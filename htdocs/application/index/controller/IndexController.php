@@ -1,11 +1,12 @@
 <?php
 namespace app\index\controller;
 
-class IndexController
+class IndexController extends BaseController
 {
     public function index()
     {
-        return view();
+        $this->seo();
+        $this->display();
     }
 
 }

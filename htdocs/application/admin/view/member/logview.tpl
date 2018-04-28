@@ -1,0 +1,32 @@
+    <table class="table table-hover table-striped">
+        <tbody>
+            <tr>
+                <th width="80">日志ID</th>
+                <td>{$m.id}</td>
+            </tr>
+            <tr>
+                <th>会员</th>
+                <td>{$m.username}</td>
+            </tr>
+            <tr>
+                <th>操作</th>
+                <td>{$m.action}</td>
+            </tr>
+            <tr>
+                <th>结果</th>
+                <td>{$m.result}</td>
+            </tr>
+            <tr>
+                <th>日期</th>
+                <td>{$m.create_at|showdate}</td>
+            </tr>
+            <tr>
+                <th>IP</th>
+                <td>{$m.ip}</td>
+            </tr>
+            <tr>
+                <th>备注</th>
+                <td>{$m.remark}</td>
+            </tr>
+        </tbody>
+    </table>
