@@ -4,3 +4,5 @@
 *.log
 /htdocs/thinkphp
 .env
+/htdocs/public/uploads/*
+!/htdocs/public/uploads/index.html

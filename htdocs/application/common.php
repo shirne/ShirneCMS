@@ -637,6 +637,20 @@ function cutstr($str,$len,$dot='...'){
     return $strcut . $dot;
 }
 
+function gener_qrcode($text,$size=300,$pad=10,$errLevel='high'){
+    $qrCode = new \Endroid\QrCode\QrCode();
+
+    $qrCode->setText($text)
+        ->setSize($size)
+        ->setPadding($pad)
+        ->setErrorCorrection($errLevel)
+        ->setForegroundColor(array('r' => 0, 'g' => 0, 'b' => 0, 'a' => 0))
+        ->setBackgroundColor(array('r' => 255, 'g' => 255, 'b' => 255, 'a' => 0))
+        //->setLabel('thinkphp.cn')
+        //->setLabelFontSize(16)
+        ->setImageType(\Endroid\QrCode\QrCode::IMAGE_TYPE_PNG);
+    $qrCode->render();
+}
 
 /**
  * 根据参数裁剪图片
