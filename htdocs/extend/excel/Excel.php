@@ -1,6 +1,9 @@
 <?php
 namespace excel;
 
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class Excel {
 
@@ -23,7 +26,7 @@ class Excel {
      */
     function __construct($fmt='Excel5'){
         $this->format=$fmt;
-        $this->excel=new \PHPExcel();
+        $this->excel=new Spreadsheet();
         $this->sheet=$this->excel->getActiveSheet();
         $this->rownum=1;
         $this->columnmap=array();
@@ -42,7 +45,7 @@ class Excel {
 
     public function load($file)
     {
-        $reader = \PHPExcel_IOFactory::createReader($this->format); // 读取 excel 文档
+        $reader = IOFactory::createReader($this->format); // 读取 excel 文档
         $this->excel = $reader->load($file); // 文档名称
         $this->sheet = $this->excel->getActiveSheet();
     }
@@ -98,7 +101,7 @@ class Excel {
 
     /**
      * @param $column int|string
-     * @param $type string PHPExcel_Cell_DataType
+     * @param $type string DataType
      */
     function setColumnType($column,$type){
         if(is_numeric($column)){
@@ -126,7 +129,7 @@ class Excel {
     function setHeader($header=array()){
         $i=0;
         foreach ($header as $key => $value) {
-            $this->sheet->setCellValueExplicit($this->columnmap[$i].$this->rownum,$value);
+            $this->sheet->setCellValueExplicit($this->columnmap[$i].$this->rownum,$value,DataType::TYPE_STRING);
             $i++;
         }
         $this->rownum++;
@@ -170,7 +173,7 @@ class Excel {
      * @return TRUE/FALSE
      */
     function saveTo($path){
-        $objWriter = \PHPExcel_IOFactory::createWriter($this->excel, $this->format);
+        $objWriter = IOFactory::createWriter($this->excel, $this->format);
         $objWriter->save($path);
     }
 

@@ -3,8 +3,11 @@
 namespace app\admin\controller;
 
 use think\Controller;
+use think\Db;
+use think\Request;
 
 class BaseController extends Controller {
+
 
     protected $table;
     protected $model;
@@ -13,27 +16,29 @@ class BaseController extends Controller {
     protected $manage;
     protected $permision;
 
-    public function _initialize(){
+    public function initialize(){
+        parent::initialize();
+
         $this->mid = session('adminId');
         //判断用户是否登陆
         if(empty($this->mid ) ) {
-            redirect(U('Login/index'));
+            redirect(url('Login/index'));
         }
-        $this->manage=M('manager')->find($this->mid);
+        $this->manage=Db::name('Manager')->find($this->mid);
         if(empty($this->manage)){
             clearLogin();
-            $this->error('账号已失效',U('Login/index'));
+            $this->error('账号已失效',url('Login/index'));
         }
         if($this->manage['logintime']!=session('adminLTime')){
             clearLogin();
-            $this->error('该账号在其它地方登录',U('Login/index'));
+            $this->error('该账号在其它地方登录',url('Login/index'));
         }
         $controller=strtolower(CONTROLLER_NAME);
         //if(strpos($controller,'/')!==false)$controller=substr($controller,strrpos($controller,'/')+1);
         if($controller!='index'){
             $action=strtolower(ACTION_NAME);
             //if(strpos($action,'/')!==false)$action=substr($action,strrpos($action,'/')+1);
-            if(IS_POST || $action=='add' || $action=='update'){
+            if($this->request->isPost() || $action=='add' || $action=='update'){
                 $this->checkPermision("edit");
             }
             if(strpos('del',$action)!==false || strpos('clear',$action)!==false){
@@ -56,7 +61,7 @@ class BaseController extends Controller {
             return true;
         }
         if(empty($this->permision)){
-            $this->permision=M('manager_permision')->where(array('manager_id'=>$this->mid))->find();
+            $this->permision=Db::name('ManagerPermision')->where(array('manager_id'=>$this->mid))->find();
             if(empty($this->permision)){
                 $this->error('权限设置有误，请联系管理员');
             }

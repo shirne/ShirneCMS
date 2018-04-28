@@ -3,7 +3,8 @@ namespace app\admin\model;
 
 use think\Model;
 
-class PageModel extends Model{
+class PageModel extends Model
+{
     protected $_validate = array(
         array('title','require','请填写单页标题！'), //默认情况下用正则进行验证
         array('name','require','请填写单页别名！'), //默认情况下用正则进行验证

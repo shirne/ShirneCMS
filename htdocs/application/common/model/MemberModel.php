@@ -1,7 +1,12 @@
 <?php
 namespace app\common\model;
+
 use think\Model;
+
 class MemberModel extends Model{
+
+    protected $autoWriteTimestamp = true;
+
     protected $_validate = array(
         array('username','require','请填写用户名！'),
         array('email','require','请填写邮箱！'),
@@ -19,8 +24,6 @@ class MemberModel extends Model{
     protected $_auto = array(
         //array('password','encode_password',self::MODEL_BOTH,'callback') ,
         array('password','',self::MODEL_UPDATE,'ignore'),
-        array('update_at','time',self::MODEL_BOTH,'function'),
-        array('create_at','time',self::MODEL_INSERT,'function'),
         //array('login_ip','get_client_ip',self::MODEL_INSERT,'function')
     );
 

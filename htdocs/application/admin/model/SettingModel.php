@@ -3,7 +3,8 @@ namespace app\admin\model;
 
 use think\Model;
 
-class SettingModel extends Model{
+class SettingModel extends Model
+{
     protected $_validate = array(
         array('key','require','请填写配置名！'), //默认情况下用正则进行验证
         array('title','require','请填写配置标题！'), //默认情况下用正则进行验证

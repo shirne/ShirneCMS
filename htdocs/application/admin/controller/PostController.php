@@ -1,5 +1,7 @@
 <?php
 namespace app\admin\controller;
+use think\Db;
+
 /**
  * 文章管理
  */
@@ -10,7 +12,8 @@ class PostController extends BaseController
      */
     public function index($key="")
     {
-        $model = D('PostView');
+        $model = Db::view('post','*')->view('category',['name'=>'category_name','title'=>'category_title'],'post.cate_id=category.id','LEFT')
+            ->view('manager',['username'],'LEFT');
         $where=array();
         if(!empty($key)){
             $where['post.title'] = array('like',"%$key%");
@@ -19,7 +22,10 @@ class PostController extends BaseController
             $where['_logic'] = 'or';
         }
 
-        $this->pagelist($model,$where,'post.id DESC');
+        $lists=$model->where($where)->paginate(10);
+
+        $this->assign('lists',$lists);
+        $this->assign('page',$lists->render());
 
         $this->display();     
     }

@@ -1,6 +1,8 @@
 <?php
 namespace app\index\controller;
+
 use think\Controller;
+use think\Db;
 
 /**
  * 如果某个控制器必须用户登录才可以访问  
@@ -16,12 +18,13 @@ class BaseController extends Controller {
     protected $isWechat=false;
     protected $isMobile=false;
 
-    public function _initialize(){
+    public function initialize(){
+        parent::initialize();
+
         $this->config=getSettings();
         $this->assign('config',$this->config);
 
         $this->checkLogin();
-
 
         $this->assign('isLogin',$this->isLogin);
 
@@ -51,7 +54,7 @@ class BaseController extends Controller {
     public function checkLogin(){
         $this->userid = session('userid');
         if(!empty($this->userid)){
-            $this->user = M('member')->find($this->userid);
+            $this->user = Db::name('Member')->find($this->userid);
             /*$time=session('logintime');
             if($time != $this->user['logintime']){
                 session('userid',null);
@@ -63,7 +66,7 @@ class BaseController extends Controller {
             }else{
                 $this->userid=null;
                 clearLogin(false);
-                $this->error("登录失效",U('Login/index'));
+                $this->error("登录失效",url('Login/index'));
             }
         }
     }
@@ -93,7 +96,7 @@ class BaseController extends Controller {
         if($this->isWechat) {
             $jssdk = new \Extend\JSSDK(C('WX_APPID'), C('WX_APPSECRET'));
             $signPackage = $jssdk->GetSignPackage();
-            $signPackage['logo'] = C('WX_DOMAIN') . 'Public/logo.png';
+            $signPackage['logo'] = config('WX_DOMAIN') . 'Public/logo.png';
             $this->assign('signPackage', $signPackage);
         }
     }
@@ -107,8 +110,8 @@ class BaseController extends Controller {
             );
         }
 
-        vendor('PHPMailer.class#phpmailer'); //从PHPMailer目录导class.phpmailer.php类文件
-        $mail             = new \PHPMailer(); //PHPMailer对象
+        //vendor('PHPMailer.class#phpmailer'); //从PHPMailer目录导class.phpmailer.php类文件
+        $mail             = new \PHPMailer\PHPMailer\PHPMailer(); //PHPMailer对象
         $mail->CharSet    = 'UTF-8'; //设定邮件编码，默认ISO-8859-1，如果发中文此项必须设置，否则乱码
         $mail->IsSMTP();  // 设定使用SMTP服务
         $mail->SMTPDebug  = 0;                     // 关闭SMTP调试功能

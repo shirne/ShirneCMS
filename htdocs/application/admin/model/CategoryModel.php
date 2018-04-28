@@ -3,7 +3,8 @@ namespace app\admin\model;
 
 use think\Model;
 
-class CategoryModel extends Model{
+class CategoryModel extends Model
+{
     protected $_validate = array(
         array('title','require','请填写分类标题！'), //默认情况下用正则进行验证
         array('name','require','请填写分类别名！'), //默认情况下用正则进行验证

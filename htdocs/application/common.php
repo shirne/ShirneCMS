@@ -23,7 +23,7 @@ function getMemberLevels()
     if (empty($levels)) {
         $levels = cache('levels');
         if (empty($levels)) {
-            $levels = \think\Db::table('MemberLevel')->order('sort ASC,level_id ASC')->select(array('index'=>'level_id'));
+            $levels = \think\Db::name('MemberLevel')->order('sort ASC,level_id ASC')->select(array('index'=>'level_id'));
             foreach ($levels as $lvid=>$level){
                 $levels[$lvid]['lead_percent']=explode(',',$level['lead_percent']);
             }
@@ -183,7 +183,7 @@ function money_log($uid, $money, $reson,$type='')
 {
     if($money==0)return true;
 
-    $member=\think\Db::table('member')->lock(true)->find($uid);
+    $member=\think\Db::name('member')->lock(true)->find($uid);
 
     if(empty($member))return false;
 
@@ -191,14 +191,14 @@ function money_log($uid, $money, $reson,$type='')
     $data['money']=$member['money']+$money;
 
     try {
-        \think\Db::table('member')->where(array('id' => $member['id']))
+        \think\Db::name('member')->where(array('id' => $member['id']))
             ->update($data);
     }catch(Exception $e){
         \think\facade\Log::write($e->getMessage());
         //exit($e->getMessage());
         //echo M('member')->getLastSql();
     }
-    return \think\Db::table('member_money_log')->insert(array(
+    return \think\Db::name('member_money_log')->insert(array(
         'create_at' => time(),
         'member_id' => $uid,
         'type'=>$type,
@@ -250,7 +250,7 @@ function getPaytypes($type = '')
 {
     $where=array();
     if(!empty($type))$where['type']=$type;
-    $lists=\think\Db::table('Paytype')->where($where)->select();
+    $lists=\think\Db::name('Paytype')->where($where)->select();
     $ptypes=array();
     foreach ($lists as $t){
         $ptypes[$t['id']]=$t;
@@ -470,7 +470,7 @@ function getSettings($all = false, $group = false, $parse=true)
     if (empty($settings)) {
         $settings = cache('setting');
         if (empty($settings)) {
-            $settings = \think\Db::table('setting')->order('sort ASC,id ASC')->select();
+            $settings = \think\Db::name('setting')->order('sort ASC,id ASC')->select();
             foreach ($settings as $k=>$v){
                 if($v['type']=='bool' && empty($v['data']))$v['data']="1:是\n0:否";
                 $settings[$k]['data']=parse_data($v['data']);
@@ -508,7 +508,7 @@ function getSetting($key){
     else return null;
 }
 function setSetting($key,$v){
-    \think\Db::table('setting')->where(array('key'=>$key))->update(array('value'=>$v));
+    \think\Db::name('setting')->where(array('key'=>$key))->update(array('value'=>$v));
     cache('setting', null);
 }
 

@@ -2,7 +2,7 @@
 
 namespace app\index\controller;
 
-
+use \think\Db;
 /**
  * 发布文章必须登录
  */
@@ -28,15 +28,13 @@ class PostController extends BaseController{
         if(!empty($cids)){
             $where['post.cate_id']=array('in',$cids);
         }
-        $model=D('PostView');
+        $model=Db::view('post','*')
+        ->view('category',['name'=>'category_name','title'=>'category_title'],'post.cate_id=category.id','LEFT')
+        ->view('manager',['username'],'LEFT')
+        ->paginate(10);
 
-        $count  = $model->where($where)->count();// 查询满足要求的总记录数
-        $Page = new \Extend\Page($count,10);// 实例化分页类 传入总记录数和每页显示的记录数(25)
-        $show = $Page->show();// 分页显示输出
-        $lists = $model->where($where)->limit($Page->firstRow.','.$Page->listRows)->order('post.id DESC')->select();
-
-        $this->assign('lists', $lists);
-        $this->assign('page',$show);
+        $this->assign('lists', $model);
+        $this->assign('page',$model->render());
         $this->display();
     }
 

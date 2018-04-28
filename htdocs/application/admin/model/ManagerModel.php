@@ -3,7 +3,10 @@ namespace app\admin\model;
 
 use think\Model;
 
-class ManagerModel extends Model{
+class ManagerModel extends Model
+{
+    protected $autoWriteTimestamp = true;
+
     protected $_validate = array(
         array('username','require','请填写用户名！'), //默认情况下用正则进行验证
         array('email','require','请填写邮箱！'), //默认情况下用正则进行验证
@@ -17,11 +20,8 @@ class ManagerModel extends Model{
     );
 
     protected $_auto = array(
-    	array('password','md5',1,'function') , //添加时用md5函数处理 
-        array('update_at','time',2,'function'), //更新时
-        array('create_at','time',1,'function'), //新增时
-        array('login_ip','get_client_ip',3,'function'), //新增时
-      //  array('password','',2,'ignore')   //怎么不能用？
+        array('login_ip','get_client_ip',3,'function'),
+        array('password','',2,'ignore')
     );
 
 

@@ -13,8 +13,5 @@ use think\Model;
 
 class MemberOauthModel extends Model
 {
-    protected $_auto = array (
-        array('create_at','time',self::MODEL_INSERT,'function'),
-        array('update_at','time',self::MODEL_BOTH,'function')
-    );
+    protected $autoWriteTimestamp = true;
 }
