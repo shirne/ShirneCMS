@@ -1,0 +1,6 @@
+/.idea
+/.vscode
+/htdocs/vendor
+*.log
+/htdocs/thinkphp
+.env
