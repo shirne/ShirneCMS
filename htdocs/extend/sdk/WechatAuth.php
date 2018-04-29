@@ -23,6 +23,8 @@ class WechatAuth extends AccountBase {
     protected $jsapi_ticket;
     protected $authpre='wechat_access_token_';
 
+    protected $postxml;
+
     public function __construct($options)
     {
         parent::__construct($options);
@@ -279,10 +281,10 @@ class WechatAuth extends AccountBase {
 
     /**
      * 通过code获取Access Token
+     * $@param $code
      * @return array|bool {access_token,expires_in,refresh_token,openid,scope}
      */
-    public function getOauthAccessToken(){
-        $code = isset($_GET['code'])?$_GET['code']:'';
+    public function getOauthAccessToken($code){
         if (!$code) return false;
         $result = $this->http_get(self::API_BASE_URL_PREFIX.self::OAUTH_TOKEN_URL.'appid='.$this->appid.'&secret='.$this->appsecret.'&code='.$code.'&grant_type=authorization_code');
         if ($result)

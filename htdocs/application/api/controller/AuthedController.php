@@ -11,8 +11,8 @@ namespace app\api\Controller;
 
 class AuthedController extends BaseController
 {
-    public function _initialize(){
-        parent::_initialize();
+    public function initialize(){
+        parent::initialize();
         if(!$this->isLogin){
             $this->response('未登录',101);
         }

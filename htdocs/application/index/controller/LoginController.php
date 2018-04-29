@@ -1,8 +1,9 @@
 <?php
 
 namespace app\index\controller;
+use sdk\WechatAuth;
+use think\Db;
 
-use Extend\Oauth\ThinkOauth;
 /**
  * 用户本地登陆和第三方登陆
  */
@@ -20,12 +21,12 @@ class LoginController extends BaseController{
     protected $options;
 
 
-    public function __construct(){
-        parent::__construct();
-        $this->token = $this->config("token");
-        $this->appid = $this->config("appid");
-        $this->appsecret = $this->config("appsecret");
-        $this->encodingaeskey = $this->config("encodingaeskey");
+    public function initialize(){
+        parent::initialize();
+        $this->token = $this->config["token"];
+        $this->appid = $this->config["appid"];
+        $this->appsecret = $this->config["appsecret"];
+        $this->encodingaeskey = $this->config["encodingaeskey"];
         //配置
         $this->options = array(
             'token'=>$this->token,
@@ -55,14 +56,14 @@ class LoginController extends BaseController{
               $this->display('login');
             }
             if($this->request->isPost()){
-                $code = I('verify','','strtolower');
+                $code = $this->request->post('verify','','strtolower');
                 //验证验证码是否正确
                 if(!($this->check_verify($code))){
                     $this->error('验证码错误');
                 }
 
-                $data['username'] = I('post.username');
-                $password = I('post.password');
+                $data['username'] = $this->request->post('username');
+                $password = $this->request->post('password');
                 $member = Db::name('member')->where($data)->find();
                 if(!empty($member) && $member['password']==encode_password($password,$member['salt'])){
 
@@ -98,7 +99,7 @@ class LoginController extends BaseController{
         }
         //验证通过  使用第三方登陆
         if($type != null){
-            $sns = ThinkOauth::getInstance($type);
+            $sns = WechatAuth::getInstance($type);
             redirect($sns->getRequestCodeURL());  
         }
         
@@ -146,8 +147,8 @@ class LoginController extends BaseController{
     public function wechatCallback()
     {
         $data=array();
-        $wechat = new \Extend\Wechat($this->options);
-        $wxdata = $wechat->getOauthAccessToken();
+        $wechat = new WechatAuth($this->options);
+        $wxdata = $wechat->getOauthAccessToken($this->request->get('code'));
         /**
           $wxdata 字段
          {
@@ -200,9 +201,9 @@ class LoginController extends BaseController{
     }
 
     public function getpassword(){
-        $step=I('step/d',1);
-        $username=I('username');
-        $authtype=I('authtype');
+        $step=$this->request->get('step/d',1);
+        $username=$this->request->post('username');
+        $authtype=$this->request->post('authtype');
 
         if($step==2 || $step==3){
             $step--;
@@ -226,8 +227,8 @@ class LoginController extends BaseController{
         }
         if($step==3){
             $step--;
-            $sendto=I('sendto');
-            $code=I('checkcode');
+            $sendto=$this->request->post('sendto');
+            $code=$this->request->post('checkcode');
             $crow=Db::name('checkcode')->where(array('sendto'=>$sendto,'checkcode'=>$code,'is_check'=>0))->order('create_at DESC')->find();
             $time=time();
             if(!empty($crow) && $crow['create_at']>$time-60*5){
@@ -247,8 +248,8 @@ class LoginController extends BaseController{
             if(empty($passed)){
                 $this->error("非法操作");
             }
-            $password=I('password');
-            $repassword=I('repassword');
+            $password=$this->request->post('password');
+            $repassword=$this->request->post('repassword');
 
             if(empty($password))$this->error("请填写密码");
             if(strlen($password)<6 || strlen($password)>20)$this->error("密码长度 6-20");
@@ -259,7 +260,7 @@ class LoginController extends BaseController{
             $data['salt'] = random_str(8);
             $data['password'] = encode_password($password, $data['salt']);
             $data['update_at'] = time();
-            if (Db::name('member')->where(array('username'=>$passed))->save($data)) {
+            if (Db::name('member')->where(array('username'=>$passed))->update($data)) {
                 $this->success("密码设置成功",url('Login/index'));
             }
         }
@@ -271,7 +272,7 @@ class LoginController extends BaseController{
         $this->display();
     }
     public function checkusername(){
-        $username=I('username');
+        $username=$this->request->post('username');
         if(empty($username))$this->error("请填写用户名");
         $user=Db::name('member')->where(array('username'=>$username))->find();
         if(empty($user)){
@@ -299,11 +300,11 @@ class LoginController extends BaseController{
 
         if($this->request->isPost()){
             $data=array();
-            $data['username']=I('username');
-            $data['password']=I('password');
-            $data['email']=I('email');
-            $data['realname']=I('realname');
-            $data['mobile']=I('mobile');
+            $data['username']=$this->request->post('username');
+            $data['password']=$this->request->post('password');
+            $data['email']=$this->request->post('email');
+            $data['realname']=$this->request->post('realname');
+            $data['mobile']=$this->request->post('mobile');
 
             $member=Db::name('member');
             if(empty($data['username']))$this->error("请填写用户名");
@@ -326,8 +327,8 @@ class LoginController extends BaseController{
             $m=$member->where(array('mobile'=>$data['mobile']))->find();
             if(!empty($m))$this->error("手机号已经被占用");
 
-            $invite_code=I('invite_code');
-            if(($this->settings['m_invite']==1 && !empty($invite_code)) || $this->settings['m_invite']==2) {
+            $invite_code=$this->request->post('invite_code');
+            if(($this->config['m_invite']==1 && !empty($invite_code)) || $this->settings['m_invite']==2) {
                 if (empty($invite_code)) $this->error("请填写激活码");
                 $invite = Db::name('invite_code')->where(array('code' => $invite_code, 'is_lock' => 0, 'member_use' => 0))->find();
                 if (empty($invite) || ($invite['invalid_at'] > 0 && $invite['invalid_at'] < time())) {
@@ -339,40 +340,39 @@ class LoginController extends BaseController{
 
 
 
-            M()->startTrans();
+            Db::startTrans();
             if(!empty($invite)) {
                 $invite = Db::name('invite_code')->lock(true)->find($invite['id']);
                 if (!empty($invite['member_use'])) {
-                    M()->rollback();
+                    Db::rollback();
                     $this->error("激活码已被使用");
                 }
             }
             $time=time();
             $data['salt']=random_str(8);
             $data['password']=encode_password($data['password'],$data['salt']);
-            $data['login_ip']=get_client_ip();
+            $data['login_ip']=$this->request->ip();
             $data['referer']=empty($invite['member_id'])?session('agent'):$invite['member_id'];
             $data['create_at']=$time;
             $data['update_at']=$time;
-            $data['login_ip']=get_client_ip();
             if($invite['level_id']){
                 $data['level_id']=$invite['level_id'];
             }else{
                 $data['level_id']=getDefaultLevel();
             }
 
-            $userid=Db::name('member')->add($data);
+            $userid=Db::name('member')->insert($data);
 
             if(empty($userid)){
-                M()->rollback();
+                Db::rollback();
                 $this->error("注册失败");
             }
             if(!empty($invite)) {
                 $invite['member_use'] = $userid;
                 $invite['use_at'] = time();
-                Db::name('invite_code')->save($invite);
+                Db::name('invite_code')->update($invite);
             }
-            M()->commit();
+            Db::commit();
             setLogin($data);
             $this->success("注册成功",url('Index/index'));
         }else{
@@ -395,14 +395,14 @@ class LoginController extends BaseController{
     }
 
     public function verify(){
-        $Verify = new \Think\Verify(array('seKey'=>'foreign'));
+        $Verify = new \think\captcha\Captcha(array('seKey'=>'foreign'));
         $Verify->codeSet = '0123456789';
         $Verify->fontSize = 13;
         $Verify->length = 4;
         $Verify->entry();
     }
     protected function check_verify($code){
-        $verify = new \Think\Verify(array('seKey'=>'foreign'));
+        $verify = new \think\captcha\Captcha(array('seKey'=>'foreign'));
         return $verify->check($code);
     }
 

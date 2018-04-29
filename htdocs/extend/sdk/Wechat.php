@@ -200,7 +200,6 @@ class Wechat extends WechatAuth
     //private $partnerid;
     //private $partnerkey;
     //private $paysignkey;
-    private $postxml;
     private $_msg;
     private $_funcflag = false;
     private $_receive;

@@ -9,12 +9,12 @@
 // | Author: 麦当苗儿 <zuojiazi@vip.qq.com> <http://www.zjzit.cn>
 // +----------------------------------------------------------------------
 
-namespace app\index\controller;
+namespace app\api\controller;
 
-use Think\Controller;
-use Extend\Wechat;
+use sdk\Wechat;
+use think\Controller;
 
-class WeChatController extends Controller{
+class WeChatController extends BaseController{
     /**
      * 微信消息接口入口
      * 所有发送到微信的消息都会推送到该操作
@@ -27,12 +27,13 @@ class WeChatController extends Controller{
     protected $options;
 
 
-    public function __construct(){
-        parent::__construct();
-        $this->token = C("WX_TOKEN"); 
-        $this->appid = C("WX_APPID"); 
-        $this->appsecret = C("WX_APPSECRET"); 
-        $this->encodingaeskey = C("WX_ENCODINGAESKEY"); 
+    public function initialize(){
+        parent::initialize();
+
+        $this->token = $this->config['token'];
+        $this->appid = $this->config['appid'];
+        $this->appsecret = $this->config['appsecret'];
+        $this->encodingaeskey = $this->config['encodingaeskey'];
         //配置
         $this->options = array(
         'token'=>$this->token, //填写你设定的key
@@ -49,8 +50,7 @@ class WeChatController extends Controller{
         $type = $wechat->getRev()->getRevType();
         switch($type) {
             case Wechat::MSGTYPE_TEXT:
-                $domain = C('WX_DOMAIN');
-                $url = $domain.url('login/wechatCallback');
+                $url = url('login/wechatCallback','',true,true);
                 $redirect = $wechat->getOauthRedirect($url);
                 $wechat->text("<a href=\"$redirect\">点击登陆</a>")->reply();
                 exit;

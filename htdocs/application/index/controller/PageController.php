@@ -3,6 +3,8 @@
 namespace app\index\controller;
 
 
+use think\Db;
+
 class PageController extends BaseController{
 
     public function index($name='')

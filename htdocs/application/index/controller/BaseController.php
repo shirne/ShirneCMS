@@ -14,7 +14,7 @@ class BaseController extends Controller {
     protected $user;
     protected $isLogin=false;
 
-    protected $config;
+    protected $config=array();
     protected $isWechat=false;
     protected $isMobile=false;
 

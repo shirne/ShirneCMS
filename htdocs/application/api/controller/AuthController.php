@@ -8,7 +8,12 @@
 
 namespace app\api\Controller;
 
-use Extend\WechatAuth;
+
+use app\api\model\TokenModel;
+use app\common\model\MemberModel;
+use app\common\model\MemberOauthModel;
+use sdk\WechatAuth;
+use think\Db;
 
 class AuthController extends BaseController
 {
@@ -22,10 +27,11 @@ class AuthController extends BaseController
         if(empty($username) || empty($password)){
             $this->response('请填写登录账号及密码',ERROR_LOGIN_FAILED);
         }
-        $member = Db::name('member')->where(array('username'=>$username))->find();
+        $member = Db::name('Member')->where(array('username'=>$username))->find();
         if(!empty($member)){
             if(compare_password($member,$password)){
-                $token=D('Token')->createToken($member['id']);
+                $tokenModel=new TokenModel();
+                $token=$tokenModel->createToken($member['id']);
                 if(!empty($token)) {
                     $this->response($token);
                 }
@@ -38,7 +44,7 @@ class AuthController extends BaseController
     public function wxLogin(){
         $code=$this->input['code'];
         $weauth=new WechatAuth(array('appid'=>$this->config['weapp_appid'],'appsecret'=>$this->config['weapp_appsecret']));
-        $session=$weauth->getSession($code);
+        $session=$weauth->getOauthAccessToken($code);
         if(empty($session) || empty($session['openid'])){
             $this->response('登录失败',ERROR_LOGIN_FAILED);
         }
@@ -52,8 +58,9 @@ class AuthController extends BaseController
         }
         $type='wxapp';
 
-        $condition=array('member_oauth.type'=>$type,'member_oauth.openid'=>$session['openid']);
-        $member=D('OAhthView')->where($condition)->find();
+        $condition=array('type'=>$type,'openid'=>$session['openid']);
+        $oauth=MemberOauthModel::get($condition);
+        if(!empty($oauth))$member=MemberModel::get($oauth['member_id']);
         if(empty($member)){
             $register=getSetting('m_register');
             if($register=='1'){
@@ -64,7 +71,8 @@ class AuthController extends BaseController
                 $data['openid']=$session['openid'];
                 $data['type']=$type;
                 if(!empty($session['unionid']))$data['unionid']=$session['unionid'];
-                $member_id=D('Member')->add(array(
+
+                $member_id=MemberModel::create(array(
                     'username'=>'',
                     'realname'=>$data['nickname'],
                     'avatar'=>$data['avatar'],
@@ -73,28 +81,35 @@ class AuthController extends BaseController
                 ));
                 if($member_id){
                     $data['member_id']=$member_id;
-                    D('MemberOauth')->add($data);
+                    if(empty($oauth)){
+                        MemberOauthModel::create($data);
+                    }else{
+                        MemberOauthModel::update($data);
+                    }
                 }else{
                     $this->response('登录失败',ERROR_LOGIN_FAILED);
                 }
-                $member=D('OAhthView')->where($condition)->find();
+                $member=MemberModel::get($member_id);
+            }else{
+                $this->response('登录授权失败',ERROR_LOGIN_FAILED);
             }
         }elseif(!empty($userinfo)){
             //更新资料
             $data=$this->wxMapdata($userinfo,$rowData);
             if(!empty($session['unionid']))$data['unionid']=$session['unionid'];
-            D('MemberOauth')->alias('member_oauth')->where($condition)->save($data);
+            MemberOauthModel::update($data,$condition);
             $updata=array();
             $updata['gender']=$data['gender'];
             $updata['city']=$data['city'];
-            if($member['realname']==$member['auth_nickname'])$updata['realname']=$data['nickname'];
-            if($member['avatar']==$member['auth_avatar'])$updata['avatar']=$data['avatar'];
+            if($member['realname']==$oauth['nickname'])$updata['realname']=$data['nickname'];
+            if($member['avatar']==$oauth['avatar'])$updata['avatar']=$data['avatar'];
             if(!empty($updata)){
-                Db::name('member')->where(array('id'=>$member['id']))->save($updata);
+                MemberModel::update($updata,array('id'=>$member['id']));
             }
 
         }
-        $token=D('Token')->createToken($member['id']);
+        $tokenModel=new TokenModel();
+        $token=$tokenModel->createToken($member['id']);
         if(!empty($token)) {
             $this->response($token);
         }
@@ -117,7 +132,8 @@ class AuthController extends BaseController
     public function refresh(){
         $refreshToken=$this->input['refresh_token'];
         if(!empty($refreshToken)){
-            $token=D('Token')->refreshToken($refreshToken);
+            $tokenModel=new TokenModel();
+            $token=$tokenModel->refreshToken($refreshToken);
             if(!empty($token)) {
                 $this->response($token);
             }

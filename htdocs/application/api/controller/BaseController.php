@@ -6,7 +6,9 @@
  * Time: 7:30
  */
 namespace app\api\controller;
+use app\api\model\TokenModel;
 use think\Controller;
+use think\Db;
 
 define('ERROR_LOGIN_FAILED',101);//登录失败
 define('ERROR_REGISTER_FAILED',111);//注册失败
@@ -20,11 +22,12 @@ class BaseController extends Controller
     protected $isLogin=false;
     protected $user;
     protected $input=array();
+    protected $config=array();
+
     public function _initialize(){
         $this->config=getSettings();
-        //$this->assign('config',$this->config);
 
-        $format=I('get.format','json');
+        $format=$this->request->get('format','json');
         $data=file_get_contents('php://input');
         if(!empty($data)) {
             if ($format == 'xml') {
@@ -44,13 +47,14 @@ class BaseController extends Controller
     }
 
     public function checkLogin(){
-        $this->token = I('get.token',isset($this->input['token'])?$this->input['token']:'');
+        $this->token = $this->request->get('token');//I('get.token',isset($this->input['token'])?$this->input['token']:'');
         if(!empty($this->token)){
-            $token=D('Token')->findToken($this->token);
+            $tokenModel=new TokenModel();
+            $token=$tokenModel->findToken($this->token);
             $errorno=ERROR_TOKEN_INVAILD;
             if(!empty($token)) {
                 if($token['update_at']+$token['expire_in']>time()){
-                    $this->user = Db::name('member')->find($token['member_id']);
+                    $this->user = Db::name('Member')->find($token['member_id']);
                 }else{
                     $errorno=ERROR_TOKEN_EXPIRE;
                 }

@@ -11,8 +11,8 @@ namespace app\index\controller;
 
 class AuthController extends BaseController
 {
-    public function _initialize(){
-        parent::_initialize();
+    public function initialize(){
+        parent::initialize();
 
     }
 

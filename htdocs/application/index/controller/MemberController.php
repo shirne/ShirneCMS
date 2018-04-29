@@ -11,9 +11,9 @@ namespace app\index\controller;
 
 class MemberController extends AuthController
 {
-    public function _initialize()
+    public function initialize()
     {
-        parent::_initialize();
+        parent::initialize();
     }
 
     /**
