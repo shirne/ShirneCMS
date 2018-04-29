@@ -175,7 +175,7 @@ class AccountBase
      * @return boolean
      */
     protected function setCache($cachename,$value,$expired){
-        S($cachename,$value,$expired);
+        cache($cachename,$value,$expired);
         return false;
     }
 
@@ -185,7 +185,7 @@ class AccountBase
      * @return mixed
      */
     protected function getCache($cachename){
-        S($cachename);
+        cache($cachename);
         return false;
     }
 
@@ -195,7 +195,7 @@ class AccountBase
      * @return boolean
      */
     protected function removeCache($cachename){
-        S($cachename,null);
+        cache($cachename,null);
         return false;
     }
 }

@@ -9,7 +9,7 @@ class MemberController extends BaseController
     {
         parent::_initialize();
 
-        M('manager')->where(array('id'=>$this->manage['id']))->save(array('last_view_member'=>time()));
+        Db::name('manager')->where(array('id'=>$this->manage['id']))->save(array('last_view_member'=>time()));
     }
 
     /**
@@ -17,7 +17,7 @@ class MemberController extends BaseController
      */
     public function index()
     {
-        $model = M('member');
+        $model = Db::name('member');
         $where=array();
         $keyword=I('keyword');
         if(!empty($keyword)){
@@ -47,7 +47,7 @@ class MemberController extends BaseController
     }
     public function set_agent($id=0){
         if(empty($id))$this->error('会员不存在');
-        $member=M('member')->find($id);
+        $member=Db::name('member')->find($id);
         if(empty($member))$this->error('会员不存在');
 
         $level=I('level/d',1);
@@ -57,7 +57,7 @@ class MemberController extends BaseController
 
         $data=array('isagent'=>$level);
         if(empty($member['agentcode']))$data['agentcode']=random_str(6);
-        $result=M('member')->where(array('id'=>$id))->save($data);
+        $result=Db::name('member')->where(array('id'=>$id))->save($data);
         if($result){
             user_log($this->mid,'setagent',1,'设置'.$level.'级代理 '.$id ,'manager');
             $this->success('设置成功');
@@ -68,11 +68,11 @@ class MemberController extends BaseController
     }
     public function cancel_agent($id=0){
         if(empty($id))$this->error('会员不存在');
-        $member=M('member')->find($id);
+        $member=Db::name('member')->find($id);
         if(empty($member))$this->error('会员不存在');
         if($member['isagent']==0)$this->success('取消成功');
 
-        $result=M('member')->where(array('id'=>$id))->save(array('isagent'=>0));
+        $result=Db::name('member')->where(array('id'=>$id))->save(array('isagent'=>0));
         if($result){
             user_log($this->mid,'cancelagent',1,'取消代理 ' .$id ,'manager');
             $this->success('取消成功');
@@ -113,7 +113,7 @@ class MemberController extends BaseController
             $d=$date->getTimestamp();
         }
 
-        $model=M('MemberLog');
+        $model=Db::name('MemberLog');
 
         $model->where(array("create_at"=>array('ELT',$d)))->delete();
 
@@ -127,10 +127,10 @@ class MemberController extends BaseController
     public function add()
     {
         //默认显示添加表单
-        if (!IS_POST) {
+        if (!$this->request->isPost()) {
             $this->display();
         }
-        if (IS_POST) {
+        if ($this->request->isPost()) {
             //如果用户提交数据
             $model = D("Member");
             if (!$model->create()) {
@@ -142,7 +142,7 @@ class MemberController extends BaseController
                 $model->password=encode_password($model->password,$model->salt);
                 if ($model->add()) {
                     user_log($this->mid,'adduser',1,'添加会员'.$model->getLastInsID() ,'manager');
-                    $this->success("用户添加成功", U('member/index'));
+                    $this->success("用户添加成功", url('member/index'));
                 } else {
                     $this->error("用户添加失败");
                 }
@@ -155,12 +155,12 @@ class MemberController extends BaseController
     public function update()
     {
         //默认显示添加表单
-        if (!IS_POST) {
-            $model = M('member')->find(I('id/d'));
+        if (!$this->request->isPost()) {
+            $model = Db::name('member')->find(I('id/d'));
             $this->assign('model',$model);
             $this->display();
         }
-        if (IS_POST) {
+        if ($this->request->isPost()) {
             $model = D("Member");
             if (!$model->create()) {
                 $this->error($model->getError());
@@ -177,7 +177,7 @@ class MemberController extends BaseController
                 //更新
                 if ($model->save($data)) {
                     user_log($this->mid,'updateuser',1,'修改会员资料'.$data['id'] ,'manager');
-                    $this->success("用户信息更新成功", U('member/index'));
+                    $this->success("用户信息更新成功", url('member/index'));
                 } else {
                     $this->error("未做任何修改,用户信息更新失败");
                 }        
@@ -191,7 +191,7 @@ class MemberController extends BaseController
     {
     	$id = intval($id);
 
-        $model = M('member');
+        $model = Db::name('member');
         //查询status字段值
         $result = $model->find($id);
         //更新字段
@@ -204,7 +204,7 @@ class MemberController extends BaseController
         }
         if($model->save($data)){
             user_log($this->mid,'deleteuser',1,'禁用会员' ,'manager');
-            $this->success("状态更新成功", U('member/index'));
+            $this->success("状态更新成功", url('member/index'));
         }else{
             $this->error("状态更新失败");
         }

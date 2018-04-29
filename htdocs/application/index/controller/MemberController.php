@@ -27,7 +27,7 @@ class MemberController extends AuthController
      * 个人资料
      */
     public function profile(){
-        if(IS_POST){
+        if($this->request->isPost()){
 
         }
         $this->display();

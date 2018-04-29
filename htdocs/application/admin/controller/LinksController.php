@@ -10,7 +10,7 @@ class LinksController extends BaseController
      */
     public function index($key="")
     {
-        $model = M('links');
+        $model = Db::name('links');
         $where=array();
         if(!empty($key)){
             $where['title'] = array('like',"%$key%");
@@ -28,10 +28,10 @@ class LinksController extends BaseController
     public function add()
     {
         //默认显示添加表单
-        if (!IS_POST) {
+        if (!$this->request->isPost()) {
             $this->display();
         }
-        if (IS_POST) {
+        if ($this->request->isPost()) {
             //如果用户提交数据
             $model = D("links");
             if (!$model->create()) {
@@ -40,7 +40,7 @@ class LinksController extends BaseController
                 exit();
             } else {
                 if ($model->add()) {
-                    $this->success("链接添加成功", U('links/index'));
+                    $this->success("链接添加成功", url('links/index'));
                 } else {
                     $this->error("链接添加失败");
                 }
@@ -54,18 +54,18 @@ class LinksController extends BaseController
     {
         $id = intval($id);
         //默认显示添加表单
-        if (!IS_POST) {
-            $model = M('links')->where("id= %d",$id)->find();
+        if (!$this->request->isPost()) {
+            $model = Db::name('links')->where("id= %d",$id)->find();
             $this->assign('model',$model);
             $this->display();
         }
-        if (IS_POST) {
+        if ($this->request->isPost()) {
             $model = D("links");
             if (!$model->create()) {
                 $this->error($model->getError());
             }else{
                 if ($model->save()) {
-                    $this->success("更新成功", U('links/index'));
+                    $this->success("更新成功", url('links/index'));
                 } else {
                     $this->error("更新失败");
                 }        
@@ -78,10 +78,10 @@ class LinksController extends BaseController
     public function delete($id)
     {
     		$id = intval($id);
-        $model = M('links');
+        $model = Db::name('links');
         $result = $model->delete($id);
         if($result){
-            $this->success("链接删除成功", U('links/index'));
+            $this->success("链接删除成功", url('links/index'));
         }else{
             $this->error("链接删除失败");
         }

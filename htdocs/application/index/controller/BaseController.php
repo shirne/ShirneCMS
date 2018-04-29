@@ -74,13 +74,12 @@ class BaseController extends Controller {
     public function checkPlatform(){
         $detected=session('detected');
         if(empty($detected)) {
-            $useragent = $_SERVER['HTTP_USER_AGENT'];
+            $useragent = $this->request->server('HTTP_USER_AGENT');
             if (stripos($useragent, 'MicroMessenger') > 0) {
                 $this->isWechat = true;
                 $this->isMobile = true;
             }else {
-                $mobileDetect = new \Mobile_Detect();
-                $this->isMobile = $mobileDetect->isMobile();
+                $this->isMobile = $this->request->isMobile();
             }
             session('detected',1);
             session('isWechat',$this->isWechat);
@@ -94,9 +93,9 @@ class BaseController extends Controller {
         详细用法参考：http://mp.weixin.qq.com/wiki/7/1c97470084b73f8e224fe6d9bab1625b.html
          */
         if($this->isWechat) {
-            $jssdk = new \sdk\JSSDK(C('WX_APPID'), C('WX_APPSECRET'));
-            $signPackage = $jssdk->GetSignPackage();
-            $signPackage['logo'] = config('WX_DOMAIN') . 'Public/logo.png';
+            $jssdk = new \sdk\WechatAuth($this->config);
+            $signPackage = $jssdk->getJsSign(current_url(true));
+            $signPackage['logo'] = config('WX_DOMAIN') . 'static/logo.png';
             $this->assign('signPackage', $signPackage);
         }
     }

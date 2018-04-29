@@ -22,8 +22,8 @@ class PermissionController extends BaseController
     }
 
     public function clearcache(){
-        S('menus',null);
-        $this->success("清除成功", U('permission/index'));
+        cache('menus',null);
+        $this->success("清除成功", url('permission/index'));
     }
 
     /**
@@ -33,10 +33,10 @@ class PermissionController extends BaseController
     {
         $this->assign('pid',I('pid',0));
         //默认显示添加表单
-        if (!IS_POST) {
+        if (!$this->request->isPost()) {
             $this->display();
         }
-        if (IS_POST) {
+        if ($this->request->isPost()) {
             //如果用户提交数据
             $model = D("Permission");
             if (!$model->create()) {
@@ -45,7 +45,7 @@ class PermissionController extends BaseController
                 exit();
             } else {
                 if ($model->add()) {
-                    $this->success("添加成功", U('permission/index'));
+                    $this->success("添加成功", url('permission/index'));
                 } else {
                     $this->error("添加失败");
                 }
@@ -60,18 +60,18 @@ class PermissionController extends BaseController
     {
         $id = intval($id);
         //默认显示添加表单
-        if (!IS_POST) {
-            $model = M('permission')->where("id=%d",$id)->find();
+        if (!$this->request->isPost()) {
+            $model = Db::name('permission')->where("id=%d",$id)->find();
             $this->assign('perm',$model);
             $this->display();
         }
-        if (IS_POST) {
+        if ($this->request->isPost()) {
             $model = D("Permission");
             if (!$model->create()) {
                 $this->error($model->getError());
             }else{
                 if ($model->save()) {
-                    $this->success("更新成功", U('permission/index'));
+                    $this->success("更新成功", url('permission/index'));
                 } else {
                     $this->error("更新失败");
                 }
@@ -85,10 +85,10 @@ class PermissionController extends BaseController
     public function delete($id)
     {
         $id = intval($id);
-        $model = M('Permission');
+        $model = Db::name('Permission');
         $result = $model->where("id=%d",$id)->delete();
         if($result){
-            $this->success("删除成功", U('permission/index'));
+            $this->success("删除成功", url('permission/index'));
         }else{
             $this->error("删除失败");
         }

@@ -17,7 +17,7 @@ class MemberLevelController extends BaseController
      */
     public function index()
     {
-        $model = M('memberLevel');
+        $model = Db::name('memberLevel');
 
         $this->pagelist($model,array(),'level_id ASC');
         $this->display();
@@ -29,13 +29,13 @@ class MemberLevelController extends BaseController
     public function add()
     {
         //默认显示添加表单
-        if (!IS_POST) {
+        if (!$this->request->isPost()) {
             $this->assign('model',array(
                 'commission_layer'=>3
             ));
             $this->display();
         }
-        if (IS_POST) {
+        if ($this->request->isPost()) {
             //如果用户提交数据
             $model = D("memberLevel");
             if (!$model->create()) {
@@ -45,8 +45,8 @@ class MemberLevelController extends BaseController
             } else {
                 $insertId=$model->add();
                 if ($insertId!==false) {
-                    S('levels', null);
-                    $this->success("添加成功", U('memberLevel/index'));
+                    cache('levels', null);
+                    $this->success("添加成功", url('memberLevel/index'));
                 } else {
                     $this->error("添加失败");
                 }
@@ -60,19 +60,19 @@ class MemberLevelController extends BaseController
     {
         $id = intval($id);
         //默认显示添加表单
-        if (!IS_POST) {
+        if (!$this->request->isPost()) {
             $model = D('memberLevel')->where("level_id= %d",$id)->find();
             $this->assign('model',$model);
             $this->display('add');
         }
-        if (IS_POST) {
+        if ($this->request->isPost()) {
             $model = D("memberLevel");
             if (!$model->create()) {
                 $this->error($model->getError());
             }else{
                 if ($model->save()) {
-                    S('levels', null);
-                    $this->success("更新成功", U('memberLevel/index'));
+                    cache('levels', null);
+                    $this->success("更新成功", url('memberLevel/index'));
                 } else {
                     $this->error("更新失败");
                 }
@@ -85,15 +85,15 @@ class MemberLevelController extends BaseController
     public function delete($id)
     {
         $id = intval($id);
-        $count=M('member')->where(array('level_id'=>$id))->count();
+        $count=Db::name('member')->where(array('level_id'=>$id))->count();
         if($count>0){
             $this->error("该分组尚有会员,不能删除");
         }
-        $model = M('memberLevel');
+        $model = Db::name('memberLevel');
         $result = $model->delete($id);
         if($result){
-            S('levels', null);
-            $this->success("删除成功", U('memberLevel/index'));
+            cache('levels', null);
+            $this->success("删除成功", url('memberLevel/index'));
         }else{
             $this->error("删除失败");
         }

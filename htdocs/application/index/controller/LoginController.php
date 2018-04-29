@@ -46,15 +46,15 @@ class LoginController extends BaseController{
     public function login($type=null)
     {
         if($this->userid){
-            $this->success('您已登录',U('index/index'));
+            $this->success('您已登录',url('index/index'));
             exit;
         }
         //方式1：本地账号登陆
         if(empty($type)){
-            if(!IS_POST){
+            if(!$this->request->isPost()){
               $this->display('login');
             }
-            if(IS_POST){
+            if($this->request->isPost()){
                 $code = I('verify','','strtolower');
                 //验证验证码是否正确
                 if(!($this->check_verify($code))){
@@ -63,7 +63,7 @@ class LoginController extends BaseController{
 
                 $data['username'] = I('post.username');
                 $password = I('post.password');
-                $member = M('member')->where($data)->find();
+                $member = Db::name('member')->where($data)->find();
                 if(!empty($member) && $member['password']==encode_password($password,$member['salt'])){
 
                     if($member['status']==0){
@@ -83,7 +83,7 @@ class LoginController extends BaseController{
         }
         //方式2：如果是微信登录（微信内部浏览器登录，非扫码登录）
         if(strtolower($type) == "weixin"){
-            $redirect = U('Login/wechatCallback','',true);
+            $redirect = url('Login/wechatCallback','',true);
             $scope = "snsapi_userinfo";
             $url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid={$this->appid}&redirect_uri=$redirect&response_type=code&scope=$scope&state=STATE#wechat_redirect";
             redirect($url);
@@ -208,7 +208,7 @@ class LoginController extends BaseController{
             $step--;
             if(empty($username))$this->error("请填写用户名");
             if(empty($authtype))$this->error("请选择认证方式");
-            $user=M('member')->where(array('username'=>$username))->find();
+            $user=Db::name('member')->where(array('username'=>$username))->find();
             if(empty($user)){
                 $this->error("该用户不存在");
             }
@@ -228,10 +228,10 @@ class LoginController extends BaseController{
             $step--;
             $sendto=I('sendto');
             $code=I('checkcode');
-            $crow=M('checkcode')->where(array('sendto'=>$sendto,'checkcode'=>$code,'is_check'=>0))->order('create_at DESC')->find();
+            $crow=Db::name('checkcode')->where(array('sendto'=>$sendto,'checkcode'=>$code,'is_check'=>0))->order('create_at DESC')->find();
             $time=time();
             if(!empty($crow) && $crow['create_at']>$time-60*5){
-                M('checkcode')->where(array('id' => $crow['id']))->save(array('is_check' => 1, 'check_at' => $time));
+                Db::name('checkcode')->where(array('id' => $crow['id']))->save(array('is_check' => 1, 'check_at' => $time));
                 session('passed',$username);
             }else{
                 $this->error("验证码已失效");
@@ -259,8 +259,8 @@ class LoginController extends BaseController{
             $data['salt'] = random_str(8);
             $data['password'] = encode_password($password, $data['salt']);
             $data['update_at'] = time();
-            if (M('member')->where(array('username'=>$passed))->save($data)) {
-                $this->success("密码设置成功",U('Login/index'));
+            if (Db::name('member')->where(array('username'=>$passed))->save($data)) {
+                $this->success("密码设置成功",url('Login/index'));
             }
         }
 
@@ -273,7 +273,7 @@ class LoginController extends BaseController{
     public function checkusername(){
         $username=I('username');
         if(empty($username))$this->error("请填写用户名");
-        $user=M('member')->where(array('username'=>$username))->find();
+        $user=Db::name('member')->where(array('username'=>$username))->find();
         if(empty($user)){
             $this->error("该用户不存在");
         }
@@ -291,13 +291,13 @@ class LoginController extends BaseController{
         $this->seo("会员注册");
 
         if(!empty($agent)){
-            $amem=M('Member')->where(array('isagent'=>1,'agentcode'=>$agent))->find();
+            $amem=Db::name('Member')->where(array('isagent'=>1,'agentcode'=>$agent))->find();
             if(!empty($amem)){
                 session('agent',$amem['id']);
             }
         }
 
-        if(IS_POST){
+        if($this->request->isPost()){
             $data=array();
             $data['username']=I('username');
             $data['password']=I('password');
@@ -305,7 +305,7 @@ class LoginController extends BaseController{
             $data['realname']=I('realname');
             $data['mobile']=I('mobile');
 
-            $member=M('member');
+            $member=Db::name('member');
             if(empty($data['username']))$this->error("请填写用户名");
             if(!preg_match('/^[a-zA-Z][a-zA-Z0-9\\-]{5,9}$/',$data['username']))$this->error("用户名格式不正确");
             $m=$member->where(array('username'=>$data['username']))->find();
@@ -329,7 +329,7 @@ class LoginController extends BaseController{
             $invite_code=I('invite_code');
             if(($this->settings['m_invite']==1 && !empty($invite_code)) || $this->settings['m_invite']==2) {
                 if (empty($invite_code)) $this->error("请填写激活码");
-                $invite = M('invite_code')->where(array('code' => $invite_code, 'is_lock' => 0, 'member_use' => 0))->find();
+                $invite = Db::name('invite_code')->where(array('code' => $invite_code, 'is_lock' => 0, 'member_use' => 0))->find();
                 if (empty($invite) || ($invite['invalid_at'] > 0 && $invite['invalid_at'] < time())) {
                     $this->error("激活码不正确");
                 }
@@ -341,7 +341,7 @@ class LoginController extends BaseController{
 
             M()->startTrans();
             if(!empty($invite)) {
-                $invite = M('invite_code')->lock(true)->find($invite['id']);
+                $invite = Db::name('invite_code')->lock(true)->find($invite['id']);
                 if (!empty($invite['member_use'])) {
                     M()->rollback();
                     $this->error("激活码已被使用");
@@ -361,7 +361,7 @@ class LoginController extends BaseController{
                 $data['level_id']=getDefaultLevel();
             }
 
-            $userid=M('member')->add($data);
+            $userid=Db::name('member')->add($data);
 
             if(empty($userid)){
                 M()->rollback();
@@ -370,11 +370,11 @@ class LoginController extends BaseController{
             if(!empty($invite)) {
                 $invite['member_use'] = $userid;
                 $invite['use_at'] = time();
-                M('invite_code')->save($invite);
+                Db::name('invite_code')->save($invite);
             }
             M()->commit();
             setLogin($data);
-            $this->success("注册成功",U('Index/index'));
+            $this->success("注册成功",url('Index/index'));
         }else{
             $this->display();
         }
@@ -384,7 +384,7 @@ class LoginController extends BaseController{
         if(!in_array($type,array('username','email','mobile'))){
             $this->error('参数不合法');
         }
-        $member=M('member');
+        $member=Db::name('member');
         $val=I('value');
         $m=$member->where(array($type=>$val))->find();
         $json=array();

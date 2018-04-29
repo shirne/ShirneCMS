@@ -22,7 +22,7 @@ class PaytypeController extends BaseController
 
     public function index($type='')
     {
-        $model = M('Paytype');
+        $model = Db::name('Paytype');
         $where=array();
         if(!empty($type )){
             $where['type'] = $type;
@@ -38,11 +38,11 @@ class PaytypeController extends BaseController
     public function add()
     {
         //默认显示添加表单
-        if (!IS_POST) {
+        if (!$this->request->isPost()) {
             $this->assign('banklist',banklist());
             $this->display();
         }
-        if (IS_POST) {
+        if ($this->request->isPost()) {
             //如果用户提交数据
             $model = D("Paytype");
             if (!$model->create()) {
@@ -55,7 +55,7 @@ class PaytypeController extends BaseController
                     $model->qrcode=$file['url'];
                 }
                 if ($model->add()) {
-                    $this->success("添加成功", U('Paytype/index'));
+                    $this->success("添加成功", url('Paytype/index'));
                 } else {
                     $this->error("添加失败");
                 }
@@ -69,13 +69,13 @@ class PaytypeController extends BaseController
     {
         $id = intval($id);
         //默认显示添加表单
-        if (!IS_POST) {
-            $model = M('Paytype')->where("id= %d",$id)->find();
+        if (!$this->request->isPost()) {
+            $model = Db::name('Paytype')->where("id= %d",$id)->find();
             $this->assign('model',$model);
             $this->assign('banklist',banklist());
             $this->display();
         }
-        if (IS_POST) {
+        if ($this->request->isPost()) {
             $model = D("Paytype");
             if (!$model->create()) {
                 $this->error($model->getError());
@@ -90,7 +90,7 @@ class PaytypeController extends BaseController
 
                 }
                 if ($model->save()) {
-                    $this->success("更新成功", U('Paytype/index'));
+                    $this->success("更新成功", url('Paytype/index'));
                 } else {
                     $this->error("更新失败");
                 }
@@ -103,10 +103,10 @@ class PaytypeController extends BaseController
     public function delete($id)
     {
         $id = intval($id);
-        $model = M('Paytype');
+        $model = Db::name('Paytype');
         $result = $model->delete($id);
         if($result){
-            $this->success("付款方式删除成功", U('Paytype/index'));
+            $this->success("付款方式删除成功", url('Paytype/index'));
         }else{
             $this->error("付款方式删除失败");
         }

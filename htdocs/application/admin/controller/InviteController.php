@@ -10,7 +10,7 @@ class InviteController extends BaseController
      */
     public function index($key="")
     {
-        $model = M('invite_code');
+        $model = Db::name('invite_code');
         $where=array();
         if(!empty($key )){
             $where['username'] = array('like',"%$key%");
@@ -29,7 +29,7 @@ class InviteController extends BaseController
      */
     public function add()
     {
-        if (IS_POST) {
+        if ($this->request->isPost()) {
             //如果用户提交数据
             $model = D("invite_code");
             $mem_id=I('member_id/d');
@@ -39,7 +39,7 @@ class InviteController extends BaseController
             $date=I('valid_date');
             if($length<8 || $length>16)$this->error('激活码长度需在8-16位之间');
             if($number>1000)$this->error('每次生成数量在 1000以内');
-            $member=M('member')->where(array('id'=>$mem_id))->find();
+            $member=Db::name('member')->where(array('id'=>$mem_id))->find();
             if(empty($member))$this->error('指定的会员不存在');
             $invalid=0;
             if(!empty($date)){
@@ -60,7 +60,7 @@ class InviteController extends BaseController
                 $data['code']=$this->create($length);
                 $model->add($data);
             }
-            $this->success("生成成功", U('Invite/index'));
+            $this->success("生成成功", url('Invite/index'));
         }else{
             $this->assign('levels',getMemberLevels());
             $this->display();
@@ -72,12 +72,12 @@ class InviteController extends BaseController
     public function update()
     {
         //默认显示添加表单
-        if (!IS_POST) {
-            $model = M('invite_code')->find(I('id/d'));
+        if (!$this->request->isPost()) {
+            $model = Db::name('invite_code')->find(I('id/d'));
             $this->assign('model',$model);
             $this->display();
         }
-        if (IS_POST) {
+        if ($this->request->isPost()) {
             $model = D("invite_code");
             if (!$model->create()) {
                 $this->error($model->getError());
@@ -85,7 +85,7 @@ class InviteController extends BaseController
                 $data=array();
                 //更新
                 if ($model->save($data)) {
-                    $this->success("转赠成功", U('Invite/index'));
+                    $this->success("转赠成功", url('Invite/index'));
                 } else {
                     $this->error("转赠失败");
                 }        

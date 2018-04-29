@@ -196,7 +196,7 @@ function money_log($uid, $money, $reson,$type='')
     }catch(Exception $e){
         \think\facade\Log::write($e->getMessage());
         //exit($e->getMessage());
-        //echo M('member')->getLastSql();
+        //echo Db::name('member')->getLastSql();
     }
     return \think\Db::name('member_money_log')->insert(array(
         'create_at' => time(),

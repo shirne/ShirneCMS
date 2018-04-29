@@ -5,4 +5,8 @@
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^(.*)$ index.php/$1 [QSA,PT,L]
+
+  RewriteCond   %{REQUEST_FILENAME} -f
+  RewriteCond   %{QUERY_STRING} ^(w|h)\=.+
+  RewriteRule   ^(uploads/.+?\.(jpg|png)) index.php/task/util/cropimage?img=$1 [NC,L,QSA]
 </IfModule>

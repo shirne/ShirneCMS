@@ -9,8 +9,8 @@ class LoginController extends Controller {
     }
     //登陆验证
     public function login(){
-        if(!IS_POST)$this->error("非法请求");
-        $member = M('manager');
+        if(!$this->request->isPost())$this->error("非法请求");
+        $member = Db::name('manager');
         $username =I('username','','addslashes');
         $password =I('password');
         $code = I('verify','','strtolower');
@@ -37,7 +37,7 @@ class LoginController extends Controller {
 
         setLogin($user);
 
-        $this->success("登陆成功",U('Index/index'));
+        $this->success("登陆成功",url('Index/index'));
     }
 
     //验证码

@@ -39,7 +39,7 @@ class PostController extends BaseController{
     }
 
     public function view($id){
-        $post = M('post')->find($id);
+        $post = Db::name('post')->find($id);
         $this->seo($post['title']);
         $this->category($post['cate_id']);
 
@@ -47,7 +47,7 @@ class PostController extends BaseController{
         $this->display();
     }
     public function notice($id){
-        $post = M('notice')->find($id);
+        $post = Db::name('notice')->find($id);
         $this->seo($post['title']);
         $this->category();
 
@@ -56,13 +56,13 @@ class PostController extends BaseController{
     }
 
     private function category($name=''){
-        $categories=S('allcate');
+        $categories=cache('allcate');
         if(empty($categories)) {
-            $cates = M('category')->select();
+            $cates = Db::name('category')->select();
             foreach ($cates as $cate) {
                 $categories[$cate['id']] = $cate;
             }
-            S('allcate',$categories);
+            cache('allcate',$categories);
         }
 
         $this->category=array();

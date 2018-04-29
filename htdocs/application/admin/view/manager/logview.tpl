@@ -2,31 +2,31 @@
         <tbody>
             <tr>
                 <th width="80">日志ID</th>
-                <td>{$m.id}</td>
+                <td>{$model.id}</td>
             </tr>
             <tr>
                 <th>管理员</th>
-                <td>{$m.username}</td>
+                <td>{$manager.username}</td>
             </tr>
             <tr>
                 <th>操作</th>
-                <td>{$m.action}</td>
+                <td>{$model.action}</td>
             </tr>
             <tr>
                 <th>结果</th>
-                <td>{$m.result}</td>
+                <td>{$model.result}</td>
             </tr>
             <tr>
                 <th>日期</th>
-                <td>{$m.create_at|showdate}</td>
+                <td>{$model.create_at|showdate}</td>
             </tr>
             <tr>
                 <th>IP</th>
-                <td>{$m.ip}</td>
+                <td>{$model.ip}</td>
             </tr>
             <tr>
                 <th>备注</th>
-                <td>{$m.remark}</td>
+                <td>{$model.remark}</td>
             </tr>
         </tbody>
     </table>

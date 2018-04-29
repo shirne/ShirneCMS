@@ -37,7 +37,7 @@ class PostController extends BaseController
     {
         $id = intval($id);
 
-        if (IS_POST) {
+        if ($this->request->isPost()) {
             $model = D("Post");
             if (!$model->create()) {
                 $this->error($model->getError());
@@ -47,7 +47,7 @@ class PostController extends BaseController
                 if($id>0) {
                     if ($model->save()) {
                         user_log($this->mid, 'updatepost', 1, '修改文章 ' . $id, 'manager');
-                        $this->success("编辑成功", U('post/index'));
+                        $this->success("编辑成功", url('post/index'));
                     } else {
                         $this->error("编辑失败");
                     }
@@ -56,7 +56,7 @@ class PostController extends BaseController
                     $model->user_id = $this->mid;
                     if ($model->add()) {
                         user_log($this->mid,'addpost',1,'添加文章 '.$model->getLastInsID() ,'manager');
-                        $this->success("添加成功", U('post/index'));
+                        $this->success("添加成功", url('post/index'));
                     } else {
                         $this->error("添加失败");
                     }
@@ -64,11 +64,11 @@ class PostController extends BaseController
             }
         }else{
             if($id>0) {
-                $model = M('post')->find($id);
+                $model = Db::name('post')->find($id);
             }else{
                 $model=array('type'=>1);
             }
-            $this->assign("category",getSortedCategory(M('category')->select()));
+            $this->assign("category",getSortedCategory(Db::name('category')->select()));
             $this->assign('post',$model);
             $this->assign('id',$id);
             $this->display();
@@ -80,28 +80,28 @@ class PostController extends BaseController
     public function delete($id)
     {
     		$id = intval($id);
-        $model = M('post');
+        $model = Db::name('post');
         $result = $model->where("id= %d",$id)->delete();
         if($result){
             user_log($this->mid,'deletepost',1,'删除文章 '.$id ,'manager');
-            $this->success("删除成功", U('post/index'));
+            $this->success("删除成功", url('post/index'));
         }else{
             $this->error("删除失败");
         }
     }
 	public function push($id) {//post到前台
 		$id = intval($id);
-        $status = M('post') -> where("id= %d",$id) -> getField('status');
+        $status = Db::name('post') -> where("id= %d",$id) -> getField('status');
         if ($status === '0') {
             $data['status'] = 1;
         } else {
             $data['status'] = 0;
         }
-        $result = M('post') -> where("id= %d",$id) -> save($data);
+        $result = Db::name('post') -> where("id= %d",$id) -> save($data);
         if ($result && $data['status'] === 1) {
-            $this -> success("发布成功", U('post/index'));
+            $this -> success("发布成功", url('post/index'));
         } elseif ($result && $data['status'] === 0) {
-            $this -> success("撤销成功", U('post/index'));
+            $this -> success("撤销成功", url('post/index'));
         } else {
             $this -> error("操作失败");
         }

@@ -10,10 +10,10 @@ class SettingController extends BaseController
      */
     public function index($group="")
     {
-        if(IS_POST){
+        if($this->request->isPost()){
             $this->checkPermision("setting_update");
             $data=I();
-            $model=M('setting');
+            $model=Db::name('setting');
             $settings=getSettings(false,false,true);
             foreach ($data as $k=>$v){
                 if(substr($k,0,2)=='v-'){
@@ -25,9 +25,9 @@ class SettingController extends BaseController
                     }
                 }
             }
-            S('setting',null);
+            cache('setting',null);
             user_log($this->mid,'sysconfig',1,'修改系统配置' ,'manager');
-            $this->success('配置已更新',U('setting/index',array('group'=>$group)));
+            $this->success('配置已更新',url('setting/index',array('group'=>$group)));
         }
         $this->assign('group',$group);
         $this->assign('groups', settingGroups());
@@ -35,18 +35,18 @@ class SettingController extends BaseController
         $this->display();
     }
     public function refresh(){
-        S('setting',null);
-        $this->success("刷新成功",U('setting/index'));
+        cache('setting',null);
+        $this->success("刷新成功",url('setting/index'));
     }
 
     public function advance($key=""){
         if(empty($key)){
-            $model = M('setting');
+            $model = Db::name('setting');
         }else{
             $where['key'] = array('like',"%$key%");
             $where['description'] = array('like',"%$key%");
             $where['_logic'] = 'or';
-            $model = M('setting')->where($where);
+            $model = Db::name('setting')->where($where);
         }
 
         $this->assign('key',$key);
@@ -65,7 +65,7 @@ class SettingController extends BaseController
      */
     public function add()
     {
-        if (IS_POST) {
+        if ($this->request->isPost()) {
             //如果用户提交数据
             $model = D("Setting");
             if (!$model->create()) {
@@ -74,8 +74,8 @@ class SettingController extends BaseController
                 exit();
             } else {
                 if ($model->add()) {
-                    S('setting',null);
-                    $this->success("字段添加成功", U('setting/advance'));
+                    cache('setting',null);
+                    $this->success("字段添加成功", url('setting/advance'));
                 } else {
                     $this->error("字段添加失败");
                 }
@@ -91,20 +91,20 @@ class SettingController extends BaseController
      */
     public function update()
     {
-        if (IS_POST) {
+        if ($this->request->isPost()) {
             $model = D("Setting");
             if (!$model->create()) {
                 $this->error($model->getError());
             }else{
                 if ($model->save()) {
-                    S('setting',null);
-                    $this->success("字段更新成功", U('setting/advance'));
+                    cache('setting',null);
+                    $this->success("字段更新成功", url('setting/advance'));
                 } else {
                     $this->error("字段更新失败".$model->getLastSql());
                 }        
             }
         }else{
-            $model = M('setting')->find(I('id/d'));
+            $model = Db::name('setting')->find(I('id/d'));
             $this->assign('model',$model);
             $this->assign('groups',settingGroups());
             $this->assign('types',settingTypes());
@@ -117,12 +117,12 @@ class SettingController extends BaseController
     public function delete($id)
     {
         $id = intval($id);
-        $model = M('setting');
+        $model = Db::name('setting');
  
         //验证通过
         $result = $model->delete($id);
         if($result){
-            $this->success("字段删除成功", U('setting/advance'));
+            $this->success("字段删除成功", url('setting/advance'));
         }else{
             $this->error("字段删除失败");
         }

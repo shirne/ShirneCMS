@@ -50,7 +50,7 @@ class WeChatController extends Controller{
         switch($type) {
             case Wechat::MSGTYPE_TEXT:
                 $domain = C('WX_DOMAIN');
-                $url = $domain.U('login/wechatCallback');
+                $url = $domain.url('login/wechatCallback');
                 $redirect = $wechat->getOauthRedirect($url);
                 $wechat->text("<a href=\"$redirect\">点击登陆</a>")->reply();
                 exit;

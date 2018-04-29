@@ -5,7 +5,7 @@ function setLogin($member){
     session('username',empty($member['realname'])? $member['username']:$member['realname']);
     $time=time();
     session('logintime',$time);
-    M('member')->where(array('id'=>$member['id']))->save(array(
+    Db::name('member')->where(array('id'=>$member['id']))->save(array(
         'login_ip'=>get_client_ip(),
         'logintime'=>$time
     ));

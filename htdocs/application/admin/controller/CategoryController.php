@@ -2,6 +2,8 @@
 
 namespace app\admin\controller;
 
+use think\Db;
+
 /**
  * 分类管理
  */
@@ -12,7 +14,7 @@ class CategoryController extends BaseController
      */
     public function index($key="")
     {
-        $model = M('category');
+        $model = Db::name('category');
         $where=array();
         if(!empty($key)){
             $where['title|name'] = array('like',"%$key%");
@@ -28,9 +30,9 @@ class CategoryController extends BaseController
      */
     public function edit($id=0)
     {
-        if (IS_POST) {
+        if ($this->request->isPost()) {
             //如果用户提交数据
-            $model = D("Category");
+            $model = Db::name("Category");
             if (!$model->create()) {
                 // 如果创建失败 表示验证没有通过 输出错误提示信息
                 $this->error($model->getError());
@@ -40,19 +42,19 @@ class CategoryController extends BaseController
                 if(!empty($iconupload))$model->icon=$iconupload['url'];
                 $uploaded=$this->upload('category','upload_image',true);
                 if(!empty($uploaded))$model->image=$uploaded['url'];
-                if ($model->add()) {
-                    $this->success(($id>0?'保存':'添加')."成功", U('category/index'));
+                if ($model->insert()) {
+                    $this->success(($id>0?'保存':'添加')."成功", url('category/index'));
                 } else {
                     $this->error(($id>0?'保存':'添加')."失败");
                 }
             }
         }else{
             if($id>0) {
-                $model = M('category')->find($id);
+                $model = Db::name('category')->find($id);
             }else{
                 $model=array('sort'=>99);
             }
-            $cate = getSortedCategory(M('category')->order('pid ASC,`sort` ASC')->select());
+            $cate = getSortedCategory(Db::name('category')->order('pid ASC,`sort` ASC')->select());
 
             $this->assign('cate',$cate);
             $this->assign('model',$model);
@@ -67,9 +69,9 @@ class CategoryController extends BaseController
     public function delete($id)
     {
     		$id = intval($id);
-        $model = M('category');
+        $model = Db::name('Category');
         //查询属于这个分类的文章
-        $posts = M('post')->where("cate_id= %d",$id)->select();
+        $posts = Db::name('Post')->where("cate_id= %d",$id)->select();
         if($posts){
             $this->error("禁止删除含有文章的分类");
         }
@@ -81,7 +83,7 @@ class CategoryController extends BaseController
         //验证通过
         $result = $model->delete($id);
         if($result){
-            $this->success("分类删除成功", U('category/index'));
+            $this->success("分类删除成功", url('category/index'));
         }else{
             $this->error("分类删除失败");
         }

@@ -10,7 +10,7 @@ class PageController extends BaseController
      */
     public function index($key="")
     {
-        $model = M('page');
+        $model = Db::name('page');
         $where=array();
         if(!empty($key)){
             $where['title'] = array('like',"%$key%");
@@ -27,10 +27,10 @@ class PageController extends BaseController
     public function add()
     {
         //默认显示添加表单
-        if (!IS_POST) {
+        if (!$this->request->isPost()) {
             $this->display();
         }
-        if (IS_POST) {
+        if ($this->request->isPost()) {
             //如果用户提交数据
             $model = D("Page");
             if (!$model->create()) {
@@ -39,7 +39,7 @@ class PageController extends BaseController
                 exit();
             } else {
                 if ($model->add()) {
-                    $this->success("添加成功", U('page/index'));
+                    $this->success("添加成功", url('page/index'));
                 } else {
                     $this->error("添加失败");
                 }
@@ -53,18 +53,18 @@ class PageController extends BaseController
     {
     		$id = intval($id);
         //默认显示添加表单
-        if (!IS_POST) {
-            $model = M('page')->where("id=%d",$id)->find();
+        if (!$this->request->isPost()) {
+            $model = Db::name('page')->where("id=%d",$id)->find();
             $this->assign('page',$model);
             $this->display();
         }
-        if (IS_POST) {
+        if ($this->request->isPost()) {
             $model = D("Page");
             if (!$model->create()) {
                 $this->error($model->getError());
             }else{
                 if ($model->save()) {
-                    $this->success("更新成功", U('page/index'));
+                    $this->success("更新成功", url('page/index'));
                 } else {
                     $this->error("更新失败");
                 }        
@@ -77,10 +77,10 @@ class PageController extends BaseController
     public function delete($id)
     {
     		$id = intval($id);
-        $model = M('page');
+        $model = Db::name('page');
         $result = $model->where("id=%d",$id)->delete();
         if($result){
-            $this->success("删除成功", U('page/index'));
+            $this->success("删除成功", url('page/index'));
         }else{
             $this->error("删除失败");
         }

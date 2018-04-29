@@ -1,68 +1,74 @@
 <?php
 namespace app\admin\controller;
+use app\admin\model\FeedbackModel;
+use app\index\validate\FeedbackValidate;
+use think\Db;
+
 /**
  * 留言管理
  */
 class FeedbackController extends BaseController
 {
-    public function _initialize()
-    {
-        $this->table="feedback";
-        $this->model=M($this->table);
-        parent::_initialize();
-    }
 
     /**
      * 留言列表
+     * @param string $key
      */
     public function index($key="")
     {
-        $model=D('FeedbackView');
+        $model=Db::view('Feedback','*')
+            ->view('Member',['username','realname'],'Feedback.member_id=Member.id','LEFT')
+            ->view('Manager',['username'=>'manager_username','realname'=>'manager_realname'],'Feedback.manager_id=Manager.id','LEFT');
         $where=array();
         if(!empty($key)){
             $where['feedback.email'] = array('like',"%$key%");
             $where['feedback.content'] = array('like',"%$key%");
             $where['_logic'] = 'or';
         }
-        $this->pagelist($model,$where,'feedback.id DESC');
+        $lists=$model->where($where)->paginate(15);
+        $this->assign('lists',$lists);
+        $this->assign('page',$lists->render());
         $this->display();     
     }
 
     /**
      * 回复留言
+     * @param $id
      */
     public function reply($id)
     {
         $id = intval($id);
-        //默认显示添加表单
-        if (!IS_POST) {
-            $model = $this->model->where("id= %d",$id)->find();
-            $this->assign('model',$model);
-            $this->display();
-        }
-        if (IS_POST) {
-            $model = D($this->table);
-            if (!$model->create()) {
-                $this->error($model->getError());
+
+        if ($this->request->isPost()) {
+            $data = $this->request->only(['reply','status'],'post');
+            $validate=new FeedbackValidate();
+            if (!$validate->check($data)) {
+                $this->error($validate->getError());
             }else{
-                $model->reply_at=time();
-                if ($model->save()) {
-                    $this->success("更新成功", U('feedback/index'));
+                $data['reply_at']=time();
+                if (FeedbackModel::update($data,['id'=>$id])) {
+                    $this->success("更新成功", url('feedback/index'));
                 } else {
                     $this->error("更新失败");
                 }        
             }
         }
+        $model = FeedbackModel::get($id);
+        $this->assign('model',$model);
+        $this->display();
     }
+
     /**
      * 删除留言
+     * @param $id
      */
     public function delete($id)
     {
         $id = intval($id);
-        $result = $this->model->delete($id);
+        $model=FeedbackModel::get($id);
+        $result = $model->delete();
         if($result){
-            $this->success("留言删除成功", U('feedback/index'));
+            $this->success("留言删除成功", url('feedback/index'));
         }else{
             $this->error("留言删除失败");
         }

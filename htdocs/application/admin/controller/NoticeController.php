@@ -13,7 +13,7 @@ class NoticeController extends BaseController
 {
     public function index($type='')
     {
-        $model = M('Notice');
+        $model = Db::name('Notice');
         $where=array();
         if(!empty($type )){
             $where['type'] = $type;
@@ -29,10 +29,10 @@ class NoticeController extends BaseController
     public function add()
     {
         //默认显示添加表单
-        if (!IS_POST) {
+        if (!$this->request->isPost()) {
             $this->display();
         }
-        if (IS_POST) {
+        if ($this->request->isPost()) {
             //如果用户提交数据
             $model = D("Notice");
             if (!$model->create()) {
@@ -44,7 +44,7 @@ class NoticeController extends BaseController
                 $model->update_at=$model->create_at;
                 $model->manager_id=session('adminId');
                 if ($model->add()) {
-                    $this->success("添加成功", U('Notice/index'));
+                    $this->success("添加成功", url('Notice/index'));
                 } else {
                     $this->error("添加失败");
                 }
@@ -58,19 +58,19 @@ class NoticeController extends BaseController
     {
         $id = intval($id);
         //默认显示添加表单
-        if (!IS_POST) {
-            $model = M('Notice')->where("id= %d",$id)->find();
+        if (!$this->request->isPost()) {
+            $model = Db::name('Notice')->where("id= %d",$id)->find();
             $this->assign('model',$model);
             $this->display();
         }
-        if (IS_POST) {
+        if ($this->request->isPost()) {
             $model = D("Notice");
             if (!$model->create()) {
                 $this->error($model->getError());
             }else{
                 $model->update_at=time();
                 if ($model->save()) {
-                    $this->success("更新成功", U('Notice/index'));
+                    $this->success("更新成功", url('Notice/index'));
                 } else {
                     $this->error("更新失败");
                 }
@@ -83,10 +83,10 @@ class NoticeController extends BaseController
     public function delete($id)
     {
         $id = intval($id);
-        $model = M('Notice');
+        $model = Db::name('Notice');
         $result = $model->delete($id);
         if($result){
-            $this->success("删除成功", U('Notice/index'));
+            $this->success("删除成功", url('Notice/index'));
         }else{
             $this->error("删除失败");
         }

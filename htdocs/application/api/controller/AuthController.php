@@ -22,7 +22,7 @@ class AuthController extends BaseController
         if(empty($username) || empty($password)){
             $this->response('请填写登录账号及密码',ERROR_LOGIN_FAILED);
         }
-        $member = M('member')->where(array('username'=>$username))->find();
+        $member = Db::name('member')->where(array('username'=>$username))->find();
         if(!empty($member)){
             if(compare_password($member,$password)){
                 $token=D('Token')->createToken($member['id']);
@@ -90,7 +90,7 @@ class AuthController extends BaseController
             if($member['realname']==$member['auth_nickname'])$updata['realname']=$data['nickname'];
             if($member['avatar']==$member['auth_avatar'])$updata['avatar']=$data['avatar'];
             if(!empty($updata)){
-                M('member')->where(array('id'=>$member['id']))->save($updata);
+                Db::name('member')->where(array('id'=>$member['id']))->save($updata);
             }
 
         }

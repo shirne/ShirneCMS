@@ -50,7 +50,7 @@ class BaseController extends Controller
             $errorno=ERROR_TOKEN_INVAILD;
             if(!empty($token)) {
                 if($token['update_at']+$token['expire_in']>time()){
-                    $this->user = M('member')->find($token['member_id']);
+                    $this->user = Db::name('member')->find($token['member_id']);
                 }else{
                     $errorno=ERROR_TOKEN_EXPIRE;
                 }

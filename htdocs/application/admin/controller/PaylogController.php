@@ -12,7 +12,7 @@ namespace app\admin\controller;
 class PaylogController extends BaseController
 {
     public function recharge(){
-        $model=M('member_recharge');
+        $model=Db::name('member_recharge');
         $key=I('key');
         $status=I('status/d',2);
         $where=array();
@@ -72,20 +72,20 @@ class PaylogController extends BaseController
     public function rechargeupdate($id=''){
         $id=intval($id);
         if($id==0)$this->error('参数错误 ');
-        $recharge=M('member_recharge')->find($id);
+        $recharge=Db::name('member_recharge')->find($id);
         if(empty($recharge))$this->error('充值单不存在');
         if($recharge['status']!=0)$this->error('充值单已处理过了');
 
-        $recharge=M('member_recharge')->lock(true)->find($id);
+        $recharge=Db::name('member_recharge')->lock(true)->find($id);
         if($recharge['status']!=0)$this->error('充值单已处理过了');
         $data['status']=1;
-        M('member_recharge')->where(array('id'=>$recharge['id']))->save($data);
+        Db::name('member_recharge')->where(array('id'=>$recharge['id']))->save($data);
 
         money_log($recharge['member_id'],$recharge['amount'],'充值','charge');
         //是否首充
         $settings=getSettings();$suf='';$issend=false;
         if($settings['m_cashback']=='1'){
-            $cashsuc=M('member_recharge')->where(array('member_id'=>$recharge['member_id'],'status'=>1))->count();
+            $cashsuc=Db::name('member_recharge')->where(array('member_id'=>$recharge['member_id'],'status'=>1))->count();
             if($cashsuc==1){
                 $cback=$recharge['amount'];
                 if($cback > $settings['m_cashuppon']*100){
@@ -111,23 +111,23 @@ class PaylogController extends BaseController
     public function rechargecancel($id=''){
         $id=intval($id);
         if($id==0)$this->error('参数错误 ');
-        $recharge=M('member_recharge')->find($id);
+        $recharge=Db::name('member_recharge')->find($id);
         if(empty($recharge))$this->error('充值单不存在');
         if($recharge['status']!=1)$this->error('充值单未成功');
 
-        $recharge=M('member_recharge')->lock(true)->find($id);
+        $recharge=Db::name('member_recharge')->lock(true)->find($id);
         if($recharge['status']!=1)$this->error('充值单未成功');
         $data=array();
         $data['status']=0;
         $data['audit_at']=time();
-        M('member_recharge')->where(array('id'=>$recharge['id']))->save($data);
+        Db::name('member_recharge')->where(array('id'=>$recharge['id']))->save($data);
 
         money_log($recharge['member_id'],-$recharge['amount'],'充值撤销','charge');
 
 
         //首充赠送撤销
         $suf='';
-        $rechargelog=M('member_money_log')
+        $rechargelog=Db::name('member_money_log')
             ->where(array('member_id'=>$recharge['member_id'],'create_at'=>array('GT',$recharge['create_at']),'reson'=>'首充赠送','type'=>'charge'))
             ->find();
         if(!empty($rechargelog)){
@@ -145,22 +145,22 @@ class PaylogController extends BaseController
     public function rechargedelete($id=''){
         $id=intval($id);
         if($id==0)$this->error('参数错误 ');
-        $recharge=M('member_recharge')->find($id);
+        $recharge=Db::name('member_recharge')->find($id);
         if(empty($recharge))$this->error('充值单不存在');
         if($recharge['status']!=0)$this->error('充值单已处理过了');
 
-        $recharge=M('member_recharge')->lock(true)->find($id);
+        $recharge=Db::name('member_recharge')->lock(true)->find($id);
         if($recharge['status']!=0)$this->error('充值单已处理过了');
         $data=array();
         $data['status']=2;
         $data['audit_at']=time();
-        M('member_recharge')->where(array('id'=>$recharge['id']))->save($data);
+        Db::name('member_recharge')->where(array('id'=>$recharge['id']))->save($data);
         user_log($this->mid,'rechargedelete',1,'作废充值单 '.$id ,'manager');
         $this->success('处理成功！');
     }
 
     public function cashin(){
-        $model=M('member_cashin');
+        $model=Db::name('member_cashin');
         $key=I('key');
         $where=array();
         if(!empty($key)){
@@ -193,16 +193,16 @@ class PaylogController extends BaseController
     public function cashupdate($id=''){
         $id=intval($id);
         if($id==0)$this->error('参数错误 ');
-        $recharge=M('member_cashin')->find($id);
+        $recharge=Db::name('member_cashin')->find($id);
         if(empty($recharge))$this->error('提现单不存在');
         if($recharge['status']!=0)$this->error('提现单已处理过了');
 
-        $recharge=M('member_cashin')->lock(true)->find($id);
+        $recharge=Db::name('member_cashin')->lock(true)->find($id);
         if($recharge['status']!=0)$this->error('提现单已处理过了');
         $data=array();
         $data['status']=1;
         $data['audit_at']=time();
-        M('member_cashin')->where(array('id'=>$recharge['id']))->save($data);
+        Db::name('member_cashin')->where(array('id'=>$recharge['id']))->save($data);
         user_log($this->mid,'cashaudit',1,'处理提现单 '.$id ,'manager');
         $this->success('处理成功！');
     }
@@ -214,20 +214,20 @@ class PaylogController extends BaseController
     public function cashdelete($id=''){
         $id=intval($id);
         if($id==0)$this->error('参数错误 ');
-        $cash=M('member_cashin')->find($id);
+        $cash=Db::name('member_cashin')->find($id);
         if(empty($cash))$this->error('提现单不存在');
         if($cash['status']!=0)$this->error('提现单已处理过了');
 
-        $cash=M('member_cashin')->lock(true)->find($id);
+        $cash=Db::name('member_cashin')->lock(true)->find($id);
         if($cash['status']!=0)$this->error('提现单已处理过了');
         $data['status']=2;
-        M('member_cashin')->where(array('id'=>$cash['id']))->save($data);
+        Db::name('member_cashin')->where(array('id'=>$cash['id']))->save($data);
 
         money_log($cash['member_id'],$cash['amount'],'提现作废','cash');
-        /*$member=M('member')->lock(true)->where(array('id'=>$cash['member_id']))->find();
+        /*$member=Db::name('member')->lock(true)->where(array('id'=>$cash['member_id']))->find();
         if(!empty($member)){
             $mdata['money'] =$member['money']+$recharge['amount'];
-            M('member')->where(array('id'=>$member['id']))->save($mdata);
+            Db::name('member')->where(array('id'=>$member['id']))->save($mdata);
         }*/
         user_log($this->mid,'cashdelete',1,'作废提现单 '.$id ,'manager');
         $this->success('处理成功！');

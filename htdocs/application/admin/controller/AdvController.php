@@ -9,10 +9,12 @@
 namespace app\admin\controller;
 
 
+use think\Db;
+
 class AdvController extends BaseController
 {
     public function index(){
-        $model = M('AdvGroup');
+        $model = Db::name('AdvGroup');
         $where=array();
         if(!empty($key)){
             $where['title'] = array('like',"%$key%");
@@ -30,20 +32,20 @@ class AdvController extends BaseController
     {
         $id = intval($id);
 
-        if (IS_POST) {
-            $model = D("AdvGroup");
+        if ($this->request->isPost()) {
+            $model = Db::name("AdvGroup");
             if (!$model->create()) {
                 $this->error($model->getError());
             }else{
                 if($id==0){
                     if ($model->add()) {
-                        $this->success("添加成功", U('adv/index'));
+                        $this->success("添加成功", url('adv/index'));
                     } else {
                         $this->error("添加失败");
                     }
                 }else {
                     if ($model->save()) {
-                        $this->success("更新成功", U('adv/index'));
+                        $this->success("更新成功", url('adv/index'));
                     } else {
                         $this->error("更新失败");
                     }
@@ -51,7 +53,7 @@ class AdvController extends BaseController
             }
         }else{
             if($id!=0) {
-                $model = M('AdvGroup')->where("id= %d", $id)->find();
+                $model = Db::name('AdvGroup')->where("id= %d", $id)->find();
             }else{
                 $model=array('status'=>1);
             }
@@ -65,9 +67,9 @@ class AdvController extends BaseController
     public function delete($id)
     {
         $id = intval($id);
-        $force=I('post.force/d',0);
-        $model = M('AdvGroup');
-        $count=M('AdvItem')->where(array('group_id'=>$id))->count();
+        $force=$this->request->post('force/d',0);
+        $model = Db::name('AdvGroup');
+        $count=Db::name('AdvItem')->where(array('group_id'=>$id))->count();
         if($count<1 || $force!=0) {
             $result = $model->delete($id);
         }else{
@@ -75,17 +77,17 @@ class AdvController extends BaseController
         }
         if($result){
             if($count>0){
-                M('AdvItem')->where(array('group_id'=>$id))->delete();
+                Db::name('AdvItem')->where(array('group_id'=>$id))->delete();
             }
-            $this->success("广告位删除成功", U('adv/index'));
+            $this->success("广告位删除成功", url('adv/index'));
         }else{
             $this->error("广告位删除失败");
         }
     }
 
     public function itemlist($gid){
-        $model = M('AdvItem');
-        $group=M('AdvGroup')->find($gid);
+        $model = Db::name('AdvItem');
+        $group=Db::name('AdvGroup')->find($gid);
         if(empty($group)){
             $this->error('广告位不存在');
         }
@@ -106,20 +108,20 @@ class AdvController extends BaseController
     public function itemupdate($id=0,$gid=0)
     {
         $id = intval($id);
-        $url=$gid==0?U('adv/index'):U('adv/itemlist',array('gid'=>$gid));
-        if (IS_POST) {
-            $model = D("AdvItem");
+        $url=$gid==0?url('adv/index'):url('adv/itemlist',array('gid'=>$gid));
+        if ($this->request->isPost()) {
+            $model = Db::name("AdvItem");
             if (!$model->create()) {
                 $this->error($model->getError());
             }else{
                 if($id==0){
-                    if ($model->add()) {
+                    if ($model->insert()) {
                         $this->success("添加成功",$url);
                     } else {
                         $this->error("添加失败");
                     }
                 }else {
-                    if ($model->save()) {
+                    if ($model->update()) {
                         $this->success("更新成功", $url);
                     } else {
                         $this->error("更新失败");
@@ -128,7 +130,7 @@ class AdvController extends BaseController
             }
         }else{
             if($id!=0) {
-                $model = M('AdvItem')->where("id= %d", $id)->find();
+                $model = Db::name('AdvItem')->where("id= %d", $id)->find();
             }else{
                 $model=array('status'=>1);
             }
@@ -143,10 +145,10 @@ class AdvController extends BaseController
     public function itemdelete($gid,$id)
     {
         $id = intval($id);
-        $model = M('AdvItem');
+        $model = Db::name('AdvItem');
         $result = $model->delete($id);
         if($result){
-            $this->success("广告删除成功", U('adv/itemlist',array('gid'=>$gid)));
+            $this->success("广告删除成功", url('adv/itemlist',array('gid'=>$gid)));
         }else{
             $this->error("广告删除失败");
         }
