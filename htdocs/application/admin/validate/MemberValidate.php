@@ -11,7 +11,7 @@ namespace app\index\validate;
 
 use think\Validate;
 
-class ManagerValidate extends Validate
+class MemberValidate extends Validate
 {
     public function setId($id=0){
         foreach ($this->rule as $f=>$rule){
@@ -19,9 +19,9 @@ class ManagerValidate extends Validate
         }
     }
     protected $rule  = array(
-        'username'=>'require|unique:manager,%id%',
-        'email'=>'email|unique:manager,%id%',
-        'mobile'=>'mobile|unique:manager,%id%',
+        'username'=>'require|unique:member,%id%',
+        'email'=>'email|unique:member,%id%',
+        'mobile'=>'mobile|unique:member,%id%',
         'password'=>'require|min:6'
     );
 
@@ -36,8 +36,8 @@ class ManagerValidate extends Validate
         'password.min' => '手机号码已存在',
     );
 
+
     protected $scene = array(
         'edit'=>['name','email','mobile']
     );
-
 }

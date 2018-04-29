@@ -6,7 +6,7 @@
             </tr>
             <tr>
                 <th>会员</th>
-                <td>{$m.username}</td>
+                <td>{$member.username}</td>
             </tr>
             <tr>
                 <th>操作</th>

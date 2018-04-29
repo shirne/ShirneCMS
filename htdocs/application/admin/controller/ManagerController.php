@@ -70,7 +70,7 @@ class ManagerController extends BaseController
     {
         if ($this->request->isPost()) {
 
-            $data = $this->request->only(['username','email','mobile','level_id','password'],'post');
+            $data = $this->request->only(['username','email','mobile','password'],'post');
             $validate=new ManagerValidate();
             $validate->setId();
             if (!$validate->check($data)) {

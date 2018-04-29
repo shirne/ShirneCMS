@@ -1,15 +1,19 @@
 <?php
 namespace app\admin\controller;
+use app\common\model\MemberModel;
+use app\index\validate\MemberValidate;
+use think\Db;
+
 /**
  * 用户管理
  */
 class MemberController extends BaseController
 {
-    public function _initialize()
+    public function initialize()
     {
-        parent::_initialize();
+        parent::initialize();
 
-        Db::name('manager')->where(array('id'=>$this->manage['id']))->save(array('last_view_member'=>time()));
+        Db::name('Manager')->where(array('id'=>$this->manage['id']))->update(array('last_view_member'=>time()));
     }
 
     /**
@@ -17,14 +21,14 @@ class MemberController extends BaseController
      */
     public function index()
     {
-        $model = Db::name('member');
+        $model = Db::view('__MEMBER__ m','*');
         $where=array();
-        $keyword=I('keyword');
+        $keyword=$this->request->request('keyword');
         if(!empty($keyword)){
             $where['m.username|m.email|m.realname'] = array('like',"%$keyword%");
         }
 
-        $referer=I('referer');
+        $referer=$this->request->request('referer');
         if($referer!==''){
             if($referer!=='0'){
                 $member=$model->where(array('id|username'=>$referer))->find();
@@ -37,10 +41,10 @@ class MemberController extends BaseController
             }
         }
 
-        $this->pagelist(
-            $model->alias('m')->Join('__MEMBER__ rm ON m.referer=rm.id','LEFT'),
-            $where,
-            'm.id DESC','m.*,rm.username as refer_name,rm.realname as refer_realname,rm.isagent as refer_agent');
+        $lists=$model->view('__MEMBER__ rm',['username'=> 'refer_name','realname'=> 'refer_realname','isagent'=> 'refer_agent'],'m.referer=rm.id','LEFT')->paginate(15);
+
+        $this->assign('lists',$lists);
+        $this->assign('page',$lists->render());
         $this->assign('referer',$referer);
         $this->assign('keyword',$keyword);
         $this->display();     
@@ -50,14 +54,14 @@ class MemberController extends BaseController
         $member=Db::name('member')->find($id);
         if(empty($member))$this->error('会员不存在');
 
-        $level=I('level/d',1);
+        $level=$this->request->get('level/d',1);
         if($level>3)$level=3;
 
         if($member['isagent']==$level)$this->success('设置成功');
 
         $data=array('isagent'=>$level);
         if(empty($member['agentcode']))$data['agentcode']=random_str(6);
-        $result=Db::name('member')->where(array('id'=>$id))->save($data);
+        $result=Db::name('member')->where(array('id'=>$id))->update($data);
         if($result){
             user_log($this->mid,'setagent',1,'设置'.$level.'级代理 '.$id ,'manager');
             $this->success('设置成功');
@@ -72,7 +76,7 @@ class MemberController extends BaseController
         if(empty($member))$this->error('会员不存在');
         if($member['isagent']==0)$this->success('取消成功');
 
-        $result=Db::name('member')->where(array('id'=>$id))->save(array('isagent'=>0));
+        $result=Db::name('member')->where(array('id'=>$id))->update(array('isagent'=>0));
         if($result){
             user_log($this->mid,'cancelagent',1,'取消代理 ' .$id ,'manager');
             $this->success('取消成功');
@@ -83,7 +87,8 @@ class MemberController extends BaseController
     }
 
     public function log($type='',$member_id=0){
-        $model=D('MemberLogView');
+        $model=Db::view('MemberLog','*')
+            ->view('Member',['username'],'MemberLog.member_id=Member.id','LEFT');
         $where=array();
         if(!empty($type)){
             $where['action']=$type;
@@ -92,21 +97,25 @@ class MemberController extends BaseController
             $where['member_id']=$member_id;
         }
 
-        $this->pagelist($model,$where,'member_log.id DESC');
+        $logs = $model->where($where)->paginate(15);
+        $this->assign('logs', $logs);
+        $this->assign('page',$logs->render());
         $this->display();
     }
     public function logview(){
-        $id=I('id/d');
-        $model=D('MemberLogView');
+        $id=$this->request->get('id/d');
+        $model=Db::name('MemberLog');
 
-        $m=$model->where("member_log.id= %d",$id)->find();
+        $m=$model->where(["member_log.id"=>$id])->find();
+        $member=Db::name('Member')->where(["id"=>$m['member_id']])->find();
 
         $this->assign('m', $m);
+        $this->assign('member', $member);
         $this->display();
     }
 
     public function logclear(){
-        $date=I('date');
+        $date=$this->request->get('date');
         $d=strtotime($date);
         if(empty($d)){
             $date=date_sub(new \DateTime(date('Y-m-d')),new \DateInterval('P1M'));
@@ -132,16 +141,18 @@ class MemberController extends BaseController
         }
         if ($this->request->isPost()) {
             //如果用户提交数据
-            $model = D("Member");
-            if (!$model->create()) {
+            $data=$this->request->only(['username','email','mobile','level_id','password'],'post');
+            $validate=new MemberValidate();
+            $validate->setId();
+            if (!$validate->check($data)) {
                 // 如果创建失败 表示验证没有通过 输出错误提示信息
-                $this->error($model->getError());
+                $this->error($validate->getError());
                 exit();
             } else {
-                $model->salt=random_str(8);
-                $model->password=encode_password($model->password,$model->salt);
-                if ($model->add()) {
-                    user_log($this->mid,'adduser',1,'添加会员'.$model->getLastInsID() ,'manager');
+                $data['salt']=random_str(8);
+                $data['password']=encode_password($data['password'],$data['salt']);
+                if ($member_id=MemberModel::create($data)) {
+                    user_log($this->mid,'adduser',1,'添加会员'.$member_id ,'manager');
                     $this->success("用户添加成功", url('member/index'));
                 } else {
                     $this->error("用户添加失败");
@@ -152,21 +163,16 @@ class MemberController extends BaseController
     /**
      * 更新会员信息
      */
-    public function update()
+    public function update($id)
     {
-        //默认显示添加表单
-        if (!$this->request->isPost()) {
-            $model = Db::name('member')->find(I('id/d'));
-            $this->assign('model',$model);
-            $this->display();
-        }
+        $id=intval($id);
         if ($this->request->isPost()) {
-            $model = D("Member");
-            if (!$model->create()) {
-                $this->error($model->getError());
+            $data=$this->request->only(['username','email','mobile','level_id','password'],'post');
+            $validate=new MemberValidate();
+            $validate->setId($id);
+            if (!$validate->check($data)) {
+                $this->error($validate->getError());
             }else{
-                //验证密码是否为空   
-                $data = I();
                 if(!empty($data['password'])){
                     $data['salt']=random_str(8);
                     $data['password'] = encode_password($data['password'],$data['salt']);
@@ -175,14 +181,17 @@ class MemberController extends BaseController
                 }
 
                 //更新
-                if ($model->save($data)) {
-                    user_log($this->mid,'updateuser',1,'修改会员资料'.$data['id'] ,'manager');
+                if (MemberModel::update($data,array('id'=>$id))) {
+                    user_log($this->mid,'updateuser',1,'修改会员资料'.$id ,'manager');
                     $this->success("用户信息更新成功", url('member/index'));
                 } else {
                     $this->error("未做任何修改,用户信息更新失败");
                 }        
             }
         }
+        $model = Db::name('Member')->find($id);
+        $this->assign('model',$model);
+        $this->display();
     }
     /**
      * 删除管理员
@@ -202,7 +211,7 @@ class MemberController extends BaseController
         if($result['status'] == 0){
         	$data['status']=1;
         }
-        if($model->save($data)){
+        if($model->update($data)){
             user_log($this->mid,'deleteuser',1,'禁用会员' ,'manager');
             $this->success("状态更新成功", url('member/index'));
         }else{

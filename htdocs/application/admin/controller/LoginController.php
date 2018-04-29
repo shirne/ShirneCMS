@@ -1,8 +1,10 @@
 <?php
 namespace app\admin\controller;
 use think\Controller;
+use think\Db;
 
 class LoginController extends Controller {
+
     //登陆主页
     public function index(){
         $this->display();
@@ -10,16 +12,16 @@ class LoginController extends Controller {
     //登陆验证
     public function login(){
         if(!$this->request->isPost())$this->error("非法请求");
-        $member = Db::name('manager');
-        $username =I('username','','addslashes');
-        $password =I('password');
-        $code = I('verify','','strtolower');
+        $member = Db::name('Manager');
+        $username =$this->request->post('username','','trim');
+        $password =$this->request->post('password');
+        $code = $this->request->post('verify','','strtolower');
         //验证验证码是否正确
         if(!($this->check_verify($code))){
             $this->error('验证码错误');
         }
         //验证账号密码是否正确
-        $user = $member->where("username = '%s' ",array($username))->find();
+        $user = $member->where(array('username'=>$username))->find();
 
         if(empty($user) || $user['password'] !== encode_password($password,$user['salt'])) {
             if(!empty($user)){
@@ -42,14 +44,14 @@ class LoginController extends Controller {
 
     //验证码
     public function verify(){
-        $Verify = new \Think\Verify();
+        $Verify = new \think\captcha\Captcha();
         $Verify->codeSet = '0123456789';
         $Verify->fontSize = 13;
         $Verify->length = 4;
         $Verify->entry();
     }
     protected function check_verify($code){
-        $verify = new \Think\Verify();
+        $verify = new \think\captcha\Captcha();
         return $verify->check($code);
     }
 
