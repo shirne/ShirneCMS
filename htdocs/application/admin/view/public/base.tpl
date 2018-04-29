@@ -6,16 +6,16 @@
     <title>管理面板</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="__STATIC__/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="__STATIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Add custom CSS here -->
-    <link href="__STATIC__/admin/css/common.css" rel="stylesheet">
     <link href="__STATIC__/datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
     <link rel="stylesheet" href="__STATIC__/font-awesome/css/font-awesome.min.css">
+    <link href="__STATIC__/admin/css/common.css" rel="stylesheet">
 
     <!-- JavaScript -->
-    <script src="__STATIC__/js/jquery-1.10.2.js"></script>
-    <script src="__STATIC__/bootstrap/js/bootstrap.js"></script>
+    <script src="__STATIC__/jquery/jquery.min.js"></script>
+    <script src="__STATIC__/bootstrap/js/bootstrap.min.js"></script>
 
     <block name="header"></block>
 
