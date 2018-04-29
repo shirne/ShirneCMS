@@ -243,16 +243,16 @@
         },
         {
             "name": "khanamiryan/qrcode-detector-decoder",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/khanamiryan/php-qrcode-detector-decoder.git",
-                "reference": "4ff2f14006930631ed30f0d15da72b032c96bc0a"
+                "reference": "a75482d3bc804e3f6702332bfda6cccbb0dfaa76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/khanamiryan/php-qrcode-detector-decoder/zipball/4ff2f14006930631ed30f0d15da72b032c96bc0a",
-                "reference": "4ff2f14006930631ed30f0d15da72b032c96bc0a",
+                "url": "https://api.github.com/repos/khanamiryan/php-qrcode-detector-decoder/zipball/a75482d3bc804e3f6702332bfda6cccbb0dfaa76",
+                "reference": "a75482d3bc804e3f6702332bfda6cccbb0dfaa76",
                 "shasum": ""
             },
             "require": {
@@ -289,7 +289,7 @@
                 "qr",
                 "zxing"
             ],
-            "time": "2018-04-01T20:25:53+00:00"
+            "time": "2018-04-26T11:41:33+00:00"
         },
         {
             "name": "kriswallsmith/assetic",

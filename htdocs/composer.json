@@ -38,6 +38,7 @@
         "think-path": "thinkphp"
     },
     "config": {
-        "preferred-install": "dist"
+        "preferred-install": "dist",
+        "component-dir": "public/static"
     }
 }

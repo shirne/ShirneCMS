@@ -9,7 +9,7 @@
     <link href="__STATIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Add custom CSS here -->
-    <link href="__STATIC__/datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link href="__STATIC__/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
     <link rel="stylesheet" href="__STATIC__/font-awesome/css/font-awesome.min.css">
     <link href="__STATIC__/admin/css/common.css" rel="stylesheet">
 
@@ -62,8 +62,8 @@
 
     <block name="body" ></block>
 
-    <script src="__STATIC__/datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
-    <script src="__STATIC__/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="__STATIC__/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="__STATIC__/moment/locale/zh-cn.js"></script>
     <script src="__STATIC__/admin/js/app.js?v=20180406"></script>
     <script type="text/javascript">
         (function(){
