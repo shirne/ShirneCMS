@@ -79,7 +79,7 @@ class BaseController extends Controller {
                 $this->isWechat = true;
                 $this->isMobile = true;
             }else {
-                $mobileDetect = new \Extend\MobileDetect();
+                $mobileDetect = new \Mobile_Detect();
                 $this->isMobile = $mobileDetect->isMobile();
             }
             session('detected',1);
@@ -94,7 +94,7 @@ class BaseController extends Controller {
         详细用法参考：http://mp.weixin.qq.com/wiki/7/1c97470084b73f8e224fe6d9bab1625b.html
          */
         if($this->isWechat) {
-            $jssdk = new \Extend\JSSDK(C('WX_APPID'), C('WX_APPSECRET'));
+            $jssdk = new \sdk\JSSDK(C('WX_APPID'), C('WX_APPSECRET'));
             $signPackage = $jssdk->GetSignPackage();
             $signPackage['logo'] = config('WX_DOMAIN') . 'Public/logo.png';
             $this->assign('signPackage', $signPackage);
@@ -110,19 +110,18 @@ class BaseController extends Controller {
             );
         }
 
-        //vendor('PHPMailer.class#phpmailer'); //从PHPMailer目录导class.phpmailer.php类文件
-        $mail             = new \PHPMailer\PHPMailer\PHPMailer(); //PHPMailer对象
-        $mail->CharSet    = 'UTF-8'; //设定邮件编码，默认ISO-8859-1，如果发中文此项必须设置，否则乱码
-        $mail->IsSMTP();  // 设定使用SMTP服务
-        $mail->SMTPDebug  = 0;                     // 关闭SMTP调试功能
+        $mail             = new \PHPMailer\PHPMailer\PHPMailer();
+        $mail->CharSet    = 'UTF-8';
+        $mail->IsSMTP();
+        $mail->SMTPDebug  = 0;
         // 1 = errors and messages
         // 2 = messages only
-        $mail->SMTPAuth   = true;                  // 启用 SMTP 验证功能
-        $mail->SMTPSecure = 'ssl';                 // 使用安全协议
-        $mail->Host       = $this->config['mail_host'];  // SMTP 服务器
-        $mail->Port       = $this->config['mail_port'];  // SMTP服务器的端口号
-        $mail->Username   = $this->config['mail_user'];  // SMTP服务器用户名
-        $mail->Password   = $this->config['mail_pass'];  // SMTP服务器密码
+        $mail->SMTPAuth   = true;
+        $mail->SMTPSecure = 'ssl';
+        $mail->Host       = $this->config['mail_host'];
+        $mail->Port       = $this->config['mail_port'];
+        $mail->Username   = $this->config['mail_user'];
+        $mail->Password   = $this->config['mail_pass'];
         $mail->SetFrom($this->config['mail_user'], $this->config['site-name']);
         /*$replyEmail       = $config['REPLY_EMAIL']?$config['REPLY_EMAIL']:$config['FROM_EMAIL'];
         $replyName        = $config['REPLY_NAME']?$config['REPLY_NAME']:$config['FROM_NAME'];
