@@ -7,15 +7,15 @@
     
     <div class="row">
         <div class="col-xs-6">
-            <a href="{:U('Notice/add')}" class="btn btn-success">添加公告</a>
+            <a href="{:url('Notice/add')}" class="btn btn-success">添加公告</a>
         </div>
         <div class="col-xs-6">
-            <form action="{:U('Notice/index')}" method="post">
+            <form action="{:url('Notice/index')}" method="post">
                 <div class="form-group input-group">
                     <input type="text" class="form-control" name="key" placeholder="输入标题或者地址关键词搜索">
-                    <span class="input-group-btn">
+                    <div class="input-group-append">
                       <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
-                    </span>
+                    </div>
                 </div>
             </form>
         </div>
@@ -38,8 +38,8 @@
                 <td>{$v.url}</td>
                 <td><if condition="$v['status']">显示<else/>隐藏</if></td>
                 <td>
-                    <a class="btn btn-default btn-sm" href="{:U('Notice/update',array('id'=>$v['id']))}"><i class="fa fa-edit"></i> 编辑</a>
-                    <a class="btn btn-default btn-sm" href="{:U('Notice/delete',array('id'=>$v['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="fa fa-trash"></i> 删除</a>
+                    <a class="btn btn-default btn-sm" href="{:url('Notice/update',array('id'=>$v['id']))}"><i class="fa fa-edit"></i> 编辑</a>
+                    <a class="btn btn-default btn-sm" href="{:url('Notice/delete',array('id'=>$v['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="fa fa-trash"></i> 删除</a>
                 </td>
             </tr>
         </foreach>

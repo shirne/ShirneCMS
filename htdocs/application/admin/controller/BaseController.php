@@ -22,7 +22,7 @@ class BaseController extends Controller {
         $this->mid = session('adminId');
         //判断用户是否登陆
         if(empty($this->mid ) ) {
-            redirect(url('Login/index'));
+            $this->error('请登录',url('Login/index'));
         }
         $this->manage=Db::name('Manager')->find($this->mid);
         if(empty($this->manage)){

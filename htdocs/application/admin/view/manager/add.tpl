@@ -7,7 +7,7 @@
 <div id="page-wrapper">
 	<div class="page-header">添加管理员</div>
 	<div id="page-content">
-<form action="{:U('manager/add')}" method="post">
+<form action="{:url('manager/add')}" method="post">
 	<div class="form-group">
 		<label>用户名</label>
 		<input class="form-control" type="text" name="username" placeholder="username">

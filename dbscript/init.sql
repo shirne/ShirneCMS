@@ -67,7 +67,7 @@ VALUES
   (31, 'm_register', '强制注册', 'radio', 'member', '0', '1', '', '0:关闭\r\n1:启用'),
   (26, 'cash_fee', '提现手续费', 'text', 'member', '0', '10', '', ''),
   (27, 'cash_limit', '最低提现金额', 'text', 'member', '0', '10', '', ''),
-  (28, 'cash_max', '最高提现金额', 'text', 'member', '0', '100000', '', ''),;
+  (28, 'cash_max', '最高提现金额', 'text', 'member', '0', '100000', '', '');
 
 /*!40000 ALTER TABLE `sa_setting` ENABLE KEYS */;
 UNLOCK TABLES;

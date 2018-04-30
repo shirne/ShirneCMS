@@ -8,15 +8,15 @@
     
     <div class="row">
         <div class="col-xs-6">
-            <a href="{:U('Paytype/add')}" class="btn btn-success">添加付款方式</a>
+            <a href="{:url('Paytype/add')}" class="btn btn-success">添加付款方式</a>
         </div>
         <div class="col-xs-6">
-            <form action="{:U('Paytype/index')}" method="post">
+            <form action="{:url('Paytype/index')}" method="post">
                 <div class="form-group input-group">
                     <input type="text" class="form-control" name="key" placeholder="输入名称搜索">
-                    <span class="input-group-btn">
+                    <div class="input-group-append">
                       <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
-                    </span>
+                    </div>
                 </div>
             </form>
         </div>
@@ -39,8 +39,8 @@
                 <td>{$v.type|payTypes}</td>
                 <td>{$v['status']?'显示':'隐藏'}</td>
                 <td>
-                    <a class="btn btn-default btn-sm" href="{:U('Paytype/update',array('id'=>$v['id']))}"><i class="fa fa-edit"></i> 编辑</a>
-                    <a class="btn btn-default btn-sm" href="{:U('Paytype/delete',array('id'=>$v['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="fa fa-trash"></i> 删除</a>
+                    <a class="btn btn-default btn-sm" href="{:url('Paytype/update',array('id'=>$v['id']))}"><i class="fa fa-edit"></i> 编辑</a>
+                    <a class="btn btn-default btn-sm" href="{:url('Paytype/delete',array('id'=>$v['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="fa fa-trash"></i> 删除</a>
                 </td>
             </tr>
         </foreach>

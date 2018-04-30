@@ -6,7 +6,7 @@ class IndexController extends BaseController
     public function index()
     {
         $this->seo();
-        $this->display();
+        return $this->fetch();
     }
 
 }

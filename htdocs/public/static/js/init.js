@@ -1,8 +1,3 @@
-function del(msg) { 
-//    var msg = "您真的确定要删除吗？\n\n删除后将不能恢复!请确认！"; 
-    return confirm(msg);
-}
-
 
 Number.prototype.format=function(fix){
     if(fix===undefined)fix=2;
@@ -67,6 +62,7 @@ function iif(v,m1,m2){
     return v?m1:m2;
 }
 
+
 var dialogTpl='<div class="modal fade" id="{@id}" tabindex="-1" role="dialog" aria-labelledby="{@id}Label" aria-hidden="true">\
     <div class="modal-dialog">\
     <div class="modal-content">\
@@ -74,16 +70,13 @@ var dialogTpl='<div class="modal fade" id="{@id}" tabindex="-1" role="dialog" ar
     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>\
     <h4 class="modal-title" id="{@id}Label"></h4>\
     </div>\
-    <div class="modal-body">\
-    </div>\
-    <div class="modal-footer">\
-    </div>\
+    <div class="modal-body"></div>\
+    <div class="modal-footer"></div>\
     </div>\
     </div>\
     </div>';
 var dialogIdx=0;
 function Dialog(opts){
-    if(!opts)opts={};
     //处理按钮
     if(opts.btns!==undefined) {
         if (typeof(opts.btns) == 'string') {
@@ -118,7 +111,6 @@ function Dialog(opts){
         ],
         'defaultBtn':1,
         'onsure':null,
-        'onshow':null,
         'onshown':null,
         'onhide':null
     },opts);
@@ -168,11 +160,6 @@ Dialog.prototype.show=function(html,title){
     this.box.on('hidden.bs.modal',function(){
         self.box.remove();
     });
-    this.box.on('show.bs.modal',function(){
-        if(self.options.onshow){
-            self.options.onshow(body,self.box);
-        }
-    });
     this.box.on('shown.bs.modal',function(){
         if(self.options.onshown){
             self.options.onshown(body,self.box);
@@ -199,58 +186,8 @@ Dialog.prototype.hide=function(){
     this.box.modal('hide');
 };
 
+
 jQuery(function($){
-
-    //监控按键
-    $(document).on('keydown', function(e){
-        if(!Dialog.instance)return;
-        var dlg=Dialog.instance;
-        if (e.keyCode == 13) {
-            dlg.box.find('.modal-footer .btn').eq(dlg.options.defaultBtn).trigger('click');
-        }
-        //默认已监听关闭
-        /*if (e.keyCode == 27) {
-         self.hide();
-         }*/
-    });
-});
-
-jQuery(function ($) {
-    //高亮当前选中的导航
-    var menu = $(".breadcrumb").data('menu');
-    if(menu) {
-        var link = $('.side-nav a[data-key=' + menu + ']');
-
-        if (link.length > 0) {
-            link.parents('.panel-collapse').addClass('in');
-            link.addClass("active");
-        }
-
-    }
-
-    $('a[rel=ajax]').click(function(e){
-       e.preventDefault();
-        var self=$(this);
-        var title=$(this).data('title');
-        if(!title)title=$(this).text();
-        var dlg=new Dialog({
-            btns:['确定'],
-            onshow:function(body){
-                $.ajax({
-                    url:self.attr('href'),
-                    success:function(text){
-                        body.html(text);
-                    }
-                });
-            }
-        }).show('<p class="loading">加载中...</p>',title);
-
-    });
-
-    $('.nav-tabs a').click(function (e) {
-        e.preventDefault();
-        $(this).tab('show')
-    });
     if($.fn.datetimepicker) {
         $('.datepicker').datetimepicker({
             language: 'zh-CN',
@@ -279,5 +216,3 @@ jQuery(function ($) {
         });
     }
 });
-
-

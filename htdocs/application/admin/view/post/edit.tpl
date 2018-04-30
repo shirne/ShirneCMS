@@ -5,7 +5,7 @@
 <div id="page-wrapper">
     <div class="page-header">{$id>0?'编辑':'添加'}文章</div>
     <div id="page-content">
-    <form method="post" action="{:U('post/edit',array('id'=>$category.id))}" enctype="multipart/form-data">
+    <form method="post" action="{:url('post/edit',array('id'=>$category.id))}" enctype="multipart/form-data">
         <div class="form-group">
             <label for="post-title">文章标题</label>
             <input type="text" name="title" class="form-control" value="{$post.title}" id="post-title" placeholder="输入文章标题">

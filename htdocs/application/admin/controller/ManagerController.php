@@ -27,7 +27,7 @@ class ManagerController extends BaseController
         $lists=$model->where($where)->order('ID ASC')->paginate(15);
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
-        $this->display();
+        return $this->fetch();
     }
 
     public function log($key=''){
@@ -41,7 +41,7 @@ class ManagerController extends BaseController
         $logs = $model->where($where)->paginate(15);
         $this->assign('logs', $logs);
         $this->assign('page',$logs->render());
-        $this->display();
+        return $this->fetch();
     }
     public function logview($id){
 
@@ -50,7 +50,7 @@ class ManagerController extends BaseController
 
         $this->assign('model', $model);
         $this->assign('manager', $manager);
-        $this->display();
+        return $this->fetch();
     }
 
     public function logclear(){
@@ -61,7 +61,7 @@ class ManagerController extends BaseController
             $d=$date->getTimestamp();
         }
 
-        Db::name('ManagerLog')->where(array("create_at"=>array('ELT',$d)))->delete();
+        Db::name('ManagerLog')->where(array("create_time"=>array('ELT',$d)))->delete();
         user_log($this->mid,'clearlog',1,'清除日志' ,'manager');
         $this->success("清除完成");
     }
@@ -90,7 +90,7 @@ class ManagerController extends BaseController
                 }
             }
         }
-        $this->display();
+        return $this->fetch();
     }
     /**
      * 更新管理员信息
@@ -128,7 +128,7 @@ class ManagerController extends BaseController
         }
         $model = Db::name('Manager')->find($id);
         $this->assign('model',$model);
-        $this->display();
+        return $this->fetch();
     }
 
     /**
@@ -162,7 +162,7 @@ class ManagerController extends BaseController
         $model['detail']=explode(',',$model['detail']);
         $this->assign('model',$model);
         $this->assign('perms',include(app()->getConfigPath().'/admin/permisions.php'));
-        $this->display();
+        return $this->fetch();
     }
     /**
      * 删除管理员

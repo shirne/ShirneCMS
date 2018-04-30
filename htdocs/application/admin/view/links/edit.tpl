@@ -7,7 +7,7 @@
 <div id="page-wrapper">
     <div class="page-header">修改链接</div>
     <div class="page-content">
-    <form method="post" action="{:U('links/update')}">
+    <form method="post" action="{:url('links/update')}">
         <div class="form-group">
             <label for="aa">链接标题</label>
             <input type="text" name="title" class="form-control" id="aa" value="{$model.title}" placeholder="输入链接标题">

@@ -7,7 +7,7 @@
 <div id="page-wrapper">
     <div class="page-header">查看留言</div>
     <div class="page-content">
-        <form method="post" action="{:U('feedback/reply')}">
+        <form method="post" action="{:url('feedback/reply')}">
             <div class="form-group">
                 <label for="bb">留言内容</label>
                 <div class="form-control">{$model.content}</div>

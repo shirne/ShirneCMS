@@ -10,7 +10,7 @@
 
     <!-- Add custom CSS here -->
     <link href="__STATIC__/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="__STATIC__/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="__STATIC__/font-awesome/css/fontawesome-all.min.css">
     <link href="__STATIC__/admin/css/common.css" rel="stylesheet">
 
     <!-- JavaScript -->
@@ -26,49 +26,41 @@
 <div id="wrapper">
 
     <!-- Sidebar -->
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <!-- Brand and toggle get grouped for better mobile display -->
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="{:U('index/index')}">管理后台</a>
-        </div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" role="navigation">
 
-        <!-- Collect the nav links, forms, and other content for toggling -->
-        <div class="collapse navbar-collapse navbar-ex1-collapse">
+        <a class="navbar-brand" href="{:url('index/index')}">管理后台</a>
+
+        <div class="navbar-collapse navbar-ex1-collapse">
 
             <include file="Public/sidebar" />
 
-            <ul class="nav navbar-nav navbar-right navbar-user">
+            <ul class="nav navbar-nav navbar-user">
 
                 <li class="dropdown user-dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> 你好,{:session('adminname')} <b class="caret"></b></a>
                     <ul class="dropdown-menu">
                         <li><a href="/" target="_blank"><i class="fa fa-home"></i> 浏览</a></li>
                         <li class="divider"></li>
-                        <li><a href="{:U('setting/index')}"><i class="fa fa-gear"></i> 设置</a></li>
-                        <li><a href="{:U('Index/profile')}"><i class="fa fa-user"></i> 资料</a></li>
+                        <li><a href="{:url('setting/index')}"><i class="fa fa-gear"></i> 设置</a></li>
+                        <li><a href="{:url('Index/profile')}"><i class="fa fa-user"></i> 资料</a></li>
                         <li class="divider"></li>
-                        <li><a href="{:U('login/logout')}"><i class="fa fa-power-off"></i> 退出</a></li>
+                        <li><a href="{:url('login/logout')}"><i class="fa fa-power-off"></i> 退出</a></li>
                     </ul>
                 </li>
             </ul>
-        </div><!-- /.navbar-collapse -->
+        </div>
     </nav>
 
     <block name="body" ></block>
 
-    <script src="__STATIC__/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="__STATIC__/moment/min/moment.min.js"></script>
     <script src="__STATIC__/moment/locale/zh-cn.js"></script>
+    <script src="__STATIC__/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
     <script src="__STATIC__/admin/js/app.js?v=20180406"></script>
     <script type="text/javascript">
         (function(){
             var func=arguments.callee;
-            $.ajax('{:U("index/newcount")}', {
+            $.ajax('{:url("index/newcount")}', {
                 dataType:'JSON',
                 type:'POST',
                 success:function(json){

@@ -23,7 +23,7 @@ class MemberController extends AuthController
      * 会员中心
      */
     public function index(){
-        $this->display();
+        return $this->fetch();
     }
 
     /**
@@ -43,7 +43,7 @@ class MemberController extends AuthController
             }
         }
 
-        $this->display();
+        return $this->fetch();
     }
 
     /**
@@ -51,7 +51,7 @@ class MemberController extends AuthController
      */
     public function avatar(){
 
-        $this->display();
+        return $this->fetch();
     }
 
 
@@ -59,6 +59,6 @@ class MemberController extends AuthController
      * 安全中心
      */
     public function security(){
-
+        return $this->fetch();
     }
 }

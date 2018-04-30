@@ -7,7 +7,7 @@
 <div id="page-wrapper">
     <div class="page-header">{$id>0?'编辑':'添加'}广告位</div>
     <div class="page-content">
-    <form method="post" action="{:U('adv/update')}">
+    <form method="post" action="{:url('adv/update')}">
         <div class="form-group">
             <label for="title">位置名称</label>
             <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="位置名称">

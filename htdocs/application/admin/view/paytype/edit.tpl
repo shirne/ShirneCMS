@@ -7,7 +7,7 @@
 <div id="page-wrapper">
     <div class="page-header">修改付款方式</div>
     <div class="page-content">
-    <form method="post" action="{:U('Paytype/update')}"  enctype="multipart/form-data">
+    <form method="post" action="{:url('Paytype/update')}"  enctype="multipart/form-data">
         <div class="form-group">
             <label for="title">付款方式名称</label>
             <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="输入付款方式名称">

@@ -7,15 +7,15 @@
 <div id="page-wrapper">
     <div class="row">
         <div class="col-xs-6">
-            <a href="{:U('Invite/add')}" class="btn btn-success">生成邀请码</a>
+            <a href="{:url('Invite/add')}" class="btn btn-success">生成邀请码</a>
         </div>
         <div class="col-xs-6">
-            <form action="{:U('member/index')}" method="post">
+            <form action="{:url('member/index')}" method="post">
                 <div class="form-group input-group">
                     <input type="text" class="form-control" name="key" placeholder="输入用户id或邀请码搜索">
-                    <span class="input-group-btn">
+                    <div class="input-group-append">
                       <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
-                    </span>
+                    </div>
                 </div>
             </form>
         </div>
@@ -40,17 +40,17 @@
                 <td>{$v.id}</td>
                 <td>{$v.code}</td>
                 <td>{$v.member_id}</td>
-                <td>{$v.create_at|showdate}</td>
+                <td>{$v.create_time|showdate}</td>
                 <td>{$v.member_use}</td>
                 <td>{$v.use_at|showdate}</td>
                 <td>{$v.valid_at|showdate}</td>
                 <td><if condition="$v.status eq 1"><span style="color:red">锁定</span><else/>正常</if></td>
                 <td>
-                    <a class="btn btn-default btn-sm" href="{:U('Invite/update',array('id'=>$v['id']))}"><i class="fa fa-edit"></i> 转赠</a>
+                    <a class="btn btn-default btn-sm" href="{:url('Invite/update',array('id'=>$v['id']))}"><i class="fa fa-edit"></i> 转赠</a>
                     <if condition="$v.status eq 0">
-                        <a class="btn btn-default btn-sm" href="{:U('Invite/lock',array('id'=>$v['id']))}" style="color:red;" onclick="javascript:return del('锁定后将不能使用此激活码注册!\n\n请确认!!!');"><i class="fa fa-close"></i> 锁定</a>
+                        <a class="btn btn-default btn-sm" href="{:url('Invite/lock',array('id'=>$v['id']))}" style="color:red;" onclick="javascript:return del('锁定后将不能使用此激活码注册!\n\n请确认!!!');"><i class="fa fa-close"></i> 锁定</a>
                     <else/>
-                        <a class="btn btn-default btn-sm" href="{:U('Invite/unlock',array('id'=>$v['id']))}" style="color:#50AD1E;"><i class="fa fa-check"></i> 解锁</a>
+                        <a class="btn btn-default btn-sm" href="{:url('Invite/unlock',array('id'=>$v['id']))}" style="color:#50AD1E;"><i class="fa fa-check"></i> 解锁</a>
                     </if>
                 </td>
             </tr>

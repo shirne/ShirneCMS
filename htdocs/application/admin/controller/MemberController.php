@@ -47,7 +47,7 @@ class MemberController extends BaseController
         $this->assign('page',$lists->render());
         $this->assign('referer',$referer);
         $this->assign('keyword',$keyword);
-        $this->display();     
+        return $this->fetch();
     }
     public function set_agent($id=0){
         if(empty($id))$this->error('会员不存在');
@@ -100,7 +100,7 @@ class MemberController extends BaseController
         $logs = $model->where($where)->paginate(15);
         $this->assign('logs', $logs);
         $this->assign('page',$logs->render());
-        $this->display();
+        return $this->fetch();
     }
     public function logview(){
         $id=$this->request->get('id/d');
@@ -111,7 +111,7 @@ class MemberController extends BaseController
 
         $this->assign('m', $m);
         $this->assign('member', $member);
-        $this->display();
+        return $this->fetch();
     }
 
     public function logclear(){
@@ -124,7 +124,7 @@ class MemberController extends BaseController
 
         $model=Db::name('MemberLog');
 
-        $model->where(array("create_at"=>array('ELT',$d)))->delete();
+        $model->where(array("create_time"=>array('ELT',$d)))->delete();
 
         user_log($this->mid,'clearmemberlog',1,'清除会员日志' ,'manager');
         $this->success("清除完成");
@@ -153,7 +153,7 @@ class MemberController extends BaseController
                 }
             }
         }
-        $this->display();
+        return $this->fetch();
     }
     /**
      * 更新会员信息
@@ -186,7 +186,7 @@ class MemberController extends BaseController
         }
         $model = Db::name('Member')->find($id);
         $this->assign('model',$model);
-        $this->display();
+        return $this->fetch();
     }
     /**
      * 删除管理员

@@ -73,8 +73,14 @@ class LoginController extends BaseController{
                         $this->error("您的账号已禁用");
                     }else {
                         setLogin($member);
+                        $redirect=redirect()->restore();
+                        if(empty($redirect->getData())){
+                            $url=url('member/index');
+                        }else{
+                            $url=$redirect->getTargetUrl();
+                        }
 
-                        $this->success("登陆成功");
+                        $this->success("登陆成功",$url);
                     }
                 }else{
                     user_log($member['id'],'login',0,'密码错误:'.$password);
@@ -189,8 +195,8 @@ class LoginController extends BaseController{
         $data['openid'] = $oauthUserinfo['openid'];
         $data['avatar'] =$oauthUserinfo['headimgurl'];
         $data['status'] = 1;
-        $data['create_at'] = time();
-        $data['update_at'] = time();
+        $data['create_time'] = time();
+        $data['update_time'] = time();
 
         #
         #
@@ -230,9 +236,9 @@ class LoginController extends BaseController{
             $step--;
             $sendto=$this->request->post('sendto');
             $code=$this->request->post('checkcode');
-            $crow=Db::name('checkcode')->where(array('sendto'=>$sendto,'checkcode'=>$code,'is_check'=>0))->order('create_at DESC')->find();
+            $crow=Db::name('checkcode')->where(array('sendto'=>$sendto,'checkcode'=>$code,'is_check'=>0))->order('create_time DESC')->find();
             $time=time();
-            if(!empty($crow) && $crow['create_at']>$time-60*5){
+            if(!empty($crow) && $crow['create_time']>$time-60*5){
                 Db::name('checkcode')->where(array('id' => $crow['id']))->save(array('is_check' => 1, 'check_at' => $time));
                 session('passed',$username);
             }else{
@@ -354,9 +360,15 @@ class LoginController extends BaseController{
             }
             Db::commit();
             setLogin($data);
-            $this->success("注册成功",url('Index/index'));
+            $redirect=redirect()->restore();
+            if(empty($redirect->getData())){
+                $url=url('member/index');
+            }else{
+                $url=$redirect->getTargetUrl();
+            }
+            $this->success("注册成功",$url);
         }else{
-            $this->display();
+            return $this->fetch();
         }
     }
 
@@ -398,6 +410,6 @@ class LoginController extends BaseController{
      */
     public function forgot()
     {
-        $this->display();
+        return $this->fetch();
     }
 }

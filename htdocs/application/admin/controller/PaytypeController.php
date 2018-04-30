@@ -34,7 +34,7 @@ class PaytypeController extends BaseController
         $lists=$model->where($where)->order('ID DESC')->paginate(15);
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
-        $this->display();
+        return $this->fetch();
     }
 
     /**
@@ -79,7 +79,7 @@ class PaytypeController extends BaseController
         }
         $this->assign('model',$model);
         $this->assign('banklist',banklist());
-        $this->display();
+        return $this->fetch();
     }
 
     /**
@@ -99,6 +99,6 @@ class PaytypeController extends BaseController
 
     public function recharge()
     {
-        $this->display();
+        return $this->fetch();
     }
 }

@@ -22,7 +22,7 @@ class InviteController extends BaseController
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
         $this->assign('levels',getMemberLevels());
-        $this->display();     
+        return $this->fetch();
     }
 
 
@@ -56,7 +56,7 @@ class InviteController extends BaseController
             $data['level_id']=$level_id;
             $data['invalid_at']=$invalid;
             $data['is_lock']=0;
-            $data['create_at']=time();
+            $data['create_time']=time();
             $data['member_use']=0;
             $data['use_at']=0;
             for ($i=0;$i<$number;$i++){
@@ -66,7 +66,7 @@ class InviteController extends BaseController
             $this->success("生成成功", url('Invite/index'));
         }else{
             $this->assign('levels',getMemberLevels());
-            $this->display();
+            return $this->fetch();
         }
     }
     /**
@@ -90,7 +90,7 @@ class InviteController extends BaseController
 
         $model = Db::name('invite_code')->find($id);
         $this->assign('model',$model);
-        $this->display();
+        return $this->fetch();
     }
     protected function create($length){
         $c=random_str($length);

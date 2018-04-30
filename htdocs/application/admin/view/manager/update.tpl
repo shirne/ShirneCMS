@@ -8,7 +8,7 @@
 	<div class="page-header">修改管理员</div>
 	<div id="page-content">
 
-		<form action="{:U('manager/update',array('id'=>$model['id']))}" method="post">
+		<form action="{:url('manager/update',array('id'=>$model['id']))}" method="post">
 	<div class="form-group">
 		<label>用户名</label>
 		<input class="form-control" type="text" name="username" value="{$model.username}">

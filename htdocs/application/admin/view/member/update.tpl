@@ -6,7 +6,7 @@
 <div id="page-wrapper">
 	<div class="page-header">修改会员</div>
 	<div id="page-content">
-<form action="{:U('manager/update')}" method="post">
+<form action="{:url('manager/update')}" method="post">
 	<div class="form-group">
 		<label>用户名</label>
 		<input class="form-control" type="text" name="username" value="{$model.username}">

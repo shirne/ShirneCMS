@@ -8,8 +8,8 @@
     
     <div class="row">
         <div class="col-xs-6">
-            <a href="{:U('permission/add')}" class="btn btn-success">添加菜单</a>
-            <a href="{:U('permission/clearcache')}" class="btn btn-default">清除缓存</a>
+            <a href="{:url('permission/add')}" class="btn btn-success">添加菜单</a>
+            <a href="{:url('permission/clearcache')}" class="btn btn-default">清除缓存</a>
         </div>
         <div class="col-xs-6">
         </div>
@@ -32,9 +32,9 @@
                 <td>{$v.key}</td>
                 <td>{$v.url}</td>
                 <td>
-                    <a class="btn btn-default btn-sm" href="{:U('permission/add',array('pid'=>$v['id']))}"><i class="fa fa-edit"></i> 添加</a>
-                    <a class="btn btn-default btn-sm" href="{:U('permission/update',array('id'=>$v['id']))}"><i class="fa fa-edit"></i> 编辑</a>
-                    <a class="btn btn-default btn-sm" href="{:U('permission/delete',array('id'=>$v['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="fa fa-trash"></i> 删除</a>
+                    <a class="btn btn-default btn-sm" href="{:url('permission/add',array('pid'=>$v['id']))}"><i class="fa fa-edit"></i> 添加</a>
+                    <a class="btn btn-default btn-sm" href="{:url('permission/update',array('id'=>$v['id']))}"><i class="fa fa-edit"></i> 编辑</a>
+                    <a class="btn btn-default btn-sm" href="{:url('permission/delete',array('id'=>$v['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="fa fa-trash"></i> 删除</a>
                 </td>
             </tr>
             <foreach name="model[$v['id']]" item="sv">
@@ -44,9 +44,9 @@
                     <td>{$sv.key}</td>
                     <td>{$sv.url}</td>
                     <td>
-                        <a class="btn btn-default btn-sm" href="{:U('permission/add',array('pid'=>$sv['id']))}"><i class="fa fa-edit"></i> 添加</a>
-                        <a class="btn btn-default btn-sm" href="{:U('permission/update',array('id'=>$sv['id']))}"><i class="fa fa-edit"></i> 编辑</a>
-                        <a class="btn btn-default btn-sm" href="{:U('permission/delete',array('id'=>$sv['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="fa fa-trash"></i> 删除</a>
+                        <a class="btn btn-default btn-sm" href="{:url('permission/add',array('pid'=>$sv['id']))}"><i class="fa fa-edit"></i> 添加</a>
+                        <a class="btn btn-default btn-sm" href="{:url('permission/update',array('id'=>$sv['id']))}"><i class="fa fa-edit"></i> 编辑</a>
+                        <a class="btn btn-default btn-sm" href="{:url('permission/delete',array('id'=>$sv['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="fa fa-trash"></i> 删除</a>
                     </td>
                 </tr>
                 <foreach name="model[$sv['id']]" item="mv">
@@ -56,8 +56,8 @@
                         <td>{$mv.key}</td>
                         <td>{$mv.url}</td>
                         <td>
-                            <a class="btn btn-default btn-sm" href="{:U('permission/update',array('id'=>$mv['id']))}"><i class="fa fa-edit"></i> 编辑</a>
-                            <a class="btn btn-default btn-sm" href="{:U('permission/delete',array('id'=>$mv['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="fa fa-trash"></i> 删除</a>
+                            <a class="btn btn-default btn-sm" href="{:url('permission/update',array('id'=>$mv['id']))}"><i class="fa fa-edit"></i> 编辑</a>
+                            <a class="btn btn-default btn-sm" href="{:url('permission/delete',array('id'=>$mv['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="fa fa-trash"></i> 删除</a>
                         </td>
                     </tr>
                 </foreach>

@@ -22,7 +22,7 @@ class PageController extends BaseController{
         $this->seo($page['title']);
         $this->assign('page',$page);
         $this->assign('lists',$lists);
-        $this->display();
+        return $this->fetch();
     }
 
     public function __call($method,$args){

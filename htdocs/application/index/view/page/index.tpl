@@ -17,7 +17,7 @@
 					<div id="news" class="list">
 						<Volist name="lists" id="p">
 							<div class="panel">
-								<a class="Level_1" href="{:U('Page/index',array('name'=>$p['name']))}"> {$p.title} </a>
+								<a class="Level_1" href="{:url('Page/index',array('name'=>$p['name']))}"> {$p.title} </a>
 							</div>
 						</Volist>
 					</div>

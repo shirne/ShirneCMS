@@ -53,7 +53,7 @@ class PaylogController extends BaseController
         $this->assign('key',$key);
         $this->assign('status',$status);
         $this->assign('paytype',$paytype);
-        $this->display();
+        return $this->fetch();
     }
 
     /**
@@ -119,7 +119,7 @@ class PaylogController extends BaseController
         //首充赠送撤销
         $suf='';
         $rechargelog=Db::name('member_money_log')
-            ->where(array('member_id'=>$recharge['member_id'],'create_at'=>array('GT',$recharge['create_at']),'reson'=>'首充赠送','type'=>'charge'))
+            ->where(array('member_id'=>$recharge['member_id'],'create_time'=>array('GT',$recharge['create_time']),'reson'=>'首充赠送','type'=>'charge'))
             ->find();
         if(!empty($rechargelog)){
             $suf=' 撤销首充 '.showmoney($rechargelog['amount']);
@@ -165,7 +165,7 @@ class PaylogController extends BaseController
         $total=$model->where(array('status'=>1))->sum('amount');
         $this->assign('total',$total);
         $this->assign('key',$key);
-        $this->display();
+        return $this->fetch();
     }
 
     /**

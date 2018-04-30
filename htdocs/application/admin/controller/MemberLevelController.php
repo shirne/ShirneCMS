@@ -25,7 +25,7 @@ class MemberLevelController extends BaseController
 
         $lists=$model->select();
         $this->assign('lists',$lists);
-        $this->display();
+        return $this->fetch();
     }
 
     /**
@@ -55,7 +55,7 @@ class MemberLevelController extends BaseController
         $this->assign('model',array(
             'commission_layer'=>3
         ));
-        $this->display();
+        return $this->fetch();
     }
     /**
      * 更新会员组

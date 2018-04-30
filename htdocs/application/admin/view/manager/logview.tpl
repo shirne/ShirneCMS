@@ -18,7 +18,7 @@
             </tr>
             <tr>
                 <th>日期</th>
-                <td>{$model.create_at|showdate}</td>
+                <td>{$model.create_time|showdate}</td>
             </tr>
             <tr>
                 <th>IP</th>

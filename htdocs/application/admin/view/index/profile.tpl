@@ -5,7 +5,7 @@
 <include file="Public/bread" menu="Board" section="主面板" title="个人资料" />
 
 <div id="page-wrapper">
-<form action="{:U('index/profile')}" method="post">
+<form action="{:url('index/profile')}" method="post">
 	<div class="form-group">
 		<label>用户名</label>
 		<input class="form-control" type="text" name="username" value="{$model.username}" />

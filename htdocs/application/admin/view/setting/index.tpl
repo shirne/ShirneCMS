@@ -7,7 +7,7 @@
 <div id="page-wrapper">
 
     <div class="row">
-        <a href="{:U('setting/advance')}" class="btn btn-success pull-right">高级模式</a>
+        <a href="{:url('setting/advance')}" class="btn btn-success pull-right">高级模式</a>
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
             <foreach name="groups" item="name">

@@ -11,7 +11,7 @@
             总有效金额: {$total|showmoney}
         </div>
         <div class="col-xs-6">
-            <form action="{:U('Paylog/recharge')}" method="post">
+            <form action="{:url('Paylog/recharge')}" method="post">
                 <div class="form-group input-group">
                     <select class="form-control" name="status">
                         <option value="9">全部</option>
@@ -22,9 +22,9 @@
                     </select>
                     <span class="input-group-addon"></span>
                     <input type="text" class="form-control" value="{$key}" name="key" placeholder="输入名称搜索">
-                    <span class="input-group-btn">
+                    <div class="input-group-append">
                       <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
-                    </span>
+                    </div>
                 </div>
             </form>
         </div>
@@ -55,14 +55,14 @@
                 </td>
                 <td>{$v.amount|showmoney}</td>
                 <td>{$v.remark}</td>
-                <td>{$v.create_at|showdate='Y-m-d H:i:s'}</td>
+                <td>{$v.create_time|showdate='Y-m-d H:i:s'}</td>
                 <td>{$v.status|o_status}</td>
                 <td>
                     <if condition="$v['status'] EQ 0">
-                    <a class="btn btn-default btn-sm" href="{:U('Paylog/rechargeupdate',array('id'=>$v['id']))}"><i class="fa fa-check"></i> 确认</a>
-                    <a class="btn btn-default btn-sm" href="{:U('Paylog/rechargedelete',array('id'=>$v['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要作废吗？');"><i class="fa fa-trash"></i> 无效</a>
+                    <a class="btn btn-default btn-sm" href="{:url('Paylog/rechargeupdate',array('id'=>$v['id']))}"><i class="fa fa-check"></i> 确认</a>
+                    <a class="btn btn-default btn-sm" href="{:url('Paylog/rechargedelete',array('id'=>$v['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要作废吗？');"><i class="fa fa-trash"></i> 无效</a>
                         <elseif condition="$v['status'] EQ 1"/>
-                        <a class="btn btn-default btn-sm" href="{:U('Paylog/rechargecancel',array('id'=>$v['id']))}"  style="color:red;"><i class="fa fa-history"></i> 撤销</a>
+                        <a class="btn btn-default btn-sm" href="{:url('Paylog/rechargecancel',array('id'=>$v['id']))}"  style="color:red;"><i class="fa fa-history"></i> 撤销</a>
                         <else/>
                         -
                     </if>

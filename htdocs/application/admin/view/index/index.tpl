@@ -19,7 +19,7 @@
                         </div>
                     </div>
                 </div>
-                <a href="{:U('feedback/index')}">
+                <a href="{:url('feedback/index')}">
                     <div class="panel-footer announcement-bottom">
                         <div class="row">
                             <div class="col-xs-6">
@@ -46,7 +46,7 @@
                         </div>
                     </div>
                 </div>
-                <a href="{:U('member/index')}">
+                <a href="{:url('member/index')}">
                     <div class="panel-footer announcement-bottom">
                         <div class="row">
                             <div class="col-xs-6">
@@ -73,7 +73,7 @@
                         </div>
                     </div>
                 </div>
-                <a href="{:U('post/index')}">
+                <a href="{:url('post/index')}">
                     <div class="panel-footer announcement-bottom">
                         <div class="row">
                             <div class="col-xs-6">
@@ -100,7 +100,7 @@
                         </div>
                     </div>
                 </div>
-                <a href="{:U('links/index')}">
+                <a href="{:url('links/index')}">
                     <div class="panel-footer announcement-bottom">
                         <div class="row">
                             <div class="col-xs-6">
@@ -126,15 +126,15 @@
                     <table class="table table-striped">
                         <tr>
                             <th width="80">总会员</th>
-                            <td>{$m.total}</td>
+                            <td>{$mem.total}</td>
                         </tr>
                         <tr>
                             <th width="80">正常会员</th>
-                            <td>{$m.avail}</td>
+                            <td>{$mem.avail}</td>
                         </tr>
                         <tr>
                             <th width="80">总代理数</th>
-                            <td>{$m.agent}</td>
+                            <td>{$mem.agent}</td>
                         </tr>
                     </table>
                 </div>
@@ -149,15 +149,15 @@
                     <table class="table table-striped">
                         <tr>
                             <th width="80">总充值</th>
-                            <td>{$a.total_charge|showmoney}</td>
+                            <td>{$money.total_charge|showmoney}</td>
                         </tr>
                         <tr>
                             <th width="80">总提现</th>
-                            <td>{$a.total_cash|showmoney}</td>
+                            <td>{$money.total_cash|showmoney}</td>
                         </tr>
                         <tr>
                             <th width="80">总余额</th>
-                            <td>{$a.total_money|showmoney}</td>
+                            <td>{$money.total_money|showmoney}</td>
                         </tr>
                     </table>
                 </div>

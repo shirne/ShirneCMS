@@ -5,7 +5,7 @@
 		<div class="container">
 			<ol class="breadcrumb">
 				<li class="icon"><a href="/">首页</a></li>
-				<li><a href="{:U('Post/index')}">资讯中心</a></li>
+				<li><a href="{:url('Post/index')}">资讯中心</a></li>
 			</ol>
 		</div>
 
@@ -16,7 +16,7 @@
 				<div class="panel-body postbody">
 					<h1>{$post.title}</h1>
 					<div class="info">
-						分类:<a href="{:U('Post/index',array('name'=>$category['name']))}">{$category.title}</a>
+						分类:<a href="{:url('Post/index',array('name'=>$category['name']))}">{$category.title}</a>
 						&nbsp;&nbsp;
 						发表时间:{$post.time|showdate}
 					</div>

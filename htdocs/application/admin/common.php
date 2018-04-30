@@ -8,7 +8,7 @@ function setLogin($user){
     session('adminId',$user['id']);
     session('adminLTime',$time);
     session('adminname',empty($user['realname'])?$user['username']:$user['realname']);
-    Db::name('Manager')->where(array('id'=>$user['id']))->save(array(
+    Db::name('Manager')->where(array('id'=>$user['id']))->update(array(
         'login_ip'=>Request::ip(),
         'logintime'=>$time
     ));
@@ -44,6 +44,6 @@ function FU($url='',$vars=''){
 
     $link=url($url,$vars);
 
-    return str_replace(__APP__,'',$link);
+    return str_replace(app()->getModulePath(),'',$link);
 }
 //end file

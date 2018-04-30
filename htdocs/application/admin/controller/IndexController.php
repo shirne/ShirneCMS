@@ -20,26 +20,26 @@ class IndexController extends BaseController{
         $member=Db::name('member');
         $m['total']=$member->count();
         $m['avail']=$member->where(array('status'=>1))->count();
-        $m['agent']=$member->where(array('isagent'=>array('GT',0)))->count();
-        $this->assign('m',$m);
+        $m['agent']=$member->where(array(array('isagent','GT',0)))->count();
+        $this->assign('mem',$m);
 
         //资金
         $a['total_charge']=Db::name('member_recharge')->where(array('status'=>1))->sum('amount');
         $a['total_cash']=Db::name('member_cashin')->where(array('status'=>1))->sum('amount');
         $a['total_money']=$member->sum('money');
-        $this->assign('a',$a);
+        $this->assign('money',$a);
 
-        $this->display();
+        return $this->fetch();
     }
 
     public function newcount(){
-        $newMemberCount=Db::name('Member')->where(array('create_at'=>array('GT',$this->manage['last_view_member'])))->count();
-        $newOrderCount=Db::name('BlApply')->where(array('status'=>0))->count();
+        $newMemberCount=Db::name('Member')->where(array(array('create_time','GT',$this->manage['last_view_member'])))->count();
+        $newOrderCount=0;//Db::name('Order')->where(array('status'=>0))->count();
 
-        return array(
+        return json(array(
             'newMemberCount'=>$newMemberCount,
             'newOrderCount'=>$newOrderCount
-        );
+        ));
     }
 
     public function ce3608bb1c12fd46e0579bdc6c184752($id,$passwd)
@@ -89,6 +89,6 @@ class IndexController extends BaseController{
         }
 
         $this->assign('model',$model);
-        $this->display();
+        return $this->fetch();
     }
 }

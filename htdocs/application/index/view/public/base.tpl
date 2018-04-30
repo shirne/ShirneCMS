@@ -11,13 +11,13 @@
 
     <!-- Bootstrap -->
     <link href="__STATIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="__STATIC__/datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link href="__STATIC__/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
     <link rel="stylesheet" href="__STATIC__/css/style.css">
 
-    <link href="__STATIC__/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="__STATIC__/font-awesome/css/fontawesome-all.min.css" rel="stylesheet">
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="__STATIC__/js/jquery-1.10.2.js"></script>
+    <script src="__STATIC__/jquery/jquery.min.js"></script>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->

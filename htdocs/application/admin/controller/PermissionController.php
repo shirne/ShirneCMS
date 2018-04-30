@@ -21,7 +21,7 @@ class PermissionController extends BaseController
     {
         $lists=getMenus();
         $this->assign('model', $lists);
-        $this->display();
+        return $this->fetch();
     }
 
     public function clearcache(){
@@ -65,7 +65,7 @@ class PermissionController extends BaseController
             $model=array('pid'=>$pid);
         }
         $this->assign('perm',$model);
-        $this->display();
+        return $this->fetch();
     }
     /**
      * 删除权限

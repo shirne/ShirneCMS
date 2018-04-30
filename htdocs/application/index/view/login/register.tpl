@@ -14,7 +14,7 @@
 				</blockquote>
 				<div class="panel-body">
 
-					<form class="form-horizontal registerForm" role="form" method="post" action="{:U('Login/register')}">
+					<form class="form-horizontal registerForm" role="form" method="post" action="{:url('Login/register')}">
 						<div class="form-group">
 							<label for="userName" class="col-sm-2 control-label">用户名：</label>
 							<div class="col-sm-10">
@@ -145,7 +145,7 @@
 						}else{
 							ajaxtime[fname]=new Date().getTime();
 							$.ajax({
-								url:'{:U('Login/checkunique',array('type'=>'username'))}',
+								url:'{:url('Login/checkunique',array('type'=>'username'))}',
 								data:{value:val},
 								dataType:'JSON',
 								type:'POST',
@@ -180,7 +180,7 @@
 						}else{
 							ajaxtime[fname]=new Date().getTime();
 							$.ajax({
-								url:'{:U('Login/checkunique',array('type'=>'email'))}',
+								url:'{:url('Login/checkunique',array('type'=>'email'))}',
 								data:{value:val},
 								dataType:'JSON',
 								type:'POST',
@@ -201,7 +201,7 @@
 						}else{
 							ajaxtime[fname]=new Date().getTime();
 							$.ajax({
-								url:'{:U('Login/checkunique',array('type'=>'mobile'))}',
+								url:'{:url('Login/checkunique',array('type'=>'mobile'))}',
 								data:{value:val},
 								dataType:'JSON',
 								type:'POST',

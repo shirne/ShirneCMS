@@ -160,8 +160,8 @@ function compare_secpassword($user,$password){
 
 function user_log($uid, $action, $result, $remark = '', $tbl = 'member')
 {
-    return \think\Db::table($tbl . '_log')->insert(array(
-        'create_at' => time(),
+    return \think\Db::name($tbl . 'Log')->insert(array(
+        'create_time' => time(),
         $tbl . '_id' => $uid,
         'ip' => app()->request->ip(),
         'action' => $action,
@@ -198,8 +198,8 @@ function money_log($uid, $money, $reson,$type='')
         //exit($e->getMessage());
         //echo Db::name('member')->getLastSql();
     }
-    return \think\Db::name('member_money_log')->insert(array(
-        'create_at' => time(),
+    return \think\Db::name('memberMoneyLog')->insert(array(
+        'create_time' => time(),
         'member_id' => $uid,
         'type'=>$type,
         'before'=>$member['money'],

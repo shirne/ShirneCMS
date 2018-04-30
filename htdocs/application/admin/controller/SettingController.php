@@ -36,7 +36,7 @@ class SettingController extends BaseController
         $this->assign('group',$group);
         $this->assign('groups', settingGroups());
         $this->assign('settings',getSettings(true,true));
-        $this->display();
+        return $this->fetch();
     }
     public function refresh(){
         cache('setting',null);
@@ -59,7 +59,7 @@ class SettingController extends BaseController
 
         $this->assign('model', $setting);
         $this->assign('page',$setting->render());
-        $this->display();
+        return $this->fetch();
     }
 
     /**
@@ -101,7 +101,7 @@ class SettingController extends BaseController
             $this->assign('model',$model);
             $this->assign('groups',settingGroups());
             $this->assign('types',settingTypes());
-            $this->display();
+            return $this->fetch();
         }
     }
     /**

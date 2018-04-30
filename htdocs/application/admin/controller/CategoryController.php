@@ -23,7 +23,7 @@ class CategoryController extends BaseController
         
         $category = $model->where($where)->order('pid ASC,`sort` ASC,id ASC')->select();
         $this->assign('model',getSortedCategory($category));
-        $this->display();   
+        return $this->fetch();
     }
 
     /**
@@ -66,7 +66,7 @@ class CategoryController extends BaseController
             $this->assign('cate',$cate);
             $this->assign('model',$model);
             $this->assign('id',$id);
-            $this->display();
+            return $this->fetch();
         }
     }
 

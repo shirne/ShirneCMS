@@ -15,7 +15,7 @@ class PostController extends BaseController
     public function index($key="")
     {
         $model = Db::view('post','*')->view('category',['name'=>'category_name','title'=>'category_title'],'post.cate_id=category.id','LEFT')
-            ->view('manager',['username'],'LEFT');
+            ->view('manager',['username'],'post.user_id=manager.id','LEFT');
         $where=array();
         if(!empty($key)){
             $where['post.title'] = array('like',"%$key%");
@@ -29,7 +29,7 @@ class PostController extends BaseController
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
 
-        $this->display();     
+        return $this->fetch();
     }
 
     /**
@@ -77,7 +77,7 @@ class PostController extends BaseController
             $this->assign("category",getSortedCategory(Db::name('category')->select()));
             $this->assign('post',$model);
             $this->assign('id',$id);
-            $this->display();
+            return $this->fetch();
         }
     }
     /**

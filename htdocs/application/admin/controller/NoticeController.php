@@ -26,7 +26,7 @@ class NoticeController extends BaseController
         $lists=$model->where($where)->order('ID DESC')->paginate(15);
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
-        $this->display();
+        return $this->fetch();
     }
 
     /**
@@ -64,7 +64,7 @@ class NoticeController extends BaseController
             $model=array();
         }
         $this->assign('model',$model);
-        $this->display();
+        return $this->fetch();
     }
 
     /**

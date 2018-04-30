@@ -15,7 +15,7 @@
                     <div class="panel-body">
                         <ul class="list-unstyled">
                             <foreach name="menus[$menu['id']]" item="m">
-                                <li><a data-key="{$m['key']}" href="{:U($m['url'])}"><i class="fa {$m['icon']}"></i> {$m['name']}</a></li>
+                                <li><a data-key="{$m['key']}" href="{:url($m['url'])}"><i class="fa {$m['icon']}"></i> {$m['name']}</a></li>
                             </foreach>
                         </ul>
                     </div>
@@ -23,7 +23,7 @@
                 <else/>
                 <div class="panel-heading" role="tab" id="heading{$menu['key']}">
                     <h4 class="panel-title">
-                        <a data-key="{$menu['key']}" data-parent="#accordion" href="{:U($menu['url'])}"  aria-expanded="false">
+                        <a data-key="{$menu['key']}" data-parent="#accordion" href="{:url($menu['url'])}"  aria-expanded="false">
                             <i class="fa {$menu['icon']}"></i>&nbsp;{$menu['name']}
                         </a>
                     </h4>
@@ -35,7 +35,7 @@
     <div class="panel panel-default" id="loginBar">
         <div class="panel-heading" role="tab" id="headinglog">
             <h4 class="panel-title">
-                <a data-parent="#accordion" href="{:U('login/logout')}"  aria-expanded="false">
+                <a data-parent="#accordion" href="{:url('login/logout')}"  aria-expanded="false">
                     <i class="fa fa-power-off"></i>&nbsp;退出
                 </a>
             </h4>

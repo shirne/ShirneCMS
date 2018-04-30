@@ -83,11 +83,13 @@ class BaseController extends Controller {
             }
             session('detected',1);
             session('isWechat',$this->isWechat);
-            session('isWechat',$this->isMobile);
+            session('isMobile',$this->isMobile);
         }else{
             $this->isWechat = session('isWechat');
             $this->isMobile = session('isMobile');
         }
+        $this->assign('isWechat',$this->isWechat);
+        $this->assign('isMobile',$this->isMobile);
         /**
         微信JSSDK
         详细用法参考：http://mp.weixin.qq.com/wiki/7/1c97470084b73f8e224fe6d9bab1625b.html

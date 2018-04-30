@@ -5,16 +5,16 @@
 <div id="page-wrapper">
 
 	<div class="row">
-		<div class="col-xs-6">
-			<a href="{:U('post/edit')}" class="btn btn-success">添加文章</a>
+		<div class="col col-xs-6">
+			<a href="{:url('post/edit')}" class="btn btn-success">添加文章</a>
 		</div>
-		<div class="col-xs-6">
-			<form action="{:U('post/index')}" method="post">
+		<div class="col col-xs-6">
+			<form action="{:url('post/index')}" method="post">
 				<div class="form-group input-group">
 					<input type="text" class="form-control" name="key" placeholder="输入文章标题、作者或者分类关键词搜索">
-					<span class="input-group-btn">
+					<div class="input-group-append">
                       <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
-                    </span>
+                    </div>
 				</div>
 			</form>
 		</div>
@@ -49,16 +49,16 @@
 					<td>{$v.category_title}</td>
 					<td>
 						<if condition="$v.status eq 1">
-							<a class="btn btn-default btn-sm" href="{:U('post/push',array('id'=>$v['id']))}" style="color:red;"><i class="fa fa-mail-reply"></i> 撤销</a>
+							<a class="btn btn-default btn-sm" href="{:url('post/push',array('id'=>$v['id']))}" style="color:red;"><i class="fa fa-mail-reply"></i> 撤销</a>
 							<else/>
-							<a class="btn btn-default btn-sm" href="{:U('post/push',array('id'=>$v['id']))}" style="color:#50AD1E;"><i class="fa fa-location-arrow"></i> 发布</a>
+							<a class="btn btn-default btn-sm" href="{:url('post/push',array('id'=>$v['id']))}" style="color:#50AD1E;"><i class="fa fa-location-arrow"></i> 发布</a>
 						</if>
 					</td>
 
 					<td>
 
-					<a class="btn btn-default btn-sm" href="{:U('post/edit',array('id'=>$v['id']))}"><i class="fa fa-edit"></i> 编辑</a>
-					<a class="btn btn-default btn-sm" href="{:U('post/delete',array('id'=>$v['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="fa fa-trash"></i> 删除</a>
+					<a class="btn btn-default btn-sm" href="{:url('post/edit',array('id'=>$v['id']))}"><i class="fa fa-edit"></i> 编辑</a>
+					<a class="btn btn-default btn-sm" href="{:url('post/delete',array('id'=>$v['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="fa fa-trash"></i> 删除</a>
 					</td>
 				</tr>
 			</foreach>

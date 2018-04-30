@@ -16,13 +16,13 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="{:U('index/index')}">首页<span class="sr-only">(current)</span></a></li>
+                    <li class="active"><a href="{:url('index/index')}">首页<span class="sr-only">(current)</span></a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">菜单 <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{:U('Post/index')}">文章列表</a></li>
+                            <li><a href="{:url('Post/index')}">文章列表</a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="{:U('Page/index')}">单页</a></li>
+                            <li><a href="{:url('Page/index')}">单页</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -40,8 +40,8 @@
                             </ul>
                         </li>
                         <else/>
-                        <li><a href="{:U('login/index')}">登录</a></li>
-                        <li><a href="{:U('login/register')}">注册</a></li>
+                        <li><a href="{:url('login/index')}">登录</a></li>
+                        <li><a href="{:url('login/register')}">注册</a></li>
                     </if>
                 </ul>
             </div><!-- /.navbar-collapse -->

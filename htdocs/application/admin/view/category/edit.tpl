@@ -7,7 +7,7 @@
 <div id="page-wrapper">
     <div class="page-header">{$id>0?'编辑':'添加'}分类</div>
     <div class="page-content">
-    <form method="post" action="{:U('category/edit',array('id'=>$id))}" enctype="multipart/form-data">
+    <form method="post" action="{:url('category/edit',array('id'=>$id))}" enctype="multipart/form-data">
         <div class="form-group">
             <label for="title">分类名称</label>
             <div class="input-group">

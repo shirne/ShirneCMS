@@ -35,7 +35,7 @@ class PostController extends BaseController{
 
         $this->assign('lists', $model);
         $this->assign('page',$model->render());
-        $this->display();
+        return $this->fetch();
     }
 
     public function view($id){
@@ -44,7 +44,7 @@ class PostController extends BaseController{
         $this->category($post['cate_id']);
 
         $this->assign('post', $post);
-        $this->display();
+        return $this->fetch();
     }
     public function notice($id){
         $post = Db::name('notice')->find($id);
@@ -52,7 +52,7 @@ class PostController extends BaseController{
         $this->category();
 
         $this->assign('post', $post);
-        $this->display();
+        return $this->fetch();
     }
 
     private function category($name=''){

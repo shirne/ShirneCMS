@@ -7,7 +7,7 @@ class LoginController extends Controller {
 
     //登陆主页
     public function index(){
-        $this->display();
+        return $this->fetch();
     }
     //登陆验证
     public function login(){
@@ -48,7 +48,7 @@ class LoginController extends Controller {
         $Verify->codeSet = '0123456789';
         $Verify->fontSize = 13;
         $Verify->length = 4;
-        $Verify->entry();
+        return $Verify->entry();
     }
     protected function check_verify($code){
         $verify = new \think\captcha\Captcha();

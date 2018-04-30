@@ -7,7 +7,7 @@
 <div id="page-wrapper">
 	<div class="page-header">生成邀请码</div>
 	<div id="page-content">
-<form action="{:U('Invite/add')}" method="post">
+<form action="{:url('Invite/add')}" method="post">
 	<div class="form-group">
 		<label>绑定邀请人</label>
 		<div class="input-group">

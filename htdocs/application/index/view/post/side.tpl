@@ -6,7 +6,7 @@
         <div id="news" class="list">
             <Volist name="categories[0]" id="cate">
             <div class="panel">
-                <a class="Level_1" href="{:U('Post/index',array('name'=>$cate['name']))}"> {$cate.title} </a>
+                <a class="Level_1" href="{:url('Post/index',array('name'=>$cate['name']))}"> {$cate.title} </a>
             </div>
             </Volist>
         </div>

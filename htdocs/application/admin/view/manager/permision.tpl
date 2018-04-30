@@ -14,7 +14,7 @@
 <div id="page-wrapper">
 	<div class="page-header">管理员权限</div>
 	<div id="page-content">
-<form action="{:U('manager/permision',array('id'=>$model['manager_id']))}" class="form-horizontal" method="post">
+<form action="{:url('manager/permision',array('id'=>$model['manager_id']))}" class="form-horizontal" method="post">
 	<div class="form-group">
 		<div class="col-sm-2">全局权限</div>
 		<div class="col-sm-10">

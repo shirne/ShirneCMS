@@ -6,7 +6,7 @@
 <div id="page-wrapper">
     <div class="page-header">修改菜单</div>
     <div id="page-content">
-    <form method="post" action="{:U('permission/update',array('id'=>$perm.id))}">
+    <form method="post" action="{:url('permission/update',array('id'=>$perm.id))}">
         <div class="form-group">
             <label for="page-title">所属菜单</label>
             <select name="parent_id" class="form-control">

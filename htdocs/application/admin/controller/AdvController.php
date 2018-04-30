@@ -24,7 +24,7 @@ class AdvController extends BaseController
         $lists=$model->where($where)->order('id DESC')->paginate(15);
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
-        $this->display();
+        return $this->fetch();
     }
 
     /**
@@ -65,7 +65,7 @@ class AdvController extends BaseController
                 $model=array('status'=>1);
             }
             $this->assign('model',$model);
-            $this->display();
+            return $this->fetch();
         }
     }
     /**
@@ -108,7 +108,7 @@ class AdvController extends BaseController
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
         $this->assign('gid',$gid);
-        $this->display();
+        return $this->fetch();
     }
 
     /**
@@ -149,7 +149,7 @@ class AdvController extends BaseController
             }
             $this->assign('gid',$gid);
             $this->assign('model',$model);
-            $this->display();
+            return $this->fetch();
         }
     }
     /**

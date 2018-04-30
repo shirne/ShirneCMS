@@ -28,7 +28,7 @@ class FeedbackController extends BaseController
         $lists=$model->where($where)->paginate(15);
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
-        $this->display();     
+        return $this->fetch();
     }
 
     /**
@@ -55,7 +55,7 @@ class FeedbackController extends BaseController
         }
         $model = FeedbackModel::get($id);
         $this->assign('model',$model);
-        $this->display();
+        return $this->fetch();
     }
 
     /**
