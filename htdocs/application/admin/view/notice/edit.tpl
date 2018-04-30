@@ -8,15 +8,15 @@
     <div class="page-content">
     <form method="post" action="{:U('Notice/update')}">
         <div class="form-group">
-            <label for="aa">公告标题</label>
-            <input type="text" name="title" class="form-control" id="aa" value="{$model.title}" placeholder="输入公告标题">
+            <label for="title">公告标题</label>
+            <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="输入公告标题">
         </div>
         <div class="form-group">
             <label for="bb">链接地址</label>
-            <input type="text" name="url" class="form-control" id="bb" value="{$model.url}" placeholder="输入链接地址">
+            <input type="text" name="url" class="form-control" value="{$model.url}" placeholder="输入链接地址">
         </div>
         <div class="form-group">
-            <label for="cc">公告状态</label>
+            <label for="status1">公告状态</label>
             <label class="radio-inline">
                 <input type="radio" name="status" id="status1" value="1" <if condition="$model.status eq 1">checked="checked"</if> >显示
             </label>

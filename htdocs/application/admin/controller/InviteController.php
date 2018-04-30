@@ -1,5 +1,7 @@
 <?php
 namespace app\admin\controller;
+use think\Db;
+
 /**
  * 邀请码管理
  */
@@ -13,12 +15,12 @@ class InviteController extends BaseController
         $model = Db::name('invite_code');
         $where=array();
         if(!empty($key )){
-            $where['username'] = array('like',"%$key%");
-            $where['email'] = array('like',"%$key%");
-            $where['_logic'] = 'or';
+            $where[] = array('code','like',"%$key%");
         }
 
-        $this->pagelist($model,$where,'id DESC');
+        $lists=$model->where($where)->paginate(15);
+        $this->assign('lists',$lists);
+        $this->assign('page',$lists->render());
         $this->assign('levels',getMemberLevels());
         $this->display();     
     }
@@ -31,12 +33,13 @@ class InviteController extends BaseController
     {
         if ($this->request->isPost()) {
             //如果用户提交数据
-            $model = D("invite_code");
-            $mem_id=I('member_id/d');
-            $level_id=I('level_id/d');
-            $length=I('length/d');
-            $number=I('number/d');
-            $date=I('valid_date');
+            $model = Db::name("invite_code");
+            $mem_id=$this->request->post('member_id/d');
+            $level_id=$this->request->post('level_id/d');
+            $length=$this->request->post('length/d');
+            $number=$this->request->post('number/d');
+            $date=$this->request->post('valid_date');
+
             if($length<8 || $length>16)$this->error('激活码长度需在8-16位之间');
             if($number>1000)$this->error('每次生成数量在 1000以内');
             $member=Db::name('member')->where(array('id'=>$mem_id))->find();
@@ -58,7 +61,7 @@ class InviteController extends BaseController
             $data['use_at']=0;
             for ($i=0;$i<$number;$i++){
                 $data['code']=$this->create($length);
-                $model->add($data);
+                $model->insert($data);
             }
             $this->success("生成成功", url('Invite/index'));
         }else{
@@ -67,30 +70,27 @@ class InviteController extends BaseController
         }
     }
     /**
-     * 转赠送
+     * 转赠送 功能暂无
      */
-    public function update()
+    public function update($id)
     {
-        //默认显示添加表单
-        if (!$this->request->isPost()) {
-            $model = Db::name('invite_code')->find(I('id/d'));
-            $this->assign('model',$model);
-            $this->display();
-        }
+        $id=intval($id);
         if ($this->request->isPost()) {
-            $model = D("invite_code");
-            if (!$model->create()) {
-                $this->error($model->getError());
-            }else{
-                $data=array();
-                //更新
-                if ($model->save($data)) {
-                    $this->success("转赠成功", url('Invite/index'));
-                } else {
-                    $this->error("转赠失败");
-                }        
+            $model = Db::name("invite_code");
+
+            $data=array();
+
+            //更新
+            if ($model->update($data)) {
+                $this->success("转赠成功", url('Invite/index'));
+            } else {
+                $this->error("转赠失败");
             }
         }
+
+        $model = Db::name('invite_code')->find($id);
+        $this->assign('model',$model);
+        $this->display();
     }
     protected function create($length){
         $c=random_str($length);

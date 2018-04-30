@@ -9,12 +9,12 @@
 namespace app\admin\controller;
 
 
+use think\Db;
+
 class PaylogController extends BaseController
 {
-    public function recharge(){
-        $model=Db::name('member_recharge');
-        $key=I('key');
-        $status=I('status/d',2);
+    public function recharge($key='',$status=0){
+        $model=Db::view('__MEMBER_RECHARGE__ mr','*');
         $where=array();
         if($status>0){
             switch ($status){
@@ -39,20 +39,13 @@ class PaylogController extends BaseController
         if(!empty($key)){
             $where['m.username']=array('LIKE',"%$key%");
         }
-        $join="__MEMBER__ m ON mr.member_id=m.id";
-        $this->pagelist($model->alias('mr')->join($join,'LEFT')->join('__PAYTYPE__ p ON mr.paytype_id=p.id','LEFT'),
-            $where,'id DESC','mr.*,m.username,m.realname,p.type,p.cardname,p.bank,p.cardno');
 
+        $lists=$model->view('__MEMBER__ m',['username','realname'],'mr.member_id=m.id','LEFT')
+            ->view('__PAYTYPE__ p',['type','cardname','bank','cardno'],'mr.paytype_id=p.id','LEFT')
+            ->order('id DESC')->paginate(15);
 
-        /*$count=$model->alias('mr')->join($join,'LEFT')->where($where)->count();
-        $Page = new \Extend\Page($count,15,array('status'=>$status,'key'=>$key));
-        $show = $Page->show();
-        $lists = $model->alias('mr')
-            ->join($join,'LEFT')
-            ->join('__PAYTYPE__ p ON mr.paytype_id=p.id','LEFT')
-            ->where($where)
-            ->field("mr.*,m.username,m.realname,p.type,p.cardname,p.bank,p.cardno")
-            ->limit($Page->firstRow.','.$Page->listRows)->order('id DESC')->select();*/
+        $this->assign('lists',$lists);
+        $this->assign('page',$lists->render());
         $paytype=getPaytypes();
 
         $total=$model->where(array('status'=>1))->sum('amount');
@@ -60,8 +53,6 @@ class PaylogController extends BaseController
         $this->assign('key',$key);
         $this->assign('status',$status);
         $this->assign('paytype',$paytype);
-        //$this->assign('page',$show);
-        //$this->assign('lists',$lists);
         $this->display();
     }
 
@@ -79,7 +70,7 @@ class PaylogController extends BaseController
         $recharge=Db::name('member_recharge')->lock(true)->find($id);
         if($recharge['status']!=0)$this->error('充值单已处理过了');
         $data['status']=1;
-        Db::name('member_recharge')->where(array('id'=>$recharge['id']))->save($data);
+        Db::name('member_recharge')->where(array('id'=>$recharge['id']))->update($data);
 
         money_log($recharge['member_id'],$recharge['amount'],'充值','charge');
         //是否首充
@@ -120,7 +111,7 @@ class PaylogController extends BaseController
         $data=array();
         $data['status']=0;
         $data['audit_at']=time();
-        Db::name('member_recharge')->where(array('id'=>$recharge['id']))->save($data);
+        Db::name('member_recharge')->where(array('id'=>$recharge['id']))->update($data);
 
         money_log($recharge['member_id'],-$recharge['amount'],'充值撤销','charge');
 
@@ -154,35 +145,26 @@ class PaylogController extends BaseController
         $data=array();
         $data['status']=2;
         $data['audit_at']=time();
-        Db::name('member_recharge')->where(array('id'=>$recharge['id']))->save($data);
+        Db::name('member_recharge')->where(array('id'=>$recharge['id']))->update($data);
         user_log($this->mid,'rechargedelete',1,'作废充值单 '.$id ,'manager');
         $this->success('处理成功！');
     }
 
-    public function cashin(){
-        $model=Db::name('member_cashin');
-        $key=I('key');
+    public function cashin($key=''){
+        $model=Db::view('__MEMBER_CASHIN__ mc','*');
         $where=array();
         if(!empty($key)){
             $where['m.username']=array('LIKE',"%$key%");
         }
 
-        $join="__MEMBER__ m ON mc.member_id=m.id";
-        $this->pagelist($model->alias("mc")->join($join,'LEFT'),$where,'id DESC',"mc.*,m.username,m.realname");
-        /*$count=$model->alias("mc")->join($join,'LEFT')->where($where)->count();
-        $Page = new \Extend\Page($count,15,array('key'=>$key));// 实例化分页类 传入总记录数和每页显示的记录数(25)
-        $show = $Page->show();// 分页显示输出
-        $lists = $model->alias("mc")
-            ->join($join,'LEFT')
-            ->where($where)
-            ->field("mc.*,m.username,m.realname")
-            ->limit($Page->firstRow.','.$Page->listRows)->order('id DESC')->select();*/
+        $lists=$model->view('__MEMBER__ m',['username','realname'],'mc.member_id=m.id','LEFT')->order('id DESC')->paginate(15);
 
+
+        $this->assign('lists',$lists);
+        $this->assign('page',$lists->render());
         $total=$model->where(array('status'=>1))->sum('amount');
         $this->assign('total',$total);
         $this->assign('key',$key);
-        //$this->assign('page',$show);
-        //$this->assign('lists',$lists);
         $this->display();
     }
 
@@ -202,7 +184,7 @@ class PaylogController extends BaseController
         $data=array();
         $data['status']=1;
         $data['audit_at']=time();
-        Db::name('member_cashin')->where(array('id'=>$recharge['id']))->save($data);
+        Db::name('member_cashin')->where(array('id'=>$recharge['id']))->update($data);
         user_log($this->mid,'cashaudit',1,'处理提现单 '.$id ,'manager');
         $this->success('处理成功！');
     }
@@ -221,7 +203,7 @@ class PaylogController extends BaseController
         $cash=Db::name('member_cashin')->lock(true)->find($id);
         if($cash['status']!=0)$this->error('提现单已处理过了');
         $data['status']=2;
-        Db::name('member_cashin')->where(array('id'=>$cash['id']))->save($data);
+        Db::name('member_cashin')->where(array('id'=>$cash['id']))->update($data);
 
         money_log($cash['member_id'],$cash['amount'],'提现作废','cash');
         /*$member=Db::name('member')->lock(true)->where(array('id'=>$cash['member_id']))->find();

@@ -81,7 +81,8 @@ DROP TABLE IF EXISTS `sa_category`;
 CREATE TABLE `sa_category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `pid` int(11) DEFAULT NULL COMMENT '父分类ID',
-  `title` varchar(100) DEFAULT NULL COMMENT '分类标题',
+  `title` varchar(100) DEFAULT NULL COMMENT '分类名称',
+  `short` varchar(20) DEFAULT NULL COMMENT '分类简称',
   `name` varchar(50) DEFAULT NULL COMMENT '分类别名',
   `icon` varchar(100) DEFAULT NULL COMMENT '图标',
   `image` varchar(100) DEFAULT NULL COMMENT '大图',
@@ -236,6 +237,7 @@ DROP TABLE IF EXISTS `sa_member_message`;
 CREATE TABLE `sa_member_message` (
   `message_id` BIGINT NOT NULL AUTO_INCREMENT,
   `member_id` INT NOT NULL DEFAULT 0,
+  `type` TINYINT NOT NULL DEFAULT 0,
   `from_member_id` INT NULL DEFAULT 0,
   `manager_id` INT NULL DEFAULT 0,
   `reply_id` INT NULL DEFAULT 0,
@@ -248,6 +250,7 @@ CREATE TABLE `sa_member_message` (
   `is_delete` TINYINT NULL DEFAULT 0,
   PRIMARY KEY (`message_id`),
   INDEX `member_id`(`member_id`),
+  INDEX `type`(`type`),
   INDEX `show_at`(`show_at`),
   INDEX `is_delete`(`is_delete`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

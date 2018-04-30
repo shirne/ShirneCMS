@@ -1,5 +1,9 @@
 <?php
 namespace app\admin\controller;
+use app\admin\model\SettingModel;
+use app\index\validate\SettingValidate;
+use think\Db;
+
 /**
  * 字段管理
  */
@@ -12,7 +16,7 @@ class SettingController extends BaseController
     {
         if($this->request->isPost()){
             $this->checkPermision("setting_update");
-            $data=I();
+            $data=$this->request->post();
             $model=Db::name('setting');
             $settings=getSettings(false,false,true);
             foreach ($data as $k=>$v){
@@ -20,7 +24,7 @@ class SettingController extends BaseController
                     $key=substr($k,2);
                     if(is_array($v))$v=serialize($v);
                     if($settings[$key]!=$v) {
-                        $model->where(array('key' => $key))->save(array('value' => $v));
+                        $model->where(array('key' => $key))->update(array('value' => $v));
                         
                     }
                 }
@@ -40,71 +44,60 @@ class SettingController extends BaseController
     }
 
     public function advance($key=""){
-        if(empty($key)){
-            $model = Db::name('setting');
-        }else{
+
+        $model = Db::name('setting');
+        $where=array();
+        if(!empty($key)){
             $where['key'] = array('like',"%$key%");
             $where['description'] = array('like',"%$key%");
             $where['_logic'] = 'or';
-            $model = Db::name('setting')->where($where);
         }
 
         $this->assign('key',$key);
 
-        $count  = $model->where($where)->count();// 查询满足要求的总记录数
-        $Page = new \Extend\Page($count,15);// 实例化分页类 传入总记录数和每页显示的记录数(25)
-        $show = $Page->show();// 分页显示输出
-        $setting = $model->limit($Page->firstRow.','.$Page->listRows)->where($where)->order('id ASC')->select();
+        $setting  = $model->where($where)->paginate(15);// 查询满足要求的总记录数
+
         $this->assign('model', $setting);
-        $this->assign('page',$show);
+        $this->assign('page',$setting->render());
         $this->display();
     }
 
     /**
      * 添加分类
      */
-    public function add()
+    public function edit($id=0)
     {
         if ($this->request->isPost()) {
-            //如果用户提交数据
-            $model = D("Setting");
-            if (!$model->create()) {
-                // 如果创建失败 表示验证没有通过 输出错误提示信息
-                $this->error($model->getError());
-                exit();
+            $data=$this->request->post();
+            $validate=new SettingValidate();
+            $validate->setId($id);
+            if (!$validate->check($data)) {
+
+                $this->error($validate->getError());
             } else {
-                if ($model->add()) {
-                    cache('setting',null);
-                    $this->success("字段添加成功", url('setting/advance'));
-                } else {
-                    $this->error("字段添加失败");
+                if($id>0){
+                    $data['id']=$id;
+                    if (SettingModel::update($data)) {
+                        cache('setting',null);
+                        $this->success("字段更新成功", url('setting/advance'));
+                    } else {
+                        $this->error("字段更新失败");
+                    }
+                }else {
+                    if (SettingModel::create($data)) {
+                        cache('setting', null);
+                        $this->success("字段添加成功", url('setting/advance'));
+                    } else {
+                        $this->error("字段添加失败");
+                    }
                 }
             }
         }else{
-            $this->assign('groups',settingGroups());
-            $this->assign('types',settingTypes());
-            $this->display();
-        }
-    }
-    /**
-     * 更新分类信息
-     */
-    public function update()
-    {
-        if ($this->request->isPost()) {
-            $model = D("Setting");
-            if (!$model->create()) {
-                $this->error($model->getError());
+            if($id>0){
+                $model = Db::name('setting')->find($id);
             }else{
-                if ($model->save()) {
-                    cache('setting',null);
-                    $this->success("字段更新成功", url('setting/advance'));
-                } else {
-                    $this->error("字段更新失败".$model->getLastSql());
-                }        
+                $model=array();
             }
-        }else{
-            $model = Db::name('setting')->find(I('id/d'));
             $this->assign('model',$model);
             $this->assign('groups',settingGroups());
             $this->assign('types',settingTypes());

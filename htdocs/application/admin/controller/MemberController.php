@@ -135,19 +135,13 @@ class MemberController extends BaseController
      */
     public function add()
     {
-        //默认显示添加表单
-        if (!$this->request->isPost()) {
-            $this->display();
-        }
         if ($this->request->isPost()) {
             //如果用户提交数据
             $data=$this->request->only(['username','email','mobile','level_id','password'],'post');
             $validate=new MemberValidate();
             $validate->setId();
             if (!$validate->check($data)) {
-                // 如果创建失败 表示验证没有通过 输出错误提示信息
                 $this->error($validate->getError());
-                exit();
             } else {
                 $data['salt']=random_str(8);
                 $data['password']=encode_password($data['password'],$data['salt']);
@@ -159,6 +153,7 @@ class MemberController extends BaseController
                 }
             }
         }
+        $this->display();
     }
     /**
      * 更新会员信息
@@ -170,7 +165,7 @@ class MemberController extends BaseController
             $data=$this->request->only(['username','email','mobile','level_id','password'],'post');
             $validate=new MemberValidate();
             $validate->setId($id);
-            if (!$validate->check($data)) {
+            if (!$validate->scene('edit')->check($data)) {
                 $this->error($validate->getError());
             }else{
                 if(!empty($data['password'])){

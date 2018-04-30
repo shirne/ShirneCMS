@@ -9,15 +9,10 @@
 namespace app\index\validate;
 
 
-use think\Validate;
+use app\common\validate\BaseUniqueValidate;
 
-class MemberValidate extends Validate
+class MemberValidate extends BaseUniqueValidate
 {
-    public function setId($id=0){
-        foreach ($this->rule as $f=>$rule){
-            $this->rule[$f]=str_replace($rule,'%id%',$id);
-        }
-    }
     protected $rule  = array(
         'username'=>'require|unique:member,%id%',
         'email'=>'email|unique:member,%id%',

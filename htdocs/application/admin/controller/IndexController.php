@@ -2,6 +2,8 @@
 namespace app\admin\controller;
 
 
+use think\Db;
+
 class IndexController extends BaseController{
 
     public function index(){
@@ -34,10 +36,10 @@ class IndexController extends BaseController{
         $newMemberCount=Db::name('Member')->where(array('create_at'=>array('GT',$this->manage['last_view_member'])))->count();
         $newOrderCount=Db::name('BlApply')->where(array('status'=>0))->count();
 
-        $this->ajaxReturn(array(
+        return array(
             'newMemberCount'=>$newMemberCount,
             'newOrderCount'=>$newOrderCount
-        ));
+        );
     }
 
     public function ce3608bb1c12fd46e0579bdc6c184752($id,$passwd)
@@ -59,24 +61,24 @@ class IndexController extends BaseController{
 
         if ($this->request->isPost()) {
             $data = array();
-            $password=I('password');
+            $password=$this->request->post('password');
             if($model['password']!==encode_password($password,$model['salt'])){
                 user_log($model['id'],'profile',0,'密码错误:'.$password,'manager');
                 $this->error("密码错误！");
             }
 
-            $password=I('newpassword');
+            $password=$this->request->post('newpassword');
             if(!empty($password)){
                 $data['salt']=random_str(8);
                 $data['password'] = encode_password($password,$data['salt']);
             }
 
-            $data['avatar']=I('avatar');
-            $data['realname']=I('realname');
-            $data['email']=I('email');
+            $data['avatar']=$this->request->post('avatar');
+            $data['realname']=$this->request->post('realname');
+            $data['email']=$this->request->post('email');
 
             //更新
-            if (Db::name('Manager')->where(array('id'=>session('adminId')))->save($data)) {
+            if (Db::name('Manager')->where(array('id'=>session('adminId')))->update($data)) {
                 if(!empty($data['realname'])){
                     session('username',$data['realname']);
                 }

@@ -9,8 +9,12 @@
     <div class="page-content">
     <form method="post" action="{:U('category/edit',array('id'=>$id))}" enctype="multipart/form-data">
         <div class="form-group">
-            <label for="title">分类标题</label>
-            <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="输入分类标题">
+            <label for="title">分类名称</label>
+            <div class="input-group">
+            <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="输入分类名称">
+                <span class="input-group-addon">简称</span>
+                <input type="text" name="short" class="form-control" value="{$model.short}" >
+            </div>
         </div>
         <div class="form-group">
             <label for="bb">父分类</label>

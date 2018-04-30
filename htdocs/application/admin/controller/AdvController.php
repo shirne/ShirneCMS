@@ -9,6 +9,8 @@
 namespace app\admin\controller;
 
 
+use app\index\validate\AdvGroupValidate;
+use app\index\validate\AdvItemValidate;
 use think\Db;
 
 class AdvController extends BaseController
@@ -17,11 +19,11 @@ class AdvController extends BaseController
         $model = Db::name('AdvGroup');
         $where=array();
         if(!empty($key)){
-            $where['title'] = array('like',"%$key%");
-            $where['flag'] = array('like',"%$key%");
-            $where['_logic'] = 'or';
+            $where[] = array('title|flag','like',"%$key%");
         }
-        $this->pagelist($model,$where,'id DESC');
+        $lists=$model->where($where)->order('id DESC')->paginate(15);
+        $this->assign('lists',$lists);
+        $this->assign('page',$lists->render());
         $this->display();
     }
 
@@ -33,18 +35,23 @@ class AdvController extends BaseController
         $id = intval($id);
 
         if ($this->request->isPost()) {
-            $model = Db::name("AdvGroup");
-            if (!$model->create()) {
-                $this->error($model->getError());
+            $data=$this->request->post();
+            $validate=new AdvGroupValidate();
+            $validate->setId($id);
+
+            if (!$validate->check($data)) {
+                $this->error($validate->getError());
             }else{
+                $model = Db::name("AdvGroup");
                 if($id==0){
-                    if ($model->add()) {
+                    if ($model->insert($data)) {
                         $this->success("添加成功", url('adv/index'));
                     } else {
                         $this->error("添加失败");
                     }
                 }else {
-                    if ($model->save()) {
+                    $data['id']=$id;
+                    if ($model->update($data)) {
                         $this->success("更新成功", url('adv/index'));
                     } else {
                         $this->error("更新失败");
@@ -53,7 +60,7 @@ class AdvController extends BaseController
             }
         }else{
             if($id!=0) {
-                $model = Db::name('AdvGroup')->where("id= %d", $id)->find();
+                $model = Db::name('AdvGroup')->where(["id"=> $id])->find();
             }else{
                 $model=array('status'=>1);
             }
@@ -97,7 +104,9 @@ class AdvController extends BaseController
             $where['url'] = array('like',"%$key%");
             $where['_logic'] = 'or';
         }
-        $this->pagelist($model,$where,'id DESC');
+        $lists=$model->where($where)->order('sort ASC,id DESC')->paginate(15);
+        $this->assign('lists',$lists);
+        $this->assign('page',$lists->render());
         $this->assign('gid',$gid);
         $this->display();
     }
@@ -110,18 +119,22 @@ class AdvController extends BaseController
         $id = intval($id);
         $url=$gid==0?url('adv/index'):url('adv/itemlist',array('gid'=>$gid));
         if ($this->request->isPost()) {
-            $model = Db::name("AdvItem");
-            if (!$model->create()) {
-                $this->error($model->getError());
+            $data=$this->request->post();
+            $validate=new AdvItemValidate();
+
+            if (!$validate->check($data)) {
+                $this->error($validate->getError());
             }else{
+                $model = Db::name("AdvItem");
                 if($id==0){
-                    if ($model->insert()) {
+                    if ($model->insert($data)) {
                         $this->success("添加成功",$url);
                     } else {
                         $this->error("添加失败");
                     }
                 }else {
-                    if ($model->update()) {
+                    $data['id']=$id;
+                    if ($model->update($data)) {
                         $this->success("更新成功", $url);
                     } else {
                         $this->error("更新失败");
@@ -130,9 +143,9 @@ class AdvController extends BaseController
             }
         }else{
             if($id!=0) {
-                $model = Db::name('AdvItem')->where("id= %d", $id)->find();
+                $model = Db::name('AdvItem')->where(["id"=> $id])->find();
             }else{
-                $model=array('status'=>1);
+                $model=array('status'=>1,'gid'=>$gid);
             }
             $this->assign('gid',$gid);
             $this->assign('model',$model);

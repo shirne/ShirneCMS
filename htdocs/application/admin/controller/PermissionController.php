@@ -9,6 +9,9 @@
 namespace app\admin\controller;
 
 
+use app\index\validate\PermissionValidate;
+use think\Db;
+
 class PermissionController extends BaseController
 {
     /**
@@ -29,54 +32,40 @@ class PermissionController extends BaseController
     /**
      * 添加权限
      */
-    public function add()
-    {
-        $this->assign('pid',I('pid',0));
-        //默认显示添加表单
-        if (!$this->request->isPost()) {
-            $this->display();
-        }
-        if ($this->request->isPost()) {
-            //如果用户提交数据
-            $model = D("Permission");
-            if (!$model->create()) {
-                // 如果创建失败 表示验证没有通过 输出错误提示信息
-                $this->error($model->getError());
-                exit();
-            } else {
-                if ($model->add()) {
-                    $this->success("添加成功", url('permission/index'));
-                } else {
-                    $this->error("添加失败");
-                }
-            }
-        }
-    }
-    /**
-     * 更新权限信息
-     * @param $id int|string
-     */
-    public function update($id)
+    public function edit($pid=0,$id=0)
     {
         $id = intval($id);
-        //默认显示添加表单
-        if (!$this->request->isPost()) {
-            $model = Db::name('permission')->where("id=%d",$id)->find();
-            $this->assign('perm',$model);
-            $this->display();
-        }
         if ($this->request->isPost()) {
-            $model = D("Permission");
-            if (!$model->create()) {
-                $this->error($model->getError());
-            }else{
-                if ($model->save()) {
-                    $this->success("更新成功", url('permission/index'));
-                } else {
-                    $this->error("更新失败");
+            $data=$this->request->post();
+            $validate=new PermissionValidate();
+            $validate->setId($id);
+
+            if (!$validate->check($data)) {
+                $this->error($validate->getError());
+            } else {
+                if($id>0){
+                    $data['id']=$id;
+                    if (Db::name('Permission')->update()) {
+                        $this->success("更新成功", url('permission/index'));
+                    } else {
+                        $this->error("更新失败");
+                    }
+                }else {
+                    if (Db::name('Permission')->insert($data)) {
+                        $this->success("添加成功", url('permission/index'));
+                    } else {
+                        $this->error("添加失败");
+                    }
                 }
             }
         }
+        if($id>0) {
+            $model = Db::name('permission')->where(["id" => $id])->find();
+        }else{
+            $model=array('pid'=>$pid);
+        }
+        $this->assign('perm',$model);
+        $this->display();
     }
     /**
      * 删除权限
@@ -86,7 +75,7 @@ class PermissionController extends BaseController
     {
         $id = intval($id);
         $model = Db::name('Permission');
-        $result = $model->where("id=%d",$id)->delete();
+        $result = $model->where(["id"=>$id])->delete();
         if($result){
             $this->success("删除成功", url('permission/index'));
         }else{

@@ -1,5 +1,8 @@
 <?php
 namespace app\admin\controller;
+use app\index\validate\LinksValidate;
+use think\Db;
+
 /**
  * 链接管理
  */
@@ -13,71 +16,58 @@ class LinksController extends BaseController
         $model = Db::name('links');
         $where=array();
         if(!empty($key)){
-            $where['title'] = array('like',"%$key%");
-            $where['url'] = array('like',"%$key%");
-            $where['_logic'] = 'or';
+            $where[] = array('title|url','like',"%$key%");
         }
-        $this->pagelist($model,$where,'id DESC');
-
-        $this->display();     
+        $lists=$model->where($where)->order('ID DESC')->paginate(15);
+        $this->assign('lists',$lists);
+        $this->assign('page',$lists->render());
+        $this->display();
     }
 
     /**
-     * 添加链接
+     * 编辑链接
      */
-    public function add()
+    public function edit($id=0)
     {
-        //默认显示添加表单
-        if (!$this->request->isPost()) {
-            $this->display();
-        }
         if ($this->request->isPost()) {
             //如果用户提交数据
-            $model = D("links");
-            if (!$model->create()) {
-                // 如果创建失败 表示验证没有通过 输出错误提示信息
-                $this->error($model->getError());
-                exit();
+            $data = $this->request->post();
+            $validate=new LinksValidate();
+
+            if (!$validate->check($data)) {
+                $this->error($validate->getError());
             } else {
-                if ($model->add()) {
-                    $this->success("链接添加成功", url('links/index'));
-                } else {
-                    $this->error("链接添加失败");
+                if($id>0){
+                    $data['id']=$id;
+                    if (Db::name('Links')->update($data)) {
+                        $this->success("更新成功", url('links/index'));
+                    } else {
+                        $this->error("更新失败");
+                    }
+                }else {
+                    if (Db::name('Links')->insert($data)) {
+                        $this->success("链接添加成功", url('links/index'));
+                    } else {
+                        $this->error("链接添加失败");
+                    }
                 }
             }
         }
-    }
-    /**
-     * 更新链接信息
-     */
-    public function update($id)
-    {
-        $id = intval($id);
-        //默认显示添加表单
-        if (!$this->request->isPost()) {
-            $model = Db::name('links')->where("id= %d",$id)->find();
-            $this->assign('model',$model);
-            $this->display();
+
+        if($id>0) {
+            $model = Db::name('Links')->find($id);
+        }else{
+            $model=array();
         }
-        if ($this->request->isPost()) {
-            $model = D("links");
-            if (!$model->create()) {
-                $this->error($model->getError());
-            }else{
-                if ($model->save()) {
-                    $this->success("更新成功", url('links/index'));
-                } else {
-                    $this->error("更新失败");
-                }        
-            }
-        }
+        $this->assign('model',$model);
+        $this->display();
     }
     /**
      * 删除链接
      */
     public function delete($id)
     {
-    		$id = intval($id);
+        $id = intval($id);
         $model = Db::name('links');
         $result = $model->delete($id);
         if($result){

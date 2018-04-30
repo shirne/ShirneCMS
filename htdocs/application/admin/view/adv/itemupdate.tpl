@@ -31,7 +31,7 @@
         </div>
         <div class="form-group">
             <label for="image">排序</label>
-            <input type="text" name="image" class="form-control" value="{$model.flag}" />
+            <input type="text" name="sort" class="form-control" value="{$model.sort}" />
         </div>
         <div class="form-group">
             <label for="cc">状态</label>

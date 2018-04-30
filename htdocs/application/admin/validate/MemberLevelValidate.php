@@ -7,15 +7,10 @@
  */
 namespace app\admin\validate;
 
-use think\Validate;
+use app\common\validate\BaseUniqueValidate;
 
-class MemberLevelValidate extends Validate
+class MemberLevelValidate extends BaseUniqueValidate
 {
-    public function setId($id=0){
-        foreach ($this->rule as $f=>$rule){
-            $this->rule[$f]=str_replace($rule,'%id%',$id);
-        }
-    }
     protected $rule  = array(
         'level_name'=>'require|unique:memberLevel,%id%,level_id',
     );

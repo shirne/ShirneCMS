@@ -9,6 +9,10 @@
 namespace app\admin\controller;
 
 
+use app\admin\model\NoticeModel;
+use app\index\validate\NoticeValidate;
+use think\Db;
+
 class NoticeController extends BaseController
 {
     public function index($type='')
@@ -19,64 +23,50 @@ class NoticeController extends BaseController
             $where['type'] = $type;
         }
 
-        $this->pagelist($model,$where,'id DESC');
+        $lists=$model->where($where)->order('ID DESC')->paginate(15);
+        $this->assign('lists',$lists);
+        $this->assign('page',$lists->render());
         $this->display();
     }
 
     /**
      * 公告添加
      */
-    public function add()
+    public function edit($id=0)
     {
-        //默认显示添加表单
-        if (!$this->request->isPost()) {
-            $this->display();
-        }
         if ($this->request->isPost()) {
-            //如果用户提交数据
-            $model = D("Notice");
-            if (!$model->create()) {
+            $data=$this->request->post();
+            $validate=new NoticeValidate();
+            if (!$validate->check($data)) {
                 // 如果创建失败 表示验证没有通过 输出错误提示信息
-                $this->error($model->getError());
-                exit();
+                $this->error($validate->getError());
             } else {
-                $model->create_at=time();
-                $model->update_at=$model->create_at;
-                $model->manager_id=session('adminId');
-                if ($model->add()) {
-                    $this->success("添加成功", url('Notice/index'));
-                } else {
-                    $this->error("添加失败");
+                if($id>0){
+
+                    if (NoticeModel::update($data)) {
+                        $this->success("更新成功", url('Notice/index'));
+                    } else {
+                        $this->error("更新失败");
+                    }
+                }else {
+                    $data['manager_id'] = session('adminId');
+                    if (NoticeModel::create($data)) {
+                        $this->success("添加成功", url('Notice/index'));
+                    } else {
+                        $this->error("添加失败");
+                    }
                 }
             }
         }
-    }
-    /**
-     * 公告修改
-     */
-    public function update($id)
-    {
-        $id = intval($id);
-        //默认显示添加表单
-        if (!$this->request->isPost()) {
-            $model = Db::name('Notice')->where("id= %d",$id)->find();
-            $this->assign('model',$model);
-            $this->display();
+        if($id>0) {
+            $model = Db::name('Notice')->where(["id"=> $id])->find();
+        }else{
+            $model=array();
         }
-        if ($this->request->isPost()) {
-            $model = D("Notice");
-            if (!$model->create()) {
-                $this->error($model->getError());
-            }else{
-                $model->update_at=time();
-                if ($model->save()) {
-                    $this->success("更新成功", url('Notice/index'));
-                } else {
-                    $this->error("更新失败");
-                }
-            }
-        }
+        $this->assign('model',$model);
+        $this->display();
     }
+
     /**
      * 公告删除
      */

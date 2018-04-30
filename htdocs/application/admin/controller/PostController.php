@@ -1,5 +1,7 @@
 <?php
 namespace app\admin\controller;
+use app\admin\model\PostModel;
+use app\index\validate\PostValidate;
 use think\Db;
 
 /**
@@ -38,24 +40,28 @@ class PostController extends BaseController
         $id = intval($id);
 
         if ($this->request->isPost()) {
-            $model = D("Post");
-            if (!$model->create()) {
-                $this->error($model->getError());
+            $data=$this->request->post();
+            $validate=new PostValidate();
+
+            if (!$validate->check($data)) {
+                $this->error($validate->getError());
             }else{
                 $uploaded=$this->upload('post','upload_cover',true);
-                if(!empty($uploaded))$model->cover=$uploaded['url'];
+                if(!empty($uploaded)){
+                    $data['cover']=$uploaded['url'];
+                }
                 if($id>0) {
-                    if ($model->save()) {
+                    $data['id']=$id;
+                    if (PostModel::update($data)) {
                         user_log($this->mid, 'updatepost', 1, '修改文章 ' . $id, 'manager');
                         $this->success("编辑成功", url('post/index'));
                     } else {
                         $this->error("编辑失败");
                     }
                 }else{
-                    $model->time = time();
-                    $model->user_id = $this->mid;
-                    if ($model->add()) {
-                        user_log($this->mid,'addpost',1,'添加文章 '.$model->getLastInsID() ,'manager');
+                    $data['user_id'] = $this->mid;
+                    if ($insert_id=PostModel::create($data)) {
+                        user_log($this->mid,'addpost',1,'添加文章 '.$insert_id ,'manager');
                         $this->success("添加成功", url('post/index'));
                     } else {
                         $this->error("添加失败");
@@ -79,9 +85,9 @@ class PostController extends BaseController
      */
     public function delete($id)
     {
-    		$id = intval($id);
+        $id = intval($id);
         $model = Db::name('post');
-        $result = $model->where("id= %d",$id)->delete();
+        $result = $model->where(["id"=>$id])->delete();
         if($result){
             user_log($this->mid,'deletepost',1,'删除文章 '.$id ,'manager');
             $this->success("删除成功", url('post/index'));
@@ -91,13 +97,13 @@ class PostController extends BaseController
     }
 	public function push($id) {//post到前台
 		$id = intval($id);
-        $status = Db::name('post') -> where("id= %d",$id) -> getField('status');
+        $status = Db::name('post')->where(["id"=>$id])->column('status');
         if ($status === '0') {
             $data['status'] = 1;
         } else {
             $data['status'] = 0;
         }
-        $result = Db::name('post') -> where("id= %d",$id) -> save($data);
+        $result = Db::name('post')->where(["id"=>$id])->update($data);
         if ($result && $data['status'] === 1) {
             $this -> success("发布成功", url('post/index'));
         } elseif ($result && $data['status'] === 0) {

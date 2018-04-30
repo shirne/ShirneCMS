@@ -40,10 +40,10 @@
                 <td>{$v.id}</td>
                 <td>{$v.code}</td>
                 <td>{$v.member_id}</td>
-                <td>{$v.create_at|date="Y/m/d H:i:s",###}</td>
+                <td>{$v.create_at|showdate}</td>
                 <td>{$v.member_use}</td>
-                <td>{$v.use_at|date="Y/m/d H:i:s",###}</td>
-                <td>{$v.valid_at|date="Y/m/d H:i:s",###}</td>
+                <td>{$v.use_at|showdate}</td>
+                <td>{$v.valid_at|showdate}</td>
                 <td><if condition="$v.status eq 1"><span style="color:red">锁定</span><else/>正常</if></td>
                 <td>
                     <a class="btn btn-default btn-sm" href="{:U('Invite/update',array('id'=>$v['id']))}"><i class="fa fa-edit"></i> 转赠</a>

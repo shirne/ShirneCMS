@@ -2,6 +2,7 @@
 
 namespace app\admin\controller;
 
+use app\index\validate\CategoryValidate;
 use think\Db;
 
 /**
@@ -31,18 +32,24 @@ class CategoryController extends BaseController
     public function edit($id=0)
     {
         if ($this->request->isPost()) {
-            //如果用户提交数据
-            $model = Db::name("Category");
-            if (!$model->create()) {
+            $data=$this->request->post();
+            $validate=new CategoryValidate();
+            $validate->setId($id);
+
+            if (!$validate->check($data)) {
                 // 如果创建失败 表示验证没有通过 输出错误提示信息
-                $this->error($model->getError());
-                exit();
+                $this->error($validate->getError());
             } else {
                 $iconupload=$this->upload('category','upload_icon',true);
-                if(!empty($iconupload))$model->icon=$iconupload['url'];
+                if(!empty($iconupload))$data['icon']=$iconupload['url'];
                 $uploaded=$this->upload('category','upload_image',true);
-                if(!empty($uploaded))$model->image=$uploaded['url'];
-                if ($model->insert()) {
+                if(!empty($uploaded))$data['image']=$uploaded['url'];
+                if($id>0){
+                    $result=Db::name('category')->where(array('id'=>$id))->update($data);
+                }else{
+                    $result=Db::name('category')->insert($data);
+                }
+                if ($result) {
                     $this->success(($id>0?'保存':'添加')."成功", url('category/index'));
                 } else {
                     $this->error(($id>0?'保存':'添加')."失败");
@@ -71,12 +78,12 @@ class CategoryController extends BaseController
     		$id = intval($id);
         $model = Db::name('Category');
         //查询属于这个分类的文章
-        $posts = Db::name('Post')->where("cate_id= %d",$id)->select();
+        $posts = Db::name('Post')->where(["cate_id"=>$id])->select();
         if($posts){
             $this->error("禁止删除含有文章的分类");
         }
         //禁止删除含有子分类的分类
-        $hasChild = $model->where("pid= %d",$id)->select();
+        $hasChild = $model->where(["pid"=>$id])->select();
         if($hasChild){
             $this->error("禁止删除含有子分类的分类");
         }

@@ -1,5 +1,6 @@
 <?php
 namespace app\admin\controller;
+use app\admin\model\ManagerModel;
 use app\index\validate\ManagerValidate;
 use think\Db;
 
@@ -15,6 +16,7 @@ class ManagerController extends BaseController
      */
     public function index($key="")
     {
+        $model=Db::name('Manager');
         $where=array();
         if(!empty($key )){
             $where['username'] = array('like',"%$key%");
@@ -22,8 +24,9 @@ class ManagerController extends BaseController
             $where['_logic'] = 'or';
         }
 
-        $this->pagelist($this->model,$where,'id ASC');
-
+        $lists=$model->where($where)->order('ID ASC')->paginate(15);
+        $this->assign('lists',$lists);
+        $this->assign('page',$lists->render());
         $this->display();
     }
 
@@ -74,7 +77,6 @@ class ManagerController extends BaseController
             $validate=new ManagerValidate();
             $validate->setId();
             if (!$validate->check($data)) {
-                // 如果创建失败 表示验证没有通过 输出错误提示信息
                 $this->error($validate->getError());
                 exit();
             } else {
@@ -98,9 +100,8 @@ class ManagerController extends BaseController
         $id=intval($id);
         if($id==0)$this->error('参数错误');
 
-
         if ($this->request->isPost()) {
-            $data = $this->request->only(['username','email','mobile','level_id','password'],'post');
+            $data = $this->request->only(['username','email','mobile','password'],'post');
             $validate=new ManagerValidate();
             $validate->setId($id);
             if (!$validate->scene('edit')->check($data)) {
