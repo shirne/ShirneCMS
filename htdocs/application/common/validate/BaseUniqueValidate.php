@@ -14,7 +14,14 @@ class BaseUniqueValidate extends Validate
 {
     public function setId($id=0){
         foreach ($this->rule as $f=>$rule){
-            $this->rule[$f]=str_replace($rule,'%id%',$id);
+            if(is_string($rule)) {
+                $this->rule[$f] = str_replace($rule, '%id%', $id);
+            }elseif(is_array($rule)){
+                foreach ($rule as $t=>$v){
+                    $rule[$t]=str_replace($v, '%id%', $id);
+                }
+                $this->rule[$f]=$rule;
+            }
         }
     }
 }

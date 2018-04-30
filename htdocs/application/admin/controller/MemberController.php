@@ -1,7 +1,7 @@
 <?php
 namespace app\admin\controller;
 use app\common\model\MemberModel;
-use app\index\validate\MemberValidate;
+use app\common\validate\MemberValidate;
 use think\Db;
 
 /**
@@ -140,7 +140,7 @@ class MemberController extends BaseController
             $data=$this->request->only(['username','email','mobile','level_id','password'],'post');
             $validate=new MemberValidate();
             $validate->setId();
-            if (!$validate->check($data)) {
+            if (!$validate->scene('register')->check($data)) {
                 $this->error($validate->getError());
             } else {
                 $data['salt']=random_str(8);

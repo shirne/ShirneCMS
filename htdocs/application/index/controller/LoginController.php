@@ -1,6 +1,7 @@
 <?php
 
 namespace app\index\controller;
+use app\common\validate\MemberValidate;
 use sdk\WechatAuth;
 use think\Db;
 
@@ -284,7 +285,7 @@ class LoginController extends BaseController{
         if(empty($types)) {
             $this->error("您的帐户未绑定任何有效资料，请联系客服处理。");
         }else{
-            $this->ajax($types, 1);
+            $this->success('', '',$types);
         }
     }
 
@@ -306,39 +307,20 @@ class LoginController extends BaseController{
             $data['realname']=$this->request->post('realname');
             $data['mobile']=$this->request->post('mobile');
 
-            $member=Db::name('member');
-            if(empty($data['username']))$this->error("请填写用户名");
-            if(!preg_match('/^[a-zA-Z][a-zA-Z0-9\\-]{5,9}$/',$data['username']))$this->error("用户名格式不正确");
-            $m=$member->where(array('username'=>$data['username']))->find();
-            if(!empty($m))$this->error("用户名已经被占用");
-
-            if(empty($data['password']))$this->error("请填写密码");
-            if(strlen($data['password'])<6 || strlen($data['password'])>20)$this->error("密码长度 6-20");
-
-            if(empty($data['email']))$this->error("请填写邮箱");
-            if(!preg_match('/^([0-9A-Za-z\\-_\\.]+)@([0-9a-z]+\\.[a-z]{2,3}(\\.[a-z]{2})?)$/',$data['email']))$this->error("邮箱格式不正确");
-            $m=$member->where(array('email'=>$data['email']))->find();
-            if(!empty($m))$this->error("邮箱已经被占用");
-
-            if(empty($data['realname']))$this->error("请填写真实姓名");
-
-            if(empty($data['mobile']))$this->error("请填写手机号码");
-            if(!preg_match('/^1[3458679][0-9]{9}$/',$data['mobile']))$this->error("手机号码格式不正确");
-            $m=$member->where(array('mobile'=>$data['mobile']))->find();
-            if(!empty($m))$this->error("手机号已经被占用");
+            $validate=new MemberValidate();
+            $validate->setId();
+            if(!$validate->scene('register')->check($data)){
+                $this->error($validate->getError());
+            }
 
             $invite_code=$this->request->post('invite_code');
-            if(($this->config['m_invite']==1 && !empty($invite_code)) || $this->settings['m_invite']==2) {
+            if(($this->config['m_invite']==1 && !empty($invite_code)) || $this->config['m_invite']==2) {
                 if (empty($invite_code)) $this->error("请填写激活码");
                 $invite = Db::name('invite_code')->where(array('code' => $invite_code, 'is_lock' => 0, 'member_use' => 0))->find();
                 if (empty($invite) || ($invite['invalid_at'] > 0 && $invite['invalid_at'] < time())) {
                     $this->error("激活码不正确");
                 }
             }
-
-
-
-
 
             Db::startTrans();
             if(!empty($invite)) {
@@ -348,13 +330,11 @@ class LoginController extends BaseController{
                     $this->error("激活码已被使用");
                 }
             }
-            $time=time();
             $data['salt']=random_str(8);
             $data['password']=encode_password($data['password'],$data['salt']);
             $data['login_ip']=$this->request->ip();
             $data['referer']=empty($invite['member_id'])?session('agent'):$invite['member_id'];
-            $data['create_at']=$time;
-            $data['update_at']=$time;
+
             if($invite['level_id']){
                 $data['level_id']=$invite['level_id'];
             }else{
@@ -385,7 +365,7 @@ class LoginController extends BaseController{
             $this->error('参数不合法');
         }
         $member=Db::name('member');
-        $val=I('value');
+        $val=$this->request->get('value');
         $m=$member->where(array($type=>$val))->find();
         $json=array();
         $json['error']=0;
