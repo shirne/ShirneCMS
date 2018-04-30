@@ -17,16 +17,15 @@ class IndexController extends BaseController{
         $this->assign('stat',$stat);
 
         //统计
-        $member=Db::name('member');
-        $m['total']=$member->count();
-        $m['avail']=$member->where(array('status'=>1))->count();
-        $m['agent']=$member->where(array(array('isagent','GT',0)))->count();
+        $m['total']=Db::name('member')->count();
+        $m['avail']=Db::name('member')->where('status',1)->count();
+        $m['agent']=Db::name('member')->where('isagent','GT',0)->count(0);
         $this->assign('mem',$m);
 
         //资金
         $a['total_charge']=Db::name('member_recharge')->where(array('status'=>1))->sum('amount');
         $a['total_cash']=Db::name('member_cashin')->where(array('status'=>1))->sum('amount');
-        $a['total_money']=$member->sum('money');
+        $a['total_money']=Db::name('member')->sum('money');
         $this->assign('money',$a);
 
         return $this->fetch();

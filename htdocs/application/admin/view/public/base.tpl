@@ -34,18 +34,18 @@
 
             <include file="Public/sidebar" />
 
-            <ul class="nav navbar-nav navbar-user">
+            <div class="nav navbar-nav navbar-user">
 
                 <li class="dropdown user-dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> 你好,{:session('adminname')} <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="/" target="_blank"><i class="fa fa-home"></i> 浏览</a></li>
-                        <li class="divider"></li>
-                        <li><a href="{:url('setting/index')}"><i class="fa fa-gear"></i> 设置</a></li>
-                        <li><a href="{:url('Index/profile')}"><i class="fa fa-user"></i> 资料</a></li>
-                        <li class="divider"></li>
-                        <li><a href="{:url('login/logout')}"><i class="fa fa-power-off"></i> 退出</a></li>
-                    </ul>
+                    <a href="javascript:" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> 你好,{:session('adminname')} <b class="caret"></b></a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="/" target="_blank"><i class="fa fa-home"></i> 浏览</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{:url('setting/index')}"><i class="fa fa-gears"></i> 设置</a>
+                        <a class="dropdown-item" href="{:url('Index/profile')}"><i class="fa fa-user"></i> 资料</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{:url('login/logout')}"><i class="fa fa-power-off"></i> 退出</a>
+                    </div>
                 </li>
             </ul>
         </div>

@@ -7,10 +7,10 @@
 <div id="page-wrapper">
     
     <div class="row">
-        <div class="col-xs-6">
+        <div class="col col-xs-6">
             <a href="{:url('category/edit')}" class="btn btn-success">添加分类</a>
         </div>
-        <div class="col-xs-6">
+        <div class="col col-xs-6">
             <form action="{:url('category/index')}" method="post">
                 <div class="form-group input-group">
                     <input type="text" class="form-control" name="key" placeholder="输入分类标题或者别名关键词搜索">
@@ -45,7 +45,6 @@
         </foreach>
         </tbody>
     </table>
-    {$page}
 </div>
 
 </block>

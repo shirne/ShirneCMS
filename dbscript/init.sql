@@ -64,7 +64,7 @@ VALUES
   (23, 'mail_user', '邮箱账户', 'text', 'advance', '0', '', '', ''),
   (24, 'mail_pass', '邮箱密码', 'text', 'advance', '0', '', '', ''),
   (31, 'm_invite', '邀请注册', 'radio', 'member', '0', '1', '', '0:关闭\r\n1:启用\r\n2:强制'),
-  (31, 'm_register', '强制注册', 'radio', 'member', '0', '1', '', '0:关闭\r\n1:启用'),
+  (32, 'm_register', '强制注册', 'radio', 'member', '0', '1', '', '0:关闭\r\n1:启用'),
   (26, 'cash_fee', '提现手续费', 'text', 'member', '0', '10', '', ''),
   (27, 'cash_limit', '最低提现金额', 'text', 'member', '0', '10', '', ''),
   (28, 'cash_max', '最高提现金额', 'text', 'member', '0', '100000', '', '');

@@ -21,7 +21,7 @@ class CategoryController extends BaseController
             $where['title|name'] = array('like',"%$key%");
         } 
         
-        $category = $model->where($where)->order('pid ASC,`sort` ASC,id ASC')->select();
+        $category = $model->where($where)->order('pid ASC,sort ASC,id ASC')->select();
         $this->assign('model',getSortedCategory($category));
         return $this->fetch();
     }
@@ -61,7 +61,7 @@ class CategoryController extends BaseController
             }else{
                 $model=array('sort'=>99);
             }
-            $cate = getSortedCategory(Db::name('category')->order('pid ASC,`sort` ASC')->select());
+            $cate = getSortedCategory(Db::name('category')->order('pid ASC,sort ASC')->select());
 
             $this->assign('cate',$cate);
             $this->assign('model',$model);
