@@ -222,7 +222,7 @@ jQuery(function ($) {
         var link = $('.side-nav a[data-key=' + menu + ']');
 
         if (link.length > 0) {
-            link.parents('.panel-collapse').addClass('in');
+            link.parents('.collapse').addClass('show');
             link.addClass("active");
         }
 

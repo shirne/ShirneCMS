@@ -132,17 +132,17 @@ table.tablesorter thead tr th:hover {
     height: 100%;
 }
 
-.side-nav .panel-default{
+.side-nav .card{
     border-radius:0;
     margin:0;
     border:0;
     background: none;
 }
-.side-nav .panel + .panel{
+.side-nav .card + .card{
     margin-top:0;
 }
 
-.side-nav .panel-heading{
+.side-nav .card-header{
     padding:0;
     background: none;
 }
@@ -155,16 +155,19 @@ table.tablesorter thead tr th:hover {
     padding:8px 15px;
     color: #999999;
 }
-.side-nav .panel-heading a{
+.side-nav .card-header a{
     padding:13px 15px;
-    border-top: 1px solid rgba(0,0,0,0.1);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+    /*border-top: 1px solid rgba(0,0,0,0.1);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);*/
 }
-.side-nav .panel-body a{
+.side-nav .card-body{
+    padding:0;
+}
+.side-nav .card-body a{
 
     padding-left:25px;
 }
-.side-nav .panel-body ul{
+.side-nav .card-body ul{
     margin:0;
     padding:8px 0;
     background:#222;
@@ -175,18 +178,18 @@ table.tablesorter thead tr th:hover {
 .side-nav a.active{
     color: #fff;
     text-decoration: none;
-    background-color: #2e2e2e;
+    /*background-color: #2e2e2e;*/
 }
-.side-nav .panel-body a:focus,
-.side-nav .panel-body a:hover,
-.side-nav .panel-body a.active{
+.side-nav .card-body a:focus,
+.side-nav .card-body a:hover,
+.side-nav .card-body a.active{
     background-color: #292929;
 }
 
-.side-nav .panel-body a.active{
-    background: #111;
+.side-nav .card-body a.active{
+    /*background: #111;*/
 }
-.side-nav .panel-heading + .panel-collapse .panel-body{
+.side-nav .card-header + .card-header .card-body{
     border:0;
     padding:0;
 }
@@ -247,6 +250,6 @@ table.tablesorter thead tr th:hover {
 }
 
 .sidebar-active{
-    color: #fff;
-    background-color: #333;
+    /*color: #fff;
+    background-color: #333;*/
 }

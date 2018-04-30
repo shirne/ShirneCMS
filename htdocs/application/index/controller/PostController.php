@@ -30,7 +30,7 @@ class PostController extends BaseController{
         }
         $model=Db::view('post','*')
         ->view('category',['name'=>'category_name','title'=>'category_title'],'post.cate_id=category.id','LEFT')
-        ->view('manager',['username'],'LEFT')
+        ->view('manager',['username'],'manager.id=post.user_id','LEFT')
         ->paginate(10);
 
         $this->assign('lists', $model);
@@ -40,6 +40,9 @@ class PostController extends BaseController{
 
     public function view($id){
         $post = Db::name('post')->find($id);
+        if(empty($post)){
+            $this->error('文章不存在');
+        }
         $this->seo($post['title']);
         $this->category($post['cate_id']);
 
@@ -58,10 +61,7 @@ class PostController extends BaseController{
     private function category($name=''){
         $categories=cache('allcate');
         if(empty($categories)) {
-            $cates = Db::name('category')->select();
-            foreach ($cates as $cate) {
-                $categories[$cate['id']] = $cate;
-            }
+            $categories = Db::name('category')->select(array('index'=>'id'));
             cache('allcate',$categories);
         }
 
@@ -84,7 +84,7 @@ class PostController extends BaseController{
                 }
             }
         }
-        $this->categries=array();
+        $this->categries=array('0'=>[]);
         foreach ($categories as $cate){
             $this->categries[$cate['pid']][$cate['id']]=$cate;
         }

@@ -13,7 +13,7 @@
 				<div class="form-group input-group">
 					<input type="text" class="form-control" name="key" placeholder="输入文章标题、作者或者分类关键词搜索">
 					<div class="input-group-append">
-                      <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
+                      <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i></button>
                     </div>
 				</div>
 			</form>

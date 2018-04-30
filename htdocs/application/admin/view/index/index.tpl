@@ -10,10 +10,10 @@
             <div class="panel panel-info">
                 <div class="panel-heading">
                     <div class="row">
-                        <div class="col-xs-6">
+                        <div class="col col-xs-6">
                             <i class="fa  fa-comment fa-5x"></i>
                         </div>
-                        <div class="col-xs-6 text-right">
+                        <div class="col col-xs-6 text-right">
                             <p class="announcement-heading">{$stat.feedback}</p>
                             <p class="announcement-text">留言</p>
                         </div>
@@ -22,10 +22,10 @@
                 <a href="{:url('feedback/index')}">
                     <div class="panel-footer announcement-bottom">
                         <div class="row">
-                            <div class="col-xs-6">
+                            <div class="col col-xs-6">
                                 查看留言
                             </div>
-                            <div class="col-xs-6 text-right">
+                            <div class="col col-xs-6 text-right">
                                 <i class="fa fa-arrow-circle-right"></i>
                             </div>
                         </div>
@@ -37,10 +37,10 @@
             <div class="panel panel-warning">
                 <div class="panel-heading">
                     <div class="row">
-                        <div class="col-xs-6">
+                        <div class="col col-xs-6">
                             <i class="fa fa-users fa-5x"></i>
                         </div>
-                        <div class="col-xs-6 text-right">
+                        <div class="col col-xs-6 text-right">
                             <p class="announcement-heading">{$stat.member}</p>
                             <p class="announcement-text">会员</p>
                         </div>
@@ -49,10 +49,10 @@
                 <a href="{:url('member/index')}">
                     <div class="panel-footer announcement-bottom">
                         <div class="row">
-                            <div class="col-xs-6">
+                            <div class="col col-xs-6">
                                 管理会员
                             </div>
-                            <div class="col-xs-6 text-right">
+                            <div class="col col-xs-6 text-right">
                                 <i class="fa fa-arrow-circle-right"></i>
                             </div>
                         </div>
@@ -64,10 +64,10 @@
             <div class="panel panel-danger">
                 <div class="panel-heading">
                     <div class="row">
-                        <div class="col-xs-6">
+                        <div class="col col-xs-6">
                             <i class="fa fa-edit fa-5x"></i>
                         </div>
-                        <div class="col-xs-6 text-right">
+                        <div class="col col-xs-6 text-right">
                             <p class="announcement-heading">{$stat.post}</p>
                             <p class="announcement-text">文章</p>
                         </div>
@@ -76,10 +76,10 @@
                 <a href="{:url('post/index')}">
                     <div class="panel-footer announcement-bottom">
                         <div class="row">
-                            <div class="col-xs-6">
+                            <div class="col col-xs-6">
                                 管理文章
                             </div>
-                            <div class="col-xs-6 text-right">
+                            <div class="col col-xs-6 text-right">
                                 <i class="fa fa-arrow-circle-right"></i>
                             </div>
                         </div>
@@ -91,10 +91,10 @@
             <div class="panel panel-success">
                 <div class="panel-heading">
                     <div class="row">
-                        <div class="col-xs-6">
+                        <div class="col col-xs-6">
                             <i class="fa fa-link fa-5x"></i>
                         </div>
-                        <div class="col-xs-6 text-right">
+                        <div class="col col-xs-6 text-right">
                             <p class="announcement-heading">{$stat.links}</p>
                             <p class="announcement-text">链接</p>
                         </div>
@@ -103,10 +103,10 @@
                 <a href="{:url('links/index')}">
                     <div class="panel-footer announcement-bottom">
                         <div class="row">
-                            <div class="col-xs-6">
+                            <div class="col col-xs-6">
                                 管理链接
                             </div>
-                            <div class="col-xs-6 text-right">
+                            <div class="col col-xs-6 text-right">
                                 <i class="fa fa-arrow-circle-right"></i>
                             </div>
                         </div>

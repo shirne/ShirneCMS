@@ -1,47 +1,40 @@
 <header>
 
-    <nav class="navbar navbar-default">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">Brand</a>
-            </div>
+            <a class="navbar-brand" href="#">Brand</a>
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-            <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="{:url('index/index')}">首页<span class="sr-only">(current)</span></a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">菜单 <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{:url('Post/index')}">文章列表</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="{:url('Page/index')}">单页</a></li>
-                        </ul>
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active"><a class="nav-link" href="{:url('index/index')}">首页<span class="sr-only">(current)</span></a></li>
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">菜单 <span class="caret"></span></a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="{:url('Post/index')}">文章列表</a>
+                            <div role="separator" class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{:url('Page/index')}">单页</a>
+                        </div>
                     </li>
                 </ul>
-                <ul class="nav navbar-nav navbar-right">
+                <ul class="navbar-nav justify-content-end">
 
                     <if condition="$isLogin">
-                        <li class="dropdown">
+                        <li class="nav-item dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">会员中心 <span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="#">Action</a></li>
-                                <li><a href="#">Another action</a></li>
-                                <li><a href="#">Something else here</a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a href="#">Separated link</a></li>
-                            </ul>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" href="#">Another action</a>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="{:url('member/logout')}"><i class="fa fa-power-off"></i> 退出登录</a>
+                            </div>
                         </li>
                         <else/>
-                        <li><a href="{:url('login/index')}">登录</a></li>
-                        <li><a href="{:url('login/register')}">注册</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{:url('login/index')}">登录</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{:url('login/register')}">注册</a></li>
                     </if>
                 </ul>
             </div><!-- /.navbar-collapse -->

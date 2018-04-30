@@ -30,14 +30,14 @@
 
         <a class="navbar-brand" href="{:url('index/index')}">管理后台</a>
 
-        <div class="navbar-collapse navbar-ex1-collapse">
+        <div class="navbar-collapse justify-content-end navbar-ex1-collapse">
 
             <include file="Public/sidebar" />
 
             <div class="nav navbar-nav navbar-user">
 
                 <li class="dropdown user-dropdown">
-                    <a href="javascript:" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> 你好,{:session('adminname')} <b class="caret"></b></a>
+                    <a href="javascript:" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> 你好,{:session('adminname')} <b class="caret"></b></a>
                     <div class="dropdown-menu">
                         <a class="dropdown-item" href="/" target="_blank"><i class="fa fa-home"></i> 浏览</a>
                         <div class="dropdown-divider"></div>

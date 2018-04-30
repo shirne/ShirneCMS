@@ -29,8 +29,8 @@ class MemberController extends BaseController
         }
 
         $referer=$this->request->request('referer');
-        if($referer!==''){
-            if($referer!=='0'){
+        if(!empty($referer)){
+            if($referer!='0'){
                 $member=$model->where(array('id|username'=>$referer))->find();
                 if(empty($member)){
                     $this->error('填写的会员不存在');

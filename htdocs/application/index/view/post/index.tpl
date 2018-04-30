@@ -4,18 +4,18 @@
 	<div class="main">
 		<div class="container">
 			<ol class="breadcrumb">
-				<li class="icon"><a href="/">首页</a></li>
-				<li><a href="javascript:">资讯中心</a></li>
+				<li class="breadcrumb-item icon"><a href="/">首页</a></li>
+				<li class="breadcrumb-item active"><a href="javascript:">资讯中心</a></li>
 			</ol>
 		</div>
 
 		<div class="container">
-			<include file="side" />
+			<include file="post/side" />
 
 			<div class="panel pull-right main_right news_list">
 				<div class="panel-body">
 					<ul>
-						<php>$empty='<li class="empty">暂时没有内容</li>'</php>
+						<php>$empty='<li class="empty">暂时没有内容</li>';</php>
 						<Volist name="lists" id="post" empty="$empty">
 						<li>
 							<h2><a href="{:url('Post/view',array('id'=>$post['id']))}">{$post.title}</a></h2>

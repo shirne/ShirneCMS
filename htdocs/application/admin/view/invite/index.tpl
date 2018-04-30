@@ -6,15 +6,15 @@
 
 <div id="page-wrapper">
     <div class="row">
-        <div class="col-xs-6">
+        <div class="col col-xs-6">
             <a href="{:url('Invite/add')}" class="btn btn-success">生成邀请码</a>
         </div>
-        <div class="col-xs-6">
+        <div class="col col-xs-6">
             <form action="{:url('member/index')}" method="post">
                 <div class="form-group input-group">
                     <input type="text" class="form-control" name="key" placeholder="输入用户id或邀请码搜索">
                     <div class="input-group-append">
-                      <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
+                      <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i></button>
                     </div>
                 </div>
             </form>

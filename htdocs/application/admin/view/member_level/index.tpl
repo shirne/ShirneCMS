@@ -7,10 +7,10 @@
     <div id="page-wrapper">
 
         <div class="row">
-            <div class="col-xs-6">
+            <div class="col col-xs-6">
                 <a href="{:url('MemberLevel/add')}" class="btn btn-success">添加等级</a>
             </div>
-            <div class="col-xs-6">
+            <div class="col col-xs-6">
             </div>
         </div>
         <table class="table table-hover table-striped">
@@ -24,7 +24,7 @@
             </tr>
             </thead>
             <tbody>
-            <foreach name="model" item="v">
+            <foreach name="lists" item="v">
                 <tr>
                     <td>{$v.level_id}</td>
                     <td>{$v.level_name}[{$v.short_name}]<if condition="$v['is_default']"><span class="label label-info">默认</span> </if></td>
@@ -38,6 +38,5 @@
             </foreach>
             </tbody>
         </table>
-        {$page}
     </div>
 </block>

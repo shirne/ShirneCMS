@@ -7,11 +7,11 @@
 <div id="page-wrapper">
     
     <div class="row">
-        <div class="col-xs-6">
+        <div class="col col-xs-6">
             <a href="{:url('permission/add')}" class="btn btn-success">添加菜单</a>
             <a href="{:url('permission/clearcache')}" class="btn btn-default">清除缓存</a>
         </div>
-        <div class="col-xs-6">
+        <div class="col col-xs-6">
         </div>
     </div>
     <table class="table table-hover table-striped">

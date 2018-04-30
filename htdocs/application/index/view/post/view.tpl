@@ -10,7 +10,7 @@
 		</div>
 
 		<div class="container">
-			<include file="side" />
+			<include file="post/side" />
 
 			<div class="panel pull-right main_right news_list">
 				<div class="panel-body postbody">
