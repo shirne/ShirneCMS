@@ -71,8 +71,8 @@ var dialogTpl='<div class="modal fade" id="{@id}" tabindex="-1" role="dialog" ar
     <div class="modal-dialog">\
     <div class="modal-content">\
     <div class="modal-header">\
-    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>\
     <h4 class="modal-title" id="{@id}Label"></h4>\
+    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>\
     </div>\
     <div class="modal-body">\
     </div>\
@@ -113,14 +113,15 @@ function Dialog(opts){
         'id':'dlgModal'+dialogIdx++,
         'size':'',
         'btns':[
-            {'text':'取消','class':'btn-default'},
+            {'text':'取消','class':'btn-secondary'},
             {'text':'确定','isdefault':true,'class':'btn-primary'}
         ],
         'defaultBtn':1,
         'onsure':null,
         'onshow':null,
         'onshown':null,
-        'onhide':null
+        'onhide':null,
+        'onhidden':null
     },opts);
 
     this.box=$(this.options.id);
@@ -130,6 +131,7 @@ Dialog.prototype.generBtn=function(opt,idx){
 };
 Dialog.prototype.show=function(html,title){
     this.box=$('#'+this.options.id);
+    if(!title)title='系统提示';
     if(this.box.length<1) {
         $(document.body).append(dialogTpl.compile({'id': this.options.id}));
         this.box=$('#'+this.options.id);
@@ -161,11 +163,14 @@ Dialog.prototype.show=function(html,title){
     body.html(html);
     this.box.on('hide.bs.modal',function(){
         if(self.options.onhide){
-            self.options.onhide(body);
+            self.options.onhide(body,self.box);
         }
         Dialog.instance=null;
     });
     this.box.on('hidden.bs.modal',function(){
+        if(self.options.onhidden){
+            self.options.onhidden(body,self.box);
+        }
         self.box.remove();
     });
     this.box.on('show.bs.modal',function(){
@@ -255,7 +260,40 @@ jQuery(function ($) {
     $('.custom-file .custom-file-input').on('change',function(){
         var label=$(this).parents('.custom-file').find('.custom-file-label');
         label.text($(this).val());
-    })
+    });
+
+    $('.btn-primary[type=submit]').click(function(e){
+        var form=$(this).parents('form');
+        if(form.attr('enctype')=='multipart/form-data'){
+            return true;
+        }
+        e.preventDefault();
+        $(this).attr('disabled',true);
+        var btn=this;
+        $.ajax({
+            url:$(form).attr('action'),
+            type:'POST',
+            dataType:'JSON',
+            data:$(form).serialize(),
+            success:function (json) {
+                if(json.code==1){
+                    new Dialog({
+                        onhidden:function(){
+                            if(json.url){
+                                location.href=json.url;
+                            }else{
+                                location.reload();
+                            }
+                        }
+                    }).show(json.msg);
+                }else{
+                    new Dialog({}).show(json.msg);
+                    $(btn).removeAttr('disabled');
+                }
+            }
+        })
+
+    });
 
     if($.fn.datetimepicker) {
         $('.datepicker').datetimepicker({

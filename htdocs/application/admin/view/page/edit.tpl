@@ -6,14 +6,14 @@
 <div id="page-wrapper">
     <div class="page-header">{$id>0?'编辑':'添加'}页面</div>
     <div id="page-content">
-    <form method="post" action="{:url('page/update',array('id'=>$page.id))}">
+    <form method="post" action="">
         <div class="form-group">
             <label for="page-title">单页标题</label>
             <input type="text" name="title" class="form-control" value="{$page.title}" id="page-title" placeholder="输入单页标题">
         </div>
         <div class="form-group">
             <label for="page-name">单页别名</label>
-            <input type="text" name="name" class="form-control" value="{$page.name}"id="page-name" placeholder="输入单页别名,不能和其他单页别名重复">
+            <input type="text" name="name" class="form-control" value="{$page.name}" id="page-name" placeholder="输入单页别名,不能和其他单页别名重复">
         </div>
         <div class="form-group">
             <label for="p-content">单页内容</label>

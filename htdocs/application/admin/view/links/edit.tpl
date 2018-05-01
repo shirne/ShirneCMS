@@ -5,24 +5,24 @@
 <include file="Public/bread" menu="links_index" section="其它" title="链接管理" />
 
 <div id="page-wrapper">
-    <div class="page-header">修改链接</div>
+    <div class="page-header">{$id>0?'编辑':'添加'}链接</div>
     <div class="page-content">
-    <form method="post" action="{:url('links/update')}">
+    <form method="post" action="">
         <div class="form-group">
-            <label for="aa">链接标题</label>
-            <input type="text" name="title" class="form-control" id="aa" value="{$model.title}" placeholder="输入链接标题">
+            <label for="title">链接标题</label>
+            <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="输入链接标题">
         </div>
         <div class="form-group">
-            <label for="bb">链接地址</label>
-            <input type="text" name="url" class="form-control" id="bb" value="{$model.url}" placeholder="输入链接标题">
+            <label for="url">链接地址</label>
+            <input type="text" name="url" class="form-control" value="{$model.url}" placeholder="输入链接标题">
         </div>
         <div class="form-group">
-            <label for="cc">优先级</label>
-            <input type="text" name="sort" class="form-control" id="cc" value="{$model.sort}" placeholder="越大越靠前" value="100">
+            <label for="sort">优先级</label>
+            <input type="text" name="sort" class="form-control" value="{$model.sort}" placeholder="越小越靠前" >
         </div>
         <div class="form-group">
             <input type="hidden" name="id" value="{$model.id}">
-            <button type="submit" class="btn btn-primary">更新</button>
+            <button type="submit" class="btn btn-primary">{$id>0?'保存':'添加'}</button>
         </div>
     </form>
     </div>

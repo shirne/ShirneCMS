@@ -56,7 +56,7 @@
 								<if condition="0">
 								<div class="input-group">
 									<input type="text" class="form-control" name="mobile">
-									<a class="btn btn-default input-group-addon">发送验证码</a>
+									<a class="btn btn-dark input-group-addon">发送验证码</a>
 									<input type="text" class="form-control" name="mobilecheck">
 								</div>
 									<else/>
@@ -77,7 +77,7 @@
 						</if>
 						<div class="form-group submitline">
 							<div class="col-sm-offset-2 col-sm-10">
-								<button type="submit" class="btn btn-default create">创建我的账户</button>
+								<button type="submit" class="btn btn-dark create">创建我的账户</button>
 							</div>
 						</div>
 					</form>

@@ -1,7 +1,7 @@
 <?php
 namespace app\admin\controller;
 use app\admin\model\PostModel;
-use app\index\validate\PostValidate;
+use app\admin\validate\PostValidate;
 use think\Db;
 
 /**
@@ -40,12 +40,16 @@ class PostController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
+                $delete_images=[];
                 $uploaded = $this->upload('post', 'upload_cover', true);
                 if (!empty($uploaded)) {
                     $data['cover'] = $uploaded['url'];
+                    $delete_images[]=$data['delete_cover'];
                 }
+                unset($data['delete_cover']);
                 $data['user_id'] = $this->mid;
                 if ($insert_id=PostModel::create($data)) {
+                    delete_image($delete_images);
                     user_log($this->mid,'addpost',1,'添加文章 '.$insert_id ,'manager');
                     $this->success("添加成功", url('post/index'));
                 } else {

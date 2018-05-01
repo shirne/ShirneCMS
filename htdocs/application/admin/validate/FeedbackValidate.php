@@ -1,6 +1,6 @@
 <?php
 
-namespace app\index\validate;
+namespace app\admin\validate;
 
 /**
  * 留言回复验证

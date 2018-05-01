@@ -32,7 +32,7 @@
 						</div>
 						<div class="form-group submitline">
 							<div class="col-sm-offset-2 col-sm-10">
-								<button type="submit" class="btn btn-default create">登陆</button>&nbsp;没有账号?<a href="{:url('Login/register')}">立即注册</a>
+								<button type="submit" class="btn btn-dark create">登陆</button>&nbsp;没有账号?<a href="{:url('Login/register')}">立即注册</a>
 							</div>
 						</div>
 					</form>

@@ -55,7 +55,7 @@ class MemberLevelController extends BaseController
         $this->assign('model',array(
             'commission_layer'=>3
         ));
-        return $this->fetch();
+        return $this->fetch('update');
     }
     /**
      * 更新会员组
@@ -80,7 +80,7 @@ class MemberLevelController extends BaseController
         }
         $model = MemberLevelModel::get($id);
         $this->assign('model',$model);
-        $this->display('add');
+        $this->display();
     }
     /**
      * 删除会员组

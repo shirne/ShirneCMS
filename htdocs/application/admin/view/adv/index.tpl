@@ -37,18 +37,20 @@
                 <td>{$v.title}</td>
                 <td>{$v.flag}</td>
                 <td>
-                    <a class="btn btn-default btn-sm" href="{:url('adv/update',array('id'=>$v['id']))}"><i class="ion-edit"></i> 编辑</a>
-                    <div class="btn-group">
-                        <a class="btn btn-default btn-sm" href="{:url('adv/itemlist',array('gid'=>$v['id']))}"><i class="ion-list-ul"></i> 广告列表</a>
-                        <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="btn btn-dark btn-sm" href="{:url('adv/update',array('id'=>$v['id']))}"><i class="ion-edit"></i> 编辑</a>
+                    <div class="btn-group btn-group-sm">
+                        <a class="btn btn-dark" href="{:url('adv/itemlist',array('gid'=>$v['id']))}"><i class="ion-list-ul"></i> 广告列表</a>
+                        <div class="dropdown" >
+                        <button type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="caret"></span>
                             <span class="sr-only">Toggle Dropdown</span>
                         </button>
-                        <ul class="dropdown-menu">
-                            <li><a href="{:url('adv/itemadd',array('gid'=>$v['id']))}">添加广告</a></li>
-                        </ul>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="{:url('adv/itemadd',array('gid'=>$v['id']))}">添加广告</a>
+                        </div>
+                        </div>
                     </div>
-                    <a class="btn btn-default btn-sm" href="{:url('adv/delete',array('id'=>$v['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash"></i> 删除</a>
+                    <a class="btn btn-dark btn-sm" href="{:url('adv/delete',array('id'=>$v['id']))}" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash-a"></i> 删除</a>
                 </td>
             </tr>
         </foreach>

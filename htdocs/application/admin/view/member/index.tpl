@@ -73,8 +73,8 @@
 
                     <if condition="$v.isagent neq 0">
                         <div class="btn-group">
-                                <a class="btn btn-default btn-sm" href="{:url('member/cancel_agent',array('id'=>$v['id']))}" style="color:green;" onclick="javascript:return del('取消代理不能更改已注册的用户!!!');"><i class="ion-close"></i> 取消代理[{$v.isagent}]</a>
-                            <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">
+                                <a class="btn btn-dark btn-sm" href="{:url('member/cancel_agent',array('id'=>$v['id']))}" style="color:green;" onclick="javascript:return del('取消代理不能更改已注册的用户!!!');"><i class="ion-close"></i> 取消代理[{$v.isagent}]</a>
+                            <button type="button" class="btn btn-sm btn-dark dropdown-toggle" data-toggle="dropdown">
                                 <span class="caret"></span>
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
@@ -84,18 +84,18 @@
                             </ul>
                         </div>
                     <else/>
-                    <a class="btn btn-default btn-sm {$v.refer_agent>2?'disabled':''}" href="{:url('member/set_agent',array('id'=>$v['id']))}" ><i class="ion-check"></i> 设置代理[<php> echo $v['refer_agent']+1;</php>]</a>
+                    <a class="btn btn-dark btn-sm {$v.refer_agent>2?'disabled':''}" href="{:url('member/set_agent',array('id'=>$v['id']))}" ><i class="ion-check"></i> 设置代理[<php> echo $v['refer_agent']+1;</php>]</a>
                     </if>
 
                 </td> 
                 <td><if condition="$v.status eq 1">正常<else/><span style="color:red">禁用</span></if></td>
                 <td>
 
-                    <a class="btn btn-default btn-sm" href="{:url('member/update',array('id'=>$v['id']))}"><i class="ion-edit"></i> 编辑</a>
+                    <a class="btn btn-dark btn-sm" href="{:url('member/update',array('id'=>$v['id']))}"><i class="ion-edit"></i> 编辑</a>
                     <if condition="$v.status eq 1">
-                        <a class="btn btn-default btn-sm" href="{:url('member/delete',array('id'=>$v['id']))}" style="color:red;" onclick="javascript:return del('禁用后用户将不能登陆!\n\n请确认!!!');"><i class="ion-close"></i> 禁用</a>
+                        <a class="btn btn-dark btn-sm" href="{:url('member/delete',array('id'=>$v['id']))}" onclick="javascript:return del('禁用后用户将不能登陆!\n\n请确认!!!');"><i class="ion-close"></i> 禁用</a>
                     <else/>
-                        <a class="btn btn-default btn-sm" href="{:url('member/delete',array('id'=>$v['id']))}" style="color:#50AD1E;"><i class="ion-check"></i> 启用</a>
+                        <a class="btn btn-dark btn-sm" href="{:url('member/delete',array('id'=>$v['id']))}" style="color:#50AD1E;"><i class="ion-check"></i> 启用</a>
                     </if>
                 </td>
             </tr>

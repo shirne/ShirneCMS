@@ -9,7 +9,7 @@
 namespace app\admin\controller;
 
 
-use app\index\validate\PaytypeValidate;
+use app\admin\validate\PaytypeValidate;
 use think\Db;
 
 class PaytypeController extends BaseController

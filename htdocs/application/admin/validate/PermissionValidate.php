@@ -6,7 +6,7 @@
  * Time: 11:30
  */
 
-namespace app\index\validate;
+namespace app\admin\validate;
 
 
 use app\common\validate\BaseUniqueValidate;
@@ -15,7 +15,7 @@ class PermissionValidate extends BaseUniqueValidate
 {
     protected $rule=array(
         'name'=>'require',
-        'key'=>'require|unique,permission,%id%'
+        'key'=>'require|unique:permission,%id%'
     );
 
     protected $message=array(

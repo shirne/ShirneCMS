@@ -7,7 +7,7 @@
     <div id="page-wrapper">
         <div class="page-header">{$id>0?'编辑':'添加'}分类</div>
         <div class="page-content">
-            <form method="post" action="{:url('category/edit',array('id'=>$id))}" enctype="multipart/form-data">
+            <form method="post" action="" enctype="multipart/form-data">
                 <div class="form-row">
                     <div class="form-group col">
                         <div class="input-group">
@@ -83,7 +83,7 @@
                     <if condition="$model['image']">
                         <figure class="figure">
                             <img src="{$model.image}" class="figure-img img-fluid rounded" alt="image">
-                            <figcaption class="figure-caption text-center">{$model.icon}</figcaption>
+                            <figcaption class="figure-caption text-center">{$model.image}</figcaption>
                         </figure>
                         <input type="hidden" name="delete_image" value="{$model.image}"/>
                     </if>

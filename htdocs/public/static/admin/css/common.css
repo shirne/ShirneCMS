@@ -55,6 +55,11 @@ body {
     padding-top:30px;
 }
 
+.form-group figure{
+    margin-top:10px;
+    max-width: 300px;
+}
+
 #loginContainer{
     margin-top:100px;
     padding-top:120px;

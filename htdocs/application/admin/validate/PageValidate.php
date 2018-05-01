@@ -6,7 +6,7 @@
  * Time: 11:09
  */
 
-namespace app\index\validate;
+namespace app\admin\validate;
 
 
 use app\common\validate\BaseUniqueValidate;
@@ -16,7 +16,7 @@ class PageValidate extends BaseUniqueValidate
 
     protected $rule=array(
         'title'=>'require',
-        'name'=>'require|unique,page,%id%'
+        'name'=>'require|unique:page,%id%'
     );
     protected $message = array(
         'title.require'=>'请填写单页标题！',

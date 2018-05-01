@@ -37,8 +37,8 @@
                 <td>{$v.name}</td>
                 <td>{$v.title}</td>
                 <td>
-                    <a class="btn btn-default btn-sm" href="{:url('page/edit',array('id'=>$v['id']))}"><i class="ion-edit"></i> 编辑</a>
-                    <a class="btn btn-default btn-sm" href="{:url('page/delete',array('id'=>$v['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash"></i> 删除</a>
+                    <a class="btn btn-dark btn-sm" href="{:url('page/edit',array('id'=>$v['id']))}"><i class="ion-edit"></i> 编辑</a>
+                    <a class="btn btn-dark btn-sm" href="{:url('page/delete',array('id'=>$v['id']))}" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash-a"></i> 删除</a>
                 </td>
             </tr>
         </foreach>

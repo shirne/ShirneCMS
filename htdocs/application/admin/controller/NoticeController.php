@@ -10,7 +10,7 @@ namespace app\admin\controller;
 
 
 use app\admin\model\NoticeModel;
-use app\index\validate\NoticeValidate;
+use app\admin\validate\NoticeValidate;
 use think\Db;
 
 class NoticeController extends BaseController

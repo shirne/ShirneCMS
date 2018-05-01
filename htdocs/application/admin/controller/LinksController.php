@@ -1,6 +1,6 @@
 <?php
 namespace app\admin\controller;
-use app\index\validate\LinksValidate;
+use app\admin\validate\LinksValidate;
 use think\Db;
 
 /**
@@ -41,7 +41,7 @@ class LinksController extends BaseController
                 }
             }
         }
-        $model=array();
+        $model=array('sort'=>99);
         $this->assign('model',$model);
         $this->assign('id',0);
         return $this->fetch('edit');

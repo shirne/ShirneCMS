@@ -27,7 +27,7 @@
                 <th width="50">编号</th>
                 <th>标题</th>
                 <th>别名</th>
-                <th width="150">操作</th>
+                <th width="250">操作</th>
             </tr>
         </thead>
         <tbody>
@@ -38,9 +38,11 @@
                 <td>{$v.name}</td>
 
                 <td>
-                    <a class="btn btn-default btn-sm" href="{:url('category/add',array('pid'=>$v['id']))}"><i class="ion-edit"></i> 添加</a>
-                    <a class="btn btn-default btn-sm" href="{:url('category/edit',array('id'=>$v['id']))}"><i class="ion-edit"></i> 编辑</a>
-                    <a class="btn btn-default btn-sm" href="{:url('category/delete',array('id'=>$v['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash"></i> 删除</a>
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                    <a class="btn btn-dark btn-sm" href="{:url('category/add',array('pid'=>$v['id']))}"><i class="ion-plus"></i> 添加</a>
+                    <a class="btn btn-dark btn-sm" href="{:url('category/edit',array('id'=>$v['id']))}"><i class="ion-edit"></i> 编辑</a>
+                    <a class="btn btn-dark btn-sm" href="{:url('category/delete',array('id'=>$v['id']))}" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash-a"></i> 删除</a>
+                    </div>
                 </td>
             </tr>
         </foreach>

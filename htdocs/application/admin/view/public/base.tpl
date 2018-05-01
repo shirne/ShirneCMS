@@ -37,14 +37,14 @@
             <div class="nav navbar-nav navbar-user">
 
                 <li class="dropdown user-dropdown">
-                    <a href="javascript:" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="ion-user"></i> 你好,{:session('adminname')} <b class="caret"></b></a>
+                    <a href="javascript:" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="ion-person"></i> 你好,{:session('adminname')} <b class="caret"></b></a>
                     <div class="dropdown-menu">
                         <a class="dropdown-item" href="/" target="_blank"><i class="ion-home"></i> 浏览</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{:url('setting/index')}"><i class="ion-gears"></i> 设置</a>
-                        <a class="dropdown-item" href="{:url('Index/profile')}"><i class="ion-user"></i> 资料</a>
+                        <a class="dropdown-item" href="{:url('setting/index')}"><i class="ion-gear-a"></i> 设置</a>
+                        <a class="dropdown-item" href="{:url('Index/profile')}"><i class="ion-person"></i> 资料</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{:url('login/logout')}"><i class="ion-power-off"></i> 退出</a>
+                        <a class="dropdown-item" href="{:url('login/logout')}"><i class="ion-log-out"></i> 退出</a>
                     </div>
                 </li>
             </ul>

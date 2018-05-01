@@ -4,7 +4,6 @@ namespace app\admin\controller;
 
 use think\Controller;
 use think\Db;
-use think\Request;
 
 class BaseController extends Controller {
 
@@ -85,14 +84,17 @@ class BaseController extends Controller {
             'savePath'      =>  $folder.'/', //保存路径
         );
         $file = $this->request->file($field);
-        $path=$config['rootPath'].$config['savePath'].date('Y/m');
-        if(!is_dir($path)){
-            mkdir($path,0777,true);
+        if(empty($file)){
+            return false;
         }
-        $info = $file->validate(['size'=>$config['maxSize'],'ext'=>$config['exts']])->move( $path);
+
+        $info = $file->validate(['size'=>$config['maxSize'],'ext'=>$config['exts']])->rule(function() use ($config){
+            return $config['savePath'].date('Y/m/').md5(microtime(true));
+        })->move( $config['rootPath']);
         if($info){
-            $file['url']=$info->getSaveName();
-            return $file;
+            $upload=array();
+            $upload['url']=$uploadpath.$info->getSaveName();
+            return $upload;
         }else{
             $this->errMsg=$file->getError();
             if($isreturn)return false;

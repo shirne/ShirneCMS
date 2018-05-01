@@ -9,7 +9,7 @@
 namespace app\admin\controller;
 
 
-use app\index\validate\PermissionValidate;
+use app\admin\validate\PermissionValidate;
 use think\Db;
 
 class PermissionController extends BaseController

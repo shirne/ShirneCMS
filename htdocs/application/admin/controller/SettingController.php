@@ -1,7 +1,7 @@
 <?php
 namespace app\admin\controller;
 use app\admin\model\SettingModel;
-use app\index\validate\SettingValidate;
+use app\admin\validate\SettingValidate;
 use think\Db;
 
 /**

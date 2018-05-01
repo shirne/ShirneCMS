@@ -6,7 +6,7 @@
  * Time: 12:00
  */
 
-namespace app\index\validate;
+namespace app\admin\validate;
 
 
 use app\common\validate\BaseUniqueValidate;
@@ -15,6 +15,6 @@ class AdvGroupValidate extends BaseUniqueValidate
 {
     protected $rule=array(
         'title|广告组名称'=>'require',
-        'flag|调用标识'=>'require|unique,AdvGroup,%id%'
+        'flag|调用标识'=>'require|unique:AdvGroup,%id%'
     );
 }

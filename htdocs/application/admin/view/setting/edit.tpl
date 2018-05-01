@@ -6,7 +6,7 @@
 <div id="page-wrapper">
     <div class="page-header">修改配置</div>
     <div id="page-content">
-    <form method="post" action="{:url('setting/update')}">
+    <form method="post" action="">
         <div class="form-group">
             <label for="key">字段名</label>
             <input type="text" name="key" class="form-control" value="{$model.key}" placeholder="英文字母组成的字符，不可重复">

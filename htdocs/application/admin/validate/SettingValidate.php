@@ -6,7 +6,7 @@
  * Time: 11:41
  */
 
-namespace app\index\validate;
+namespace app\admin\validate;
 
 
 use app\common\validate\BaseUniqueValidate;
@@ -14,7 +14,7 @@ use app\common\validate\BaseUniqueValidate;
 class SettingValidate extends BaseUniqueValidate
 {
     protected $rule=array(
-        'key'=>'require|unique,setting,%id%'
+        'key'=>'require|unique:setting,%id%'
     );
     protected $message=array(
         'key.require'=>'请填写配置名',

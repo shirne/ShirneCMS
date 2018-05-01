@@ -54,8 +54,8 @@
                 <td>{$v.status|o_status}</td>
                 <td>
                     <if condition="$v['status'] EQ 0">
-                    <a class="btn btn-default btn-sm" href="{:url('Paylog/cashupdate',array('id'=>$v['id']))}"><i class="ion-check"></i> 确认</a>
-                    <a class="btn btn-default btn-sm" href="{:url('Paylog/cashdelete',array('id'=>$v['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要作废吗？');"><i class="ion-trash"></i> 无效</a>
+                    <a class="btn btn-dark btn-sm" href="{:url('Paylog/cashupdate',array('id'=>$v['id']))}"><i class="ion-check"></i> 确认</a>
+                    <a class="btn btn-dark btn-sm" href="{:url('Paylog/cashdelete',array('id'=>$v['id']))}" onclick="javascript:return del('您真的确定要作废吗？');"><i class="ion-trash-a"></i> 无效</a>
                         <else/>
                         -
                     </if>

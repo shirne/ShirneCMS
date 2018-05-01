@@ -6,7 +6,7 @@
 <div id="page-wrapper">
     <div class="page-header">修改公告</div>
     <div class="page-content">
-    <form method="post" action="{:url('Notice/update')}">
+    <form method="post" action="">
         <div class="form-group">
             <label for="title">公告标题</label>
             <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="输入公告标题">

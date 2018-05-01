@@ -2,7 +2,7 @@
 
 <block name="body">
 
-    <include file="Public/bread" menu="memberlevel_index" section="会员" title="会员等级" />
+    <include file="Public/bread" menu="member_level_index" section="会员" title="会员等级" />
 
     <div id="page-wrapper">
 
@@ -31,8 +31,8 @@
                     <td>{$v.sort}</td>
                     <td>{$v.level_price}</td>
                     <td>
-                        <a class="btn btn-default btn-sm" href="{:url('memberLevel/update',array('id'=>$v['level_id']))}"><i class="ion-edit"></i> 编辑</a>
-                        <a class="btn btn-default btn-sm" href="{:url('memberLevel/delete',array('id'=>$v['level_id']))}" style="color:red;" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash"></i> 删除</a>
+                        <a class="btn btn-dark btn-sm" href="{:url('memberLevel/update',array('id'=>$v['level_id']))}"><i class="ion-edit"></i> 编辑</a>
+                        <a class="btn btn-dark btn-sm" href="{:url('memberLevel/delete',array('id'=>$v['level_id']))}" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash-a"></i> 删除</a>
                     </td>
                 </tr>
             </foreach>

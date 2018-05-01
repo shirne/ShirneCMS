@@ -46,4 +46,16 @@ function FU($url='',$vars=''){
 
     return str_replace(app()->getModulePath(),'',$link);
 }
+
+function delete_image($images){
+    if(is_array($images)){
+        foreach ($images as $image){
+            delete_image($image);
+        }
+    }else{
+        if(!empty($images)){
+            @unlink('.'.$images);
+        }
+    }
+}
 //end file

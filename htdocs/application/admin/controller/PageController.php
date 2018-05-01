@@ -1,7 +1,7 @@
 <?php
 namespace app\admin\controller;
 use app\admin\model\PageModel;
-use app\index\validate\PageValidate;
+use app\admin\validate\PageValidate;
 use think\Db;
 
 /**

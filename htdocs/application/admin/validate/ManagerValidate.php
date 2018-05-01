@@ -6,7 +6,7 @@
  * Time: 10:34
  */
 
-namespace app\index\validate;
+namespace app\admin\validate;
 
 
 use app\common\validate\BaseUniqueValidate;

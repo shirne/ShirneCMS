@@ -7,7 +7,7 @@
 <div id="page-wrapper">
     <div class="page-header">{$id>0?'编辑':'添加'}广告位</div>
     <div class="page-content">
-    <form method="post" action="{:url('adv/update')}">
+    <form method="post" action="">
         <div class="form-group">
             <label for="title">位置名称</label>
             <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="位置名称">
@@ -19,10 +19,10 @@
         <div class="form-group">
             <label for="cc">状态</label>
             <label class="radio-inline">
-                <input type="radio" name="type" value="1" <if condition="$model['status'] eq 1">checked="checked"</if> >显示
+                <input type="radio" name="status" value="1" <if condition="$model['status'] eq 1">checked="checked"</if> >显示
             </label>
             <label class="radio-inline">
-                <input type="radio" name="type" value="0" <if condition="$model['status'] eq 0">checked="checked"</if>>隐藏
+                <input type="radio" name="status" value="0" <if condition="$model['status'] eq 0">checked="checked"</if>>隐藏
             </label>
         </div>
         <div class="form-group">

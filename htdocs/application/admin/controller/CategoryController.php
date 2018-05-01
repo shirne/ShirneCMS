@@ -2,7 +2,7 @@
 
 namespace app\admin\controller;
 
-use app\index\validate\CategoryValidate;
+use app\admin\validate\CategoryValidate;
 use think\Db;
 
 /**
@@ -58,7 +58,7 @@ class CategoryController extends BaseController
     }
 
     /**
-     * 添加分类
+     * 编辑分类
      */
     public function edit($id)
     {
@@ -70,14 +70,24 @@ class CategoryController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
+                $delete_images=[];
                 $iconupload=$this->upload('category','upload_icon',true);
-                if(!empty($iconupload))$data['icon']=$iconupload['url'];
+                if(!empty($iconupload)){
+                    $data['icon']=$iconupload['url'];
+                    $delete_images[]=$data['delete_icon'];
+                }
                 $uploaded=$this->upload('category','upload_image',true);
-                if(!empty($uploaded))$data['image']=$uploaded['url'];
+                if(!empty($uploaded)){
+                    $data['image']=$uploaded['url'];
+                    $delete_images[]=$data['delete_image'];
+                }
+                unset($data['delete_icon']);
+                unset($data['delete_image']);
 
                 $result=Db::name('category')->where(array('id'=>$id))->update($data);
 
                 if ($result) {
+                    delete_image($delete_images);
                     $this->success("保存成功", url('category/index'));
                 } else {
                     $this->error("保存失败");

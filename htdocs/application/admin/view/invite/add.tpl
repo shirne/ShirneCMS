@@ -12,7 +12,7 @@
 		<label>绑定邀请人</label>
 		<div class="input-group">
 			<input class="form-control" type="text" name="member_id" placeholder="填写会员ID">
-			<a class="btn btn-default input-group-addon"><i class="ion-user"></i> 选择会员</a>
+			<a class="btn btn-dark input-group-addon"><i class="ion-user"></i> 选择会员</a>
 		</div>
 	</div>
 	<div class="form-group">

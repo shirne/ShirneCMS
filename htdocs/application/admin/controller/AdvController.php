@@ -9,8 +9,8 @@
 namespace app\admin\controller;
 
 
-use app\index\validate\AdvGroupValidate;
-use app\index\validate\AdvItemValidate;
+use app\admin\validate\AdvGroupValidate;
+use app\admin\validate\AdvItemValidate;
 use think\Db;
 
 class AdvController extends BaseController
@@ -134,6 +134,10 @@ class AdvController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             }else{
+                $uploaded=$this->upload('adv','upload_image',true);
+                if(!empty($uploaded)){
+                    $data['image']=$uploaded['url'];
+                }
                 $model = Db::name("AdvItem");
                 $url=url('adv/itemlist',array('gid'=>$gid));
                 if ($model->insert($data)) {
@@ -165,9 +169,16 @@ class AdvController extends BaseController
             }else{
                 $model = Db::name("AdvItem");
                 $url=url('adv/itemlist',array('gid'=>$data['gid']));
-
+                $delete_images=[];
+                $uploaded=$this->upload('adv','upload_image',true);
+                if(!empty($uploaded)){
+                    $data['image']=$uploaded['url'];
+                    $delete_images[]=$data['delete_image'];
+                }
+                unset($data['delete_image']);
                 $data['id']=$id;
                 if ($model->update($data)) {
+                    delete_image($delete_images);
                     $this->success("更新成功", $url);
                 } else {
                     $this->error("更新失败");

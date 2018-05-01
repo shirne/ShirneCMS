@@ -1,7 +1,7 @@
 <?php
 namespace app\admin\controller;
-use app\admin\model\ManagerModel;
-use app\index\validate\ManagerValidate;
+
+use app\admin\validate\ManagerValidate;
 use think\Db;
 
 

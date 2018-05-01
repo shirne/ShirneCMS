@@ -5,7 +5,7 @@
 <div id="page-wrapper">
     <div class="page-header">{$id>0?'编辑':'添加'}文章</div>
     <div id="page-content">
-    <form method="post" action="{:url('post/edit',array('id'=>$category.id))}" enctype="multipart/form-data">
+    <form method="post" action="" enctype="multipart/form-data">
         <div class="form-group">
             <label for="post-title">文章标题</label>
             <input type="text" name="title" class="form-control" value="{$post.title}" id="post-title" placeholder="输入文章标题">
@@ -22,8 +22,11 @@
             <label for="post-title">封面图</label>
             <input type="file" name="upload_cover" />
             <if condition="$post['cover']">
-                <img src="{$post.cover}" style="max-width:80%" />
-                <input type="hidden" name="deleteimages[]" value="{$post.cover}"/>
+                <figure class="figure">
+                    <img src="{$model.cover}" class="figure-img img-fluid rounded" alt="icon">
+                    <figcaption class="figure-caption text-center">{$model.cover}</figcaption>
+                </figure>
+                <input type="hidden" name="delete_cover" value="{$model.cover}"/>
             </if>
         </div>
         <div class="form-group">
