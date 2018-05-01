@@ -48,9 +48,10 @@ class PostController extends BaseController
                 }
                 unset($data['delete_cover']);
                 $data['user_id'] = $this->mid;
-                if ($insert_id=PostModel::create($data)) {
+                $model=PostModel::create($data);
+                if ($model->id) {
                     delete_image($delete_images);
-                    user_log($this->mid,'addpost',1,'添加文章 '.$insert_id ,'manager');
+                    user_log($this->mid,'addpost',1,'添加文章 '.$model->id ,'manager');
                     $this->success("添加成功", url('post/index'));
                 } else {
                     $this->error("添加失败");
@@ -82,8 +83,8 @@ class PostController extends BaseController
                 if(!empty($uploaded)){
                     $data['cover']=$uploaded['url'];
                 }
-                $data['id']=$id;
-                if (PostModel::update($data)) {
+                $model=PostModel::get($id);
+                if ($model->allowField(true)->save($data)) {
                     user_log($this->mid, 'updatepost', 1, '修改文章 ' . $id, 'manager');
                     $this->success("编辑成功", url('post/index'));
                 } else {

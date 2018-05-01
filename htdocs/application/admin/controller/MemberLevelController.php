@@ -43,9 +43,11 @@ class MemberLevelController extends BaseController
                 $this->error($validate->getError());
                 exit();
             } else {
-                $insertId=MemberLevelModel::create($data);
+                $levelModel=MemberLevelModel::create($data);
+                $insertId=$levelModel->getLastInsID();
                 if ($insertId!==false) {
                     cache('levels', null);
+                    user_log($this->mid,'addlevel',1,'添加会员组'.$insertId ,'manager');
                     $this->success("添加成功", url('memberLevel/index'));
                 } else {
                     $this->error("添加失败");
@@ -70,8 +72,10 @@ class MemberLevelController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             }else{
-                if (MemberLevelModel::update($data)) {
+                $model=MemberLevelModel::get($id);
+                if ($model->allowField(true)->save($data)) {
                     cache('levels', null);
+                    user_log($this->mid,'updatelevel',1,'修改会员组'.$id ,'manager');
                     $this->success("更新成功", url('memberLevel/index'));
                 } else {
                     $this->error("更新失败");

@@ -296,28 +296,64 @@ jQuery(function ($) {
     });
 
     if($.fn.datetimepicker) {
+        var tooltips= {
+            today: '定位当前日期',
+            clear: '清除已选日期',
+            close: '关闭选择器',
+            selectMonth: '选择月份',
+            prevMonth: '上个月',
+            nextMonth: '下个月',
+            selectYear: '选择年份',
+            prevYear: '上一年',
+            nextYear: '下一年',
+            selectDecade: '选择年份区间',
+            prevDecade: '上一区间',
+            nextDecade: '下一区间',
+            prevCentury: '上个世纪',
+            nextCentury: '下个世纪'
+        };
+        var icons={
+            time: 'ion-clock',
+            date: 'ion-calendar',
+            up: 'ion-arrow-up-c',
+            down: 'ion-arrow-down-c',
+            previous: 'ion-arrow-left-c',
+            next: 'ion-arrow-right-c',
+            today: 'ion-pinpoint',
+            clear: 'ion-trash-a',
+            close: 'ion-close'
+        };
         $('.datepicker').datetimepicker({
-            language: 'zh-CN',
-            minView: 'month',
-            autoclose: true
+            icons:icons,
+            tooltips:tooltips,
+            format: 'YYYY-MM-DD',
+            locale: 'zh-cn',
+            showClear:true,
+            showTodayButton:true,
+            showClose:true,
+            keepInvalid:true
         });
 
         $('.date-range').each(function () {
             var from = $(this).find('[name=fromdate],.fromdate'), to = $(this).find('[name=todate],.todate');
             var options = {
-                format: 'yyyy-mm-dd',
-                minView: 'month',
-                autoclose: true,
-                language: 'zh-CN'
+                icons:icons,
+                tooltips:tooltips,
+                format: 'YYYY-MM-DD',
+                locale:'zh-cn',
+                showClear:true,
+                showTodayButton:true,
+                showClose:true,
+                keepInvalid:true
             };
-            from.datetimepicker(options).on('changeDate', function () {
+            from.datetimepicker(options).on('dp.change', function () {
                 if (from.val()) {
-                    to.datetimepicker('setStartDate', from.val());
+                    to.data('DateTimePicker').minDate(from.val());
                 }
             });
-            to.datetimepicker(options).on('changeDate', function () {
+            to.datetimepicker(options).on('dp.change', function () {
                 if (to.val()) {
-                    from.datetimepicker('setEndDate', to.val());
+                    from.data('DateTimePicker').maxDate(to.val());
                 }
             });
         });

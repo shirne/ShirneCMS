@@ -15,7 +15,7 @@
 
     <!-- JavaScript -->
     <script src="__STATIC__/jquery/jquery.min.js"></script>
-    <script src="__STATIC__/bootstrap/js/bootstrap.min.js"></script>
+    <script src="__STATIC__/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <block name="header"></block>
 

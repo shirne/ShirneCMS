@@ -332,11 +332,12 @@ function showcashtype($type){
 /**
  * 仅转换参数，方便调用
  * @param $time
+ * @param $replace
  * @param $format
  * @return false|string
  */
-function showdate($time,$format='Y-m-d H:i:s'){
-    return $time==0?'-':date($format,$time);
+function showdate($time,$replace='-',$format='Y-m-d H:i:s'){
+    return $time==0?$replace:date($format,$time);
 }
 
 /**

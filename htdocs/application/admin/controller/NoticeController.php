@@ -37,7 +37,8 @@ class NoticeController extends BaseController
                 $this->error($validate->getError());
             } else {
                 $data['manager_id'] = session('adminId');
-                if (NoticeModel::create($data)) {
+                $model=NoticeModel::create($data);
+                if ($model->getLastInsID()) {
                     $this->success("添加成功", url('Notice/index'));
                 } else {
                     $this->error("添加失败");
@@ -61,9 +62,9 @@ class NoticeController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
-                $data['id']=$id;
+                $model=NoticeModel::get($id);
 
-                if (NoticeModel::update($data)) {
+                if ($model->allowField(true)->save($data)) {
                     $this->success("更新成功", url('Notice/index'));
                 } else {
                     $this->error("更新失败");

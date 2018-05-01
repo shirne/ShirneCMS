@@ -46,7 +46,8 @@ class FeedbackController extends BaseController
                 $this->error($validate->getError());
             }else{
                 $data['reply_at']=time();
-                if (FeedbackModel::update($data,['id'=>$id])) {
+                $model=FeedbackModel::get($id);
+                if ($model->allowField(true)->save($data)) {
                     $this->success("更新成功", url('feedback/index'));
                 } else {
                     $this->error("更新失败");

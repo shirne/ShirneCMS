@@ -33,7 +33,8 @@ class PageController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
-                if (PageModel::create($data)) {
+                $model=PageModel::create($data);
+                if ($model->getLastInsID()) {
                     $this->success("添加成功", url('page/index'));
                 } else {
                     $this->error("添加失败");
@@ -58,8 +59,9 @@ class PageController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
-                $data['id']=$id;
-                if (PageModel::update($data)) {
+                $model=PageModel::get($id);
+
+                if ($model->allowField(true)->save($data)) {
                     $this->success("更新成功", url('page/index'));
                 } else {
                     $this->error("更新失败");

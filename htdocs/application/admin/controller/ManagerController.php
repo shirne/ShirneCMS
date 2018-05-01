@@ -73,7 +73,7 @@ class ManagerController extends BaseController
     {
         if ($this->request->isPost()) {
 
-            $data = $this->request->only(['username','email','mobile','password'],'post');
+            $data = $this->request->post();
             $validate=new ManagerValidate();
             $validate->setId();
             if (!$validate->check($data)) {
@@ -101,7 +101,7 @@ class ManagerController extends BaseController
         if($id==0)$this->error('参数错误');
 
         if ($this->request->isPost()) {
-            $data = $this->request->only(['username','email','mobile','password'],'post');
+            $data = $this->request->post();
             $validate=new ManagerValidate();
             $validate->setId($id);
             if (!$validate->scene('edit')->check($data)) {

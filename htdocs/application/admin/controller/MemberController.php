@@ -137,7 +137,7 @@ class MemberController extends BaseController
     {
         if ($this->request->isPost()) {
             //如果用户提交数据
-            $data=$this->request->only(['username','email','mobile','level_id','password'],'post');
+            $data=$this->request->post();
             $validate=new MemberValidate();
             $validate->setId();
             if (!$validate->scene('register')->check($data)) {
@@ -145,8 +145,8 @@ class MemberController extends BaseController
             } else {
                 $data['salt']=random_str(8);
                 $data['password']=encode_password($data['password'],$data['salt']);
-                if ($member_id=MemberModel::create($data)) {
-                    user_log($this->mid,'adduser',1,'添加会员'.$member_id ,'manager');
+                if ($member=MemberModel::create($data)) {
+                    user_log($this->mid,'adduser',1,'添加会员'.$member->getLastInsID() ,'manager');
                     $this->success("用户添加成功", url('member/index'));
                 } else {
                     $this->error("用户添加失败");
@@ -162,7 +162,7 @@ class MemberController extends BaseController
     {
         $id=intval($id);
         if ($this->request->isPost()) {
-            $data=$this->request->only(['username','email','mobile','level_id','password'],'post');
+            $data=$this->request->post();
             $validate=new MemberValidate();
             $validate->setId($id);
             if (!$validate->scene('edit')->check($data)) {
@@ -176,7 +176,8 @@ class MemberController extends BaseController
                 }
 
                 //更新
-                if (MemberModel::update($data,array('id'=>$id))) {
+                $member=MemberModel::get($id);
+                if ($member->allowField(true)->save($data)) {
                     user_log($this->mid,'updateuser',1,'修改会员资料'.$id ,'manager');
                     $this->success("用户信息更新成功", url('member/index'));
                 } else {

@@ -28,7 +28,7 @@
                 <th>标题</th>
                 <th>地址</th>
                 <th>优先级</th>
-                <th width="150">操作</th>
+                <th width="250">操作</th>
             </tr>
         </thead>
         <tbody>

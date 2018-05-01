@@ -34,12 +34,21 @@
         </div>
         <div class="form-group">
             <label for="image">有效期</label>
-            <div class="input-group date-range">
-                <span class="input-group-addon">从</span>
-                <input type="text" name="start_date" class="form-control fromdate" value="{$model.start_date|showdate}" />
-                <span class="input-group-addon">至</span>
-                <input type="text" name="end_date" class="form-control todate" value="{$model.end_date|showdate}" />
+            <div class="form-row date-range">
+                <div class="input-group col">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text">从</span>
+                    </div>
+                    <input type="text" name="start_date" class="form-control fromdate" value="{$model.start_date|showdate=''}" />
+                </div>
+                <div class="input-group col">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text">至</span>
+                    </div>
+                    <input type="text" name="end_date" class="form-control todate" value="{$model.end_date|showdate=''}" />
+                </div>
             </div>
+
         </div>
         <div class="form-group">
             <label for="image">排序</label>
