@@ -5,7 +5,7 @@ return array(
         'items'=>array(
             'index'=>'内容分类查看',
             'add'=>'内容分类添加',
-            'update'=>'内容分类修改',
+            'edit'=>'内容分类修改',
             'delete'=>'内容分类删除'
         )
     ),
@@ -14,7 +14,7 @@ return array(
         'items'=>array(
             'index'=>'文章查看',
             'add'=>'文章添加',
-            'update'=>'文章修改',
+            'edit'=>'文章修改',
             'delete'=>'文章删除',
             'push'=>'文章发布'
         )
@@ -24,7 +24,7 @@ return array(
         'items'=>array(
             'index'=>'页面查看',
             'add'=>'页面添加',
-            'update'=>'页面修改',
+            'edit'=>'页面修改',
             'delete'=>'页面删除'
         )
     ),
@@ -33,8 +33,21 @@ return array(
         'items'=>array(
             'index'=>'公告查看',
             'add'=>'公告添加',
-            'update'=>'公告修改',
+            'edit'=>'公告修改',
             'delete'=>'公告删除'
+        )
+    ),
+    'adv'=>array(
+        'title'=>'广告管理',
+        'items'=>array(
+            'index'=>'广告位置查看',
+            'add'=>'广告位置添加',
+            'update'=>'广告位置修改',
+            'delete'=>'广告位置删除',
+            'itemlist'=>'广告查看',
+            'itemadd'=>'广告添加',
+            'itemupdate'=>'广告修改',
+            'itemdelete'=>'广告删除'
         )
     ),
     'feedback'=>array(
@@ -50,7 +63,7 @@ return array(
         'items'=>array(
             'index'=>'友链查看',
             'add'=>'友链添加',
-            'update'=>'友链修改',
+            'edit'=>'友链修改',
             'delete'=>'友链删除'
         )
     ),
@@ -107,7 +120,7 @@ return array(
             'index'=>'系统配置',
             'advance'=>'配置管理',
             'add'=>'配置添加',
-            'update'=>'配置修改',
+            'edit'=>'配置修改',
             'delete'=>'配置删除'
         )
     ),
@@ -116,7 +129,7 @@ return array(
         'items'=>array(
             'index'=>'充值方式查看',
             'add'=>'充值方式添加',
-            'update'=>'充值方式修改',
+            'edit'=>'充值方式修改',
             'delete'=>'充值方式删除'
         )
     )
