@@ -36,7 +36,7 @@
         </div>
         <div class="form-group">
             <label for="post-content">文章内容</label>
-            <script id="post-content" name="content" type="text/plain">{$post.content|htmlspecialchars_decode}</script>
+            <script id="post-content" name="content" type="text/plain">{$post.content|raw}</script>
         </div>
         <div class="form-group">
             <label>文章类型</label>

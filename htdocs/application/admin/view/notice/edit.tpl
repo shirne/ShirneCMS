@@ -26,7 +26,7 @@
         </div>
         <div class="form-group">
             <label for="post-content">公告内容</label>
-            <script id="post-content" name="content" type="text/plain">{$model.content|htmlspecialchars_decode}</script>
+            <script id="post-content" name="content" type="text/plain">{$model.content|raw}</script>
         </div>
         <div class="form-group">
             <input type="hidden" name="id" value="{$model.id}">
