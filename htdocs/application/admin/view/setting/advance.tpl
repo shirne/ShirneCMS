@@ -9,7 +9,7 @@
     <div class="row">
         <div class="col-md-6">
             <a href="{:url('setting/index')}" class="btn btn-primary">普通模式</a>&nbsp;&nbsp;
-            <a href="{:url('setting/add')}" class="btn btn-success">添加配置</a>
+            <a href="{:url('setting/add')}" class="btn btn-primary">添加配置</a>
         </div>
         <div class="col-md-6">
             <form action="{:url('setting/advance')}" method="post">
@@ -44,7 +44,7 @@
                 <td>{$v.type|settingTypes}</td>
                 <td>{$v.description}</td> 
                 <td>
-                    <a class="btn btn-default btn-sm" href="{:url('setting/update',array('id'=>$v['id']))}"><i class="fa fa-edit"></i> 编辑</a>
+                    <a class="btn btn-default btn-sm" href="{:url('setting/edit',array('id'=>$v['id']))}"><i class="fa fa-edit"></i> 编辑</a>
                     <a class="btn btn-default btn-sm" href="{:url('setting/delete',array('id'=>$v['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="fa fa-trash"></i> 删除</a>
                 </td>
             </tr>

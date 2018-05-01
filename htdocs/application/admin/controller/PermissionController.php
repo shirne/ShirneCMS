@@ -29,10 +29,31 @@ class PermissionController extends BaseController
         $this->success("清除成功", url('permission/index'));
     }
 
+    public function add($pid){
+        if ($this->request->isPost()) {
+            $data = $this->request->post();
+            $validate = new PermissionValidate();
+            $validate->setId();
+
+            if (!$validate->check($data)) {
+                $this->error($validate->getError());
+            } else {
+                if (Db::name('Permission')->insert($data)) {
+                    $this->success("添加成功", url('permission/index'));
+                } else {
+                    $this->error("添加失败");
+                }
+            }
+        }
+        $model=array('pid'=>$pid);
+        $this->assign('perm',$model);
+        return $this->fetch('edit');
+    }
+
     /**
      * 添加权限
      */
-    public function edit($pid=0,$id=0)
+    public function edit($id=0)
     {
         $id = intval($id);
         if ($this->request->isPost()) {
@@ -43,26 +64,18 @@ class PermissionController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
-                if($id>0){
-                    $data['id']=$id;
-                    if (Db::name('Permission')->update()) {
-                        $this->success("更新成功", url('permission/index'));
-                    } else {
-                        $this->error("更新失败");
-                    }
-                }else {
-                    if (Db::name('Permission')->insert($data)) {
-                        $this->success("添加成功", url('permission/index'));
-                    } else {
-                        $this->error("添加失败");
-                    }
+                $data['id']=$id;
+                if (Db::name('Permission')->update()) {
+                    $this->success("更新成功", url('permission/index'));
+                } else {
+                    $this->error("更新失败");
                 }
+
             }
         }
-        if($id>0) {
             $model = Db::name('permission')->where(["id" => $id])->find();
-        }else{
-            $model=array('pid'=>$pid);
+        if(empty($model)){
+            $this->error('要编辑的项不存在');
         }
         $this->assign('perm',$model);
         return $this->fetch();

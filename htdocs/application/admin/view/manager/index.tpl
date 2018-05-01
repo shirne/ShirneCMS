@@ -6,7 +6,7 @@
 <div id="page-wrapper">
     <div class="row">
         <div class="col-md-6">
-            <a href="{:url('manager/add')}" class="btn btn-success">添加管理员</a>
+            <a href="{:url('manager/add')}" class="btn btn-primary">添加管理员</a>
         </div>
         <div class="col-md-6">
             <form action="{:url('manager/index')}" method="post">

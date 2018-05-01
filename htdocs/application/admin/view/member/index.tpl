@@ -6,15 +6,18 @@
 <div id="page-wrapper">
     <div class="row">
         <div class="col col-4">
-            <a href="{:url('member/add')}" class="btn btn-success">添加会员</a>
+            <a href="{:url('member/add')}" class="btn btn-primary">添加会员</a>
         </div>
         <div class="col col-8">
             <form action="{:url('member/index')}" method="post">
-                <div class="form-group input-group">
+                <div class="form-row">
+                <div class="form-group col input-group">
                     <div class="input-group-prepend">
                     <span class="input-group-text">上级</span>
                     </div>
                     <input type="text" class="form-control" name="referer" placeholder="填写id或会员名" value="{$referer}">
+                </div>
+                <div class="form-group col input-group">
                     <div class="input-group-prepend">
                     <span class="input-group-text">关键字</span>
                     </div>
@@ -22,6 +25,7 @@
                     <div class="input-group-append">
                       <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i></button>
                     </div>
+                </div>
                 </div>
             </form>
         </div>

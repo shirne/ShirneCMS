@@ -25,41 +25,53 @@ class PageController extends BaseController
         return $this->fetch();
     }
 
+    public function add(){
+        if ($this->request->isPost()) {
+            $data=$this->request->post();
+            $validate=new PageValidate();
+            $validate->setId();
+            if (!$validate->check($data)) {
+                $this->error($validate->getError());
+            } else {
+                if (PageModel::create($data)) {
+                    $this->success("添加成功", url('page/index'));
+                } else {
+                    $this->error("添加失败");
+                }
+            }
+        }
+        $model=array();
+        $this->assign('page', $model);
+        $this->assign('id', 0);
+        return $this->fetch('edit');
+    }
+
     /**
      * 添加单页
      */
-    public function edit($id=0)
+    public function edit($id)
     {
         if ($this->request->isPost()) {
             $data=$this->request->post();
             $validate=new PageValidate();
             $validate->setId($id);
             if (!$validate->check($data)) {
-                // 如果创建失败 表示验证没有通过 输出错误提示信息
                 $this->error($validate->getError());
             } else {
-                if($id>0){
-                    $data['id']=$id;
-                    if (PageModel::update($data)) {
-                        $this->success("更新成功", url('page/index'));
-                    } else {
-                        $this->error("更新失败");
-                    }
-                }else {
-                    if (PageModel::create($data)) {
-                        $this->success("添加成功", url('page/index'));
-                    } else {
-                        $this->error("添加失败");
-                    }
+                $data['id']=$id;
+                if (PageModel::update($data)) {
+                    $this->success("更新成功", url('page/index'));
+                } else {
+                    $this->error("更新失败");
                 }
             }
         }
-        if($id>0) {
-            $model = Db::name('page')->where(["id"=> $id])->find();
-        }else{
-            $model=array();
+        $model = Db::name('page')->where(["id"=> $id])->find();
+        if(empty($model)){
+            $this->error('要编辑的内容不存在');
         }
         $this->assign('page', $model);
+        $this->assign('id', $id);
         return $this->fetch();
     }
     /**

@@ -57,5 +57,6 @@ class LoginController extends Controller {
 
     public function logout(){
         clearLogin();
+        $this->redirect(url('index'));
     }
 }

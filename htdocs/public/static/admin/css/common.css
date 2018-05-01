@@ -6,11 +6,11 @@ body {
     background:#F6F6F6;
 }
 
-.btn-primary{background-color:#3d9597;border-color:#3d9597}
-.btn-primary:hover{background-color:#3f9799;border-color:#3f9799}
-.btn-primary:active,.btn-primary:focus,.btn-primary:active:focus,.btn-primary:active:hover{background-color:#308a8c;border-color:#308a8c}
-
 .navbar-right{margin-right:10px;}
+
+.card-header h1,.card-header h2,.card-header h3,.card-header h4,.card-header h5,.card-header h6{
+    margin-bottom:0;
+}
 
 #wrapper {
     padding-left: 0;
@@ -61,9 +61,14 @@ body {
 }
 #loginBox h1{
     font-size: 20px;
-    line-height:32px;
+    line-height:50px;
     border-bottom:1px #ccc solid;
     margin-bottom:20px;
+}
+#loginBox .alert{
+    margin-top:10px;
+    margin-bottom:0;
+    display: none;
 }
 #loginContainer .copy{
     margin-top:20px;
@@ -103,6 +108,7 @@ body {
 
 .announcement-heading {
     font-size: 50px;
+    line-height: 60px;
     margin: 0;
 }
 
@@ -114,6 +120,9 @@ body {
 
 table.tablesorter thead {
     cursor: pointer;
+}
+table th{
+    white-space: nowrap;
 }
 
 table.tablesorter thead tr th:hover {

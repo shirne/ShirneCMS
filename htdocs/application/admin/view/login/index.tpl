@@ -28,7 +28,7 @@
 <script type="text/javascript" src="__STATIC__/admin/js/effect-dot.js"></script>
 <div class="container" id="loginContainer">
     <div class="row justify-content-md-center">
-        <div class="col-md-4" id="loginBox">
+        <div class="col-md-5" id="loginBox">
             <h1>管理员登陆</h1>
 
             <form action="{:url('login/login')}" method="post">
@@ -63,11 +63,14 @@
                     </div>
                 </div>
                 <button type="submit" class="btn btn-block btn-primary">登陆</button>
+                <div class="alert fade show" role="alert">
+                    <span class="alert-content"></span>
+                </div>
             </form>
         </div>
     </div>
     <div class="row justify-content-md-center">
-        <div class="col-md-4 col-md-offset-4 copy">
+        <div class="col-md-4 copy">
             <p>&copy;原设软件 2015-2017</p>
         </div>
     </div>
@@ -85,6 +88,44 @@
             $(this).attr("src", verifysrc + "_t=" + new Date().getTime());
 
         });
+
+        $('form').submit(function(e) {
+            e.preventDefault();
+            var errors=[];
+            if(!this.username.value){
+                errors.push('用户名');
+            }
+            if(!this.password.value) {
+                errors.push('密码');
+            }
+            if(!this.verify.value) {
+                errors.push('验证码');
+            }
+            if(errors.length>0){
+                $('.alert-content').html('<i class="fa fa-exclamation-triangle"></i> 请填写'+errors.join('、'));
+                $('.alert').addClass('alert-danger').show(true);
+                return false;
+            }
+            $('.btn-primary').attr('disabled',true);
+            $.ajax({
+                url:"{:url('login')}",
+                type:'POST',
+                dataType:'JSON',
+                data:$(this).serialize(),
+                success:function(json){
+                    if(json.code==1){
+                        $('.alert-content').html('<i class="fa fa-check-circle"></i> '+json.msg);
+                        $('.alert').removeClass('alert-danger').addClass('alert-success').show(true);
+                        location.href=json.url;
+                    }else{
+                        $('.alert-content').html('<i class="fa fa-exclamation-triangle"></i> '+json.msg);
+                        $('.alert').addClass('alert-danger').show(true);
+                        $('.btn-primary').removeAttr('disabled');
+                        verify.trigger('click');
+                    }
+                }
+            })
+        })
     })
 </script>
 </body>

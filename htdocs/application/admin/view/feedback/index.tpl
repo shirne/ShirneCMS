@@ -7,10 +7,10 @@
 <div id="page-wrapper">
     
     <div class="row">
-        <div class="col col-xs-6">
+        <div class="col-6">
 
         </div>
-        <div class="col col-xs-6">
+        <div class="col-6">
             <form action="{:url('links/index')}" method="post">
                 <div class="form-group input-group">
                     <input type="text" class="form-control" name="key" placeholder="输入邮箱或者关键词搜索">

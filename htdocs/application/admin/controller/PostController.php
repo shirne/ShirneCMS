@@ -32,10 +32,38 @@ class PostController extends BaseController
         return $this->fetch();
     }
 
+    public function add(){
+        if ($this->request->isPost()) {
+            $data = $this->request->post();
+            $validate = new PostValidate();
+
+            if (!$validate->check($data)) {
+                $this->error($validate->getError());
+            } else {
+                $uploaded = $this->upload('post', 'upload_cover', true);
+                if (!empty($uploaded)) {
+                    $data['cover'] = $uploaded['url'];
+                }
+                $data['user_id'] = $this->mid;
+                if ($insert_id=PostModel::create($data)) {
+                    user_log($this->mid,'addpost',1,'添加文章 '.$insert_id ,'manager');
+                    $this->success("添加成功", url('post/index'));
+                } else {
+                    $this->error("添加失败");
+                }
+            }
+        }
+        $model=array('type'=>1);
+        $this->assign("category",getSortedCategory(Db::name('category')->select()));
+        $this->assign('post',$model);
+        $this->assign('id',0);
+        return $this->fetch('edit');
+    }
+
     /**
      * 更新文章信息
      */
-    public function edit($id=0)
+    public function edit($id)
     {
         $id = intval($id);
 
@@ -50,29 +78,19 @@ class PostController extends BaseController
                 if(!empty($uploaded)){
                     $data['cover']=$uploaded['url'];
                 }
-                if($id>0) {
-                    $data['id']=$id;
-                    if (PostModel::update($data)) {
-                        user_log($this->mid, 'updatepost', 1, '修改文章 ' . $id, 'manager');
-                        $this->success("编辑成功", url('post/index'));
-                    } else {
-                        $this->error("编辑失败");
-                    }
-                }else{
-                    $data['user_id'] = $this->mid;
-                    if ($insert_id=PostModel::create($data)) {
-                        user_log($this->mid,'addpost',1,'添加文章 '.$insert_id ,'manager');
-                        $this->success("添加成功", url('post/index'));
-                    } else {
-                        $this->error("添加失败");
-                    }
+                $data['id']=$id;
+                if (PostModel::update($data)) {
+                    user_log($this->mid, 'updatepost', 1, '修改文章 ' . $id, 'manager');
+                    $this->success("编辑成功", url('post/index'));
+                } else {
+                    $this->error("编辑失败");
                 }
             }
         }else{
-            if($id>0) {
-                $model = Db::name('post')->find($id);
-            }else{
-                $model=array('type'=>1);
+
+            $model = Db::name('post')->find($id);
+            if(empty($model)){
+                $this->error('文章不存在');
             }
             $this->assign("category",getSortedCategory(Db::name('category')->select()));
             $this->assign('post',$model);

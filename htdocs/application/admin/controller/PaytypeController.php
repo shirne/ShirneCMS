@@ -37,17 +37,43 @@ class PaytypeController extends BaseController
         return $this->fetch();
     }
 
+    public function add(){
+        if ($this->request->isPost()) {
+            $data = $this->request->post();
+            $validate = new PaytypeValidate();
+
+            if (!$validate->check($data)) {
+                $this->error($validate->getError());
+                exit();
+            } else {
+                $file = $this->upload('paytype', 'qrcodefile');
+                if ($file) {
+                    $data['qrcode'] = $file['url'];
+                }
+                if (Db::name('Paytype')->insert($data)) {
+                    $this->success("添加成功", url('Paytype/index'));
+                } else {
+                    $this->error("添加失败");
+                }
+            }
+        }
+        $model=array();
+        $this->assign('model',$model);
+        $this->assign('id',0);
+        $this->assign('banklist',banklist());
+        return $this->fetch('edit');
+    }
+
     /**
      * 添加付款方式
      */
-    public function edit($id=0)
+    public function edit($id)
     {
         if ($this->request->isPost()) {
             $data=$this->request->post();
             $validate=new PaytypeValidate();
 
             if (!$validate->check($data)) {
-                // 如果创建失败 表示验证没有通过 输出错误提示信息
                 $this->error($validate->getError());
                 exit();
             } else {
@@ -55,29 +81,23 @@ class PaytypeController extends BaseController
                 if($file){
                     $data['qrcode']=$file['url'];
                 }
-                if($id>0){
-                    $data['id']=$id;
-                    if (Db::name('Paytype')->update($data)) {
-                        $this->success("更新成功", url('Paytype/index'));
-                    } else {
-                        $this->error("更新失败");
-                    }
-                }else {
-                    if (Db::name('Paytype')->insert($data)) {
-                        $this->success("添加成功", url('Paytype/index'));
-                    } else {
-                        $this->error("添加失败");
-                    }
+                $data['id']=$id;
+                if (Db::name('Paytype')->update($data)) {
+                    $this->success("更新成功", url('Paytype/index'));
+                } else {
+                    $this->error("更新失败");
                 }
+
             }
         }
 
-        if($id>0) {
-            $model = Db::name('Paytype')->where(["id"=> $id])->find();
-        }else{
-            $model=array();
+
+        $model = Db::name('Paytype')->where(["id"=> $id])->find();
+        if(empty($model)){
+            $this->error('支付方式不存在');
         }
         $this->assign('model',$model);
+        $this->assign('id',$id);
         $this->assign('banklist',banklist());
         return $this->fetch();
     }

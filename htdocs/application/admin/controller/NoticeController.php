@@ -29,41 +29,53 @@ class NoticeController extends BaseController
         return $this->fetch();
     }
 
+    public function add(){
+        if ($this->request->isPost()) {
+            $data = $this->request->post();
+            $validate = new NoticeValidate();
+            if (!$validate->check($data)) {
+                $this->error($validate->getError());
+            } else {
+                $data['manager_id'] = session('adminId');
+                if (NoticeModel::create($data)) {
+                    $this->success("添加成功", url('Notice/index'));
+                } else {
+                    $this->error("添加失败");
+                }
+            }
+        }
+        $model=array();
+        $this->assign('model',$model);
+        $this->assign('id',0);
+        return $this->fetch('edit');
+    }
+
     /**
      * 公告添加
      */
-    public function edit($id=0)
+    public function edit($id)
     {
         if ($this->request->isPost()) {
             $data=$this->request->post();
             $validate=new NoticeValidate();
             if (!$validate->check($data)) {
-                // 如果创建失败 表示验证没有通过 输出错误提示信息
                 $this->error($validate->getError());
             } else {
-                if($id>0){
+                $data['id']=$id;
 
-                    if (NoticeModel::update($data)) {
-                        $this->success("更新成功", url('Notice/index'));
-                    } else {
-                        $this->error("更新失败");
-                    }
-                }else {
-                    $data['manager_id'] = session('adminId');
-                    if (NoticeModel::create($data)) {
-                        $this->success("添加成功", url('Notice/index'));
-                    } else {
-                        $this->error("添加失败");
-                    }
+                if (NoticeModel::update($data)) {
+                    $this->success("更新成功", url('Notice/index'));
+                } else {
+                    $this->error("更新失败");
                 }
             }
         }
-        if($id>0) {
-            $model = Db::name('Notice')->where(["id"=> $id])->find();
-        }else{
-            $model=array();
+        $model = Db::name('Notice')->where(["id"=> $id])->find();
+        if(empty($model)){
+            $this->error('公告不存在');
         }
         $this->assign('model',$model);
+        $this->assign('id',$id);
         return $this->fetch();
     }
 

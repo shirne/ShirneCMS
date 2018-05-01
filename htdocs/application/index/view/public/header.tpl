@@ -1,7 +1,7 @@
 <header>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
+        <div class="container">
             <a class="navbar-brand" href="#">Brand</a>
             <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
                 <span class="navbar-toggler-icon"></span>

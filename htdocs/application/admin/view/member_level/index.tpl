@@ -7,10 +7,10 @@
     <div id="page-wrapper">
 
         <div class="row">
-            <div class="col col-xs-6">
-                <a href="{:url('MemberLevel/add')}" class="btn btn-success">添加等级</a>
+            <div class="col-6">
+                <a href="{:url('MemberLevel/add')}" class="btn btn-primary">添加等级</a>
             </div>
-            <div class="col col-xs-6">
+            <div class="col-6">
             </div>
         </div>
         <table class="table table-hover table-striped">

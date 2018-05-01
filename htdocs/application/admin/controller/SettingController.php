@@ -62,10 +62,35 @@ class SettingController extends BaseController
         return $this->fetch();
     }
 
+    public function add(){
+        if ($this->request->isPost()) {
+            $data=$this->request->post();
+            $validate=new SettingValidate();
+            $validate->setId();
+            if (!$validate->check($data)) {
+                $this->error($validate->getError());
+            } else {
+                if (SettingModel::create($data)) {
+                    cache('setting', null);
+                    $this->success("字段添加成功", url('setting/advance'));
+                } else {
+                    $this->error("字段添加失败");
+                }
+            }
+
+        }
+        $model=array();
+        $this->assign('model',$model);
+        $this->assign('id',0);
+        $this->assign('groups',settingGroups());
+        $this->assign('types',settingTypes());
+        return $this->fetch('edit');
+    }
+
     /**
      * 添加分类
      */
-    public function edit($id=0)
+    public function edit($id)
     {
         if ($this->request->isPost()) {
             $data=$this->request->post();
@@ -75,30 +100,22 @@ class SettingController extends BaseController
 
                 $this->error($validate->getError());
             } else {
-                if($id>0){
-                    $data['id']=$id;
-                    if (SettingModel::update($data)) {
-                        cache('setting',null);
-                        $this->success("字段更新成功", url('setting/advance'));
-                    } else {
-                        $this->error("字段更新失败");
-                    }
-                }else {
-                    if (SettingModel::create($data)) {
-                        cache('setting', null);
-                        $this->success("字段添加成功", url('setting/advance'));
-                    } else {
-                        $this->error("字段添加失败");
-                    }
+                $data['id']=$id;
+                if (SettingModel::update($data)) {
+                    cache('setting',null);
+                    $this->success("字段更新成功", url('setting/advance'));
+                } else {
+                    $this->error("字段更新失败");
                 }
+
             }
         }else{
-            if($id>0){
-                $model = Db::name('setting')->find($id);
-            }else{
-                $model=array();
+            $model = Db::name('setting')->find($id);
+            if(empty($model)){
+                $this->error('要修改的配置不存在');
             }
             $this->assign('model',$model);
+            $this->assign('id',$id);
             $this->assign('groups',settingGroups());
             $this->assign('types',settingTypes());
             return $this->fetch();
@@ -115,9 +132,9 @@ class SettingController extends BaseController
         //验证通过
         $result = $model->delete($id);
         if($result){
-            $this->success("字段删除成功", url('setting/advance'));
+            $this->success("删除成功", url('setting/advance'));
         }else{
-            $this->error("字段删除失败");
+            $this->error("删除失败");
         }
     }
 

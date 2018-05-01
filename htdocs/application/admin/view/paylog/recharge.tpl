@@ -7,10 +7,10 @@
 <div id="page-wrapper">
 
     <div class="row">
-        <div class="col col-xs-6">
+        <div class="col-6">
             总有效金额: {$total|showmoney}
         </div>
-        <div class="col col-xs-6">
+        <div class="col-6">
             <form action="{:url('Paylog/recharge')}" method="post">
                 <div class="form-group input-group">
                     <select class="form-control" name="status">

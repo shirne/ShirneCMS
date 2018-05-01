@@ -4,7 +4,7 @@
 <include file="Public/bread" menu="page_index" section="内容" title="单页管理" />
 
 <div id="page-wrapper">
-    <div class="page-header">修改页面</div>
+    <div class="page-header">{$id>0?'编辑':'添加'}页面</div>
     <div id="page-content">
     <form method="post" action="{:url('page/update',array('id'=>$page.id))}">
         <div class="form-group">
@@ -21,7 +21,7 @@
         </div>
         <div class="form-group">
         <input type="hidden" name="id" value="{$page.id}">
-        <button type="submit" class="btn btn-primary">提交</button>
+        <button type="submit" class="btn btn-primary">{$id>0?'保存':'添加'}</button>
             </div>
     </form>
         </div>
@@ -29,9 +29,9 @@
     </block>
 <block name="script">
 <!-- 配置文件 -->
-<script type="text/javascript" src="__PUBLIC__/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" src="__STATIC__/ueditor/ueditor.config.js"></script>
 <!-- 编辑器源码文件 -->
-<script type="text/javascript" src="__PUBLIC__/ueditor/ueditor.all.js"></script>
+<script type="text/javascript" src="__STATIC__/ueditor/ueditor.all.min.js"></script>
 <!-- 实例化编辑器 -->
 <script type="text/javascript">
     var ue = UE.getEditor('p-content',{

@@ -7,10 +7,10 @@
 <div id="page-wrapper">
     
     <div class="row">
-        <div class="col col-xs-6">
-            <a href="{:url('adv/itemupdate',array('gid'=>$gid))}" class="btn btn-success">添加广告</a>
+        <div class="col-6">
+            <a href="{:url('adv/itemadd',array('gid'=>$gid))}" class="btn btn-primary">添加广告</a>
         </div>
-        <div class="col col-xs-6">
+        <div class="col-6">
             <form action="{:url('adv/itemlist')}" method="post">
                 <div class="form-group input-group">
                     <input type="text" class="form-control" name="key" placeholder="输入标题或者地址关键词搜索">

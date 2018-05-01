@@ -7,10 +7,10 @@
 <div id="page-wrapper">
     
     <div class="row">
-        <div class="col col-xs-6">
-            <a href="{:url('page/add')}" class="btn btn-success">添加单页</a>
+        <div class="col-6">
+            <a href="{:url('page/add')}" class="btn btn-primary">添加单页</a>
         </div>
-        <div class="col col-xs-6">
+        <div class="col-6">
             <form action="{:url('page/index')}" method="post">
                 <div class="form-group input-group">
                     <input type="text" class="form-control" name="key" placeholder="输入单页标题或者别名关键词搜索">
@@ -37,7 +37,7 @@
                 <td>{$v.name}</td>
                 <td>{$v.title}</td>
                 <td>
-                    <a class="btn btn-default btn-sm" href="{:url('page/update',array('id'=>$v['id']))}"><i class="fa fa-edit"></i> 编辑</a>
+                    <a class="btn btn-default btn-sm" href="{:url('page/edit',array('id'=>$v['id']))}"><i class="fa fa-edit"></i> 编辑</a>
                     <a class="btn btn-default btn-sm" href="{:url('page/delete',array('id'=>$v['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="fa fa-trash"></i> 删除</a>
                 </td>
             </tr>

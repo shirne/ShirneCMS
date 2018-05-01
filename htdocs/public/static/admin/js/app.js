@@ -251,6 +251,12 @@ jQuery(function ($) {
         e.preventDefault();
         $(this).tab('show')
     });
+
+    $('.custom-file .custom-file-input').on('change',function(){
+        var label=$(this).parents('.custom-file').find('.custom-file-label');
+        label.text($(this).val());
+    })
+
     if($.fn.datetimepicker) {
         $('.datepicker').datetimepicker({
             language: 'zh-CN',

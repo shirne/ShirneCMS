@@ -24,10 +24,33 @@ class LinksController extends BaseController
         return $this->fetch();
     }
 
+    public function add(){
+        if ($this->request->isPost()) {
+            //如果用户提交数据
+            $data = $this->request->post();
+            $validate=new LinksValidate();
+
+            if (!$validate->check($data)) {
+                $this->error($validate->getError());
+            } else {
+
+                if (Db::name('Links')->insert($data)) {
+                    $this->success("链接添加成功", url('links/index'));
+                } else {
+                    $this->error("链接添加失败");
+                }
+            }
+        }
+        $model=array();
+        $this->assign('model',$model);
+        $this->assign('id',0);
+        return $this->fetch('edit');
+    }
+
     /**
      * 编辑链接
      */
-    public function edit($id=0)
+    public function edit($id)
     {
         if ($this->request->isPost()) {
             //如果用户提交数据
@@ -37,29 +60,21 @@ class LinksController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
-                if($id>0){
-                    $data['id']=$id;
-                    if (Db::name('Links')->update($data)) {
-                        $this->success("更新成功", url('links/index'));
-                    } else {
-                        $this->error("更新失败");
-                    }
-                }else {
-                    if (Db::name('Links')->insert($data)) {
-                        $this->success("链接添加成功", url('links/index'));
-                    } else {
-                        $this->error("链接添加失败");
-                    }
+                $data['id']=$id;
+                if (Db::name('Links')->update($data)) {
+                    $this->success("更新成功", url('links/index'));
+                } else {
+                    $this->error("更新失败");
                 }
             }
         }
 
-        if($id>0) {
-            $model = Db::name('Links')->find($id);
-        }else{
-            $model=array();
+        $model = Db::name('Links')->find($id);
+        if(empty($model)){
+            $this->error('链接不存在');
         }
         $this->assign('model',$model);
+        $this->assign('id',$id);
         return $this->fetch();
     }
     /**

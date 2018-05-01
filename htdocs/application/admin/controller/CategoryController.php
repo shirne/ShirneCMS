@@ -18,7 +18,7 @@ class CategoryController extends BaseController
         $model = Db::name('category');
         $where=array();
         if(!empty($key)){
-            $where['title|name'] = array('like',"%$key%");
+            $where[] = array('title|name','like',"%$key%");
         } 
         
         $category = $model->where($where)->order('pid ASC,sort ASC,id ASC')->select();
@@ -26,10 +26,41 @@ class CategoryController extends BaseController
         return $this->fetch();
     }
 
+    public function add($pid=0){
+        $pid=intval($pid);
+        if ($this->request->isPost()) {
+            $data=$this->request->post();
+            $validate=new CategoryValidate();
+            $validate->setId();
+
+            if (!$validate->check($data)) {
+                $this->error($validate->getError());
+            } else {
+                $iconupload=$this->upload('category','upload_icon',true);
+                if(!empty($iconupload))$data['icon']=$iconupload['url'];
+                $uploaded=$this->upload('category','upload_image',true);
+                if(!empty($uploaded))$data['image']=$uploaded['url'];
+
+                $result=Db::name('category')->insert($data);
+                if ($result) {
+                    $this->success("添加成功", url('category/index'));
+                } else {
+                    $this->error("添加失败");
+                }
+            }
+        }
+        $cate = getSortedCategory(Db::name('category')->order('pid ASC,sort ASC')->select());
+        $model=array('sort'=>99,'pid'=>$pid);
+        $this->assign('cate',$cate);
+        $this->assign('model',$model);
+        $this->assign('id',0);
+        return $this->fetch('edit');
+    }
+
     /**
      * 添加分类
      */
-    public function edit($id=0)
+    public function edit($id)
     {
         if ($this->request->isPost()) {
             $data=$this->request->post();
@@ -37,29 +68,25 @@ class CategoryController extends BaseController
             $validate->setId($id);
 
             if (!$validate->check($data)) {
-                // 如果创建失败 表示验证没有通过 输出错误提示信息
                 $this->error($validate->getError());
             } else {
                 $iconupload=$this->upload('category','upload_icon',true);
                 if(!empty($iconupload))$data['icon']=$iconupload['url'];
                 $uploaded=$this->upload('category','upload_image',true);
                 if(!empty($uploaded))$data['image']=$uploaded['url'];
-                if($id>0){
-                    $result=Db::name('category')->where(array('id'=>$id))->update($data);
-                }else{
-                    $result=Db::name('category')->insert($data);
-                }
+
+                $result=Db::name('category')->where(array('id'=>$id))->update($data);
+
                 if ($result) {
-                    $this->success(($id>0?'保存':'添加')."成功", url('category/index'));
+                    $this->success("保存成功", url('category/index'));
                 } else {
-                    $this->error(($id>0?'保存':'添加')."失败");
+                    $this->error("保存失败");
                 }
             }
         }else{
-            if($id>0) {
-                $model = Db::name('category')->find($id);
-            }else{
-                $model=array('sort'=>99);
+            $model = Db::name('category')->find($id);
+            if(empty($model)){
+                $this->error('分类不存在');
             }
             $cate = getSortedCategory(Db::name('category')->order('pid ASC,sort ASC')->select());
 

@@ -7,11 +7,11 @@
 <div id="page-wrapper">
     
     <div class="row">
-        <div class="col col-xs-6">
-            <a href="{:url('permission/add')}" class="btn btn-success">添加菜单</a>
+        <div class="col-6">
+            <a href="{:url('permission/add')}" class="btn btn-primary">添加菜单</a>
             <a href="{:url('permission/clearcache')}" class="btn btn-default">清除缓存</a>
         </div>
-        <div class="col col-xs-6">
+        <div class="col-6">
         </div>
     </div>
     <table class="table table-hover table-striped">
@@ -33,7 +33,7 @@
                 <td>{$v.url}</td>
                 <td>
                     <a class="btn btn-default btn-sm" href="{:url('permission/add',array('pid'=>$v['id']))}"><i class="fa fa-edit"></i> 添加</a>
-                    <a class="btn btn-default btn-sm" href="{:url('permission/update',array('id'=>$v['id']))}"><i class="fa fa-edit"></i> 编辑</a>
+                    <a class="btn btn-default btn-sm" href="{:url('permission/edit',array('id'=>$v['id']))}"><i class="fa fa-edit"></i> 编辑</a>
                     <a class="btn btn-default btn-sm" href="{:url('permission/delete',array('id'=>$v['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="fa fa-trash"></i> 删除</a>
                 </td>
             </tr>
@@ -45,7 +45,7 @@
                     <td>{$sv.url}</td>
                     <td>
                         <a class="btn btn-default btn-sm" href="{:url('permission/add',array('pid'=>$sv['id']))}"><i class="fa fa-edit"></i> 添加</a>
-                        <a class="btn btn-default btn-sm" href="{:url('permission/update',array('id'=>$sv['id']))}"><i class="fa fa-edit"></i> 编辑</a>
+                        <a class="btn btn-default btn-sm" href="{:url('permission/edit',array('id'=>$sv['id']))}"><i class="fa fa-edit"></i> 编辑</a>
                         <a class="btn btn-default btn-sm" href="{:url('permission/delete',array('id'=>$sv['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="fa fa-trash"></i> 删除</a>
                     </td>
                 </tr>
@@ -56,7 +56,7 @@
                         <td>{$mv.key}</td>
                         <td>{$mv.url}</td>
                         <td>
-                            <a class="btn btn-default btn-sm" href="{:url('permission/update',array('id'=>$mv['id']))}"><i class="fa fa-edit"></i> 编辑</a>
+                            <a class="btn btn-default btn-sm" href="{:url('permission/edit',array('id'=>$mv['id']))}"><i class="fa fa-edit"></i> 编辑</a>
                             <a class="btn btn-default btn-sm" href="{:url('permission/delete',array('id'=>$mv['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="fa fa-trash"></i> 删除</a>
                         </td>
                     </tr>

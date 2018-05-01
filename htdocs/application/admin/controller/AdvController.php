@@ -27,10 +27,31 @@ class AdvController extends BaseController
         return $this->fetch();
     }
 
+    public function add(){
+        if ($this->request->isPost()) {
+            $data=$this->request->post();
+            $validate=new AdvGroupValidate();
+            $validate->setId();
+            if (!$validate->check($data)) {
+                $this->error($validate->getError());
+            }else{
+                if (Db::name("AdvGroup")->insert($data)) {
+                    $this->success("添加成功", url('adv/index'));
+                } else {
+                    $this->error("添加失败");
+                }
+            }
+        }
+        $model=array('status'=>1);
+        $this->assign('model',$model);
+        $this->assign('id',0);
+        return $this->fetch('update');
+    }
+
     /**
      * 添加/修改
      */
-    public function update($id=0)
+    public function update($id)
     {
         $id = intval($id);
 
@@ -43,28 +64,22 @@ class AdvController extends BaseController
                 $this->error($validate->getError());
             }else{
                 $model = Db::name("AdvGroup");
-                if($id==0){
-                    if ($model->insert($data)) {
-                        $this->success("添加成功", url('adv/index'));
-                    } else {
-                        $this->error("添加失败");
-                    }
-                }else {
-                    $data['id']=$id;
-                    if ($model->update($data)) {
-                        $this->success("更新成功", url('adv/index'));
-                    } else {
-                        $this->error("更新失败");
-                    }
+
+                $data['id']=$id;
+                if ($model->update($data)) {
+                    $this->success("更新成功", url('adv/index'));
+                } else {
+                    $this->error("更新失败");
                 }
             }
         }else{
-            if($id!=0) {
-                $model = Db::name('AdvGroup')->where(["id"=> $id])->find();
-            }else{
-                $model=array('status'=>1);
+
+            $model = Db::name('AdvGroup')->where(["id"=> $id])->find();
+            if(empty($model)){
+                $this->error('广告组不存在');
             }
             $this->assign('model',$model);
+            $this->assign('id',$id);
             return $this->fetch();
         }
     }
@@ -111,13 +126,7 @@ class AdvController extends BaseController
         return $this->fetch();
     }
 
-    /**
-     * 添加/修改
-     */
-    public function itemupdate($id=0,$gid=0)
-    {
-        $id = intval($id);
-        $url=$gid==0?url('adv/index'):url('adv/itemlist',array('gid'=>$gid));
+    public function itemadd($gid){
         if ($this->request->isPost()) {
             $data=$this->request->post();
             $validate=new AdvItemValidate();
@@ -126,29 +135,52 @@ class AdvController extends BaseController
                 $this->error($validate->getError());
             }else{
                 $model = Db::name("AdvItem");
-                if($id==0){
-                    if ($model->insert($data)) {
-                        $this->success("添加成功",$url);
-                    } else {
-                        $this->error("添加失败");
-                    }
-                }else {
-                    $data['id']=$id;
-                    if ($model->update($data)) {
-                        $this->success("更新成功", $url);
-                    } else {
-                        $this->error("更新失败");
-                    }
+                $url=url('adv/itemlist',array('gid'=>$gid));
+                if ($model->insert($data)) {
+                    $this->success("添加成功",$url);
+                } else {
+                    $this->error("添加失败");
+                }
+            }
+        }
+        $model=array('status'=>1,'gid'=>$gid);
+        $this->assign('model',$model);
+        $this->assign('id',0);
+        return $this->fetch('itemupdate');
+    }
+
+    /**
+     * 添加/修改
+     */
+    public function itemupdate($id)
+    {
+        $id = intval($id);
+
+        if ($this->request->isPost()) {
+            $data=$this->request->post();
+            $validate=new AdvItemValidate();
+
+            if (!$validate->check($data)) {
+                $this->error($validate->getError());
+            }else{
+                $model = Db::name("AdvItem");
+                $url=url('adv/itemlist',array('gid'=>$data['gid']));
+
+                $data['id']=$id;
+                if ($model->update($data)) {
+                    $this->success("更新成功", $url);
+                } else {
+                    $this->error("更新失败");
                 }
             }
         }else{
-            if($id!=0) {
-                $model = Db::name('AdvItem')->where(["id"=> $id])->find();
-            }else{
-                $model=array('status'=>1,'gid'=>$gid);
+            $model = Db::name('AdvItem')->where(["id"=> $id])->find();
+            if(empty($model)){
+                $this->error('广告项不存在');
             }
-            $this->assign('gid',$gid);
+
             $this->assign('model',$model);
+            $this->assign('id',$id);
             return $this->fetch();
         }
     }

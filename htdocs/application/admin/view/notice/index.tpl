@@ -6,10 +6,10 @@
 <div id="page-wrapper">
     
     <div class="row">
-        <div class="col col-xs-6">
-            <a href="{:url('Notice/add')}" class="btn btn-success">添加公告</a>
+        <div class="col-6">
+            <a href="{:url('Notice/add')}" class="btn btn-primary">添加公告</a>
         </div>
-        <div class="col col-xs-6">
+        <div class="col-6">
             <form action="{:url('Notice/index')}" method="post">
                 <div class="form-group input-group">
                     <input type="text" class="form-control" name="key" placeholder="输入标题或者地址关键词搜索">
@@ -38,7 +38,7 @@
                 <td>{$v.url}</td>
                 <td><if condition="$v['status']">显示<else/>隐藏</if></td>
                 <td>
-                    <a class="btn btn-default btn-sm" href="{:url('Notice/update',array('id'=>$v['id']))}"><i class="fa fa-edit"></i> 编辑</a>
+                    <a class="btn btn-default btn-sm" href="{:url('Notice/edit',array('id'=>$v['id']))}"><i class="fa fa-edit"></i> 编辑</a>
                     <a class="btn btn-default btn-sm" href="{:url('Notice/delete',array('id'=>$v['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="fa fa-trash"></i> 删除</a>
                 </td>
             </tr>
