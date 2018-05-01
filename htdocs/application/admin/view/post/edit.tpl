@@ -19,14 +19,19 @@
             </select>
         </div>
         <div class="form-group">
-            <label for="post-title">封面图</label>
-            <input type="file" name="upload_cover" />
+            <label for="image">封面图</label>
+            <div class="input-group">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" name="upload_cover"/>
+                    <label class="custom-file-label" for="upload_cover">选择文件</label>
+                </div>
+            </div>
             <if condition="$post['cover']">
                 <figure class="figure">
-                    <img src="{$model.cover}" class="figure-img img-fluid rounded" alt="icon">
-                    <figcaption class="figure-caption text-center">{$model.cover}</figcaption>
+                    <img src="{$post.cover}" class="figure-img img-fluid rounded" alt="image">
+                    <figcaption class="figure-caption text-center">{$post.cover}</figcaption>
                 </figure>
-                <input type="hidden" name="delete_cover" value="{$model.cover}"/>
+                <input type="hidden" name="delete_cover" value="{$post.cover}"/>
             </if>
         </div>
         <div class="form-group">

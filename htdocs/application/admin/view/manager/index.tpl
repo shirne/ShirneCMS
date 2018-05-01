@@ -4,9 +4,9 @@
 <include file="Public/bread" menu="manager_index" section="系统" title="管理员" />
 
 <div id="page-wrapper">
-    <div class="row">
+    <div class="row list-header">
         <div class="col-md-6">
-            <a href="{:url('manager/add')}" class="btn btn-primary">添加管理员</a>
+            <a href="{:url('manager/add')}" class="btn btn-outline-primary">添加管理员</a>
         </div>
         <div class="col-md-6">
             <form action="{:url('manager/index')}" method="post">
@@ -29,7 +29,7 @@
                 <th>上次登陆</th>
                 <th>类型</th>
                 <th>状态</th>
-                <th width="220">操作</th>
+                <th width="240">操作</th>
             </tr>
         </thead>
         <tbody>
@@ -47,12 +47,12 @@
                 </td> 
                 <td><if condition="$v.status eq 1">正常<else/><span style="color:red">禁用</span></if></td>
                 <td>
-                    <a class="btn btn-dark btn-sm" href="{:url('manager/update',array('id'=>$v['id']))}"><i class="ion-edit"></i> 编辑</a>
-                <if condition="$v.type neq 1">	<a class="btn btn-dark btn-sm" href="{:url('manager/permision',array('id'=>$v['id']))}"><i class="ion-edit"></i> 权限</a></if>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('manager/update',array('id'=>$v['id']))}"><i class="ion-edit"></i> 编辑</a>
+                <if condition="$v.type neq 1">	<a class="btn btn-outline-dark btn-sm" href="{:url('manager/permision',array('id'=>$v['id']))}"><i class="ion-edit"></i> 权限</a></if>
                 <if condition="$v.status eq 1">	
-                    <a class="btn btn-dark btn-sm" href="{:url('manager/delete',array('id'=>$v['id']))}" onclick="javascript:return del('禁用后用户将不能登陆后台!\n\n请确认!!!');"><i class="ion-close"></i> 禁用</a>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('manager/delete',array('id'=>$v['id']))}" onclick="javascript:return del('禁用后用户将不能登陆后台!\n\n请确认!!!');"><i class="ion-close"></i> 禁用</a>
             	<else/>
-                    <a class="btn btn-dark btn-sm" href="{:url('manager/delete',array('id'=>$v['id']))}" style="color:#50AD1E;"><i class="ion-check"></i> 启用</a>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('manager/delete',array('id'=>$v['id']))}" style="color:#50AD1E;"><i class="ion-check"></i> 启用</a>
             	</if>
                 </td>
             </tr>

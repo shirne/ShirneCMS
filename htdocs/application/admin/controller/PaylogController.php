@@ -42,13 +42,13 @@ class PaylogController extends BaseController
 
         $lists=$model->view('__MEMBER__ m',['username','realname'],'mr.member_id=m.id','LEFT')
             ->view('__PAYTYPE__ p',['type','cardname','bank','cardno'],'mr.paytype_id=p.id','LEFT')
-            ->order('id DESC')->paginate(15);
+            ->order('mr.id DESC')->paginate(15);
 
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
         $paytype=getPaytypes();
 
-        $total=$model->where(array('status'=>1))->sum('amount');
+        $total=Db::name('MemberRecharge')->where(array('status'=>1))->sum('amount');
         $this->assign('total',$total);
         $this->assign('key',$key);
         $this->assign('status',$status);
@@ -73,29 +73,8 @@ class PaylogController extends BaseController
         Db::name('member_recharge')->where(array('id'=>$recharge['id']))->update($data);
 
         money_log($recharge['member_id'],$recharge['amount'],'充值','charge');
-        //是否首充
-        $settings=getSettings();$suf='';$issend=false;
-        if($settings['m_cashback']=='1'){
-            $cashsuc=Db::name('member_recharge')->where(array('member_id'=>$recharge['member_id'],'status'=>1))->count();
-            if($cashsuc==1){
-                $cback=$recharge['amount'];
-                if($cback > $settings['m_cashuppon']*100){
-                    $cback=$settings['m_cashuppon']*100;
-                }
-                $suf=' 首充赠送'.showmoney($cback);
-                money_log($recharge['member_id'],$cback,'首充赠送','charge');
-                $issend=true;
-            }
-        }
-        if(!$issend && $settings['m_chargeback']>0){
-            $cback=$recharge['amount'] * $settings['m_chargeback']/100;
-            if($settings['m_cashuppon']>0 && $cback > $settings['m_cashuppon']*100){
-                $cback=$settings['m_cashuppon']*100;
-            }
-            $suf=' 充值赠送'.showmoney($cback);
-            money_log($recharge['member_id'],$cback,'充值赠送','charge');
-        }
-        user_log($this->mid,'rechargeaudit',1,'审核充值单 '.$id.$suf ,'manager');
+
+        user_log($this->mid,'rechargeaudit',1,'审核充值单 '.$id ,'manager');
         $this->success('处理成功！');
     }
 
@@ -162,7 +141,7 @@ class PaylogController extends BaseController
 
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
-        $total=$model->where(array('status'=>1))->sum('amount');
+        $total=Db::name('MemberCashin')->where(array('status'=>1))->sum('amount');
         $this->assign('total',$total);
         $this->assign('key',$key);
         return $this->fetch();

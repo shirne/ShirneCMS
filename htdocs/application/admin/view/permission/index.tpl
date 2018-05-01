@@ -6,10 +6,10 @@
 
 <div id="page-wrapper">
     
-    <div class="row">
+    <div class="row list-header">
         <div class="col-6">
-            <a href="{:url('permission/add')}" class="btn btn-primary">添加菜单</a>
-            <a href="{:url('permission/clearcache')}" class="btn btn-dark">清除缓存</a>
+            <a href="{:url('permission/add')}" class="btn btn-outline-primary">添加菜单</a>
+            <a href="{:url('permission/clearcache')}" class="btn btn-outline-dark">清除缓存</a>
         </div>
         <div class="col-6">
         </div>
@@ -32,9 +32,9 @@
                 <td>{$v.key}</td>
                 <td>{$v.url}</td>
                 <td>
-                    <a class="btn btn-dark btn-sm" href="{:url('permission/add',array('pid'=>$v['id']))}"><i class="ion-edit"></i> 添加</a>
-                    <a class="btn btn-dark btn-sm" href="{:url('permission/edit',array('id'=>$v['id']))}"><i class="ion-edit"></i> 编辑</a>
-                    <a class="btn btn-dark btn-sm" href="{:url('permission/delete',array('id'=>$v['id']))}" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash-a"></i> 删除</a>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('permission/add',array('pid'=>$v['id']))}"><i class="ion-plus"></i> 添加</a>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('permission/edit',array('id'=>$v['id']))}"><i class="ion-edit"></i> 编辑</a>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('permission/delete',array('id'=>$v['id']))}" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash-a"></i> 删除</a>
                 </td>
             </tr>
             <foreach name="model[$v['id']]" item="sv">
@@ -44,9 +44,9 @@
                     <td>{$sv.key}</td>
                     <td>{$sv.url}</td>
                     <td>
-                        <a class="btn btn-dark btn-sm" href="{:url('permission/add',array('pid'=>$sv['id']))}"><i class="ion-edit"></i> 添加</a>
-                        <a class="btn btn-dark btn-sm" href="{:url('permission/edit',array('id'=>$sv['id']))}"><i class="ion-edit"></i> 编辑</a>
-                        <a class="btn btn-dark btn-sm" href="{:url('permission/delete',array('id'=>$sv['id']))}" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash-a"></i> 删除</a>
+                        <a class="btn btn-outline-dark btn-sm" href="{:url('permission/add',array('pid'=>$sv['id']))}"><i class="ion-plus"></i> 添加</a>
+                        <a class="btn btn-outline-dark btn-sm" href="{:url('permission/edit',array('id'=>$sv['id']))}"><i class="ion-edit"></i> 编辑</a>
+                        <a class="btn btn-outline-dark btn-sm" href="{:url('permission/delete',array('id'=>$sv['id']))}" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash-a"></i> 删除</a>
                     </td>
                 </tr>
                 <foreach name="model[$sv['id']]" item="mv">
@@ -56,8 +56,8 @@
                         <td>{$mv.key}</td>
                         <td>{$mv.url}</td>
                         <td>
-                            <a class="btn btn-dark btn-sm" href="{:url('permission/edit',array('id'=>$mv['id']))}"><i class="ion-edit"></i> 编辑</a>
-                            <a class="btn btn-dark btn-sm" href="{:url('permission/delete',array('id'=>$mv['id']))}" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash-a"></i> 删除</a>
+                            <a class="btn btn-outline-dark btn-sm" href="{:url('permission/edit',array('id'=>$mv['id']))}"><i class="ion-edit"></i> 编辑</a>
+                            <a class="btn btn-outline-dark btn-sm" href="{:url('permission/delete',array('id'=>$mv['id']))}" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash-a"></i> 删除</a>
                         </td>
                     </tr>
                 </foreach>
@@ -65,7 +65,7 @@
         </foreach>
         </tbody>
     </table>
-    {$page}
+    {$page|raw}
 </div>
 
 </block>

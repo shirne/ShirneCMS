@@ -127,7 +127,7 @@ function Dialog(opts){
     this.box=$(this.options.id);
 }
 Dialog.prototype.generBtn=function(opt,idx){
-    return '<a class="btn '+(opt['class']?opt['class']:'btn-default')+'" data-index="'+idx+'">'+opt.text+'</a>';
+    return '<a href="javascript:" class="btn '+(opt['class']?opt['class']:'btn-default')+'" data-index="'+idx+'">'+opt.text+'</a>';
 };
 Dialog.prototype.show=function(html,title){
     this.box=$('#'+this.options.id);
@@ -264,17 +264,11 @@ jQuery(function ($) {
 
     $('.btn-primary[type=submit]').click(function(e){
         var form=$(this).parents('form');
-        if(form.attr('enctype')=='multipart/form-data'){
-            return true;
-        }
-        e.preventDefault();
-        $(this).attr('disabled',true);
         var btn=this;
-        $.ajax({
+        var options={
             url:$(form).attr('action'),
             type:'POST',
             dataType:'JSON',
-            data:$(form).serialize(),
             success:function (json) {
                 if(json.code==1){
                     new Dialog({
@@ -291,8 +285,22 @@ jQuery(function ($) {
                     $(btn).removeAttr('disabled');
                 }
             }
-        })
+        };
+        if(form.attr('enctype')=='multipart/form-data'){
+            if(!FormData){
+                return true;
+            }
+            options.data=new FormData(form[0]);
+            options.cache=false;
+            options.processData=false;
+            options.contentType=false;
+        }else{
+            options.data=$(form).serialize();
+        }
 
+        e.preventDefault();
+        $(this).attr('disabled',true);
+        $.ajax(options);
     });
 
     if($.fn.datetimepicker) {

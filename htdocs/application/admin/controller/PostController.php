@@ -79,12 +79,15 @@ class PostController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             }else{
+                $delete_images=[];
                 $uploaded=$this->upload('post','upload_cover',true);
                 if(!empty($uploaded)){
                     $data['cover']=$uploaded['url'];
+                    $delete_images[]=$data['delete_cover'];
                 }
                 $model=PostModel::get($id);
                 if ($model->allowField(true)->save($data)) {
+                    delete_image($delete_images);
                     user_log($this->mid, 'updatepost', 1, '修改文章 ' . $id, 'manager');
                     $this->success("编辑成功", url('post/index'));
                 } else {

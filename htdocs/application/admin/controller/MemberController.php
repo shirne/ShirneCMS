@@ -31,7 +31,7 @@ class MemberController extends BaseController
         $referer=$this->request->request('referer');
         if(!empty($referer)){
             if($referer!='0'){
-                $member=$model->where(array('id|username'=>$referer))->find();
+                $member=Db::name('Member')->where(array('id|username'=>$referer))->find();
                 if(empty($member)){
                     $this->error('填写的会员不存在');
                 }
@@ -41,7 +41,7 @@ class MemberController extends BaseController
             }
         }
 
-        $lists=$model->view('__MEMBER__ rm',['username'=> 'refer_name','realname'=> 'refer_realname','isagent'=> 'refer_agent'],'m.referer=rm.id','LEFT')->paginate(15);
+        $lists=$model->view('__MEMBER__ rm',['username'=> 'refer_name','realname'=> 'refer_realname','isagent'=> 'refer_agent'],'m.referer=rm.id','LEFT')->where($where)->paginate(15);
 
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());

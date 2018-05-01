@@ -6,9 +6,9 @@
 
 <div id="page-wrapper">
     
-    <div class="row">
+    <div class="row list-header">
         <div class="col-6">
-            <a href="{:url('links/add')}" class="btn btn-primary">添加链接</a>
+            <a href="{:url('links/add')}" class="btn btn-outline-primary">添加链接</a>
         </div>
         <div class="col-6">
             <form action="{:url('links/index')}" method="post">
@@ -28,7 +28,7 @@
                 <th>标题</th>
                 <th>地址</th>
                 <th>优先级</th>
-                <th width="250">操作</th>
+                <th width="200">操作</th>
             </tr>
         </thead>
         <tbody>
@@ -39,13 +39,13 @@
                 <td>{$v.url}</td>
                 <td>{$v.sort}</td> 
                 <td>
-                    <a class="btn btn-dark btn-sm" href="{:url('links/edit',array('id'=>$v['id']))}"><i class="ion-edit"></i> 编辑</a>
-                    <a class="btn btn-dark btn-sm" href="{:url('links/delete',array('id'=>$v['id']))}" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash-a"></i> 删除</a>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('links/edit',array('id'=>$v['id']))}"><i class="ion-edit"></i> 编辑</a>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('links/delete',array('id'=>$v['id']))}" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash-a"></i> 删除</a>
                 </td>
             </tr>
         </foreach>
         </tbody>
     </table>
-    {$page}
+    {$page|raw}
 </div>
 </block>

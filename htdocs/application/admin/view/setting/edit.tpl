@@ -41,7 +41,7 @@
         </div>
         <div class="form-group">
             <label for="value">字段值</label>
-            <textarea name="value" class="form-control"  cols="30" rows="3" placeholder="value">{$model.value}</textarea>
+            <textarea name="value" class="form-control"  cols="30" rows="3" placeholder="value">{$model.value|raw}</textarea>
         </div>
         <div class="form-group">
             <label for="description">字段描述</label>

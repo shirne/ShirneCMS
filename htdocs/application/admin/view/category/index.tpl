@@ -6,9 +6,9 @@
 
 <div id="page-wrapper">
     
-    <div class="row">
+    <div class="row list-header">
         <div class="col-6">
-            <a href="{:url('category/add')}" class="btn btn-primary">添加分类</a>
+            <a href="{:url('category/add')}" class="btn btn-outline-primary">添加分类</a>
         </div>
         <div class="col-6">
             <form action="{:url('category/index')}" method="post">
@@ -39,9 +39,9 @@
 
                 <td>
                     <div class="btn-group" role="group" aria-label="Basic example">
-                    <a class="btn btn-dark btn-sm" href="{:url('category/add',array('pid'=>$v['id']))}"><i class="ion-plus"></i> 添加</a>
-                    <a class="btn btn-dark btn-sm" href="{:url('category/edit',array('id'=>$v['id']))}"><i class="ion-edit"></i> 编辑</a>
-                    <a class="btn btn-dark btn-sm" href="{:url('category/delete',array('id'=>$v['id']))}" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash-a"></i> 删除</a>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('category/add',array('pid'=>$v['id']))}"><i class="ion-plus"></i> 添加</a>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('category/edit',array('id'=>$v['id']))}"><i class="ion-edit"></i> 编辑</a>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('category/delete',array('id'=>$v['id']))}" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash-a"></i> 删除</a>
                     </div>
                 </td>
             </tr>

@@ -4,9 +4,9 @@
 <include file="Public/bread" menu="member_index" section="会员" title="会员管理" />
 
 <div id="page-wrapper">
-    <div class="row">
+    <div class="row list-header">
         <div class="col col-4">
-            <a href="{:url('member/add')}" class="btn btn-primary">添加会员</a>
+            <a href="{:url('member/add')}" class="btn btn-outline-primary">添加会员</a>
         </div>
         <div class="col col-8">
             <form action="{:url('member/index')}" method="post">
@@ -43,7 +43,7 @@
                 <th>上次登陆</th>
                 <th>代理</th>
                 <th>状态</th>
-                <th width="160">操作</th>
+                <th width="200">操作</th>
             </tr>
         </thead>
         <tbody>
@@ -73,7 +73,7 @@
 
                     <if condition="$v.isagent neq 0">
                         <div class="btn-group">
-                                <a class="btn btn-dark btn-sm" href="{:url('member/cancel_agent',array('id'=>$v['id']))}" style="color:green;" onclick="javascript:return del('取消代理不能更改已注册的用户!!!');"><i class="ion-close"></i> 取消代理[{$v.isagent}]</a>
+                                <a class="btn btn-outline-dark btn-sm" href="{:url('member/cancel_agent',array('id'=>$v['id']))}" style="color:green;" onclick="javascript:return del('取消代理不能更改已注册的用户!!!');"><i class="ion-close"></i> 取消代理[{$v.isagent}]</a>
                             <button type="button" class="btn btn-sm btn-dark dropdown-toggle" data-toggle="dropdown">
                                 <span class="caret"></span>
                                 <span class="sr-only">Toggle Dropdown</span>
@@ -84,25 +84,25 @@
                             </ul>
                         </div>
                     <else/>
-                    <a class="btn btn-dark btn-sm {$v.refer_agent>2?'disabled':''}" href="{:url('member/set_agent',array('id'=>$v['id']))}" ><i class="ion-check"></i> 设置代理[<php> echo $v['refer_agent']+1;</php>]</a>
+                    <a class="btn btn-outline-dark btn-sm {$v.refer_agent>2?'disabled':''}" href="{:url('member/set_agent',array('id'=>$v['id']))}" ><i class="ion-check"></i> 设置代理[<php> echo $v['refer_agent']+1;</php>]</a>
                     </if>
 
                 </td> 
                 <td><if condition="$v.status eq 1">正常<else/><span style="color:red">禁用</span></if></td>
                 <td>
 
-                    <a class="btn btn-dark btn-sm" href="{:url('member/update',array('id'=>$v['id']))}"><i class="ion-edit"></i> 编辑</a>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('member/update',array('id'=>$v['id']))}"><i class="ion-edit"></i> 编辑</a>
                     <if condition="$v.status eq 1">
-                        <a class="btn btn-dark btn-sm" href="{:url('member/delete',array('id'=>$v['id']))}" onclick="javascript:return del('禁用后用户将不能登陆!\n\n请确认!!!');"><i class="ion-close"></i> 禁用</a>
+                        <a class="btn btn-outline-dark btn-sm" href="{:url('member/delete',array('id'=>$v['id']))}" onclick="javascript:return del('禁用后用户将不能登陆!\n\n请确认!!!');"><i class="ion-close"></i> 禁用</a>
                     <else/>
-                        <a class="btn btn-dark btn-sm" href="{:url('member/delete',array('id'=>$v['id']))}" style="color:#50AD1E;"><i class="ion-check"></i> 启用</a>
+                        <a class="btn btn-outline-dark btn-sm" href="{:url('member/delete',array('id'=>$v['id']))}" style="color:#50AD1E;"><i class="ion-check"></i> 启用</a>
                     </if>
                 </td>
             </tr>
         </foreach>
         </tbody>
     </table>
-    {$page}
+    {$page|raw}
 </div>
 
 </block>

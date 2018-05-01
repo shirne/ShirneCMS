@@ -6,12 +6,12 @@
 
 <div id="page-wrapper">
 
-    <div class="row">
-        <a href="{:url('setting/advance')}" class="btn btn-success pull-right">高级模式</a>
+    <div class="container-fluid">
+        <a href="{:url('setting/advance')}" class="btn btn-outline-secondary float-right">高级模式</a>
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
             <foreach name="groups" item="name">
-                <li role="presentation" class="head-{$key}"><a href="#panel-{$key}" data-group="{$key}" role="tab" data-toggle="tab">{$name}</a></li>
+                <li class="nav-item head-{$key}"><a class="nav-link" href="#panel-{$key}" data-group="{$key}" role="tab" data-toggle="tab">{$name}</a></li>
             </foreach>
         </ul>
 
@@ -72,7 +72,7 @@
                                         </select>
                                     </case>
                                     <case value="textarea">
-                                        <textarea name="v-{$key}" class="form-control" placeholder="{$item.description}">{$item.value}</textarea>
+                                        <textarea name="v-{$key}" class="form-control" placeholder="{$item.description}">{$item.value|raw}</textarea>
                                     </case>
                                     <case value="html">
                                         <textarea name="v-{$key}" class="form-control" placeholder="{$item.description}">{$item.value}</textarea>

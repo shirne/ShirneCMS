@@ -62,7 +62,9 @@ class InviteController extends BaseController
             for ($i=0;$i<$number;$i++){
                 $data['code']=$this->create($length);
                 $model->insert($data);
+                $model->setOption('data',[]);
             }
+            user_log($this->mid,'addinvite',1,'生成邀请码['.$mem_id.','.$level_id.']'.$number.'个','manager');
             $this->success("生成成功", url('Invite/index'));
         }else{
             $this->assign('levels',getMemberLevels());

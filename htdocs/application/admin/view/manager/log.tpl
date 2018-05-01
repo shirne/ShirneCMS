@@ -5,16 +5,16 @@
 <include file="Public/bread" menu="manager_log" section="系统" title="操作日志" />
 
 <div id="page-wrapper">
-    <div class="row">
+    <div class="row list-header">
         <div class="col-md-6">
-            <a href="{:url('member/logclear')}" class="btn btn-success">清理日志</a>
+            <a href="{:url('member/logclear')}" class="btn btn-outline-secondary">清理日志</a>
         </div>
         <div class="col-md-6">
             <form action="{:url('member/index')}" method="post">
                 <div class="form-group input-group">
                     <input type="text" class="form-control" name="key" placeholder="输入用户名或者关键词搜索">
                     <div class="input-group-append">
-                      <button class="btn btn-dark" type="submit"><i class="ion-search"></i></button>
+                      <button class="btn btn-outline-secondary" type="submit"><i class="ion-search"></i></button>
                     </div>
                 </div>
             </form>
@@ -30,7 +30,7 @@
                 <th>时间</th>
                 <th>IP</th>
                 <th>备注</th>
-                <th width="70">操作</th>
+                <th width="80">操作</th>
             </tr>
         </thead>
         <tbody>
@@ -44,7 +44,7 @@
                 <td>{$v.ip}</td>
                 <td>{$v.remark}</td>
                 <td>
-                    <a class="btn btn-dark btn-sm" rel="ajax" href="{:url('manager/logview',array('id'=>$v['id']))}"><i class="ion-file-text"></i> 查看</a>
+                    <a class="btn btn-outline-dark btn-sm" rel="ajax" href="{:url('manager/logview',array('id'=>$v['id']))}"><i class="ion-file-text"></i> 查看</a>
                 </td>
             </tr>
         </foreach>

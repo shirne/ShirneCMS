@@ -6,9 +6,9 @@
 
 <div id="page-wrapper">
     
-    <div class="row">
+    <div class="row list-header">
         <div class="col-6">
-            <a href="{:url('adv/add')}" class="btn btn-primary">添加广告位</a>
+            <a href="{:url('adv/add')}" class="btn btn-outline-primary">添加广告位</a>
         </div>
         <div class="col-6">
             <form action="{:url('adv/index')}" method="post">
@@ -37,10 +37,10 @@
                 <td>{$v.title}</td>
                 <td>{$v.flag}</td>
                 <td>
-                    <a class="btn btn-dark btn-sm" href="{:url('adv/update',array('id'=>$v['id']))}"><i class="ion-edit"></i> 编辑</a>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('adv/update',array('id'=>$v['id']))}"><i class="ion-edit"></i> 编辑</a>
                     <div class="btn-group btn-group-sm">
-                        <a class="btn btn-dark" href="{:url('adv/itemlist',array('gid'=>$v['id']))}"><i class="ion-list-ul"></i> 广告列表</a>
-                        <button type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a class="btn btn-outline-dark" href="{:url('adv/itemlist',array('gid'=>$v['id']))}"><i class="ion-android-list"></i> 广告列表</a>
+                        <button type="button" class="btn btn-outline-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="caret"></span>
                             <span class="sr-only">Toggle Dropdown</span>
                         </button>
@@ -48,12 +48,12 @@
                             <a class="dropdown-item" href="{:url('adv/itemadd',array('gid'=>$v['id']))}">添加广告</a>
                         </div>
                     </div>
-                    <a class="btn btn-dark btn-sm" href="{:url('adv/delete',array('id'=>$v['id']))}" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash-a"></i> 删除</a>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('adv/delete',array('id'=>$v['id']))}" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash-a"></i> 删除</a>
                 </td>
             </tr>
         </foreach>
         </tbody>
     </table>
-    {$page}
+    {$page|raw}
 </div>
 </block>

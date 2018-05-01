@@ -34,7 +34,7 @@ class MemberValidate extends BaseUniqueValidate
 
 
     protected $scene = array(
-        'register'=>['username','password','email','mobile'],
+        'register'=>['username','password','repassword','email','mobile'],
         'edit'=>['email','mobile'],
         'repassword'=>['password','repassword']
     );

@@ -29,10 +29,18 @@
         </div>
         <div class="form-group typebox type-wechat type-alipay">
             <label for="cc">二维码</label>
-            <input type="hidden" name="qrcode" value="{$model.qrcode}" />
-            <input type="file" name="qrcodefile" class="form-control" />
+            <div class="input-group">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" name="upload_qrcode"/>
+                    <label class="custom-file-label" for="upload_qrcode">选择文件</label>
+                </div>
+            </div>
             <if condition="!empty($model['qrcode'])">
-                <img src="{$model.qrcode}" style="max-height:80px;margin-top:10px;" />
+                <figure class="figure">
+                    <img src="{$model.qrcode}" class="figure-img img-fluid rounded" alt="image">
+                    <figcaption class="figure-caption text-center">{$model.qrcode}</figcaption>
+                </figure>
+                <input type="hidden" name="delete_qrcode" value="{$model.qrcode}"/>
             </if>
         </div>
         <div class="form-group typebox type-unioncard">
@@ -49,11 +57,11 @@
             </div>
         </div>
         <div class="form-group typebox type-unioncard">
-            <label for="cc">开户名称</label>
+            <label for="cardname">开户名称</label>
             <input type="text" name="cardname" class="form-control" placeholder="请填写开户名" value="{$model.cardname}">
         </div>
         <div class="form-group typebox type-unioncard">
-            <label for="cc">银行卡号</label>
+            <label for="cardno">银行卡号</label>
             <input type="text" name="cardno" class="form-control" placeholder="请填写卡号" value="{$model.cardno}">
         </div>
         <div class="form-group">

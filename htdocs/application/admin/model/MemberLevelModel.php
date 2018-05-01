@@ -8,6 +8,7 @@
 
 namespace app\admin\model;
 
+use think\Db;
 use think\Model;
 
 class MemberLevelModel extends Model{
@@ -21,10 +22,10 @@ class MemberLevelModel extends Model{
         self::event('after_write','_set_default');
     }
 
-    protected function _set_default($userLevel){
+    protected static function _set_default($userLevel){
         if($userLevel->is_default) {
-            $this->where(array('level_id' => array('NEQ', $userLevel->level_id)))
-                ->save(array('is_default' => 0));
+            Db::name('MemberLevel')->where('level_id','NEQ', $userLevel->level_id)
+                ->update(array('is_default' => 0));
         }
     }
 }

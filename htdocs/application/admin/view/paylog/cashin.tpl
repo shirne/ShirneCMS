@@ -6,7 +6,7 @@
 
 <div id="page-wrapper">
 
-    <div class="row">
+    <div class="row list-header">
         <div class="col-6">
             总有效金额: {$total|showmoney}
         </div>
@@ -32,7 +32,7 @@
             <th>提现信息</th>
             <th>下单时间</th>
             <th>状态</th>
-            <th width="150">操作</th>
+            <th width="200">操作</th>
         </tr>
         </thead>
         <tbody>
@@ -54,8 +54,8 @@
                 <td>{$v.status|o_status}</td>
                 <td>
                     <if condition="$v['status'] EQ 0">
-                    <a class="btn btn-dark btn-sm" href="{:url('Paylog/cashupdate',array('id'=>$v['id']))}"><i class="ion-check"></i> 确认</a>
-                    <a class="btn btn-dark btn-sm" href="{:url('Paylog/cashdelete',array('id'=>$v['id']))}" onclick="javascript:return del('您真的确定要作废吗？');"><i class="ion-trash-a"></i> 无效</a>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('Paylog/cashupdate',array('id'=>$v['id']))}"><i class="ion-check"></i> 确认</a>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('Paylog/cashdelete',array('id'=>$v['id']))}" onclick="javascript:return del('您真的确定要作废吗？');"><i class="ion-trash-a"></i> 无效</a>
                         <else/>
                         -
                     </if>
@@ -64,7 +64,7 @@
         </foreach>
         </tbody>
     </table>
-    {$page}
+    {$page|raw}
 </div>
 
 </block>

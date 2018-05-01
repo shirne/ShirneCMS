@@ -6,9 +6,9 @@
 
 <div id="page-wrapper">
     
-    <div class="row">
+    <div class="row list-header">
         <div class="col-6">
-            <a href="{:url('adv/itemadd',array('gid'=>$gid))}" class="btn btn-primary">添加广告</a>
+            <a href="{:url('adv/itemadd',array('gid'=>$gid))}" class="btn btn-outline-primary">添加广告</a>
         </div>
         <div class="col-6">
             <form action="{:url('adv/itemlist')}" method="post">
@@ -31,7 +31,7 @@
                 <th>有效期</th>
                 <th>排序</th>
                 <th>状态</th>
-                <th width="150">操作</th>
+                <th width="200">操作</th>
             </tr>
         </thead>
         <tbody>
@@ -45,13 +45,13 @@
                 <td>{$v.sort}</td>
                 <td>{$v.status|v_status}</td>
                 <td>
-                    <a class="btn btn-dark btn-sm" href="{:url('adv/itemupdate',array('id'=>$v['id'],'gid'=>$gid))}"><i class="ion-edit"></i> 编辑</a>
-                    <a class="btn btn-dark btn-sm" href="{:url('adv/itemdelete',array('id'=>$v['id'],'gid'=>$gid))}" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash-a"></i> 删除</a>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('adv/itemupdate',array('id'=>$v['id'],'gid'=>$gid))}"><i class="ion-edit"></i> 编辑</a>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('adv/itemdelete',array('id'=>$v['id'],'gid'=>$gid))}" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash-a"></i> 删除</a>
                 </td>
             </tr>
         </foreach>
         </tbody>
     </table>
-    {$page}
+    {$page|raw}
 </div>
 </block>

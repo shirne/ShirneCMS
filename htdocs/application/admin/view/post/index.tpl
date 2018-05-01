@@ -4,9 +4,9 @@
 <include file="Public/bread" menu="post_index" section="内容" title="文章管理" />
 <div id="page-wrapper">
 
-	<div class="row">
+	<div class="row list-header">
 		<div class="col-6">
-			<a href="{:url('post/add')}" class="btn btn-primary">添加文章</a>
+			<a href="{:url('post/add')}" class="btn btn-outline-primary">添加文章</a>
 		</div>
 		<div class="col-6">
 			<form action="{:url('post/index')}" method="post">
@@ -29,7 +29,7 @@
 				<th>作者</th>
 				<th>分类</th>
 				<th>状态</th>
-				<th width="150">操作</th>
+				<th width="200">操作</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -49,23 +49,23 @@
 					<td>{$v.category_title}</td>
 					<td>
 						<if condition="$v.status eq 1">
-							<a class="btn btn-dark btn-sm" href="{:url('post/push',array('id'=>$v['id']))}"><i class="ion-mail-reply"></i> 撤销</a>
+							<a class="btn btn-outline-dark btn-sm" href="{:url('post/push',array('id'=>$v['id']))}"><i class="ion-mail-reply"></i> 撤销</a>
 							<else/>
-							<a class="btn btn-dark btn-sm" href="{:url('post/push',array('id'=>$v['id']))}" style="color:#50AD1E;"><i class="ion-location-arrow"></i> 发布</a>
+							<a class="btn btn-outline-dark btn-sm" href="{:url('post/push',array('id'=>$v['id']))}" style="color:#50AD1E;"><i class="ion-location-arrow"></i> 发布</a>
 						</if>
 					</td>
 
 					<td>
 
-					<a class="btn btn-dark btn-sm" href="{:url('post/edit',array('id'=>$v['id']))}"><i class="ion-edit"></i> 编辑</a>
-					<a class="btn btn-dark btn-sm" href="{:url('post/delete',array('id'=>$v['id']))}" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash-a"></i> 删除</a>
+					<a class="btn btn-outline-dark btn-sm" href="{:url('post/edit',array('id'=>$v['id']))}"><i class="ion-edit"></i> 编辑</a>
+					<a class="btn btn-outline-dark btn-sm" href="{:url('post/delete',array('id'=>$v['id']))}" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash-a"></i> 删除</a>
 					</td>
 				</tr>
 			</foreach>
 		</tbody>
 	</table>
 	<div class="clearfix"></div>
-	{$page}
+	{$page|raw}
 
 </div>
 </block>

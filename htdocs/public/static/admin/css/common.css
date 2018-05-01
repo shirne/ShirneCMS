@@ -30,9 +30,15 @@ body {
 
 #page-wrapper .page-header{
     border-bottom:1px #ccc solid;
-    margin:10px 0;
+    margin:1rem 0;
     font-size: 1.6em;
     color: #666;
+}
+#page-wrapper .list-header{
+    margin-bottom:1rem;
+}
+#page-wrapper .list-header .form-group{
+    margin-bottom:0;
 }
 #page-wrapper .row+.row{
     margin-top:1rem;

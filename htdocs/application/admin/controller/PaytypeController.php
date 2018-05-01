@@ -44,13 +44,16 @@ class PaytypeController extends BaseController
 
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
-                exit();
             } else {
-                $file = $this->upload('paytype', 'qrcodefile');
+                $delete_images=[];
+                $file = $this->upload('paytype', 'upload_qrcode');
                 if ($file) {
                     $data['qrcode'] = $file['url'];
+                    $delete_images[]=$data['delete_qrcode'];
                 }
+                unset($data['delete_qrcode']);
                 if (Db::name('Paytype')->insert($data)) {
+                    delete_image($delete_images);
                     $this->success("添加成功", url('Paytype/index'));
                 } else {
                     $this->error("添加失败");

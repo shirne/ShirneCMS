@@ -6,7 +6,7 @@
 
 <div id="page-wrapper">
     
-    <div class="row">
+    <div class="row list-header">
         <div class="col-6">
 
         </div>
@@ -30,7 +30,7 @@
                 <th>IP</th>
                 <th>日期</th>
                 <th>状态</th>
-                <th width="150">操作</th>
+                <th width="200">操作</th>
             </tr>
         </thead>
         <tbody>
@@ -43,14 +43,14 @@
                 <td>{$v.create_time|showdate}</td>
                 <td>{$v.status|f_status}</td>
                 <td>
-                    <a class="btn btn-dark btn-sm" href="{:url('feedback/reply',array('id'=>$v['id']))}"><i class="ion-reply"></i> 回复</a>
-                    <a class="btn btn-dark btn-sm" href="{:url('feedback/delete',array('id'=>$v['id']))}" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash-a"></i> 删除</a>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('feedback/reply',array('id'=>$v['id']))}"><i class="ion-reply"></i> 回复</a>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('feedback/delete',array('id'=>$v['id']))}" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash-a"></i> 删除</a>
                 </td>
             </tr>
         </foreach>
         </tbody>
     </table>
-    {$page}
+    {$page|raw}
 </div>
 
 </block>

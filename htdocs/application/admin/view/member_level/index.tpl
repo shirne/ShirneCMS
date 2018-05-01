@@ -6,9 +6,9 @@
 
     <div id="page-wrapper">
 
-        <div class="row">
+        <div class="row list-header">
             <div class="col-6">
-                <a href="{:url('MemberLevel/add')}" class="btn btn-primary">添加等级</a>
+                <a href="{:url('MemberLevel/add')}" class="btn btn-outline-primary">添加等级</a>
             </div>
             <div class="col-6">
             </div>
@@ -20,7 +20,7 @@
                 <th>名称</th>
                 <th>排序</th>
                 <th>购买价格</th>
-                <th width="150">操作</th>
+                <th width="200">操作</th>
             </tr>
             </thead>
             <tbody>
@@ -31,8 +31,8 @@
                     <td>{$v.sort}</td>
                     <td>{$v.level_price}</td>
                     <td>
-                        <a class="btn btn-dark btn-sm" href="{:url('memberLevel/update',array('id'=>$v['level_id']))}"><i class="ion-edit"></i> 编辑</a>
-                        <a class="btn btn-dark btn-sm" href="{:url('memberLevel/delete',array('id'=>$v['level_id']))}" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash-a"></i> 删除</a>
+                        <a class="btn btn-outline-dark btn-sm" href="{:url('memberLevel/update',array('id'=>$v['level_id']))}"><i class="ion-edit"></i> 编辑</a>
+                        <a class="btn btn-outline-dark btn-sm" href="{:url('memberLevel/delete',array('id'=>$v['level_id']))}" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash-a"></i> 删除</a>
                     </td>
                 </tr>
             </foreach>
