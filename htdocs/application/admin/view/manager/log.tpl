@@ -14,7 +14,7 @@
                 <div class="form-group input-group">
                     <input type="text" class="form-control" name="key" placeholder="输入用户名或者关键词搜索">
                     <div class="input-group-append">
-                      <button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
+                      <button class="btn btn-default" type="submit"><i class="ion-search"></i></button>
                     </div>
                 </div>
             </form>
@@ -44,7 +44,7 @@
                 <td>{$v.ip}</td>
                 <td>{$v.remark}</td>
                 <td>
-                    <a class="btn btn-default btn-sm" rel="ajax" href="{:url('manager/logview',array('id'=>$v['id']))}"><i class="fa fa-file-text"></i> 查看</a>
+                    <a class="btn btn-default btn-sm" rel="ajax" href="{:url('manager/logview',array('id'=>$v['id']))}"><i class="ion-file-text"></i> 查看</a>
                 </td>
             </tr>
         </foreach>

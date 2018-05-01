@@ -14,7 +14,7 @@
     <link href="__STATIC__/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
     <link rel="stylesheet" href="__STATIC__/css/style.css">
 
-    <link href="__STATIC__/font-awesome/css/fontawesome-all.min.css" rel="stylesheet">
+    <link href="__STATIC__/ionicons/css/ionicons.min.css" rel="stylesheet">
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="__STATIC__/jquery/jquery.min.js"></script>

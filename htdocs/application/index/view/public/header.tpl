@@ -29,7 +29,7 @@
                                 <a class="dropdown-item" href="#">Another action</a>
                                 <a class="dropdown-item" href="#">Something else here</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="{:url('member/logout')}"><i class="fa fa-power-off"></i> 退出登录</a>
+                                <a class="dropdown-item" href="{:url('member/logout')}"><i class="ion-log-out"></i> 退出登录</a>
                             </div>
                         </li>
                         <else/>

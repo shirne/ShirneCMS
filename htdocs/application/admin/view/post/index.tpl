@@ -13,7 +13,7 @@
 				<div class="form-group input-group">
 					<input type="text" class="form-control" name="key" placeholder="输入文章标题、作者或者分类关键词搜索">
 					<div class="input-group-append">
-                      <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i></button>
+                      <button class="btn btn-outline-secondary" type="submit"><i class="ion-search"></i></button>
                     </div>
 				</div>
 			</form>
@@ -49,16 +49,16 @@
 					<td>{$v.category_title}</td>
 					<td>
 						<if condition="$v.status eq 1">
-							<a class="btn btn-default btn-sm" href="{:url('post/push',array('id'=>$v['id']))}" style="color:red;"><i class="fa fa-mail-reply"></i> 撤销</a>
+							<a class="btn btn-default btn-sm" href="{:url('post/push',array('id'=>$v['id']))}" style="color:red;"><i class="ion-mail-reply"></i> 撤销</a>
 							<else/>
-							<a class="btn btn-default btn-sm" href="{:url('post/push',array('id'=>$v['id']))}" style="color:#50AD1E;"><i class="fa fa-location-arrow"></i> 发布</a>
+							<a class="btn btn-default btn-sm" href="{:url('post/push',array('id'=>$v['id']))}" style="color:#50AD1E;"><i class="ion-location-arrow"></i> 发布</a>
 						</if>
 					</td>
 
 					<td>
 
-					<a class="btn btn-default btn-sm" href="{:url('post/edit',array('id'=>$v['id']))}"><i class="fa fa-edit"></i> 编辑</a>
-					<a class="btn btn-default btn-sm" href="{:url('post/delete',array('id'=>$v['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="fa fa-trash"></i> 删除</a>
+					<a class="btn btn-default btn-sm" href="{:url('post/edit',array('id'=>$v['id']))}"><i class="ion-edit"></i> 编辑</a>
+					<a class="btn btn-default btn-sm" href="{:url('post/delete',array('id'=>$v['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash"></i> 删除</a>
 					</td>
 				</tr>
 			</foreach>

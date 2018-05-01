@@ -7,7 +7,7 @@
                 <div class="card-header" role="tab" id="heading{$menu['key']}">
                     <h4 >
                         <a data-key="{$menu['key']}" class="collapsed" data-toggle="collapse" href="#collapse{$menu['key']}" aria-expanded="false" aria-controls="collapse{$menu['key']}">
-                            <i class="fa {$menu['icon']}"></i>&nbsp;{$menu['name']}
+                            <i class="{$menu['icon']}"></i>&nbsp;{$menu['name']}
                         </a>
                     </h4>
                 </div>
@@ -15,7 +15,7 @@
                     <div class="card-body">
                         <ul class="list-unstyled">
                             <foreach name="menus[$menu['id']]" item="m">
-                                <li><a data-key="{$m['key']}" href="{:url($m['url'])}"><i class="fa {$m['icon']}"></i> {$m['name']}</a></li>
+                                <li><a data-key="{$m['key']}" href="{:url($m['url'])}"><i class="{$m['icon']}"></i> {$m['name']}</a></li>
                             </foreach>
                         </ul>
                     </div>
@@ -24,7 +24,7 @@
                 <div class="card-header" role="tab" id="heading{$menu['key']}">
                     <h4 >
                         <a data-key="{$menu['key']}" data-parent="#accordion" href="{:url($menu['url'])}"  aria-expanded="false">
-                            <i class="fa {$menu['icon']}"></i>&nbsp;{$menu['name']}
+                            <i class="{$menu['icon']}"></i>&nbsp;{$menu['name']}
                         </a>
                     </h4>
                 </div>
@@ -36,7 +36,7 @@
         <div class="panel-heading" role="tab" id="headinglog">
             <h4 class="panel-title">
                 <a data-parent="#accordion" href="{:url('login/logout')}"  aria-expanded="false">
-                    <i class="fa fa-power-off"></i>&nbsp;退出
+                    <i class="ion-power-off"></i>&nbsp;退出
                 </a>
             </h4>
         </div>

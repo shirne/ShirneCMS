@@ -10,7 +10,7 @@
 
     <!-- Add custom CSS here -->
     <link href="__STATIC__/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="__STATIC__/font-awesome/css/fontawesome-all.min.css">
+    <link rel="stylesheet" href="__STATIC__/ionicons/css/ionicons.min.css">
     <link href="__STATIC__/admin/css/common.css" rel="stylesheet">
 
     <!-- JavaScript -->
@@ -37,14 +37,14 @@
             <div class="nav navbar-nav navbar-user">
 
                 <li class="dropdown user-dropdown">
-                    <a href="javascript:" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> 你好,{:session('adminname')} <b class="caret"></b></a>
+                    <a href="javascript:" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="ion-user"></i> 你好,{:session('adminname')} <b class="caret"></b></a>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="/" target="_blank"><i class="fa fa-home"></i> 浏览</a>
+                        <a class="dropdown-item" href="/" target="_blank"><i class="ion-home"></i> 浏览</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{:url('setting/index')}"><i class="fa fa-gears"></i> 设置</a>
-                        <a class="dropdown-item" href="{:url('Index/profile')}"><i class="fa fa-user"></i> 资料</a>
+                        <a class="dropdown-item" href="{:url('setting/index')}"><i class="ion-gears"></i> 设置</a>
+                        <a class="dropdown-item" href="{:url('Index/profile')}"><i class="ion-user"></i> 资料</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{:url('login/logout')}"><i class="fa fa-power-off"></i> 退出</a>
+                        <a class="dropdown-item" href="{:url('login/logout')}"><i class="ion-power-off"></i> 退出</a>
                     </div>
                 </li>
             </ul>

@@ -15,7 +15,7 @@
                 <div class="form-group input-group">
                     <input type="text" class="form-control" value="{$key}" name="key" placeholder="输入名称搜索">
                     <div class="input-group-append">
-                      <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i></button>
+                      <button class="btn btn-outline-secondary" type="submit"><i class="ion-search"></i></button>
                     </div>
                 </div>
             </form>
@@ -54,8 +54,8 @@
                 <td>{$v.status|o_status}</td>
                 <td>
                     <if condition="$v['status'] EQ 0">
-                    <a class="btn btn-default btn-sm" href="{:url('Paylog/cashupdate',array('id'=>$v['id']))}"><i class="fa fa-check"></i> 确认</a>
-                    <a class="btn btn-default btn-sm" href="{:url('Paylog/cashdelete',array('id'=>$v['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要作废吗？');"><i class="fa fa-trash"></i> 无效</a>
+                    <a class="btn btn-default btn-sm" href="{:url('Paylog/cashupdate',array('id'=>$v['id']))}"><i class="ion-check"></i> 确认</a>
+                    <a class="btn btn-default btn-sm" href="{:url('Paylog/cashdelete',array('id'=>$v['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要作废吗？');"><i class="ion-trash"></i> 无效</a>
                         <else/>
                         -
                     </if>

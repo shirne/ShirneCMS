@@ -15,7 +15,7 @@
                 <div class="form-group input-group">
                     <input type="text" class="form-control" name="key" placeholder="输入分类标题或者别名关键词搜索">
                     <div class="input-group-append">
-                      <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i></button>
+                      <button class="btn btn-outline-secondary" type="submit"><i class="ion-search"></i></button>
                     </div>
                 </div>
             </form>
@@ -38,9 +38,9 @@
                 <td>{$v.name}</td>
 
                 <td>
-                    <a class="btn btn-default btn-sm" href="{:url('category/add',array('pid'=>$v['id']))}"><i class="fa fa-edit"></i> 添加</a>
-                    <a class="btn btn-default btn-sm" href="{:url('category/edit',array('id'=>$v['id']))}"><i class="fa fa-edit"></i> 编辑</a>
-                    <a class="btn btn-default btn-sm" href="{:url('category/delete',array('id'=>$v['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="fa fa-trash"></i> 删除</a>
+                    <a class="btn btn-default btn-sm" href="{:url('category/add',array('pid'=>$v['id']))}"><i class="ion-edit"></i> 添加</a>
+                    <a class="btn btn-default btn-sm" href="{:url('category/edit',array('id'=>$v['id']))}"><i class="ion-edit"></i> 编辑</a>
+                    <a class="btn btn-default btn-sm" href="{:url('category/delete',array('id'=>$v['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash"></i> 删除</a>
                 </td>
             </tr>
         </foreach>

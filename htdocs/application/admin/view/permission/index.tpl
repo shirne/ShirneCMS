@@ -32,9 +32,9 @@
                 <td>{$v.key}</td>
                 <td>{$v.url}</td>
                 <td>
-                    <a class="btn btn-default btn-sm" href="{:url('permission/add',array('pid'=>$v['id']))}"><i class="fa fa-edit"></i> 添加</a>
-                    <a class="btn btn-default btn-sm" href="{:url('permission/edit',array('id'=>$v['id']))}"><i class="fa fa-edit"></i> 编辑</a>
-                    <a class="btn btn-default btn-sm" href="{:url('permission/delete',array('id'=>$v['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="fa fa-trash"></i> 删除</a>
+                    <a class="btn btn-default btn-sm" href="{:url('permission/add',array('pid'=>$v['id']))}"><i class="ion-edit"></i> 添加</a>
+                    <a class="btn btn-default btn-sm" href="{:url('permission/edit',array('id'=>$v['id']))}"><i class="ion-edit"></i> 编辑</a>
+                    <a class="btn btn-default btn-sm" href="{:url('permission/delete',array('id'=>$v['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash"></i> 删除</a>
                 </td>
             </tr>
             <foreach name="model[$v['id']]" item="sv">
@@ -44,9 +44,9 @@
                     <td>{$sv.key}</td>
                     <td>{$sv.url}</td>
                     <td>
-                        <a class="btn btn-default btn-sm" href="{:url('permission/add',array('pid'=>$sv['id']))}"><i class="fa fa-edit"></i> 添加</a>
-                        <a class="btn btn-default btn-sm" href="{:url('permission/edit',array('id'=>$sv['id']))}"><i class="fa fa-edit"></i> 编辑</a>
-                        <a class="btn btn-default btn-sm" href="{:url('permission/delete',array('id'=>$sv['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="fa fa-trash"></i> 删除</a>
+                        <a class="btn btn-default btn-sm" href="{:url('permission/add',array('pid'=>$sv['id']))}"><i class="ion-edit"></i> 添加</a>
+                        <a class="btn btn-default btn-sm" href="{:url('permission/edit',array('id'=>$sv['id']))}"><i class="ion-edit"></i> 编辑</a>
+                        <a class="btn btn-default btn-sm" href="{:url('permission/delete',array('id'=>$sv['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash"></i> 删除</a>
                     </td>
                 </tr>
                 <foreach name="model[$sv['id']]" item="mv">
@@ -56,8 +56,8 @@
                         <td>{$mv.key}</td>
                         <td>{$mv.url}</td>
                         <td>
-                            <a class="btn btn-default btn-sm" href="{:url('permission/edit',array('id'=>$mv['id']))}"><i class="fa fa-edit"></i> 编辑</a>
-                            <a class="btn btn-default btn-sm" href="{:url('permission/delete',array('id'=>$mv['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="fa fa-trash"></i> 删除</a>
+                            <a class="btn btn-default btn-sm" href="{:url('permission/edit',array('id'=>$mv['id']))}"><i class="ion-edit"></i> 编辑</a>
+                            <a class="btn btn-default btn-sm" href="{:url('permission/delete',array('id'=>$mv['id']))}" style="color:red;" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash"></i> 删除</a>
                         </td>
                     </tr>
                 </foreach>

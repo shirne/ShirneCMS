@@ -11,7 +11,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-6">
-                            <i class="fa  fa-comment fa-5x"></i>
+                            <i class="ion-chatbox-working ion-5x"></i>
                         </div>
                         <div class="col-6 text-right">
                             <p class="announcement-heading">{$stat.feedback}</p>
@@ -26,7 +26,7 @@
                                 查看留言
                             </div>
                             <div class="col-6 text-right">
-                                <i class="fa fa-arrow-circle-right"></i>
+                                <i class="ion-arrow-circle-right"></i>
                             </div>
                         </div>
                     </div>
@@ -38,7 +38,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-6">
-                            <i class="fa fa-users fa-5x"></i>
+                            <i class="ion-person-stalker ion-5x"></i>
                         </div>
                         <div class="col-6 text-right">
                             <p class="announcement-heading">{$stat.member}</p>
@@ -53,7 +53,7 @@
                                 管理会员
                             </div>
                             <div class="col-6 text-right">
-                                <i class="fa fa-arrow-circle-right"></i>
+                                <i class="ion-arrow-circle-right"></i>
                             </div>
                         </div>
                     </div>
@@ -65,7 +65,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-6">
-                            <i class="fa fa-edit fa-5x"></i>
+                            <i class="ion-edit ion-5x"></i>
                         </div>
                         <div class="col-6 text-right">
                             <p class="announcement-heading">{$stat.post}</p>
@@ -80,7 +80,7 @@
                                 管理文章
                             </div>
                             <div class="col-6 text-right">
-                                <i class="fa fa-arrow-circle-right"></i>
+                                <i class="ion-arrow-circle-right"></i>
                             </div>
                         </div>
                     </div>
@@ -92,7 +92,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-6">
-                            <i class="fa fa-link fa-5x"></i>
+                            <i class="ion-link ion-5x"></i>
                         </div>
                         <div class="col-6 text-right">
                             <p class="announcement-heading">{$stat.links}</p>
@@ -107,7 +107,7 @@
                                 管理链接
                             </div>
                             <div class="col-6 text-right">
-                                <i class="fa fa-arrow-circle-right"></i>
+                                <i class="ion-arrow-circle-right"></i>
                             </div>
                         </div>
                     </div>

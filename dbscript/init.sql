@@ -1,32 +1,32 @@
-
+TRUNCATE TABLE `sa_permission`;
 LOCK TABLES `sa_permission` WRITE;
 /*!40000 ALTER TABLE `sa_permission` DISABLE KEYS */;
 
 INSERT INTO `sa_permission` (`id`, `parent_id`,`name`, `url`,`key`, `icon`, `order_id`, `disable`)
 VALUES
-  (1,0,'主面板','Index/index','Board','fa-dashboard',0,0),
-  (2,0,'内容','','Content','fa-tasks',0,0),
-  (3,0,'其它','','Other','fa-th-large',0,0),
-  (4,0,'会员','','Member','fa-user',0,0),
-  (5,0,'系统','','System','fa-cog',0,0),
-  (6,2,'分类管理','Category/index','category_index','fa-sitemap',0,0),
-  (7,2,'文章管理','Post/index','post_index','fa-edit',0,0),
-  (8,2,'单页管理','Page/index','page_index','fa-file',0,0),
-  (9,3,'公告管理','Notice/index','notice_index','fa-bullhorn',0,0),
-  (10,3,'广告管理','Adv/index','adv_index','fa-newspaper-o',0,0),
-  (11,3,'链接管理','Links/index','links_index','fa-link',0,0),
-  (12,3,'留言管理','Feedback/index','feedback_index','fa-commenting',0,0),
-  (13,4,'会员管理','Member/index','member_index','fa-users',0,0),
-  (14,4,'邀请码','Invite/index','invite_index','fa-check-circle',0,0),
-  (15,4,'会员等级','MemberLevel/index','member_level_index','fa-users',0,0),
-  (16,4,'充值记录','Paylog/recharge','paylog_recharge','fa-arrow-circle-right',0,0),
-  (17,4,'提现记录','Paylog/cashin','paylog_cashin','fa-arrow-circle-left',0,0),
-  (18,4,'操作日志','Member/log','member_log','fa-file-text',0,0),
-  (19,5,'配置管理','Setting/index','setting_index','fa-gears',0,0),
-  (20,5,'管理员','Manager/index','manager_index','fa-users',0,0),
-  (21,5,'菜单管理','Permission/index','permission_index','fa-navicon',0,0),
-  (22,5,'操作日志','Manager/log','manager_log','fa-file-text',0,0),
-  (23,5,'付款方式','Paytype/index','paytype_index','fa-credit-card',0,0);
+  (1,0,'主面板','Index/index','Board','ion-speedometer',0,0),
+  (2,0,'内容','','Content','ion-grid',0,0),
+  (3,0,'其它','','Other','ion-cube',0,0),
+  (4,0,'会员','','Member','ion-person',0,0),
+  (5,0,'系统','','System','ion-gear-a',0,0),
+  (6,2,'分类管理','Category/index','category_index','ion-asterisk',0,0),
+  (7,2,'文章管理','Post/index','post_index','ion-document-text',0,0),
+  (8,2,'单页管理','Page/index','page_index','ion-document',0,0),
+  (9,3,'公告管理','Notice/index','notice_index','ion-speakerphone',0,0),
+  (10,3,'广告管理','Adv/index','adv_index','ion-aperture',0,0),
+  (11,3,'链接管理','Links/index','links_index','ion-link',0,0),
+  (12,3,'留言管理','Feedback/index','feedback_index','ion-chatbox-working',0,0),
+  (13,4,'会员管理','Member/index','member_index','ion-person',0,0),
+  (14,4,'邀请码','Invite/index','invite_index','ion-pricetags',0,0),
+  (15,4,'会员等级','MemberLevel/index','member_level_index','ion-person-stalker',0,0),
+  (16,4,'充值记录','Paylog/recharge','paylog_recharge','ion-log-in',0,0),
+  (17,4,'提现记录','Paylog/cashin','paylog_cashin','ion-log-out',0,0),
+  (18,4,'操作日志','Member/log','member_log','ion-clipboard',0,0),
+  (19,5,'配置管理','Setting/index','setting_index','ion-gear-b',0,0),
+  (20,5,'管理员','Manager/index','manager_index','ion-person',0,0),
+  (21,5,'菜单管理','Permission/index','permission_index','ion-code-working',0,0),
+  (22,5,'操作日志','Manager/log','manager_log','ion-clipboard',0,0),
+  (23,5,'付款方式','Paytype/index','paytype_index','ion-card',0,0);
 
 /*!40000 ALTER TABLE `sa_permission` ENABLE KEYS */;
 UNLOCK TABLES;
