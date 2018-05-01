@@ -44,7 +44,7 @@
                 <td>{$v.member_use}</td>
                 <td>{$v.use_at|showdate}</td>
                 <td>{$v.valid_at|showdate}</td>
-                <td><if condition="$v.status eq 1"><span style="color:red">锁定</span><else/>正常</if></td>
+                <td><if condition="$v.status eq 1"><span class="badge badge-danger">锁定</span><else/><span class="badge badge-secondary">正常</span></if></td>
                 <td>
                     <a class="btn btn-outline-dark btn-sm" href="{:url('Invite/update',array('id'=>$v['id']))}"><i class="ion-edit"></i> 转赠</a>
                     <if condition="$v.status eq 0">
@@ -57,6 +57,7 @@
         </foreach>
         </tbody>
     </table>
+    {$page|raw}
 </div>
 
 </block>

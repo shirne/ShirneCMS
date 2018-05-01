@@ -402,8 +402,8 @@ function showstatus($status,$wrap=true){
     }
     return $wrap?wrap_label("未知",'default'):'未知';
 }
-function wrap_label($text,$type='default'){
-    return "<span class=\"label label-$type\">$text</span>";
+function wrap_label($text,$type='secondary'){
+    return "<span class=\"badge badge-$type\">$text</span>";
 }
 
 function maskphone($phone){
