@@ -12,7 +12,7 @@
         </div>
         <div class="col-6">
             <form action="{:url('Paylog/cashin')}" method="post">
-                <div class="form-group input-group">
+                <div class="form-group input-group input-group-sm">
                     <input type="text" class="form-control" value="{$keyword}" name="key" placeholder="输入名称搜索">
                     <div class="input-group-append">
                       <button class="btn btn-outline-secondary" type="submit"><i class="ion-search"></i></button>

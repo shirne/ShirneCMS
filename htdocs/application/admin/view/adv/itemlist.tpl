@@ -8,11 +8,11 @@
     
     <div class="row list-header">
         <div class="col-6">
-            <a href="{:url('adv/itemadd',array('gid'=>$gid))}" class="btn btn-outline-primary">添加广告</a>
+            <a href="{:url('adv/itemadd',array('gid'=>$gid))}" class="btn btn-outline-primary btn-sm">添加广告</a>
         </div>
         <div class="col-6">
             <form action="{:url('adv/itemlist')}" method="post">
-                <div class="form-group input-group">
+                <div class="input-group input-group-sm">
                     <input type="text" class="form-control" name="key" placeholder="输入标题或者地址关键词搜索">
                     <div class="input-group-append">
                       <button class="btn btn-outline-secondary" type="submit"><i class="ion-search"></i></button>

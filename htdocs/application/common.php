@@ -36,7 +36,7 @@ function getMemberLevels()
 
 function getLevelConfig($levels){
     $configs=array(
-        'sale_award_layer'=>0
+        'commission_layer'=>0
     );
     foreach ($levels as $level){
         foreach ($configs as $k=>$v){
@@ -68,6 +68,17 @@ function current_url($withqry=true){
 
 function current_domain(){
     return ($_SERVER['HTTPS']=="On"?"https":"http").'://'.$_SERVER['SERVER_NAME'];
+}
+
+function idArr($id){
+    if(strpos($id,',')>0){
+        $ids=explode(',',$id);
+        return array_map(function($i){
+            return intval($i);
+        },$ids);
+    }else{
+        return [intval($id)];
+    }
 }
 
 /**
@@ -432,6 +443,15 @@ function random_str($length = 6, $type = 'string', $convert = 0)
         $code = ($convert > 0) ? strtoupper($code) : strtolower($code);
     }
     return $code;
+}
+
+function getArticleCategories($force=false){
+    $categories=cache('categories');
+    if(empty($categories) || $force==true){
+        $categories=getSortedCategory(\think\Db::name('Category')->select());
+        cache('categories',$categories);
+    }
+    return $categories;
 }
 
 /**

@@ -7,7 +7,7 @@
 <div id="page-wrapper">
 
     <div class="container-fluid">
-        <a href="{:url('setting/advance')}" class="btn btn-outline-secondary float-right">高级模式</a>
+        <a href="{:url('setting/advance')}" class="btn btn-outline-secondary btn-sm float-right">高级模式</a>
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
             <foreach name="groups" item="name">
@@ -23,9 +23,9 @@
                 <div role="tabpanel" class="tab-pane" id="panel-{$key}">
 
                     <foreach name="settings[$key]" item="item">
-                        <div class="form-group">
-                            <label for="{$key}" class="col-sm-2 control-label">{$item.title}</label>
-                            <div class="col-sm-5">
+                        <div class="form-row form-group">
+                            <label for="{$key}" class="col-2 text-right align-middle">{$item.title}</label>
+                            <div class="col-5">
                                 <switch name="item.type">
                                     <case value="text">
                                         <input type="text" class="form-control" name="v-{$key}" value="{$item.value}" placeholder="{$item.description}">
@@ -34,31 +34,49 @@
                                         <input type="number" class="form-control" name="v-{$key}" value="{$item.value}" placeholder="{$item.description}">
                                     </case>
                                     <case value="bool">
+                                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                         <foreach name="item.data" item="value" key="k">
                                             <if condition="$item['value']==$k">
-                                                <label><input type="radio" name="v-{$key}" value="{$k}" checked="checked" /> &nbsp;{$value}</label>
+                                                <label class="btn btn-outline-secondary active">
+                                                    <input type="radio" name="v-{$key}" value="{$k}" autocomplete="off" checked> {$value}
+                                                </label>
                                             <else />
-                                                <label><input type="radio" name="v-{$key}" value="{$k}" /> &nbsp;{$value}</label>
+                                                <label class="btn btn-outline-secondary">
+                                                    <input type="radio" name="v-{$key}" value="{$k}" autocomplete="off"> {$value}
+                                                </label>
                                             </if>
                                         </foreach>
+                                        </div>
                                     </case>
                                     <case value="radio">
+                                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                         <foreach name="item.data" item="value" key="k">
                                             <if condition="$item['value']==$k">
-                                                <label><input type="radio" name="v-{$key}" value="{$k}" checked="checked" /> &nbsp;{$value}</label>
+                                                <label class="btn btn-outline-secondary active">
+                                                    <input type="radio" name="v-{$key}" value="{$k}" autocomplete="off" checked> {$value}
+                                                </label>
                                             <else />
-                                                <label><input type="radio" name="v-{$key}" value="{$k}" /> &nbsp;{$value}</label>
+                                                <label class="btn btn-outline-secondary">
+                                                    <input type="radio" name="v-{$key}" value="{$k}" autocomplete="off"> {$value}
+                                                </label>
                                             </if>
                                         </foreach>
+                                        </div>
                                     </case>
                                     <case value="check">
+                                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                         <foreach name="item.data" item="value" key="k">
                                             <if condition="in_array($k,$item['value'])">
-                                                <label><input type="checkbox" name="v-{$key}[]" value="{$k}" checked="checked" /> &nbsp;{$value}</label>
+                                                <label class="btn btn-outline-secondary active">
+                                                    <input type="radio" name="v-{$key}[]" value="{$k}" autocomplete="off" checked> {$value}
+                                                </label>
                                             <else />
-                                                <label><input type="checkbox" name="v-{$key}[]" value="{$k}" /> &nbsp;{$value}</label>
+                                                <label class="btn btn-outline-secondary">
+                                                    <input type="radio" name="v-{$key}[]" value="{$k}" autocomplete="off"> {$value}
+                                                </label>
                                             </if>
                                         </foreach>
+                                        </div>
                                     </case>
                                     <case value="select">
                                         <select name="v-{$key}" class="form-control">
@@ -75,16 +93,16 @@
                                         <textarea name="v-{$key}" class="form-control" placeholder="{$item.description}">{$item.value|raw}</textarea>
                                     </case>
                                     <case value="html">
-                                        <textarea name="v-{$key}" class="form-control" placeholder="{$item.description}">{$item.value}</textarea>
+                                        <textarea name="v-{$key}" class="form-control" placeholder="{$item.description}">{$item.value|raw}</textarea>
                                     </case>
                                 </switch>
                             </div>
-                            <div class="col-sm-5">
+                            <div class="col-5">
                             </div>
                         </div>
                     </foreach>
-                    <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10">
+                    <div class="form-row form-group">
+                        <div class="col-10 offset-2">
                             <button type="submit" class="btn btn-primary">保存</button>
                         </div>
                     </div>

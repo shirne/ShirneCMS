@@ -6,11 +6,11 @@
 <div id="page-wrapper">
     <div class="row list-header">
         <div class="col-md-6">
-            <a href="{:url('member/logclear')}" class="btn btn-outline-secondary">清理日志</a>
+            <a href="{:url('member/logclear')}" class="btn btn-outline-secondary btn-sm">清理日志</a>
         </div>
         <div class="col-md-6">
             <form action="{:url('member/index')}" method="post">
-                <div class="form-group input-group">
+                <div class="form-group input-group input-group-sm">
                     <input type="text" class="form-control" name="key" placeholder="输入用户名或者关键词搜索">
                     <div class="input-group-append">
                       <button class="btn btn-outline-secondary" type="submit"><i class="ion-search"></i></button>

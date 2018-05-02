@@ -15,13 +15,15 @@ class InviteController extends BaseController
         $model = Db::name('invite_code');
         $where=array();
         if(!empty($key )){
-            $where[] = array('code','like',"%$key%");
+            $key=trim($key);
+            $where['code|member_id'] = $key;
         }
 
         $lists=$model->where($where)->paginate(15);
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
         $this->assign('levels',getMemberLevels());
+        $this->assign('keyword',$key);
         return $this->fetch();
     }
 

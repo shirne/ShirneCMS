@@ -6,11 +6,11 @@
 <div id="page-wrapper">
     <div class="row list-header">
         <div class="col-md-6">
-            <a href="{:url('manager/add')}" class="btn btn-outline-primary">添加管理员</a>
+            <a href="{:url('manager/add')}" class="btn btn-outline-primary btn-sm">添加管理员</a>
         </div>
         <div class="col-md-6">
             <form action="{:url('manager/index')}" method="post">
-                <div class="form-group input-group">
+                <div class="input-group input-group-sm">
                     <input type="text" class="form-control" name="key" placeholder="输入用户名或者邮箱关键词搜索">
                     <div class="input-group-append">
                       <button class="btn btn-outline-secondary" type="submit"><i class="ion-search"></i></button>

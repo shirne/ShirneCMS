@@ -8,8 +8,8 @@
     
     <div class="row list-header">
         <div class="col-6">
-            <a href="{:url('permission/add')}" class="btn btn-outline-primary">添加菜单</a>
-            <a href="{:url('permission/clearcache')}" class="btn btn-outline-dark">清除缓存</a>
+            <a href="{:url('permission/add')}" class="btn btn-outline-primary btn-sm">添加菜单</a>
+            <a href="{:url('permission/clearcache')}" class="btn btn-outline-dark btn-sm">清除缓存</a>
         </div>
         <div class="col-6">
         </div>

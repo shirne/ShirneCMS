@@ -12,7 +12,7 @@
         </div>
         <div class="col-6">
             <form action="{:url('Paylog/recharge')}" method="post">
-                <div class="form-group input-group">
+                <div class="form-group input-group input-group-sm">
                     <select class="form-control" name="status">
                         <option value="9">全部</option>
                         <option value="1" {$status==1?'selected':''}>待转帐</option>

@@ -7,12 +7,12 @@
 <div id="page-wrapper">
     <div class="row list-header">
         <div class="col-6">
-            <a href="{:url('Invite/add')}" class="btn btn-outline-primary">生成邀请码</a>
+            <a href="{:url('Invite/add')}" class="btn btn-outline-primary btn-sm">生成邀请码</a>
         </div>
         <div class="col-6">
-            <form action="{:url('member/index')}" method="post">
-                <div class="form-group input-group">
-                    <input type="text" class="form-control" name="key" placeholder="输入用户id或邀请码搜索">
+            <form action="{:url('Invite/index')}" method="post">
+                <div class="input-group input-group-sm">
+                    <input type="text" class="form-control" name="key" value="{$keyword}" placeholder="输入用户id或邀请码搜索">
                     <div class="input-group-append">
                       <button class="btn btn-outline-secondary" type="submit"><i class="ion-search"></i></button>
                     </div>

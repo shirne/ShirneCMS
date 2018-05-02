@@ -12,7 +12,7 @@
         </div>
         <div class="col-6">
             <form action="{:url('links/index')}" method="post">
-                <div class="form-group input-group">
+                <div class="input-group input-group-sm">
                     <input type="text" class="form-control" name="key" placeholder="输入邮箱或者关键词搜索">
                     <div class="input-group-append">
                       <button class="btn btn-outline-secondary" type="submit"><i class="ion-search"></i></button>

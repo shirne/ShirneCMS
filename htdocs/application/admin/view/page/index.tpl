@@ -8,11 +8,11 @@
     
     <div class="row list-header">
         <div class="col-6">
-            <a href="{:url('page/add')}" class="btn btn-outline-primary">添加单页</a>
+            <a href="{:url('page/add')}" class="btn btn-outline-primary btn-sm">添加单页</a>
         </div>
         <div class="col-6">
             <form action="{:url('page/index')}" method="post">
-                <div class="form-group input-group">
+                <div class="form-group input-group input-group-sm">
                     <input type="text" class="form-control" name="key" placeholder="输入单页标题或者别名关键词搜索">
                     <div class="input-group-append">
                       <button class="btn btn-outline-secondary" type="submit"><i class="ion-search"></i></button>

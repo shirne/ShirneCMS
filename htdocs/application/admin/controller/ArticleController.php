@@ -12,7 +12,7 @@ class ArticleController extends BaseController
     /**
      * 文章列表
      */
-    public function index($key="")
+    public function index($key="",$cate_id=0)
     {
         $model = Db::view('article','*')->view('category',['name'=>'category_name','title'=>'category_title'],'article.cate_id=category.id','LEFT')
             ->view('manager',['username'],'article.user_id=manager.id','LEFT');
@@ -20,12 +20,17 @@ class ArticleController extends BaseController
         if(!empty($key)){
             $where[]=['article.title|manager.username|category.title','like',"%$key%"];
         }
+        if($cate_id>0){
+            $where[]=['article.cate_id','in',getSubCateids($cate_id)];
+        }
 
         $lists=$model->where($where)->paginate(10);
 
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
         $this->assign('keyword',$key);
+        $this->assign('cate_id',$cate_id);
+        $this->assign("category",getArticleCategories());
 
         return $this->fetch();
     }
@@ -57,7 +62,7 @@ class ArticleController extends BaseController
             }
         }
         $model=array('type'=>1);
-        $this->assign("category",getSortedCategory(Db::name('category')->select()));
+        $this->assign("category",getArticleCategories());
         $this->assign('article',$model);
         $this->assign('id',0);
         return $this->fetch('edit');
@@ -98,7 +103,7 @@ class ArticleController extends BaseController
             if(empty($model)){
                 $this->error('文章不存在');
             }
-            $this->assign("category",getSortedCategory(Db::name('category')->select()));
+            $this->assign("category",getArticleCategories());
             $this->assign('article',$model);
             $this->assign('id',$id);
             return $this->fetch();
@@ -109,9 +114,8 @@ class ArticleController extends BaseController
      */
     public function delete($id)
     {
-        $id = intval($id);
         $model = Db::name('article');
-        $result = $model->where(["id"=>$id])->delete();
+        $result = $model->where("id",'in',idArr($id))->delete();
         if($result){
             user_log($this->mid,'deletearticle',1,'删除文章 '.$id ,'manager');
             $this->success("删除成功", url('Article/index'));
@@ -119,9 +123,9 @@ class ArticleController extends BaseController
             $this->error("删除失败");
         }
     }
-	public function push($id) {
-		$id = intval($id);
-        $status = Db::name('article')->where(["id"=>$id])->column('status');
+	public function push($id)
+    {
+        $status = Db::name('article')->where("id",'in',idArr($id))->column('status');
         if ($status === '0') {
             $data['status'] = 1;
         } else {
@@ -129,8 +133,10 @@ class ArticleController extends BaseController
         }
         $result = Db::name('article')->where(["id"=>$id])->update($data);
         if ($result && $data['status'] === 1) {
+            user_log($this->mid,'pusharticle',1,'发布文章 '.$id ,'manager');
             $this -> success("发布成功", url('Article/index'));
         } elseif ($result && $data['status'] === 0) {
+            user_log($this->mid,'cancelarticle',1,'撤销文章 '.$id ,'manager');
             $this -> success("撤销成功", url('Article/index'));
         } else {
             $this -> error("操作失败");

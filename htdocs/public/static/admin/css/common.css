@@ -17,6 +17,11 @@ body {
     font-size :60px;
 }
 
+.form-row label.col-2{
+    margin-bottom:0;
+    line-height:2.4rem;
+}
+
 #wrapper {
     padding-left: 0;
 }

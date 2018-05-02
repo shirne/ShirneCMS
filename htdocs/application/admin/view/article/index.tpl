@@ -6,15 +6,39 @@
 
 	<div class="row list-header">
 		<div class="col-6">
-			<a href="{:url('article/add')}" class="btn btn-outline-primary">添加文章</a>
+			<div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+				<div class="btn-group btn-group-sm mr-2" role="group" aria-label="check action group">
+					<a href="javascript:" class="btn btn-outline-secondary">全选</a>
+					<a href="javascript:" class="btn btn-outline-secondary">反选</a>
+				</div>
+				<div class="btn-group btn-group-sm mr-2" role="group" aria-label="action button group">
+					<a href="javascript:" class="btn btn-outline-secondary">发布</a>
+					<a href="javascript:" class="btn btn-outline-secondary">撤销</a>
+					<a href="javascript:" class="btn btn-outline-secondary">删除</a>
+				</div>
+				<a href="{:url('article/add')}" class="btn btn-outline-primary btn-sm">添加文章</a>
+			</div>
 		</div>
 		<div class="col-6">
 			<form action="{:url('article/index')}" method="post">
-				<div class="form-group input-group">
-					<input type="text" class="form-control" name="key" value="{$keyword}" placeholder="输入文章标题、作者或者分类关键词搜索">
-					<div class="input-group-append">
-                      <button class="btn btn-outline-secondary" type="submit"><i class="ion-search"></i></button>
-                    </div>
+				<div class="form-row">
+					<div class="col input-group input-group-sm mr-2">
+						<div class="input-group-prepend">
+							<span class="input-group-text">分类</span>
+						</div>
+						<select name="cate_id" class="form-control">
+							<option value="0">不限分类</option>
+							<foreach name="category" item="v">
+								<option value="{$v.id}" {$cate_id == $v['id']?'selected="selected"':""}>{$v.html} {$v.title}</option>
+							</foreach>
+						</select>
+					</div>
+					<div class="col input-group input-group-sm">
+						<input type="text" class="form-control" name="key" value="{$keyword}" placeholder="搜索标题、作者或分类">
+						<div class="input-group-append">
+							<button class="btn btn-outline-secondary" type="submit"><i class="ion-search"></i></button>
+						</div>
+					</div>
 				</div>
 			</form>
 		</div>
