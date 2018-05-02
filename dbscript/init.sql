@@ -71,3 +71,9 @@ VALUES
 
 /*!40000 ALTER TABLE `sa_setting` ENABLE KEYS */;
 UNLOCK TABLES;
+
+LOCK TABLES `sa_member_level` WRITE;
+/*!40000 ALTER TABLE `sa_member_level` DISABLE KEYS */;
+INSERT INTO `sa_member_level`(`level_id`,`level_name`,`short_name`,`is_default`,`level_price`,`sort`,`commission_layer`,`commission_percent`) VALUES (1,'普通会员','普',1,0.00,0,3,'[\"0\",\"0\",\"0\"]');
+/*!40000 ALTER TABLE `sa_member_level` ENABLE KEYS */;
+UNLOCK TABLES;
