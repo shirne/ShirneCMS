@@ -51,7 +51,7 @@ VALUES
   (1,'site-name','站点名','text','common',0,'ShirneCMS','站点名',''),
   (2,'site-keywords','关键词','text','common',0,'关键词1,关键词2','关键词',''),
   (3,'site-description','站点描述','text','common',0,'站点描述信息','站点描述',''),
-  (4,'site-tongji','统计代码','text','common',0,'&lt;script&gt; console.log(&quot;统计代码&quot;)&lt;/script&gt;','统计代码',''),
+  (4,'site-tongji','统计代码','textarea','common',0,'&lt;script&gt; console.log(&quot;统计代码&quot;)&lt;/script&gt;','统计代码',''),
   (5,'site-icp','ICP备案号','text','common',0,'123456','ICP备案号',''),
   (6,'site-url','站点地址','text','common',0,'http://www.shirne.cn','站点地址',''),
   (10, 'appid', 'APPID', 'text', 'wechat', '0', 'wx8deb07601b20866f', '', ''),
