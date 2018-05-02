@@ -42,19 +42,18 @@ class LoginController extends BaseController{
 
     public function index()
     {
-        $this->login();
+        return $this->login();
     }
 
     public function login($type=null)
     {
         if($this->userid){
             $this->success('您已登录',url('index/index'));
-            exit;
         }
         //方式1：本地账号登陆
         if(empty($type)){
             if(!$this->request->isPost()){
-              $this->display('login');
+                return $this->fetch('login');
             }
             if($this->request->isPost()){
                 $code = $this->request->post('verify','','strtolower');
@@ -391,7 +390,7 @@ class LoginController extends BaseController{
         $Verify->codeSet = '0123456789';
         $Verify->fontSize = 13;
         $Verify->length = 4;
-        $Verify->entry();
+        return $Verify->entry();
     }
     protected function check_verify($code){
         $verify = new \think\captcha\Captcha(array('seKey'=>'foreign'));

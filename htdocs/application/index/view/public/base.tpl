@@ -9,18 +9,13 @@
     <meta name="keywords" content="{$keywords}" />
     <meta name="description" content="{$description}" />
 
-    <!-- Bootstrap -->
     <link href="__STATIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="__STATIC__/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link href="__STATIC__/ionicons/css/ionicons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="__STATIC__/css/style.css">
 
-    <link href="__STATIC__/ionicons/css/ionicons.min.css" rel="stylesheet">
-
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="__STATIC__/jquery/jquery.min.js"></script>
 
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
     <script src="http://cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>

@@ -48,7 +48,7 @@ LOCK TABLES `sa_setting` WRITE;
 
 INSERT INTO `sa_setting` (`id`, `key`,`title`,`type`,`group`,`sort`, `value`, `description`,`data`)
 VALUES
-  (1,'site-name','站点名','text','common',0,'SimpleCMS','站点名',''),
+  (1,'site-name','站点名','text','common',0,'ShirneCMS','站点名',''),
   (2,'site-keywords','关键词','text','common',0,'关键词1,关键词2','关键词',''),
   (3,'site-description','站点描述','text','common',0,'站点描述信息','站点描述',''),
   (4,'site-tongji','统计代码','text','common',0,'&lt;script&gt; console.log(&quot;统计代码&quot;)&lt;/script&gt;','统计代码',''),

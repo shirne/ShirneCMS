@@ -6,48 +6,44 @@
 	<div class="main">
 
 		<div class="container register">
-			<fieldset>
-				<legend>会员注册</legend>
-				<blockquote>
-					<h3>创建一个账户</h3>
-					<p>请填写您的注册账户信息，用于登录。</p>
-				</blockquote>
-				<div class="panel-body">
+			<div class="card">
+				<div class="card-header">会员注册</div>
+				<div class="card-body">
 
 					<form class="form-horizontal registerForm" role="form" method="post" action="{:url('Login/register')}">
 						<div class="form-group">
 							<label for="userName" class="col-sm-2 control-label">用户名：</label>
 							<div class="col-sm-10">
-								<input type="text" class="form-control" name="username"><br/>
-								<span class="remind">用户名以6—10位数字和字母组成 <i>*</i></span>
+								<input type="text" class="form-control" name="username">
+								<span class="form-text text-muted">用户名以6—10位数字和字母组成 <i>*</i></span>
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="Password" class="col-sm-2 control-label">密码：</label>
 							<div class="col-sm-10">
-								<input type="password" class="form-control" name="password"><br/>
-								<span class="remind">密码以6—20位字符，可包含大小写字母，数字及特殊符号<i>*</i></span>
+								<input type="password" class="form-control" name="password">
+								<span class="form-text text-muted">密码以6—20位字符，可包含大小写字母，数字及特殊符号<i>*</i></span>
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="Password" class="col-sm-2 control-label">确认密码：</label>
 							<div class="col-sm-10">
-								<input type="password" class="form-control" name="repassword"><br/>
-								<span class="remind">请再次确认您输入的密码<i>*</i></span>
+								<input type="password" class="form-control" name="repassword">
+								<span class="form-text text-muted">请再次确认您输入的密码<i>*</i></span>
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="realName" class="col-sm-2 control-label">真实姓名：</label>
 							<div class="col-sm-10">
-								<input type="text" class="form-control" name="realname"><br/>
-								<span class="remind">真实姓名填写无法更改，必须与提款银行账户一致,否则无法提款<i>*</i></span>
+								<input type="text" class="form-control" name="realname">
+								<span class="form-text text-muted">真实姓名填写无法更改，必须与提款银行账户一致,否则无法提款<i>*</i></span>
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="email" class="col-sm-2 control-label">邮箱地址：</label>
 							<div class="col-sm-10">
-								<input type="text" class="form-control" name="email"><br/>
-								<span class="remind">合法邮箱地址：abc@def.com<i>*</i></span>
+								<input type="text" class="form-control" name="email">
+								<span class="form-text text-muted">合法邮箱地址：abc@def.com<i>*</i></span>
 							</div>
 						</div>
 						<div class="form-group">
@@ -62,7 +58,7 @@
 									<else/>
 									<input type="text" class="form-control" name="mobile">
 								</if><br/>
-								<span class="remind">请填写11位手机号码<i>*</i></span>
+								<span class="form-text text-muted">请填写11位手机号码<i>*</i></span>
 							</div>
 						</div>
 						<if condition="$nocode">
@@ -71,13 +67,13 @@
 							<label for="mobile" class="col-sm-2 control-label">激活码：</label>
 							<div class="col-sm-10">
 								<input type="text" class="form-control" name="invite_code"><br/>
-								<span class="remind">您的推荐人提供给你的激活码<if condition="$config['m_invite'] eq 2"><i>*</i></if></span>
+								<span class="form-text text-muted">您的推荐人提供给你的激活码<if condition="$config['m_invite'] eq 2"><i>*</i></if></span>
 							</div>
 						</div>
 						</if>
 						<div class="form-group submitline">
 							<div class="col-sm-offset-2 col-sm-10">
-								<button type="submit" class="btn btn-dark create">创建我的账户</button>
+								<button type="submit" class="btn btn-primary create">创建我的账户</button>
 							</div>
 						</div>
 					</form>
@@ -235,19 +231,19 @@
 			}).keyup(function() {
 				hideError(this);
 			});
-			$('.remind').each(function() {
+			$('.form-text text-muted').each(function() {
 				$(this).data('origin',$(this).html());
 			});
 			function showError(field,msg){
 				$(field).addClass('error');
-				var msgbox=$(field).parents('.form-group').find('.remind');
+				var msgbox=$(field).parents('.form-group').find('.form-text text-muted');
 				if(msgbox.length<1)return;
 				if(!msgbox.data('origin'))msgbox.data('origin',msgbox.html());
 				msgbox.text(msg);
 			}
 			function hideError(field){
 				$(field).removeClass('error');
-				var msgbox=$(field).parents('.form-group').find('.remind');
+				var msgbox=$(field).parents('.form-group').find('.form-text text-muted');
 				if(msgbox.length<1)return;
 				if(msgbox.data('origin')) {
 					msgbox.html(msgbox.data('origin'));

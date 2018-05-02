@@ -4,9 +4,9 @@
 	<div class="main">
 
 		<div class="container loginbox">
-			<fieldset>
-				<legend>会员登录</legend>
-				<div class="panel-body">
+			<div class="card">
+				<div class="card-header">会员登录</div>
+				<div class="card-body">
 
 					<form class="form-horizontal" role="form" method="post" action="{:url('Login/login')}">
 						<div class="form-group">
@@ -32,13 +32,13 @@
 						</div>
 						<div class="form-group submitline">
 							<div class="col-sm-offset-2 col-sm-10">
-								<button type="submit" class="btn btn-dark create">登陆</button>&nbsp;没有账号?<a href="{:url('Login/register')}">立即注册</a>
+								<button type="submit" class="btn btn-primary create">登陆</button>&nbsp;没有账号?<a href="{:url('Login/register')}">立即注册</a>
 							</div>
 						</div>
 					</form>
 
 				</div>
-			</fieldset>
+			</div>
 		</div>
 	</div>
 	<script type="text/javascript">
