@@ -6,7 +6,7 @@ use \think\Db;
 /**
  * 发布文章必须登录
  */
-class PostController extends BaseController{
+class ArticleController extends BaseController{
 
     protected $categries;
     protected $category;
@@ -26,11 +26,11 @@ class PostController extends BaseController{
             $cids[]=$cate['id'];
         }
         if(!empty($cids)){
-            $where['post.cate_id']=array('in',$cids);
+            $where['article.cate_id']=array('in',$cids);
         }
-        $model=Db::view('post','*')
-        ->view('category',['name'=>'category_name','title'=>'category_title'],'post.cate_id=category.id','LEFT')
-        ->view('manager',['username'],'manager.id=post.user_id','LEFT')
+        $model=Db::view('article','*')
+        ->view('category',['name'=>'category_name','title'=>'category_title'],'article.cate_id=category.id','LEFT')
+        ->view('manager',['username'],'manager.id=article.user_id','LEFT')
         ->paginate(10);
 
         $this->assign('lists', $model);
@@ -39,22 +39,22 @@ class PostController extends BaseController{
     }
 
     public function view($id){
-        $post = Db::name('post')->find($id);
-        if(empty($post)){
+        $article = Db::name('article')->find($id);
+        if(empty($article)){
             $this->error('文章不存在');
         }
-        $this->seo($post['title']);
-        $this->category($post['cate_id']);
+        $this->seo($article['title']);
+        $this->category($article['cate_id']);
 
-        $this->assign('post', $post);
+        $this->assign('article', $article);
         return $this->fetch();
     }
     public function notice($id){
-        $post = Db::name('notice')->find($id);
-        $this->seo($post['title']);
+        $article = Db::name('notice')->find($id);
+        $this->seo($article['title']);
         $this->category();
 
-        $this->assign('post', $post);
+        $this->assign('article', $article);
         return $this->fetch();
     }
 

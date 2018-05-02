@@ -10,7 +10,7 @@ VALUES
   (4,0,'会员','','Member','ion-person',0,0),
   (5,0,'系统','','System','ion-gear-a',0,0),
   (6,2,'分类管理','Category/index','category_index','ion-asterisk',0,0),
-  (7,2,'文章管理','Post/index','post_index','ion-document-text',0,0),
+  (7,2,'文章管理','Article/index','article_index','ion-document-text',0,0),
   (8,2,'单页管理','Page/index','page_index','ion-document',0,0),
   (9,3,'公告管理','Notice/index','notice_index','ion-speakerphone',0,0),
   (10,3,'广告管理','Adv/index','adv_index','ion-aperture',0,0),

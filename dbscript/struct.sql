@@ -457,13 +457,13 @@ CREATE TABLE `sa_page` (
 
 
 --
--- Table structure for table `sa_post`
+-- Table structure for table `sa_article`
 --
 
-DROP TABLE IF EXISTS `sa_post`;
+DROP TABLE IF EXISTS `sa_article`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `sa_post` (
+CREATE TABLE `sa_article` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) DEFAULT NULL,
   `cover` varchar(100) DEFAULT NULL COMMENT '封面图',

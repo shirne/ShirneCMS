@@ -11,7 +11,7 @@ class IndexController extends BaseController{
         $stat=array();
         $stat['feedback']=Db::name('feedback')->count();
         $stat['member']=Db::name('member')->count();
-        $stat['post']=Db::name('post')->count();
+        $stat['article']=Db::name('article')->count();
         $stat['links']=Db::name('links')->count();
 
         $this->assign('stat',$stat);

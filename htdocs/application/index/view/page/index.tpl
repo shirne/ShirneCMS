@@ -27,7 +27,7 @@
 			</div>
 
 			<div class="card pull-right main_right news_list">
-				<div class="card-body postbody">
+				<div class="card-body articlebody">
 					<h1>{$page.title}</h1>
 					<div class="info">
 					</div>

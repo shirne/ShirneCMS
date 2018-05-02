@@ -25,20 +25,20 @@ class Article extends TagLib
 
         $parseStr='<?php ';
 
-        $parseStr.='$'.$var.'=\think\Db::view("Post","*")';
-        $parseStr .= '->view("Category",["title"=>"category_title","name"=>"category_name","short"=>"category_short","icon"=>"category_icon","image"=>"category_image"],"Post.cate_id=Category.id","LEFT")';
+        $parseStr.='$'.$var.'=\think\Db::view("Article","*")';
+        $parseStr .= '->view("Category",["title"=>"category_title","name"=>"category_name","short"=>"category_short","icon"=>"category_icon","image"=>"category_image"],"Article.cate_id=Category.id","LEFT")';
         if(!empty($tag['category'])){
             if($recursive=='true'){
-                $parseStr .= '->where("Post.cate_id", "IN", getSubCateids(' . intval($tag['category']) . '))';
+                $parseStr .= '->where("Article.cate_id", "IN", getSubCateids(' . intval($tag['category']) . '))';
             }else {
-                $parseStr .= '->where("Post.cate_id",' . intval($tag['category']) . ')';
+                $parseStr .= '->where("Article.cate_id",' . intval($tag['category']) . ')';
             }
         }
         if(!empty($tag['type'])){
-            $parseStr .= '->where("Post.type",'.intval($tag['type']).')';
+            $parseStr .= '->where("Article.type",'.intval($tag['type']).')';
         }
         if(!empty($tag['cover'])){
-            $parseStr .= '->where("Post.cover","<>","")';
+            $parseStr .= '->where("Article.cover","<>","")';
         }
         if(empty($tag['limit'])){
             $tag['limit']=10;

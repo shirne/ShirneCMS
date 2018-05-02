@@ -11,7 +11,7 @@ namespace app\admin\validate;
 
 use think\Validate;
 
-class PostValidate extends Validate
+class ArticleValidate extends Validate
 {
     protected $rule=array(
         'title'=>'require'

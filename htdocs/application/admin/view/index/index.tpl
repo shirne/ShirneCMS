@@ -68,12 +68,12 @@
                             <i class="ion-edit ion-5x"></i>
                         </div>
                         <div class="col-6 text-right">
-                            <p class="announcement-heading">{$stat.post}</p>
+                            <p class="announcement-heading">{$stat.article}</p>
                             <p class="announcement-text">文章</p>
                         </div>
                     </div>
                 </div>
-                <a href="{:url('post/index')}">
+                <a href="{:url('article/index')}">
                     <div class="card-footer announcement-bottom">
                         <div class="row">
                             <div class="col-6">

@@ -31,11 +31,11 @@
                 <h5 class="card-title">系统说明</h5>
                 <article:list var="article_list" />
                 <volist name="article_list" id="art">
-                    <a href="{:url('post/view',['id'=>$art['id']])}">{$art.title}</a>
+                    <a href="{:url('article/view',['id'=>$art['id']])}">{$art.title}</a>
                 </volist>
                 <article:cates var="cates" />
                 <volist name="cates" id="cate">
-                    <a href="{:url('post/index',['name'=>$cate['name']])}">{$cate.title}</a>
+                    <a href="{:url('article/index',['name'=>$cate['name']])}">{$cate.title}</a>
                 </volist>
             </div>
         </div>

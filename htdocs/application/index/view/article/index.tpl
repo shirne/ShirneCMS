@@ -10,16 +10,16 @@
 		</div>
 
 		<div class="container">
-			<include file="post/side" />
+			<include file="article/side" />
 
 			<div class="card float-right main_right news_list">
 				<div class="card-body">
 					<ul>
 						<php>$empty='<li class="empty">暂时没有内容</li>';</php>
-						<Volist name="lists" id="post" empty="$empty">
+						<Volist name="lists" id="article" empty="$empty">
 						<li>
-							<h2><a href="{:url('Post/view',array('id'=>$post['id']))}">{$post.title}</a></h2>
-							<div>{$post.content|cutstr=250}</div>
+							<h2><a href="{:url('Article/view',array('id'=>$article['id']))}">{$article.title}</a></h2>
+							<div>{$article.content|cutstr=250}</div>
 						</li>
 						</Volist>
 

@@ -9,7 +9,7 @@ return array(
             'delete'=>'内容分类删除'
         )
     ),
-    'post'=>array(
+    'article'=>array(
         'title'=>'内容管理',
         'items'=>array(
             'index'=>'文章查看',

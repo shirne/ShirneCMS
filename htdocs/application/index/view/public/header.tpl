@@ -13,7 +13,7 @@
                     <li class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">菜单 <span class="caret"></span></a>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="{:url('Post/index')}">文章列表</a>
+                            <a class="dropdown-item" href="{:url('Article/index')}">文章列表</a>
                             <div role="separator" class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{:url('Page/index')}">单页</a>
                         </div>
