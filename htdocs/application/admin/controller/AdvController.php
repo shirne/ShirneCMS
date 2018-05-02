@@ -115,9 +115,7 @@ class AdvController extends BaseController
         }
         $where=array('group_id'=>$gid);
         if(!empty($key)){
-            $where['title'] = array('like',"%$key%");
-            $where['url'] = array('like',"%$key%");
-            $where['_logic'] = 'or';
+            $where[] = array('title|url','like',"%$key%");
         }
         $lists=$model->where($where)->order('sort ASC,id DESC')->paginate(15);
         $this->assign('lists',$lists);
@@ -147,7 +145,7 @@ class AdvController extends BaseController
                 }
             }
         }
-        $model=array('status'=>1,'gid'=>$gid);
+        $model=array('status'=>1,'group_id'=>$gid);
         $this->assign('model',$model);
         $this->assign('id',0);
         return $this->fetch('itemupdate');

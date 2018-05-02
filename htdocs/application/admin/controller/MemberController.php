@@ -25,7 +25,7 @@ class MemberController extends BaseController
         $where=array();
         $keyword=$this->request->request('keyword');
         if(!empty($keyword)){
-            $where['m.username|m.email|m.realname'] = array('like',"%$keyword%");
+            $where[] = array('m.username|m.email|m.realname','like',"%$keyword%");
         }
 
         $referer=$this->request->request('referer');

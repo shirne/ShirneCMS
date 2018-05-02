@@ -11,7 +11,7 @@
 		<div class="col-6">
 			<form action="{:url('post/index')}" method="post">
 				<div class="form-group input-group">
-					<input type="text" class="form-control" name="key" placeholder="输入文章标题、作者或者分类关键词搜索">
+					<input type="text" class="form-control" name="key" value="{$keyword}" placeholder="输入文章标题、作者或者分类关键词搜索">
 					<div class="input-group-append">
                       <button class="btn btn-outline-secondary" type="submit"><i class="ion-search"></i></button>
                     </div>

@@ -14,7 +14,7 @@
         <div class="col-md-6">
             <form action="{:url('setting/advance')}" method="post">
                 <div class="form-group input-group">
-                    <input type="text" class="form-control" name="key" value="{$key}" placeholder="输入字段名或者描述关键词搜索">
+                    <input type="text" class="form-control" name="key" value="{$keyword}" placeholder="输入字段名或者描述关键词搜索">
                     <div class="input-group-append">
                       <button class="btn btn-outline-secondary" type="submit"><i class="ion-search"></i></button>
                     </div>

@@ -38,12 +38,14 @@
         <foreach name="lists" item="v">
             <tr>
                 <td>{$v.id}</td>
-                <td><img src="" width="80" height="60" /></td>
+                <td><figure class="figure" >
+                        <img src="{$v.image}?w=100" class="figure-img img-fluid rounded" alt="image">
+                    </figure></td>
                 <td>{$v.title}</td>
                 <td>{$v.url}</td>
                 <td>{$v.start_date|showdate}<br />{$v.end_date|showdate}</td>
                 <td>{$v.sort}</td>
-                <td>{$v.status|v_status}</td>
+                <td>{$v.status|v_status|raw}</td>
                 <td>
                     <a class="btn btn-outline-dark btn-sm" href="{:url('adv/itemupdate',array('id'=>$v['id'],'gid'=>$gid))}"><i class="ion-edit"></i> 编辑</a>
                     <a class="btn btn-outline-dark btn-sm" href="{:url('adv/itemdelete',array('id'=>$v['id'],'gid'=>$gid))}" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash-a"></i> 删除</a>

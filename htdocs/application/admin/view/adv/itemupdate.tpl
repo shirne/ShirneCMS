@@ -57,13 +57,14 @@
         <div class="form-group">
             <label for="cc">状态</label>
             <label class="radio-inline">
-                <input type="radio" name="type" value="1" <if condition="$model['status'] eq 1">checked="checked"</if> >显示
+                <input type="radio" name="status" value="1" <if condition="$model['status'] eq 1">checked="checked"</if> >显示
             </label>
             <label class="radio-inline">
-                <input type="radio" name="type" value="0" <if condition="$model['status'] eq 0">checked="checked"</if>>隐藏
+                <input type="radio" name="status" value="0" <if condition="$model['status'] eq 0">checked="checked"</if>>隐藏
             </label>
         </div>
         <div class="form-group">
+            <input type="hidden" name="group_id" value="{$model.group_id}">
             <button type="submit" class="btn btn-primary">{$id>0?'编辑':'添加'}</button>
         </div>
     </form>

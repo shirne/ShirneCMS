@@ -48,12 +48,10 @@ class SettingController extends BaseController
         $model = Db::name('setting');
         $where=array();
         if(!empty($key)){
-            $where['key'] = array('like',"%$key%");
-            $where['description'] = array('like',"%$key%");
-            $where['_logic'] = 'or';
+            $where[] = array('key|description','like',"%$key%");
         }
 
-        $this->assign('key',$key);
+        $this->assign('keyword',$key);
 
         $setting  = $model->where($where)->paginate(15);// 查询满足要求的总记录数
 

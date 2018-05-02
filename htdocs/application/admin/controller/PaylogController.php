@@ -37,7 +37,7 @@ class PaylogController extends BaseController
             }
         }
         if(!empty($key)){
-            $where['m.username']=array('LIKE',"%$key%");
+            $where[]=array('m.username','LIKE',"%$key%");
         }
 
         $lists=$model->view('__MEMBER__ m',['username','realname'],'mr.member_id=m.id','LEFT')
@@ -50,7 +50,7 @@ class PaylogController extends BaseController
 
         $total=Db::name('MemberRecharge')->where(array('status'=>1))->sum('amount');
         $this->assign('total',$total);
-        $this->assign('key',$key);
+        $this->assign('keyword',$key);
         $this->assign('status',$status);
         $this->assign('paytype',$paytype);
         return $this->fetch();
@@ -133,7 +133,7 @@ class PaylogController extends BaseController
         $model=Db::view('__MEMBER_CASHIN__ mc','*');
         $where=array();
         if(!empty($key)){
-            $where['m.username']=array('LIKE',"%$key%");
+            $where[]=array('m.username','LIKE',"%$key%");
         }
 
         $lists=$model->view('__MEMBER__ m',['username','realname'],'mc.member_id=m.id','LEFT')->order('id DESC')->paginate(15);
@@ -143,7 +143,7 @@ class PaylogController extends BaseController
         $this->assign('page',$lists->render());
         $total=Db::name('MemberCashin')->where(array('status'=>1))->sum('amount');
         $this->assign('total',$total);
-        $this->assign('key',$key);
+        $this->assign('keyword',$key);
         return $this->fetch();
     }
 

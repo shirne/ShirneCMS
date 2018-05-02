@@ -18,16 +18,14 @@ class PostController extends BaseController
             ->view('manager',['username'],'post.user_id=manager.id','LEFT');
         $where=array();
         if(!empty($key)){
-            $where['post.title'] = array('like',"%$key%");
-            $where['manager.username'] = array('like',"%$key%");
-            $where['category.title'] = array('like',"%$key%");
-            $where['_logic'] = 'or';
+            $where[]=['post.title|manager.username|category.title','like',"%$key%"];
         }
 
         $lists=$model->where($where)->paginate(10);
 
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
+        $this->assign('keyword',$key);
 
         return $this->fetch();
     }

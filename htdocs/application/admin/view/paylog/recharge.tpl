@@ -21,7 +21,7 @@
                         <option value="4" {$status==4?'selected':''}>无效单</option>
                     </select>
                     <span class="input-group-addon"></span>
-                    <input type="text" class="form-control" value="{$key}" name="key" placeholder="输入名称搜索">
+                    <input type="text" class="form-control" value="{$keyword}" name="key" placeholder="输入名称搜索">
                     <div class="input-group-append">
                       <button class="btn btn-outline-secondary" type="submit"><i class="ion-search"></i></button>
                     </div>
@@ -56,7 +56,7 @@
                 <td>{$v.amount|showmoney}</td>
                 <td>{$v.remark}</td>
                 <td>{$v.create_time|showdate='Y-m-d H:i:s'}</td>
-                <td>{$v.status|o_status}</td>
+                <td>{$v.status|o_status|raw}</td>
                 <td>
                     <if condition="$v['status'] EQ 0">
                     <a class="btn btn-outline-dark btn-sm" href="{:url('Paylog/rechargeupdate',array('id'=>$v['id']))}"><i class="ion-check"></i> 确认</a>

@@ -17,7 +17,7 @@ class PageController extends BaseController
         $model = Db::name('page');
         $where=array();
         if(!empty($key)){
-            $where['title'] = array('title|name','like',"%$key%");
+            $where[] = array('title|name','like',"%$key%");
         }
         $lists=$model->where($where)->order('ID DESC')->paginate(15);
         $this->assign('lists',$lists);

@@ -19,9 +19,7 @@ class ManagerController extends BaseController
         $model=Db::name('Manager');
         $where=array();
         if(!empty($key )){
-            $where['username'] = array('like',"%$key%");
-            $where['email'] = array('like',"%$key%");
-            $where['_logic'] = 'or';
+            $where[] = array('username|email','like',"%$key%");
         }
 
         $lists=$model->where($where)->order('ID ASC')->paginate(15);
