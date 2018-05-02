@@ -8,8 +8,6 @@ class IndexController extends BaseController
 {
     public function index()
     {
-        $banners=AdvGroupModel::getAdList('banner');
-        $this->assign('banner',$banners);
 
         $this->seo();
         return $this->fetch();

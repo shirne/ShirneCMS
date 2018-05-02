@@ -459,6 +459,26 @@ function getSortedCategory($data, $pid = 0, $html = "|---", $level = 0)
     return $temp;
 }
 
+function getSubCateids($pid,$recursive=false)
+{
+    $ids=[];
+    if(is_array($pid)){
+        $where=array('pid','in',$pid);
+        if(!$recursive)$ids=$pid;
+    }else{
+        $where=array('pid',$pid);
+        if(!$recursive)$ids=[$pid];
+    }
+    $sons=\think\Db::name('Category')->where('pid',$pid)->field('id')->select();
+    if(!empty($sons)){
+        $sonids=array_column($sons,'id');
+        $ids = array_merge($ids,$sonids);
+        $ids=array_merge($ids,getSubCateids($sonids,true));
+    }
+
+    return $ids;
+}
+
 /**
  * 获取全部配置
  * @param $all bool 是否全部数据

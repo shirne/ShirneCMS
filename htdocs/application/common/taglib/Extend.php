@@ -26,7 +26,7 @@ class Extend extends TagLib
 
         $parseStr.='$'.$var.'=\think\Db::name("Links")';
         if(!empty($tag['limit'])){
-            $parseStr .= '->limit('.intval($tag['limit']).');';
+            $parseStr .= '->limit('.intval($tag['limit']).')';
         }
         $parseStr .= '->select();';
 
@@ -52,9 +52,9 @@ class Extend extends TagLib
         $parseStr='<?php ';
 
         $parseStr.='$'.$var.'=\think\Db::name("Notice")';
-        $parseStr .= '->where("status",1);';
+        $parseStr .= '->where("status",1)';
         if(!empty($tag['limit'])){
-            $parseStr .= '->limit('.intval($tag['limit']).');';
+            $parseStr .= '->limit('.intval($tag['limit']).')';
         }
         $parseStr .= '->select();';
 

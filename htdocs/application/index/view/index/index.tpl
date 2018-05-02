@@ -2,14 +2,15 @@
 
 <block name="body">
     <div class="container">
+        <extend:advs var="banners" flag="banner"/>
         <div id="carouselBannerControls" class="carousel slide" data-ride="carousel">
             <ol class="carousel-indicators">
-                <volist name="banner" id="item" key="k">
+                <volist name="banners" id="item" key="k">
                     <li data-target="#carouselBannerControls" {$k==1?'class="active"':''} data-slide-to="{$k-1}"></li>
                 </volist>
             </ol>
             <div class="carousel-inner">
-                <volist name="banner" id="item" key="k">
+                <volist name="banners" id="item" key="k">
                     <div class="carousel-item{$k==1?' active':''}" {$k}>
                         <img class="d-block w-100" src="{$item.image}" alt="{$image.title}">
                         <p>{$image.title}</p>
@@ -28,7 +29,14 @@
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">系统说明</h5>
-                <p class="card-text"></p>
+                <article:list var="article_list" />
+                <volist name="article_list" id="art">
+                    <a href="{:url('post/view',['id'=>$art['id']])}">{$art.title}</a>
+                </volist>
+                <article:cates var="cates" />
+                <volist name="cates" id="cate">
+                    <a href="{:url('post/index',['name'=>$cate['name']])}">{$cate.title}</a>
+                </volist>
             </div>
         </div>
     </div>
