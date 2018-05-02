@@ -32,7 +32,7 @@
 					<div class="info">
 					</div>
 					<div class="container-fluid">
-						{$page.content|html_entity_decode}
+						{$page.content|raw}
 					</div>
 				</div>
 			</div>

@@ -18,10 +18,10 @@
 					<div class="info">
 						分类:<a href="{:url('Post/index',array('name'=>$category['name']))}">{$category.title}</a>
 						&nbsp;&nbsp;
-						发表时间:{$post.time|showdate}
+						发表时间:{$post.create_time|showdate}
 					</div>
 					<div class="container-fluid">
-						{$post.content|html_entity_decode}
+						{$post.content|raw}
 					</div>
 				</div>
 			</div>

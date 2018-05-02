@@ -19,7 +19,7 @@
 						发表时间:{$post.time|showdate}
 					</div>
 					<div class="container-fluid">
-						{$post.content|html_entity_decode}
+						{$post.content|raw}
 					</div>
 				</div>
 			</div>
