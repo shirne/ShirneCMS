@@ -19,13 +19,23 @@ ShirneCMS
 
 [chartjs/Chart.js 2.7.2](https://chartjs.bootcss.com/docs/)
 
-##安装说明
+## 安装说明
 
-数据库手动安装
+[Composer](https://getcomposer.org/download/)
+
+>composer install
+
+数据库
 
 >scripts/struct.sql 数据表结构
 
 >scripts/init.sql 初始数据
+
+项目目录
+
+>htdocs 项目根据目录
+
+>htdocs/public 网站根目录
 
 后台登录账号及密码
 
