@@ -70,7 +70,7 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">{$i+1} 代</span>
                                 </div>
-                                <input type="text" name="commission_percent[$i]"
+                                <input type="text" name="commission_percent[{$i}]"
                                        value="{$model['commission_percent'][$i]}"
                                        class="form-control"/>
                                 <div class="input-group-append">

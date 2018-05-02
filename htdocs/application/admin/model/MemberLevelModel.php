@@ -14,18 +14,17 @@ use think\Model;
 class MemberLevelModel extends Model{
     protected $pk="level_id";
 
-    protected $json = ['commission_percent'];
+    protected $type = ['commission_percent'=>'array'];
 
     public static function init()
     {
         parent::init();
-        self::event('after_write','_set_default');
+        self::event('after_write',function($userLevel){
+            if($userLevel->is_default) {
+                Db::name('MemberLevel')->where('level_id','NEQ', $userLevel->level_id)
+                    ->update(array('is_default' => 0));
+            }
+        });
     }
 
-    protected static function _set_default($userLevel){
-        if($userLevel->is_default) {
-            Db::name('MemberLevel')->where('level_id','NEQ', $userLevel->level_id)
-                ->update(array('is_default' => 0));
-        }
-    }
 }

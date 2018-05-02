@@ -84,7 +84,7 @@ class MemberLevelController extends BaseController
         }
         $model = MemberLevelModel::get($id);
         $this->assign('model',$model);
-        $this->display();
+        return $this->fetch();
     }
     /**
      * 删除会员组

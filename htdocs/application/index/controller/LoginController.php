@@ -52,9 +52,6 @@ class LoginController extends BaseController{
         }
         //方式1：本地账号登陆
         if(empty($type)){
-            if(!$this->request->isPost()){
-                return $this->fetch('login');
-            }
             if($this->request->isPost()){
                 $code = $this->request->post('verify','','strtolower');
                 //验证验证码是否正确
@@ -86,7 +83,7 @@ class LoginController extends BaseController{
                     $this->error("账号或密码错误");
                 }
             }
-            return;
+            return $this->fetch('login');
         }
         //方式2：如果是微信登录（微信内部浏览器登录，非扫码登录）
         if(strtolower($type) == "weixin"){
@@ -106,7 +103,7 @@ class LoginController extends BaseController{
         //验证通过  使用第三方登陆
         if($type != null){
             $sns = WechatAuth::getInstance($type);
-            redirect($sns->getRequestCodeURL());  
+            redirect($sns->getRequestCodeURL())->send();
         }
         
     }
@@ -275,7 +272,7 @@ class LoginController extends BaseController{
         $this->assign('authtype',$authtype);
         $this->assign('step',$step);
         $this->assign('nextstep',$step+1);
-        $this->display();
+        return $this->fetch();
     }
     public function checkusername(){
         $username=$this->request->post('username');
@@ -381,8 +378,7 @@ class LoginController extends BaseController{
         $json=array();
         $json['error']=0;
         if(!empty($m))$json['error']=1;
-        echo json_encode($json);
-        exit;
+        return json($json);
     }
 
     public function verify(){
