@@ -1,1 +1,9 @@
-body{}
+body{font-size:14px;}
+
+#carouselBannerControls{
+    height :400px;
+}
+#carouselBannerControls .carousel-item{
+    height :400px;
+    overflow: hidden;
+}

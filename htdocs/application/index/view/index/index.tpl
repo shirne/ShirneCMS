@@ -2,26 +2,39 @@
 
 <block name="body">
     <div class="container">
-
+        <div id="carouselBannerControls" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+                <volist name="banner" id="item" key="k">
+                    <li data-target="#carouselBannerControls" {$k==1?'class="active"':''} data-slide-to="{$k-1}"></li>
+                </volist>
+            </ol>
+            <div class="carousel-inner">
+                <volist name="banner" id="item" key="k">
+                    <div class="carousel-item{$k==1?' active':''}" {$k}>
+                        <img class="d-block w-100" src="{$item.image}" alt="{$image.title}">
+                        <p>{$image.title}</p>
+                    </div>
+                </volist>
+            </div>
+            <a class="carousel-control-prev" href="#carouselBannerControls" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouselBannerControls" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
         <div class="card">
             <div class="card-body">
                 <h5 class="card-title">系统说明</h5>
-                <p>列表页:
-                    <a href="{:url('Post/index',array('name'=>'cnsecer'))}">{:url('Post/index',array('name'=>'cnsecer'))}</a>
-                </p>
-                <p>详情页: <a href="{:url('Post/view',array('id'=>1))}">{:url('Post/view',array('id'=>1))}</a></p>
-                <p>单页:
-                    <a href="{:url('Page/index',array('name'=>'cnsecer'))}">{:url('Page/index',array('name'=>'cnsecer'))}</a>
-                </p>
-                <p>登录页: <a href="{:url('login/login')}">{:url('login/login')}</a></p>
-                <p>QQ登录: <a href="{:url('login/login',array('type'=>'qq'))}">{:url('login/login',array('type'=>'qq'))}</a>
-                </p>
-                <p>会员中心：<a href="{:url('Member/index')}">{:url('Member/index')}</a></p>
-                <hr>
-                <p>后台地址: <a href="/admin/">/admin/</a></p>
-                <p>账号:admin</p>
-                <p>密码:123456</p>
+                <p class="card-text"></p>
             </div>
         </div>
     </div>
+</block>
+<block name="script">
+    <script type="text/javascript">
+
+    </script>
 </block>
