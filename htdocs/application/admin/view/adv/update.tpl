@@ -1,8 +1,8 @@
-<extend name="Public:Base" />
+<extend name="public:base" />
 
 <block name="body">
 
-<include file="Public/bread" menu="adv_index" section="其它" title="广告位编辑" />
+<include file="public/bread" menu="adv_index" section="其它" title="广告位编辑" />
 
 <div id="page-wrapper">
     <div class="page-header">{$id>0?'编辑':'添加'}广告位</div>

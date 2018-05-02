@@ -1,4 +1,4 @@
-<extend name="Public:Base" />
+<extend name="public:base" />
 <block name="body">
     <include file="side" />
     <div class="container">

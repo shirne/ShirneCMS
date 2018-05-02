@@ -1,8 +1,8 @@
-<extend name="Public:Base" />
+<extend name="public:base" />
 
 <block name="body">
 
-<include file="Public/bread" menu="paylog_cashin" section="会员" title="提现记录" />
+<include file="public/bread" menu="paylog_cashin" section="会员" title="提现记录" />
 
 <div id="page-wrapper">
 

@@ -1,7 +1,7 @@
-<extend name="Public:Base"/>
+<extend name="public:base"/>
 
 <block name="body">
-    <include file="Public/bread" menu="page_index" section="内容" title="单页管理"/>
+    <include file="public/bread" menu="page_index" section="内容" title="单页管理"/>
 
     <div id="page-wrapper">
         <div class="page-header">{$id>0?'编辑':'添加'}页面</div>

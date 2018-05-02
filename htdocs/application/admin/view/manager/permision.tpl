@@ -1,4 +1,4 @@
-<extend name="Public:Base" />
+<extend name="public:base" />
 <block name="header">
 	<style type="text/css">
 	label{font-weight:normal;}
@@ -9,7 +9,7 @@
 </block>
 <block name="body">
 
-<include file="Public/bread" menu="manager_index" section="系统" title="管理员" />
+<include file="public/bread" menu="manager_index" section="系统" title="管理员" />
 
 <div id="page-wrapper">
 	<div class="page-header">管理员权限</div>

@@ -1,8 +1,8 @@
-<extend name="Public:Base" />
+<extend name="public:base" />
 
 <block name="body">
 
-<include file="Public/bread" menu="feedback_index" section="其它" title="留言管理" />
+<include file="public/bread" menu="feedback_index" section="其它" title="留言管理" />
 
 <div id="page-wrapper">
     

@@ -1,7 +1,7 @@
-<extend name="Public:Base" />
+<extend name="public:base" />
 
 <block name="body">
-<include file="Public/bread" menu="notice_index" section="其它" title="公告管理" />
+<include file="public/bread" menu="notice_index" section="其它" title="公告管理" />
 
 <div id="page-wrapper">
     

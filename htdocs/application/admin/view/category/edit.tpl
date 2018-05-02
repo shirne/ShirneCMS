@@ -1,8 +1,8 @@
-<extend name="Public:Base"/>
+<extend name="public:base"/>
 
 <block name="body">
 
-    <include file="Public/bread" menu="category_index" section="内容" title="分类管理"/>
+    <include file="public/bread" menu="category_index" section="内容" title="分类管理"/>
 
     <div id="page-wrapper">
         <div class="page-header">{$id>0?'编辑':'添加'}分类</div>

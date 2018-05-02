@@ -73,6 +73,7 @@ class BaseController extends Controller
         $data           =   is_array($data)?$data:array();
         $data['info']   =   $message;
         $data['status'] =   is_int($data)?$data:$status;
-        return $data;
+        json($data)->send();
+        exit;
     }
 }

@@ -1,8 +1,8 @@
-<extend name="Public:Base" />
+<extend name="public:base" />
 
 <block name="body">
 
-<include file="Public/bread" menu="Board" section="主面板" title="主面板" />
+<include file="public/bread" menu="Board" section="主面板" title="主面板" />
 <div id="page-wrapper">
 
     <div class="row">

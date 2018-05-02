@@ -1,8 +1,8 @@
-<extend name="Public:Base" />
+<extend name="public:base" />
 
 <block name="body">
 
-<include file="Public/bread" menu="Board" section="主面板" title="个人资料" />
+<include file="public/bread" menu="Board" section="主面板" title="个人资料" />
 
 <div id="page-wrapper">
 <form action="{:url('index/profile')}" method="post">

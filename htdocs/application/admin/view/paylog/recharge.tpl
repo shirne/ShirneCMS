@@ -1,8 +1,8 @@
-<extend name="Public:Base" />
+<extend name="public:base" />
 
 <block name="body">
 
-<include file="Public/bread" menu="paylog_recharge" section="系统" title="充值记录" />
+<include file="public/bread" menu="paylog_recharge" section="系统" title="充值记录" />
 
 <div id="page-wrapper">
 

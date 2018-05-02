@@ -32,7 +32,7 @@
 
         <div class="navbar-collapse justify-content-end navbar-ex1-collapse">
 
-            <include file="Public/sidebar" />
+            <include file="public/sidebar" />
 
             <div class="nav navbar-nav navbar-user">
 

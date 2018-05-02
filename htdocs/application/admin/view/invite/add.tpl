@@ -1,8 +1,8 @@
-<extend name="Public:Base"/>
+<extend name="public:base"/>
 
 <block name="body">
 
-    <include file="Public/bread" menu="invite_index" section="会员" title="邀请码"/>
+    <include file="public/bread" menu="invite_index" section="会员" title="邀请码"/>
 
     <div id="page-wrapper">
         <div class="page-header">生成邀请码</div>

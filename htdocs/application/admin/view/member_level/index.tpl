@@ -1,8 +1,8 @@
-<extend name="Public:Base" />
+<extend name="public:base" />
 
 <block name="body">
 
-    <include file="Public/bread" menu="member_level_index" section="会员" title="会员等级" />
+    <include file="public/bread" menu="member_level_index" section="会员" title="会员等级" />
 
     <div id="page-wrapper">
 

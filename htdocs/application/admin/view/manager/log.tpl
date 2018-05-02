@@ -1,8 +1,8 @@
-<extend name="Public:Base" />
+<extend name="public:base" />
 
 <block name="body">
 
-<include file="Public/bread" menu="manager_log" section="系统" title="操作日志" />
+<include file="public/bread" menu="manager_log" section="系统" title="操作日志" />
 
 <div id="page-wrapper">
     <div class="row list-header">

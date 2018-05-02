@@ -1,8 +1,8 @@
-<extend name="Public:Base" />
+<extend name="public:base" />
 
 <block name="body">
 
-<include file="Public/bread" menu="paytype_index" section="系统" title="付款方式" />
+<include file="public/bread" menu="paytype_index" section="系统" title="付款方式" />
 
 <div id="page-wrapper">
     
