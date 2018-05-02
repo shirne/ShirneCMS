@@ -4,8 +4,8 @@
 	<div class="main">
 		<div class="container">
 			<ol class="breadcrumb">
-				<li class="icon"><a href="/">首页</a></li>
-				<li><a href="javascript:">系统公告</a></li>
+				<li class="breadcrumb-item icon"><a href="/">首页</a></li>
+				<li class="breadcrumb-item"><a href="javascript:">系统公告</a></li>
 			</ol>
 		</div>
 
