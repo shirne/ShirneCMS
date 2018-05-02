@@ -1,7 +1,7 @@
 
-<div class="panel pull-left main_left">
-    <div class="panel-heading"><h3>资讯中心</h3></div>
-    <div class="panel-body">
+<div class="card float-left main_left">
+    <div class="card-header"><h3>资讯中心</h3></div>
+    <div class="card-body">
 
         <div id="news" class="list">
             <Volist name="categories[0]" id="cate">

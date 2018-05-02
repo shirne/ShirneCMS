@@ -12,8 +12,8 @@
 		<div class="container">
 			<include file="post/side" />
 
-			<div class="panel pull-right main_right news_list">
-				<div class="panel-body postbody">
+			<div class="card float-right main_right news_list">
+				<div class="card-body postbody">
 					<h1>{$post.title}</h1>
 					<div class="info">
 						分类:<a href="{:url('Post/index',array('name'=>$category['name']))}">{$category.title}</a>

@@ -12,8 +12,8 @@
 		<div class="container">
 			<include file="side" />
 
-			<div class="panel pull-right main_right news_list">
-				<div class="panel-body postbody">
+			<div class="card float-right main_right news_list">
+				<div class="card-body postbody">
 					<h1>{$post.title}</h1>
 					<div class="info">
 						发表时间:{$post.time|showdate}

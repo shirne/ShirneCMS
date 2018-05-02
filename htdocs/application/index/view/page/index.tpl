@@ -10,9 +10,9 @@
 		</div>
 
 		<div class="container">
-			<div class="panel pull-left main_left">
-				<div class="panel-heading"><h3>关于我们</h3></div>
-				<div class="panel-body">
+			<div class="card float-left main_left">
+				<div class="card-header"><h3>关于我们</h3></div>
+				<div class="card-body">
 
 					<div id="news" class="list">
 						<Volist name="lists" id="p">
@@ -26,8 +26,8 @@
 				</div>
 			</div>
 
-			<div class="panel pull-right main_right news_list">
-				<div class="panel-body postbody">
+			<div class="card pull-right main_right news_list">
+				<div class="card-body postbody">
 					<h1>{$page.title}</h1>
 					<div class="info">
 					</div>

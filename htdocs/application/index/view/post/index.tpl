@@ -12,8 +12,8 @@
 		<div class="container">
 			<include file="post/side" />
 
-			<div class="panel pull-right main_right news_list">
-				<div class="panel-body">
+			<div class="card float-right main_right news_list">
+				<div class="card-body">
 					<ul>
 						<php>$empty='<li class="empty">暂时没有内容</li>';</php>
 						<Volist name="lists" id="post" empty="$empty">
