@@ -77,6 +77,7 @@ var dialogTpl='<div class="modal fade" id="{@id}" tabindex="-1" role="dialog" ar
     <div class="modal-body">\
     </div>\
     <div class="modal-footer">\
+    <nav class="nav nav-fill"></nav>\
     </div>\
     </div>\
     </div>\
@@ -103,8 +104,8 @@ function Dialog(opts){
             opts.btns[dft].isdefault=true;
         }
 
-        if(!opts.btns[dft]['class']){
-            opts.btns[dft]['class']='btn-primary';
+        if(!opts.btns[dft]['type']){
+            opts.btns[dft]['type']='primary';
         }
         opts.defaultBtn=dft;
     }
@@ -113,8 +114,8 @@ function Dialog(opts){
         'id':'dlgModal'+dialogIdx++,
         'size':'',
         'btns':[
-            {'text':'取消','class':'btn-secondary'},
-            {'text':'确定','isdefault':true,'class':'btn-primary'}
+            {'text':'取消','type':'secondary'},
+            {'text':'确定','isdefault':true,'type':'primary'}
         ],
         'defaultBtn':1,
         'onsure':null,
@@ -127,7 +128,8 @@ function Dialog(opts){
     this.box=$(this.options.id);
 }
 Dialog.prototype.generBtn=function(opt,idx){
-    return '<a href="javascript:" class="btn '+(opt['class']?opt['class']:'btn-default')+'" data-index="'+idx+'">'+opt.text+'</a>';
+    if(opt['type'])opt['class']='btn-outline-'+opt['type'];
+    return '<a href="javascript:" class="nav-item btn '+(opt['class']?opt['class']:'btn-outline-secondary')+'" data-index="'+idx+'">'+opt.text+'</a>';
 };
 Dialog.prototype.show=function(html,title){
     this.box=$('#'+this.options.id);
@@ -148,7 +150,7 @@ Dialog.prototype.show=function(html,title){
     for(var i=0;i<this.options.btns.length;i++){
         btns.push(this.generBtn(this.options.btns[i],i));
     }
-    this.box.find('.modal-footer').html(btns.join('\n'));
+    this.box.find('.modal-footer .nav').html(btns.join('\n'));
 
     var dialog=this.box.find('.modal-dialog');
     dialog.removeClass('modal-sm').removeClass('modal-lg');
@@ -193,7 +195,7 @@ Dialog.prototype.show=function(html,title){
                 result = self.options.onsure.apply(this,[body, self.box]);
             }
         }
-        if(result===true){
+        if(result!==false){
             self.box.modal('hide');
         }
     });
@@ -202,6 +204,66 @@ Dialog.prototype.show=function(html,title){
 };
 Dialog.prototype.hide=function(){
     this.box.modal('hide');
+    return this;
+};
+
+var dialog={
+    alert:function(message,callback,title){
+        var called=false;
+        return new Dialog({
+            btns:'确定',
+            onsure:function(){
+                if(typeof callback=='function'){
+                    called=true;
+                    return callback(true);
+                }
+            },
+            onhide:function(){
+                if(!called && typeof callback=='function'){
+                    callback(false);
+                }
+            }
+        }).show(message,title);
+    },
+    confirm:function(message,confirm,cancel){
+        var called=false;
+        return new Dialog({
+            'onsure':function(){
+                if(typeof confirm=='function'){
+                    called=true;
+                    return confirm();
+                }
+            },
+            'onhide':function () {
+                if(called=false && typeof cancel=='function'){
+                    return cancel();
+                }
+            }
+        }).show(message);
+    },
+    prompt:function(message,callback,cancel){
+        var called=false;
+        return new Dialog({
+            'onshown':function(body){
+                body.find('[name=confirm_input]').focus();
+            },
+            'onsure':function(body){
+                var val=body.find('[name=confirm_input]').val();
+                if(typeof callback=='function'){
+                    var result = callback(val);
+                    if(result===true){
+                        called=true;
+                    }
+                    return result;
+                }
+            },
+            'onhide':function () {
+                if(called=false && typeof cancel=='function'){
+                    return cancel();
+                }
+            }
+        }).show('<input type="text" name="confirm_input" class="form-control" />',message);
+    }
 };
 
 jQuery(function($){
@@ -247,6 +309,62 @@ jQuery(function ($) {
         bread.html(html.join("\n"));
     }
 
+    //全选、反选按钮
+    $('.checkall-btn').click(function (e) {
+        var target=$(this).data('target');
+        if(!target)target='id';
+        var ids=$('[name='+target+']');
+        if($(this).is('.active')){
+            ids.removeAttr('checked');
+        }else{
+            ids.attr('checked',true);
+        }
+    });
+    $('.checkreverse-btn').click(function (e) {
+        var target=$(this).data('target');
+        if(!target)target='id';
+        var ids=$('[name='+target+']');
+        for(var i=0;i<ids.length;i++) {
+            if (ids[i].checked) {
+                ids.eq(i).removeAttr('checked');
+            } else {
+                ids.eq(i).attr('checked', true);
+            }
+        }
+    });
+    $('.action-btn').click(function(e){
+        e.preventDefault();
+        var action=$(this).data('action');
+        if(!action){
+            return dialog.alert('未知操作');
+        }
+        action='action'+action.replace(/^[a-z]/,function(letter){
+            return letter.toUpperCase();
+        });
+        if(!window[action] || typeof window[action] !== 'function'){
+            return dialog.alert('操作未定义');
+        }
+        var needChecks=$(this).data('needChecks');
+        if(needChecks===undefined)needChecks=true;
+        if(needChecks){
+            var target=$(this).data('target');
+            if(!target)target='id';
+            var ids=$('[name='+target+']:checked');
+            if(ids.length<1){
+                return dialog.alert('请选择需要操作的项目');
+            }else{
+                var idchecks=[];
+                for(var i=0;i<ids.length;i++){
+                    idchecks.push(ids.eq(i).val());
+                }
+                window[action](idchecks);
+            }
+        }else{
+            window[action]();
+        }
+    });
+
+    //异步显示资料链接
     $('a[rel=ajax]').click(function(e){
        e.preventDefault();
         var self=$(this);
@@ -271,11 +389,13 @@ jQuery(function ($) {
         $(this).tab('show')
     });
 
+    //上传框
     $('.custom-file .custom-file-input').on('change',function(){
         var label=$(this).parents('.custom-file').find('.custom-file-label');
         label.text($(this).val());
     });
 
+    //表单Ajax提交
     $('.btn-primary[type=submit]').click(function(e){
         var form=$(this).parents('form');
         var btn=this;
@@ -317,6 +437,7 @@ jQuery(function ($) {
         $.ajax(options);
     });
 
+    //日期组件
     if($.fn.datetimepicker) {
         var tooltips= {
             today: '定位当前日期',

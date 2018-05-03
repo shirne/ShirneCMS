@@ -234,6 +234,16 @@ table td figure{
     border:0;
     padding:0;
 }
+
+.modal-footer .nav{
+    width :100%;
+}
+.modal-footer .nav .btn{
+    margin-left:1rem;
+}
+.modal-footer .nav .btn:first-child{
+    margin-left:0;
+}
 #loginBar{
     display: none;
 }

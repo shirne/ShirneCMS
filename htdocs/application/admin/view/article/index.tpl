@@ -6,15 +6,15 @@
 
 	<div class="row list-header">
 		<div class="col-6">
-			<div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+			<div class="btn-toolbar list-toolbar" role="toolbar" aria-label="Toolbar with button groups">
 				<div class="btn-group btn-group-sm mr-2" role="group" aria-label="check action group">
-					<a href="javascript:" class="btn btn-outline-secondary">全选</a>
-					<a href="javascript:" class="btn btn-outline-secondary">反选</a>
+					<a href="javascript:" class="btn btn-outline-secondary checkall-btn" data-toggle="button" aria-pressed="false">全选</a>
+					<a href="javascript:" class="btn btn-outline-secondary checkreverse-btn">反选</a>
 				</div>
 				<div class="btn-group btn-group-sm mr-2" role="group" aria-label="action button group">
-					<a href="javascript:" class="btn btn-outline-secondary">发布</a>
-					<a href="javascript:" class="btn btn-outline-secondary">撤销</a>
-					<a href="javascript:" class="btn btn-outline-secondary">删除</a>
+					<a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="publish">发布</a>
+					<a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="cancel">撤销</a>
+					<a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="delete">删除</a>
 				</div>
 				<a href="{:url('article/add')}" class="btn btn-outline-primary btn-sm">添加文章</a>
 			</div>
@@ -59,7 +59,7 @@
 		<tbody>
 			<foreach name="lists" item="v">
 				<tr>
-					<td>{$v.id}</td>
+					<td><input type="checkbox" name="id" value="{$v.id}" /></td>
 					<td>{$v.title}</td>
 					<td>
 						<if condition="$v.type eq 1"><span class="label label-default">普通</span>
@@ -91,4 +91,25 @@
 	{$page|raw}
 
 </div>
+</block>
+<block name="script">
+	<script type="text/javascript">
+		(function(w){
+			w.actionPublish=function(){
+				dialog.confirm('确定将选中文章发布到前台？',function() {
+				    dialog.alert('发布成功');
+                });
+            };
+            w.actionCancel=function(){
+                dialog.confirm('确定取消选中文章的发布状态？',function() {
+                    dialog.alert('取消成功');
+                });
+            };
+            w.actionDelete=function(){
+                dialog.confirm('确定删除选中的文章？',function() {
+                    dialog.alert('删除成功');
+                });
+            };
+        })(window)
+	</script>
 </block>
