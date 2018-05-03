@@ -1,7 +1,7 @@
 <extend name="public:base" />
 
 <block name="body">
-<include file="public/bread" menu="member_log" section="会员" title="会员管理" />
+<include file="public/bread" menu="member_index" title="会员信息" />
 
 <div id="page-wrapper">
 	<div class="page-header">修改会员</div>

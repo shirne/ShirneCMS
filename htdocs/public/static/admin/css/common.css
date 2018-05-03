@@ -1,10 +1,12 @@
 /* Global Styles */
-
+html{
+    font-size:20px;
+}
 body {
-    padding-top: 50px;
+    padding-top: 3.5rem;
     font-family: "Microsoft YaHei", sans-serif;
     background:#F6F6F6;
-    font-size:14px;
+    font-size:1rem;
 }
 
 .navbar-right{margin-right:10px;}
@@ -21,6 +23,10 @@ body {
     margin-bottom:0;
     line-height:2.4rem;
 }
+
+.card .announcement-bottom{padding:0;}
+.announcement-bottom .nav-item{border-right:1px rgba(0,0,0,.125) solid;}
+.announcement-bottom .nav-item:last-child{border-right:0;}
 
 #wrapper {
     padding-left: 0;
@@ -235,6 +241,7 @@ table td figure{
 
 
 @media (max-width:768px) {
+
     .navbar-right{
         display: none;
     }
@@ -244,8 +251,11 @@ table td figure{
 }
 
 /* Edit Below to Customize Widths > 768px */
-@media (min-width:768px) {
+@media (min-width:992px) {
 
+    html{
+        font-size:14px;
+    }
     /* Wrappers */
 
     #wrapper {
@@ -264,7 +274,7 @@ table td figure{
         left: 225px;
         width: 225px;
         position: fixed;
-        top: 50px;
+        top: 3.5rem;
         height: 100%;
         border-radius: 0;
         border: none;

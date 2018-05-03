@@ -1,7 +1,7 @@
 <extend name="public:base" />
 
 <block name="body">
-<include file="public/bread" menu="setting_index" section="系统" title="配置管理" />
+<include file="public/bread" menu="setting_index" title="配置详情" />
 
 <div id="page-wrapper">
     <div class="page-header">修改配置</div>

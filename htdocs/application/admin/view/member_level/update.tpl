@@ -1,7 +1,7 @@
 <extend name="public:base"/>
 
 <block name="body">
-    <include file="public/bread" menu="member_level_index" section="会员" title="会员等级"/>
+    <include file="public/bread" menu="member_level_index" title="会员组配置"/>
 
     <div id="page-wrapper">
         <div class="page-header">添加等级</div>

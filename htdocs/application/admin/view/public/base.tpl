@@ -29,8 +29,11 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" role="navigation">
 
         <a class="navbar-brand" href="{:url('index/index')}">管理后台</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-        <div class="navbar-collapse justify-content-end navbar-ex1-collapse">
+        <div class="collapse navbar-collapse justify-content-end navbar-ex1-collapse" id="navbarSupportedContent">
 
             <include file="public/sidebar" />
 

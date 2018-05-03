@@ -59,6 +59,10 @@ class FeedbackController extends BaseController
         return $this->fetch();
     }
 
+    public function statics(){
+        return $this->fetch();
+    }
+
     /**
      * 删除留言
      * @param $id

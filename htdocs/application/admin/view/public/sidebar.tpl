@@ -6,7 +6,7 @@
             <if condition="!empty($menus[$menu['id']])">
                 <div class="card-header" role="tab" id="heading{$menu['key']}">
                     <h4 >
-                        <a data-key="{$menu['key']}" class="collapsed" data-toggle="collapse" href="#collapse{$menu['key']}" aria-expanded="false" aria-controls="collapse{$menu['key']}">
+                        <a data-key="{$menu['key']}" class="menu_top collapsed" data-toggle="collapse" href="#collapse{$menu['key']}" aria-expanded="false" aria-controls="collapse{$menu['key']}">
                             <i class="{$menu['icon']}"></i>&nbsp;{$menu['name']}
                         </a>
                     </h4>
@@ -23,7 +23,7 @@
                 <else/>
                 <div class="card-header" role="tab" id="heading{$menu['key']}">
                     <h4 >
-                        <a data-key="{$menu['key']}" data-parent="#accordion" href="{:url($menu['url'])}"  aria-expanded="false">
+                        <a class="menu_top" data-key="{$menu['key']}" data-parent="#accordion" href="{:url($menu['url'])}"  aria-expanded="false">
                             <i class="{$menu['icon']}"></i>&nbsp;{$menu['name']}
                         </a>
                     </h4>

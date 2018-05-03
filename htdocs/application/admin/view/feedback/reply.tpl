@@ -2,7 +2,7 @@
 
 <block name="body">
 
-<include file="public/bread" menu="feedback_index" section="其它" title="留言管理" />
+<include file="public/bread" menu="feedback_index" title="回复留言" />
 
 <div id="page-wrapper">
     <div class="page-header">查看留言</div>

@@ -2,7 +2,7 @@
 
 <block name="body">
 
-<include file="public/bread" menu="invite_index" section="会员" title="邀请码" />
+<include file="public/bread" menu="invite_index" title="邀请码列表" />
 
 <div id="page-wrapper">
     <div class="row list-header">

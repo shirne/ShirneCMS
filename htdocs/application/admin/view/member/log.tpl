@@ -1,7 +1,7 @@
 <extend name="public:base" />
 
 <block name="body">
-<include file="public/bread" menu="member_log" section="会员" title="操作日志" />
+<include file="public/bread" menu="member_log" />
 
 <div id="page-wrapper">
     <div class="row list-header">

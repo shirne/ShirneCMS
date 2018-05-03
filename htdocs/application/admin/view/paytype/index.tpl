@@ -2,7 +2,7 @@
 
 <block name="body">
 
-<include file="public/bread" menu="paytype_index" section="系统" title="付款方式" />
+<include file="public/bread" menu="paytype_index" title="" />
 
 <div id="page-wrapper">
     

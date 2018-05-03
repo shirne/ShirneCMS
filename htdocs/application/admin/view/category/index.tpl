@@ -2,7 +2,7 @@
 
 <block name="body">
 
-<include file="public/bread" menu="category_index" section="内容" title="分类管理" />
+<include file="public/bread" menu="category_index" title="" />
 
 <div id="page-wrapper">
     

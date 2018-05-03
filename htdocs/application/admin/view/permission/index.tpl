@@ -2,7 +2,7 @@
 
 <block name="body">
 
-<include file="public/bread" menu="permission_index" section="系统" title="菜单管理" />
+<include file="public/bread" menu="permission_index" title="菜单列表" />
 
 <div id="page-wrapper">
     

@@ -2,7 +2,7 @@
 
 <block name="body">
 
-<include file="public/bread" menu="manager_index" section="系统" title="管理员" />
+<include file="public/bread" menu="manager_index" title="添加管理员" />
 
 <div id="page-wrapper">
 	<div class="page-header">添加管理员</div>

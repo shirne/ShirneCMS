@@ -1,7 +1,7 @@
 <extend name="public:base" />
 
 <block name="body">
-<include file="public/bread" menu="article_index" section="内容" title="文章管理" />
+<include file="public/bread" menu="article_index" title="文章列表" />
 <div id="page-wrapper">
 
 	<div class="row list-header">

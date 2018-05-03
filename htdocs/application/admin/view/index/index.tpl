@@ -2,7 +2,7 @@
 
 <block name="body">
 
-<include file="public/bread" menu="Board" section="主面板" title="主面板" />
+<include file="public/bread" menu="Board" section="主面板" title=""/>
 <div id="page-wrapper">
 
     <div class="row">
@@ -19,18 +19,12 @@
                         </div>
                     </div>
                 </div>
-                <a href="{:url('feedback/index')}">
-                    <div class="card-footer announcement-bottom">
-                        <div class="row">
-                            <div class="col-6">
-                                查看留言
-                            </div>
-                            <div class="col-6 text-right">
-                                <i class="ion-arrow-circle-right"></i>
-                            </div>
-                        </div>
-                    </div>
-                </a>
+                <div class="card-footer announcement-bottom">
+                    <nav class="nav nav-fill">
+                        <a class="nav-item nav-link" href="{:url('feedback/index')}"><i class="ion-navicon"></i> 查看留言 </a>
+                        <a class="nav-item nav-link" href="{:url('feedback/statics')}"><i class="ion-stats-bars"></i> 留言统计 </a>
+                    </nav>
+                </div>
             </div>
         </div>
         <div class="col-lg-3">
@@ -46,18 +40,12 @@
                         </div>
                     </div>
                 </div>
-                <a href="{:url('member/index')}">
-                    <div class="card-footer announcement-bottom">
-                        <div class="row">
-                            <div class="col-6">
-                                管理会员
-                            </div>
-                            <div class="col-6 text-right">
-                                <i class="ion-arrow-circle-right"></i>
-                            </div>
-                        </div>
-                    </div>
-                </a>
+                <div class="card-footer announcement-bottom">
+                    <nav class="nav nav-fill">
+                        <a class="nav-item nav-link" href="{:url('member/index')}"><i class="ion-navicon"></i> 管理会员 </a>
+                        <a class="nav-item nav-link" href="{:url('member/statics')}"><i class="ion-stats-bars"></i> 会员统计 </a>
+                    </nav>
+                </div>
             </div>
         </div>
         <div class="col-lg-3">
@@ -73,18 +61,12 @@
                         </div>
                     </div>
                 </div>
-                <a href="{:url('article/index')}">
-                    <div class="card-footer announcement-bottom">
-                        <div class="row">
-                            <div class="col-6">
-                                管理文章
-                            </div>
-                            <div class="col-6 text-right">
-                                <i class="ion-arrow-circle-right"></i>
-                            </div>
-                        </div>
-                    </div>
-                </a>
+                <div class="card-footer announcement-bottom">
+                    <nav class="nav nav-fill">
+                        <a class="nav-item nav-link" href="{:url('article/index')}"><i class="ion-navicon"></i> 管理文章 </a>
+                        <a class="nav-item nav-link" href="{:url('article/add')}"><i class="ion-plus"></i> 发布文章 </a>
+                    </nav>
+                </div>
             </div>
         </div>
         <div class="col-lg-3">
@@ -100,18 +82,12 @@
                         </div>
                     </div>
                 </div>
-                <a href="{:url('links/index')}">
-                    <div class="card-footer announcement-bottom">
-                        <div class="row">
-                            <div class="col-6">
-                                管理链接
-                            </div>
-                            <div class="col-6 text-right">
-                                <i class="ion-arrow-circle-right"></i>
-                            </div>
-                        </div>
-                    </div>
-                </a>
+                <div class="card-footer announcement-bottom">
+                    <nav class="nav nav-fill">
+                        <a class="nav-item nav-link" href="{:url('links/index')}"><i class="ion-navicon"></i> 管理链接 </a>
+                        <a class="nav-item nav-link" href="{:url('links/statics')}"><i class="ion-stats-bars"></i> 文章统计 </a>
+                    </nav>
+                </div>
             </div>
         </div>
     </div>

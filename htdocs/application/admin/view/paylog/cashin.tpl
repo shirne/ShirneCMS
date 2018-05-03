@@ -2,7 +2,7 @@
 
 <block name="body">
 
-<include file="public/bread" menu="paylog_cashin" section="会员" title="提现记录" />
+<include file="public/bread" menu="paylog_cashin" title="" />
 
 <div id="page-wrapper">
 

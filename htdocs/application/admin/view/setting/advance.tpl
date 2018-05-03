@@ -2,7 +2,7 @@
 
 <block name="body">
 
-<include file="public/bread" menu="setting_index" section="系统" title="配置管理" />
+<include file="public/bread" menu="setting_index" title="高级模式" />
 
 <div id="page-wrapper">
 

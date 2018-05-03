@@ -2,7 +2,7 @@
 
 <block name="body">
 
-<include file="public/bread" menu="links_index" section="其它" title="链接管理" />
+<include file="public/bread" menu="links_index" title="链接列表" />
 
 <div id="page-wrapper">
     
