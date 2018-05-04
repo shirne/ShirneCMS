@@ -5,7 +5,7 @@
 <div id="page-wrapper">
 
 	<div class="row list-header">
-		<div class="col-6">
+		<div class="col-md-6">
 			<div class="btn-toolbar list-toolbar" role="toolbar" aria-label="Toolbar with button groups">
 				<div class="btn-group btn-group-sm mr-2" role="group" aria-label="check action group">
 					<a href="javascript:" class="btn btn-outline-secondary checkall-btn" data-toggle="button" aria-pressed="false">全选</a>
@@ -19,7 +19,7 @@
 				<a href="{:url('article/add')}" class="btn btn-outline-primary btn-sm">添加文章</a>
 			</div>
 		</div>
-		<div class="col-6">
+		<div class="col-md-6">
 			<form action="{:url('article/index')}" method="post">
 				<div class="form-row">
 					<div class="col input-group input-group-sm mr-2">
@@ -73,9 +73,9 @@
 					<td>{$v.category_title}</td>
 					<td>
 						<if condition="$v.status eq 1">
-							<a class="btn btn-outline-warning btn-sm" href="{:url('article/push',array('id'=>$v['id']))}"><i class="ion-reply-all"></i> 撤销</a>
+							<span class="badge badge-success">已发布</span>
 							<else/>
-							<a class="btn btn-outline-success btn-sm" href="{:url('article/push',array('id'=>$v['id']))}"><i class="ion-paper-airplane"></i> 发布</a>
+							<span class="badge badge-secondary">未发布</span>
 						</if>
 					</td>
 
@@ -95,19 +95,58 @@
 <block name="script">
 	<script type="text/javascript">
 		(function(w){
-			w.actionPublish=function(){
+			w.actionPublish=function(ids){
 				dialog.confirm('确定将选中文章发布到前台？',function() {
-				    dialog.alert('发布成功');
+				    $.ajax({
+						url:'{:url('article/push',['id'=>'__id__','type'=>1])}'.replace('__id__',ids.join(',')),
+						type:'GET',
+						dataType:'JSON',
+						success:function(json){
+						    if(json.code==1){
+                                dialog.alert(json.msg,function() {
+                                    location.reload();
+                                });
+                            }else{
+						        toastr.warning(json.msg);
+                            }
+                        }
+					});
                 });
             };
-            w.actionCancel=function(){
+            w.actionCancel=function(ids){
                 dialog.confirm('确定取消选中文章的发布状态？',function() {
-                    dialog.alert('取消成功');
+                    $.ajax({
+                        url:'{:url('article/push',['id'=>'__id__','type'=>0])}'.replace('__id__',ids.join(',')),
+                        type:'GET',
+                        dataType:'JSON',
+                        success:function(json){
+                            if(json.code==1){
+                                dialog.alert(json.msg,function() {
+                                    location.reload();
+                                });
+                            }else{
+                                toastr.warning(json.msg);
+                            }
+                        }
+                    });
                 });
             };
-            w.actionDelete=function(){
+            w.actionDelete=function(ids){
                 dialog.confirm('确定删除选中的文章？',function() {
-                    dialog.alert('删除成功');
+                    $.ajax({
+                        url:'{:url('article/delete',['id'=>'__id__'])}'.replace('__id__',ids.join(',')),
+                        type:'GET',
+                        dataType:'JSON',
+                        success:function(json){
+                            if(json.code==1){
+                                dialog.alert(json.msg,function() {
+                                    location.reload();
+                                });
+                            }else{
+                                toastr.warning(json.msg);
+                            }
+                        }
+                    });
                 });
             };
         })(window)

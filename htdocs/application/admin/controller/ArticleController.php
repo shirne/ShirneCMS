@@ -123,15 +123,11 @@ class ArticleController extends BaseController
             $this->error("删除失败");
         }
     }
-	public function push($id)
+	public function push($id,$type=0)
     {
-        $status = Db::name('article')->where("id",'in',idArr($id))->column('status');
-        if ($status === '0') {
-            $data['status'] = 1;
-        } else {
-            $data['status'] = 0;
-        }
-        $result = Db::name('article')->where(["id"=>$id])->update($data);
+        $data['status'] = $type==1?1:0;
+
+        $result = Db::name('article')->where("id",'in',idArr($id))->update($data);
         if ($result && $data['status'] === 1) {
             user_log($this->mid,'pusharticle',1,'发布文章 '.$id ,'manager');
             $this -> success("发布成功", url('Article/index'));

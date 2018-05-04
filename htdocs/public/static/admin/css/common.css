@@ -1,6 +1,6 @@
 /* Global Styles */
 html{
-    font-size:20px;
+    font-size:14px;
 }
 body {
     padding-top: 3.5rem;
@@ -79,8 +79,8 @@ body {
 }
 
 #loginContainer{
-    margin-top:100px;
-    padding-top:120px;
+    margin-top:50px;
+    padding-top:30px;
 }
 #loginBox{
     background:#fff;
@@ -284,6 +284,12 @@ table td figure{
     #page-wrapper {
         padding:10px 20px;
         margin: 15px 25px;
+    }
+
+
+    #loginContainer{
+        margin-top:100px;
+        padding-top:120px;
     }
 
     /* Side Nav */
