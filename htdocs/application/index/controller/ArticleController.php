@@ -14,24 +14,20 @@ class ArticleController extends BaseController{
 
     public function index($name=""){
         $this->category($name);
+
+        $where=array();
         if(!empty($this->category)){
             $this->seo($this->category['title']);
+            $where[]=array('article.cate_id','in',getSubCateids($this->category['id']));
         }else{
             $this->seo("新闻中心");
         }
 
-        $where=array();
-        $cids=array();
-        foreach ($this->categotyTree as $cate){
-            $cids[]=$cate['id'];
-        }
-        if(!empty($cids)){
-            $where['article.cate_id']=array('in',$cids);
-        }
         $model=Db::view('article','*')
-        ->view('category',['name'=>'category_name','title'=>'category_title'],'article.cate_id=category.id','LEFT')
-        ->view('manager',['username'],'manager.id=article.user_id','LEFT')
-        ->paginate(10);
+            ->view('category',['name'=>'category_name','title'=>'category_title'],'article.cate_id=category.id','LEFT')
+            ->view('manager',['username'],'manager.id=article.user_id','LEFT')
+            ->where($where)
+            ->paginate(10);
 
         $this->assign('lists', $model);
         $this->assign('page',$model->render());
@@ -59,12 +55,7 @@ class ArticleController extends BaseController{
     }
 
     private function category($name=''){
-        $categories=cache('allcate');
-        if(empty($categories)) {
-            $categories = Db::name('category')->order('pid ASC,sort ASC,id ASC')->select();
-            $categories = array_combine(array_column($categories,'id'),$categories);
-            cache('allcate',$categories);
-        }
+        $categories=getArticleCategories();
 
         $this->category=array();
         $this->categotyTree=array();

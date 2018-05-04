@@ -448,7 +448,7 @@ function random_str($length = 6, $type = 'string', $convert = 0)
 function getArticleCategories($force=false){
     $categories=cache('categories');
     if(empty($categories) || $force==true){
-        $categories=getSortedCategory(\think\Db::name('Category')->select());
+        $categories=getSortedCategory(\think\Db::name('Category')->order('pid ASC,sort ASC,id ASC')->select());
         cache('categories',$categories);
     }
     return $categories;
@@ -489,7 +489,7 @@ function getSubCateids($pid,$recursive=false)
         $where=array('pid',$pid);
         if(!$recursive)$ids=[$pid];
     }
-    $sons=\think\Db::name('Category')->where('pid',$pid)->field('id')->select();
+    $sons=\think\Db::name('Category')->where($where)->field('id')->select();
     if(!empty($sons)){
         $sonids=array_column($sons,'id');
         $ids = array_merge($ids,$sonids);
