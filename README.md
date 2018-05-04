@@ -19,6 +19,8 @@ ShirneCMS
 
 [chartjs/Chart.js 2.7.2](https://chartjs.bootcss.com/docs/)
 
+[codeseven/toastr](http://codeseven.github.io/toastr/)
+
 ## 安装说明
 
 [Composer](https://getcomposer.org/download/)

@@ -11,11 +11,13 @@
     <!-- Add custom CSS here -->
     <link href="__STATIC__/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
     <link rel="stylesheet" href="__STATIC__/ionicons/css/ionicons.min.css">
+    <link href="__STATIC__/toastr/toastr.min.css" rel="stylesheet">
     <link href="__STATIC__/admin/css/common.css" rel="stylesheet">
 
     <!-- JavaScript -->
     <script src="__STATIC__/jquery/jquery.min.js"></script>
     <script src="__STATIC__/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="__STATIC__/toastr/toastr.min.js"></script>
 
     <block name="header"></block>
 

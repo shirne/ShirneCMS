@@ -336,13 +336,13 @@ jQuery(function ($) {
         e.preventDefault();
         var action=$(this).data('action');
         if(!action){
-            return dialog.alert('未知操作');
+            return toastr.error('未知操作');
         }
         action='action'+action.replace(/^[a-z]/,function(letter){
             return letter.toUpperCase();
         });
         if(!window[action] || typeof window[action] !== 'function'){
-            return dialog.alert('操作未定义');
+            return toastr.error('未知操作');
         }
         var needChecks=$(this).data('needChecks');
         if(needChecks===undefined)needChecks=true;
@@ -351,7 +351,7 @@ jQuery(function ($) {
             if(!target)target='id';
             var ids=$('[name='+target+']:checked');
             if(ids.length<1){
-                return dialog.alert('请选择需要操作的项目');
+                return toastr.warning('请选择需要操作的项目');
             }else{
                 var idchecks=[];
                 for(var i=0;i<ids.length;i++){
