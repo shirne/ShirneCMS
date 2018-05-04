@@ -250,7 +250,7 @@ table td figure{
 
 
 
-@media (max-width:768px) {
+@media (max-width:992px) {
 
     .navbar-right{
         display: none;
@@ -260,7 +260,7 @@ table td figure{
     }
 }
 
-/* Edit Below to Customize Widths > 768px */
+
 @media (min-width:992px) {
 
     html{
@@ -292,7 +292,6 @@ table td figure{
         overflow-y: auto;
     }
 
-    /* Nav Messages */
 
     .messages-dropdown .dropdown-menu {
         min-width: 300px;

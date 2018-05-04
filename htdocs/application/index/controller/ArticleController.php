@@ -61,7 +61,8 @@ class ArticleController extends BaseController{
     private function category($name=''){
         $categories=cache('allcate');
         if(empty($categories)) {
-            $categories = Db::name('category')->select(array('index'=>'id'));
+            $categories = Db::name('category')->order('pid ASC,sort ASC,id ASC')->select();
+            $categories = array_combine(array_column($categories,'id'),$categories);
             cache('allcate',$categories);
         }
 

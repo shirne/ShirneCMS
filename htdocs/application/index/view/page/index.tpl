@@ -10,29 +10,31 @@
 		</div>
 
 		<div class="container">
-			<div class="card float-left main_left">
-				<div class="card-header"><h3>关于我们</h3></div>
-				<div class="card-body">
-
-					<div id="news" class="list">
-						<Volist name="lists" id="p">
-							<div class="panel">
-								<a class="Level_1" href="{:url('Page/index',array('name'=>$p['name']))}"> {$p.title} </a>
+			<div class="row">
+				<div class="col-md-3">
+					<div class="card main_left">
+						<div class="card-header"><h3>关于我们</h3></div>
+						<div class="card-body">
+							<div id="news" class="list">
+								<Volist name="lists" id="p">
+									<div class="panel">
+										<a class="Level_1" href="{:url('Page/index',array('name'=>$p['name']))}"> {$p.title} </a>
+									</div>
+								</Volist>
 							</div>
-						</Volist>
+						</div>
 					</div>
-
-
 				</div>
-			</div>
-
-			<div class="card pull-right main_right news_list">
-				<div class="card-body articlebody">
-					<h1>{$page.title}</h1>
-					<div class="info">
-					</div>
-					<div class="container-fluid">
-						{$page.content|raw}
+				<div class="col">
+					<div class="card main_right news_list">
+						<div class="card-body articlebody">
+							<h1>{$page.title}</h1>
+							<div class="info">
+							</div>
+							<div class="container-fluid">
+                                {$page.content|raw}
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>

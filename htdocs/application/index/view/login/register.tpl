@@ -11,44 +11,54 @@
 				<div class="card-body">
 
 					<form class="form-horizontal registerForm" role="form" method="post" action="{:url('Login/register')}">
-						<div class="form-group">
-							<label for="userName" class="col-sm-2 control-label">用户名：</label>
-							<div class="col-sm-10">
+						<div class="form-group form-row">
+							<label for="userName" class="col-md-2 control-label">用户名：</label>
+							<div class="col-md-5">
 								<input type="text" class="form-control" name="username">
+							</div>
+							<div class="col-md-5">
 								<span class="form-text text-muted">用户名以6—10位数字和字母组成 <i>*</i></span>
 							</div>
 						</div>
-						<div class="form-group">
-							<label for="Password" class="col-sm-2 control-label">密码：</label>
-							<div class="col-sm-10">
+						<div class="form-group form-row">
+							<label for="Password" class="col-md-2 control-label">密码：</label>
+							<div class="col-md-5">
 								<input type="password" class="form-control" name="password">
+							</div>
+							<div class="col-md-5">
 								<span class="form-text text-muted">密码以6—20位字符，可包含大小写字母，数字及特殊符号<i>*</i></span>
 							</div>
 						</div>
-						<div class="form-group">
-							<label for="Password" class="col-sm-2 control-label">确认密码：</label>
-							<div class="col-sm-10">
+						<div class="form-group form-row">
+							<label for="Password" class="col-md-2 control-label">确认密码：</label>
+							<div class="col-md-5">
 								<input type="password" class="form-control" name="repassword">
+							</div>
+							<div class="col-md-5">
 								<span class="form-text text-muted">请再次确认您输入的密码<i>*</i></span>
 							</div>
 						</div>
-						<div class="form-group">
-							<label for="realName" class="col-sm-2 control-label">真实姓名：</label>
-							<div class="col-sm-10">
+						<div class="form-group form-row">
+							<label for="realName" class="col-md-2 control-label">真实姓名：</label>
+							<div class="col-md-5">
 								<input type="text" class="form-control" name="realname">
+							</div>
+							<div class="col-md-5">
 								<span class="form-text text-muted">真实姓名填写无法更改，必须与提款银行账户一致,否则无法提款<i>*</i></span>
 							</div>
 						</div>
-						<div class="form-group">
-							<label for="email" class="col-sm-2 control-label">邮箱地址：</label>
-							<div class="col-sm-10">
+						<div class="form-group form-row">
+							<label for="email" class="col-md-2 control-label">邮箱地址：</label>
+							<div class="col-md-5">
 								<input type="text" class="form-control" name="email">
+							</div>
+							<div class="col-md-5">
 								<span class="form-text text-muted">合法邮箱地址：abc@def.com<i>*</i></span>
 							</div>
 						</div>
-						<div class="form-group">
-							<label for="mobile" class="col-sm-2 control-label">手机号码：</label>
-							<div class="col-sm-10">
+						<div class="form-group form-row">
+							<label for="mobile" class="col-md-2 control-label">手机号码：</label>
+							<div class="col-md-5">
 								<if condition="0">
 								<div class="input-group">
 									<input type="text" class="form-control" name="mobile">
@@ -57,22 +67,26 @@
 								</div>
 									<else/>
 									<input type="text" class="form-control" name="mobile">
-								</if><br/>
+								</if>
+							</div>
+							<div class="col-md-5">
 								<span class="form-text text-muted">请填写11位手机号码<i>*</i></span>
 							</div>
 						</div>
 						<if condition="$nocode">
 							<else/>
-						<div class="form-group">
-							<label for="mobile" class="col-sm-2 control-label">激活码：</label>
-							<div class="col-sm-10">
-								<input type="text" class="form-control" name="invite_code"><br/>
+						<div class="form-group form-row">
+							<label for="mobile" class="col-md-2 control-label">激活码：</label>
+							<div class="col-md-5">
+								<input type="text" class="form-control" name="invite_code">
+							</div>
+							<div class="col-md-5">
 								<span class="form-text text-muted">您的推荐人提供给你的激活码<if condition="$config['m_invite'] eq 2"><i>*</i></if></span>
 							</div>
 						</div>
 						</if>
-						<div class="form-group submitline">
-							<div class="col-sm-offset-2 col-sm-10">
+						<div class="form-group form-row submitline">
+							<div class="offset-md-2 col-md-10">
 								<button type="submit" class="btn btn-primary create">创建我的账户</button>
 							</div>
 						</div>
@@ -236,14 +250,14 @@
 			});
 			function showError(field,msg){
 				$(field).addClass('error');
-				var msgbox=$(field).parents('.form-group').find('.form-text text-muted');
+				var msgbox=$(field).parents('.form-group form-row').find('.form-text text-muted');
 				if(msgbox.length<1)return;
 				if(!msgbox.data('origin'))msgbox.data('origin',msgbox.html());
 				msgbox.text(msg);
 			}
 			function hideError(field){
 				$(field).removeClass('error');
-				var msgbox=$(field).parents('.form-group').find('.form-text text-muted');
+				var msgbox=$(field).parents('.form-group form-row').find('.form-text text-muted');
 				if(msgbox.length<1)return;
 				if(msgbox.data('origin')) {
 					msgbox.html(msgbox.data('origin'));
