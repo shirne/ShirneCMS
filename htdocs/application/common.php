@@ -533,18 +533,26 @@ function clearCategory(){
 function getSubCateids($pid,$recursive=false)
 {
     $ids=[];
+    $treedCategories=getTreedCategory();
+
     if(is_array($pid)){
-        $where=array('pid','in',$pid);
         if(!$recursive)$ids=$pid;
+        foreach($pid as $p){
+            if(isset($treedCategories[$p]) && !empty($treedCategories[$p])) {
+                $sons = $treedCategories[$p];
+                $sonids = array_column($sons, 'id');
+                $ids = array_merge($ids, $sonids);
+                $ids = array_merge($ids, getSubCateids($sonids, true));
+            }
+        }
     }else{
-        $where=array('pid',$pid);
         if(!$recursive)$ids=[$pid];
-    }
-    $sons=\think\Db::name('Category')->where($where)->field('id')->select();
-    if(!empty($sons)){
-        $sonids=array_column($sons,'id');
-        $ids = array_merge($ids,$sonids);
-        $ids=array_merge($ids,getSubCateids($sonids,true));
+        if(isset($treedCategories[$pid]) && !empty($treedCategories[$pid])) {
+            $sons = $treedCategories[$pid];
+            $sonids = array_column($sons, 'id');
+            $ids = array_merge($ids, $sonids);
+            $ids = array_merge($ids, getSubCateids($sonids, true));
+        }
     }
 
     return $ids;
