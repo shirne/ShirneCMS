@@ -302,7 +302,7 @@ jQuery(function ($) {
                 html.push('<li class="breadcrumb-item"><a href="javascript:">'+ link.text()+'</a></li>');
             }
         }
-        var title=bread.data('title')
+        var title=bread.data('title');
         if(title){
             html.push('<li class="breadcrumb-item active" aria-current="page">'+ title+'</li>');
         }
@@ -332,6 +332,7 @@ jQuery(function ($) {
             }
         }
     });
+    //操作按钮
     $('.action-btn').click(function(e){
         e.preventDefault();
         var action=$(this).data('action');

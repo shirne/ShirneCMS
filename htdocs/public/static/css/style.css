@@ -1,11 +1,4 @@
-
-
-html{font-size:20px;}
-@media (min-width:992px) {
-    html{
-        font-size:14px;
-    }
-}
+html{font-size:14px;}
 
 h1{font-size:1.5rem;}
 h2{font-size:1.4rem;}

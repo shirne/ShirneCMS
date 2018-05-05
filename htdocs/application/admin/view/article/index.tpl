@@ -68,7 +68,7 @@
 							<elseif condition="$v.type eq 4" /><span class="label label-success">推荐</span>
 						</if>
 					</td>
-					<td>{$v.time|showdate}</td>
+					<td>{$v.create_time|showdate}</td>
 					<td>{$v.username}</td>
 					<td>{$v.category_title}</td>
 					<td>

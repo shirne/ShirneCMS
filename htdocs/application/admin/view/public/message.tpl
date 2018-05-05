@@ -6,39 +6,37 @@
     <title>跳转提示</title>
     <link href="__STATIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="__STATIC__/ionicons/css/ionicons.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="__STATIC__/css/style.css">
+    <link rel="stylesheet" href="__STATIC__/admin/css/common.css">
     <style type="text/css">
-        .card{margin:100px auto;width:25rem;}
+        .jumbotron{margin:100px auto;max-width:400px;}
     </style>
 </head>
 <body>
 <?php
 if($code==1){
-$class='border-success';
-$class2='text-success';
-$title='<i class="ion-happy-outline"></i>';
+$class='text-success';
+$title='<i class="ion-happy"></i>';
 }
 else{
-$class='border-danger';
-$class2='text-danger';
-$title='<i class="ion-sad-outline"></i>';
+$class='text-danger';
+$title='<i class="ion-sad"></i>';
 }
 ?>
-<div class="card <?php echo $class;?>">
-    <div class="card-body <?php echo $class2;?>">
-        <h5 class="card-title"><?php echo $title;?></h5>
-        <p class="card-text"><?php echo(strip_tags($msg));?></p>
-        <p class="jump">
-            页面自动 <a class="card-link" id="href" href="<?php echo($url);?>">跳转</a> 等待时间： <b id="wait"><?php echo($wait);?></b>
-        </p>
-    </div>
+<div class="jumbotron w-75">
+    <h2 class="display-4 <?php echo $class;?>"><?php echo $title;?></h2>
+    <p class="lead <?php echo $class;?>"><?php echo(strip_tags($msg));?></p>
+    <hr class="my-4">
+    <p class="lead" >
+        <a class="btn btn-primary" id="href" href="<?php echo($url);?>" role="button">立即跳转</a> &nbsp;<span class="text-muted"><b id="wait"><?php echo($wait);?></b>s后自动跳转</span>
+    </p>
 </div>
 <script type="text/javascript">
     (function(){
         var wait = document.getElementById('wait'),
             href = document.getElementById('href').href;
+        var time=parseInt('<?php echo $wait;?>');
         var interval = setInterval(function(){
-            var time = --wait.innerHTML;
+            wait.innerHTML=(--time).toString();
             if(time <= 0) {
                 location.href = href;
                 clearInterval(interval);

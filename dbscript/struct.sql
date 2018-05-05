@@ -170,6 +170,27 @@ CREATE TABLE `sa_notice` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `sa_subscribe`
+--
+
+DROP TABLE IF EXISTS `sa_subscribe`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sa_subscribe` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `member_id` varchar(20) NOT NULL,
+  `type` varchar(20) NOT NULL DEFAULT 'email',
+  `mobile` varchar(20) NOT NULL DEFAULT '',
+  `email` varchar(100) DEFAULT '',
+  `create_time` int(11) DEFAULT '0',
+  `update_time` int(11) DEFAULT '0',
+  `last_time` int(11) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `mobile` (`mobile`),
+  KEY `email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `sa_member`
@@ -455,7 +476,6 @@ CREATE TABLE `sa_page` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 
-
 --
 -- Table structure for table `sa_article`
 --
@@ -480,7 +500,31 @@ CREATE TABLE `sa_article` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `sa_article_comment`
+--
 
+DROP TABLE IF EXISTS `sa_article_comment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sa_article_comment` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NOT NULL DEFAULT '0',
+  `article_id` int(11) NOT NULL DEFAULT '0',
+  `email` varchar(150) NOT NULL DEFAULT '',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `device` varchar(50) NOT NULL DEFAULT '',
+  `ip` varchar(50) NOT NULL DEFAULT '',
+  `status` tinyint(4) NOT NULL DEFAULT '0',
+  `is_anonymous` tinyint(4) NOT NULL DEFAULT '0',
+  `content` text,
+  `reply_id` int(11) DEFAULT '0',
+  `group_id` int(11) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `member_id` (`member_id`),
+  KEY `article_id` (`article_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `sa_setting`

@@ -2,7 +2,9 @@
 namespace app\admin\controller;
 use app\admin\model\ArticleModel;
 use app\admin\validate\ArticleValidate;
+use app\common\model\ArticleCommentModel;
 use think\Db;
+use think\Response;
 
 /**
  * 文章管理
@@ -138,4 +140,86 @@ class ArticleController extends BaseController
             $this -> error("操作失败");
         }
 	}
+
+
+    /**
+     * 文章评论
+     * @param int $id
+     * @return Response
+     */
+	public function comments($id=0,$key=''){
+        $model = Db::view('articleComment','*')
+            ->view('member',['username','level_id','avatar'],'member.id=articleComment.member_id','LEFT')
+            ->view('article',['title'=>'article_title','cate_id','cover'],'article.id=articleComment.article_id','LEFT')
+            ->view('category',['name'=>'category_name','title'=>'category_title'],'article.cate_id=category.id','LEFT');
+        $where=array();
+        if($id>0){
+            $where[]=['article_id',$id];
+        }
+        if(!empty($key)){
+            $where[]=['article.title|category.title','like',"%$key%"];
+        }
+
+        $lists=$model->where($where)->paginate(10);
+
+        $this->assign('lists',$lists);
+        $this->assign('page',$lists->render());
+        $this->assign('keyword',$key);
+        $this->assign('article_id',$id);
+        $this->assign("category",getArticleCategories());
+
+        return $this->fetch();
+    }
+
+    public function commentview($id){
+	    $model=Db::name('articleComment')->find('id');
+	    if(empty($model)){
+	        $this->error('评论不存在');
+        }
+	    if($this->request->isPost()){
+            $data=$this->request->post();
+            $data['reply_id']=$id;
+            $data['group_id']=empty($model['group_id'])?$model['id']:$model['group_id'];
+            $data['status']=1;
+            ArticleCommentModel::create($data);
+            $this->success('回复成功');
+
+        }
+        $article=Db::name('article')->find($model['article_id']);
+        $category=Db::name('category')->find($article['cate_id']);
+        $member=Db::name('member')->find($model['member_id']);
+
+        $this->assign('model',$model);
+        $this->assign('article',$article);
+        $this->assign('category',$category);
+        $this->assign('member',$member);
+        return $this->fetch();
+    }
+
+    public function commentstatus($id,$type=1)
+    {
+        $data['status'] = $type==1?1:2;
+
+        $result = Db::name('articleComment')->where("id",'in',idArr($id))->update($data);
+        if ($result && $data['status'] === 1) {
+            user_log($this->mid,'auditcomment',1,'审核评论 '.$id ,'manager');
+            $this -> success("审核成功", url('Article/comments'));
+        } elseif ($result && $data['status'] === 2) {
+            user_log($this->mid,'hidecomment',1,'隐藏评论 '.$id ,'manager');
+            $this -> success("评论已隐藏", url('Article/comments'));
+        } else {
+            $this -> error("操作失败");
+        }
+    }
+    public function commentdelete($id)
+    {
+        $model = Db::name('articleComment');
+        $result = $model->where("id",'in',idArr($id))->delete();
+        if($result){
+            user_log($this->mid,'deletecomment',1,'删除评论 '.$id ,'manager');
+            $this->success("删除成功", url('Article/comments'));
+        }else{
+            $this->error("删除失败");
+        }
+    }
 }
