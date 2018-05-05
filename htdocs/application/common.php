@@ -463,6 +463,27 @@ function getArticleCategories($force=false){
     return $categories;
 }
 
+function getArticleCategoryTree($name){
+    $categories=getArticleCategories();
+    $tree=array();
+    while($name!='0'){
+        $current=findCategory($categories,$name);
+        if(empty($current))break;
+        array_unshift($tree,$current);
+        $name=$current['pid'];
+    }
+
+    return $tree;
+}
+function findCategory(&$cates,$name){
+    foreach ($cates as $cate){
+        if($cate['id']==$name || $cate['name']==$name){
+            return $cate;
+        }
+    }
+    return NULL;
+}
+
 /**
  * 获取排序后的分类
  * @param  array $data [description]
@@ -471,7 +492,7 @@ function getArticleCategories($force=false){
  * @param  integer $level [description]
  * @return array
  */
-function getSortedCategory($data, $pid = 0, $html = "|---", $level = 0)
+function getSortedCategory(&$data, $pid = 0, $html = "|---", $level = 0)
 {
     $temp = array();
     foreach ($data as $k => $v) {
@@ -486,6 +507,27 @@ function getSortedCategory($data, $pid = 0, $html = "|---", $level = 0)
 
     }
     return $temp;
+}
+
+function getTreedCategory($force=false){
+    static $categories;
+    if(empty($categories)){
+        $categories=cache('categorietree');
+    }
+    if(empty($categories) || $force==true){
+        $data=\think\Db::name('Category')->order('pid ASC,sort ASC,id ASC')->select();
+        $categries=array('0'=>[]);
+        foreach ($data as $cate){
+            $categries[$cate['pid']][$cate['id']]=$cate;
+        }
+        cache('categorietree',$categories);
+    }
+    return $categories;
+}
+
+function clearCategory(){
+    cache('categorietree',null);
+    cache('categories',null);
 }
 
 function getSubCateids($pid,$recursive=false)

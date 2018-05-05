@@ -20,7 +20,7 @@ class CategoryController extends BaseController
         if(!empty($key)){
             $where[] = array('title|name','like',"%$key%");
         } 
-        
+
         $category = $model->where($where)->order('pid ASC,sort ASC,id ASC')->select();
         $this->assign('model',getSortedCategory($category));
         return $this->fetch();
@@ -43,13 +43,14 @@ class CategoryController extends BaseController
 
                 $result=Db::name('category')->insert($data);
                 if ($result) {
+                    clearCategory();
                     $this->success("添加成功", url('category/index'));
                 } else {
                     $this->error("添加失败");
                 }
             }
         }
-        $cate = getSortedCategory(Db::name('category')->order('pid ASC,sort ASC')->select());
+        $cate = getArticleCategories();
         $model=array('sort'=>99,'pid'=>$pid);
         $this->assign('cate',$cate);
         $this->assign('model',$model);
@@ -88,6 +89,7 @@ class CategoryController extends BaseController
 
                 if ($result) {
                     delete_image($delete_images);
+                    clearCategory();
                     $this->success("保存成功", url('category/index'));
                 } else {
                     $this->error("保存失败");
@@ -112,7 +114,7 @@ class CategoryController extends BaseController
      */
     public function delete($id)
     {
-    		$id = intval($id);
+        $id = intval($id);
         $model = Db::name('Category');
         //查询属于这个分类的文章
         $posts = Db::name('Post')->where(["cate_id"=>$id])->select();
@@ -127,6 +129,7 @@ class CategoryController extends BaseController
         //验证通过
         $result = $model->delete($id);
         if($result){
+            clearCategory();
             $this->success("分类删除成功", url('category/index'));
         }else{
             $this->error("分类删除失败");

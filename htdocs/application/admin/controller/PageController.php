@@ -80,14 +80,23 @@ class PageController extends BaseController
         $this->assign('id', $id);
         return $this->fetch();
     }
+
+    public function status($id,$type=0){
+        $model = Db::name('page');
+        $result = $model->where('id','in',idArr($id))->update(['status'=>intval($type)]);
+        if($result){
+            $this->success("设置成功", url('page/index'));
+        }else{
+            $this->error("设置失败");
+        }
+    }
     /**
      * 删除单页
      */
     public function delete($id)
     {
-        $id = intval($id);
         $model = Db::name('page');
-        $result = $model->where(["id"=>$id])->delete();
+        $result = $model->where('id','in',idArr($id))->delete();
         if($result){
             $this->success("删除成功", url('page/index'));
         }else{
@@ -141,6 +150,7 @@ class PageController extends BaseController
             $result = Db::name('PageGroup')->where("id", 'in', $id)->delete();
         }
         if($result){
+            cache('page_group',NULL);
             $this->success("删除成功", url('page/groups'));
         }else{
             $this->error("删除失败");

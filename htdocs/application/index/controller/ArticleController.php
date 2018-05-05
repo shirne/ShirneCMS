@@ -57,29 +57,10 @@ class ArticleController extends BaseController{
     private function category($name=''){
         $categories=getArticleCategories();
 
-        $this->category=array();
-        $this->categotyTree=array();
-        if(!empty($name)){
-            foreach ($categories as $cate){
-                if($cate['id']==$name || $cate['name']==$name){
-                    $this->category=$cate;
-                    break;
-                }
-            }
-            if(!empty($this->category)) {
-                $this->categotyTree = array($this->category);
-                $pid = $this->category['pid'];
-                while ($pid > 0) {
-                    if (!isset($categories[$pid])) break;
-                    array_unshift($this->categotyTree, $categories[$pid]);
-                    $pid = $this->categotyTree[0]['pid'];
-                }
-            }
-        }
-        $this->categries=array('0'=>[]);
-        foreach ($categories as $cate){
-            $this->categries[$cate['pid']][$cate['id']]=$cate;
-        }
+        $this->category=findCategory($categories,$name);
+        $this->categotyTree=getArticleCategoryTree($name);
+
+        $this->categries=getTreedCategory();
 
         $this->assign('category',$this->category);
         $this->assign('categotyTree',$this->categotyTree);
