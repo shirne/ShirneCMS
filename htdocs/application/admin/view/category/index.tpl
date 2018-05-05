@@ -25,8 +25,9 @@
         <thead>
             <tr>
                 <th width="50">编号</th>
-                <th>标题</th>
+                <th>名称</th>
                 <th>别名</th>
+                <th>排序</th>
                 <th width="250">操作</th>
             </tr>
         </thead>
@@ -34,9 +35,9 @@
         <foreach name="model" item="v">
             <tr>
                 <td>{$v.id}</td>
-                <td>{$v.html} {$v.title}</td>
+                <td>{$v.html} {$v.title}<span class="badge badge-info">{$v.short}</span></td>
                 <td>{$v.name}</td>
-
+                <td>{$v.sort}</td>
                 <td>
                     <div class="btn-group" role="group" aria-label="Basic example">
                     <a class="btn btn-outline-dark btn-sm" href="{:url('category/add',array('pid'=>$v['id']))}"><i class="ion-plus"></i> 添加</a>

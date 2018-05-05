@@ -24,6 +24,9 @@ class BaseController extends Controller {
         $this->config=getSettings();
         $this->assign('config',$this->config);
 
+        $navigation=config('navigator.');
+        $this->assign('navigator',parseNavigator($navigation));
+
         $this->checkLogin();
 
         $this->assign('isLogin',$this->isLogin);

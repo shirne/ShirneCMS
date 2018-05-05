@@ -1,5 +1,4 @@
 <header>
-
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark nav-box">
         <div class="container">
             <a class="navbar-brand float-left" href="/"><img src="__STATIC__/images/logo.png" </a>
@@ -9,39 +8,20 @@
 
             <div class="collapse navbar-collapse" id="bs-navbar-collapse">
                 <ul class="navbar-nav nav-fill main-nav">
-                    <li class="nav-item active"><a class="nav-link" href="{:url('index/index')}">首页<span class="sr-only">(current)</span></a></li>
-                    <li class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">服务范围 <span class="caret"></span></a>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="{:url('Article/index')}">云平台网站服务</a>
-                            <a class="dropdown-item" href="{:url('Article/index')}">微信平台服务/小程序</a>
-                            <a class="dropdown-item" href="{:url('Article/index')}">企业APP开发</a>
-                            <a class="dropdown-item" href="{:url('Article/index')}">域名注册/企业邮箱</a>
-                            <a class="dropdown-item" href="{:url('Article/index')}">电子商务平台</a>
-                            <a class="dropdown-item" href="{:url('Article/index')}">云服务器/云主机</a>
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">解决方案 <span class="caret"></span></a>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="{:url('Article/index')}">企业网站解决方案</a>
-                            <a class="dropdown-item" href="{:url('Article/index')}">手机端网站解决方案</a>
-                            <a class="dropdown-item" href="{:url('Article/index')}">云服务解决方案</a>
-                            <a class="dropdown-item" href="{:url('Article/index')}">微信商城系统解决方案</a>
-                        </div>
-                    </li>
-                    <li class="nav-item"><a class="nav-link" href="{:url('Article/index',array('name'=>''))}">案例中心</a></li>
-                    <li class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">关于原设 <span class="caret"></span></a>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="{:url('Article/index')}">公司简介</a>
-                            <a class="dropdown-item" href="{:url('Article/index')}">企业文化</a>
-                            <a class="dropdown-item" href="{:url('Article/index')}">发展历程</a>
-                            <a class="dropdown-item" href="{:url('Article/index')}">联系我们</a>
-                        </div>
-                    </li>
-                    <li class="nav-item"><a class="nav-link" href="{:url('Article/index',array('name'=>'news'))}">新闻动态</a></li>
-                    <li class="nav-item"><a class="nav-link" href="http://cloud.shirne.cn" target="_blank">云计算</a></li>
+                    <volist name="navigator" id="nav">
+                        <if condition="empty($nav['subnav'])">
+                            <li class="nav-item"><a class="nav-link" href="{$nav['url']}">{$nav['title']}</a></li>
+                            <else/>
+                            <li class="nav-item dropdown">
+                                <a href="javascript:" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{$nav['title']} <span class="caret"></span></a>
+                                <div class="dropdown-menu">
+                                    <volist name="nav['subnav']" id="nav">
+                                        <a class="dropdown-item" href="{$nav['url']}">{$nav['title']}</a>
+                                    </volist>
+                                </div>
+                            </li>
+                        </if>
+                    </volist>
                 </ul>
                 <ul class="navbar-nav justify-content-end">
 

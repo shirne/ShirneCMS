@@ -15,7 +15,7 @@ class Article extends TagLib
 {
     protected $tags =[
         'list'=>['attr'=>'var,category,type,limit,cover','close'=>0],
-        'pages'=>['attr'=>'var,limit','close'=>0],
+        'pages'=>['attr'=>'var,group,limit','close'=>0],
         'cates'=>['attr'=>'var,pid','close'=>0]
     ];
 
@@ -51,10 +51,14 @@ class Article extends TagLib
     }
     public function tagPages($tag){
         $var  = isset($tag['var']) ? $tag['var'] : 'page_list';
+        $group=isset($tag['group']) ? $tag['group'] : '';
 
         $parseStr='<?php ';
 
         $parseStr.='$'.$var.'=\think\Db::name("page")';
+        if(!empty($group)){
+            $parseStr .= '->where(\'group\',\''.$tag['group'].'\')';
+        }
         if(!empty($tag['limit'])){
             $parseStr .= '->limit('.intval($tag['limit']).')';
         }

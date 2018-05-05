@@ -31,7 +31,7 @@ VALUES
 /*!40000 ALTER TABLE `sa_permission` ENABLE KEYS */;
 UNLOCK TABLES;
 
-
+TRUNCATE TABLE `sa_manager`;
 LOCK TABLES `sa_manager` WRITE;
 /*!40000 ALTER TABLE `sa_manager` DISABLE KEYS */;
 
@@ -42,7 +42,7 @@ VALUES
 /*!40000 ALTER TABLE `sa_manager` ENABLE KEYS */;
 UNLOCK TABLES;
 
-
+TRUNCATE TABLE `sa_setting`;
 LOCK TABLES `sa_setting` WRITE;
 /*!40000 ALTER TABLE `sa_setting` DISABLE KEYS */;
 
@@ -72,8 +72,25 @@ VALUES
 /*!40000 ALTER TABLE `sa_setting` ENABLE KEYS */;
 UNLOCK TABLES;
 
+TRUNCATE TABLE `sa_member_level`;
 LOCK TABLES `sa_member_level` WRITE;
 /*!40000 ALTER TABLE `sa_member_level` DISABLE KEYS */;
 INSERT INTO `sa_member_level`(`level_id`,`level_name`,`short_name`,`is_default`,`level_price`,`sort`,`commission_layer`,`commission_percent`) VALUES (1,'普通会员','普',1,0.00,0,3,'[\"0\",\"0\",\"0\"]');
 /*!40000 ALTER TABLE `sa_member_level` ENABLE KEYS */;
+UNLOCK TABLES;
+
+TRUNCATE TABLE `sa_category`;
+LOCK TABLES `sa_category` WRITE;
+/*!40000 ALTER TABLE `sa_category` DISABLE KEYS */;
+INSERT INTO `sa_category`(`id`,`pid`,`title`,`short`,`name`,`icon`,`image`,`sort`,`keywords`,`description`)VALUES
+(1,0,'新闻动态','新闻','news','','',0,'',''),
+(2,0,'案例中心','案例','cases','','',0,'',''),
+(3,1,'行业新闻','行业','industry','','',0,'',''),
+(4,1,'公司新闻','公司','company','','',0,'',''),
+(5,1,'常见问题','FAQ','faq','','',0,'',''),
+(6,2,'网站建设','网站','web','','',0,'',''),
+(7,2,'微信平台','微信','wechat','','',0,'',''),
+(8,2,'企业APP','APP','app','','',0,'',''),
+(9,2,'画册/LOGO','AI','design','','',0,'','');
+/*!40000 ALTER TABLE `sa_category` ENABLE KEYS */;
 UNLOCK TABLES;
