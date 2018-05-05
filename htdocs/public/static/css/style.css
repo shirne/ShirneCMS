@@ -11,6 +11,38 @@ h6{ font-size :1rem;}
     margin-bottom:0;
     line-height :2.25rem;
 }
+.nav-box{
+    border-bottom:1px #2b2b2c solid;
+    padding:0;
+    line-height:2.5;
+}
+.navbar-brand{
+    padding:0;
+}
+.navbar-brand img{
+    display:block;
+}
+.main-nav{
+    margin-right:150px;
+    flex:1;
+}
+.nav-box .dropdown-menu{
+    margin:0;
+    border-radius:0;
+    border-top:1px #992835 solid;
+    background:#343a40;
+}
+.nav-box .dropdown-menu .dropdown-item{
+    color:rgba(255,255,255,.5);
+}
+.nav-box .dropdown-menu .dropdown-item:hover{
+    color:rgba(255,255,255,.9);
+    background:none;
+}
+.nav-box .dropdown-menu .active{
+    color:rgba(255,255,255,1);
+    background:none;
+}
 
 #carouselBannerControls{
     height :400px;
@@ -20,6 +52,35 @@ h6{ font-size :1rem;}
     overflow: hidden;
 }
 
+.index-card{
+    padding:30px;
+}
+.index-bg{
+    background:#f5f5f5;
+}
+.index-card-title h2{
+    text-align: center;
+    color:#282828;
+}
+.index-card-title h2::after{
+    content:".";
+    color:#bf1e2e;
+    font-size:2rem;
+    line-height: 0.6;
+    font-weight:bold;
+    vertical-align: sub;
+}
+.index-card-title p{
+    text-align: center;
+    color:#c2c2c2;
+}
+.index-card .slide h2{
+    text-align: left;
+}
+.index-card .slide p{
+    text-align: left;
+}
+
 .articlebody h1{
     text-align: center;
 }
@@ -27,4 +88,14 @@ h6{ font-size :1rem;}
     .control-label {
         text-align: right;
     }
+}
+.footer{
+    padding-top:70px;
+}
+.footer dl dd a{
+    display:block;
+    color:#898989;
+}
+.footer hr{
+    border-color:#3e4044;
 }
