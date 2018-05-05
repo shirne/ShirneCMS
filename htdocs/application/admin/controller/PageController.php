@@ -1,6 +1,7 @@
 <?php
 namespace app\admin\controller;
 use app\admin\model\PageModel;
+use app\admin\validate\PageGroupValidate;
 use app\admin\validate\PageValidate;
 use think\Db;
 
@@ -14,12 +15,13 @@ class PageController extends BaseController
      */
     public function index($key="")
     {
-        $model = Db::name('page');
+        $model = Db::view('page','*');
         $where=array();
         if(!empty($key)){
-            $where[] = array('title|name','like',"%$key%");
+            $where[] = array('page.title|page.name|page.group','like',"%$key%");
         }
-        $lists=$model->where($where)->order('ID DESC')->paginate(15);
+        $lists=$model->view('pageGroup',['group_name'],'pageGroup.group=page.group','LEFT')
+            ->where($where)->order('sort ASC,ID DESC')->paginate(15);
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
         return $this->fetch();
@@ -43,6 +45,7 @@ class PageController extends BaseController
         }
         $model=array();
         $this->assign('page', $model);
+        $this->assign('groups', getPageGroups());
         $this->assign('id', 0);
         return $this->fetch('edit');
     }
@@ -73,6 +76,7 @@ class PageController extends BaseController
             $this->error('要编辑的内容不存在');
         }
         $this->assign('page', $model);
+        $this->assign('groups', getPageGroups());
         $this->assign('id', $id);
         return $this->fetch();
     }
@@ -81,11 +85,63 @@ class PageController extends BaseController
      */
     public function delete($id)
     {
-    		$id = intval($id);
+        $id = intval($id);
         $model = Db::name('page');
         $result = $model->where(["id"=>$id])->delete();
         if($result){
             $this->success("删除成功", url('page/index'));
+        }else{
+            $this->error("删除失败");
+        }
+    }
+
+    public function groups(){
+        $groups=getPageGroups(true);
+
+        $this->assign('lists', $groups);
+        return $this->fetch();
+    }
+    public function groupedit($id=0){
+        if($this->request->isPost()){
+            $data=$this->request->post();
+            $validate=new PageGroupValidate();
+            $validate->setId($id);
+            if(!$validate->check($data)){
+                $this->error($validate->getError());
+            }
+            if($id>0){
+                Db::name('PageGroup')->where('id',$id)->update($data);
+                cache('page_group',null);
+                $this->success('保存成功',url('page/groups'));
+            }else{
+                Db::name('PageGroup')->where('id',$id)->insert($data);
+                cache('page_group',null);
+                $this->success('添加成功',url('page/groups'));
+            }
+        }
+        if($id>0){
+            $model=Db::name('PageGroup')->find($id);
+        }else{
+            $model=array('sort'=>99);
+        }
+        $this->assign('model', $model);
+        $this->assign('id', $id);
+        return $this->fetch();
+    }
+    public function groupdelete($id)
+    {
+        $id = idArr($id);
+        $groups=Db::name('PageGroup')->where("id",'in',$id)->select();
+        if(!empty($groups)) {
+            $groups=array_column($groups,'group');
+            $exists = Db::name('page')->where('group', 'in', $groups)->count();
+            if ($exists > 0) {
+                $this->error("选中的页面组还有内容");
+            }
+            $result = Db::name('PageGroup')->where("id", 'in', $id)->delete();
+        }
+        if($result){
+            $this->success("删除成功", url('page/groups'));
         }else{
             $this->error("删除失败");
         }

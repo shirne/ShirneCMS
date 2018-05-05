@@ -41,16 +41,16 @@
         <div class="form-group">
             <label>文章类型</label>
             <label class="radio-inline">
-              <input type="radio" name="type" id="type" value="1" <if condition="$article.type eq 1">checked="checked"</if> >普通
+              <input type="radio" name="type" value="1" <if condition="$article.type eq 1">checked="checked"</if> >普通
             </label>
             <label class="radio-inline">
-              <input type="radio" name="type" id="type" value="2" <if condition="$article.type eq 2">checked="checked"</if>>置顶
+              <input type="radio" name="type" value="2" <if condition="$article.type eq 2">checked="checked"</if>>置顶
             </label>
             <label class="radio-inline">
-              <input type="radio" name="type" id="type" value="3" <if condition="$article.type eq 3">checked="checked"</if>>热门
+              <input type="radio" name="type" value="3" <if condition="$article.type eq 3">checked="checked"</if>>热门
             </label>
             <label class="radio-inline">
-              <input type="radio" name="type" id="type" value="4" <if condition="$article.type eq 4">checked="checked"</if>>推荐
+              <input type="radio" name="type" value="4" <if condition="$article.type eq 4">checked="checked"</if>>推荐
             </label>
         </div>
         <input type="hidden" name="id" value="{$article.id}">

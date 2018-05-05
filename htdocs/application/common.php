@@ -445,6 +445,15 @@ function random_str($length = 6, $type = 'string', $convert = 0)
     return $code;
 }
 
+function getPageGroups($force=false){
+    $groups=cache('page_group');
+    if(empty($groups) || $force==true){
+        $groups=\think\Db::name('PageGroup')->order('sort ASC,id ASC')->select();
+        cache('page_group',$groups);
+    }
+    return $groups;
+}
+
 function getArticleCategories($force=false){
     $categories=cache('categories');
     if(empty($categories) || $force==true){

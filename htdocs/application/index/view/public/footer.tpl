@@ -57,7 +57,7 @@
             </div>
         </div>
         <hr class="my-4"/>
-        <div class="row">
+        <div class="row copyright-row">
             <div class="col-md-8">
                 &nbsp;
             </div>

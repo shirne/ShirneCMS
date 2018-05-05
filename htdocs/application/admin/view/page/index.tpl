@@ -9,6 +9,7 @@
     <div class="row list-header">
         <div class="col-6">
             <a href="{:url('page/add')}" class="btn btn-outline-primary btn-sm">添加单页</a>
+            <a href="{:url('page/groups')}" class="btn btn-outline-secondary btn-sm">分组管理</a>
         </div>
         <div class="col-6">
             <form action="{:url('page/index')}" method="post">
@@ -25,8 +26,10 @@
         <thead>
             <tr>
                 <th width="50">编号</th>
+                <th>分组</th>
                 <th>别名</th>
                 <th>标题</th>
+                <th>排序</th>
                 <th width="200">操作</th>
             </tr>
         </thead>
@@ -34,8 +37,10 @@
         <foreach name="lists" item="v">
             <tr>
                 <td>{$v.id}</td>
+                <td>{$v.group}</td>
                 <td>{$v.name}</td>
                 <td>{$v.title}</td>
+                <td>{$v.sort}</td>
                 <td>
                     <a class="btn btn-outline-dark btn-sm" href="{:url('page/edit',array('id'=>$v['id']))}"><i class="ion-edit"></i> 编辑</a>
                     <a class="btn btn-outline-dark btn-sm" href="{:url('page/delete',array('id'=>$v['id']))}" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash-a"></i> 删除</a>

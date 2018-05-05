@@ -99,3 +99,7 @@ h6{ font-size :1rem;}
 .footer hr{
     border-color:#3e4044;
 }
+.copyright-row{
+    line-height:40px;
+    padding-bottom:20px;
+}

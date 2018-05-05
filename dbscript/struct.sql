@@ -469,12 +469,31 @@ DROP TABLE IF EXISTS `sa_page`;
 CREATE TABLE `sa_page` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(100) NOT NULL,
+  `group` varchar(50) NOT NULL DEFAULT '',
+  `icon` varchar(50) NOT NULL DEFAULT '',
   `name` varchar(100) DEFAULT NULL,
+  `sort` int(11) DEFAULT 0,
+  `status` tinyint(11) DEFAULT 0,
   `content` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Table structure for table `sa_page_group`
+--
+
+DROP TABLE IF EXISTS `sa_page_group`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sa_page_group` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_name` varchar(100) NOT NULL,
+  `group` varchar(50) NOT NULL DEFAULT '',
+  `sort` int(11) DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `sa_article`
