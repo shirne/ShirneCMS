@@ -81,6 +81,14 @@ h6{ font-size :1rem;}
     text-align: left;
 }
 
+.main{
+    padding:1rem 0;
+}
+
+.main_right{
+    min-height:500px;
+}
+
 .articlebody h1{
     text-align: center;
 }

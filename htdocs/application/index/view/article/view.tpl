@@ -5,7 +5,10 @@
         <div class="container">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item icon"><a href="/">首页</a></li>
-                <li class="breadcrumb-item"><a href="{:url('Article/index')}">资讯中心</a></li>
+                <volist name="categotyTree" id="cate">
+                    <li class="breadcrumb-item"><a href="{:url("Article/index",['name'=>$cate['name']])}">{$cate['title']}</a></li>
+                </volist>
+                <li class="breadcrumb-item active"><a href="{:url('Article/index')}">{$article.title}</a></li>
             </ol>
         </div>
 

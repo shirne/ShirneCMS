@@ -31,7 +31,7 @@ function parseNavigator(&$config){
     if(empty($navigators)){
         $navigators=array();
         foreach ($config as $item){
-            if(!isset($item['url']))continue;
+            if(empty($item['url']))continue;
             $item['url']=parseNavUrl($item['url']);
 
             if(isset($item['subnav']) ){
@@ -56,10 +56,9 @@ function parseNavUrl($url){
     if(is_array($url)){
         return call_user_func_array('url',$url);
     }elseif(is_string($url)) {
-
-        if (strpos($url, 'http://') == 0 ||
-            strpos($url, 'https://') == 0 ||
-            strpos($url, '/') == 0) {
+        if (strpos($url, 'http://') === 0 ||
+            strpos($url, 'https://') === 0 ||
+            strpos($url, '/') === 0) {
             return $url;
         } else {
             return url($url);

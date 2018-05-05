@@ -12,12 +12,12 @@ return [
     ],
     [
         'title'=>'服务范围',
-        'url'=>['Page/index',['name'=>'services']],
+        'url'=>['Page/index',['group'=>'services']],
         'subnav'=>'Page/services'
     ],
     [
         'title'=>'解决方案',
-        'url'=>['Page/index',['name'=>'solutions']],
+        'url'=>['Page/index',['group'=>'solutions']],
         'subnav'=>'Page/solutions'
     ],
     [
@@ -27,7 +27,7 @@ return [
     ],
     [
         'title'=>'关于原设',
-        'url'=>['Page/index',['name'=>'about']],
+        'url'=>['Page/index',['group'=>'about']],
         'subnav'=>'Page/about'
     ],
     [

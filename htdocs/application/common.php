@@ -510,15 +510,15 @@ function getSortedCategory(&$data, $pid = 0, $html = "|---", $level = 0)
 }
 
 function getTreedCategory($force=false){
-    static $categories;
+    static $categories=array();
     if(empty($categories)){
         $categories=cache('categorietree');
     }
     if(empty($categories) || $force==true){
         $data=\think\Db::name('Category')->order('pid ASC,sort ASC,id ASC')->select();
-        $categries=array('0'=>[]);
+        $categories=array('0'=>[]);
         foreach ($data as $cate){
-            $categries[$cate['pid']][$cate['id']]=$cate;
+            $categories[$cate['pid']][]=$cate;
         }
         cache('categorietree',$categories);
     }

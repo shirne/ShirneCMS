@@ -5,7 +5,10 @@
 		<div class="container">
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item icon"><a href="/">首页</a></li>
-				<li class="breadcrumb-item"><a href="javascript:">关于我们</a></li>
+				<notempty name="group" >
+					<li class="breadcrumb-item"><a href="{:url('Page/index',['group'=>$group['group']])}">{$group['group_name']}</a></li>
+				</notempty>
+				<li class="breadcrumb-item active"><a href="javascript:">{$page.title}</a></li>
 			</ol>
 		</div>
 
@@ -13,13 +16,17 @@
 			<div class="row">
 				<div class="col-md-3">
 					<div class="card main_left">
-						<div class="card-header"><h3>关于我们</h3></div>
+						<div class="card-header">
+							<empty name="group" >
+								<h3>关于我们</h3>
+								<else/>
+								<h3>{$group['group_name']}</h3>
+							</empty>
+						</div>
 						<div class="card-body">
-							<div id="news" class="list">
+							<div id="news" class="list-group">
 								<Volist name="lists" id="p">
-									<div class="panel">
-										<a class="Level_1" href="{:url('Page/index',array('name'=>$p['name']))}"> {$p.title} </a>
-									</div>
+									<a class="list-group-item Level_1" href="{:url('Page/index',array('name'=>$p['name']))}">{$p.title}</a>
 								</Volist>
 							</div>
 						</div>
