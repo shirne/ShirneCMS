@@ -44,3 +44,9 @@ ShirneCMS
 >admin
 
 >123456
+
+## 模板说明
+
+标签库 article/extend 具体查看 applition/common/taglib
+
+导航配置 navigator.php
