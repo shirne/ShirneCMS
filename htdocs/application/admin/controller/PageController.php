@@ -20,7 +20,7 @@ class PageController extends BaseController
         if(!empty($key)){
             $where[] = array('page.title|page.name|page.group','like',"%$key%");
         }
-        $lists=$model->view('pageGroup',['group_name'],'pageGroup.group=page.group','LEFT')
+        $lists=$model->view('pageGroup',['group_name','use_template'=>'group_use_template'],'pageGroup.group=page.group','LEFT')
             ->where($where)->order('sort ASC,ID DESC')->paginate(15);
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());

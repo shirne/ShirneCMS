@@ -47,8 +47,8 @@
         <foreach name="lists" item="v">
             <tr>
                 <td><input type="checkbox" name="id" value="{$v.id}" /></td>
-                <td>{$v.group}</td>
-                <td>{$v.name}</td>
+                <td>{$v.group}<if condition="$v.group_use_template EQ 1">&nbsp;<span class="badge badge-warning">独立模板</span></if></td>
+                <td>{$v.name}<if condition="$v.use_template EQ 1">&nbsp;<span class="badge badge-warning">独立模板</span></if></td>
                 <td>{$v.title}</td>
                 <td>{$v.sort}</td>
                 <td>

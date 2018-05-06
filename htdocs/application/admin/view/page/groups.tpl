@@ -28,7 +28,7 @@
             <foreach name="lists" item="v">
                 <tr>
                     <td>{$v.id}</td>
-                    <td>{$v.group}</td>
+                    <td>{$v.group}<if condition="$v.use_template EQ 1">&nbsp;<span class="badge badge-warning">独立模板</span></if></td>
                     <td>{$v.group_name}</td>
                     <td>{$v.sort}</td>
                     <td>

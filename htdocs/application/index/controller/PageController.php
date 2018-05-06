@@ -34,13 +34,13 @@ class PageController extends BaseController{
         $this->assign('group',$groupset);
         $this->assign('lists',$lists);
         if($page['use_template']){
-            if(!empty($groupset) && $group['use_template']){
-                return $this->fetch($group['group'].'/'.$page['name']);
+            if(!empty($groupset) && $groupset['use_template']){
+                return $this->fetch($groupset['group'].'/'.$page['name']);
             }else{
                 return $this->fetch('page/'.$page['name']);
             }
-        }elseif(!empty($groupset) && $group['use_template']){
-            return $this->fetch($group['group'].'/index');
+        }elseif(!empty($groupset) && $groupset['use_template']){
+            return $this->fetch($groupset['group'].'/index');
         }
         return $this->fetch();
     }
