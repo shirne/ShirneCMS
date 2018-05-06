@@ -67,16 +67,20 @@ var dialogTpl='<div class="modal fade" id="{@id}" tabindex="-1" role="dialog" ar
     <div class="modal-dialog">\
     <div class="modal-content">\
     <div class="modal-header">\
-    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>\
     <h4 class="modal-title" id="{@id}Label"></h4>\
+    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>\
     </div>\
-    <div class="modal-body"></div>\
-    <div class="modal-footer"></div>\
+    <div class="modal-body">\
+    </div>\
+    <div class="modal-footer">\
+    <nav class="nav nav-fill"></nav>\
+    </div>\
     </div>\
     </div>\
     </div>';
 var dialogIdx=0;
 function Dialog(opts){
+    if(!opts)opts={};
     //处理按钮
     if(opts.btns!==undefined) {
         if (typeof(opts.btns) == 'string') {
@@ -96,8 +100,8 @@ function Dialog(opts){
             opts.btns[dft].isdefault=true;
         }
 
-        if(!opts.btns[dft]['class']){
-            opts.btns[dft]['class']='btn-primary';
+        if(!opts.btns[dft]['type']){
+            opts.btns[dft]['type']='primary';
         }
         opts.defaultBtn=dft;
     }
@@ -106,22 +110,26 @@ function Dialog(opts){
         'id':'dlgModal'+dialogIdx++,
         'size':'',
         'btns':[
-            {'text':'取消','class':'btn-default'},
-            {'text':'确定','isdefault':true,'class':'btn-primary'}
+            {'text':'取消','type':'secondary'},
+            {'text':'确定','isdefault':true,'type':'primary'}
         ],
         'defaultBtn':1,
         'onsure':null,
+        'onshow':null,
         'onshown':null,
-        'onhide':null
+        'onhide':null,
+        'onhidden':null
     },opts);
 
     this.box=$(this.options.id);
 }
 Dialog.prototype.generBtn=function(opt,idx){
-    return '<a class="btn '+(opt['class']?opt['class']:'btn-default')+'" data-index="'+idx+'">'+opt.text+'</a>';
+    if(opt['type'])opt['class']='btn-outline-'+opt['type'];
+    return '<a href="javascript:" class="nav-item btn '+(opt['class']?opt['class']:'btn-outline-secondary')+'" data-index="'+idx+'">'+opt.text+'</a>';
 };
 Dialog.prototype.show=function(html,title){
     this.box=$('#'+this.options.id);
+    if(!title)title='系统提示';
     if(this.box.length<1) {
         $(document.body).append(dialogTpl.compile({'id': this.options.id}));
         this.box=$('#'+this.options.id);
@@ -138,7 +146,7 @@ Dialog.prototype.show=function(html,title){
     for(var i=0;i<this.options.btns.length;i++){
         btns.push(this.generBtn(this.options.btns[i],i));
     }
-    this.box.find('.modal-footer').html(btns.join('\n'));
+    this.box.find('.modal-footer .nav').html(btns.join('\n'));
 
     var dialog=this.box.find('.modal-dialog');
     dialog.removeClass('modal-sm').removeClass('modal-lg');
@@ -153,12 +161,20 @@ Dialog.prototype.show=function(html,title){
     body.html(html);
     this.box.on('hide.bs.modal',function(){
         if(self.options.onhide){
-            self.options.onhide(body);
+            self.options.onhide(body,self.box);
         }
         Dialog.instance=null;
     });
     this.box.on('hidden.bs.modal',function(){
+        if(self.options.onhidden){
+            self.options.onhidden(body,self.box);
+        }
         self.box.remove();
+    });
+    this.box.on('show.bs.modal',function(){
+        if(self.options.onshow){
+            self.options.onshow(body,self.box);
+        }
     });
     this.box.on('shown.bs.modal',function(){
         if(self.options.onshown){
@@ -175,7 +191,7 @@ Dialog.prototype.show=function(html,title){
                 result = self.options.onsure.apply(this,[body, self.box]);
             }
         }
-        if(result===true){
+        if(result!==false){
             self.box.modal('hide');
         }
     });
@@ -184,33 +200,130 @@ Dialog.prototype.show=function(html,title){
 };
 Dialog.prototype.hide=function(){
     this.box.modal('hide');
+    return this;
+};
+
+var dialog={
+    alert:function(message,callback,title){
+        var called=false;
+        return new Dialog({
+            btns:'确定',
+            onsure:function(){
+                if(typeof callback=='function'){
+                    called=true;
+                    return callback(true);
+                }
+            },
+            onhide:function(){
+                if(!called && typeof callback=='function'){
+                    callback(false);
+                }
+            }
+        }).show(message,title);
+    },
+    confirm:function(message,confirm,cancel){
+        var called=false;
+        return new Dialog({
+            'onsure':function(){
+                if(typeof confirm=='function'){
+                    called=true;
+                    return confirm();
+                }
+            },
+            'onhide':function () {
+                if(called=false && typeof cancel=='function'){
+                    return cancel();
+                }
+            }
+        }).show(message);
+    },
+    prompt:function(message,callback,cancel){
+        var called=false;
+        return new Dialog({
+            'onshown':function(body){
+                body.find('[name=confirm_input]').focus();
+            },
+            'onsure':function(body){
+                var val=body.find('[name=confirm_input]').val();
+                if(typeof callback=='function'){
+                    var result = callback(val);
+                    if(result===true){
+                        called=true;
+                    }
+                    return result;
+                }
+            },
+            'onhide':function () {
+                if(called=false && typeof cancel=='function'){
+                    return cancel();
+                }
+            }
+        }).show('<input type="text" name="confirm_input" class="form-control" />',message);
+    }
 };
 
 
 jQuery(function($){
+    //日期组件
     if($.fn.datetimepicker) {
+        var tooltips= {
+            today: '定位当前日期',
+            clear: '清除已选日期',
+            close: '关闭选择器',
+            selectMonth: '选择月份',
+            prevMonth: '上个月',
+            nextMonth: '下个月',
+            selectYear: '选择年份',
+            prevYear: '上一年',
+            nextYear: '下一年',
+            selectDecade: '选择年份区间',
+            prevDecade: '上一区间',
+            nextDecade: '下一区间',
+            prevCentury: '上个世纪',
+            nextCentury: '下个世纪'
+        };
+        var icons={
+            time: 'ion-clock',
+            date: 'ion-calendar',
+            up: 'ion-arrow-up-c',
+            down: 'ion-arrow-down-c',
+            previous: 'ion-arrow-left-c',
+            next: 'ion-arrow-right-c',
+            today: 'ion-pinpoint',
+            clear: 'ion-trash-a',
+            close: 'ion-close'
+        };
         $('.datepicker').datetimepicker({
-            language: 'zh-CN',
-            minView: 'month',
-            autoclose: true
+            icons:icons,
+            tooltips:tooltips,
+            format: 'YYYY-MM-DD',
+            locale: 'zh-cn',
+            showClear:true,
+            showTodayButton:true,
+            showClose:true,
+            keepInvalid:true
         });
 
         $('.date-range').each(function () {
             var from = $(this).find('[name=fromdate],.fromdate'), to = $(this).find('[name=todate],.todate');
             var options = {
-                format: 'yyyy-mm-dd',
-                minView: 'month',
-                autoclose: true,
-                language: 'zh-CN'
+                icons:icons,
+                tooltips:tooltips,
+                format: 'YYYY-MM-DD',
+                locale:'zh-cn',
+                showClear:true,
+                showTodayButton:true,
+                showClose:true,
+                keepInvalid:true
             };
-            from.datetimepicker(options).on('changeDate', function () {
+            from.datetimepicker(options).on('dp.change', function () {
                 if (from.val()) {
-                    to.datetimepicker('setStartDate', from.val());
+                    to.data('DateTimePicker').minDate(from.val());
                 }
             });
-            to.datetimepicker(options).on('changeDate', function () {
+            to.datetimepicker(options).on('dp.change', function () {
                 if (to.val()) {
-                    from.datetimepicker('setEndDate', to.val());
+                    from.data('DateTimePicker').maxDate(to.val());
                 }
             });
         });

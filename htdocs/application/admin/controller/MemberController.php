@@ -191,7 +191,7 @@ class MemberController extends BaseController
         return $this->fetch();
     }
     /**
-     * 删除管理员
+     * 删除会员
      */
     public function delete($id,$type=0)
     {
@@ -203,5 +203,20 @@ class MemberController extends BaseController
         }else{
             $this->error("状态更新失败");
         }
+    }
+
+    /**
+     * 会员注册情况统计
+     * @param string $type
+     * @return mixed
+     */
+    public function statics($type='date')
+    {
+        $format="'%Y-%m-%d'";
+
+        $statics=Db::name('member')->field('count(id) as member_count,date_format(from_unixtime(create_time),' . $format . ') as awdate')->group('awdate')->select();
+
+        $this->assign('statics',$statics);
+        return $this->fetch();
     }
 }

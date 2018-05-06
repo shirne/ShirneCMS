@@ -1,6 +1,7 @@
 <?php
 
 namespace app\index\controller;
+use app\common\model\MemberModel;
 use app\common\validate\MemberValidate;
 use sdk\WechatAuth;
 use think\Db;
@@ -48,7 +49,7 @@ class LoginController extends BaseController{
     public function login($type=null)
     {
         if($this->userid){
-            $this->success('您已登录',url('index/index'));
+            $this->success('您已登录',url('index/index/index'));
         }
         //方式1：本地账号登陆
         if(empty($type)){
@@ -71,7 +72,7 @@ class LoginController extends BaseController{
                         setLogin($member);
                         $redirect=redirect()->restore();
                         if(empty($redirect->getData())){
-                            $url=url('member/index');
+                            $url=url('index/member/index');
                         }else{
                             $url=$redirect->getTargetUrl();
                         }
@@ -264,7 +265,7 @@ class LoginController extends BaseController{
             $data['password'] = encode_password($password, $data['salt']);
             $data['update_at'] = time();
             if (Db::name('member')->where(array('username'=>$passed))->update($data)) {
-                $this->success("密码设置成功",url('Login/index'));
+                $this->success("密码设置成功",url('index/login/index'));
             }
         }
 
@@ -305,6 +306,7 @@ class LoginController extends BaseController{
             $data=array();
             $data['username']=$this->request->post('username');
             $data['password']=$this->request->post('password');
+            $data['repassword']=$this->request->post('repassword');
             $data['email']=$this->request->post('email');
             $data['realname']=$this->request->post('realname');
             $data['mobile']=$this->request->post('mobile');
@@ -343,19 +345,20 @@ class LoginController extends BaseController{
                 $data['level_id']=getDefaultLevel();
             }
 
-            $userid=Db::name('member')->insert($data);
+            unset($data['repassword']);
+            $model=MemberModel::create($data);
 
-            if(empty($userid)){
+            if(empty($model['id'])){
                 Db::rollback();
                 $this->error("注册失败");
             }
             if(!empty($invite)) {
-                $invite['member_use'] = $userid;
+                $invite['member_use'] = $model['id'];
                 $invite['use_at'] = time();
                 Db::name('invite_code')->update($invite);
             }
             Db::commit();
-            setLogin($data);
+            setLogin($model);
             $redirect=redirect()->restore();
             if(empty($redirect->getData())){
                 $url=url('member/index');

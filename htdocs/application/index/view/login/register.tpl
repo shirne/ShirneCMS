@@ -131,11 +131,12 @@
 						dataType: 'JSON',
 						type: 'POST',
 						success: function (j) {
-							if (j.status == 0) {
-								alert(j.info);
+							if (j.code == 1) {
+                                dialog.alert('注册成功！',function() {
+                                    location.href = j.url;
+                                });
 							} else {
-								alert('注册成功！');
-								location.href = j.url;
+                                dialog.alert(j.msg);
 							}
 						}
 					});
@@ -190,7 +191,7 @@
 						}else{
 							ajaxtime[fname]=new Date().getTime();
 							$.ajax({
-								url:'{:url('Login/checkunique',array('type'=>'email'))}',
+								url:'{:url('index/login/checkunique',array('type'=>'email'))}',
 								data:{value:val},
 								dataType:'JSON',
 								type:'POST',
@@ -211,7 +212,7 @@
 						}else{
 							ajaxtime[fname]=new Date().getTime();
 							$.ajax({
-								url:'{:url('Login/checkunique',array('type'=>'mobile'))}',
+								url:'{:url('index/login/checkunique',array('type'=>'mobile'))}',
 								data:{value:val},
 								dataType:'JSON',
 								type:'POST',
@@ -245,19 +246,19 @@
 			}).keyup(function() {
 				hideError(this);
 			});
-			$('.form-text text-muted').each(function() {
+			$('.form-text').each(function() {
 				$(this).data('origin',$(this).html());
 			});
 			function showError(field,msg){
 				$(field).addClass('error');
-				var msgbox=$(field).parents('.form-group form-row').find('.form-text text-muted');
+				var msgbox=$(field).parents('.form-group').find('.form-text');
 				if(msgbox.length<1)return;
 				if(!msgbox.data('origin'))msgbox.data('origin',msgbox.html());
 				msgbox.text(msg);
 			}
 			function hideError(field){
 				$(field).removeClass('error');
-				var msgbox=$(field).parents('.form-group form-row').find('.form-text text-muted');
+				var msgbox=$(field).parents('.form-group').find('.form-text');
 				if(msgbox.length<1)return;
 				if(msgbox.data('origin')) {
 					msgbox.html(msgbox.data('origin'));

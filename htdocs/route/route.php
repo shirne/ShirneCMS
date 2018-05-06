@@ -43,7 +43,7 @@ Route::group('user',[
     'profile'=>'index/member/profile',
     'avatar'=>'index/member/avatar',
     'security'=>'index/member/security',
-    'log'=>'index/member/actionlog',
+    'actionlog'=>'index/member/actionlog',
     'balance'=>'index/member/moneylog',
     'logout'=>'index/member/logout'
 ])->method('GET|POST');
