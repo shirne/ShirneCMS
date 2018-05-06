@@ -1,6 +1,7 @@
 <?php
 namespace app\admin\controller;
 
+use app\admin\model\ManagerModel;
 use app\admin\validate\ManagerValidate;
 use think\Db;
 
@@ -81,7 +82,10 @@ class ManagerController extends BaseController
                 $data['salt']=random_str(8);
                 $data['password']=encode_password($data['password'],$data['salt']);
                 $data['last_view_member']=time();
-                if (Db::name('Manager')->insert($data)) {
+                unset($data['repassword']);
+                $model=ManagerModel::create($data);
+                if ($model->id) {
+                    user_log($this->mid,'addmanager',1,'添加管理员'.$model->id ,'manager');
                     $this->success("添加成功", url('manager/index'));
                 } else {
                     $this->error("添加失败");
@@ -115,9 +119,10 @@ class ManagerController extends BaseController
                 if(config('SUPER_ADMIN_ID') ==$id){
                     $data['type'] = 1;
                 }
-                $data['manager_id']=$id;
+                $model=ManagerModel::get($id);
                 //更新
-                if (Db::name('Manager')->update($data)) {
+                if ($model->allowField(true)->update($data)) {
+                    user_log($this->mid,'addmanager',1,'修改管理员'.$model->id ,'manager');
                     $this->success("更新成功", url('manager/index'));
                 } else {
                     $this->error("未做任何修改,更新失败");
@@ -159,7 +164,7 @@ class ManagerController extends BaseController
         $model['global']=explode(',',$model['global']);
         $model['detail']=explode(',',$model['detail']);
         $this->assign('model',$model);
-        $this->assign('perms',include(app()->getConfigPath().'/admin/permisions.php'));
+        $this->assign('perms',config('permisions.'));
         return $this->fetch();
     }
     /**
