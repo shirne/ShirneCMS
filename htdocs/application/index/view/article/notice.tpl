@@ -12,10 +12,10 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-3">
-                    <include file="side"/>
+                    <include file="article/side"/>
                 </div>
                 <div class="col">
-                    <div class="card float-right main_right news_list">
+                    <div class="card main_right news_list">
                         <div class="card-body articlebody">
                             <h1>{$article.title}</h1>
                             <div class="info">

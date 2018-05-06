@@ -54,6 +54,7 @@ function parseNavigator(&$config){
 }
 function parseNavUrl($url){
     if(is_array($url)){
+        $url[0]='index/'.strtolower($url[0]);
         return call_user_func_array('url',$url);
     }elseif(is_string($url)) {
         if (strpos($url, 'http://') === 0 ||
@@ -61,6 +62,7 @@ function parseNavUrl($url){
             strpos($url, '/') === 0) {
             return $url;
         } else {
+            $url='index/'.strtolower($url);
             return url($url);
         }
     }
@@ -78,7 +80,7 @@ function parseNavPage($group){
     foreach ($pages as $page){
         $subs[]=array(
             'title'=>$page['title'],
-            'url'=>url('page/index',['name'=>$page['name']])
+            'url'=>url('index/page/index',['name'=>$page['name'],'group'=>$page['group']])
         );
     }
     return $subs;
@@ -93,7 +95,7 @@ function parseNavArticle($cate){
         foreach ($cates as $c){
             $subs[]=array(
                 'title'=>$c['title'],
-                'url'=>url('Article/index',['name'=>$c['name']])
+                'url'=>url('index/article/index',['name'=>$c['name']])
             );
         }
     }

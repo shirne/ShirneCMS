@@ -1,18 +1,18 @@
 {
-    "name": "topthink/think",
-    "description": "the new thinkphp framework",
+    "name": "shirnecn/ShirneCMS",
+    "description": "基于ThinkPHP5.1和Bootstrap4.x的内容管理系统框架",
     "type": "project",
     "keywords": [
         "framework",
-        "thinkphp",
+        "cms",
         "ORM"
     ],
-    "homepage": "http://thinkphp.cn/",
+    "homepage": "http://www.shirne.cn/",
     "license": "Apache-2.0",
     "authors": [
         {
-            "name": "liu21st",
-            "email": "liu21st@gmail.com"
+            "name": "shirne",
+            "email": "shirne@126.com"
         }
     ],
     "require": {

@@ -13,7 +13,7 @@
                 else { $catelist=$categories[$category['pid']];}
             </php>
             <Volist name="catelist" id="cate">
-                <a class="list-group-item Level_1" href="{:url('Article/index',array('name'=>$cate['name']))}">{$cate.title}</a>
+                <a class="list-group-item Level_1" href="{:url('index/article/index',array('name'=>$cate['name']))}">{$cate.title}</a>
             </Volist>
         </div>
     </div>

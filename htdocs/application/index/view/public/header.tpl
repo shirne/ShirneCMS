@@ -33,16 +33,16 @@
                                 <a class="dropdown-item" href="#">Another action</a>
                                 <a class="dropdown-item" href="#">Something else here</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="{:url('member/logout')}"><i class="ion-log-out"></i> 退出登录</a>
+                                <a class="dropdown-item" href="{:url('index/member/logout')}"><i class="ion-log-out"></i> 退出登录</a>
                             </div>
                         </li>
                         <else/>
-                        <li class="nav-item"><a class="nav-link" href="{:url('login/index')}">登录</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{:url('login/register')}">注册</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{:url('index/login/index')}">登录</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{:url('index/login/register')}">注册</a></li>
                     </if>
                 </ul>
-            </div><!-- /.navbar-collapse -->
-        </div><!-- /.container-fluid -->
+            </div>
+        </div>
     </nav>
 
 </header>

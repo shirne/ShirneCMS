@@ -10,7 +10,7 @@
 				<div class="card-header">会员注册</div>
 				<div class="card-body">
 
-					<form class="form-horizontal registerForm" role="form" method="post" action="{:url('Login/register')}">
+					<form class="form-horizontal registerForm" role="form" method="post" action="{:url('index/login/register')}">
 						<div class="form-group form-row">
 							<label for="userName" class="col-md-2 control-label">用户名：</label>
 							<div class="col-md-5">
@@ -155,7 +155,7 @@
 						}else{
 							ajaxtime[fname]=new Date().getTime();
 							$.ajax({
-								url:'{:url('Login/checkunique',array('type'=>'username'))}',
+								url:'{:url('index/login/checkunique',array('type'=>'username'))}',
 								data:{value:val},
 								dataType:'JSON',
 								type:'POST',

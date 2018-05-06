@@ -35,9 +35,13 @@
                     <p>SERVICE SCOPE</p>
                 </div>
                 <div class="index-card-body">
+                    <p>{:url('index/article/view',['id'=>1])}</p>
+                    <p>{:url('index/page/index',['group'=>'about'])}
+                    <p>{:url('index/page/index',['group'=>'about','name'=>'about'])}
+                    <p>{:url('index/member/index')}</p>
                     <article:list var="article_list"/>
                     <volist name="article_list" id="art">
-                        <a href="{:url('article/view',['id'=>$art['id']])}">{$art.title}</a>
+                        <a href="{:url('index/article/view',['id'=>$art['id']])}">{$art.title}</a>
                     </volist>
                 </div>
             </div>

@@ -26,7 +26,7 @@
 						<div class="card-body">
 							<div id="news" class="list-group">
 								<Volist name="lists" id="p">
-									<a class="list-group-item Level_1" href="{:url('Page/index',array('name'=>$p['name']))}">{$p.title}</a>
+									<a class="list-group-item Level_1" href="{:url('page/index',array('name'=>$p['name'],'grorup'=>$p['group']))}">{$p.title}</a>
 								</Volist>
 							</div>
 						</div>

@@ -12,6 +12,10 @@ namespace app\index\controller;
 use app\common\validate\MemberValidate;
 use think\Db;
 
+/**
+ * Class MemberController
+ * @package app\index\controller
+ */
 class MemberController extends AuthController
 {
     public function initialize()
@@ -60,5 +64,10 @@ class MemberController extends AuthController
      */
     public function security(){
         return $this->fetch();
+    }
+
+    public function logout(){
+        clearLogin();
+        $this->success('退出成功',url('index/login/index'));
     }
 }

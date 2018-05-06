@@ -9,11 +9,45 @@
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 
-Route::get('think', function () {
-    return 'hello,ThinkPHP5!';
-});
+Route::pattern([
+    'name' => '[a-zA-Z]\w*',
+    'id'   => '\d+',
+    'group'=> '[a-zA-Z]\w*',
+    'action'=> '[a-zA-Z]\w*',
+]);
 
-Route::get('hello/:name', 'index/hello');
+Route::get('index$', 'index/index/index');
+
+Route::group('article',[
+    ':name'=>'index/article/index',
+    ':id'=>'index/article/view'
+]);
+
+Route::get('page/:group/[:name]','index/page/index')->pattern(['group' => '[a-zA-Z]\w*']);
+
+Route::get('notice/:id', 'index/article/notice');
+
+Route::group('auth',[
+    'login/[:type]'=>'index/login/index',
+    'callback'=>'index/login/callback',
+    'getpassword'=>'index/login/getpassword',
+    'register'=>'index/login/register',
+    'checkusername'=>'index/login/checkusername',
+    'checkunique'=>'index/login/checkunique',
+    'verify'=>'index/login/verify',
+    'forgot'=>'index/login/forgot',
+])->method('GET|POST');
+
+Route::group('user',[
+    'index'=>'index/member/index',
+    'profile'=>'index/member/profile',
+    'avatar'=>'index/member/avatar',
+    'security'=>'index/member/security',
+    'log'=>'index/member/actionlog',
+    'balance'=>'index/member/moneylog',
+    'logout'=>'index/member/logout'
+])->method('GET|POST');
+
 
 return [
 

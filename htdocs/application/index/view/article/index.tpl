@@ -6,7 +6,7 @@
             <ol class="breadcrumb">
                 <li class="breadcrumb-item icon"><a href="/">首页</a></li>
                 <volist name="categotyTree" id="cate">
-                    <li class="breadcrumb-item"><a href="{:url("Article/index",['name'=>$cate['name']])}">{$cate['title']}</a></li>
+                    <li class="breadcrumb-item"><a href="{:url("index/article/index",['name'=>$cate['name']])}">{$cate['title']}</a></li>
                 </volist>
             </ol>
         </div>
@@ -25,7 +25,7 @@
                                     <li class="media">
                                         <div class="media-body">
                                         <h5 class="mt-0 mb-1">
-                                            <a href="{:url('Article/view',array('id'=>$article['id']))}">{$article.title}</a>
+                                            <a href="{:url('index/article/view',array('id'=>$article['id']))}">{$article.title}</a>
                                         </h5>
                                         <div>{$article.content|cutstr=250}</div>
                                         </div>
