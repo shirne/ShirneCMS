@@ -1,49 +1,28 @@
 <div class="footer bg-dark text-light">
     <div class="container">
         <div class="row">
+            <volist name="navigator" id="nav">
+                <if condition="$nav['footer']">
             <div class="col">
                 <dl>
-                    <dt>服务范围</dt>
+                    <dt>{$nav['title']}</dt>
                     <dd>
-                        <a href="">云平台网站服务</a>
-                        <a href="">云平台网站服务</a>
-                        <a href="">云平台网站服务</a>
-                        <a href="">云平台网站服务</a>
-                        <a href="">云平台网站服务</a>
-                        <a href="">云平台网站服务</a>
+                        <volist name="nav['subnav']" id="nav">
+                        <a href="{$nav['url']}">{$nav['title']}</a>
+                        </volist>
                     </dd>
                 </dl>
             </div>
-            <div class="col">
-                <dl>
-                    <dt>解决方案</dt>
-                    <dd>
-                        <a href="">云平台网站服务</a>
-                        <a href="">云平台网站服务</a>
-                        <a href="">云平台网站服务</a>
-                        <a href="">云平台网站服务</a>
-                    </dd>
-                </dl>
-            </div>
-            <div class="col">
-                <dl>
-                    <dt>关于原设</dt>
-                    <dd>
-                        <a href="">云平台网站服务</a>
-                        <a href="">云平台网站服务</a>
-                        <a href="">云平台网站服务</a>
-                        <a href="">云平台网站服务</a>
-                    </dd>
-                </dl>
-            </div>
+                </if>
+            </volist>
             <div class="col">
                 <dl>
                     <dt>友情链接</dt>
                     <dd>
-                        <a href="">云平台网站服务</a>
-                        <a href="">云平台网站服务</a>
-                        <a href="">云平台网站服务</a>
-                        <a href="">云平台网站服务</a>
+                        <extend:links var="links" />
+                        <volist name="links" id="link">
+                            <a href="{$link.url}">{$link.title}</a>
+                        </volist>
                     </dd>
                 </dl>
             </div>

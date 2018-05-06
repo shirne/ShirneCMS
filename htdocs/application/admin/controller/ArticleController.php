@@ -37,7 +37,7 @@ class ArticleController extends BaseController
         return $this->fetch();
     }
 
-    public function add(){
+    public function add($cid=0){
         if ($this->request->isPost()) {
             $data = $this->request->post();
             $validate = new ArticleValidate();
@@ -63,7 +63,7 @@ class ArticleController extends BaseController
                 }
             }
         }
-        $model=array('type'=>1);
+        $model=array('type'=>1,'cate_id'=>$cid);
         $this->assign("category",getArticleCategories());
         $this->assign('article',$model);
         $this->assign('id',0);
