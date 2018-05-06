@@ -97,6 +97,22 @@
                     <input type="text" name="sort" class="form-control" value="{$model.sort}" placeholder="排序按从小到大">
                     </div>
                 </div>
+                <div class="form-row">
+                    <label class="col-md-1">独立模板</label>
+                    <div class="form-group col-md-2">
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-outline-secondary{$model['use_template']==1?' active':''}">
+                                <input type="radio" name="use_template" value="1" autocomplete="off" {$model['use_template']==1?' checked':''}> 是
+                            </label>
+                            <label class="btn btn-outline-secondary{$model['use_template']==0?' active':''}">
+                                <input type="radio" name="use_template" value="0" autocomplete="off"{$model['use_template']==0?' checked':''}> 否
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-text text-muted">独立模板编写index.tpl及view.tpl放在“分类别名”目录下，参考article/index.tpl及view.tpl</div>
+                    </div>
+                </div>
                 <div class="form-group">
                     <div class="input-group">
                         <div class="input-group-prepend">

@@ -53,14 +53,34 @@
                     <input type="text" name="sort" class="form-control" value="{$page.sort}" >
                 </div>
                 </div>
-                <div class="form-group">
-                    <label>页面状态</label>
-                    <label class="radio-inline">
-                        <input type="radio" name="status" value="1" <if condition="$page.status eq 1">checked="checked"</if> >显示
-                    </label>
-                    <label class="radio-inline">
-                        <input type="radio" name="status" value="0" <if condition="$page.status eq 2">checked="checked"</if> >隐藏
-                    </label>
+                <div class="form-row">
+                    <label class="col-md-1">独立模板</label>
+                    <div class="form-group col-md-2">
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-outline-secondary{$page['use_template']==1?' active':''}">
+                                <input type="radio" name="use_template" value="1" autocomplete="off" {$page['use_template']==1?' checked':''}> 是
+                            </label>
+                            <label class="btn btn-outline-secondary{$page['use_template']==0?' active':''}">
+                                <input type="radio" name="use_template" value="0" autocomplete="off"{$page['use_template']==0?' checked':''}> 否
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="form-text text-muted">独立模板编写[别名].tpl放在“分组标识”(如果分组有开启独立模板)或page目录下，参考page/index.tpl</div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <label class="col-md-1">页面状态</label>
+                    <div class="form-group col-md-2">
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-outline-secondary{$page['status']==1?' active':''}">
+                                <input type="radio" name="status" value="1" autocomplete="off" {$page['status']==1?' checked':''}> 显示
+                            </label>
+                            <label class="btn btn-outline-secondary{$page['status']==2?' active':''}">
+                                <input type="radio" name="status" value="0" autocomplete="off"{$page['status']==2?' checked':''}> 隐藏
+                            </label>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="p-content">单页内容</label>

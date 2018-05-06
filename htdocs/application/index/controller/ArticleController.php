@@ -4,7 +4,7 @@ namespace app\index\controller;
 
 use \think\Db;
 /**
- * 发布文章必须登录
+ * 文章
  */
 class ArticleController extends BaseController{
 
@@ -31,6 +31,14 @@ class ArticleController extends BaseController{
 
         $this->assign('lists', $model);
         $this->assign('page',$model->render());
+        if(!empty($this->categotyTree)){
+            for($i=count($this->categotyTree)-1;$i>=0;$i--){
+                if($this->categotyTree[$i]['use_template']){
+                    return $this->fetch($this->categotyTree[$i]['name'].'/index');
+                }
+            }
+        }
+
         return $this->fetch();
     }
 
@@ -43,6 +51,13 @@ class ArticleController extends BaseController{
         $this->category($article['cate_id']);
 
         $this->assign('article', $article);
+        if(!empty($this->categotyTree)){
+            for($i=count($this->categotyTree)-1;$i>=0;$i--){
+                if($this->categotyTree[$i]['use_template']){
+                    return $this->fetch($this->categotyTree[$i]['name'].'/view');
+                }
+            }
+        }
         return $this->fetch();
     }
     public function notice($id){

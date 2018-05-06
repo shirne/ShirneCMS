@@ -87,6 +87,7 @@ CREATE TABLE `sa_category` (
   `icon` varchar(100) DEFAULT NULL COMMENT '图标',
   `image` varchar(100) DEFAULT NULL COMMENT '大图',
   `sort` int(11) DEFAULT NULL COMMENT '排序',
+  `use_template` tinyint(11) DEFAULT 0 COMMENT '独立模板',
   `keywords` varchar(255) DEFAULT NULL COMMENT '分类关键词',
   `description` varchar(255) DEFAULT NULL COMMENT '分类描述',
   PRIMARY KEY (`id`)
@@ -470,10 +471,11 @@ CREATE TABLE `sa_page` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(100) NOT NULL,
   `group` varchar(50) NOT NULL DEFAULT '',
-  `icon` varchar(50) NOT NULL DEFAULT '',
-  `name` varchar(100) DEFAULT NULL,
+  `icon` varchar(150) NOT NULL DEFAULT '',
+  `name` varchar(50) DEFAULT NULL,
   `sort` int(11) DEFAULT 0,
   `status` tinyint(11) DEFAULT 0,
+  `use_template` TINYINT NULL DEFAULT 0,
   `content` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -491,6 +493,7 @@ CREATE TABLE `sa_page_group` (
   `group_name` varchar(100) NOT NULL,
   `group` varchar(50) NOT NULL DEFAULT '',
   `sort` int(11) DEFAULT 0,
+  `use_template` TINYINT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
