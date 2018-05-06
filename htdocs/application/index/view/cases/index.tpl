@@ -3,7 +3,7 @@
 <block name="body">
     <div class="main">
         <div class="subbanner">
-            <div class="inner" style="background-image:url({:getAdImage('news')})"></div>
+            <div class="inner" style="background-image:url({:getAdImage('cases')})"></div>
         </div>
 
         <div class="container">
@@ -18,7 +18,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-3">
-                    <include file="article/side"/>
+                    <include file="cases/side"/>
                 </div>
                 <div class="col">
                     <div class="card main_right news_list">

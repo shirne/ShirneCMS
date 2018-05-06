@@ -102,4 +102,12 @@ function parseNavArticle($cate){
 
     return $subs;
 }
+
+function getAdImage($tag,$default=''){
+    $adrow=\app\common\model\AdvGroupModel::getAdList($tag,1);
+    if(!empty($adrow)){
+        return $adrow[0]['image'];
+    }
+    return $default;
+}
 //end file

@@ -2,6 +2,10 @@
 
 <block name="body">
 	<div class="main">
+		<div class="subbanner">
+			<div class="inner" style="background-image:url({:getAdImage($page['group'])})"></div>
+		</div>
+
 		<div class="container">
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item icon"><a href="/">首页</a></li>

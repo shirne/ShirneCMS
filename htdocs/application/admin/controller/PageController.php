@@ -43,7 +43,7 @@ class PageController extends BaseController
                 }
             }
         }
-        $model=array();
+        $model=array('status'=>1);
         $this->assign('page', $model);
         $this->assign('groups', getPageGroups());
         $this->assign('id', 0);

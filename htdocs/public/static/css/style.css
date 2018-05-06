@@ -81,8 +81,14 @@ h6{ font-size :1rem;}
     text-align: left;
 }
 
+.subbanner .inner{
+    height :250px;
+    background:url(../images/blank.gif) center center no-repeat #272727;
+    background-size:cover;
+}
+
 .main{
-    padding:1rem 0;
+    padding:0 0 1rem 0;
 }
 
 .main_right{
