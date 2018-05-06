@@ -145,8 +145,9 @@ class MemberController extends BaseController
             } else {
                 $data['salt']=random_str(8);
                 $data['password']=encode_password($data['password'],$data['salt']);
-                if ($member=MemberModel::create($data)) {
-                    user_log($this->mid,'adduser',1,'添加会员'.$member->getLastInsID() ,'manager');
+                $member=MemberModel::create($data);
+                if ($member->id) {
+                    user_log($this->mid,'adduser',1,'添加会员'.$member->id ,'manager');
                     $this->success("用户添加成功", url('member/index'));
                 } else {
                     $this->error("用户添加失败");
