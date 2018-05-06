@@ -21,9 +21,9 @@ Route::get('index$', 'index/index/index');
 Route::group('article',[
     ':name'=>'index/article/index',
     ':id'=>'index/article/view'
-]);
+])->method('GET');
 
-Route::get('page/:group/[:name]','index/page/index')->pattern(['group' => '[a-zA-Z]\w*']);
+Route::get('page/:group/[:name]','index/page/index');
 
 Route::get('notice/:id', 'index/article/notice');
 

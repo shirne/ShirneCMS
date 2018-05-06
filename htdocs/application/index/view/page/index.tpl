@@ -6,7 +6,7 @@
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item icon"><a href="/">首页</a></li>
 				<notempty name="group" >
-					<li class="breadcrumb-item"><a href="{:url('Page/index',['group'=>$group['group']])}">{$group['group_name']}</a></li>
+					<li class="breadcrumb-item"><a href="{:url('index/page/index',['group'=>$group['group']])}">{$group['group_name']}</a></li>
 				</notempty>
 				<li class="breadcrumb-item active"><a href="javascript:">{$page.title}</a></li>
 			</ol>
@@ -26,7 +26,7 @@
 						<div class="card-body">
 							<div id="news" class="list-group">
 								<Volist name="lists" id="p">
-									<a class="list-group-item Level_1" href="{:url('page/index',array('name'=>$p['name'],'grorup'=>$p['group']))}">{$p.title}</a>
+									<a class="list-group-item Level_1" href="{:url('index/page/index',['group'=>$p['group'],'name'=>$p['name']])}">{$p.title}</a>
 								</Volist>
 							</div>
 						</div>
