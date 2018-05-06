@@ -25,7 +25,7 @@
                 <th width="50">编号</th>
                 <th>用户名</th>
                 <th>邮箱</th>
-                <th>注册时间</th>
+                <th>注册时间/修改时间</th>
                 <th>上次登陆</th>
                 <th>类型</th>
                 <th>状态</th>
@@ -38,7 +38,7 @@
                 <td>{$v.id}</td>
                 <td>{$v.username}</td>
                 <td>{$v.email}</td>
-                <td>{$v.create_time|showdate}</td>
+                <td>{$v.create_time|showdate}<br />{$v.update_time|showdate}</td>
                 <td>{$v.login_ip}<br />{$v.logintime|showdate}</td>
                 <td>
                     <if condition="$v.type eq 1"> <span class="label label-success">超级管理员</span>

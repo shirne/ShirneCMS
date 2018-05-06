@@ -193,23 +193,12 @@ class MemberController extends BaseController
     /**
      * 删除管理员
      */
-    public function delete($id)
+    public function delete($id,$type=0)
     {
-    	$id = intval($id);
-
         $model = Db::name('member');
-        //查询status字段值
-        $result = $model->find($id);
-        //更新字段
-        $data['id']=$id;
-        if($result['status'] == 1){
-        	$data['status']=0;
-        }
-        if($result['status'] == 0){
-        	$data['status']=1;
-        }
-        if($model->update($data)){
-            user_log($this->mid,'deleteuser',1,'禁用会员' ,'manager');
+        $data['status']=$type==1?1:0;
+        if($model->where('id','in',idArr($id))->update($data)){
+            user_log($this->mid,$type==1?'enableuser':'disableuser',1,($type==1?'启用会员':'禁用会员').':'.$id ,'manager');
             $this->success("状态更新成功", url('member/index'));
         }else{
             $this->error("状态更新失败");

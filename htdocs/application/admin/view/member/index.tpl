@@ -6,7 +6,17 @@
 <div id="page-wrapper">
     <div class="row list-header">
         <div class="col col-4">
-            <a href="{:url('member/add')}" class="btn btn-outline-primary btn-sm">添加会员</a>
+            <div class="btn-toolbar list-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                <div class="btn-group btn-group-sm mr-2" role="group" aria-label="check action group">
+                    <a href="javascript:" class="btn btn-outline-secondary checkall-btn" data-toggle="button" aria-pressed="false">全选</a>
+                    <a href="javascript:" class="btn btn-outline-secondary checkreverse-btn">反选</a>
+                </div>
+                <div class="btn-group btn-group-sm mr-2" role="group" aria-label="action button group">
+                    <a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="enable">启用</a>
+                    <a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="disable">禁用</a>
+                </div>
+                <a href="{:url('member/add')}" class="btn btn-outline-primary btn-sm">添加会员</a>
+            </div>
         </div>
         <div class="col col-8">
             <form action="{:url('member/index')}" method="post">
@@ -35,9 +45,9 @@
             <tr>
                 <th width="50">编号</th>
                 <th>用户名</th>
-                <th>余额/总流水</th>
-                <th>总充值/总提现</th>
                 <th>手机/邮箱</th>
+                <th>余额</th>
+                <th>积分</th>
                 <th>推荐人</th>
                 <th>注册时间</th>
                 <th>上次登陆</th>
@@ -51,8 +61,8 @@
             <tr>
                 <td>{$v.id}</td>
                 <td>{$v.username}<br/>{$v.realname}</td>
-                <td>{$v.money|showmoney}<br />{$v.bet_all|showmoney}</td>
-                <td>{$v.charge_all|showmoney}<br />{$v.cash_all|showmoney}</td>
+                <td>{$v.money|showmoney}</td>
+                <td>{$v.credit}</td>
                 <td>{$v.mobile}<br />{$v.email}</td>
                 <td>
                     <empty name="v.refer_name">
@@ -93,9 +103,9 @@
 
                     <a class="btn btn-outline-dark btn-sm" href="{:url('member/update',array('id'=>$v['id']))}"><i class="ion-edit"></i> 编辑</a>
                     <if condition="$v.status eq 1">
-                        <a class="btn btn-outline-dark btn-sm" href="{:url('member/delete',array('id'=>$v['id']))}" onclick="javascript:return del('禁用后用户将不能登陆!\n\n请确认!!!');"><i class="ion-close"></i> 禁用</a>
+                        <a class="btn btn-outline-dark btn-sm" href="{:url('member/delete',array('id'=>$v['id'],'type'=>0))}" onclick="javascript:return del('禁用后用户将不能登陆!\n\n请确认!!!');"><i class="ion-close"></i> 禁用</a>
                     <else/>
-                        <a class="btn btn-outline-dark btn-sm" href="{:url('member/delete',array('id'=>$v['id']))}" style="color:#50AD1E;"><i class="ion-check"></i> 启用</a>
+                        <a class="btn btn-outline-dark btn-sm" href="{:url('member/delete',array('id'=>$v['id'],'type'=>1))}" style="color:#50AD1E;"><i class="ion-check"></i> 启用</a>
                     </if>
                 </td>
             </tr>
@@ -105,4 +115,46 @@
     {$page|raw}
 </div>
 
+</block>
+<block name="script">
+    <script type="text/javascript">
+        (function(w){
+            w.actionEnable=function(ids){
+                dialog.confirm('确定将选中会员设置为正常状态？',function() {
+                    $.ajax({
+                        url:'{:url('member/delete',['id'=>'__id__','type'=>1])}'.replace('__id__',ids.join(',')),
+                        type:'GET',
+                        dataType:'JSON',
+                        success:function(json){
+                            if(json.code==1){
+                                dialog.alert(json.msg,function() {
+                                    location.reload();
+                                });
+                            }else{
+                                toastr.warning(json.msg);
+                            }
+                        }
+                    });
+                });
+            };
+            w.actionDisable=function(ids){
+                dialog.confirm('确定禁用选中会员？',function() {
+                    $.ajax({
+                        url:'{:url('member/delete',['id'=>'__id__','type'=>0])}'.replace('__id__',ids.join(',')),
+                        type:'GET',
+                        dataType:'JSON',
+                        success:function(json){
+                            if(json.code==1){
+                                dialog.alert(json.msg,function() {
+                                    location.reload();
+                                });
+                            }else{
+                                toastr.warning(json.msg);
+                            }
+                        }
+                    });
+                });
+            };
+        })(window)
+    </script>
 </block>
