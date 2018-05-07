@@ -1,7 +1,7 @@
 <header>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark nav-box">
         <div class="container">
-            <a class="navbar-brand float-left" href="/"><img src="__STATIC__/images/logo.png" </a>
+            <a class="navbar-brand float-left" href="/"><img src="__STATIC__/images/logo.png" /></a>
             <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#bs-navbar-collapse" aria-expanded="false">
                 <span class="navbar-toggler-icon"></span>
             </button>

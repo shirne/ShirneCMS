@@ -47,6 +47,6 @@ ShirneCMS
 
 ## 模板说明
 
-标签库 article/extend 具体查看 applition/common/taglib
+标签库 [article](TAGLIB.md) 和 [extend](TAGLIB.md)
 
 导航配置 navigator.php

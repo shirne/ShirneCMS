@@ -14,9 +14,10 @@ use think\template\TagLib;
 class Article extends TagLib
 {
     protected $tags =[
-        'list'=>['attr'=>'var,category,type,limit,cover','close'=>0],
+        'list'=>['attr'=>'var,category,type,limit,cover,recursive','close'=>0],
         'pages'=>['attr'=>'var,group,limit','close'=>0],
-        'cates'=>['attr'=>'var,pid','close'=>0]
+        'cates'=>['attr'=>'var,pid','close'=>0],
+        'listwrap'=>['attr'=>'name,step,id']
     ];
 
     public function tagList($tag){
@@ -82,6 +83,27 @@ class Article extends TagLib
         $parseStr .= '->select();';
 
         $parseStr .= ' ?>';
+        return $parseStr;
+    }
+    public function tagListwrap($tag,$content){
+        $name   = $tag['name'];
+        $id     = isset($tag['id'])?$tag['id']:'wrapedlist';
+        $step   = isset($tag['step'])?intval($tag['step']):1;
+        $flag     = substr($name, 0, 1);
+
+        $parseStr='<?php ';
+        if (':' == $flag) {
+            $name = $this->autoBuildVar($name);
+            $parseStr .= '$_result=' . $name . ';';
+            $name = '$_result';
+        } else {
+            $name = $this->autoBuildVar($name);
+        }
+        $parseStr .= '$wrapcount=count('.$name.');';
+        $parseStr .= 'for($wrapi=0; $wrapi < $wrapcount; $wrapi+='.$step.'):';
+        $parseStr .= ' $'.$id.' = array_slice('.$name.', $wrapi, '.$step.'); ?>';
+        $parseStr .= $content;
+        $parseStr .= '<?php endfor; ?>';
         return $parseStr;
     }
 }
