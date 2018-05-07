@@ -11,8 +11,8 @@
         </ol>
         <div class="carousel-inner">
             <volist name="banners" id="item" key="k">
-                <div class="carousel-item{$k==1?' active':''}" {$k}>
-                    <img class="d-block w-100" src="{$item.image}" alt="{$image.title}">
+                <div class="carousel-item{$k==1?' active':''}" >
+                    <img class="d-block h-100 m-auto" src="{$item.image}" alt="{$image.title}">
                     <p>{$image.title}</p>
                 </div>
             </volist>

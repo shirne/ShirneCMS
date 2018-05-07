@@ -44,8 +44,4 @@ class PageController extends BaseController{
         }
         return $this->fetch();
     }
-
-    public function __call($method,$args){
-        $this->index($method);
-    }
 }
