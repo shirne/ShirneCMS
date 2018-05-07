@@ -35,6 +35,10 @@ class PageController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
+                $uploaded = $this->upload('page', 'upload_icon', true);
+                if (!empty($uploaded)) {
+                    $data['icon'] = $uploaded['url'];
+                }
                 $model=PageModel::create($data);
                 if ($model->getLastInsID()) {
                     $this->success("添加成功", url('page/index'));
@@ -63,8 +67,14 @@ class PageController extends BaseController
                 $this->error($validate->getError());
             } else {
                 $model=PageModel::get($id);
-
+                $delete_images=[];
+                $uploaded = $this->upload('page', 'upload_icon', true);
+                if (!empty($uploaded)) {
+                    $data['icon'] = $uploaded['url'];
+                    $delete_images[]=$data['delete_icon'];
+                }
                 if ($model->allowField(true)->save($data)) {
+                    delete_image($delete_images);
                     $this->success("更新成功", url('page/index'));
                 } else {
                     $this->error("更新失败");

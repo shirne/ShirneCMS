@@ -82,6 +82,50 @@ h6{ font-size :1rem;}
     text-align: left;
 }
 
+.service-body{
+    padding-top:40px;
+}
+.service-body .figure figcaption{
+    text-align: center;
+    white-space: nowrap;
+}
+.service-body .figure-caption{
+    font-size:0.8rem;
+}
+
+.solution-body .nav{
+    background:#f2f2f2;
+}
+.solution-body .nav-link{
+    padding:20px 30px;
+    background:#f2f2f2;
+    color:#282828;
+    border-radius:0;
+    position:relative;
+}
+.solution-body .nav-pills .nav-link.active{
+    background:rgba(0,0,0,.1);
+    color:#282828;
+}
+.solution-body .nav-pills .nav-link.active:after{
+    content:"";
+    display:block;
+    position: absolute;
+    top:0;
+    left:-16px;
+    height:100%;
+    width:16px;
+    background:rgba(0,0,0,.1);
+    border-left:4px #282828 solid;
+}
+.solution-body .nav-link p{
+    line-height:1.8rem;
+    margin:0;
+}
+.solution-body .nav-link .vice_title{
+    color:#b2b2b2;
+}
+
 .subbanner .inner{
     height :250px;
     background:url(../images/blank.gif) center center no-repeat #272727;

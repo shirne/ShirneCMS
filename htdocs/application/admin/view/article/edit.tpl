@@ -6,9 +6,15 @@
     <div class="page-header">{$id>0?'编辑':'添加'}文章</div>
     <div id="page-content">
     <form method="post" action="" enctype="multipart/form-data">
-        <div class="form-group">
-            <label for="article-title">文章标题</label>
-            <input type="text" name="title" class="form-control" value="{$article.title}" id="article-title" placeholder="输入文章标题">
+        <div class="form-row">
+            <div class="col form-group">
+                <label for="article-title">文章标题</label>
+                <input type="text" name="title" class="form-control" value="{$article.title}" id="article-title" placeholder="输入文章标题">
+            </div>
+            <div class="col form-group">
+                <label for="article-title">副标题</label>
+                <input type="text" name="vice_title" class="form-control" value="{$article.vice_title}" id="article-title" >
+            </div>
         </div>
         <div class="form-group">
             <label for="article-cate">文章分类</label>

@@ -7,16 +7,23 @@
         <div class="page-header">{$id>0?'编辑':'添加'}页面</div>
         <div id="page-content">
             <form method="post" action="" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label for="page-title">页面标题</label>
-                    <input type="text" name="title" class="form-control" value="{$page.title}" id="page-title"
-                           placeholder="输入单页标题">
+                <div class="form-row">
+                    <div class="col form-group">
+                        <label for="page-title">页面标题</label>
+                        <input type="text" name="title" class="form-control" value="{$page.title}" id="page-title"
+                               placeholder="输入单页标题">
+                    </div>
+                    <div class="col form-group">
+                        <label for="page-title">副标题</label>
+                        <input type="text" name="vice_title" class="form-control" value="{$page.vice_title}" id="page-title"
+                               >
+                    </div>
                 </div>
                 <div class="form-row">
                     <div class="col form-group">
-                        <label for="page-name">别名</label>
+                        <label for="page-name">页面标识</label>
                         <input type="text" name="name" class="form-control" value="{$page.name}" id="page-name"
-                               placeholder="输入单页别名,不能和其他单页别名重复">
+                               placeholder="输入标识,不能和其他页面标识重复">
                     </div>
                     <div class="col form-group">
                         <label for="page-title">分组</label>
