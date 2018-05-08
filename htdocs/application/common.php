@@ -348,6 +348,12 @@ function showcashtype($type){
  * @return false|string
  */
 function showdate($time,$replace='-',$format='Y-m-d H:i:s'){
+    if(!empty($replace)){
+        if($replace!='-'){
+            $format=$replace;
+            $replace='';
+        }
+    }
     return $time==0?$replace:date($format,$time);
 }
 

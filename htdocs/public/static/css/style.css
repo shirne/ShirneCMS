@@ -246,6 +246,37 @@ h6{ font-size :1rem;}
     background-size:cover;
 }
 
+.nav-row{
+    border-bottom:1px #e6e6e6 solid;
+}
+.nav-row .row-item{
+    text-align: center;
+    line-height :4rem;
+    margin-top:1rem;
+    color:#282828;
+}
+.nav-row .active{
+    color:#bf1e2e;
+}
+
+.page-title{
+    text-align: center;
+    line-height:4rem;
+    margin-top:4rem;
+}
+.page-title:after{
+    content:"";
+    display:block;
+    width:60px;
+    height:0;
+    border-bottom:2px #bf1e2e solid;
+    margin:0 auto;
+}
+
+.page-content{
+    min-height: 500px;
+}
+
 .main{
     padding:0 0 1rem 0;
 }

@@ -160,12 +160,11 @@
                                     <volist name="art_list" id="art" >
                                         <a class="col-4" href="{:url('index/article/view',['id'=>$art['id']])}">
                                             <div class="media">
-                                                <img class="align-self-end mr-3" src="{$art.cover}"
-                                                     alt="Generic placeholder image">
+                                                <img class="align-self-end mr-3" src="{$art.cover}" alt="{$art.title}">
                                                 <div class="media-body">
                                                     <div>
                                                         <span class="badge">{$art.category_title}</span>
-                                                        <text class="text-muted">{$art.create_time|showdate='','Y-m-d'}</text>
+                                                        <text class="text-muted">{$art.create_time|showdate='Y-m-d'}</text>
                                                     </div>
                                                     <h4>{$art.title}</h4>
                                                 </div>
