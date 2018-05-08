@@ -16,23 +16,31 @@ class Article extends TagLib
     protected $tags =[
         'list'=>['attr'=>'var,category,type,limit,cover,recursive','close'=>0],
         'pages'=>['attr'=>'var,group,limit','close'=>0],
+        'page'=>['attr'=>'var,name','close'=>0],
         'cates'=>['attr'=>'var,pid','close'=>0],
+        'cate'=>['attr'=>'var,name','close'=>0],
         'listwrap'=>['attr'=>'name,step,id']
     ];
 
     public function tagList($tag){
         $var  = isset($tag['var']) ? $tag['var'] : 'article_list';
         $recursive =isset($tag['recursive']) ? $tag['recursive'] : 'false';
+        $category=isset($tag['category']) ? $tag['category'] : '';
+        if(preg_match('/^[a-zA-Z]\w*$/',$category)){
+            $category="getCategoryId('".$category."')";
+        }else{
+            $category=intval($category);
+        }
 
         $parseStr='<?php ';
 
         $parseStr.='$'.$var.'=\think\Db::view("Article","*")';
         $parseStr .= '->view("Category",["title"=>"category_title","name"=>"category_name","short"=>"category_short","icon"=>"category_icon","image"=>"category_image"],"Article.cate_id=Category.id","LEFT")';
-        if(!empty($tag['category'])){
+        if(!empty($category)){
             if($recursive=='true'){
-                $parseStr .= '->where("Article.cate_id", "IN", getSubCateids(' . intval($tag['category']) . '))';
+                $parseStr .= '->where("Article.cate_id", "IN", getSubCateids(' . $category . '))';
             }else {
-                $parseStr .= '->where("Article.cate_id",' . intval($tag['category']) . ')';
+                $parseStr .= '->where("Article.cate_id",' . $category . ')';
             }
         }
         if(!empty($tag['type'])){
@@ -58,12 +66,27 @@ class Article extends TagLib
 
         $parseStr.='$'.$var.'=\think\Db::name("page")';
         if(!empty($group)){
-            $parseStr .= '->where(\'group\',\''.$tag['group'].'\')';
+            $parseStr .= '->where(\'group\',\''.$group.'\')';
         }
         if(!empty($tag['limit'])){
             $parseStr .= '->limit('.intval($tag['limit']).')';
         }
         $parseStr .= '->select();';
+
+        $parseStr .= ' ?>';
+        return $parseStr;
+    }
+    public function tagPage($tag){
+        $var  = isset($tag['var']) ? $tag['var'] : 'page_model';
+        $name=isset($tag['name']) ? $tag['name'] : '';
+
+        $parseStr='<?php ';
+
+        $parseStr.='$'.$var.'=\think\Db::name("page")';
+        if(!empty($group)){
+            $parseStr .= '->where(\'name\',\''.$name.'\')';
+        }
+        $parseStr .= '->find();';
 
         $parseStr .= ' ?>';
         return $parseStr;
@@ -81,6 +104,22 @@ class Article extends TagLib
         }
         $parseStr .= '->order("sort ASC, id ASC")';
         $parseStr .= '->select();';
+
+        $parseStr .= ' ?>';
+        return $parseStr;
+    }
+    public function tagCate($tag){
+        $var  = isset($tag['var']) ? $tag['var'] : 'cates_list';
+        $name = isset($tag['name']) ? intval($tag['name']) : 0;
+        if(preg_match('/^[a-zA-Z]\w*$/',$name)){
+            $name="'".$name."'";
+        }else{
+            $name=intval($name);
+        }
+
+        $parseStr='<?php ';
+
+        $parseStr.='$'.$var.'=findCategory('.$name.');';
 
         $parseStr .= ' ?>';
         return $parseStr;

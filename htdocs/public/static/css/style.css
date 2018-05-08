@@ -186,6 +186,10 @@ h6{ font-size :1rem;}
     color:#fff;
 }
 
+.about-body{
+    padding-top:60px;
+}
+
 .slide-box a{
     color:#fff;
     line-height:3rem;
@@ -218,6 +222,10 @@ h6{ font-size :1rem;}
     background:transparent;
     display:inline-block;
     line-height :1.6rem;
+    margin-right:1rem;
+}
+.news-body .media .text-muted{
+    color:#c2c2c2;
 }
 .news-body .media h4{
     color:#1f2326;

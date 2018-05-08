@@ -70,9 +70,8 @@ class ArticleController extends BaseController{
     }
 
     private function category($name=''){
-        $categories=getArticleCategories();
 
-        $this->category=findCategory($categories,$name);
+        $this->category=findCategory($name);
         $this->categotyTree=getArticleCategoryTree($name);
 
         $this->categries=getTreedCategory();

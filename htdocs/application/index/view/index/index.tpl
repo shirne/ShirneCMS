@@ -90,7 +90,7 @@
             </div>
             <div class="index-card-body cases-body">
                 <div class="row">
-                    <article:list var="case_list" category="4"/>
+                    <article:list var="case_list" category="4" limit="9"/>
                     <volist name="case_list" id="case">
                         <div class="col-4">
                             <div class="card">
@@ -110,6 +110,11 @@
                         </div>
                     </volist>
                 </div>
+                <if condition="count($case_list) EQ 9">
+                    <div class="row">
+                        <div class="col-1 align-self-center"><a href="{:url('index/article/index',['name'=>'cases'])}" class="btn btn-outline-secondary btn-block">MORE</a></div>
+                    </div>
+                </if>
             </div>
         </div>
     </div>
@@ -119,8 +124,19 @@
                 <h2>关于原设</h2>
                 <p>ABOUT ORIGIN SOFTWARE</p>
             </div>
-            <div class="index-card-body">
-
+            <div class="index-card-body about-body">
+                <article:page var="about" name="about"/>
+                <div class="row">
+                    <div class="col-5">
+                        <figure class="figure">
+                            <img src="{$about.icon}" class="figure-img img-fluid rounded" />
+                        </figure>
+                    </div>
+                    <div class="col-7">
+                        <h4>WHO WE ARE ?</h4>
+                        <div class="text-muted">{$about.content|raw}</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

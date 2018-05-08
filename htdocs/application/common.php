@@ -467,7 +467,7 @@ function getArticleCategoryTree($name){
     $categories=getArticleCategories();
     $tree=array();
     while($name!='0'){
-        $current=findCategory($categories,$name);
+        $current=_findCategory($categories,$name);
         if(empty($current))break;
         array_unshift($tree,$current);
         $name=$current['pid'];
@@ -475,13 +475,34 @@ function getArticleCategoryTree($name){
 
     return $tree;
 }
-function findCategory(&$cates,$name){
+function _findCategory(&$cates,$name){
     foreach ($cates as $cate){
         if($cate['id']==$name || $cate['name']==$name){
             return $cate;
         }
     }
     return NULL;
+}
+function findCategory($idorname){
+    $categories=getArticleCategories();
+    $cate=_findCategory($categories,$idorname);
+    if(!empty($cate)){
+        return $cate;
+    }else{
+        return NULL;
+    }
+}
+function getCategoryId($idorname){
+    if(preg_match('/^[a-zA-Z]\w*$/',$idorname)) {
+        $cate = findCategory( $idorname);
+        if (!empty($cate)) {
+            return $cate['id'];
+        } else {
+            return 0;
+        }
+    }else{
+        return intval($idorname);
+    }
 }
 
 /**
