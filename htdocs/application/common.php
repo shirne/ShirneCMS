@@ -24,9 +24,11 @@ function getMemberLevels()
     if (empty($levels)) {
         $levels = cache('levels');
         if (empty($levels)) {
-            $levels = \think\Db::name('MemberLevel')->order('sort ASC,level_id ASC')->select(array('index'=>'level_id'));
-            foreach ($levels as $lvid=>$level){
-                $levels[$lvid]['lead_percent']=explode(',',$level['lead_percent']);
+            $levels=array();
+            $model=new \app\admin\model\MemberLevelModel();
+            $data =  $model->order('sort ASC,level_id ASC')->select();
+            foreach ($data as $level){
+                $levels[$level['level_id']]=$level;
             }
             cache('levels', $levels);
         }

@@ -12,11 +12,13 @@ class InviteController extends BaseController
      */
     public function index($key="")
     {
-        $model = Db::name('invite_code');
+        $model = Db::view('inviteCode','*')
+        ->view('member',['username'],'member.id=inviteCode.member_id','LEFT')
+        ->view('member memberUse',['username'=>'use_username'],'memberUse.id=inviteCode.member_use','LEFT');
         $where=array();
         if(!empty($key )){
             $key=trim($key);
-            $where['code|member_id'] = $key;
+            $where['inviteCode.code|inviteCode.member_id|inviteCode.member_use'] = $key;
         }
 
         $lists=$model->where($where)->paginate(15);

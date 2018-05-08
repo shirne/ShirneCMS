@@ -26,6 +26,7 @@
                 <th width="50">编号</th>
                 <th>邀请码</th>
                 <th>所属会员</th>
+                <th>会员组</th>
                 <th>创建日期</th>
                 <th>使用会员</th>
                 <th>使用日期</th>
@@ -39,9 +40,16 @@
             <tr>
                 <td>{$v.id}</td>
                 <td>{$v.code}</td>
-                <td>{$v.member_id}</td>
+                <td>[{$v.member_id}]{$v.username}</td>
+                <td>
+                    <if condition="$v['level_id'] GT 0">
+                        {$levels[$v['level_id']]['level_name']}
+                        <else/>
+                        -
+                    </if>
+                </td>
                 <td>{$v.create_time|showdate}</td>
-                <td>{$v.member_use}</td>
+                <td>[{$v.member_use}]{$v.use_username}</td>
                 <td>{$v.use_at|showdate}</td>
                 <td>{$v.valid_at|showdate}</td>
                 <td><if condition="$v.status eq 1"><span class="badge badge-danger">锁定</span><else/><span class="badge badge-secondary">正常</span></if></td>
