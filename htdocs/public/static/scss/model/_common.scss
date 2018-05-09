@@ -1,0 +1,86 @@
+html{font-size:14px;}
+
+body{background:$bg-light;}
+
+h1{font-size:1.5rem;}
+h2{font-size:1.4rem;}
+h3{font-size:1.3rem;}
+h4{font-size:1.2rem;}
+h5{font-size:1.1rem;}
+h6{ font-size :1rem;}
+
+.empty{
+  text-align: center;
+  color: $color-text-light;
+  padding:50px 0;
+}
+
+.control-label{
+  margin-bottom:0;
+  line-height :2.25rem;
+}
+.nav-box{
+  border-bottom:1px #2b2b2c solid;
+  padding:0;
+  line-height:2.5;
+}
+.navbar-brand{
+  padding:0.5rem 0;
+  margin-right:0;
+  img{
+    display:block;
+  }
+}
+.main-nav{
+  margin-right:150px;
+  flex:1;
+}
+.nav-box .dropdown-menu{
+  margin:0;
+  border-radius:0;
+  border-top:1px #992835 solid;
+  background:$bg-nav;
+  .dropdown-item{
+    color:rgba(255,255,255,.5);
+    &:hover,&:focus{
+      color:rgba(255,255,255,.9);
+      background:none;
+    }
+  }
+  .active{
+    color:rgba(255,255,255,1);
+    background:none;
+  }
+}
+
+
+.subbanner .inner{
+  height :250px;
+  background:url(../images/blank.gif) center center no-repeat $bg-dark;
+  background-size:cover;
+}
+
+.main{
+  padding:0 0 1rem 0;
+}
+
+
+.nav-row{
+  border-bottom:1px #e6e6e6 solid;
+  .row-item{
+    text-align: center;
+    line-height :4rem;
+    margin-top:1rem;
+    color:#282828;
+  }
+  .active{
+    color:$color-eye;
+  }
+}
+
+
+@media (min-width:992px) {
+  .control-label {
+    text-align: right;
+  }
+}

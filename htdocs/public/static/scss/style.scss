@@ -1,0 +1,17 @@
+$color-text:#1f2326;
+$color-text-light:#a1a1a1;
+$color-text-grey:#898989;
+$color-eye:#bf1e2e;
+
+$bg-nav:#343a40;
+$bg-dark:#272727;
+$bg-light:#f5f5f5;
+$bd-dark:#2b2b2c;
+
+
+@import "model/_common";
+@import "model/_index";
+@import "model/_page";
+@import "model/_article";
+@import "model/_case";
+@import "model/_footer";
