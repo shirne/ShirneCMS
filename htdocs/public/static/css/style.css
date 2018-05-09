@@ -1,11 +1,19 @@
 html{font-size:14px;}
 
+body{background:#f5f5f5;}
+
 h1{font-size:1.5rem;}
 h2{font-size:1.4rem;}
 h3{font-size:1.3rem;}
 h4{font-size:1.2rem;}
 h5{font-size:1.1rem;}
 h6{ font-size :1rem;}
+
+.empty{
+    text-align: center;
+    color: #999;
+    padding:50px 0;
+}
 
 .control-label{
     margin-bottom:0;
@@ -45,6 +53,7 @@ h6{ font-size :1rem;}
     background:none;
 }
 
+/*==========首页各版块样式==========*/
 #carouselBannerControls{
     height :597px;
 }
@@ -62,7 +71,7 @@ h6{ font-size :1rem;}
     padding:30px;
 }
 .index-bg{
-    background:#f5f5f5;
+    background:#fff;
 }
 .index-card-title h2{
     text-align: center;
@@ -239,12 +248,18 @@ h6{ font-size :1rem;}
 .news-body .media:hover h4{
     color:#fff;
 }
+/*==========首页各版块样式 END==========*/
 
 .subbanner .inner{
     height :250px;
     background:url(../images/blank.gif) center center no-repeat #272727;
     background-size:cover;
 }
+
+.main{
+    padding:0 0 1rem 0;
+}
+
 
 .nav-row{
     border-bottom:1px #e6e6e6 solid;
@@ -258,6 +273,7 @@ h6{ font-size :1rem;}
 .nav-row .active{
     color:#bf1e2e;
 }
+
 
 .page-title{
     text-align: center;
@@ -277,17 +293,105 @@ h6{ font-size :1rem;}
     min-height: 500px;
 }
 
-.main{
-    padding:0 0 1rem 0;
+/*==========案例列表==========*/
+.case-list{
+    padding:2rem 0;
+}
+.case-list .card{
+    border-radius:0;
+    box-shadow: rgba(0,0,0,.08) 0 0 5px;
+    position: relative;
+    transition: background-color .3s;
+    border:0;
+}
+.case-list .card .card-body{
+    position: relative;
+    z-index:2;
+}
+.case-list .card h3{
+    transition: color .3s;
+}
+.case-list .card .mask{
+    background:url(../images/eye.png) center -99px no-repeat rgba(0,0,0,0);
+    transition:background-color,background-position .5s;
+    z-index:1;
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%;
+    height :100%;
+}
+.case-list .card:hover{
+    background:#1f2326;
+}
+.case-list .card:hover .mask{
+    background-color:rgba(0,0,0,.6);
+    background-position:center 72px;
+}
+.case-list .card:hover h3{
+    color:#fff;
 }
 
-.main_right{
-    min-height:500px;
+/*==========新闻列表==========*/
+.article-list{
+    padding-top:2rem;
+}
+.article-list li{
+    border-bottom:1px #e6e6e6 solid;
+    padding-top:1rem;
+    padding-bottom:1rem;
+}
+.article-list li .media-img{
+    width: 133px;
+    height: 100px;
+    margin-right:1rem;
+}
+.article-list h5{
+    line-height:2rem;
+}
+.article-list h5 a{
+    color:#1f2326;
+}
+.article-list .media-body div{
+    line-height:1.6rem;
+    color:#a1a1a1;
+    font-size:0.9rem;
+}
+.article-list .media-body p{
+    margin:0;
 }
 
-.articlebody h1{
+
+/*==========新闻详情==========*/
+.article-body{
+    padding-top:4rem;
+}
+.article-title{
+    font-size:2rem;
+    line-height:4rem;
     text-align: center;
 }
+.article-info{
+    margin-bottom:1.5rem;
+}
+.article-info a{
+    color:#333;
+    display: inline-block;
+    border:1px #ccc solid;
+    padding:0 10px;
+}
+.article-content{
+    background:#fff;
+    border-radius:5px;
+    box-shadow: rgba(0,0,0,.1) 0 0 5px;
+    padding:50px;
+    min-height:500px;
+    margin-bottom:2rem;
+}
+
+
+
+
 @media (min-width:992px) {
     .control-label {
         text-align: right;

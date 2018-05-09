@@ -722,14 +722,13 @@ function getWeek($d){
  */
 function cutstr($str,$len,$dot='...'){
     $str=html_entity_decode($str);
-    $str = str_replace('&nbsp',' ',$str);
     $str=strip_tags($str,'');
 
     $charset = 'utf-8';
     if (strlen($str) <= $len) {
         return $str;
     }
-    $str = str_replace(array('&amp;', '&quot;', '&lt;', '&gt;'), array('&', '"', '<', '>'), $str);
+    $str = str_replace(array(' ', '&nbsp;', '&amp;', '&quot;', '&lt;', '&gt;'), array('', ' ','&', '"', '<', '>'), $str);
     $strcut = '';
     if (strtolower($charset) == 'utf-8') {
         $n = $tn = $noc = 0;
@@ -763,7 +762,7 @@ function cutstr($str,$len,$dot='...'){
             $strcut.= ord($str[$i]) > 127 ? $str[$i] . $str[++$i] : $str[$i];
         }
     }
-    $strcut = str_replace(array('&', '"', '<', '>'), array('&amp;', '&quot;', '&lt;', '&gt;'), $strcut);
+    $strcut = str_replace(array(' ', '&', '"', '<', '>'), array('&nbsp;', '&amp;', '&quot;', '&lt;', '&gt;'), $strcut);
     return $strcut . $dot;
 }
 

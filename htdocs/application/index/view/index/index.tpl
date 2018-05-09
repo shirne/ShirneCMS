@@ -27,7 +27,7 @@
         </a>
     </div>
 
-    <div class="index-card">
+    <div class="index-card index-bg">
         <div class="container">
             <div class="index-card-title">
                 <h2>服务范围</h2>
@@ -47,7 +47,7 @@
             </div>
         </div>
     </div>
-    <div class="index-card">
+    <div class="index-card index-bg">
         <div class="container">
             <div class="index-card-title">
                 <h2>解决方案</h2>
@@ -82,7 +82,7 @@
             </div>
         </div>
     </div>
-    <div class="index-card index-bg">
+    <div class="index-card">
         <div class="container">
             <div class="index-card-title">
                 <h2>案例中心</h2>
@@ -103,7 +103,7 @@
                                         <span>{$case.vice_title}</span>
                                     </p>
                                 </div>
-                                <a href="{:url('index/article/view',['id'=>$case['id']])}">
+                                <a target="_blank" href="{:url('index/article/view',['id'=>$case['id']])}">
                                     <div class="mask"></div>
                                 </a>
                             </div>
@@ -118,7 +118,7 @@
             </div>
         </div>
     </div>
-    <div class="index-card">
+    <div class="index-card index-bg">
         <div class="container">
             <div class="index-card-title">
                 <h2>关于原设</h2>
@@ -140,7 +140,7 @@
             </div>
         </div>
     </div>
-    <div class="index-card index-bg">
+    <div class="index-card">
         <div class="container">
             <div class="index-card-title slide">
                 <div class="slide-box float-right">
@@ -158,7 +158,7 @@
                             <div class="carousel-item {$wrapi==0?'active':''}">
                                 <div class="row">
                                     <volist name="art_list" id="art" >
-                                        <a class="col-4" href="{:url('index/article/view',['id'=>$art['id']])}">
+                                        <a class="col-4" target="_blank" href="{:url('index/article/view',['id'=>$art['id']])}">
                                             <div class="media">
                                                 <img class="align-self-end mr-3" src="{$art.cover}" alt="{$art.title}">
                                                 <div class="media-body">
