@@ -15,29 +15,32 @@
 	<div class="page-header">管理员权限</div>
 	<div id="page-content">
 <form action="{:url('manager/permision',array('id'=>$model['manager_id']))}" class="form-horizontal" method="post">
-	<div class="form-group">
-		<div class="col-sm-2">全局权限</div>
-		<div class="col-sm-10">
+	<div class="card">
+		<div class="card-header">全局权限</div>
+		<div class="card-body">
 			<label><input type="checkbox" name="global[]" value="edit" <if condition="in_array('edit',$model['global'])">checked</if> />&nbsp;编辑</label>
 			<label><input type="checkbox" name="global[]" value="del" <if condition="in_array('del',$model['global'])">checked</if> />&nbsp;删除</label>
 		</div>
 	</div>
-	<div class="form-group">
-		<div class="col-sm-2">详细权限</div>
-		<div class="col-sm-10">
-			<label><input type="checkbox" onclick="checkall(this)" />&nbsp;全选</label>
-		</div>
+	<div class="card mt-4 mb-4">
+		<div class="card-header">详细权限&nbsp;&nbsp;<label><input type="checkbox" onclick="checkall(this)" />&nbsp;全选</label></div>
+
+		<ul class="list-group list-group-flush">
+		<foreach name="perms" item="perm" key="key">
+			<li class="list-group-item">
+				<div class="row">
+				<label class="col-2"><input type="checkbox" onclick="checkline(this)" />&nbsp;{$perm.title}</label>
+				<div class="col-10">
+					<foreach name="perm.items" item="item" key="k">
+						<label title="{$item}"><input type="checkbox" name="detail[]" value="{$key}_{$k}" <if condition="in_array($key.'_'.$k,$model['detail'])">checked</if> />&nbsp;{$item}</label>
+					</foreach>
+				</div>
+				</div>
+			</li>
+		</foreach>
+		</ul>
 	</div>
-	<foreach name="perms" item="perm" key="key">
-		<div class="form-group detail-line">
-			<label class="col-sm-2"><input type="checkbox" onclick="checkline(this)" />&nbsp;{$perm.title}</label>
-			<div class="col-sm-10">
-				<foreach name="perm.items" item="item" key="k">
-				<label title="{$item}"><input type="checkbox" name="detail[]" value="{$key}_{$k}" <if condition="in_array($key.'_'.$k,$model['detail'])">checked</if> />&nbsp;{$item}</label>
-				</foreach>
-			</div>
-		</div>
-	</foreach>
+
 	<div class="form-group">
 		<div class="col-sm-10 col-sm-offset-2">
 		<button class="btn btn-primary" type="submit" >保存</button>
@@ -57,15 +60,15 @@ function checkall(src){
 }
 function checkline(src){
 	var checked=$(src).is(':checked');
-	$(src).parents('div.form-group').find('[name^=detail]').prop('checked',checked);
+	$(src).parents('li').find('[name^=detail]').prop('checked',checked);
 }
 $('input[name^=detail]').click(function(){
 	var row=$(this).parents('div.form-group');
 	var p=row.find('div.col-sm-10');
 	if(p.find(':checked').length==p.find('input').length){
-		row.find('label.col-sm-2 input').prop('checked',true);
+		row.find('label.col-2 input').prop('checked',true);
 	}else{
-		row.find('label.col-sm-2 input').prop('checked',false);
+		row.find('label.col-2 input').prop('checked',false);
 	}
 });
 jQuery(function(){
@@ -73,9 +76,9 @@ jQuery(function(){
 		var row=$(this);
 		var p=row.find('div.col-sm-10');
 		if(p.find(':checked').length==p.find('input').length){
-			row.find('label.col-sm-2 input').prop('checked',true);
+			row.find('label.col-2 input').prop('checked',true);
 		}else{
-			row.find('label.col-sm-2 input').prop('checked',false);
+			row.find('label.col-2 input').prop('checked',false);
 		}
 	})
 });

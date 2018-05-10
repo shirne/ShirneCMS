@@ -61,9 +61,9 @@
             <tr>
                 <td>{$v.id}</td>
                 <td>{$v.username}<br/>{$v.realname}</td>
+                <td>{$v.mobile}<br />{$v.email}</td>
                 <td>{$v.money|showmoney}</td>
                 <td>{$v.credit}</td>
-                <td>{$v.mobile}<br />{$v.email}</td>
                 <td>
                     <empty name="v.refer_name">
                         -
