@@ -28,6 +28,25 @@ body {
 .announcement-bottom .nav-item{border-right:1px rgba(0,0,0,.125) solid;}
 .announcement-bottom .nav-item:last-child{border-right:0;}
 
+.modal-title{
+    font-size:1.2rem;
+}
+.modal-footer{
+    padding:0;
+}
+.modal-footer .nav{
+    width :100%;
+}
+.modal-footer .btn{
+    line-height:2.5rem;
+    border-radius:0;
+    border:0;
+    border-left:1px #e9ecef solid;
+}
+.modal-footer .btn:first-child{
+    border-left:0;
+}
+
 #wrapper {
     padding-left: 0;
 }
@@ -235,15 +254,7 @@ table td figure{
     padding:0;
 }
 
-.modal-footer .nav{
-    width :100%;
-}
-.modal-footer .nav .btn{
-    margin-left:1rem;
-}
-.modal-footer .nav .btn:first-child{
-    margin-left:0;
-}
+
 #loginBar{
     display: none;
 }
