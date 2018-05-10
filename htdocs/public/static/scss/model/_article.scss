@@ -1,7 +1,7 @@
 .article-list{
   padding-top:2rem;
   li{
-    border-bottom:1px #e6e6e6 solid;
+    border-bottom:1px $bd-light solid;
     padding-top:1rem;
     padding-bottom:1rem;
     .media-img{
@@ -40,14 +40,14 @@
 .article-info {
   margin-bottom : 1.5rem;
   a {
-    color   : #333;
+    color   : $color-text-dark;
     display : inline-block;
-    border  : 1px #ccc solid;
+    border  : 1px $bd-light solid;
     padding : 0 10px;
   }
 }
 .article-content{
-  background:#fff;
+  background:$color-white;
   border-radius:5px;
   box-shadow: rgba(0,0,0,.1) 0 0 5px;
   padding:50px;

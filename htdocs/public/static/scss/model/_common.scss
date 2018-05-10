@@ -20,7 +20,7 @@ h6{ font-size :1rem;}
   line-height :2.25rem;
 }
 .nav-box{
-  border-bottom:1px #2b2b2c solid;
+  border-bottom:1px $bd-dark solid;
   padding:0;
   line-height:2.5;
 }
@@ -38,7 +38,7 @@ h6{ font-size :1rem;}
 .nav-box .dropdown-menu{
   margin:0;
   border-radius:0;
-  border-top:1px #992835 solid;
+  border-top:1px $color-eye-daker solid;
   background:$bg-nav;
   .dropdown-item{
     color:rgba(255,255,255,.5);
@@ -66,12 +66,12 @@ h6{ font-size :1rem;}
 
 
 .nav-row{
-  border-bottom:1px #e6e6e6 solid;
+  border-bottom:1px $bd-light solid;
   .row-item{
     text-align: center;
     line-height :4rem;
     margin-top:1rem;
-    color:#282828;
+    color:$color-text-dark;
   }
   .active{
     color:$color-eye;
