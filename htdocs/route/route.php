@@ -20,7 +20,8 @@ Route::get('index$', 'index/index/index');
 
 Route::group('article',[
     ':name'=>'index/article/index',
-    ':id'=>'index/article/view'
+    ':id'=>'index/article/view',
+    'comment/:id'=>'index/article/comment'
 ])->method('GET');
 
 Route::get('page/:group/[:name]','index/page/index');

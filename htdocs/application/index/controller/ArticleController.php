@@ -2,6 +2,8 @@
 
 namespace app\index\controller;
 
+use app\common\model\ArticleCommentModel;
+use app\common\validate\ArticleCommentValidate;
 use \think\Db;
 /**
  * 文章
@@ -66,6 +68,49 @@ class ArticleController extends BaseController{
         $this->category();
 
         $this->assign('article', $article);
+        return $this->fetch();
+    }
+    public function comment($id){
+        $article = Db::name('article')->find($id);
+        if(empty($article)){
+            $this->error('参数错误');
+        }
+        if($this->request->isPost()){
+            $data=$this->request->only('article_id,email,is_anonymous,content,reply_id','POST');
+            $validate=new ArticleCommentValidate();
+            if(!$validate->check($data)){
+                $this->error($validate->getError());
+            }else{
+                $data['member_id']=$this->userid;
+                if(!empty($data['member_id'])){
+                    $data['email']=$this->user['email'];
+                }else{
+                    if(empty($data['email'])){
+                        $this->error('请填写邮箱');
+                    }
+                }
+                if(!empty($data['reply_id'])){
+                    $reply=Db::name('ArticleComment')->find($data['reply_id']);
+                    if(empty($reply)){
+                        $this->error('回复的评论不存在');
+                    }
+                    $data['group_id']=empty($reply['group_id'])?$reply['id']:$reply['group_id'];
+                }
+                $model=ArticleCommentModel::create($data);
+                if($model->id){
+                    $this->success('评论成功');
+                }else{
+                    $this->error('评论失败');
+                }
+            }
+        }
+
+        $comments=Db::view('articleComment','*')
+        ->view('member',['username','realname'],'member.id=articleComment.member_id','LEFT')
+        ->where('article_id',$id)->paginate(10);
+
+        $this->assign('comments',$comments);
+        $this->assign('page',$comments->render());
         return $this->fetch();
     }
 
