@@ -36,7 +36,7 @@
                                     </h5>
                                     <div>
                                         <p>{$article.content|cutstr=80}</p>
-                                        <p><span class="float-right"><i class="ion-calendar"></i> {$article.create_time|showdate}</span> </p>
+                                        <p><span class="float-right"><i class="ion-md-calendar"></i> {$article.create_time|showdate}</span> </p>
                                     </div>
                                 </div>
                             </div>

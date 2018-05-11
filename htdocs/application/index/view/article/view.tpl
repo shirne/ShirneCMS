@@ -8,7 +8,7 @@
                 <div class="article-info text-muted text-center">
                     <a href="{:url('index/article/index',array('name'=>$category['name']))}">{$category.title}</a>
                     &nbsp;&nbsp;
-                    <i class="ion-calendar"></i>&nbsp;{$article.create_time|showdate}
+                    <i class="ion-md-calendar"></i>&nbsp;{$article.create_time|showdate}
                 </div>
                 <div class="article-content">
                     <div>

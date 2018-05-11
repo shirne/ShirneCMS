@@ -25,7 +25,7 @@
                 <div class="form-group input-group input-group-sm">
                     <input type="text" class="form-control" name="key" placeholder="输入单页标题或者别名关键词搜索">
                     <div class="input-group-append">
-                      <button class="btn btn-outline-secondary" type="submit"><i class="ion-search"></i></button>
+                      <button class="btn btn-outline-secondary" type="submit"><i class="ion-md-search"></i></button>
                     </div>
                 </div>
             </form>
@@ -59,8 +59,8 @@
                     </if>
                 </td>
                 <td>
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('page/edit',array('id'=>$v['id']))}"><i class="ion-edit"></i> 编辑</a>
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('page/delete',array('id'=>$v['id']))}" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash-a"></i> 删除</a>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('page/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> 编辑</a>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('page/delete',array('id'=>$v['id']))}" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
                 </td>
             </tr>
         </foreach>

@@ -63,8 +63,8 @@ function checkline(src){
 	$(src).parents('li').find('[name^=detail]').prop('checked',checked);
 }
 $('input[name^=detail]').click(function(){
-	var row=$(this).parents('div.form-group');
-	var p=row.find('div.col-sm-10');
+	var row=$(this).parents('li.list-group-item');
+	var p=row.find('div.col-10');
 	if(p.find(':checked').length==p.find('input').length){
 		row.find('label.col-2 input').prop('checked',true);
 	}else{
@@ -74,7 +74,7 @@ $('input[name^=detail]').click(function(){
 jQuery(function(){
 	$('.detail-line').each(function(){
 		var row=$(this);
-		var p=row.find('div.col-sm-10');
+		var p=row.find('div.col-10');
 		if(p.find(':checked').length==p.find('input').length){
 			row.find('label.col-2 input').prop('checked',true);
 		}else{

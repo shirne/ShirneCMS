@@ -33,7 +33,7 @@
                     </div>
                     <input type="text" class="form-control" value="{$keyword}" name="keyword" placeholder="输入用户名或者邮箱关键词搜索">
                     <div class="input-group-append">
-                      <button class="btn btn-outline-secondary" type="submit"><i class="ion-search"></i></button>
+                      <button class="btn btn-outline-secondary" type="submit"><i class="ion-md-search"></i></button>
                     </div>
                 </div>
                 </div>
@@ -83,7 +83,7 @@
 
                     <if condition="$v.isagent neq 0">
                         <div class="btn-group">
-                                <a class="btn btn-outline-dark btn-sm" href="{:url('member/cancel_agent',array('id'=>$v['id']))}" style="color:green;" onclick="javascript:return del('取消代理不能更改已注册的用户!!!');"><i class="ion-close"></i> 取消代理[{$v.isagent}]</a>
+                                <a class="btn btn-outline-dark btn-sm" href="{:url('member/cancel_agent',array('id'=>$v['id']))}" style="color:green;" onclick="javascript:return del('取消代理不能更改已注册的用户!!!');"><i class="ion-md-close"></i> 取消代理[{$v.isagent}]</a>
                             <button type="button" class="btn btn-sm btn-dark dropdown-toggle" data-toggle="dropdown">
                                 <span class="caret"></span>
                                 <span class="sr-only">Toggle Dropdown</span>
@@ -94,18 +94,18 @@
                             </ul>
                         </div>
                     <else/>
-                    <a class="btn btn-outline-dark btn-sm {$v.refer_agent>2?'disabled':''}" href="{:url('member/set_agent',array('id'=>$v['id']))}" ><i class="ion-check"></i> 设置代理[<php> echo $v['refer_agent']+1;</php>]</a>
+                    <a class="btn btn-outline-dark btn-sm {$v.refer_agent>2?'disabled':''}" href="{:url('member/set_agent',array('id'=>$v['id']))}" ><i class="ion-md-check"></i> 设置代理[<php> echo $v['refer_agent']+1;</php>]</a>
                     </if>
 
                 </td> 
                 <td><if condition="$v.status eq 1">正常<else/><span style="color:red">禁用</span></if></td>
                 <td>
 
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('member/update',array('id'=>$v['id']))}"><i class="ion-edit"></i> 编辑</a>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('member/update',array('id'=>$v['id']))}"><i class="ion-md-create"></i> 编辑</a>
                     <if condition="$v.status eq 1">
-                        <a class="btn btn-outline-dark btn-sm" href="{:url('member/delete',array('id'=>$v['id'],'type'=>0))}" onclick="javascript:return del('禁用后用户将不能登陆!\n\n请确认!!!');"><i class="ion-close"></i> 禁用</a>
+                        <a class="btn btn-outline-dark btn-sm" href="{:url('member/delete',array('id'=>$v['id'],'type'=>0))}" onclick="javascript:return del('禁用后用户将不能登陆!\n\n请确认!!!');"><i class="ion-md-close"></i> 禁用</a>
                     <else/>
-                        <a class="btn btn-outline-dark btn-sm" href="{:url('member/delete',array('id'=>$v['id'],'type'=>1))}" style="color:#50AD1E;"><i class="ion-check"></i> 启用</a>
+                        <a class="btn btn-outline-dark btn-sm" href="{:url('member/delete',array('id'=>$v['id'],'type'=>1))}" style="color:#50AD1E;"><i class="ion-md-check"></i> 启用</a>
                     </if>
                 </td>
             </tr>

@@ -90,7 +90,7 @@
             </div>
             <div class="index-card-body cases-body">
                 <div class="row">
-                    <article:list var="case_list" category="4" limit="9"/>
+                    <article:list var="case_list" category="4" limit="9" recursive="true"/>
                     <volist name="case_list" id="case">
                         <div class="col-4">
                             <div class="card">
@@ -98,8 +98,8 @@
                                 <div class="card-body">
                                     <h3 class="card-text">{$case.title}</h3>
                                     <p class="card-text text-muted">
-                                        <span class="float-right"><i class="ion-ion-monitor"></i> <i
-                                                    class="ion-iphone"></i> </span>
+                                        <span class="float-right"><i class="ion-md-ion-monitor"></i> <i
+                                                    class="ion-md-iphone"></i> </span>
                                         <span>{$case.vice_title}</span>
                                     </p>
                                 </div>
@@ -144,8 +144,8 @@
         <div class="container">
             <div class="index-card-title slide">
                 <div class="slide-box float-right">
-                    <a href="#carouselNewsIndicators" class="toleft" role="button" data-slide="prev"><i class="ion-chevron-left"></i></a>
-                    <a href="#carouselNewsIndicators" class="toright" role="button" data-slide="next"><i class="ion-chevron-right"></i></a>
+                    <a href="#carouselNewsIndicators" class="toleft" role="button" data-slide="prev"><i class="ion-md-arrow-dropleft"></i></a>
+                    <a href="#carouselNewsIndicators" class="toright" role="button" data-slide="next"><i class="ion-md-arrow-dropright"></i></a>
                 </div>
                 <h2>新闻动态</h2>
                 <p>NEWS AND TRENDS</p>

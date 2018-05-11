@@ -15,11 +15,11 @@
 <?php
 if($code==1){
 $class='text-success';
-$title='<i class="ion-happy"></i>';
+$title='<i class="ion-md-happy"></i>';
 }
 else{
 $class='text-danger';
-$title='<i class="ion-sad"></i>';
+$title='<i class="ion-md-sad"></i>';
 }
 ?>
 <div class="jumbotron w-75">

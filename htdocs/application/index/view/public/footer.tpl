@@ -30,18 +30,18 @@
                 <img src="__STATIC__/images/qrcode.png"/>
             </div>
             <div class="col telephone">
-                <h2><span class="ion-ios-telephone-outline"></span>&nbsp;076088618161</h2>
-                <p><span class="ion-location"></span>&nbsp;中山市西区</p>
-                <p><span class="ion-social-tux"></span>&nbsp;631380009</p>
+                <h2><span class="ion-md-call"></span>&nbsp;076088618161</h2>
+                <p><span class="ion-md-navigate"></span>&nbsp;中山市西区</p>
+                <p><span class="ion-logo-tux"></span>&nbsp;631380009</p>
             </div>
         </div>
         <hr class="my-4"/>
         <div class="row copyright-row">
             <div class="col-md-8">
-                &nbsp;
+                {$config['site-tongji']|raw}
             </div>
             <div class="col-md-4 text-right">
-                &copy;CopyRight 2014-2018 原设软件
+                &copy;2014-2018 原设软件&nbsp;<a href="http://www.miitbeian.gov.cn/" target="_blank">{$config['site-icp']}</a>
             </div>
         </div>
     </div>

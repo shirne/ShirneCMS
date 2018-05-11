@@ -36,7 +36,7 @@
         <div class="panel-heading" role="tab" id="headinglog">
             <h4 class="panel-title">
                 <a data-parent="#accordion" href="{:url('login/logout')}"  aria-expanded="false">
-                    <i class="ion-power-off"></i>&nbsp;退出
+                    <i class="ion-md-power-off"></i>&nbsp;退出
                 </a>
             </h4>
         </div>

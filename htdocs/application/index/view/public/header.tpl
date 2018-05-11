@@ -32,7 +32,7 @@
                                 <a class="dropdown-item" href="#">个人资料</a>
                                 <a class="dropdown-item" href="#">修改资料</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="{:url('index/member/logout')}"><i class="ion-log-out"></i> 退出登录</a>
+                                <a class="dropdown-item" href="{:url('index/member/logout')}"><i class="ion-md-log-out"></i> 退出登录</a>
                             </div>
                         </li>
                         <else/>

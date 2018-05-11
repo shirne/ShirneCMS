@@ -13,7 +13,7 @@
                         <div class="input-group-prepend"><span class="input-group-text">绑定邀请人</span></div>
                         <input class="form-control" type="text" name="member_id" placeholder="填写会员ID">
                         <div class="input-group-append">
-                            <a class="btn btn-outline-secondary"><i class="ion-person"></i> 选择会员</a>
+                            <a class="btn btn-outline-secondary"><i class="ion-md-person"></i> 选择会员</a>
                         </div>
                     </div>
                 </div>

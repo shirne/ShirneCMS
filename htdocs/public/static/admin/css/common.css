@@ -87,6 +87,13 @@ body {
     text-decoration: none;
 }
 
+.tab-container{
+    position: relative;
+}
+.tab-container .tab-toolbar{
+    position: absolute;right:1rem;top:0.4rem;
+}
+
 .tab-pane{
     width:90%;
     padding-top:30px;

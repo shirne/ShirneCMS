@@ -12,8 +12,11 @@
   hr{
     border-color:$bd-line-dark;
   }
-}
-.copyright-row{
-  line-height:40px;
-  padding-bottom:20px;
+  .copyright-row{
+    line-height:40px;
+    padding-bottom:20px;
+    a{
+      color:$color-text-grey;
+    }
+  }
 }

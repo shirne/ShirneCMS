@@ -13,7 +13,7 @@
                 <div class="input-group input-group-sm">
                     <input type="text" class="form-control" name="key" placeholder="输入用户名或者邮箱关键词搜索">
                     <div class="input-group-append">
-                      <button class="btn btn-outline-secondary" type="submit"><i class="ion-search"></i></button>
+                      <button class="btn btn-outline-secondary" type="submit"><i class="ion-md-search"></i></button>
                     </div>
                 </div>
             </form>
@@ -47,12 +47,12 @@
                 </td> 
                 <td><if condition="$v.status eq 1">正常<else/><span style="color:red">禁用</span></if></td>
                 <td>
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('manager/update',array('id'=>$v['id']))}"><i class="ion-edit"></i> 编辑</a>
-                <if condition="$v.type neq 1">	<a class="btn btn-outline-dark btn-sm" href="{:url('manager/permision',array('id'=>$v['id']))}"><i class="ion-edit"></i> 权限</a></if>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('manager/update',array('id'=>$v['id']))}"><i class="ion-md-create"></i> 编辑</a>
+                <if condition="$v.type neq 1">	<a class="btn btn-outline-dark btn-sm" href="{:url('manager/permision',array('id'=>$v['id']))}"><i class="ion-md-create"></i> 权限</a></if>
                 <if condition="$v.status eq 1">	
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('manager/delete',array('id'=>$v['id']))}" onclick="javascript:return del('禁用后用户将不能登陆后台!\n\n请确认!!!');"><i class="ion-close"></i> 禁用</a>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('manager/delete',array('id'=>$v['id']))}" onclick="javascript:return del('禁用后用户将不能登陆后台!\n\n请确认!!!');"><i class="ion-md-close"></i> 禁用</a>
             	<else/>
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('manager/delete',array('id'=>$v['id']))}" style="color:#50AD1E;"><i class="ion-check"></i> 启用</a>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('manager/delete',array('id'=>$v['id']))}" style="color:#50AD1E;"><i class="ion-md-check"></i> 启用</a>
             	</if>
                 </td>
             </tr>

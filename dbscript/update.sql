@@ -1,0 +1,1 @@
+update `sa_permission` set icon=replace(icon,'ion-','ion-md-') where id>0;

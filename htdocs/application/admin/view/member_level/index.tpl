@@ -31,8 +31,8 @@
                     <td>{$v.sort}</td>
                     <td>{$v.level_price}</td>
                     <td>
-                        <a class="btn btn-outline-dark btn-sm" href="{:url('memberLevel/update',array('id'=>$v['level_id']))}"><i class="ion-edit"></i> 编辑</a>
-                        <a class="btn btn-outline-dark btn-sm" href="{:url('memberLevel/delete',array('id'=>$v['level_id']))}" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash-a"></i> 删除</a>
+                        <a class="btn btn-outline-dark btn-sm" href="{:url('memberLevel/update',array('id'=>$v['level_id']))}"><i class="ion-md-create"></i> 编辑</a>
+                        <a class="btn btn-outline-dark btn-sm" href="{:url('memberLevel/delete',array('id'=>$v['level_id']))}" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
                     </td>
                 </tr>
             </foreach>

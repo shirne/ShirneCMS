@@ -35,7 +35,7 @@
                 <div class="form-group">
                     <div class="input-group">
                         <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="ion-person"></i> </span>
+                            <span class="input-group-text"><i class="ion-md-person"></i> </span>
                         </div>
                         <input type="text" name="username" class="form-control" id="exampleInputUser" placeholder="用户名">
                     </div>
@@ -43,7 +43,7 @@
                 <div class="form-group">
                     <div class="input-group">
                         <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="ion-locked"></i> </span>
+                            <span class="input-group-text"><i class="ion-md-locked"></i> </span>
                         </div>
                         <input type="password" name="password" class="form-control" id="exampleInputPassword"
                                placeholder="密码">
@@ -52,7 +52,7 @@
                 <div class="form-group">
                     <div class="input-group">
                         <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="ion-checkmark-circled"></i> </span>
+                            <span class="input-group-text"><i class="ion-md-checkmark-circled"></i> </span>
                         </div>
                         <input type="text" name="verify" class="form-control" id="exampleInputCode" placeholder="验证码">
                         <div class="input-group-append">
@@ -102,7 +102,7 @@
                 errors.push('验证码');
             }
             if(errors.length>0){
-                $('.alert-content').html('<i class="ion-alert-circled"></i> 请填写'+errors.join('、'));
+                $('.alert-content').html('<i class="ion-md-alert-circled"></i> 请填写'+errors.join('、'));
                 $('.alert').addClass('alert-danger').show();
                 return false;
             }
@@ -114,11 +114,11 @@
                 data:$(this).serialize(),
                 success:function(json){
                     if(json.code==1){
-                        $('.alert-content').html('<i class="ion-checkmark-circled"></i> '+json.msg);
+                        $('.alert-content').html('<i class="ion-md-checkmark-circled"></i> '+json.msg);
                         $('.alert').removeClass('alert-danger').addClass('alert-success').show();
                         location.href=json.url;
                     }else{
-                        $('.alert-content').html('<i class="ion-alert-circled"></i> '+json.msg);
+                        $('.alert-content').html('<i class="ion-md-alert-circled"></i> '+json.msg);
                         $('.alert').addClass('alert-danger').show();
                         $('.btn-primary').removeAttr('disabled');
                         verify.trigger('click');

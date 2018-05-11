@@ -15,7 +15,7 @@
                 <div class="input-group input-group-sm">
                     <input type="text" class="form-control" name="key" placeholder="输入标题或者地址关键词搜索">
                     <div class="input-group-append">
-                      <button class="btn btn-outline-secondary" type="submit"><i class="ion-search"></i></button>
+                      <button class="btn btn-outline-secondary" type="submit"><i class="ion-md-search"></i></button>
                     </div>
                 </div>
             </form>
@@ -37,9 +37,9 @@
                 <td>{$v.title}</td>
                 <td>{$v.flag}</td>
                 <td>
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('adv/update',array('id'=>$v['id']))}"><i class="ion-edit"></i> 编辑</a>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('adv/update',array('id'=>$v['id']))}"><i class="ion-md-create"></i> 编辑</a>
                     <div class="btn-group btn-group-sm">
-                        <a class="btn btn-outline-dark" href="{:url('adv/itemlist',array('gid'=>$v['id']))}"><i class="ion-android-list"></i> 广告列表</a>
+                        <a class="btn btn-outline-dark" href="{:url('adv/itemlist',array('gid'=>$v['id']))}"><i class="ion-md-list"></i> 广告列表</a>
                         <button type="button" class="btn btn-outline-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="caret"></span>
                             <span class="sr-only">Toggle Dropdown</span>
@@ -48,7 +48,7 @@
                             <a class="dropdown-item" href="{:url('adv/itemadd',array('gid'=>$v['id']))}">添加广告</a>
                         </div>
                     </div>
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('adv/delete',array('id'=>$v['id']))}" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-trash-a"></i> 删除</a>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('adv/delete',array('id'=>$v['id']))}" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
                 </td>
             </tr>
         </foreach>

@@ -6,8 +6,17 @@
 
 <div id="page-wrapper">
 
-    <div class="container-fluid">
-        <a href="{:url('setting/advance')}" class="btn btn-outline-secondary btn-sm float-right">高级模式</a>
+    <div class="container-fluid tab-container" >
+        <div class="btn-toolbar tab-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+            <div class="btn-group mr-2 btn-group-sm" role="group" aria-label="First group">
+                <a href="javascript:" class="btn btn-outline-secondary"><i class="ion-md-ios-cloud-download"></i> 导出</a>
+                <a href="javascript:" class="btn btn-outline-secondary"><i class="ion-md-ios-cloud-upload"></i> 导入</a>
+            </div>
+            <div class="btn-group btn-group-sm" role="group" aria-label="Third group">
+                <a href="{:url('setting/advance')}" class="btn btn-outline-secondary">高级模式</a>
+            </div>
+        </div>
+
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
             <foreach name="groups" item="name">

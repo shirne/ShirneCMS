@@ -31,8 +31,8 @@
                                 <div class="card-body">
                                     <h3 class="card-text">{$case.title}</h3>
                                     <p class="card-text text-muted">
-                                        <span class="float-right"><i class="ion-ion-monitor"></i> <i
-                                                    class="ion-iphone"></i> </span>
+                                        <span class="float-right"><i class="ion-md-tv"></i> <i
+                                                    class="ion-md-phone-portrait"></i> </span>
                                         <span>{$case.vice_title}</span>
                                     </p>
                                 </div>
