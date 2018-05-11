@@ -27,7 +27,7 @@ class Article extends TagLib
         $recursive =isset($tag['recursive']) ? $tag['recursive'] : 'false';
         $category=isset($tag['category']) ? $tag['category'] : '';
         if(preg_match('/^[a-zA-Z]\w*$/',$category)){
-            $category="getCategoryId('".$category."')";
+            $category="\\app\\common\\facade\\CategoryModel::getCategoryId('".$category."')";
         }else{
             $category=intval($category);
         }
@@ -38,7 +38,7 @@ class Article extends TagLib
         $parseStr .= '->view("Category",["title"=>"category_title","name"=>"category_name","short"=>"category_short","icon"=>"category_icon","image"=>"category_image"],"Article.cate_id=Category.id","LEFT")';
         if(!empty($category)){
             if($recursive=='true'){
-                $parseStr .= '->where("Article.cate_id", "IN", getSubCateids(' . $category . '))';
+                $parseStr .= '->where("Article.cate_id", "IN", \app\common\facade\CategoryModel::getSubCateIds(' . $category . '))';
             }else {
                 $parseStr .= '->where("Article.cate_id",' . $category . ')';
             }
@@ -119,7 +119,7 @@ class Article extends TagLib
 
         $parseStr='<?php ';
 
-        $parseStr.='$'.$var.'=findCategory('.$name.');';
+        $parseStr.='$'.$var.'=\app\common\facade\CategoryModel::findCategory('.$name.');';
 
         $parseStr .= ' ?>';
         return $parseStr;

@@ -2,6 +2,7 @@
 namespace app\admin\controller;
 use app\admin\model\ArticleModel;
 use app\admin\validate\ArticleValidate;
+use app\common\facade\CategoryModel;
 use app\common\model\ArticleCommentModel;
 use think\Db;
 use think\Response;
@@ -23,7 +24,7 @@ class ArticleController extends BaseController
             $where[]=['article.title|manager.username|category.title','like',"%$key%"];
         }
         if($cate_id>0){
-            $where[]=['article.cate_id','in',getSubCateids($cate_id)];
+            $where[]=['article.cate_id','in',CategoryModel::getSubCateIds($cate_id)];
         }
 
         $lists=$model->where($where)->paginate(10);
@@ -32,7 +33,7 @@ class ArticleController extends BaseController
         $this->assign('page',$lists->render());
         $this->assign('keyword',$key);
         $this->assign('cate_id',$cate_id);
-        $this->assign("category",getArticleCategories());
+        $this->assign("category",CategoryModel::getCategories());
 
         return $this->fetch();
     }
@@ -64,7 +65,7 @@ class ArticleController extends BaseController
             }
         }
         $model=array('type'=>1,'cate_id'=>$cid);
-        $this->assign("category",getArticleCategories());
+        $this->assign("category",CategoryModel::getCategories());
         $this->assign('article',$model);
         $this->assign('id',0);
         return $this->fetch('edit');
@@ -105,7 +106,7 @@ class ArticleController extends BaseController
             if(empty($model)){
                 $this->error('文章不存在');
             }
-            $this->assign("category",getArticleCategories());
+            $this->assign("category",CategoryModel::getCategories());
             $this->assign('article',$model);
             $this->assign('id',$id);
             return $this->fetch();
@@ -166,7 +167,7 @@ class ArticleController extends BaseController
         $this->assign('page',$lists->render());
         $this->assign('keyword',$key);
         $this->assign('article_id',$id);
-        $this->assign("category",getArticleCategories());
+        $this->assign("category",CategoryModel::getCategories());
 
         return $this->fetch();
     }

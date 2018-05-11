@@ -43,7 +43,7 @@
                 <div class="form-group">
                     <div class="input-group">
                         <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="ion-md-locked"></i> </span>
+                            <span class="input-group-text"><i class="ion-md-lock"></i> </span>
                         </div>
                         <input type="password" name="password" class="form-control" id="exampleInputPassword"
                                placeholder="密码">
@@ -52,7 +52,7 @@
                 <div class="form-group">
                     <div class="input-group">
                         <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="ion-md-checkmark-circled"></i> </span>
+                            <span class="input-group-text"><i class="ion-md-checkmark-circle"></i> </span>
                         </div>
                         <input type="text" name="verify" class="form-control" id="exampleInputCode" placeholder="验证码">
                         <div class="input-group-append">

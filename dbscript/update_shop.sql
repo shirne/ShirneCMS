@@ -2,10 +2,10 @@
 INSERT INTO `sa_permission` (`id`, `parent_id`,`name`, `url`,`key`, `icon`, `order_id`, `disable`)
 VALUES
   (6,0,'商城','','Shop','ion-md-cart',0,0),
-  (61,2,'分类管理','ProductCategory/index','product_category_index','ion-md-medical',0,0),
-  (62,2,'商品管理','Product/index','product_index','ion-md-gift',0,0),
-  (63,2,'订单管理','Order/index','order_index','ion-md-list-box',0,0),
-  (64,2,'订单统计','OrderStatics/index','order_statics_index','ion-md-list-box',0,0);
+  (61,6,'分类管理','ProductCategory/index','product_category_index','ion-md-medical',0,0),
+  (62,6,'商品管理','Product/index','product_index','ion-md-gift',0,0),
+  (63,6,'订单管理','Order/index','order_index','ion-md-list-box',0,0),
+  (64,6,'订单统计','OrderStatics/index','order_statics_index','ion-md-list-box',0,0);
 
 
 CREATE TABLE `sa_product_category` (
@@ -26,11 +26,12 @@ CREATE TABLE `sa_product` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `cate_id` int(11) DEFAULT NULL,
   `title` varchar(150) DEFAULT NULL,
+  `goods_no` varchar(50) DEFAULT NULL,
   `price` DECIMAL(10,2) NULL COMMENT '购买价格',
   `image` varchar(150) DEFAULT NULL,
   `content` text,
-  `create_at` int(11) DEFAULT '0',
-  `update_at` int(11) DEFAULT '0',
+  `create_time` int(11) DEFAULT '0',
+  `update_time` int(11) DEFAULT '0',
   `level_id` int(11) DEFAULT NULL,
   `type` tinyint(4) DEFAULT '1',
   `status` tinyint(4) NOT NULL DEFAULT '1',
@@ -74,11 +75,11 @@ CREATE TABLE `sa_order` (
   `member_id` INT NULL,
   `payamount` DECIMAL(10,2) NULL DEFAULT 0,
   `level_id` INT NULL,
-  `create_at` INT NULL DEFAULT 0,
+  `create_time` INT NULL DEFAULT 0,
   `pay_at` INT NULL DEFAULT 0,
-  `confirm_at` INT NULL DEFAULT 0,
+  `confirm_time` INT NULL DEFAULT 0,
   `rebated` INT NULL DEFAULT 0,
-  `rebate_at` INT NULL DEFAULT 0,
+  `rebate_time` INT NULL DEFAULT 0,
   `status` TINYINT NULL DEFAULT 0 COMMENT '订单状态',
   `remark` VARCHAR(250) NULL,
   `address_id` INT NULL,

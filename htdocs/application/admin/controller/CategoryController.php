@@ -3,6 +3,7 @@
 namespace app\admin\controller;
 
 use app\admin\validate\CategoryValidate;
+use app\common\facade\CategoryModel;
 use think\Db;
 
 /**
@@ -13,16 +14,10 @@ class CategoryController extends BaseController
     /**
      * 分类列表
      */
-    public function index($key="")
+    public function index()
     {
-        $model = Db::name('category');
-        $where=array();
-        if(!empty($key)){
-            $where[] = array('title|name','like',"%$key%");
-        } 
 
-        $category = $model->where($where)->order('pid ASC,sort ASC,id ASC')->select();
-        $this->assign('model',getSortedCategory($category));
+        $this->assign('model',CategoryModel::getCategories(true));
         return $this->fetch();
     }
 
@@ -43,14 +38,14 @@ class CategoryController extends BaseController
 
                 $result=Db::name('category')->insert($data);
                 if ($result) {
-                    clearCategory();
+                    CategoryModel::clearCache();
                     $this->success("添加成功", url('category/index'));
                 } else {
                     $this->error("添加失败");
                 }
             }
         }
-        $cate = getArticleCategories();
+        $cate = CategoryModel::getCategories();
         $model=array('sort'=>99,'pid'=>$pid);
         $this->assign('cate',$cate);
         $this->assign('model',$model);
@@ -89,7 +84,7 @@ class CategoryController extends BaseController
 
                 if ($result) {
                     delete_image($delete_images);
-                    clearCategory();
+                    CategoryModel::clearCache();
                     $this->success("保存成功", url('category/index'));
                 } else {
                     $this->error("保存失败");
@@ -100,7 +95,7 @@ class CategoryController extends BaseController
             if(empty($model)){
                 $this->error('分类不存在');
             }
-            $cate = getSortedCategory(Db::name('category')->order('pid ASC,sort ASC')->select());
+            $cate = CategoryModel::getCategories();
 
             $this->assign('cate',$cate);
             $this->assign('model',$model);
@@ -114,22 +109,21 @@ class CategoryController extends BaseController
      */
     public function delete($id)
     {
-        $id = intval($id);
-        $model = Db::name('Category');
+        $id = idArr($id);
         //查询属于这个分类的文章
-        $posts = Db::name('Post')->where(["cate_id"=>$id])->select();
+        $posts = Db::name('Article')->where('cate_id','in',$id)->count();
         if($posts){
             $this->error("禁止删除含有文章的分类");
         }
         //禁止删除含有子分类的分类
-        $hasChild = $model->where(["pid"=>$id])->select();
+        $hasChild = Db::name('Category')->where('pid','in',$id)->count();
         if($hasChild){
             $this->error("禁止删除含有子分类的分类");
         }
         //验证通过
-        $result = $model->delete($id);
+        $result = Db::name('Category')->where('pid','in',$id)->delete();
         if($result){
-            clearCategory();
+            CategoryModel::clearCache();
             $this->success("分类删除成功", url('category/index'));
         }else{
             $this->error("分类删除失败");

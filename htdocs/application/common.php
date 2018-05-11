@@ -466,66 +466,6 @@ function getPageGroups($force=false){
     return $groups;
 }
 
-function getProductCategories($force=false){
-    $categories=cache('product_categories');
-    if(empty($categories) || $force==true){
-        $categories=getSortedCategory(\think\Db::name('productCategory')->order('pid ASC,sort ASC,id ASC')->select());
-        cache('product_categories',$categories);
-    }
-    return $categories;
-}
-
-function getArticleCategories($force=false){
-    $categories=cache('categories');
-    if(empty($categories) || $force==true){
-        $categories=getSortedCategory(\think\Db::name('Category')->order('pid ASC,sort ASC,id ASC')->select());
-        cache('categories',$categories);
-    }
-    return $categories;
-}
-
-function getArticleCategoryTree($name){
-    $categories=getArticleCategories();
-    $tree=array();
-    while($name!='0'){
-        $current=_findCategory($categories,$name);
-        if(empty($current))break;
-        array_unshift($tree,$current);
-        $name=$current['pid'];
-    }
-
-    return $tree;
-}
-function _findCategory(&$cates,$name){
-    foreach ($cates as $cate){
-        if($cate['id']==$name || $cate['name']==$name){
-            return $cate;
-        }
-    }
-    return NULL;
-}
-function findCategory($idorname){
-    $categories=getArticleCategories();
-    $cate=_findCategory($categories,$idorname);
-    if(!empty($cate)){
-        return $cate;
-    }else{
-        return NULL;
-    }
-}
-function getCategoryId($idorname){
-    if(preg_match('/^[a-zA-Z]\w*$/',$idorname)) {
-        $cate = findCategory( $idorname);
-        if (!empty($cate)) {
-            return $cate['id'];
-        } else {
-            return 0;
-        }
-    }else{
-        return intval($idorname);
-    }
-}
-
 /**
  * 获取排序后的分类
  * @param  array $data [description]
@@ -551,54 +491,6 @@ function getSortedCategory(&$data, $pid = 0, $html = "|---", $level = 0)
     return $temp;
 }
 
-function getTreedCategory($force=false){
-    static $categories=array();
-    if(empty($categories)){
-        $categories=cache('categorietree');
-    }
-    if(empty($categories) || $force==true){
-        $data=\think\Db::name('Category')->order('pid ASC,sort ASC,id ASC')->select();
-        $categories=array('0'=>[]);
-        foreach ($data as $cate){
-            $categories[$cate['pid']][]=$cate;
-        }
-        cache('categorietree',$categories);
-    }
-    return $categories;
-}
-
-function clearCategory(){
-    cache('categorietree',null);
-    cache('categories',null);
-}
-
-function getSubCateids($pid,$recursive=false)
-{
-    $ids=[];
-    $treedCategories=getTreedCategory();
-
-    if(is_array($pid)){
-        if(!$recursive)$ids=$pid;
-        foreach($pid as $p){
-            if(isset($treedCategories[$p]) && !empty($treedCategories[$p])) {
-                $sons = $treedCategories[$p];
-                $sonids = array_column($sons, 'id');
-                $ids = array_merge($ids, $sonids);
-                $ids = array_merge($ids, getSubCateids($sonids, true));
-            }
-        }
-    }else{
-        if(!$recursive)$ids=[$pid];
-        if(isset($treedCategories[$pid]) && !empty($treedCategories[$pid])) {
-            $sons = $treedCategories[$pid];
-            $sonids = array_column($sons, 'id');
-            $ids = array_merge($ids, $sonids);
-            $ids = array_merge($ids, getSubCateids($sonids, true));
-        }
-    }
-
-    return $ids;
-}
 
 /**
  * 获取全部配置
