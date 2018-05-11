@@ -32,3 +32,5 @@ CREATE TABLE `sa_article_digg` (
   PRIMARY KEY (`id`),
   KEY `article_id` (`article_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
