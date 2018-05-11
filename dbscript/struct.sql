@@ -508,19 +508,62 @@ DROP TABLE IF EXISTS `sa_article`;
 /*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sa_article` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) DEFAULT NULL,
-  `vice_title` varchar(255) DEFAULT NULL,
+  `title` varchar(100) DEFAULT NULL,
+  `vice_title` varchar(100) DEFAULT NULL,
   `cover` varchar(100) DEFAULT NULL COMMENT '封面图',
+  `description` varchar(250) DEFAULT NULL,
   `content` text,
-  `create_time` varchar(11) DEFAULT '0',
+  `create_time` INT(11) DEFAULT '0',
+  `update_time` INT(11) DEFAULT '0',
+  `cate_id` INT(11) DEFAULT NULL,
+  `user_id` INT(11) DEFAULT NULL,
+  `digg` INT(11) DEFAULT '0',
+  `comment` INT(11) DEFAULT '0',
+  `views` INT(11) DEFAULT '0',
   `update_time` varchar(11) DEFAULT '0',
-  `cate_id` int(11) DEFAULT NULL,
-  `user_id` int(11) DEFAULT NULL,
   `type` tinyint(1) DEFAULT '1' COMMENT '1:普通,2:置顶,3:热门,4:推荐',
   `status` tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `cate_id` (`cate_id`),
   KEY `user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `sa_article_images`
+--
+
+DROP TABLE IF EXISTS `sa_article_images`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sa_article_images` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(100) DEFAULT NULL,
+  `description` varchar(250) DEFAULT NULL,
+  `image` varchar(150) DEFAULT NULL,
+  `article_id` int(11) DEFAULT NULL,
+  `sort` INT(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `article_id` (`article_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `sa_article_digg`
+--
+
+DROP TABLE IF EXISTS `sa_article_digg`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sa_article_digg` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `article_id` int(11) DEFAULT NULL,
+  `member_id` int(11) DEFAULT NULL,
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `device` varchar(50) NOT NULL DEFAULT '',
+  `ip` varchar(50) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`),
+  KEY `article_id` (`article_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
