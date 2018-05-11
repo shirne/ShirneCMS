@@ -416,7 +416,7 @@ jQuery(function ($) {
                         }
                     }).show(json.msg);
                 }else{
-                    new Dialog({}).show(json.msg);
+                    toastr.warning(json.msg);
                     $(btn).removeAttr('disabled');
                 }
             }

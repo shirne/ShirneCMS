@@ -79,7 +79,7 @@ class BaseController extends Controller {
         $uploadpath='/uploads/';
         $config=array(
             'maxSize'       =>  2000000, //上传的文件大小限制 (0-不做限制)
-            'exts'          =>  $is_img?array('jpg','jpeg','png','gif','bmp','tif'):array('jpg','jpeg','png','gif','bmp','tif','txt','csv','xls','doc','zip'), //允许上传的文件后缀
+            'exts'          =>  $is_img?array('jpg','jpeg','png','gif','bmp','tif'):array('jpg','jpeg','png','gif','bmp','tif','txt','csv','xls','doc','zip','json'), //允许上传的文件后缀
             'rootPath'      =>  '.'.$uploadpath, //保存根路径
             'savePath'      =>  $folder.'/', //保存路径
         );

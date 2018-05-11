@@ -10,7 +10,7 @@
         <div class="btn-toolbar tab-toolbar" role="toolbar" aria-label="Toolbar with button groups">
             <div class="btn-group mr-2 btn-group-sm" role="group" aria-label="First group">
                 <a href="{:url('export')}" class="btn btn-outline-secondary"><i class="ion-md-cloud-download"></i> 导出</a>
-                <a href="javascript:" class="btn btn-outline-secondary"><i class="ion-md-cloud-upload"></i> 导入</a>
+                <a href="javascript:" class="btn btn-outline-secondary import-btn"><i class="ion-md-cloud-upload"></i> 导入</a>
             </div>
             <div class="btn-group btn-group-sm" role="group" aria-label="Third group">
                 <a href="{:url('setting/advance')}" class="btn btn-outline-secondary">高级模式</a>
@@ -121,6 +121,40 @@
         </form>
     </div>
 </div>
+    <script type="text/plain" id="importTpl">
+        <div class="container-fluid">
+        <form method="post" action="{:url('import')}" enctype="multipart/form-data">
+        <div class="form-row">
+            <div class="col-3">导入方式</div>
+            <div class="col-9">
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                  <label class="btn btn-secondary active">
+                    <input type="radio" name="type" value="content" autocomplete="off" checked> 文本
+                  </label>
+                  <label class="btn btn-secondary">
+                    <input type="radio" name="type" value="file" autocomplete="off"> 文件
+                  </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-row typerow contentrow" style="display:none;margin-top:1rem;">
+            <div class="col-3">导入内容</div>
+            <div class="col-9">
+                <textarea name="content" class="form-control"></textarea>
+            </div>
+        </div>
+        <div class="form-row typerow filerow" style="display:none;margin-top:1rem;">
+            <div class="col-3">导入文件</div>
+            <div class="col-9">
+                <div class="custom-file">
+                    <input type="file" name="contentFile" class="custom-file-input" id="validatedCustomFile" />
+                    <label class="custom-file-label" for="validatedCustomFile">选择文件</label>
+                 </div>
+            </div>
+        </div>
+        </form>
+        </div>
+    </script>
     </block>
 <block name="script">
 <script type="text/javascript">
@@ -128,14 +162,65 @@
         var agroup='{$group}';
         if(agroup && $('.head-'+agroup).length>0){
             $('.nav-tabs li.head-'+agroup+' a').trigger('click');
-            //$('#panel-'+agroup).addClass('active');
         }else{
             $('.nav-tabs li').eq(0).find('a').trigger('click');
-            //$('.tab-content .tab-pane').eq(0).addClass('active');
         }
         $('.nav-tabs a').click(function() {
             $('[name=group]').val($(this).data('group'));
         });
+
+        var importTpl=$('#importTpl').html();
+        $('.import-btn').click(function(e) {
+            var isposting=false;
+            var dlg=new Dialog({
+                'onshow':function(body) {
+                    body.find('[name=type]').change(function (e) {
+                        var val=$('[name=type]:checked').val();
+                        body.find('.typerow').hide();
+                        body.find('.'+val+'row').show();
+                    }).eq(0).trigger('change');
+                    body.find('[name=contentFile]').change(function() {
+                        var label=$(this).parents('.custom-file').find('.custom-file-label');
+                        label.text($(this).val());
+                    })
+                },
+                'onsure':function(body){
+                    if(!isposting) {
+                        isposting = true;
+                        var form=body.find('form');
+                        if(!FormData){
+                            form.submit();
+                        }else{
+                            $.ajax({
+                                url:form.attr('action'),
+                                type:'POST',
+                                dataType:'JSON',
+                                data:new FormData(form[0]),
+                                cache:false,
+                                processData:false,
+                                contentType:false,
+                                success:function (json) {
+                                    if(json.code==1){
+                                        dlg.hide();
+                                        dialog.alert(json.msg,function(){
+                                            if(json.url){
+                                                location.href=json.url;
+                                            }else{
+                                                location.reload();
+                                            }
+                                        });
+                                    }else{
+                                        toastr.warning(json.msg);
+                                        isposting=false;
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    return false;
+                }
+            }).show(importTpl,'导入配置');
+        })
     });
 </script>
 

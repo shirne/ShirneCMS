@@ -68,9 +68,10 @@ class SettingController extends BaseController
         $settings=getSettings(false,false,true);
         foreach ($data as $k=>$v){
             if(is_array($v))$v=serialize($v);
-            if($settings[$k]!=$v) {
-                $model->where(array('key' => $k))->update(array('value' => $v));
+            if(isset($settings[$k])) {
+                if($settings[$k]!=$v)$model->where(array('key' => $k))->update(array('value' => $v));
             }else{
+                $model->setOption('data',[]);
                 $model->insert(array(
                     'key'=>$k,
                     'title'=>$k,
