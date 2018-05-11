@@ -11,7 +11,7 @@
                 &nbsp;
             </div>
             <div class="col-6">
-                <form action="{:url('links/index')}" method="post">
+                <form action="{:url('order/index')}" method="post">
                     <div class="form-group input-group input-group-sm">
                         <input type="text" class="form-control" name="key" placeholder="输入关键词搜索">
                         <span class="input-group-append">
