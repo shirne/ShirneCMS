@@ -466,6 +466,15 @@ function getPageGroups($force=false){
     return $groups;
 }
 
+function getProductCategories($force=false){
+    $categories=cache('product_categories');
+    if(empty($categories) || $force==true){
+        $categories=getSortedCategory(\think\Db::name('productCategory')->order('pid ASC,sort ASC,id ASC')->select());
+        cache('product_categories',$categories);
+    }
+    return $categories;
+}
+
 function getArticleCategories($force=false){
     $categories=cache('categories');
     if(empty($categories) || $force==true){

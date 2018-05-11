@@ -32,10 +32,29 @@ CREATE TABLE `sa_product` (
   `create_at` int(11) DEFAULT '0',
   `update_at` int(11) DEFAULT '0',
   `level_id` int(11) DEFAULT NULL,
+  `type` tinyint(4) DEFAULT '1',
   `status` tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `cate_id` (`cate_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `sa_product_comment` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NOT NULL DEFAULT '0',
+  `product_id` int(11) NOT NULL DEFAULT '0',
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  `device` varchar(50) NOT NULL DEFAULT '',
+  `ip` varchar(50) NOT NULL DEFAULT '',
+  `status` tinyint(4) NOT NULL DEFAULT '0',
+  `is_anonymous` tinyint(4) NOT NULL DEFAULT '0',
+  `content` text,
+  `reply_time` int(11) NOT NULL DEFAULT '0',
+  `reply_user_id` int(11) NOT NULL DEFAULT '0',
+  `reply` text,
+  PRIMARY KEY (`id`),
+  KEY `member_id` (`member_id`),
+  KEY `product_id` (`product_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `sa_product_images` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
