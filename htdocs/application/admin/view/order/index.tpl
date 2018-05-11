@@ -1,8 +1,8 @@
-<extend name="Public:Base" />
+<extend name="public:base" />
 
 <block name="body">
 
-    <include file="Public/bread" menu="order_index" title="订单列表" />
+    <include file="public/bread" menu="order_index" title="订单列表" />
 
     <div id="page-wrapper">
 
