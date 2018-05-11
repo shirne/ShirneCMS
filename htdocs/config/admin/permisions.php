@@ -16,7 +16,11 @@ return array(
             'add'=>'文章添加',
             'edit'=>'文章修改',
             'delete'=>'文章删除',
-            'push'=>'文章发布'
+            'push'=>'文章发布',
+            'comments'=>'评论查看',
+            'commentview'=>'评论回复',
+            'commentstatus'=>'评论审核',
+            'commentdelete'=>'评论删除'
         )
     ),
     'page'=>array(
@@ -118,6 +122,8 @@ return array(
         'title'=>'系统配置',
         'items'=>array(
             'index'=>'系统配置',
+            'import'=>'配置导入',
+            'export'=>'配置导出',
             'advance'=>'配置管理',
             'add'=>'配置添加',
             'edit'=>'配置修改',

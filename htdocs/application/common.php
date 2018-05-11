@@ -18,6 +18,10 @@ function writelog($message,$type=\think\Log::INFO){
     }
 }
 
+function file_download($filename,$data){
+    return \think\Response::create($data, '\\extcore\\FileDownload', 200, [], ['file_name'=>$filename]);
+}
+
 function getMemberLevels()
 {
     static $levels;

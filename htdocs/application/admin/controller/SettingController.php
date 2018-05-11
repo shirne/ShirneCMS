@@ -42,6 +42,54 @@ class SettingController extends BaseController
         cache('setting',null);
         $this->success("刷新成功",url('setting/index'));
     }
+    public function import(){
+        $type=$this->request->post('type');
+        if($type=='content') {
+            $json = $this->request->post('content');
+            if(empty($json)){
+                $this->error('请将配置文件内容粘贴在输入框内');
+            }
+        }else{
+            $file=$this->uploadFile('cache','contentFile',true);
+            if($file){
+                $json=file_get_contents('.'.$file['url']);
+                if(empty($json)){
+                    $this->error('配置文件内容为空');
+                }
+            }else{
+                $this->error('请选择配置文件上传(.json)');
+            }
+        }
+        $data=json_decode($json,TRUE);
+        if(empty($data)){
+            $this->error('配置内容解析失败');
+        }
+        $model=Db::name('setting');
+        $settings=getSettings(false,false,true);
+        foreach ($data as $k=>$v){
+            if(is_array($v))$v=serialize($v);
+            if($settings[$k]!=$v) {
+                $model->where(array('key' => $k))->update(array('value' => $v));
+            }else{
+                $model->insert(array(
+                    'key'=>$k,
+                    'title'=>$k,
+                    'type'=>'text',
+                    'group'=>'advance',
+                    'sort'=>0,
+                    'value'=>$v,
+                    'description'=>'',
+                    'data'=>''
+                ));
+            }
+        }
+        cache('setting',null);
+        $this->success('导入成功');
+    }
+    public function export(){
+        $settings=getSettings();
+        return file_download('setting.json',json_encode($settings,JSON_UNESCAPED_UNICODE));
+    }
 
     public function advance($key=""){
 

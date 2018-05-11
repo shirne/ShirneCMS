@@ -9,8 +9,8 @@
     <div class="container-fluid tab-container" >
         <div class="btn-toolbar tab-toolbar" role="toolbar" aria-label="Toolbar with button groups">
             <div class="btn-group mr-2 btn-group-sm" role="group" aria-label="First group">
-                <a href="javascript:" class="btn btn-outline-secondary"><i class="ion-md-ios-cloud-download"></i> 导出</a>
-                <a href="javascript:" class="btn btn-outline-secondary"><i class="ion-md-ios-cloud-upload"></i> 导入</a>
+                <a href="{:url('export')}" class="btn btn-outline-secondary"><i class="ion-md-cloud-download"></i> 导出</a>
+                <a href="javascript:" class="btn btn-outline-secondary"><i class="ion-md-cloud-upload"></i> 导入</a>
             </div>
             <div class="btn-group btn-group-sm" role="group" aria-label="Third group">
                 <a href="{:url('setting/advance')}" class="btn btn-outline-secondary">高级模式</a>
