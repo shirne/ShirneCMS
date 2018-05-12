@@ -11,6 +11,12 @@ namespace app\common\facade;
 
 use think\Facade;
 
+/**
+ * Class OrderModel
+ * @package app\common\facade
+ * @see \app\common\model\OrderModel
+ * @method bool makeOrder($member,$products,$address,$content,$balance_pay=1) static 下单
+ */
 class OrderModel extends Facade
 {
     protected static function getFacadeClass(){

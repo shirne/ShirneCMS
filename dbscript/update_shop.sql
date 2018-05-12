@@ -1,4 +1,6 @@
 
+ALTER TABLE `sa_member` ADD `discount` TINYINT NULL DEFAULT 100 COMMENT '会员折扣';
+
 INSERT INTO `sa_permission` (`id`, `parent_id`,`name`, `url`,`key`, `icon`, `order_id`, `disable`)
 VALUES
   (6,0,'商城','','Shop','ion-md-cart',0,0),

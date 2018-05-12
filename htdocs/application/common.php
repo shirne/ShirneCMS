@@ -190,14 +190,14 @@ function user_log($uid, $action, $result, $remark = '', $tbl = 'member')
 
 /**
  * 金额变动
- * charge 充值/赠送 bet 投注/赢注 cash 提现/提现失败
+ * charge 充值/赠送 cash 提现/提现失败
  * @param $uid
  * @param $money
  * @param $reson
  * @param string $type
  * @return bool|mixed
  */
-function money_log($uid, $money, $reson,$type='')
+function money_log($uid, $money, $reson, $type='')
 {
     if($money==0)return true;
 
@@ -205,26 +205,32 @@ function money_log($uid, $money, $reson,$type='')
 
     if(empty($member))return false;
 
-    $data=array();
-    $data['money']=$member['money']+$money;
-
     try {
-        \think\Db::name('member')->where(array('id' => $member['id']))
-            ->update($data);
+        if($money>0) {
+            $result=\think\Db::name('member')->where(array('id' => $uid))
+                ->setInc($money);
+        }else{
+            $result=\think\Db::name('member')->where(array('id' => $uid))
+                ->setDec(abs($money));
+        }
     }catch(Exception $e){
         \think\facade\Log::write($e->getMessage());
         //exit($e->getMessage());
         //echo Db::name('member')->getLastSql();
     }
-    return \think\Db::name('memberMoneyLog')->insert(array(
-        'create_time' => time(),
-        'member_id' => $uid,
-        'type'=>$type,
-        'before'=>$member['money'],
-        'amount' => $money,
-        'after'=>$member['money']+$money,
-        'reson' => $reson
-    ));
+    if($result) {
+        return \think\Db::name('memberMoneyLog')->insert(array(
+            'create_time' => time(),
+            'member_id' => $uid,
+            'type' => $type,
+            'before' => $member['money'],
+            'amount' => $money,
+            'after' => $member['money'] + $money,
+            'reson' => $reson
+        ));
+    }else{
+        return false;
+    }
 }
 
 function banklist(){

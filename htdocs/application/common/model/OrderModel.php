@@ -41,7 +41,12 @@ class OrderModel extends Model
             $total_price += intval($product['price']*100) * $product['count'];
         }
 
-        //todo 折扣
+        //折扣
+        $levels=getMemberLevels();
+        $level=$levels[$member['level_id']];
+        if(!empty($level) && $level['discount']<100){
+            $total_price = $total_price*$level['discount']/100;
+        }
 
         //todo  优惠券
 

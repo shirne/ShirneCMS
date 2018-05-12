@@ -286,9 +286,10 @@ CREATE TABLE `sa_member_level` (
   `short_name` VARCHAR(10) NULL,
   `is_default` TINYINT NULL DEFAULT 0,
   `level_price` DECIMAL(10,2) NULL COMMENT '购买价格',
+  `discount` TINYINT NULL DEFAULT 100 COMMENT '会员折扣',
   `sort` INT NULL DEFAULT 0,
   `commission_layer` INT NULL COMMENT '分佣层数',
-  `commission_percent` VARCHAR(60) NULL COMMENT '分佣奖励',
+  `commission_percent` VARCHAR(200) NULL COMMENT '分佣奖励',
   PRIMARY KEY (`level_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 

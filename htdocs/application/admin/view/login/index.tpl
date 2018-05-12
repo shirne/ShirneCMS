@@ -102,7 +102,7 @@
                 errors.push('验证码');
             }
             if(errors.length>0){
-                $('.alert-content').html('<i class="ion-md-alert-circled"></i> 请填写'+errors.join('、'));
+                $('.alert-content').html('<i class="ion-md-information-circle-outline"></i> 请填写'+errors.join('、'));
                 $('.alert').addClass('alert-danger').show();
                 return false;
             }
@@ -114,11 +114,11 @@
                 data:$(this).serialize(),
                 success:function(json){
                     if(json.code==1){
-                        $('.alert-content').html('<i class="ion-md-checkmark-circled"></i> '+json.msg);
+                        $('.alert-content').html('<i class="ion-md-checkmark-circle"></i> '+json.msg);
                         $('.alert').removeClass('alert-danger').addClass('alert-success').show();
                         location.href=json.url;
                     }else{
-                        $('.alert-content').html('<i class="ion-md-alert-circled"></i> '+json.msg);
+                        $('.alert-content').html('<i class="ion-md-information-circle-outline"></i> '+json.msg);
                         $('.alert').addClass('alert-danger').show();
                         $('.btn-primary').removeAttr('disabled');
                         verify.trigger('click');
