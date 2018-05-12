@@ -47,7 +47,7 @@ class WechatAuth extends AccountBase {
             if ($this->encrypt_type == 'aes') { //aes加密
                 $this->log($postStr);
                 $encryptStr = $array['Encrypt'];
-                $pc = new Prpcrypt($this->encodingAesKey);
+                $pc = new AESEnctypt($this->encodingAesKey);
                 $array = $pc->decrypt($encryptStr,$this->appid);
                 if (!isset($array[0]) || ($array[0] != 0)) {
                     if (!$return) {

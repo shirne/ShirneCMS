@@ -106,8 +106,10 @@ class Prpcrypt
             //print $e;
             return array(ErrorCode::$IllegalBuffer, null);
         }
-        if ($from_appid != $appid)
+        if ($from_appid != $appid) {
+            var_export([$xml_content,$from_appid,$appid]);
             return array(ErrorCode::$ValidateAppidError, null);
+        }
         //不注释上边两行，避免传入appid是错误的情况
         return array(0, $xml_content, $from_appid); //增加appid，为了解决后面加密回复消息的时候没有appid的订阅号会无法回复
 
