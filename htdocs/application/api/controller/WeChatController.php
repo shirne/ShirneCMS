@@ -14,7 +14,7 @@ namespace app\api\controller;
 use sdk\Wechat;
 use think\Controller;
 
-class WeChatController extends BaseController{
+class WeChatController extends Controller{
     /**
      * 微信消息接口入口
      * 所有发送到微信的消息都会推送到该操作
@@ -25,10 +25,11 @@ class WeChatController extends BaseController{
     protected $appsecret;
     protected $encodingaeskey;
     protected $options;
-
+    protected $config=array();
 
     public function initialize(){
         parent::initialize();
+        $this->config=getSettings();
 
         $this->token = $this->config['token'];
         $this->appid = $this->config['appid'];

@@ -6,7 +6,8 @@
  * Time: 7:30
  */
 namespace app\api\controller;
-use app\api\model\TokenModel;
+
+use app\api\facade\MemberTokenModel;
 use think\Controller;
 use think\Db;
 
@@ -24,7 +25,8 @@ class BaseController extends Controller
     protected $input=array();
     protected $config=array();
 
-    public function _initialize(){
+    public function initialize(){
+        parent::initialize();
         $this->config=getSettings();
 
         $format=$this->request->get('format','json');
@@ -47,13 +49,12 @@ class BaseController extends Controller
     }
 
     public function checkLogin(){
-        $this->token = $this->request->get('token');//I('get.token',isset($this->input['token'])?$this->input['token']:'');
+        $this->token = $this->request->get('token');
         if(!empty($this->token)){
-            $tokenModel=new TokenModel();
-            $token=$tokenModel->findToken($this->token);
+            $token=MemberTokenModel::findToken($this->token);
             $errorno=ERROR_TOKEN_INVAILD;
             if(!empty($token)) {
-                if($token['update_at']+$token['expire_in']>time()){
+                if($token['update_time']+$token['expire_in']>time()){
                     $this->user = Db::name('Member')->find($token['member_id']);
                 }else{
                     $errorno=ERROR_TOKEN_EXPIRE;
@@ -69,9 +70,13 @@ class BaseController extends Controller
         }
     }
 
-    protected function response($message,$data=null,$status=1){
-        $data           =   is_array($data)?$data:array();
-        $data['info']   =   $message;
+    protected function response($message,$status=1){
+        $data           =   array();
+        if(is_array($message)){
+            $data['data'] = $message;
+        }else {
+            $data['info'] = $message;
+        }
         $data['status'] =   is_int($data)?$data:$status;
         json($data)->send();
         exit;

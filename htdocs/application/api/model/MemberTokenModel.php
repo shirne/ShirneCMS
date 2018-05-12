@@ -11,7 +11,7 @@ namespace app\api\model;
 use think\facade\Log;
 use think\Model;
 
-class TokenModel extends Model
+class MemberTokenModel extends Model
 {
     private $hash='sw4GomU4LXvYqcaLctXCLK43eRcob';
     private $expire=720;
@@ -29,7 +29,11 @@ class TokenModel extends Model
             'expire_in'=>$data['expire_in'],
             'refresh_token'=>$data['refresh_token']
         );
-        if(!$response)$token['member_id']=$data['member_id'];
+        if(!$response){
+            $token['member_id']=$data['member_id'];
+            $token['create_time']=$data['create_time'];
+            $token['update_time']=$data['update_time'];
+        }
         return $token;
     }
     public function findToken($token){
@@ -48,12 +52,12 @@ class TokenModel extends Model
         $data['refresh_token']=$this->getToken($member_id,str_shuffle($data['token']));
         if(empty($token)){
             $data['member_id']=$member_id;
-            $added=$this->insert($data);
-            if(!$added){
+            $added=static::create($data);
+            if(!$added['token_id']){
                 Log::write('Token insert error:'.$this->getError());
             }
         }else{
-            $this->where(array('member_id'=>$member_id))->save($data);
+            static::update($data,['member_id'=>$member_id]);
         }
         return $this->mapToken($this->where(array('member_id'=>$member_id))->find());
     }
@@ -69,7 +73,7 @@ class TokenModel extends Model
         );
         $data['refresh_token']=$this->getToken($token['member_id'],str_shuffle($data['token']));
 
-        $this->where(array('member_id'=>$token['member_id']))->save($data);
+        static::update($data,['member_id'=>$token['member_id']]);
 
         return $this->mapToken($this->where(array('member_id'=>$token['member_id']))->find());
     }

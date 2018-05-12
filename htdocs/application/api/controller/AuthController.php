@@ -9,7 +9,7 @@
 namespace app\api\Controller;
 
 
-use app\api\model\TokenModel;
+use app\api\facade\MemberTokenModel;
 use app\common\model\MemberModel;
 use app\common\model\MemberOauthModel;
 use sdk\WechatAuth;
@@ -17,8 +17,8 @@ use think\Db;
 
 class AuthController extends BaseController
 {
-    public function _initialize(){
-        parent::_initialize();
+    public function initialize(){
+        parent::initialize();
     }
 
     public function login(){
@@ -30,8 +30,7 @@ class AuthController extends BaseController
         $member = Db::name('Member')->where(array('username'=>$username))->find();
         if(!empty($member)){
             if(compare_password($member,$password)){
-                $tokenModel=new TokenModel();
-                $token=$tokenModel->createToken($member['id']);
+                $token=MemberTokenModel::createToken($member['id']);
                 if(!empty($token)) {
                     $this->response($token);
                 }
@@ -108,8 +107,8 @@ class AuthController extends BaseController
             }
 
         }
-        $tokenModel=new TokenModel();
-        $token=$tokenModel->createToken($member['id']);
+
+        $token=MemberTokenModel::createToken($member['id']);
         if(!empty($token)) {
             $this->response($token);
         }
@@ -132,7 +131,7 @@ class AuthController extends BaseController
     public function refresh(){
         $refreshToken=$this->input['refresh_token'];
         if(!empty($refreshToken)){
-            $tokenModel=new TokenModel();
+            $tokenModel=new MemberTokenModel();
             $token=$tokenModel->refreshToken($refreshToken);
             if(!empty($token)) {
                 $this->response($token);
