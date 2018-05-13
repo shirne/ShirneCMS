@@ -24,6 +24,12 @@ Route::group('article',[
     'comment/:id'=>'index/article/comment'
 ])->method('GET');
 
+Route::group('product',[
+    ':name'=>'index/product/index',
+    ':id'=>'index/product/view',
+    'comment/:id'=>'index/product/comment'
+])->method('GET');
+
 Route::get('page/:group/[:name]','index/page/index');
 
 Route::get('notice/:id', 'index/article/notice');
