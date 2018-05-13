@@ -58,11 +58,11 @@ class OrderModel extends Model
                 return false;
             }
         }
-
+        $time=time();
         $orderdata=array(
             'order_no'=>$this->create_no(),
             'member_id'=>$member['id'],
-            'level_id'=>$product['level_id'],
+            'level_id'=>0,
             'payamount'=>$total_price,
             'status'=>$status,
             'isaudit'=>getSetting('autoaudit')==1?1:0,
@@ -74,13 +74,13 @@ class OrderModel extends Model
             'city' =>$address['city'],
             'area'=>$address['area'],
             'address' =>$address['address'],
-            'create_at'=>time(),
-            'pay_at'=>0,
+            'create_time'=>$time,
+            'pay_time'=>0,
             'express_no' =>'',
             'express_code'=>''
         );
         if($status>0){
-            $orderdata['pay_at']=time();
+            $orderdata['pay_time']=time();
         }
         $result= $this->insert($orderdata);
 

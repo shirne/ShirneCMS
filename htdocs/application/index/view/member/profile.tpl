@@ -2,6 +2,6 @@
 <block name="body">
     <include file="member/side" />
     <div class="container">
-        会员中心
+        个人资料
     </div>
 </block>

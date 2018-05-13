@@ -5,7 +5,7 @@
 
 <div id="page-wrapper">
     <div class="row list-header">
-        <div class="col col-4">
+        <div class="col col-6">
             <div class="btn-toolbar list-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                 <div class="btn-group btn-group-sm mr-2" role="group" aria-label="check action group">
                     <a href="javascript:" class="btn btn-outline-secondary checkall-btn" data-toggle="button" aria-pressed="false">全选</a>
@@ -15,10 +15,11 @@
                     <a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="enable">启用</a>
                     <a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="disable">禁用</a>
                 </div>
+                <a href="{:url('member/statics')}" class="btn btn-outline-info btn-sm mr-2">会员统计</a>
                 <a href="{:url('member/add')}" class="btn btn-outline-primary btn-sm">添加会员</a>
             </div>
         </div>
-        <div class="col col-8">
+        <div class="col col-6">
             <form action="{:url('member/index')}" method="post">
                 <div class="form-row">
                 <div class="form-group col input-group input-group-sm">
@@ -59,7 +60,7 @@
         <tbody>
         <foreach name="lists" item="v">
             <tr>
-                <td>{$v.id}</td>
+                <td><input type="checkbox" name="id" value="{$v.id}" /></td>
                 <td>{$v.username}<br/>{$v.realname}</td>
                 <td>{$v.mobile}<br />{$v.email}</td>
                 <td>{$v.money|showmoney}</td>

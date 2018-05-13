@@ -49,7 +49,7 @@ class LoginController extends BaseController{
     public function login($type=null)
     {
         if($this->userid){
-            $this->success('您已登录',url('index/index/index'));
+            $this->success('您已登录',url('index/member/index'));
         }
         //方式1：本地账号登陆
         if(empty($type)){
@@ -263,7 +263,7 @@ class LoginController extends BaseController{
             }
             $data['salt'] = random_str(8);
             $data['password'] = encode_password($password, $data['salt']);
-            $data['update_at'] = time();
+            $data['update_time'] = time();
             if (Db::name('member')->where(array('username'=>$passed))->update($data)) {
                 $this->success("密码设置成功",url('index/login/index'));
             }
@@ -361,7 +361,7 @@ class LoginController extends BaseController{
             setLogin($model);
             $redirect=redirect()->restore();
             if(empty($redirect->getData())){
-                $url=url('member/index');
+                $url=url('index/member/index');
             }else{
                 $url=$redirect->getTargetUrl();
             }

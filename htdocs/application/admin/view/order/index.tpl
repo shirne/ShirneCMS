@@ -12,11 +12,23 @@
             </div>
             <div class="col-6">
                 <form action="{:url('order/index')}" method="post">
-                    <div class="form-group input-group input-group-sm">
-                        <input type="text" class="form-control" name="key" placeholder="输入关键词搜索">
-                        <span class="input-group-append">
-                          <button class="btn btn-outline-secondary" type="submit"><i class="ion-md-search"></i></button>
-                        </span>
+                    <div class="form-row">
+                        <div class="col-3 form-group">
+                            <select class="form-control form-control-sm">
+                                <option value="">全部</option>
+                            </select>
+                        </div>
+                        <div class="col-3 form-group">
+                            <select class="form-control form-control-sm">
+                                <option value="">全部</option>
+                            </select>
+                        </div>
+                        <div class="col-6 form-group input-group input-group-sm">
+                            <input type="text" class="form-control" name="key" placeholder="输入关键词搜索">
+                            <span class="input-group-append">
+                              <button class="btn btn-outline-secondary" type="submit"><i class="ion-md-search"></i></button>
+                            </span>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -34,11 +46,11 @@
             </tr>
             </thead>
             <tbody>
-            <volist name="model" item="v">
+            <volist name="model" id="v">
                 <tr>
                     <td>{$v.order_id}</td>
                     <td>
-                        <volist name="v['products']" item="p">
+                        <volist name="v['products']" id="p">
                         <div class="media">
                             <div class="media-left">
                                 <img class="media-object" src="{$p['product_image']}" alt="{$p['product_title']}">

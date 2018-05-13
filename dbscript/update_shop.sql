@@ -91,7 +91,7 @@ CREATE TABLE `sa_order` (
   `payamount` DECIMAL(10,2) NULL DEFAULT 0,
   `level_id` INT NULL,
   `create_time` INT NULL DEFAULT 0,
-  `pay_at` INT NULL DEFAULT 0,
+  `pay_time` INT NULL DEFAULT 0,
   `confirm_time` INT NULL DEFAULT 0,
   `rebated` INT NULL DEFAULT 0,
   `rebate_time` INT NULL DEFAULT 0,
