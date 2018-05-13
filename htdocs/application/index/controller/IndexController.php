@@ -34,7 +34,7 @@ class IndexController extends BaseController
         }else{
             return var_export($pc->decrypt($encode,$this->appid));
         }
-
+        //Db::execute('ALTER TABLE `sa_member_money_log` ADD `field` varchar(30) DEFAULT \'money\'');
 
     }
 

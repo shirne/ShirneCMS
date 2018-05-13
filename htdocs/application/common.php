@@ -197,7 +197,7 @@ function user_log($uid, $action, $result, $remark = '', $tbl = 'member')
  * @param string $type
  * @return bool|mixed
  */
-function money_log($uid, $money, $reson, $type='')
+function money_log($uid, $money, $reson, $type='',$field='money')
 {
     if($money==0)return true;
 
@@ -205,27 +205,22 @@ function money_log($uid, $money, $reson, $type='')
 
     if(empty($member))return false;
 
-    try {
-        if($money>0) {
-            $result=\think\Db::name('member')->where(array('id' => $uid))
-                ->setInc($money);
-        }else{
-            $result=\think\Db::name('member')->where(array('id' => $uid))
-                ->setDec(abs($money));
-        }
-    }catch(Exception $e){
-        \think\facade\Log::write($e->getMessage());
-        //exit($e->getMessage());
-        //echo Db::name('member')->getLastSql();
+    if($money>0) {
+        $result=\think\Db::name('member')->where(array('id' => $uid))
+            ->setInc($field,$money);
+    }else{
+        $result=\think\Db::name('member')->where(array('id' => $uid))
+            ->setDec($field,abs($money));
     }
     if($result) {
         return \think\Db::name('memberMoneyLog')->insert(array(
             'create_time' => time(),
             'member_id' => $uid,
             'type' => $type,
-            'before' => $member['money'],
+            'before' => $member[$field],
             'amount' => $money,
-            'after' => $member['money'] + $money,
+            'after' => $member[$field] + $money,
+            'field'=>$field,
             'reson' => $reson
         ));
     }else{

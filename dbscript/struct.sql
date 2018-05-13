@@ -385,6 +385,7 @@ CREATE TABLE `sa_member_money_log` (
   `before` int(11) DEFAULT NULL,
   `amount` int(11) DEFAULT NULL,
   `after` int(11) DEFAULT NULL,
+  `field` varchar(30) DEFAULT 'money',
   `reson` varchar(100) DEFAULT NULL,
   `create_time` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
