@@ -109,7 +109,7 @@ class Article extends TagLib
         return $parseStr;
     }
     public function tagCate($tag){
-        $var  = isset($tag['var']) ? $tag['var'] : 'cates_list';
+        $var  = isset($tag['var']) ? $tag['var'] : 'cate';
         $name = isset($tag['name']) ? intval($tag['name']) : 0;
         if(preg_match('/^[a-zA-Z]\w*$/',$name)){
             $name="'".$name."'";
