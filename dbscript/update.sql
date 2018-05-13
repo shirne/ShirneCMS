@@ -11,6 +11,8 @@ update `sa_permission` set icon='ion-md-options' where `key`='setting_index';
 
 ALTER TABLE `sa_article` ADD `digg` INT(11) DEFAULT '0',ADD `comment` INT(11) DEFAULT '0',ADD `views` INT(11) DEFAULT '0';
 
+ALTER TABLE `sa_member_money_log` ADD `field` varchar(30) DEFAULT 'money';
+
 CREATE TABLE `sa_article_images` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(100) DEFAULT NULL,
