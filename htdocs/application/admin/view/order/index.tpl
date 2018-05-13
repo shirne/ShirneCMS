@@ -34,25 +34,27 @@
             </tr>
             </thead>
             <tbody>
-            <foreach name="model" item="v">
+            <volist name="model" item="v">
                 <tr>
-                    <td>{$v.apply_id}</td>
+                    <td>{$v.order_id}</td>
                     <td>
+                        <volist name="v['products']" item="p">
                         <div class="media">
                             <div class="media-left">
-                                <img class="media-object" src="{$v['product']['image']}" alt="{$v['product']['title']}">
+                                <img class="media-object" src="{$p['product_image']}" alt="{$p['product_title']}">
                             </div>
                             <div class="media-body">
-                                <h4 class="media-heading">{$v['product']['title']}</h4>
-                                <div>￥{$v['product']['price']}</div>
+                                <h4 class="media-heading">{$p['product_title']}</h4>
+                                <div>￥{$p['product_price']} &times; {$p['count']}件</div>
                             </div>
                         </div>
+                        </volist>
                     </td>
                     <td>
-                        [{$v.member_id}]{$v['member']['username']}
+                        [{$v.member_id}]{$v['username']}
                     </td>
                     <td>{$v.payamount}</td>
-                    <td>{$v.create_at|showdate}</td>
+                    <td>{$v.create_time|showdate}</td>
                     <td>
                         {$v.status|showstatus}
                         <if condition="$v['isaudit'] EQ 1">
@@ -69,7 +71,7 @@
                         <a class="btn btn-default btn-sm" href="{:url('order/delete',array('id'=>$v['apply_id']))}" style="color:red;" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="fa fa-trash"></i> 删除</a>
                     </td>
                 </tr>
-            </foreach>
+            </volist>
             </tbody>
         </table>
         {$page}

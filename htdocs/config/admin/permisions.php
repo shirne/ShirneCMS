@@ -23,6 +23,38 @@ return array(
             'commentdelete'=>'评论删除'
         )
     ),
+    'productcategory'=>array(
+        'title'=>'产品分类',
+        'items'=>array(
+            'index'=>'内容分类查看',
+            'add'=>'内容分类添加',
+            'edit'=>'内容分类修改',
+            'delete'=>'内容分类删除'
+        )
+    ),
+    'product'=>array(
+        'title'=>'产品管理',
+        'items'=>array(
+            'index'=>'产品查看',
+            'add'=>'产品添加',
+            'edit'=>'产品修改',
+            'delete'=>'产品删除',
+            'push'=>'产品上下架',
+            'comments'=>'评论查看',
+            'commentview'=>'评论回复',
+            'commentstatus'=>'评论审核',
+            'commentdelete'=>'评论删除'
+        )
+    ),
+    'order'=>array(
+        'title'=>'产品管理',
+        'items'=>array(
+            'index'=>'订单查看',
+            'delete'=>'订单删除',
+            'audit'=>'订单审核',
+            'status'=>'订单状态',
+        )
+    ),
     'page'=>array(
         'title'=>'页面管理',
         'items'=>array(

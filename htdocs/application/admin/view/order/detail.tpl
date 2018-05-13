@@ -12,14 +12,14 @@
                 <table class="table">
                     <tbody>
                     <tr>
-                        <td>订单ID</td>
-                        <td>{$model.apply_id}</td>
+                        <td>订单号</td>
+                        <td>{$model.order_no}</td>
                         <td>下单会员</td>
                         <td>[{$member.id}]{$member.username}</td>
                     </tr>
                     <tr>
                         <td>下单日期</td>
-                        <td>{$model.create_at|showdate}</td>
+                        <td>{$model.create_time|showdate}</td>
                         <td>订单状态</td>
                         <td>{$model.status|showstatus}</td>
                     </tr>
@@ -28,24 +28,26 @@
                     </tr>
                     <tr>
                         <td>
+                            <volist name="products" id="p">
                             <div class="media">
                                 <div class="media-left">
-                                    <img class="media-object" src="{$model['product']['image']}" alt="{$model['product']['title']}">
+                                    <img class="media-object" src="{$p['product_image']}" alt="{$p['product_title']}">
                                 </div>
                                 <div class="media-body">
-                                    <h4 class="media-heading">{$model['product']['title']}</h4>
-                                    <div>￥{$model['product']['price']}</div>
+                                    <h4 class="media-heading">{$p['product_title']}</h4>
+                                    <div>￥{$p['product_price']} &times; {$p['count']}件</div>
                                 </div>
                             </div>
+                            </volist>
                         </td>
                     </tr>
-                    <if condition="$model['content']">
+                    <if condition="$model['remark']">
                     <tr>
                         <th colspan="4">订单备注</th>
                     </tr>
                     <tr>
                         <td>
-                            {$model.content}
+                            {$model.remark}
                         </td>
                     </tr>
                     </if>
