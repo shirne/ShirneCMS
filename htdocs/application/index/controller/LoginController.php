@@ -14,42 +14,13 @@ use think\Exception;
  */
 class LoginController extends BaseController{
 
-    /**
-     * 微信消息接口入口
-     * 所有发送到微信的消息都会推送到该操作
-     * 所以，微信公众平台后台填写的api地址则为该操作的访问地址
-     */
-    protected $token;
-    protected $appid;
-    protected $appsecret;
-    protected $encodingaeskey;
-    protected $options;
 
 
     public function initialize(){
         parent::initialize();
-        $this->token = $this->config["token"];
-        $this->appid = $this->config["appid"];
-        $this->appsecret = $this->config["appsecret"];
-        $this->encodingaeskey = $this->config["encodingaeskey"];
-        //配置
-        $this->options = array(
-            'token'=>$this->token,
-            'encodingaeskey'=>$this->encodingaeskey,
-            'appid'=>$this->appid,
-            'appsecret'=>$this->appsecret
-        );
     }
 
-
-
-
-    public function index()
-    {
-        return $this->login();
-    }
-
-    public function login($type=0)
+    public function index($type=0)
     {
         if($this->userid){
             $this->success('您已登录',url('index/member/index'));
@@ -87,12 +58,13 @@ class LoginController extends BaseController{
                     $this->error("账号或密码错误");
                 }
             }
-            return $this->fetch('login');
+            return $this->fetch();
         }else {
-            $app = Db::name('OAuth')->find(['id'=>$type]);
+            $app = Db::name('OAuth')->find(['id|type'=>$type]);
             if (empty($app)) {
                 $this->error("不允许使用此方式登陆");
             }
+            $type=$app['id'];
             $callbackurl = url('index/login/callback', ['type' => $type]);
 
             // 使用第三方登陆

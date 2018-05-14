@@ -33,6 +33,9 @@ class BaseController extends Controller {
 
 
         $this->checkPlatform();
+        if($this->isWechat && $this->config['wechat_autologin']){
+            redirect(url('index/login/index',['type'=>'wechat']))->send();exit;
+        }
     }
 
     public function seo($title='',$keys='',$desc=''){
