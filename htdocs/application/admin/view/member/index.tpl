@@ -76,30 +76,27 @@
                 <td>{$v.create_time|showdate}</td>
                 <td>{$v.login_ip}<br />{$v.logintime|showdate}</td>
                 <td>
-                    <if condition="0">
-                    <if condition="$v.type eq 1"> <span class="label label-success">普通会员</span>
-                    <elseif condition="$v.type eq 2"/><span class="label label-danger">VIP</span>
-                    </if>
-                    </if>
 
-                    <if condition="$v.isagent neq 0">
-                        <div class="btn-group">
-                                <a class="btn btn-outline-dark btn-sm" href="{:url('member/cancel_agent',array('id'=>$v['id']))}" style="color:green;" onclick="javascript:return del('取消代理不能更改已注册的用户!!!');"><i class="ion-md-close"></i> 取消代理[{$v.isagent}]</a>
-                            <button type="button" class="btn btn-sm btn-dark dropdown-toggle" data-toggle="dropdown">
+                    <if condition="$v.is_agent neq 0">
+                        <div class="btn-group btn-group-sm">
+                                <a class="btn btn-outline-dark" href="{:url('member/cancel_agent',array('id'=>$v['id']))}" style="color:green;" onclick="javascript:return del('取消代理不能更改已注册的用户!!!');"><i class="ion-md-close"></i> 取消代理</a>
+                            <button type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown">
                                 <span class="caret"></span>
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
                             <ul class="dropdown-menu" role="menu">
-                                <!--<li><a href="{:url('member/set_agent',array('id'=>$v['id'],'level'=>1))}">设为一级代理</a></li>-->
                                 <li><a href="{:url('member/index',array('referer'=>$v['id']))}">查看下线</a></li>
                             </ul>
                         </div>
                     <else/>
-                    <a class="btn btn-outline-dark btn-sm {$v.refer_agent>2?'disabled':''}" href="{:url('member/set_agent',array('id'=>$v['id']))}" ><i class="ion-md-check"></i> 设置代理[<php> echo $v['refer_agent']+1;</php>]</a>
+                    <a class="btn btn-outline-dark btn-sm {$v.refer_agent>2?'disabled':''}" href="{:url('member/set_agent',array('id'=>$v['id']))}" ><i class="ion-md-check"></i> 设置代理</a>
                     </if>
 
                 </td> 
-                <td><if condition="$v.status eq 1">正常<else/><span style="color:red">禁用</span></if></td>
+                <td>
+                    <span class="badge badge-info">{$types[$v['type']]}</span>
+                    <if condition="$v.status eq 1">正常<else/><span style="color:red">禁用</span></if>
+                </td>
                 <td>
 
                     <a class="btn btn-outline-dark btn-sm" href="{:url('member/update',array('id'=>$v['id']))}"><i class="ion-md-create"></i> 编辑</a>

@@ -301,7 +301,7 @@ class LoginController extends BaseController{
         $this->seo("会员注册");
 
         if(!empty($agent)){
-            $amem=Db::name('Member')->where(array('isagent'=>1,'agentcode'=>$agent))->find();
+            $amem=Db::name('Member')->where(array('is_agent'=>1,'agentcode'=>$agent))->find();
             if(!empty($amem)){
                 session('agent',$amem['id']);
             }

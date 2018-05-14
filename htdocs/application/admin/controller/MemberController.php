@@ -19,7 +19,7 @@ class MemberController extends BaseController
     /**
      * 用户列表
      */
-    public function index()
+    public function index($type=0)
     {
         $model = Db::view('__MEMBER__ m','*');
         $where=array();
@@ -40,10 +40,15 @@ class MemberController extends BaseController
                 $where['m.referer'] = intval($referer);
             }
         }
+        if($type>0){
+            $where['m.type'] = intval($type)-1;
+        }
 
-        $lists=$model->view('__MEMBER__ rm',['username'=> 'refer_name','realname'=> 'refer_realname','isagent'=> 'refer_agent'],'m.referer=rm.id','LEFT')->where($where)->paginate(15);
+        $lists=$model->view('__MEMBER__ rm',['username'=> 'refer_name','realname'=> 'refer_realname','is_agent'=> 'refer_agent'],'m.referer=rm.id','LEFT')->where($where)->paginate(15);
 
         $this->assign('lists',$lists);
+        $this->assign('types',getMemberTypes());
+        $this->assign('type',$type);
         $this->assign('page',$lists->render());
         $this->assign('referer',$referer);
         $this->assign('keyword',$keyword);
@@ -54,16 +59,12 @@ class MemberController extends BaseController
         $member=Db::name('member')->find($id);
         if(empty($member))$this->error('会员不存在');
 
-        $level=$this->request->get('level/d',1);
-        if($level>3)$level=3;
 
-        if($member['isagent']==$level)$this->success('设置成功');
+        if($member['is_agent'])$this->success('设置成功');
 
-        $data=array('isagent'=>$level);
-        if(empty($member['agentcode']))$data['agentcode']=random_str(6);
-        $result=Db::name('member')->where(array('id'=>$id))->update($data);
+        $result=MemberModel::setAgent($id);
         if($result){
-            user_log($this->mid,'setagent',1,'设置'.$level.'级代理 '.$id ,'manager');
+            user_log($this->mid,'setagent',1,'设置代理 '.$id ,'manager');
             $this->success('设置成功');
             exit;
         }else{
@@ -74,9 +75,9 @@ class MemberController extends BaseController
         if(empty($id))$this->error('会员不存在');
         $member=Db::name('member')->find($id);
         if(empty($member))$this->error('会员不存在');
-        if($member['isagent']==0)$this->success('取消成功');
+        if($member['is_agent']==0)$this->success('取消成功');
 
-        $result=Db::name('member')->where(array('id'=>$id))->update(array('isagent'=>0));
+        $result=MemberModel::cancelAgent($id);
         if($result){
             user_log($this->mid,'cancelagent',1,'取消代理 ' .$id ,'manager');
             $this->success('取消成功');

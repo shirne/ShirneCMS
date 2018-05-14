@@ -21,7 +21,12 @@ function writelog($message,$type=\think\Log::INFO){
 function file_download($filename,$data){
     return \think\Response::create($data, '\\extcore\\FileDownload', 200, [], ['file_name'=>$filename]);
 }
-
+function getMemberTypes(){
+    return [
+        '普通会员',
+        '内部员工'
+    ];
+}
 function getOauthTypes(){
     return [
         'weixin'=>'微信登录',

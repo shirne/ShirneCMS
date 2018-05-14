@@ -11,6 +11,15 @@ update `sa_permission` set icon='ion-md-options' where `key`='setting_index';
 
 ALTER TABLE `sa_article` ADD `digg` INT(11) DEFAULT '0',ADD `comment` INT(11) DEFAULT '0',ADD `views` INT(11) DEFAULT '0';
 
+ALTER TABLE  `sa_member` ADD `total_cashin` int(11) DEFAULT '0',
+  ADD `total_recharge` int(11) DEFAULT '0',
+  ADD `total_consume` int(11) DEFAULT '0',
+  ADD `total_recommend` int(11) DEFAULT '0',
+  ADD `is_agent` int(11) DEFAULT '0';
+
+ALTER TABLE  `sa_member_level` ADD `discount` tinyint(4) DEFAULT '0',
+  ADD `is_agent` int(11) DEFAULT '0';
+
 ALTER TABLE `sa_member_money_log` ADD `field` varchar(30) DEFAULT 'money';
 
 CREATE TABLE `sa_article_images` (
@@ -36,3 +45,13 @@ CREATE TABLE `sa_article_digg` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
+CREATE TABLE `sa_o_auth` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(100) DEFAULT NULL,
+  `logo` varchar(150) DEFAULT NULL,
+  `type` varchar(20) DEFAULT NULL,
+  `appid` varchar(50) DEFAULT '',
+  `appkey` varchar(50) DEFAULT '',
+  `status` tinyint(4) DEFAULT 1,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
