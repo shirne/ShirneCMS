@@ -7,7 +7,7 @@
 <div id="page-wrapper">
     <div class="row list-header">
         <div class="col-6">
-            <a href="{:url('Invite/add')}" class="btn btn-outline-primary btn-sm">生成邀请码</a>
+            <a href="{:url('Invite/add')}" class="btn btn-outline-primary btn-sm"><i class="ion-md-add"></i> 生成邀请码</a>
         </div>
         <div class="col-6">
             <form action="{:url('Invite/index')}" method="post">

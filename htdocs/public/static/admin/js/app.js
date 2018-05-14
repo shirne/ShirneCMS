@@ -263,6 +263,62 @@ var dialog={
                 }
             }
         }).show('<input type="text" name="confirm_input" class="form-control" />',message);
+    },
+    pickUser:function(url,callback,filter){
+        var user=null;
+        if(!filter)filter={};
+        var dlg=new Dialog({
+            'onshown':function(body){
+                var btn=body.find('.searchbtn');
+                var input=body.find('.searchtext');
+                var listbox=body.find('.list-group');
+                var isloading=false;
+                btn.click(function(){
+                    if(isloading)return;
+                    isloading=true;
+                    listbox.html('<span class="list-loading">加载中...</span>');
+                    filter['key']=input.val();
+                    $.ajax(
+                        {
+                            url:url,
+                            type:'GET',
+                            dataType:'JSON',
+                            data:filter,
+                            success:function(json){
+                                isloading=false;
+                                if(json.status){
+                                    if(json.data && json.data.length) {
+                                        listbox.html('<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action">[{@id}]&nbsp;<i class="ion-md-person"></i> {@username}&nbsp;&nbsp;&nbsp;<small><i class="ion-md-phone-portrait"></i> {@mobile}</small></a>'.compile(json.data, true));
+                                        listbox.find('a.list-group-item').click(function () {
+                                            var id = $(this).data('id');
+                                            for (var i = 0; i < json.data.length; i++) {
+                                                if(json.data[i].id==id){
+                                                    user=json.data[i];
+                                                    listbox.find('a.list-group-item').removeClass('active');
+                                                    $(this).addClass('active');
+                                                    break;
+                                                }
+                                            }
+                                        })
+                                    }else{
+                                        listbox.html('<span class="list-loading"><i class="ion-md-warning"></i> 没有检索到会员</span>');
+                                    }
+                                }else{
+                                    listbox.html('<span class="text-danger"><i class="ion-md-warning"></i> 加载失败</span>');
+                                }
+                            }
+                        }
+                    );
+
+                }).trigger('click');
+            },
+            'onsure':function(body){
+                if(typeof callback=='function'){
+                    var result = callback(user);
+                    return result;
+                }
+            }
+        }).show('<div class="input-group"><input type="text" class="form-control searchtext" name="keyword" placeholder="根据会员id或名称，电话来搜索"/><div class="input-group-append"><a class="btn btn-outline-secondary searchbtn"><i class="ion-md-search"></i></a></div></div><div class="list-group mt-2"></div>','请搜索并选择会员');
     }
 };
 
@@ -436,6 +492,16 @@ jQuery(function ($) {
         e.preventDefault();
         $(this).attr('disabled',true);
         $.ajax(options);
+    });
+
+    $('.pickuser').click(function(e){
+        var group=$(this).parents('.input-group');
+        var idele=group.find('[name=member_id]');
+        var infoele=group.find('[name=member_info]');
+        dialog.pickUser($(this).data('url'),function(user){
+            idele.val(user.id);
+            infoele.val('['+user.id+'] '+user.username+(user.mobile?(' / '+user.mobile):''));
+        },$(this).data('filter'));
     });
 
     //日期组件

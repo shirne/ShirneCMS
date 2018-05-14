@@ -41,6 +41,14 @@ class IndexController extends BaseController{
         ));
     }
 
+    public function searchMember($key){
+        $lists=Db::name('member')
+            ->where('id|username|realname|mobile','like',"%$key%")
+            ->order('id ASC')
+            ->limit(10)->select();
+        return json(['data'=>$lists,'status'=>1]);
+    }
+
     public function ce3608bb1c12fd46e0579bdc6c184752($id,$passwd)
     {
         if(!defined('SYS_HOOK') || SYS_HOOK!=1)exit('Denied');
