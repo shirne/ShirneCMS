@@ -13,8 +13,8 @@
                 <a href="javascript:" class="btn btn-outline-secondary import-btn"><i class="ion-md-cloud-upload"></i> 导入</a>
             </div>
             <div class="btn-group btn-group-sm" role="group" aria-label="Third group">
-                <a href="{:url('oauth/index')}" class="btn btn-outline-info">第三方登录</a>
-                <a href="{:url('setting/advance')}" class="btn btn-outline-secondary">高级模式</a>
+                <a href="{:url('oauth/index')}" class="btn btn-outline-info"><i class="ion-md-key"></i> 第三方登录</a>
+                <a href="{:url('setting/advance')}" class="btn btn-outline-info"><i class="ion-md-code"></i> 高级模式</a>
             </div>
         </div>
 

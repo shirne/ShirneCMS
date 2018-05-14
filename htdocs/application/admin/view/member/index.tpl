@@ -15,8 +15,8 @@
                     <a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="enable">启用</a>
                     <a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="disable">禁用</a>
                 </div>
-                <a href="{:url('member/statics')}" class="btn btn-outline-info btn-sm mr-2">会员统计</a>
-                <a href="{:url('member/add')}" class="btn btn-outline-primary btn-sm">添加会员</a>
+                <a href="{:url('member/statics')}" class="btn btn-outline-info btn-sm mr-2"><i class="ion-md-stats"></i> 会员统计</a>
+                <a href="{:url('member/add')}" class="btn btn-outline-primary btn-sm"><i class="ion-md-add"></i> 添加会员</a>
             </div>
         </div>
         <div class="col col-6">

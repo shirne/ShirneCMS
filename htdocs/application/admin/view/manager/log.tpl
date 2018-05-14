@@ -7,7 +7,7 @@
 <div id="page-wrapper">
     <div class="row list-header">
         <div class="col-md-6">
-            <a href="{:url('member/logclear')}" class="btn btn-outline-secondary btn-sm">清理日志</a>
+            <a href="{:url('member/logclear')}" class="btn btn-outline-secondary btn-sm"><i class="ion-md-trash"></i> 清理日志</a>
         </div>
         <div class="col-md-6">
             <form action="{:url('member/index')}" method="post">

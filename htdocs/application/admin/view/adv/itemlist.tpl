@@ -8,7 +8,7 @@
     
     <div class="row list-header">
         <div class="col-6">
-            <a href="{:url('adv/itemadd',array('gid'=>$gid))}" class="btn btn-outline-primary btn-sm">添加广告</a>
+            <a href="{:url('adv/itemadd',array('gid'=>$gid))}" class="btn btn-outline-primary btn-sm"><i class="ion-md-add"></i> 添加广告</a>
         </div>
         <div class="col-6">
             <form action="{:url('adv/itemlist')}" method="post">

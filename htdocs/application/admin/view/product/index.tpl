@@ -16,7 +16,7 @@
 					<a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="cancel">撤销</a>
 					<a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="delete">删除</a>
 				</div>
-				<a href="{:url('product/add')}" class="btn btn-outline-primary btn-sm">添加商品</a>
+				<a href="{:url('product/add')}" class="btn btn-outline-primary btn-sm"><i class="ion-md-add"></i> 添加商品</a>
 			</div>
 		</div>
 		<div class="col-md-6">

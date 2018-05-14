@@ -17,8 +17,8 @@
                 <a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="hide">隐藏</a>
                 <a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="delete">删除</a>
             </div>
-            <a href="{:url('page/add')}" class="btn btn-outline-primary btn-sm">添加单页</a>
-            <a href="{:url('page/groups')}" class="btn btn-outline-secondary btn-sm">分组管理</a>
+            <a href="{:url('page/add')}" class="btn btn-outline-primary btn-sm"><i class="ion-md-add"></i> 添加单页</a>
+            <a href="{:url('page/groups')}" class="btn btn-outline-secondary btn-sm"><i class="ion-md-bookmarks"></i> 分组管理</a>
         </div>
         <div class="col-6">
             <form action="{:url('page/index')}" method="post">

@@ -8,7 +8,7 @@
 
         <div class="row list-header">
             <div class="col-6">
-                <a href="{:url('MemberLevel/add')}" class="btn btn-outline-primary btn-sm">添加等级</a>
+                <a href="{:url('MemberLevel/add')}" class="btn btn-outline-primary btn-sm"><i class="ion-md-add"></i> 添加等级</a>
             </div>
             <div class="col-6">
             </div>

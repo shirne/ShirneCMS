@@ -8,8 +8,8 @@
 
     <div class="row list-header">
         <div class="col-md-6">
-            <a href="{:url('setting/index')}" class="btn btn-outline-primary btn-sm">普通模式</a>&nbsp;&nbsp;
-            <a href="{:url('setting/add')}" class="btn btn-outline-secondary btn-sm">添加配置</a>
+            <a href="{:url('setting/index')}" class="btn btn-outline-primary btn-sm"><i class="ion-md-list"></i> 普通模式</a>&nbsp;&nbsp;
+            <a href="{:url('setting/add')}" class="btn btn-outline-secondary btn-sm"><i class="ion-md-add"></i> 添加配置</a>
         </div>
         <div class="col-md-6">
             <form action="{:url('setting/advance')}" method="post">
