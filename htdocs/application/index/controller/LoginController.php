@@ -116,7 +116,8 @@ class LoginController extends BaseController{
         try {
             $userInfo = $oauth->getUserInfo();
             $data = call_user_func([$this, 'map_' . $app['type'] . '_info'], $userInfo);
-            $data['type'] = $type;
+            $data['type'] = $app['type'];
+            $data['type_id'] = $type;
             $model = MemberOauthModel::get(['openid' => $data['openid']]);
             if (empty($model)) {
                 if (empty($data['member_id'])) {
