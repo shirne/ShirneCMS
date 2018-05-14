@@ -54,6 +54,15 @@ CREATE TABLE `sa_product` (
   KEY `cate_id` (`cate_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `sa_product_sku` (
+  `sku_id` int(11) NOT NULL AUTO_INCREMENT,
+  `product_id` int(11) DEFAULT NULL,
+  `specs` text,
+  `image` varchar(150) DEFAULT NULL,
+  PRIMARY KEY (`sku_id`),
+  KEY `product_id` (`product_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE `sa_product_comment` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `member_id` int(11) NOT NULL DEFAULT '0',

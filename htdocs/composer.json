@@ -21,6 +21,7 @@
         "topthink/think-captcha": "^2.0",
         "topthink/think-image": "^1.0",
         "topthink/think-helper": "^1.0",
+        "yurunsoft/yurun-oauth-login": "1.*",
         "endroid/qr-code": "^2.5",
         "phpoffice/phpspreadsheet": "^1.2",
         "phpmailer/phpmailer": "^6.0"

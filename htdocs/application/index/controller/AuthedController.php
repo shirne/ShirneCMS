@@ -9,7 +9,7 @@
 namespace app\index\controller;
 
 
-class AuthController extends BaseController
+class AuthedController extends BaseController
 {
     public function initialize(){
         parent::initialize();

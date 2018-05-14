@@ -16,7 +16,7 @@ use think\Db;
  * Class MemberController
  * @package app\index\controller
  */
-class MemberController extends AuthController
+class MemberController extends AuthedController
 {
     public function initialize()
     {

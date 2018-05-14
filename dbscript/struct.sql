@@ -172,6 +172,25 @@ CREATE TABLE `sa_notice` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `sa_o_auth`
+--
+
+DROP TABLE IF EXISTS `sa_o_auth`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sa_o_auth` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(100) DEFAULT NULL,
+  `logo` varchar(150) DEFAULT NULL,
+  `type` varchar(20) DEFAULT NULL,
+  `appid` varchar(50) DEFAULT '',
+  `appkey` varchar(50) DEFAULT '',
+  `status` tinyint(4) DEFAULT 1,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `sa_subscribe`
 --
 

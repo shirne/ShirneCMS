@@ -22,6 +22,20 @@ function file_download($filename,$data){
     return \think\Response::create($data, '\\extcore\\FileDownload', 200, [], ['file_name'=>$filename]);
 }
 
+function getOauthTypes(){
+    return [
+        'weixin'=>'微信登录',
+        'baidu'=>'百度登录',
+        'coding'=>'CODING',
+        'csdn'=>'CSDN',
+        'gitee'=>'Gitee',
+        'github'=>'Github',
+        'oschina'=>'OSChina',
+        'qq'=>'QQ登录',
+        'weibo'=>'新浪微博',
+    ];
+}
+
 function getMemberLevels()
 {
     static $levels;

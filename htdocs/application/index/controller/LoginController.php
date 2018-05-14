@@ -2,9 +2,12 @@
 
 namespace app\index\controller;
 use app\common\model\MemberModel;
+use app\common\model\MemberOauthModel;
 use app\common\validate\MemberValidate;
+use sdk\OAuthFactory;
 use sdk\WechatAuth;
 use think\Db;
+use think\Exception;
 
 /**
  * 用户本地登陆和第三方登陆
@@ -46,7 +49,7 @@ class LoginController extends BaseController{
         return $this->login();
     }
 
-    public function login($type=null)
+    public function login($type=0)
     {
         if($this->userid){
             $this->success('您已登录',url('index/member/index'));
@@ -85,62 +88,125 @@ class LoginController extends BaseController{
                 }
             }
             return $this->fetch('login');
-        }
-        //方式2：如果是微信登录（微信内部浏览器登录，非扫码登录）
-        if(strtolower($type) == "weixin"){
-            $redirect = url('Login/wechatCallback','',true);
-            $scope = "snsapi_userinfo";
-            $url = "https://open.weixin.qq.com/connect/oauth2/authorize?appid={$this->appid}&redirect_uri=$redirect&response_type=code&scope=$scope&state=STATE#wechat_redirect";
-            redirect($url);
-        }
+        }else {
+            $app = Db::name('OAuth')->find(['id'=>$type]);
+            if (empty($app)) {
+                $this->error("不允许使用此方式登陆");
+            }
+            $callbackurl = url('index/login/callback', ['type' => $type]);
 
-        //方式3：QQ  weibo  github第三方登陆 
-        //验证允许实用的登陆方式，可在后台用代码实现
-    
-        $can_use = in_array(strtolower($type), array('qq','sina','github'));
-        if(!$can_use){
-            $this->error("不允许使用此方式登陆");
+            // 使用第三方登陆
+            $oauth = OAuthFactory::getInstence($app['type'], $app['appid'], $app['appkey'], $callbackurl);
+            $url=$oauth->getAuthUrl();
+            session('OAUTH_'.$type.'_STATE',$oauth->state);
+            return redirect($url);
         }
-        //验证通过  使用第三方登陆
-        if($type != null){
-            $sns = WechatAuth::getInstance($type);
-            redirect($sns->getRequestCodeURL())->send();
-        }
-        
     }
 
-    //QQ weibo  github登录回调地址
+    //登录回调地址
     public function callback($type = null, $code = null) 
     {
       
         if(empty($type) || empty($code)){
             $this->error('参数错误');  
-        } 
-     
-        $sns = ThinkOauth::getInstance($type);
-
-        //腾讯微博需传递的额外参数
-        $extend = null;
-        if ($type == 'tencent') {
-            $extend = array('openid' => $this->_get('openid'), 'openkey' => $this->_get('openkey'));
         }
-        $tokenArray = $sns->getAccessToken($code, $extend);
-        $openid = $tokenArray['openid'];
-        //$token = $tokenArray['access_token'];  //根据需求储存  主要用来刷新并延长授权时间
-        //
-        //执行后续操作,代码自己实现。
-        //请记住每个用户的openid都是唯一的,所以把openid存到数据库即可
-        $member = D('MemberView');
-        //根据openid判断用户是否存在，如果存在 ，判断用户是否被禁用。如果不存在,把openid存到数据库,相当于注册用户
+        $app = Db::name('OAuth')->find(['id'=>$type]);
+        $oauth=OAuthFactory::getInstence($app['type'], $app['appid'], $app['appkey']);
+        $oauth->getAccessToken(session('OAUTH_'.$type.'_STATE'));
+        try {
+            $userInfo = $oauth->getUserInfo();
+            $data = call_user_func([$this, 'map_' . $app['type'] . '_info'], $userInfo);
+            $data['type'] = $type;
+            $model = MemberOauthModel::get(['openid' => $data['openid']]);
+            if (empty($model)) {
+                if (empty($data['member_id'])) {
+                    $member = MemberModel::create([
+                        'username' => $data['openid'],
+                        'realname' => $data['nickname'],
+                        'avatar' => $data['avatar']
+                    ]);
+                    $data['member_id'] = $member['id'];
+                }
+                MemberOauthModel::create($data);
+            } else {
+                unset($data['member_id']);
+                $model->save($data);
+            }
+            $member = Db::name('Member')->find($model['member_id']);
+        }catch(Exception $e){
+            $this->error('登录失败');
+        }
 
-        #
-        #
-        #  代码自己实现
-        #
-        #
-        #
-    
+        setLogin($member);
+        $this->success('登录成功');
         
+    }
+
+    private function map_oschina_info($userInfo){
+        $data=array();
+        $data['openid'] = $userInfo['openid'];
+        $data['nickname'] =$userInfo['nickname'];
+        $data['avatar'] =$userInfo['avatar'];
+        $data['data']=json_encode($userInfo);
+        return $data;
+    }
+    private function map_github_info($userInfo){
+        $data=array();
+        $data['openid'] = $userInfo['openid'];
+        $data['nickname'] =$userInfo['nickname'];
+        $data['avatar'] =$userInfo['avatar'];
+        $data['data']=json_encode($userInfo);
+        return $data;
+    }
+    private function map_gitee_info($userInfo){
+        $data=array();
+        $data['openid'] = $userInfo['openid'];
+        $data['nickname'] =$userInfo['nickname'];
+        $data['avatar'] =$userInfo['avatar'];
+        $data['data']=json_encode($userInfo);
+        return $data;
+    }
+    private function map_csdn_info($userInfo){
+        $data=array();
+        $data['openid'] = $userInfo['openid'];
+        $data['nickname'] =$userInfo['nickname'];
+        $data['avatar'] =$userInfo['avatar'];
+        $data['data']=json_encode($userInfo);
+        return $data;
+    }
+    private function map_coding_info($userInfo){
+        $data=array();
+        $data['openid'] = $userInfo['openid'];
+        $data['nickname'] =$userInfo['nickname'];
+        $data['avatar'] =$userInfo['avatar'];
+        $data['data']=json_encode($userInfo);
+        return $data;
+    }
+    private function map_baidu_info($userInfo){
+        $data=array();
+        $data['openid'] = $userInfo['openid'];
+        $data['nickname'] =$userInfo['nickname'];
+        $data['avatar'] =$userInfo['avatar'];
+        $data['data']=json_encode($userInfo);
+        return $data;
+    }
+    private function map_weibo_info($userInfo){
+        $data=array();
+        $data['openid'] = $userInfo['openid'];
+        $data['nickname'] =$userInfo['nickname'];
+        $data['avatar'] =$userInfo['avatar'];
+        $data['data']=json_encode($userInfo);
+        return $data;
+    }
+    private function map_qq_info($userInfo){
+        $data=array();
+        $data['openid'] = $userInfo['openid'];
+        $data['unionid'] = $userInfo['unionid'];
+        $data['nickname'] =$userInfo['nickname'];
+        $data['avatar'] =$userInfo['figureurl_qq_1'];
+        $data['gender'] = $userInfo['gender'];
+        $data['data']=json_encode($userInfo);
+        return $data;
     }
     
     /**
@@ -148,60 +214,26 @@ class LoginController extends BaseController{
      * 如果需要手机微信注册 请用这个方法 
      * 参考文档：http://mp.weixin.qq.com/wiki/9/01f711493b5a02f24b04365ac5d8fd95.html
      */
-    public function wechatCallback()
+    private function map_wechat_info($userInfo)
     {
         $data=array();
-        $wechat = new WechatAuth($this->options);
-        $wxdata = $wechat->getOauthAccessToken($this->request->get('code'));
-        /**
-          $wxdata 字段
-         {
-           "access_token":"ACCESS_TOKEN",
-           "expires_in":7200,
-           "refresh_token":"REFRESH_TOKEN",
-           "openid":"OPENID",
-           "scope":"SCOPE",
-           "unionid": "o6_bmasdasdsad6_2sgVt7hMZOPfL"
-         }
-        **/
-        $openid = $wxdata['openid'];
-        $access_token = $wxdata['access_token'];
-        session('openid',$openid);
-        session('access_token',$access_token);
-        //获取AUTH用户资料
-        $oauthUserinfo = $wechat->getOauthUserinfo($access_token,$openid);
-        /**
-        {
-           "openid":" OPENID",
-           "nickname": NICKNAME,
-           "sex":"1",
-           "province":"PROVINCE"
-           "city":"CITY",
-           "country":"COUNTRY",
-            "headimgurl":    "http://wx.qlogo.cn/mmopen/g3MonUZtNHkdmzicIlibx6iaFqAc56vxLSUfpb6n5WKSYVY0ChQKkiaJSgQ1dZuTOgvLLrhJbERQQ4eMsv84eavHiaiceqxibJxCfHe/46", 
-            "privilege":[
-            "PRIVILEGE1"
-            "PRIVILEGE2"
-            ],
-            "unionid": "o6_bmasdasdsad6_2sgVt7hMZOPfL"
+        $data['openid'] = $userInfo['openid'];
+        $data['unionid'] = $userInfo['unionid'];
+        $data['nickname'] =$userInfo['nickname'];
+        $data['avatar'] =$userInfo['headimgurl'];
+        $data['is_follow'] = $userInfo['subscribe'];
+        $data['gender'] = $userInfo['sex'];
+        $data['province']= $userInfo['province'];
+        $data['city']= $userInfo['city'];
+        $data['country']= $userInfo['country'];
+        $data['data']=json_encode($userInfo);
+        if(!empty($userInfo['unionid'])){
+            $sameAuth=MemberOauthModel::get(['unionid'=>$userInfo['unionid']]);
+            if(!empty($sameAuth)){
+                $data['member_id']=$sameAuth['member_id'];
+            }
         }
-        **/
-        //是否关注微信号 1：关注  0：未关注  根据实际情况确定是不是要用
-        //session('subscribe',$userInfo['subscribe']);
-        //组合数据库中的用户字段
-        $data['openid'] = $oauthUserinfo['openid'];
-        $data['avatar'] =$oauthUserinfo['headimgurl'];
-        $data['status'] = 1;
-        $data['create_time'] = time();
-        $data['update_time'] = time();
-
-        #
-        #
-        #  判断用户是否存在和和注册用户的代码自己实现。
-        #
-        #
-        #
-        
+        return $data;
     }
 
     public function getpassword(){
@@ -236,7 +268,7 @@ class LoginController extends BaseController{
             $crow=Db::name('checkcode')->where(array('sendto'=>$sendto,'checkcode'=>$code,'is_check'=>0))->order('create_time DESC')->find();
             $time=time();
             if(!empty($crow) && $crow['create_time']>$time-60*5){
-                Db::name('checkcode')->where(array('id' => $crow['id']))->save(array('is_check' => 1, 'check_at' => $time));
+                Db::name('checkcode')->where(array('id' => $crow['id']))->update(array('is_check' => 1, 'check_at' => $time));
                 session('passed',$username);
             }else{
                 $this->error("验证码已失效");
