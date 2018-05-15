@@ -47,10 +47,10 @@
 		<thead>
 			<tr>
 				<th width="50">编号</th>
+				<th>图片</th>
 				<th>标题</th>
 				<th>类型</th>
 				<th>发布时间</th>
-				<th>作者</th>
 				<th>分类</th>
 				<th>状态</th>
 				<th width="200">操作</th>
@@ -60,16 +60,14 @@
 			<foreach name="lists" item="v">
 				<tr>
 					<td><input type="checkbox" name="id" value="{$v.id}" /></td>
+					<td><figure class="figure" >
+							<img src="{$v.image}?w=100" class="figure-img img-fluid rounded" alt="image">
+						</figure></td>
 					<td>{$v.title}</td>
 					<td>
-						<if condition="$v.type eq 1"><span class="label label-default">普通</span>
-							<elseif condition="$v.type eq 2" /><span class="label label-success">置顶</span>
-							<elseif condition="$v.type eq 3" /><span class="label label-danger">热门</span>
-							<elseif condition="$v.type eq 4" /><span class="label label-success">推荐</span>
-						</if>
+						<span class="badge badge-info">{$types[$v['type']]}</span>
 					</td>
 					<td>{$v.create_time|showdate}</td>
-					<td>{$v.username}</td>
 					<td>{$v.category_title}</td>
 					<td>
 						<if condition="$v.status eq 1">

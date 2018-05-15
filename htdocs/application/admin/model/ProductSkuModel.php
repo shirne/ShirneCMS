@@ -13,5 +13,6 @@ use think\Model;
 
 class ProductSkuModel extends Model
 {
+    protected $pk='sku_id';
     protected $type = ['specs'=>'array'];
 }

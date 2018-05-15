@@ -15,7 +15,7 @@ class ProductValidate extends BaseUniqueValidate
 {
     protected $rule=array(
         'title'=>'require',
-        'goods_no'=>'require|unique:product,%id%'
+        'goods_no'=>'require|unique:product,%id%',
     );
     protected $message=array(
         'title.require'=>'请填写商品名称',

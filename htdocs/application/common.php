@@ -379,12 +379,29 @@ function showcashtype($type){
     }
 }
 
+function show_price($row){
+    $price=$row['min_price'];
+    if($row['max_price']>$row['min_price']){
+        $price .= ' ~ '.$row['min_price'];
+    }
+    return $price;
+}
 
 function fix_in_array($val,$arr){
     if(empty($arr))return false;
     return in_array($val,(array)$arr);
 }
 
+function array_max($arr,$column){
+    if(empty($arr))return 0;
+    $data=array_column($arr,$column);
+    return max($data);
+}
+function array_min($arr,$column){
+    if(empty($arr))return 0;
+    $data=array_column($arr,$column);
+    return min($data);
+}
 /**
  * 仅转换参数，方便调用
  * @param $time

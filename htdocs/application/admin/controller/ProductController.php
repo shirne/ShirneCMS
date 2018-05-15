@@ -11,6 +11,7 @@ namespace app\admin\controller;
 
 use app\admin\model\ProductModel;
 use app\admin\model\ProductSkuModel;
+use app\admin\validate\ProductSkuValidate;
 use app\admin\validate\ProductValidate;
 use app\common\facade\ProductCategoryModel;
 use think\Db;
@@ -45,6 +46,21 @@ class ProductController extends BaseController
             $data = $this->request->post();
             $validate = new ProductValidate();
             $validate->setId();
+            $skuValidate=new ProductSkuValidate();
+            $skuValidate->setId(0);
+            $validate->rule([
+                'skus'=>function($value) use ($skuValidate){
+                    if(!is_array($value) || count($value)<1){
+                        return '请填写商品规格信息';
+                    }
+                    foreach ($value as $sku){
+                        if(!$skuValidate->check($sku)){
+                            return $skuValidate->getError();
+                        }
+                    }
+                    return true;
+                }
+            ]);
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
@@ -56,9 +72,17 @@ class ProductController extends BaseController
                 }
                 unset($data['delete_cover']);
                 $data['user_id'] = $this->mid;
+                $skus=$data['skus'];
+                $data['max_price']=array_max($skus,'price');
+                $data['min_price']=array_min($skus,'price');
+                unset($data['skus']);
                 $model=ProductModel::create($data);
-                if ($model->id) {
+                if ($model['id']) {
                     delete_image($delete_images);
+                    foreach ($skus as $sku){
+                        $sku['product_id']=$model['id'];
+                        ProductSkuModel::create($sku);
+                    }
                     user_log($this->mid,'addproduct',1,'添加商品 '.$model->id ,'manager');
                     $this->success("添加成功", url('Article/index'));
                 } else {
@@ -69,7 +93,7 @@ class ProductController extends BaseController
         $model=array('type'=>1,'cate_id'=>$cid,'is_discount'=>1,'is_commission'=>1);
         $this->assign("category",ProductCategoryModel::getCategories());
         $this->assign('product',$model);
-        $this->assign('skus',[]);
+        $this->assign('skus',[[]]);
         $this->assign('levels',getMemberLevels());
         $this->assign('types',getProductTypes());
         $this->assign('id',0);
@@ -87,6 +111,21 @@ class ProductController extends BaseController
             $data=$this->request->post();
             $validate=new ProductValidate();
             $validate->setId($id);
+            $skuValidate=new ProductSkuValidate();
+            $validate->rule([
+                'skus'=>function($value) use ($skuValidate){
+                    if(!is_array($value) || count($value)<1){
+                        return '请填写商品规格信息';
+                    }
+                    foreach ($value as $sku){
+                        $skuValidate->setId($sku['sku_id']);
+                        if(!$skuValidate->check($sku)){
+                            return $skuValidate->getError();
+                        }
+                    }
+                    return true;
+                }
+            ]);
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             }else{
@@ -97,8 +136,19 @@ class ProductController extends BaseController
                     $delete_images[]=$data['delete_cover'];
                 }
                 $model=ProductModel::get($id);
+                $skus=$data['skus'];
+                $data['max_price']=array_max($skus,'price');
+                $data['min_price']=array_min($skus,'price');
                 if ($model->allowField(true)->save($data)) {
                     delete_image($delete_images);
+                    foreach ($skus as $sku){
+                        if($sku['sku_id']) {
+                            ProductSkuModel::update($sku);
+                        }else{
+                            $sku['product_id']=$id;
+                            ProductSkuModel::create($sku);
+                        }
+                    }
                     user_log($this->mid, 'updateproduct', 1, '修改商品 ' . $id, 'manager');
                     $this->success("编辑成功", url('product/index'));
                 } else {
