@@ -14,6 +14,8 @@ Route::pattern([
     'id'   => '\d+',
     'group'=> '[a-zA-Z]\w*',
     'action'=> '[a-zA-Z]\w*',
+    'type'=>'\w+',
+    'agent'=>'\w{6,}'
 ]);
 
 Route::get('index$', 'index/index/index');
@@ -38,7 +40,7 @@ Route::group('auth',[
     'login/[:type]'=>'index/login/index',
     'callback'=>'index/login/callback',
     'getpassword'=>'index/login/getpassword',
-    'register'=>'index/login/register',
+    'register/[:agent]'=>'index/login/register',
     'checkusername'=>'index/login/checkusername',
     'checkunique'=>'index/login/checkunique',
     'verify'=>'index/login/verify',
