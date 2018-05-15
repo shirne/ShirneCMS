@@ -92,7 +92,9 @@ class ManagerController extends BaseController
                 }
             }
         }
-        return $this->fetch();
+        $model=array('type'=>2,'status'=>1);
+        $this->assign('model',$model);
+        return $this->fetch('update');
     }
     /**
      * 更新管理员信息

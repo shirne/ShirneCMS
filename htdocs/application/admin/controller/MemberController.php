@@ -155,8 +155,10 @@ class MemberController extends BaseController
                 }
             }
         }
+        $model=array('type'=>1,'status'=>1);
+        $this->assign('model',$model);
         $this->assign('types',getMemberTypes());
-        return $this->fetch();
+        return $this->fetch('update');
     }
     /**
      * 更新会员信息
