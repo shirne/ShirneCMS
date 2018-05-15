@@ -9,8 +9,10 @@
 namespace app\index\controller;
 
 
+use app\common\model\ProductModel;
 use app\common\facade\ProductCategoryModel;
 use app\common\model\ProductCommentModel;
+use app\common\model\ProductSkuModel;
 use app\common\validate\ProductCommentValidate;
 use think\Db;
 
@@ -44,7 +46,7 @@ class ProductController extends BaseController
     }
 
     public function view($id){
-        $product = Db::name('product')->find($id);
+        $product = ProductModel::get($id);
         if(empty($product)){
             $this->error('商品不存在');
         }
@@ -52,6 +54,8 @@ class ProductController extends BaseController
         $this->category($product['cate_id']);
 
         $this->assign('product', $product);
+        $skuModel=new ProductSkuModel();
+        $this->assign('skus', $skuModel->where('product_id',$product['id'])->select());
         return $this->fetch();
     }
     public function comment($id){

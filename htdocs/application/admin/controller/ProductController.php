@@ -9,8 +9,8 @@
 namespace app\admin\controller;
 
 
-use app\admin\model\ProductModel;
-use app\admin\model\ProductSkuModel;
+use app\common\model\ProductModel;
+use app\common\model\ProductSkuModel;
 use app\admin\validate\ProductSkuValidate;
 use app\admin\validate\ProductValidate;
 use app\common\facade\ProductCategoryModel;

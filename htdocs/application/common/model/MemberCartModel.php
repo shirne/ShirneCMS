@@ -14,24 +14,25 @@ use think\Model;
 
 class MemberCartModel extends Model
 {
-    public function addCart($product,$sku_id,$count,$member_id)
+    public function addCart($product,$sku,$count,$member_id)
     {
         $exists=Db::name('MemberCart')->where([
             'member_id'=>$member_id,
-            'sku_id'=>$sku_id,
+            'sku_id'=>$sku['sku_id'],
         ])->find();
         if(!empty($exists)){
             return Db::name('MemberCart')->where([
                 'member_id'=>$member_id,
-                'sku_id'=>$sku_id,
+                'sku_id'=>$sku['sku_id'],
             ])->setInc('count',$count);
         }else {
             return Db::name('MemberCart')->insert([
                 'member_id' => $member_id,
                 'product_id' => $product['id'],
-                'sku_id' => $sku_id,
+                'sku_id' => $sku['sku_id'],
                 'product_title' => $product['title'],
-                'product_image' => $product['image'],
+                'product_image' => $sku['image']?$sku['image']:$product['image'],
+                'product_price' => $sku['price'],
                 'count' => $count
             ]);
         }

@@ -29,7 +29,7 @@ class CartController extends AuthedController
         if(empty($product) || $product['status']==0){
             $this->error('产品已下架');
         }
-        $added=MemberCartModel::addCart($product,$sku_id,$count,$this->userid);
+        $added=MemberCartModel::addCart($product,$sku,$count,$this->userid);
         if($added){
             $this->success('添加成功');
         }else{
