@@ -25,12 +25,11 @@
 	</div>
 	<div class="form-group">
         <label>用户类型</label>
-        <label class="radio-inline">
-          <input type="radio" name="type" id="type" value="1" <if condition="$model.type eq 1">checked="checked"</if>>普通会员
-        </label>
-        <label class="radio-inline">
-          <input type="radio" name="type" id="type" value="2" <if condition="$model.type eq 2">checked="checked"</if>>VIP
-        </label>
+		<volist name="types" id="type" key="k">
+			<label class="radio-inline">
+				<input type="radio" name="type" value="{$key}" {$key==$model['type']?'checked':''}>{$type}
+			</label>
+		</volist>
     </div>
 	<div class="form-group">
         <label>用户状态</label>

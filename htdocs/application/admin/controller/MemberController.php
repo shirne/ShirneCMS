@@ -155,6 +155,7 @@ class MemberController extends BaseController
                 }
             }
         }
+        $this->assign('types',getMemberTypes());
         return $this->fetch();
     }
     /**
@@ -188,6 +189,7 @@ class MemberController extends BaseController
             }
         }
         $model = Db::name('Member')->find($id);
+        $this->assign('types',getMemberTypes());
         $this->assign('model',$model);
         return $this->fetch();
     }

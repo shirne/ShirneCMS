@@ -23,8 +23,8 @@ function file_download($filename,$data){
 }
 function getMemberTypes(){
     return [
-        '普通会员',
-        '内部员工'
+        1=>'普通会员',
+        2=>'内部员工'
     ];
 }
 function getOauthTypes(){
