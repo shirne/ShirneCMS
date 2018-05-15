@@ -313,6 +313,10 @@ var dialog={
                 }).trigger('click');
             },
             'onsure':function(body){
+                if(!user){
+                    toastr.warning('没有选择会员!');
+                    return false;
+                }
                 if(typeof callback=='function'){
                     var result = callback(user);
                     return result;

@@ -27,7 +27,7 @@
             <foreach name="lists" item="v">
                 <tr>
                     <td>{$v.level_id}</td>
-                    <td>{$v.level_name}[{$v.short_name}]<if condition="$v['is_default']"><span class="label label-info">默认</span> </if></td>
+                    <td>{$v.level_name}[{$v.short_name}]<if condition="$v['is_default']"><span class="badge badge-info">默认</span> </if></td>
                     <td>{$v.sort}</td>
                     <td>{$v.level_price}</td>
                     <td>
