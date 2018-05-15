@@ -106,6 +106,17 @@
                            placeholder="请输入SEO关键词(选填)">
                     </div>
                 </div>
+
+                <div class="form-group">
+                    <label for="description">绑定规格</label>
+                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                        <volist name="specs" id="val" key="k">
+                            <label class="btn btn-outline-secondary{:in_array($k,$model['specs'])?' active':''}">
+                                <input type="checkbox" name="specs[]" value="{$k}" autocomplete="off" {:in_array($k,$model['specs'])?' checked':''}>{$val}
+                            </label>
+                        </volist>
+                    </div>
+                </div>
                 <div class="form-group">
                     <label for="description">描述信息</label>
                     <textarea name="description" cols="30" rows="10" class="form-control"

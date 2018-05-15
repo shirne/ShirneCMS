@@ -250,14 +250,14 @@
 				$(this).data('origin',$(this).html());
 			});
 			function showError(field,msg){
-				$(field).addClass('error');
+				$(field).addClass('is-invalid');
 				var msgbox=$(field).parents('.form-group').find('.form-text');
 				if(msgbox.length<1)return;
 				if(!msgbox.data('origin'))msgbox.data('origin',msgbox.html());
 				msgbox.text(msg);
 			}
 			function hideError(field){
-				$(field).removeClass('error');
+				$(field).removeClass('is-invalid');
 				var msgbox=$(field).parents('.form-group').find('.form-text');
 				if(msgbox.length<1)return;
 				if(msgbox.data('origin')) {

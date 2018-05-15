@@ -55,8 +55,8 @@
             <div class="form-group col-4 col-md-2">
                 <div class="btn-group btn-group-toggle" data-toggle="buttons">
                     <volist name="types" id="type" key="k">
-                        <label class="btn btn-outline-secondary{$key==$article['type']?' active':''}">
-                            <input type="radio" name="type" value="{$key}" autocomplete="off" {$key==$article['type']?'checked':''}>{$type}
+                        <label class="btn btn-outline-secondary{$k==$article['type']?' active':''}">
+                            <input type="radio" name="type" value="{$k}" autocomplete="off" {$k==$article['type']?'checked':''}>{$type}
                         </label>
                     </volist>
                 </div>

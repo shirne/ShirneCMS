@@ -56,7 +56,10 @@ class OrderController extends AuthedController
             }
         }
 
+        $address=Db::name('MemberAddress')->where('member_id',$this->userid)
+            ->where('is_default',1)->find();
         $this->assign('from',$from);
+        $this->assign('address',$address);
         $this->assign('products',$products);
         return $this->fetch();
     }

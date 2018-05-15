@@ -28,4 +28,9 @@ class ProductCategoryModel extends Facade
     protected static function getFacadeClass(){
         return \app\common\model\ProductCategoryModel::class;
     }
+
+    public static function get($data, $with = [], $cache = false, $failException = false)
+    {
+        return \app\common\model\ProductCategoryModel::get($data, $with, $cache, $failException);
+    }
 }

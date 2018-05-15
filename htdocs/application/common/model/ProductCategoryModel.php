@@ -15,6 +15,8 @@ class ProductCategoryModel extends CategoryModel
 {
     protected $precache='product_';
 
+    protected $type = ['specs'=>'array'];
+
     protected function _get_data(){
         return Db::name('ProductCategory')->order('pid ASC,sort ASC,id ASC')->select();
     }

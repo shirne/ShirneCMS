@@ -52,6 +52,29 @@ body {
     text-align: center;
 }
 
+.form-control .taginput{
+    border:0;
+    max-width: inherit;
+    box-shadow: none;
+    display: inline-block;
+    outline: none;
+}
+.form-control .taginput:focus{
+    border:0;
+}
+.form-control .badge{
+    margin-right:5px;
+    font-size:1rem;
+    margin-bottom:5px;
+}
+.badge .close{
+    float:none;
+    display:inline;
+    line-height :1rem;
+    font-size:1rem;
+    padding:0 3px;
+}
+
 #wrapper {
     padding-left: 0;
 }

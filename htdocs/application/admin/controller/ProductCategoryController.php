@@ -9,6 +9,7 @@
 namespace app\admin\controller;
 
 
+use app\admin\model\SpecificationsModel;
 use app\admin\validate\ProductCategoryValidate;
 use app\common\facade\ProductCategoryModel;
 use think\Db;
@@ -34,8 +35,8 @@ class ProductCategoryController extends BaseController
                 $uploaded=$this->upload('category','upload_image',true);
                 if(!empty($uploaded))$data['image']=$uploaded['url'];
 
-                $result=Db::name('ProductCategory')->insert($data);
-                if ($result) {
+                $model=\app\common\model\ProductCategoryModel::create($data);
+                if ($model['id']) {
                     ProductCategoryModel::clearCache();
                     $this->success("添加成功", url('productCategory/index'));
                 } else {
@@ -44,9 +45,10 @@ class ProductCategoryController extends BaseController
             }
         }
         $cate = ProductCategoryModel::getCategories();
-        $model=array('sort'=>99,'pid'=>$pid);
+        $model=array('sort'=>99,'pid'=>$pid,'specs'=>[]);
         $this->assign('cate',$cate);
         $this->assign('model',$model);
+        $this->assign('specs',SpecificationsModel::getList());
         $this->assign('id',0);
         return $this->fetch('edit');
     }
@@ -78,25 +80,25 @@ class ProductCategoryController extends BaseController
                 unset($data['delete_icon']);
                 unset($data['delete_image']);
 
-                $result=Db::name('ProductCategory')->where(array('id'=>$id))->update($data);
+                \app\common\model\ProductCategoryModel::update($data,['id'=>$id]);
 
-                if ($result) {
-                    delete_image($delete_images);
-                    ProductCategoryModel::clearCache();
-                    $this->success("保存成功", url('productCategory/index'));
-                } else {
-                    $this->error("保存失败");
-                }
+                delete_image($delete_images);
+                ProductCategoryModel::clearCache();
+                $this->success("保存成功", url('productCategory/index'));
             }
         }else{
-            $model = Db::name('ProductCategory')->find($id);
-            if(empty($model)){
+            $model = ProductCategoryModel::get($id);
+            if(empty($model) || empty($model['id'])){
                 $this->error('分类不存在');
             }
             $cate = ProductCategoryModel::getCategories();
+            if(is_null($model->specs)){
+                $model->specs=[];
+            }
 
             $this->assign('cate',$cate);
             $this->assign('model',$model);
+            $this->assign('specs',SpecificationsModel::getList());
             $this->assign('id',$id);
             return $this->fetch();
         }
