@@ -10,6 +10,7 @@ namespace app\admin\controller;
 
 
 use app\admin\model\ProductModel;
+use app\admin\model\ProductSkuModel;
 use app\admin\validate\ProductValidate;
 use app\common\facade\ProductCategoryModel;
 use think\Db;
@@ -65,9 +66,11 @@ class ProductController extends BaseController
                 }
             }
         }
-        $model=array('type'=>1,'cate_id'=>$cid);
+        $model=array('type'=>1,'cate_id'=>$cid,'is_discount'=>1,'is_commission'=>1);
         $this->assign("category",ProductCategoryModel::getCategories());
-        $this->assign('article',$model);
+        $this->assign('product',$model);
+        $this->assign('skus',[]);
+        $this->assign('levels',getMemberLevels());
         $this->assign('types',getProductTypes());
         $this->assign('id',0);
         return $this->fetch('edit');
@@ -108,8 +111,12 @@ class ProductController extends BaseController
             if(empty($model)){
                 $this->error('商品不存在');
             }
+            $skuModel=new ProductSkuModel();
+            $skus=$skuModel->where('product_id',$id)->select();
             $this->assign("category",ProductCategoryModel::getCategories());
+            $this->assign('levels',getMemberLevels());
             $this->assign('product',$model);
+            $this->assign('skus',$skus);
             $this->assign('types',getProductTypes());
             $this->assign('id',$id);
             return $this->fetch();

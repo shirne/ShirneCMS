@@ -380,6 +380,11 @@ function showcashtype($type){
 }
 
 
+function fix_in_array($val,$arr){
+    if(empty($arr))return false;
+    return in_array($val,(array)$arr);
+}
+
 /**
  * 仅转换参数，方便调用
  * @param $time

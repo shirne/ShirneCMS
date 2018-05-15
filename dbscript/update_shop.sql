@@ -60,7 +60,7 @@ CREATE TABLE `sa_product` (
   `storage` int(11) DEFAULT '0',
   `sale` int(11) DEFAULT '0',
   `type` tinyint(4) DEFAULT '1',
-  `is_commision` tinyint(4) DEFAULT '1',
+  `is_commission` tinyint(4) DEFAULT '1',
   `is_discount` tinyint(4) DEFAULT '1',
   `status` tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),

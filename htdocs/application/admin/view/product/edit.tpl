@@ -7,27 +7,84 @@
     <div id="page-content">
     <form method="post" action="" enctype="multipart/form-data">
         <div class="form-row">
-            <div class="col form-group">
+            <div class="col">
+            <div class="form-group">
                 <label for="product-title">商品名称</label>
                 <input type="text" name="title" class="form-control" value="{$product.title}" id="product-title" placeholder="输入商品名称">
             </div>
-            <div class="col form-group">
+            <div class="form-group">
                 <label for="product-title">副标题</label>
                 <input type="text" name="vice_title" class="form-control" value="{$product.vice_title}" id="product-title" >
             </div>
-        </div>
-        <div class="form-row">
-            <div class="col form-group">
+            <div class="form-group">
                 <label for="product-title">商品货号</label>
                 <input type="text" name="goods_no" class="form-control" value="{$product.goods_no}" id="product-title" placeholder="输入商品货号">
             </div>
-            <div class="col form-group">
+            <div class="form-group">
                 <label for="product-cate">商品分类</label>
                 <select name="cate_id" id="product-cate" class="form-control">
                     <foreach name="category" item="v">
                         <option value="{$v.id}" {$product['cate_id'] == $v['id']?'selected="selected"':""}>{$v.html} {$v.title}</option>
                     </foreach>
                 </select>
+            </div>
+            </div>
+            <div class="col-4">
+                <div class="card">
+                <div class="card-header">商品属性</div>
+                <div class="card-body">
+                    <div class="form-row">
+                        <label class="col-3">商品类型</label>
+                        <div class="form-group col">
+                            <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
+                                <volist name="types" id="type" key="k">
+                                    <label class="btn btn-outline-secondary{$k==$product['type']?' active':''}">
+                                        <input type="radio" name="type" value="{$k}" autocomplete="off" {$k==$product['type']?'checked':''}>{$type}
+                                    </label>
+                                </volist>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <label class="col-3">支持折扣</label>
+                        <div class="form-group col">
+                            <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
+                                <label class="btn btn-outline-secondary{$product['is_discount']==1?' active':''}">
+                                    <input type="radio" name="is_discount" value="1" autocomplete="off" {$product['is_discount']==1?'checked':''}>支持
+                                </label>
+                                <label class="btn btn-outline-secondary{$product['is_discount']==0?' active':''}">
+                                    <input type="radio" name="is_discount" value="0" autocomplete="off" {$product['is_discount']==0?'checked':''}>不支持
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <label class="col-3">支持分佣</label>
+                        <div class="form-group col">
+                            <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
+                                <label class="btn btn-outline-secondary{$product['is_commission']==1?' active':''}">
+                                    <input type="radio" name="is_commission" value="1" autocomplete="off" {$product['is_commission']==1?'checked':''}>支持
+                                </label>
+                                <label class="btn btn-outline-secondary{$product['is_commission']==0?' active':''}">
+                                    <input type="radio" name="is_commission" value="0" autocomplete="off" {$product['is_commission']==0?'checked':''}>不支持
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <label class="col-3">限制购买</label>
+                        <div class="form-group col">
+                            <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
+                                <volist name="levels" id="lv" key="k">
+                                    <label class="btn btn-outline-secondary{:fix_in_array($k,$product['levels'])?' active':''}">
+                                        <input type="checkbox" name="levels[]" value="{$k}" autocomplete="off" {:fix_in_array($k,$product['levels'])?'checked':''}>{$lv.level_name}
+                                    </label>
+                                </volist>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
             </div>
         </div>
         <div class="form-group">
@@ -50,18 +107,7 @@
             <label for="product-content">商品介绍</label>
             <script id="product-content" name="content" type="text/plain">{$product.content|raw}</script>
         </div>
-        <div class="form-row">
-            <label class="col-2 col-md-1">商品类型</label>
-            <div class="form-group col-4 col-md-2">
-                <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                    <volist name="types" id="type" key="k">
-                        <label class="btn btn-outline-secondary{$k==$article['type']?' active':''}">
-                            <input type="radio" name="type" value="{$k}" autocomplete="off" {$k==$article['type']?'checked':''}>{$type}
-                        </label>
-                    </volist>
-                </div>
-            </div>
-        </div>
+
         <input type="hidden" name="id" value="{$product.id}">
         <button type="submit" class="btn btn-primary">{$id>0?'保存':'添加'}</button>
     </form>
