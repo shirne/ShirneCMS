@@ -27,6 +27,20 @@ function getMemberTypes(){
         2=>'内部员工'
     ];
 }
+function getArticleTypes(){
+    return [
+        1=>'普通',
+        2=>'置顶',
+        3=>'热门',
+        4=>'推荐'
+    ];
+}
+function getProductTypes(){
+    return [
+        1=>'普通',
+        2=>'入会'
+    ];
+}
 function getOauthTypes(){
     return [
         'weixin'=>'微信登录',

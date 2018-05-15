@@ -31,6 +31,7 @@ class ProductController extends BaseController
 
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
+        $this->assign('types',getProductTypes());
         $this->assign('keyword',$key);
         $this->assign('cate_id',$cate_id);
         $this->assign("category",ProductCategoryModel::getCategories());
@@ -67,6 +68,7 @@ class ProductController extends BaseController
         $model=array('type'=>1,'cate_id'=>$cid);
         $this->assign("category",ProductCategoryModel::getCategories());
         $this->assign('article',$model);
+        $this->assign('types',getProductTypes());
         $this->assign('id',0);
         return $this->fetch('edit');
     }
@@ -108,6 +110,7 @@ class ProductController extends BaseController
             }
             $this->assign("category",ProductCategoryModel::getCategories());
             $this->assign('product',$model);
+            $this->assign('types',getProductTypes());
             $this->assign('id',$id);
             return $this->fetch();
         }

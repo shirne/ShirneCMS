@@ -62,11 +62,7 @@
 					<td><input type="checkbox" name="id" value="{$v.id}" /></td>
 					<td>{$v.title}</td>
 					<td>
-						<if condition="$v.type eq 1"><span class="label label-default">普通</span>
-							<elseif condition="$v.type eq 2" /><span class="label label-success">置顶</span>
-							<elseif condition="$v.type eq 3" /><span class="label label-danger">热门</span>
-							<elseif condition="$v.type eq 4" /><span class="label label-success">推荐</span>
-						</if>
+						<span class="badge badge-info">{$types[$v['type']]}</span>
 					</td>
 					<td>{$v.create_time|showdate}</td>
 					<td>{$v.username}</td>

@@ -50,20 +50,17 @@
             <label for="product-content">商品介绍</label>
             <script id="product-content" name="content" type="text/plain">{$product.content|raw}</script>
         </div>
-        <div class="form-group">
-            <label>商品类型</label>
-            <label class="radio-inline">
-              <input type="radio" name="type" value="1" <if condition="$product.type eq 1">checked="checked"</if> >普通
-            </label>
-            <label class="radio-inline">
-              <input type="radio" name="type" value="2" <if condition="$product.type eq 2">checked="checked"</if>>置顶
-            </label>
-            <label class="radio-inline">
-              <input type="radio" name="type" value="3" <if condition="$product.type eq 3">checked="checked"</if>>热门
-            </label>
-            <label class="radio-inline">
-              <input type="radio" name="type" value="4" <if condition="$product.type eq 4">checked="checked"</if>>推荐
-            </label>
+        <div class="form-row">
+            <label class="col-2 col-md-1">商品类型</label>
+            <div class="form-group col-4 col-md-2">
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <volist name="types" id="type" key="k">
+                        <label class="btn btn-outline-secondary{$key==$article['type']?' active':''}">
+                            <input type="radio" name="type" value="{$key}" autocomplete="off" {$key==$article['type']?'checked':''}>{$type}
+                        </label>
+                    </volist>
+                </div>
+            </div>
         </div>
         <input type="hidden" name="id" value="{$product.id}">
         <button type="submit" class="btn btn-primary">{$id>0?'保存':'添加'}</button>
