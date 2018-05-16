@@ -123,6 +123,9 @@ class ArticleController extends BaseController
         $model = Db::name('article');
         $result = $model->where("id",'in',idArr($id))->delete();
         if($result){
+            Db::name('articleComment')->where("article_id",'in',idArr($id))->delete();
+            Db::name('articleDigg')->where("article_id",'in',idArr($id))->delete();
+            Db::name('articleImages')->where("article_id",'in',idArr($id))->delete();
             user_log($this->mid,'deletearticle',1,'删除文章 '.$id ,'manager');
             $this->success("删除成功", url('Article/index'));
         }else{

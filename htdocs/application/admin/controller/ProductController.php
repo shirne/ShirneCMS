@@ -141,14 +141,18 @@ class ProductController extends BaseController
                 $data['min_price']=array_min($skus,'price');
                 if ($model->allowField(true)->save($data)) {
                     delete_image($delete_images);
+                    $existsIds=[];
                     foreach ($skus as $sku){
                         if($sku['sku_id']) {
                             ProductSkuModel::update($sku);
+                            $existsIds[]=$sku['sku_id'];
                         }else{
                             $sku['product_id']=$id;
-                            ProductSkuModel::create($sku);
+                            $skuModel=ProductSkuModel::create($sku);
+                            $existsIds[]=$skuModel['sku_id'];
                         }
                     }
+                    Db::name('productSku')->whereNotIn('sku_id',$existsIds)->delete();
                     user_log($this->mid, 'updateproduct', 1, '修改商品 ' . $id, 'manager');
                     $this->success("编辑成功", url('product/index'));
                 } else {
@@ -180,6 +184,9 @@ class ProductController extends BaseController
         $model = Db::name('product');
         $result = $model->where("id",'in',idArr($id))->delete();
         if($result){
+            Db::name('productSku')->where("product_id",'in',idArr($id))->delete();
+            Db::name('productImages')->where("product_id",'in',idArr($id))->delete();
+            Db::name('productComment')->where("product_id",'in',idArr($id))->delete();
             user_log($this->mid,'deleteproduct',1,'删除商品 '.$id ,'manager');
             $this->success("删除成功", url('Product/index'));
         }else{
