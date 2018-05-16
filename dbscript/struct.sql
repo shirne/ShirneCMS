@@ -546,7 +546,6 @@ CREATE TABLE `sa_article` (
   `digg` INT(11) DEFAULT '0',
   `comment` INT(11) DEFAULT '0',
   `views` INT(11) DEFAULT '0',
-  `update_time` varchar(11) DEFAULT '0',
   `type` tinyint(1) DEFAULT '1' COMMENT '1:普通,2:置顶,3:热门,4:推荐',
   `status` tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
