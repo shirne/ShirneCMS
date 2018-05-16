@@ -106,7 +106,7 @@
                            placeholder="请输入SEO关键词(选填)">
                     </div>
                 </div>
-
+                <if condition="!empty($specs)">
                 <div class="form-group">
                     <label for="description">绑定规格</label>
                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
@@ -117,6 +117,7 @@
                         </volist>
                     </div>
                 </div>
+                </if>
                 <div class="form-group">
                     <label for="description">描述信息</label>
                     <textarea name="description" cols="30" rows="10" class="form-control"
