@@ -23,7 +23,7 @@ class AuthedController extends BaseController
         //如果没有的登录 重定向至登录页面
         if(empty($this->userid ) ) {
             redirect()->remember();
-            $this->error('请先登录',url('Login/login'));
+            $this->error('请先登录',url('index/login/index'));
         }
 
     }
