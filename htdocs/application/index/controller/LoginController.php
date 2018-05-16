@@ -366,6 +366,7 @@ class LoginController extends BaseController{
             }
             $this->success("注册成功",$url);
         }else{
+            $this->assign('nocode',$this->config['m_invite']<1);
             return $this->fetch();
         }
     }
