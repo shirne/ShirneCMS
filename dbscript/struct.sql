@@ -222,7 +222,7 @@ DROP TABLE IF EXISTS `sa_member`;
 CREATE TABLE `sa_member` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(20) NOT NULL,
-  `realname` varchar(20) NOT NULL,
+  `realname` varchar(20) NOT NULL DEFAULT '',
   `level_id` int(11) DEFAULT '0',
   `mobile` varchar(20) NOT NULL DEFAULT '',
   `mobile_bind` tinyint(4) DEFAULT '0',

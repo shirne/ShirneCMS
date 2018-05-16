@@ -36,16 +36,16 @@
                             <span class="input-group-text">商品主图</span>
                         </div>
                         <div class="custom-file">
-                            <input type="file" class="custom-file-input" name="upload_cover"/>
-                            <label class="custom-file-label" for="upload_cover">选择文件</label>
+                            <input type="file" class="custom-file-input" name="upload_image"/>
+                            <label class="custom-file-label" for="upload_image">选择文件</label>
                         </div>
                     </div>
-                    <if condition="$product['cover']">
+                    <if condition="$product['image']">
                         <figure class="figure">
-                            <img src="{$product.cover}" class="figure-img img-fluid rounded" alt="image">
-                            <figcaption class="figure-caption text-center">{$product.cover}</figcaption>
+                            <img src="{$product.image}" class="figure-img img-fluid rounded" alt="image">
+                            <figcaption class="figure-caption text-center">{$product.image}</figcaption>
                         </figure>
-                        <input type="hidden" name="delete_cover" value="{$product.cover}"/>
+                        <input type="hidden" name="delete_image" value="{$product.image}"/>
                     </if>
                 </div>
             </div>

@@ -32,6 +32,7 @@ function parseNavigator(&$config,$module){
         $navigators=array();
         foreach ($config as $item){
             if(empty($item['url']))continue;
+            $item['model']=parseModel($item['url']);
             $item['url']=parseNavUrl($item['url'],$module);
 
             if(isset($item['subnav']) ){
@@ -51,6 +52,22 @@ function parseNavigator(&$config,$module){
         cache($module.'_navigator',$navigators,['expire'=>7200]);
     }
     return $navigators;
+}
+function parseModel($url){
+    $model=[];
+    if(is_array($url)){
+        $url[0]=explode('/',$url[0]);
+        $model[0]=strtolower($url[0][0]);
+        if(!empty($url[1]['name']))$model[1]=$url[1]['name'];
+    }elseif(is_string($url)) {
+        if (strpos($url, 'http://') !== 0 &&
+            strpos($url, 'https://') !== 0 &&
+            strpos($url, '/') !== 0) {
+            $url=explode('/',$url);
+            $model[0]=strtolower($url[0]);
+        }
+    }
+    return implode('-',$model);
 }
 function parseNavUrl($url,$module){
     if(is_array($url)){

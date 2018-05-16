@@ -65,12 +65,12 @@ class ProductController extends BaseController
                 $this->error($validate->getError());
             } else {
                 $delete_images=[];
-                $uploaded = $this->upload('article', 'upload_cover', true);
+                $uploaded = $this->upload('article', 'upload_image', true);
                 if (!empty($uploaded)) {
-                    $data['cover'] = $uploaded['url'];
-                    $delete_images[]=$data['delete_cover'];
+                    $data['image'] = $uploaded['url'];
+                    $delete_images[]=$data['delete_image'];
                 }
-                unset($data['delete_cover']);
+                unset($data['delete_image']);
                 $data['user_id'] = $this->mid;
                 $skus=$data['skus'];
                 $data['max_price']=array_max($skus,'price');
@@ -130,10 +130,10 @@ class ProductController extends BaseController
                 $this->error($validate->getError());
             }else{
                 $delete_images=[];
-                $uploaded=$this->upload('article','upload_cover',true);
+                $uploaded=$this->upload('article','upload_image',true);
                 if(!empty($uploaded)){
-                    $data['cover']=$uploaded['url'];
-                    $delete_images[]=$data['delete_cover'];
+                    $data['image']=$uploaded['url'];
+                    $delete_images[]=$data['delete_image'];
                 }
                 $model=ProductModel::get($id);
                 $skus=$data['skus'];

@@ -1,6 +1,7 @@
 <?php
 namespace app\index\controller;
 
+use app\admin\model\MemberLevelModel;
 use think\Controller;
 use think\Db;
 
@@ -12,6 +13,7 @@ class BaseController extends Controller {
 
     protected $userid;
     protected $user;
+    protected $userLevel;
     protected $isLogin=false;
 
     protected $config=array();
@@ -35,9 +37,10 @@ class BaseController extends Controller {
 
 
         $this->checkPlatform();
-        if($this->isWechat && $this->config['wechat_autologin']){
+        if($this->isWechat && $this->config['wechat_autologin']=='1'){
             redirect(url('index/login/index',['type'=>'wechat']))->send();exit;
         }
+        $this->seo();
     }
 
     public function seo($title='',$keys='',$desc=''){
@@ -78,7 +81,11 @@ class BaseController extends Controller {
             }
         }
     }
-
+    public function initLevel(){
+        if($this->isLogin && empty($this->userLevel)){
+            $this->userLevel=MemberLevelModel::get($this->user['level_id']);
+        }
+    }
     public function checkPlatform(){
         $detected=session('detected');
         if(empty($detected)) {
@@ -102,10 +109,10 @@ class BaseController extends Controller {
         微信JSSDK
         详细用法参考：http://mp.weixin.qq.com/wiki/7/1c97470084b73f8e224fe6d9bab1625b.html
          */
-        if($this->isWechat) {
+        if($this->isWechat && !empty($this->config['appid'])) {
             $jssdk = new \sdk\WechatAuth($this->config);
             $signPackage = $jssdk->getJsSign(current_url(true));
-            $signPackage['logo'] = config('WX_DOMAIN') . 'static/logo.png';
+            $signPackage['logo'] = 'static/logo.png';
             $this->assign('signPackage', $signPackage);
         }
     }

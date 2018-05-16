@@ -6,5 +6,5 @@
  * Time: 20:48
  */
 return [
-    'taglib_pre_load'=>'app\common\taglib\Article,app\common\taglib\Extend'
+    'taglib_pre_load'=>'app\common\taglib\Article,app\common\taglib\Product,app\common\taglib\Extend'
 ];

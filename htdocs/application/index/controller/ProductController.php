@@ -35,7 +35,6 @@ class ProductController extends BaseController
 
         $model=Db::view('product','*')
             ->view('productCategory',['name'=>'category_name','title'=>'category_title'],'product.cate_id=productCategory.id','LEFT')
-            ->view('manager',['username'],'manager.id=article.user_id','LEFT')
             ->where($where)
             ->paginate(10);
 
