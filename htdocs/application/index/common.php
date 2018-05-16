@@ -26,35 +26,35 @@ function clearLogin($log=true){
 }
 
 
-function parseNavigator(&$config,$model){
-    $navigators=cache($model.'_navigator');
+function parseNavigator(&$config,$module){
+    $navigators=cache($module.'_navigator');
     if(empty($navigators)){
         $navigators=array();
         foreach ($config as $item){
             if(empty($item['url']))continue;
-            $item['url']=parseNavUrl($item['url'],$model);
+            $item['url']=parseNavUrl($item['url'],$module);
 
             if(isset($item['subnav']) ){
                 if(is_string($item['subnav'])) {
                     $args = explode('/', $item['subnav'].'/');
-                    $item['subnav']=call_user_func('parseNav'.$args[0],$args[1],$model);
+                    $item['subnav']=call_user_func('parseNav'.$args[0],$args[1],$module);
                 }elseif(is_array($item['subnav'])){
                     foreach ($item['subnav'] as $k=>$sitem){
                         if(!empty($sitem['url'])){
-                            $item['subnav'][$k]['url']=parseNavUrl($sitem['url'],$model);
+                            $item['subnav'][$k]['url']=parseNavUrl($sitem['url'],$module);
                         }
                     }
                 }
             }
             $navigators[]=$item;
         }
-        cache($model.'_navigator',$navigators,['expire'=>7200]);
+        cache($module.'_navigator',$navigators,['expire'=>7200]);
     }
     return $navigators;
 }
-function parseNavUrl($url,$model){
+function parseNavUrl($url,$module){
     if(is_array($url)){
-        $url[0]=$model.'/'.strtolower($url[0]);
+        $url[0]=$module.'/'.strtolower($url[0]);
         return call_user_func_array('url',$url);
     }elseif(is_string($url)) {
         if (strpos($url, 'http://') === 0 ||
@@ -62,14 +62,14 @@ function parseNavUrl($url,$model){
             strpos($url, '/') === 0) {
             return $url;
         } else {
-            $url=$model.'/'.strtolower($url);
+            $url=$module.'/'.strtolower($url);
             return url($url);
         }
     }
     return $url;
 }
 
-function parseNavPage($group,$model){
+function parseNavPage($group,$module){
     $model=Db::name('Page')->where('status',1);
 
     if(!empty($group)){
@@ -80,12 +80,12 @@ function parseNavPage($group,$model){
     foreach ($pages as $page){
         $subs[]=array(
             'title'=>$page['title'],
-            'url'=>url($model.'/page/index',['name'=>$page['name'],'group'=>$page['group']])
+            'url'=>url($module.'/page/index',['name'=>$page['name'],'group'=>$page['group']])
         );
     }
     return $subs;
 }
-function parseNavProduct($cate,$model){
+function parseNavProduct($cate,$module){
     $model=Db::name('ProductCategory')->where('name',$cate)->find();
 
     $subs=[];
@@ -94,14 +94,14 @@ function parseNavProduct($cate,$model){
         foreach ($cates as $c){
             $subs[]=array(
                 'title'=>$c['title'],
-                'url'=>url($model.'/product/index',['name'=>$c['name']])
+                'url'=>url($module.'/product/index',['name'=>$c['name']])
             );
         }
     }
 
     return $subs;
 }
-function parseNavArticle($cate,$model){
+function parseNavArticle($cate,$module){
     $model=Db::name('Category')->where('name',$cate)->find();
 
     $subs=[];
@@ -110,7 +110,7 @@ function parseNavArticle($cate,$model){
         foreach ($cates as $c){
             $subs[]=array(
                 'title'=>$c['title'],
-                'url'=>url($model.'/article/index',['name'=>$c['name']])
+                'url'=>url($module.'/article/index',['name'=>$c['name']])
             );
         }
     }
