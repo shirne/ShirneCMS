@@ -308,13 +308,7 @@ class LoginController extends BaseController{
         }
 
         if($this->request->isPost()){
-            $data=array();
-            $data['username']=$this->request->post('username');
-            $data['password']=$this->request->post('password');
-            $data['repassword']=$this->request->post('repassword');
-            $data['email']=$this->request->post('email');
-            $data['realname']=$this->request->post('realname');
-            $data['mobile']=$this->request->post('mobile');
+            $data=$this->request->only('username,password,repassword,email,realname,mobile','post');
 
             $validate=new MemberValidate();
             $validate->setId();
