@@ -84,7 +84,7 @@ class ProductController extends BaseController
                         ProductSkuModel::create($sku);
                     }
                     user_log($this->mid,'addproduct',1,'添加商品 '.$model->id ,'manager');
-                    $this->success("添加成功", url('Article/index'));
+                    $this->success("添加成功", url('Product/index'));
                 } else {
                     $this->error("添加失败");
                 }
