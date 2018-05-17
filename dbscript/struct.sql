@@ -348,6 +348,18 @@ CREATE TABLE `sa_member_log` (
   KEY `action`(`action`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+DROP TABLE IF EXISTS `sa_member_card`;
+
+CREATE TABLE `sa_member_card` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NOT NULL DEFAULT 0,
+  `cardno` varchar(30) DEFAULT NULL,
+  `bankname` varchar(50) DEFAULT NULL,
+  `cardname` varchar(50) DEFAULT NULL,
+  `bank` varchar(50) DEFAULT NULL,
+  `is_default` tinyint(4) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Table structure for table `sa_member_recharge`
@@ -405,6 +417,7 @@ DROP TABLE IF EXISTS `sa_member_money_log`;
 CREATE TABLE `sa_member_money_log` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `member_id` int(11) NOT NULL,
+  `from_member_id` int(11) NOT NULL DEFAULT 0,
   `type` varchar(20) DEFAULT NULL,
   `before` int(11) DEFAULT NULL,
   `amount` int(11) DEFAULT NULL,

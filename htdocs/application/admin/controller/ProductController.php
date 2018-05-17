@@ -161,7 +161,7 @@ class ProductController extends BaseController
             }
         }else{
 
-            $model = Db::name('product')->find($id);
+            $model = ProductModel::get($id);
             if(empty($model)){
                 $this->error('商品不存在');
             }

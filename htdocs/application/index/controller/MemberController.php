@@ -71,7 +71,7 @@ class MemberController extends AuthedController
             $this->success('密码修改成功',url('index/member/index'));
         }
 
-        $this->display();
+        return $this->fetch();
     }
 
     /**
@@ -172,7 +172,7 @@ class MemberController extends AuthedController
         $cards=Db::name('MemberCard')->where('member_id',$this->userid)->select();
 
         $this->assign('cards',$cards);
-        $this->display();
+        return $this->fetch();
     }
     public function cardEdit($id=0){
         if($id>0) {
@@ -204,7 +204,7 @@ class MemberController extends AuthedController
 
         $this->assign('card',$card);
         $this->assign('banklist',banklist());
-        $this->display();
+        return $this->fetch();
     }
     public function cashList(){
         $model=Db::name('memberCashin')->where('member_id',$this->userid);
@@ -213,7 +213,7 @@ class MemberController extends AuthedController
 
         $this->assign('page',$cashes->render());
         $this->assign('cashes',$cashes);
-        $this->display();
+        return $this->fetch();
     }
     public function cash(){
         $hascash=Db::name('memberCashin')->where(array('member_id'=>$this->userid,'status'=>0))->count();
@@ -254,7 +254,7 @@ class MemberController extends AuthedController
         }
         $this->assign('cards',$cards);
         $this->assign('banklist',banklist());
-        $this->display();
+        return $this->fetch();
     }
 
     public function moneyLog($type=''){
@@ -274,7 +274,7 @@ class MemberController extends AuthedController
         $this->assign('types',$types);
         $this->assign('page',$logs->render());
         $this->assign('logs',$logs);
-        $this->display();
+        return $this->fetch();
     }
 
 
@@ -285,7 +285,7 @@ class MemberController extends AuthedController
 
         $this->assign('shareurl',url('index/login/register',array('agent'=>$this->user['agentcode']),true,true));
 
-        $this->display();
+        return $this->fetch();
     }
 
     public function team($pid=0){
@@ -325,7 +325,7 @@ class MemberController extends AuthedController
         $this->assign('levels',$levels);
         $this->assign('users',$users);
         $this->assign('soncounts',$soncounts);
-        $this->display();
+        return $this->fetch();
     }
 
     /**
@@ -361,7 +361,7 @@ class MemberController extends AuthedController
 
         $this->assign('counts',$counts);
         $this->assign('orders',$orders);
-        $this->display();
+        return $this->fetch();
     }
 
     /**

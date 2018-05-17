@@ -10,7 +10,7 @@
                     </button>
                     <ul class="dropdown-menu">
                         <foreach name="types" item="t" key="k">
-                            <li><a href="{:url('index/member/moneylog',array('type'=>$k))}">{$t['name']}</a></li>
+                            <li><a href="{:url('index/member/moneylog',array('type'=>$k))}">{$t}</a></li>
                         </foreach>
                     </ul>
                 </div>
