@@ -21,6 +21,12 @@ function writelog($message,$type=\think\Log::INFO){
 function file_download($filename,$data){
     return \think\Response::create($data, '\\extcore\\FileDownload', 200, [], ['file_name'=>$filename]);
 }
+function getLogTypes(){
+    return [
+        'consume'=>'消费',
+        'recharge'=>'充值'
+    ];
+}
 function getMemberTypes(){
     return [
         1=>'普通会员',
@@ -61,12 +67,9 @@ function getMemberLevels()
     if (empty($levels)) {
         $levels = cache('levels');
         if (empty($levels)) {
-            $levels=array();
             $model=new \app\admin\model\MemberLevelModel();
             $data =  $model->order('sort ASC,level_id ASC')->select();
-            foreach ($data as $level){
-                $levels[$level['level_id']]=$level;
-            }
+            $levels=array_index($data,'level_id');
             cache('levels', $levels);
         }
     }
@@ -153,6 +156,33 @@ function auto_read($file, $charset='UTF-8') {
         }
     }
     return "";
+}
+
+/**
+ * 索引二维数组
+ * @param $arr array 二维数组
+ * @param $index  string  索引
+ * @param bool $ismulti 一对多模式
+ * @return array
+ */
+function array_index($arr,$index,$ismulti=false){
+    $return=[];
+    if(!empty($arr)) {
+        $val = '';
+        if (strpos($index, ',') > 0) {
+            $indexes = explode(',', $index);
+            $index = trim($indexes[0]);
+            $val = trim($indexes[1]);
+        }
+        foreach ($arr as $row) {
+            if ($ismulti) {
+                $return[$row[$index]][] = empty($val) ? $row : $row[$val];
+            } else {
+                $return[$row[$index]] = empty($val) ? $row : $row[$val];
+            }
+        }
+    }
+    return $return;
 }
 
 /**

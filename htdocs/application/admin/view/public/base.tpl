@@ -85,14 +85,14 @@
                             if(json[key]>0){
                                 var badge=node.find('.badge');
                                 if(badge.length<1){
-                                    node.append('<span class="badge">'+json[key]+'</span>');
+                                    node.append('<span class="badge badge-light">'+json[key]+'</span>');
                                 }else {
                                     badge.text(json[key]);
                                 }
                                 if(node.parents('.panel-body').length>0){
                                     var pbadge=node.parents('.panel').find('.panel-title a .badge');
                                     if(pbadge.length<1){
-                                        node.parents('.panel').find('.panel-title a').append('<span class="badge">..</span>');
+                                        node.parents('.panel').find('.panel-title a').append('<span class="badge badge-light">..</span>');
                                     }else {
                                         pbadge.text(json[key]);
                                     }

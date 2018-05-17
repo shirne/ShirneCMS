@@ -1,101 +1,103 @@
 <extend name="public:base" />
 
 <block name="body">
-
-
 	<div class="main">
-
 		<div class="container register">
+			<div class="row justify-content-center">
+				<div class="col-10 col-md-5">
 			<div class="card">
 				<div class="card-header">会员注册</div>
 				<div class="card-body">
 
 					<form class="form-horizontal registerForm" role="form" method="post" action="{:url('index/login/register')}">
-						<div class="form-group form-row">
-							<label for="userName" class="col-md-2 control-label">用户名：</label>
-							<div class="col-md-5">
+						<div class="form-group">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">用户名</span>
+								</div>
 								<input type="text" class="form-control" name="username">
 							</div>
-							<div class="col-md-5">
+							<div class="col-md-10">
 								<span class="form-text text-muted">用户名以6—10位数字和字母组成 <i>*</i></span>
 							</div>
 						</div>
-						<div class="form-group form-row">
-							<label for="Password" class="col-md-2 control-label">密码：</label>
-							<div class="col-md-5">
+						<div class="form-group">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">密&emsp;码</span>
+								</div>
 								<input type="password" class="form-control" name="password">
 							</div>
-							<div class="col-md-5">
+							<div class="col-md-10">
 								<span class="form-text text-muted">密码以6—20位字符，可包含大小写字母，数字及特殊符号<i>*</i></span>
 							</div>
 						</div>
-						<div class="form-group form-row">
-							<label for="Password" class="col-md-2 control-label">确认密码：</label>
-							<div class="col-md-5">
+						<div class="form-group">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">确认密码</span>
+								</div>
 								<input type="password" class="form-control" name="repassword">
 							</div>
-							<div class="col-md-5">
+							<div class="col-md-10">
 								<span class="form-text text-muted">请再次确认您输入的密码<i>*</i></span>
 							</div>
 						</div>
-						<div class="form-group form-row">
-							<label for="realName" class="col-md-2 control-label">真实姓名：</label>
-							<div class="col-md-5">
-								<input type="text" class="form-control" name="realname">
-							</div>
-							<div class="col-md-5">
-								<span class="form-text text-muted">真实姓名填写无法更改，必须与提款银行账户一致,否则无法提款<i>*</i></span>
-							</div>
-						</div>
-						<div class="form-group form-row">
-							<label for="email" class="col-md-2 control-label">邮箱地址：</label>
-							<div class="col-md-5">
-								<input type="text" class="form-control" name="email">
-							</div>
-							<div class="col-md-5">
-								<span class="form-text text-muted">合法邮箱地址：abc@def.com<i>*</i></span>
-							</div>
-						</div>
-						<div class="form-group form-row">
-							<label for="mobile" class="col-md-2 control-label">手机号码：</label>
-							<div class="col-md-5">
-								<if condition="0">
-								<div class="input-group">
-									<input type="text" class="form-control" name="mobile">
-									<a class="btn btn-dark input-group-addon">发送验证码</a>
-									<input type="text" class="form-control" name="mobilecheck">
+						<div class="form-group">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">手机号码</span>
 								</div>
-									<else/>
-									<input type="text" class="form-control" name="mobile">
+								<input type="text" class="form-control" name="mobile">
+								<if condition="0">
+									<div class="input-group-append">
+										<a class="btn btn-dark input-group-addon">发送验证码</a>
+									</div>
 								</if>
 							</div>
-							<div class="col-md-5">
+							<div class="col-md-10">
 								<span class="form-text text-muted">请填写11位手机号码<i>*</i></span>
 							</div>
 						</div>
+						<if condition="0">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">短信验证</span>
+								</div>
+								<input type="text" class="form-control" name="mobilecheck">
+							</div>
+						</if>
 						<if condition="$nocode">
 							<else/>
-						<div class="form-group form-row">
-							<label for="mobile" class="col-md-2 control-label">激活码：</label>
-							<div class="col-md-5">
+						<div class="form-group">
+							<div class="input-group">
+								<div class="input-group-prepend">
+									<span class="input-group-text">激活码</span>
+								</div>
 								<input type="text" class="form-control" name="invite_code">
 							</div>
-							<div class="col-md-5">
+							<div class="col-md-10">
 								<span class="form-text text-muted">您的推荐人提供给你的激活码<if condition="$config['m_invite'] eq 2"><i>*</i></if></span>
 							</div>
 						</div>
 						</if>
-						<div class="form-group form-row submitline">
-							<div class="offset-md-2 col-md-10">
-								<button type="submit" class="btn btn-primary create">创建我的账户</button>
+						<div class="form-group submitline">
+							<button type="submit" class="btn btn-primary btn-block create">创建我的账户</button>
+						</div>
+						<div class="form-group">
+							<div class="text-center">
+								已有账号?<a href="{:url('index/login/index')}">返回登录</a>
 							</div>
 						</div>
 					</form>
-
 				</div>
-			</fieldset>
+			</div>
+				</div>
+			</div>
 		</div>
 	</div>
+</block>
+<block name="script">
 	<script type="text/javascript">
 		jQuery(function($){
 			$('.registerForm').submit(function(e) {

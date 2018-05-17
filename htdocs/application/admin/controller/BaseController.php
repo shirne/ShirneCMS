@@ -7,7 +7,7 @@ use think\Db;
 
 class BaseController extends Controller {
 
-
+    protected $errMsg;
     protected $table;
     protected $model;
 

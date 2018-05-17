@@ -21,14 +21,14 @@ Route::pattern([
 Route::get('index$', 'index/index/index');
 
 Route::group('article',[
-    ':name'=>'index/article/index',
     ':id'=>'index/article/view',
+    '[:name]'=>'index/article/index',
     'comment/:id'=>'index/article/comment'
 ])->method('GET');
 
 Route::group('product',[
-    ':name'=>'index/product/index',
     ':id'=>'index/product/view',
+    '[:name]'=>'index/product/index',
     'comment/:id'=>'index/product/comment'
 ])->method('GET');
 

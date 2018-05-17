@@ -15,7 +15,7 @@ class BaseController extends Controller {
     protected $user;
     protected $userLevel;
     protected $isLogin=false;
-
+    protected $errMsg;
     protected $config=array();
     protected $isWechat=false;
     protected $isMobile=false;
