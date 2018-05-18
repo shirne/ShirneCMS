@@ -49,7 +49,7 @@ class MemberController extends AuthedController
                 $data['id']=$this->userid;
                 Db::name('Member')->update($data);
                 user_log($this->userid,'addressadd',1,'修改个人资料');
-                $this->success('保存成功',url('profile'));
+                $this->success('保存成功',url('index/member/profile'));
             }
         }
 
@@ -91,7 +91,7 @@ class MemberController extends AuthedController
             if($result){
                 if(!empty($this->user['avatar']))delete_image($this->user['avatar']);
                 user_log($this->userid, 'avatar', 1, '修改头像');
-                $this->success('更新成功');
+                $this->success('更新成功',url('index/member/avatar'));
             }else{
                 $this->error('更新失败');
             }
@@ -200,7 +200,7 @@ class MemberController extends AuthedController
                     Db::name('MemberCard')->where(array('id' => array('NEQ', $id), 'member_id' => $this->userid))
                         ->update(array('is_default' => 0));
                 }
-                $this->success('保存成功');
+                $this->success('保存成功',url('index/member/cards'));
             }
         }
 
