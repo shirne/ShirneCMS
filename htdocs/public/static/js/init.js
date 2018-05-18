@@ -283,15 +283,15 @@ jQuery(function($){
             nextCentury: '下个世纪'
         };
         var icons={
-            time: 'ion-clock',
-            date: 'ion-calendar',
-            up: 'ion-arrow-up-c',
-            down: 'ion-arrow-down-c',
-            previous: 'ion-arrow-left-c',
-            next: 'ion-arrow-right-c',
-            today: 'ion-pinpoint',
-            clear: 'ion-trash-a',
-            close: 'ion-close'
+            time: 'ion-md-time',
+            date: 'ion-md-calendar',
+            up: 'ion-md-arrow-dropup',
+            down: 'ion-md-arrow-dropdown',
+            previous: 'ion-md-arrow-dropleft',
+            next: 'ion-md-arrow-dropright',
+            today: 'ion-md-today',
+            clear: 'ion-md-trash',
+            close: 'ion-md-close'
         };
         $('.datepicker').datetimepicker({
             icons:icons,
