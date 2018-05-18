@@ -25,12 +25,12 @@ class OrderModel extends Model
      * @param $member
      * @param $products
      * @param $address
-     * @param $content
+     * @param $remark
      * @param $balance_pay
      * @return mixed
      */
 
-    public function makeOrder($member,$products,$address,$content,$balance_pay=1){
+    public function makeOrder($member,$products,$address,$remark,$balance_pay=1){
 
         //status 0-待付款 1-已付款
         $this->startTrans();
@@ -51,7 +51,7 @@ class OrderModel extends Model
         //todo  优惠券
 
         if($balance_pay) {
-            $debit = money_log($member['id'], -$total_price, "下单支付", 'consume');
+            $debit = money_log($member['id'], -$total_price, "下单支付", 'consume',is_string($balance_pay)?$balance_pay:'money');
             if ($debit) $status = 1;
             else{
                 $this->error="余额不足";
@@ -66,7 +66,7 @@ class OrderModel extends Model
             'payamount'=>$total_price,
             'status'=>$status,
             'isaudit'=>getSetting('autoaudit')==1?1:0,
-            'content'=>$content,
+            'remark'=>$remark,
             'address_id'=>$address['address_id'],
             'recive_name'=>$address['recive_name'],
             'mobile'=>$address['mobile'],

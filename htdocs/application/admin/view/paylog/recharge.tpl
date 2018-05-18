@@ -60,7 +60,7 @@
                 <td>
                     <if condition="$v['status'] EQ 0">
                     <a class="btn btn-outline-dark btn-sm" href="{:url('Paylog/rechargeupdate',array('id'=>$v['id']))}"><i class="ion-md-check"></i> 确认</a>
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('Paylog/rechargedelete',array('id'=>$v['id']))}" onclick="javascript:return del('您真的确定要作废吗？');"><i class="ion-md-trash"></i> 无效</a>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('Paylog/rechargedelete',array('id'=>$v['id']))}" onclick="javascript:return del(this,'您真的确定要作废吗？');"><i class="ion-md-trash"></i> 无效</a>
                         <elseif condition="$v['status'] EQ 1"/>
                         <a class="btn btn-outline-dark btn-sm" href="{:url('Paylog/rechargecancel',array('id'=>$v['id']))}" ><i class="ion-md-history"></i> 撤销</a>
                         <else/>

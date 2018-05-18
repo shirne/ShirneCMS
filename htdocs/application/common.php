@@ -263,6 +263,11 @@ function user_log($uid, $action, $result, $remark = '', $tbl = 'member')
 function money_log($uid, $money, $reson, $type='',$field='money')
 {
     if($money==0)return true;
+    $from_id=0;
+    if(is_array($uid)){
+        $from_id=intval($uid[1]);
+        $uid=$uid[0];
+    }
 
     $member=\think\Db::name('member')->lock(true)->find($uid);
 
@@ -272,6 +277,7 @@ function money_log($uid, $money, $reson, $type='',$field='money')
         $result=\think\Db::name('member')->where(array('id' => $uid))
             ->setInc($field,$money);
     }else{
+        if($member[$field]<abs($money))return false;
         $result=\think\Db::name('member')->where(array('id' => $uid))
             ->setDec($field,abs($money));
     }
@@ -279,6 +285,7 @@ function money_log($uid, $money, $reson, $type='',$field='money')
         return \think\Db::name('memberMoneyLog')->insert(array(
             'create_time' => time(),
             'member_id' => $uid,
+            'from_member_id'=>$from_id,
             'type' => $type,
             'before' => $member[$field],
             'amount' => $money,

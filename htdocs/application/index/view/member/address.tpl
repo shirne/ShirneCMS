@@ -1,6 +1,6 @@
 <extend name="public:base" />
 <block name="body">
-    <div class="main-content">
+    <div class="container">
         <div class="page-header">
             <div class="pull-right"><a class="btn btn-default btn-confirm" href="{:url('index/member/addressAdd')}" >添加地址</a></div>
             <h1>收货地址</h1>

@@ -48,7 +48,7 @@
                 <td>{$v.status|v_status|raw}</td>
                 <td>
                     <a class="btn btn-outline-dark btn-sm" href="{:url('adv/itemupdate',array('id'=>$v['id'],'gid'=>$gid))}"><i class="ion-md-create"></i> 编辑</a>
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('adv/itemdelete',array('id'=>$v['id'],'gid'=>$gid))}" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('adv/itemdelete',array('id'=>$v['id'],'gid'=>$gid))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
                 </td>
             </tr>
         </foreach>

@@ -29,7 +29,7 @@
                         <li class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">会员中心 <span class="caret"></span></a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="{:url('index/member/profile')}">个人资料</a>
+                                <a class="dropdown-item" href="{:url('index/member/index')}">个人中心</a>
                                 <a class="dropdown-item" href="{:url('index/member/profile')}">修改资料</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="{:url('index/member/logout')}"><i class="ion-md-log-out"></i> 退出登录</a>

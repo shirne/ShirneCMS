@@ -46,7 +46,7 @@
             </tr>
             </thead>
             <tbody>
-            <volist name="model" id="v">
+            <volist name="lists" id="v">
                 <tr>
                     <td>{$v.order_id}</td>
                     <td>
@@ -68,19 +68,18 @@
                     <td>{$v.payamount}</td>
                     <td>{$v.create_time|showdate}</td>
                     <td>
-                        {$v.status|showstatus}
+                        {$v.status|showstatus|raw}
                         <if condition="$v['isaudit'] EQ 1">
-                            <span class="label label-default">已审核</span>
+                            <span class="badge badge-secondary">已审核</span>
                             <else/>
-                            <span class="label label-warning">待审核</span>
+                            <span class="badge badge-warning">待审核</span>
                         </if>
                     </td>
                     <td>
-                        <a class="btn btn-default btn-sm" href="{:url('order/detail',array('id'=>$v['apply_id']))}"><i class="fa fa-edit"></i> 详情</a>
-                        <a class="btn btn-default btn-sm btn-status" href="javascript:" data-id="{$v.apply_id}"  data-status="2"><i class="fa fa-edit"></i> 状态</a>
-                        <if condition="$v['rebated'] NEQ 1"><a class="btn btn-default btn-sm btn-audit" href="javascript:" data-id="{$v.apply_id}"  data-status="1"><i class="fa fa-lock"></i> 审核</a></if>
-                        <!--a class="btn btn-default btn-sm" href="{:url('order/exprerss',array('id'=>$v['id']))}"><i class="fa fa-edit"></i> 发货</a-->
-                        <a class="btn btn-default btn-sm" href="{:url('order/delete',array('id'=>$v['apply_id']))}" style="color:red;" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="fa fa-trash"></i> 删除</a>
+                        <a class="btn btn-outline-dark btn-sm" href="{:url('order/detail',array('id'=>$v['order_id']))}"><i class="ion-md-create"></i> 详情</a>
+                        <a class="btn btn-outline-dark btn-sm btn-status" href="javascript:" data-id="{$v.order_id}"  data-status="2"><i class="ion-md-create"></i> 状态</a>
+                        <if condition="$v['rebated'] NEQ 1"><a class="btn btn-outline-dark btn-sm btn-audit" href="javascript:" data-id="{$v.order_id}"  data-status="1"><i class="ion-md-lock"></i> 审核</a></if>
+                        <a class="btn btn-outline-dark btn-sm" href="{:url('order/delete',array('id'=>$v['order_id']))}" style="color:red;" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
                     </td>
                 </tr>
             </volist>
@@ -93,8 +92,8 @@
     <script type="text/javascript">
         jQuery(function(){
             var tpl='<div class="row" style="margin:0 20%;">' +
-                '<div class="form-group"> <select class="form-control status-id"><option value="0">待支付</option><option value="1">已支付</option><option value="2">已完成</option><option value="-1">订单作废</option></select></div>' +
-                '<div class="form-group"><div class="input-group"><span class="input-group-addon">快递单号</span> <input type="text" class="form-control" placeholder="如已发货，请填写单号"/> </div></div> '+
+                '<div class="col-12 form-group"> <select class="form-control status-id"><option value="0">待支付</option><option value="1">已支付</option><option value="2">已发货</option><option value="3">已完成</option><option value="-1">订单作废</option></select></div>' +
+                '<div class="col-12 form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">快递单号</span></div><input type="text" class="form-control" placeholder="如已发货，请填写单号"/> </div></div> '+
                 '</div>';
             $('.btn-status').click(function() {
                 var id=$(this).data('id');
@@ -124,7 +123,7 @@
             });
 
             var tpl2='<div class="row" style="margin:0 20%;">' +
-                '<div class="form-group"> <select class="form-control status-id"><option value="0">待审核</option><option value="1">已审核</option></select></div>' +
+                '<div class="col form-group"> <select class="form-control status-id"><option value="0">待审核</option><option value="1">已审核</option></select></div>' +
                 '</div>';
             $('.btn-audit').click(function() {
                 var id=$(this).data('id');

@@ -6,7 +6,7 @@
     </style>
 </block>
 <block name="body">
-    <div class="main-content">
+    <div class="container">
         <div class="page-header"><h1>注册链接</h1></div>
         <div class="form-group">
             <div class="col-xs-12">

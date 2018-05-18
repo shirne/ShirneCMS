@@ -1,6 +1,8 @@
-function del(msg) { 
-//    var msg = "您真的确定要删除吗？\n\n删除后将不能恢复!请确认！"; 
-    return confirm(msg);
+function del(obj,msg) {
+    dialog.confirm(msg,function(){
+        location.href=$(obj).attr('href');
+    });
+    return false;
 }
 
 

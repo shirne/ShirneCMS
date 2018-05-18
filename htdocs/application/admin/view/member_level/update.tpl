@@ -44,6 +44,18 @@
                     <div class="form-group col">
                         <div class="input-group">
                             <div class="input-group-prepend">
+                                <span class="input-group-text">会员折扣</span>
+                            </div>
+                            <input type="text" name="discount" class="form-control" value="{$model.discount}"
+                                   placeholder="百分比折扣">
+                            <div class="input-group-append">
+                                <span class="input-group-text">%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
                                 <span class="input-group-text">排序</span>
                             </div>
                             <input type="text" name="sort" class="form-control" value="{$model.sort}"

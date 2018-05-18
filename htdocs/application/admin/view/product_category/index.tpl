@@ -44,7 +44,7 @@
                         <a class="btn btn-outline-dark btn-sm" href="{:url('product/add',array('cid'=>$v['id']))}"><i class="ion-md-add"></i> 发布</a>
                     <a class="btn btn-outline-dark btn-sm" href="{:url('productCategory/add',array('pid'=>$v['id']))}"><i class="ion-md-add"></i> 添加</a>
                     <a class="btn btn-outline-dark btn-sm" href="{:url('productCategory/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> 编辑</a>
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('productCategory/delete',array('id'=>$v['id']))}" onclick="javascript:return del('您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('productCategory/delete',array('id'=>$v['id']))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
                     </div>
                 </td>
             </tr>

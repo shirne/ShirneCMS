@@ -1,6 +1,6 @@
 <extend name="public:base" />
 <block name="body">
-    <div class="main-content">
+    <div class="container">
         <div class="page-header"><h1>修改密码</h1></div>
     <form class="form-horizontal registerForm" role="form" method="post" onsubmit="return checkForm(this)" action="{:url('index/member/password')}">
         <div class="form-group">
@@ -30,7 +30,7 @@
         </div>
         <div class="form-group submitline">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-primary create">提交保存</button>
+                <button type="submit" class="btn btn-block btn-primary create">提交保存</button>
             </div>
         </div>
     </form>

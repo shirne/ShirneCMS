@@ -29,7 +29,7 @@ class MemberController extends AuthedController
     public function index(){
         $this->initLevel();
 
-        $this->assign('level',$this->userLevel);
+        $this->assign('userLevel',$this->userLevel);
         return $this->fetch();
     }
 
@@ -38,10 +38,10 @@ class MemberController extends AuthedController
      */
     public function profile(){
         if($this->request->isPost()){
-            $data=$this->request->only(['email','mobile','gender'],'post');
+            $data=$this->request->only(['realname','email','mobile','gender','birth','qq','wechat','alipay'],'post');
             $validate=new MemberValidate();
             $validate->setId($this->userid);
-            if(!$validate->check($data)){
+            if(!$validate->scene('edit')->check($data)){
                 $this->error($validate->getError());
             }else{
                 $data['id']=$this->userid;
@@ -144,7 +144,7 @@ class MemberController extends AuthedController
                     $id=Db::name('MemberAddress')->insert($data);
                     if($id){
                         user_log($this->userid,'addressadd',1,'添加收货地址:'.$id);
-                        $this->success('添加成功',url('index/member/address'),['address_id'=>$id]);
+                        $this->success('添加成功',url('index/member/address'),Db::name('MemberAddress')->find($id));
                     }else{
                         $this->error('添加失败');
                     }

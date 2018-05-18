@@ -1,6 +1,6 @@
 <extend name="public:base" />
 <block name="body">
-    <div class="main-content">
+    <div class="container">
         <div class="page-header">
             <div class="pull-right"><a class="btn btn-default btn-confirm" href="{:url('member/cardedit')}" >添加银行卡</a></div>
             <h1>我的银行卡</h1>

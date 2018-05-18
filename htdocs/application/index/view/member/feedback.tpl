@@ -1,6 +1,6 @@
 <extend name="public:base" />
 <block name="body">
-    <div class="main-content">
+    <div class="container">
         <div class="page-header"><h1>问题反馈</h1></div>
         <ul class="list-group">
         <foreach name="feedbacks" item="v">

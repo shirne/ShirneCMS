@@ -1,6 +1,6 @@
 <extend name="public:base" />
 <block name="body">
-    <div class="main-content">
+    <div class="container">
         <div class="page-header">
             <h1>银行卡</h1>
         </div>

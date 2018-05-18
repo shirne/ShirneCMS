@@ -1,6 +1,6 @@
 <extend name="public:base" />
 <block name="body">
-    <div class="main-content">
+    <div class="container">
         <div class="page-header"><h1>我要提现</h1></div>
         <div class="container">
             <form action="" method="post" onsubmit="return checkMoney(this)" class="form-horizontal container-fluid">

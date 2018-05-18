@@ -1,10 +1,10 @@
 <extend name="public:base" />
 <block name="body">
-    <div class="main-content">
+    <div class="container">
         <div class="page-header">
             <h1>收货地址</h1>
         </div>
-        <form class="form-horizontal registerForm" role="form" method="post" action="{:url('index/member/addressAdd',array('id'=>$address['address_id']))}">
+        <form role="form" method="post" action="{:url('index/member/addressAdd',array('id'=>$address['address_id']))}">
             <div class="form-group">
                 <label for="recive_name" class="col-2 control-label">收货人：</label>
                 <div class="col-10">

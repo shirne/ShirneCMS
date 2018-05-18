@@ -195,6 +195,22 @@ class MemberController extends BaseController
         $this->assign('model',$model);
         return $this->fetch();
     }
+    public function recharge(){
+        $id=$this->request->post('id/d');
+        $amount=$this->request->post('amount');
+        $reson=$this->request->post('reson');
+        if(floatval($amount)!=$amount){
+            $this->error('金额错误');
+        }
+
+        $logid=money_log($id,intval($amount*100),$reson,'system');
+        if($logid){
+            user_log($this->mid,'recharge',1,'会员充值 '.$id.','.$logid ,'manager');
+            $this->success('充值成功');
+        }else{
+            $this->error('充值失败');
+        }
+    }
     /**
      * 删除会员
      */

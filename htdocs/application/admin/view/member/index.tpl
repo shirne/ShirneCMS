@@ -79,7 +79,7 @@
 
                     <if condition="$v.is_agent neq 0">
                         <div class="btn-group btn-group-sm">
-                                <a class="btn btn-outline-dark" href="{:url('member/cancel_agent',array('id'=>$v['id']))}" style="color:green;" onclick="javascript:return del('取消代理不能更改已注册的用户!!!');"><i class="ion-md-close"></i> 取消代理</a>
+                                <a class="btn btn-outline-dark" href="{:url('member/cancel_agent',array('id'=>$v['id']))}" style="color:green;" onclick="javascript:return del(this,'取消代理不能更改已注册的用户!!!');"><i class="ion-md-close"></i> 取消代理</a>
                             <button type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown">
                                 <span class="caret"></span>
                                 <span class="sr-only">Toggle Dropdown</span>
@@ -98,10 +98,10 @@
                     <if condition="$v.status eq 1">正常<else/><span style="color:red">禁用</span></if>
                 </td>
                 <td>
-
                     <a class="btn btn-outline-dark btn-sm" href="{:url('member/update',array('id'=>$v['id']))}"><i class="ion-md-create"></i> 编辑</a>
+                    <a class="btn btn-outline-dark btn-sm btn-recharge" href="javascript:" data-id="{$v.id}"><i class="ion-md-card"></i> 充值</a>
                     <if condition="$v.status eq 1">
-                        <a class="btn btn-outline-dark btn-sm" href="{:url('member/delete',array('id'=>$v['id'],'type'=>0))}" onclick="javascript:return del('禁用后用户将不能登陆!\n\n请确认!!!');"><i class="ion-md-close"></i> 禁用</a>
+                        <a class="btn btn-outline-dark btn-sm" href="{:url('member/delete',array('id'=>$v['id'],'type'=>0))}" onclick="javascript:return del(this,'禁用后用户将不能登陆!\n\n请确认!!!');"><i class="ion-md-close"></i> 禁用</a>
                     <else/>
                         <a class="btn btn-outline-dark btn-sm" href="{:url('member/delete',array('id'=>$v['id'],'type'=>1))}" style="color:#50AD1E;"><i class="ion-md-check"></i> 启用</a>
                     </if>
@@ -153,6 +153,44 @@
                     });
                 });
             };
-        })(window)
+        })(window);
+        jQuery(function(){
+            var tpl='<div class="row" style="margin:0 20%;">' +
+                '<div class="col-12 form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">充值金额</span> </div><input type="text" name="amount" class="form-control" placeholder="请填写充值金额"/> </div></div>' +
+                '<div class="col-12 form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">充值原因</span> </div><input type="text" name="reson" class="form-control" placeholder="请填写充值原因"/> </div> </div>'+
+                '</div>';
+            $('.btn-recharge').click(function() {
+                var id=$(this).data('id');
+                var dlg=new Dialog({
+                    onshown:function(body){
+                    },
+                    onsure:function(body){
+                        var amount=body.find('[name=amount]').val();
+                        if(!amount)return alert('请填写金额')
+                        if(amount!=parseFloat(amount))return alert('请填写两位尾数以内的金额');
+                        $.ajax({
+                            url:'{:url("recharge")}',
+                            type:'POST',
+                            data:{
+                                id:id,
+                                amount:amount,
+                                reson:body.find('input[name=reson]').val()
+                            },
+                            dataType:'JSON',
+                            success:function(j){
+                                if(j.code==1) {
+                                    dlg.hide();
+                                    dialog.alert(j.msg,function() {
+                                        location.reload();
+                                    })
+                                }else{
+                                    toastr.warning(j.msg);
+                                }
+                            }
+                        })
+                    }
+                }).show(tpl,'会员充值');
+            });
+        });
     </script>
 </block>

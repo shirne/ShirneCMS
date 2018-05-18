@@ -40,7 +40,7 @@ class OrderController extends AuthedController
                 $item['product_price']=$item['price'];
 
                 if($item['is_discount'] && $this->userLevel['discount']){
-                    $item['product_price']=$item['product_price']*$this->userLevel['discount']*.1;
+                    $item['product_price']=$item['product_price']*$this->userLevel['discount']*.01;
                 }
                 if(!empty($item['image']))$item['product_image']=$item['image'];
                 if(isset($counts[$k])){
@@ -84,7 +84,7 @@ class OrderController extends AuthedController
         }
 
         $address=Db::name('MemberAddress')->where('member_id',$this->userid)
-            ->where('is_default',1)->find();
+            ->select();
         $this->assign('from',$from);
         $this->assign('address',$address);
         $this->assign('total_price',$total_price);

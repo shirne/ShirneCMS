@@ -1,6 +1,6 @@
 <extend name="public:base" />
 <block name="body">
-    <div class="main-content">
+    <div class="container">
         <div class="page-header"><h1>系统公告</h1></div>
         <foreach name="notices" item="v">
             <li class="list-group-item">

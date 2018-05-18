@@ -1,20 +1,16 @@
 <extend name="public:base" />
 <block name="body">
-    <div class="container">
-        <div class="media">
-            <div class="media-left">
-                <a href="javascript:">
-                    <img class="media-object img-circle" src="__STATIC__/img/avatar.png" width="60" >
-                </a>
-            </div>
-            <div class="media-body">
-                <h4 class="media-heading">{$user.username}[{$userLevel['level_name']}]</h4>
-                <div class="row">
-                    <div class="col-xs-3"><p>消费积分</p><p>￥{$user.money|showmoney}</p></div>
-                    <div class="col-xs-3"><p>已提现</p><p>￥{$totalCash|showmoney}</p></div>
-                    <div class="col-xs-3"><p>总收益</p><p>￥{$totalAward}</p></div>
-                    <div class="col-xs-3"><p>现金积分</p><p>￥{$user.credit|showmoney}</p></div>
-                </div>
+    <div class="container user-index">
+        <div class="text-center user-header">
+            <a href="javascript:">
+                <img class="user-avatar img-circle" src="__STATIC__/images/avatar.png" width="60" >
+            </a>
+            <h4 class="user-name">{$user.username}<span class="badge badge-info">{$userLevel['level_name']}</span></h4>
+            <div class="row inforow">
+                <div class="col-3"><p>消费积分</p><p>￥{$user.money|showmoney}</p></div>
+                <div class="col-3"><p>已提现</p><p>￥{$totalCash|showmoney}</p></div>
+                <div class="col-3"><p>总收益</p><p>￥{$totalAward|showmoney}</p></div>
+                <div class="col-3"><p>现金积分</p><p>￥{$user.credit|showmoney}</p></div>
             </div>
         </div>
         <div class="list-group">
@@ -28,8 +24,6 @@
             <a class="list-group-item" href="{:url('index/member/moneylog')}"><i class="fa fa-circle-o"></i> 积分记录</a>
             <a class="list-group-item" href="{:url('index/member/cashlist')}"><i class="fa fa-credit-card"></i> 提现记录</a>
             <a class="list-group-item" href="{:url('index/member/cash')}"><i class="fa fa-credit-card-alt"></i> 我要提现</a>
-            <a class="list-group-item" href="{:url('index/member/rechargelist')}"><i class="fa fa-credit-card"></i> 充值记录</a>
-            <a class="list-group-item" href="{:url('index/member/recharge')}"><i class="fa fa-credit-card-alt"></i> 我要充值</a>
         </div>
         <if condition="$user['is_agent'] GT 0">
             <div class="list-group">

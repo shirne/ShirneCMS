@@ -1,6 +1,6 @@
 <extend name="public:base" />
 <block name="body">
-    <div class="main-content">
+    <div class="container">
         <div class="page-header"><h1>我的会员</h1></div>
         <if condition="!empty($paths)">
             <ol class="breadcrumb">

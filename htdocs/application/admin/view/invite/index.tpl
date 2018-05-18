@@ -56,7 +56,7 @@
                 <td>
                     <a class="btn btn-outline-dark btn-sm" href="{:url('Invite/update',array('id'=>$v['id']))}"><i class="ion-md-create"></i> 转赠</a>
                     <if condition="$v.status eq 0">
-                        <a class="btn btn-outline-dark btn-sm" href="{:url('Invite/lock',array('id'=>$v['id']))}" onclick="javascript:return del('锁定后将不能使用此激活码注册!\n\n请确认!!!');"><i class="ion-md-close"></i> 锁定</a>
+                        <a class="btn btn-outline-dark btn-sm" href="{:url('Invite/lock',array('id'=>$v['id']))}" onclick="javascript:return del(this,'锁定后将不能使用此激活码注册!\n\n请确认!!!');"><i class="ion-md-close"></i> 锁定</a>
                     <else/>
                         <a class="btn btn-outline-dark btn-sm" href="{:url('Invite/unlock',array('id'=>$v['id']))}" style="color:#50AD1E;"><i class="ion-md-check"></i> 解锁</a>
                     </if>

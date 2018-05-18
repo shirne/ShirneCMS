@@ -31,7 +31,7 @@ class OrderController extends BaseController
         $lists=$model->where($where)->paginate(15);
         $products=[];
         if(!$lists->isEmpty()) {
-            $orderids = array_column($lists, 'order_id');
+            $orderids = array_column($lists->items(), 'order_id');
             $prodata = Db::name('OrderProduct')->where('order_id', 'in', $orderids)->select();
             foreach ($prodata as $product){
                 $products[$product['order_id']][]=$product;
