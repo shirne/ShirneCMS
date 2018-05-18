@@ -10,6 +10,8 @@ namespace app\index\controller;
 
 
 use app\common\validate\MemberValidate;
+use Endroid\QrCode\ErrorCorrectionLevel;
+use Endroid\QrCode\QrCode;
 use think\Db;
 
 /**
@@ -141,7 +143,7 @@ class MemberController extends AuthedController
                     }
                 }else{
                     $data['member_id']=$this->userid;
-                    $id=Db::name('MemberAddress')->insert($data);
+                    $id=Db::name('MemberAddress')->insert($data,false,true);
                     if($id){
                         user_log($this->userid,'addressadd',1,'添加收货地址:'.$id);
                         $this->success('添加成功',url('index/member/address'),Db::name('MemberAddress')->find($id));
@@ -192,7 +194,7 @@ class MemberController extends AuthedController
                     Db::name('MemberCard')->where(array('id' => $id))->update($card);
                 } else {
                     $card['member_id'] = $this->userid;
-                    $id = Db::name('MemberCard')->insert($card);
+                    $id = Db::name('MemberCard')->insert($card,false,true);
                 }
                 if ($card['is_default']) {
                     Db::name('MemberCard')->where(array('id' => array('NEQ', $id), 'member_id' => $this->userid))
@@ -283,7 +285,27 @@ class MemberController extends AuthedController
             $this->error('您还不是代理，请先下单购买');
         }
 
-        $this->assign('shareurl',url('index/login/register',array('agent'=>$this->user['agentcode']),true,true));
+        $shareurl=url('index/login/register',array('agent'=>$this->user['agentcode']),true,true);
+
+        $qrurl='/uploads/qrcode/'.($this->userid % 32).'/'.$this->user['agentcode'].'.png';
+        if(!file_exists('.'.$qrurl)) {
+            mkdir('.'.dirname($qrurl),0777,true);
+            $qrCode = new QrCode($shareurl);
+            $qrCode->setSize(300);
+            $qrCode->setWriterByName('png')
+                ->setMargin(10)
+                ->setEncoding('UTF-8')
+                ->setErrorCorrectionLevel(ErrorCorrectionLevel::HIGH)
+                ->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0])
+                ->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255])
+                //->setLabel('Scan the code', 16, __DIR__.'/../assets/noto_sans.otf', LabelAlignment::CENTER)
+                ->setLogoPath('./static/images/qrlogo.png')
+                ->setLogoWidth(150)
+                ->setValidateResult(false);
+            $qrCode->writeFile('.' . $qrurl);
+        }
+        $this->assign('qrurl',$qrurl);
+        $this->assign('shareurl',$shareurl);
 
         return $this->fetch();
     }

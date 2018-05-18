@@ -21,6 +21,9 @@ function writelog($message,$type=\think\Log::INFO){
 function file_download($filename,$data){
     return \think\Response::create($data, '\\extcore\\FileDownload', 200, [], ['file_name'=>$filename]);
 }
+function getTextStyles(){
+    return ['secondary','primary','info','success','warning','danger'];
+}
 function getLogTypes(){
     return [
         'consume'=>'消费',
@@ -96,6 +99,19 @@ function getDefaultLevel(){
         }
     }
     return 0;
+}
+
+function getMemberParents($userid,$level=5){
+    $parents=[];
+    $user=\think\Db::name('Member')->where('id',$userid)->field('referer')->find();
+    while(!empty($user)){
+        $userid=$user['referer'];
+        if(!$userid)break;
+        $parents[]=$userid;
+        if(count($parents)>=$level)break;
+        $user=\think\Db::name('Member')->where('id',$userid)->field('referer')->find();
+    }
+    return $parents;
 }
 
 function filter_specchar($str){

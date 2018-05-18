@@ -8,7 +8,7 @@
 
 namespace app\common\facade;
 
-use think\Facade;
+use extcore\SimpleFacade;
 
 /**
  * Class MemberCartModel
@@ -20,7 +20,7 @@ use think\Facade;
  * @method bool delCart($sku_ids,$member_id) static 删除购物车
  * @method bool clearCart($member_id) static 清空购物车
  */
-class MemberCartModel extends Facade
+class MemberCartModel extends SimpleFacade
 {
     protected static function getFacadeClass(){
         return \app\common\model\MemberCartModel::class;

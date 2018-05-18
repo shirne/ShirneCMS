@@ -9,7 +9,7 @@
 namespace app\common\facade;
 
 
-use think\Facade;
+use extcore\SimpleFacade;
 
 /**
  * Class CategoryModel
@@ -23,7 +23,7 @@ use think\Facade;
  * @method array getSubCateIds($pid) static 获取下级分类id列表
  * @method void clearCache() static 清除缓存
  */
-class CategoryModel extends Facade
+class CategoryModel extends SimpleFacade
 {
     protected static function getFacadeClass(){
         return \app\common\model\CategoryModel::class;

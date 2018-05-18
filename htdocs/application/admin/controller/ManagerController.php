@@ -148,7 +148,7 @@ class ManagerController extends BaseController
             $model['manager_id']=$id;
             $model['global']='';
             $model['detail']='';
-            $model['id']=Db::name('manager_permision')->insert($model);
+            $model['id']=Db::name('manager_permision')->insert($model,false,true);
         }
         if($this->request->isPost()){
             $model['global']=$_POST['global'];

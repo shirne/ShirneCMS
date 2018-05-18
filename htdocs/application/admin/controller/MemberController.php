@@ -48,6 +48,7 @@ class MemberController extends BaseController
 
         $this->assign('lists',$lists);
         $this->assign('types',getMemberTypes());
+        $this->assign('levels',getMemberLevels());
         $this->assign('type',$type);
         $this->assign('page',$lists->render());
         $this->assign('referer',$referer);

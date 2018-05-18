@@ -12,18 +12,23 @@ class MemberModel extends Model
     public static function init()
     {
         parent::init();
-        self::event('after_update', function ($user) {
-
+        self::afterUpdate(function ($model) {
+            $users=$model->where($model->getWhere())->find();
             //代理会员组
-            if (!$user->is_agent && $user->level_id > 0) {
-                $levels=getMemberLevels();
-                if(!empty($levels[$user->level_id]) && $levels[$user->level_id]['is_agent']){
-                    self::setAgent($user->id);
+            if(!empty($users)) {
+                $levels = getMemberLevels();
+                foreach ($users as $user) {
+                    //代理会员组
+                    if (!$user['is_agent'] && $user['level_id'] > 0) {
+                        if (!empty($levels[$user['level_id']]) && $levels[$user['level_id']]['is_agent']) {
+                            self::setAgent($user->id);
+                        }
+                    }
                 }
             }
         });
-        self::event('after_insert', function ($user) {
-            if ($user->referer) {
+        self::afterInsert(function ( $model) {
+            if ($user['referer']) {
                 Db::name('member')->where(array('id'=>$user->referer))->setInc('total_recommend',1);
             }
         });

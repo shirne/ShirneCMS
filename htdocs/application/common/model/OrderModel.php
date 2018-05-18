@@ -14,6 +14,8 @@ use think\Model;
 
 class OrderModel extends Model
 {
+    protected $pk='order_id';
+    
     private function create_no(){
         $maxid=$this->field('max(order_id) as maxid')->find();
         $maxid = $maxid['maxid'];
@@ -63,7 +65,7 @@ class OrderModel extends Model
             'order_no'=>$this->create_no(),
             'member_id'=>$member['id'],
             'level_id'=>0,
-            'payamount'=>$total_price,
+            'payamount'=>$total_price*.01,
             'status'=>$status,
             'isaudit'=>getSetting('autoaudit')==1?1:0,
             'remark'=>$remark,

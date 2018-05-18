@@ -57,6 +57,7 @@ class MemberLevelController extends BaseController
         $this->assign('model',array(
             'commission_layer'=>3
         ));
+        $this->assign('styles',getTextStyles());
         return $this->fetch('update');
     }
     /**
@@ -84,6 +85,7 @@ class MemberLevelController extends BaseController
         }
         $model = MemberLevelModel::get($id);
         $this->assign('model',$model);
+        $this->assign('styles',getTextStyles());
         return $this->fetch();
     }
     /**

@@ -30,6 +30,18 @@
                                    placeholder="名称简写">
                         </div>
                     </div>
+                    <div class="form-group col">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">样式</span>
+                            </div>
+                            <select name="style" class="form-control text-{$model.style}" onchange="$(this).attr('class','form-control text-'+$(this).val())">
+                                <foreach name="styles" id="style">
+                                    <option value="{$style}" {$model['style']=={$style}?'selected':''} class="text-{$style}">██████████</option>
+                                </foreach>
+                            </select>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col">

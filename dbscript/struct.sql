@@ -307,6 +307,7 @@ CREATE TABLE `sa_member_level` (
   `level_id` INT NOT NULL AUTO_INCREMENT,
   `level_name` VARCHAR(30) NULL,
   `short_name` VARCHAR(10) NULL,
+  `style` VARCHAR(10) default 'secondary',
   `is_default` TINYINT NULL DEFAULT 0,
   `level_price` DECIMAL(10,2) NULL COMMENT '购买价格',
   `discount` TINYINT NULL DEFAULT 100 COMMENT '会员折扣',

@@ -29,13 +29,10 @@ class OrderController extends BaseController
         }
 
         $lists=$model->where($where)->paginate(15);
-        $products=[];
         if(!$lists->isEmpty()) {
             $orderids = array_column($lists->items(), 'order_id');
             $prodata = Db::name('OrderProduct')->where('order_id', 'in', $orderids)->select();
-            foreach ($prodata as $product){
-                $products[$product['order_id']][]=$product;
-            }
+            $products=array_index($prodata,'order_id',true);
             $lists->each(function($item) use ($products){
                 if(isset($products[$item['order_id']])){
                     $item['products']=$products[$item['order_id']];
@@ -75,9 +72,8 @@ class OrderController extends BaseController
      * @param $id
      */
     public function status($id){
-        //审核
-        $webbar = Db::name('Order')->find($id);
-        if(empty($id) || empty($webbar)){
+        $order = OrderModel::get($id);
+        if(empty($id) || empty($order)){
             $this->error('订单不存在');
         }
         $audit=$this->request->post('status/d');
@@ -90,7 +86,7 @@ class OrderController extends BaseController
             $data['express_no']=$express_no;
             $data['express_code']=$express_code;
         }
-        Db::name('Order')->where('order_id',$id)->update($data);
+        $order->save($data);
         user_log($this->mid,'auditorder',1,'更新订单 '.$id .' '.$audit,'manager');
         $this->success('操作成功');
     }
@@ -100,15 +96,12 @@ class OrderController extends BaseController
      * @param $id
      */
     public function audit($id){
-        //审核
-        $webbar = Db::name('Order')->find($id);
-        if(empty($id) || empty($webbar)){
+        $order = OrderModel::get($id);
+        if(empty($id) || empty($order)){
             $this->error('订单不存在');
         }
         $audit=$this->request->post('status/d');
-        Db::name('Order')->where('order_id',$id)->update(array(
-            'isaudit'=>$audit
-        ));
+        $order->save(['isaudit'=>$audit]);
         user_log($this->mid,'auditorder',1,'审核订单 '.$id .' '.$audit,'manager');
         $this->success('操作成功');
     }
