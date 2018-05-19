@@ -99,17 +99,16 @@ class MemberController extends BaseController
             $where['member_id']=$member_id;
         }
 
-        $logs = $model->where($where)->paginate(15);
-        $this->assign('logs', $logs);
+        $logs = $model->where($where)->order('MemberLog.id DESC')->paginate(15);
+        $this->assign('lists', $logs);
         $this->assign('page',$logs->render());
         return $this->fetch();
     }
-    public function logview(){
-        $id=$this->request->get('id/d');
+    public function logview($id){
         $model=Db::name('MemberLog');
 
-        $m=$model->where(["member_log.id"=>$id])->find();
-        $member=Db::name('Member')->where(["id"=>$m['member_id']])->find();
+        $m=$model->find($id);
+        $member=Db::name('Member')->find($m['member_id']);
 
         $this->assign('m', $m);
         $this->assign('member', $member);

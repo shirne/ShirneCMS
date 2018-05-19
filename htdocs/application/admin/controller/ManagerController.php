@@ -37,7 +37,7 @@ class ManagerController extends BaseController
             $where[]=['ManagerLog.remark','like',"%$key%"];
         }
 
-        $logs = $model->where($where)->paginate(15);
+        $logs = $model->where($where)->order('ManagerLog.id DESC')->paginate(15);
         $this->assign('logs', $logs);
         $this->assign('page',$logs->render());
         return $this->fetch();

@@ -38,7 +38,7 @@
                 <td>{$v.id}</td>
                 <td>{$v.username}</td>
                 <td>{$v.action}</td>
-                <td>{$v.result}</td>
+                <td><if condition="$v.result EQ 1"><span class="badge badge-success">成功</span><else/><span class="badge badge-danger">失败</span> </if></td>
                 <td>{$v.create_time|showdate}</td>
                 <td>{$v.ip}</td>
                 <td>{$v.remark}</td>
