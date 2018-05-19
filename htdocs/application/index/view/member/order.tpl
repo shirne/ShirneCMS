@@ -6,7 +6,7 @@
             <php>$empty='<span class="col-12 empty">您还没有下单哦</span>';</php>
             <foreach name="orders" empty="$empty" item="v">
             <li class="list-group-item">
-                <div style="margin-bottom:10px;">[{$v.order_no}]  {$v.create_at|showdate}<span class="pull-right"><i class="fa fa-circle-o"></i>{$v.payamount}</span></div>
+                <div style="margin-bottom:10px;">[{$v.order_no}]  <span class="float-right badge badge-info">{$v.create_time|showdate}</span></div>
                 <div>
                     <volist name="v.products" id="prod">
                     <div class="media">
@@ -23,6 +23,9 @@
                     </volist>
                 </div>
                 <div class="order-btns text-right">
+                    <div class="float-left mt-2">
+                        订单总计： <span class="text-danger">￥{$v.payamount}</span>
+                    </div>
                     <if condition="$v['status'] EQ 0">
                         <span class="badge badge-warning">未支付</span>
                         <elseif condition="$v['status'] EQ 1"/>

@@ -427,8 +427,8 @@ class MemberController extends AuthedController
             $data['content']=htmlspecialchars($content);
             $data['member_id']=$this->userid;
             $data['type']=1;
-            $data['create_at']=time();
-            $data['ip']=$this->request->ip()();
+            $data['create_time']=time();
+            $data['ip']=$this->request->ip();
             $data['status']=0;
             $data['reply_at']=0;
             $feedid=Db::name('feedback')->insert($data);

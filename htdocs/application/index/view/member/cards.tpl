@@ -2,18 +2,20 @@
 <block name="body">
     <div class="container">
         <div class="page-header">
-            <div class="pull-right"><a class="btn btn-default btn-confirm" href="{:url('member/cardedit')}" >添加银行卡</a></div>
-            <h1>我的银行卡</h1>
+            <div class="row">
+                <h1 class="col-4">我的银行卡</h1>
+                <div class="col-8 mt-3 mb-2 text-right"><a class="btn btn-outline-primary btn-confirm" href="{:url('index/member/cardEdit')}" >添加银行卡</a></div>
+            </div>
         </div>
         <ul class="list-group">
             <foreach name="cards" item="v">
                 <li class="list-group-item row">
-                    <h4>{$v.bank}{$v['is_default']?'<span class="label label-info">默认</span>':''}</h4>
+                    <h4>{$v.bank}{$v['is_default']?'<span class="badge badge-info">默认</span>':''}</h4>
                     <div class="help-block">开户行：{$v.bankname}</div>
                     <div class="help-block">开户名：{$v.cardname}</div>
                     <div class="help-block">卡号：{$v.cardno|showcardno}</div>
                     <div class="btn-group">
-                        <a href="{:url('member/cardedit',array('id'=>$v['id']))}">修改</a>
+                        <a href="{:url('index/member/cardedit',array('id'=>$v['id']))}">修改</a>
                     </div>
                 </li>
             </foreach>

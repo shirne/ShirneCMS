@@ -5,14 +5,14 @@
         <ul class="list-group">
         <foreach name="feedbacks" item="v">
             <li class="list-group-item">
-                <div>{$v.title} <span class="float_rigght">{$v.create_at|showdate}</span></div>
+                <div>{$v.title} <span class="badge badge-secondary">{$v.create_time|showdate}</span></div>
                 <div>
                     {$v.content}
                 </div>
                 <if condition="$v['reply_at'] GT 1">
-                    <div>管理员回复：{$v.reply}</div>
+                    <div><span class="badge badge-primary">管理员回复</span>{$v.reply}</div>
                 <else/>
-                    <span class="label label-danger">待回复</span>
+                    <span class="badge badge-danger">待回复</span>
                 </if>
             </li>
         </foreach>

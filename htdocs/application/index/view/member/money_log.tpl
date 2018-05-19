@@ -31,7 +31,7 @@
             <foreach name="logs" empty="$empty" item="v">
                 <li class="list-group-item">
                     <div class="row">
-                    <div class="col-3 {$v['amount']>0?'increrow':'decrerow'}">{$v['field']=='money'?'<span class="badge badge-success">消费积分</span>':'<span class="badge badge-info">现金积分</span>'}&nbsp;{$v.amount|showmoney}</div>
+                    <div class="col-3 {$v['amount']>0?'text-success':'text-danger'}">{$v['field']=='money'?'<span class="badge badge-success">消费积分</span>':'<span class="badge badge-info">现金积分</span>'}&nbsp;{$v.amount|showmoney}</div>
                     <div class="col-3">
                         <if condition="$v['from_member_id']">
                             [{$v['from_member_id']}]{$v['username']}
@@ -39,7 +39,7 @@
                             -
                         </if>
                     </div>
-                    <div class="col-3">{$v.create_at|showdate}</div>
+                    <div class="col-3">{$v.create_time|showdate}</div>
                     <div class="col-3">{$v.reson}</div>
                     </div>
                 </li>

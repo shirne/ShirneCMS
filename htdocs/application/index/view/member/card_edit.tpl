@@ -9,7 +9,7 @@
                 <label for="bank">银行名称</label>
                 <div class="input-group">
                     <input type="text" name="bank" value="{$card.bank}" class="form-control" placeholder="请填写银行名称">
-                    <span class="input-group-addon">快速填写</span>
+                    <span class="input-group-text">快速填写</span>
                     <select id="cardlist" class="form-control" onchange="if(this.value)this.form.bank.value=this.value;">
                         <option value="">从列表中选择自动填写</option>
                         <foreach name="banklist" item="v">
@@ -30,9 +30,9 @@
                 <label for="cardno">银行卡号</label>
                 <input type="text" name="cardno" value="{$card.cardno}" class="form-control" placeholder="请填写卡号">
             </div>
-            <div class="form-group">
+            <div class="form-row">
                 <label for="is_default" class="col-2 control-label">是否默认</label>
-                <div class="col-10">
+                <div class="form-group col-10">
                 <input type="checkbox" name="is_default" value="1" {$card['is_default']?'checked':''} />
                 </div>
             </div>
