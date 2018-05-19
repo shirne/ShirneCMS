@@ -152,7 +152,7 @@ class ProductController extends BaseController
                             $existsIds[]=$skuModel['sku_id'];
                         }
                     }
-                    Db::name('productSku')->whereNotIn('sku_id',$existsIds)->delete();
+                    Db::name('productSku')->where('product_id',$id)->whereNotIn('sku_id',$existsIds)->delete();
                     user_log($this->mid, 'updateproduct', 1, '修改商品 ' . $id, 'manager');
                     $this->success("编辑成功", url('product/index'));
                 } else {
@@ -170,7 +170,7 @@ class ProductController extends BaseController
             $this->assign("category",ProductCategoryModel::getCategories());
             $this->assign('levels',getMemberLevels());
             $this->assign('product',$model);
-            $this->assign('skus',$skus);
+            $this->assign('skus',$skus->isEmpty()?[[]]:$skus);
             $this->assign('types',getProductTypes());
             $this->assign('id',$id);
             return $this->fetch();
