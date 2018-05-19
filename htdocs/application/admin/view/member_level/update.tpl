@@ -37,7 +37,7 @@
                             </div>
                             <select name="style" class="form-control text-{$model.style}" onchange="$(this).attr('class','form-control text-'+$(this).val())">
                                 <foreach name="styles" id="style">
-                                    <option value="{$style}" {$model['style']=={$style}?'selected':''} class="text-{$style}">██████████</option>
+                                    <option value="{$style}" {$model['style']==$style?'selected':''} class="text-{$style}">██████████</option>
                                 </foreach>
                             </select>
                         </div>
@@ -75,38 +75,43 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">佣金层数</span>
-                        </div>
-                        <input type="text" name="commission_layer" class="form-control"
-                               value="{$model.commission_layer}"
-                               placeholder="佣金层数">
-                    </div>
-                    <span class="form-text text-muted">层数修改需保存后才能再修改比例</span>
-                </div>
-                <div class="form-group">
-                    <label for="cc">佣金比例</label>
-                    <div class="row">
-                        <for start="0" end="$model['commission_layer']">
-                            <div class="input-group col">
+                <div class="card">
+                    <div class="card-header">消费返佣</div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text">{$i+1} 代</span>
+                                    <span class="input-group-text">代数</span>
                                 </div>
-                                <input type="text" name="commission_percent[{$i}]"
-                                       value="{$model['commission_percent'][$i]}"
-                                       class="form-control"/>
-                                <div class="input-group-append">
-                                    <span class="input-group-text">%</span>
-                                </div>
+                                <input type="text" name="commission_layer" class="form-control"
+                                    value="{$model.commission_layer}"
+                                    placeholder="佣金层数">
                             </div>
-                        </for>
-                    </div>
+                            <span class="form-text text-muted">层数修改需保存后才能再修改比例</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="cc">比例</label>
+                            <div class="row">
+                                <for start="0" end="$model['commission_layer']">
+                                    <div class="input-group col">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">第 {$i+1} 代</span>
+                                        </div>
+                                        <input type="text" name="commission_percent[{$i}]"
+                                            value="{$model['commission_percent'][$i]}"
+                                            class="form-control"/>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                    </div>
+                                </for>
+                            </div>
 
+                        </div>
+                    </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group mt-3">
                     <input type="hidden" name="level_id" value="{$model.level_id}"/>
                     <button type="submit" class="btn btn-primary">提交</button>
                 </div>
