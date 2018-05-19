@@ -40,6 +40,7 @@
             </li>
             </foreach>
         </ul>
+        {$page|raw}
     </div>
 </block>
 <block name="script">
@@ -49,7 +50,7 @@
                 var id=$(this).data('id');
                 if(confirm('是否确认订单已收货')){
                     $.ajax({
-                        url:'{:url('member/confirm')}?id='+id,
+                        url:"{:url('index/member/confirm')}?id="+id,
                         dataType:'JSON',
                         success:function(j){
                             if(j.status==1){

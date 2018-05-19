@@ -41,6 +41,11 @@ class MemberController extends AuthedController
     public function profile(){
         if($this->request->isPost()){
             $data=$this->request->only(['realname','email','mobile','gender','birth','qq','wechat','alipay'],'post');
+            if(!empty($data['birth']) && $data['birth']!='') {
+                $data['birth'] = strtotime($data['birth']);
+            }else{
+                unset($data['birth']);
+            }
             $validate=new MemberValidate();
             $validate->setId($this->userid);
             if(!$validate->scene('edit')->check($data)){
@@ -332,7 +337,7 @@ class MemberController extends AuthedController
             $paths=array_reverse($paths);
             $this->assign('paths',$paths);
         }
-        $users=Db::name('Member')->where('referer',$pid)->select();
+        $users=Db::name('Member')->where('referer',$pid)->paginate(10);
         $uids=array_column($users,'id');
         $soncounts=[];
         if(!empty($uids)) {
@@ -346,6 +351,7 @@ class MemberController extends AuthedController
 
         $this->assign('levels',$levels);
         $this->assign('users',$users);
+        $this->assign('page',$users->render());
         $this->assign('soncounts',$soncounts);
         return $this->fetch();
     }
@@ -375,7 +381,7 @@ class MemberController extends AuthedController
         }
 
         $countlist=Db::name('Order')->where('member_id',$this->userid)
-            ->group('status')->field('status,count(order_id) as order_count')->select();
+            ->group('status')->field('status,count(order_id) as order_count')->paginate(10);
         $counts=[0,0,0,0,0,0,0];
         foreach ($countlist as $row){
             $counts[$row['status']]=$row['order_count'];
@@ -383,6 +389,7 @@ class MemberController extends AuthedController
 
         $this->assign('counts',$counts);
         $this->assign('orders',$orders);
+        $this->assign('page',$orders->render());
         return $this->fetch();
     }
 
@@ -405,8 +412,9 @@ class MemberController extends AuthedController
     }
 
     public function notice(){
-        $notices=Db::name('notice')->order('id desc')->select();
+        $notices=Db::name('notice')->order('id desc')->paginate(10);
         $this->assign('notices',$notices);
+        $this->assign('page',$notices->render());
         return $this->fetch();
     }
 
@@ -430,9 +438,10 @@ class MemberController extends AuthedController
                 $this->error('系统错误');
             }
         }
-        $feedbacks=Db::name('feedback')->where('member_id',$this->userid)->order('id desc')->select();
+        $feedbacks=Db::name('feedback')->where('member_id',$this->userid)->order('id desc')->paginate(10);
 
         $this->assign('feedbacks',$feedbacks);
+        $this->assign('page',$feedbacks->render());
         $this->assign('unreplyed',$unreplyed);
         return $this->fetch();
     }

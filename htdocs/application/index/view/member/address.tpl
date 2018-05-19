@@ -2,18 +2,23 @@
 <block name="body">
     <div class="container">
         <div class="page-header">
-            <div class="pull-right"><a class="btn btn-default btn-confirm" href="{:url('index/member/addressAdd')}" >添加地址</a></div>
-            <h1>收货地址</h1>
+            <div class="row">
+                <h1 class="col-4">收货地址</h1>
+                <div class="col-8 mt-3 mb-2 text-right"><a class="btn btn-outline-primary btn-confirm" href="{:url('index/member/addressAdd')}" >添加地址</a></div>
+            </div>
         </div>
         <ul class="list-group">
-            <foreach name="address" item="v">
+            <foreach name="addresses" item="v">
                 <li class="list-group-item">
-                    <div>{$v.recive_name} <if condition="$v.is_default"><span class="label label-info">默认</span></if><span class="pull-right">{$v.mobile}</span></div>
+                    <div>
+                        <if condition="$v.is_default"><span class="float-right badge badge-info">默认</span></if>
+                        <span class="text-dark">{$v.recive_name}</span>  /  <span class="text-secondary">{$v.mobile}</span>
+                    </div>
                     <div>
                         {$v.province}&nbsp;{$v.city}&nbsp;{$v.area}&nbsp;{$v.address}
                     </div>
-                    <div class="order-btns">
-                        <a class="btn btn-default btn-confirm"  href="{:url('index/member/addressAdd',array('id'=>$v['address_id']))}">编辑</a>
+                    <div class="order-btns text-right">
+                        <a class="btn btn-outline-secondary btn-confirm"  href="{:url('index/member/addressAdd',array('id'=>$v['address_id']))}">编辑</a>
                     </div>
                 </li>
             </foreach>

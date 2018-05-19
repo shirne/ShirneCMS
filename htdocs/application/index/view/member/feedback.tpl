@@ -28,5 +28,6 @@
         </li>
         </if>
         </ul>
+        {$page|raw}
     </div>
 </block>

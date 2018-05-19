@@ -14,27 +14,27 @@
             </div>
         </div>
         <div class="list-group">
-            <a class="list-group-item" href="{:url('index/member/profile')}"><i class="fa fa-lock"></i> 个人资料</a>
-            <a class="list-group-item" href="{:url('index/member/password')}"><i class="fa fa-lock"></i> 修改密码</a>
-            <a class="list-group-item" href="{:url('index/member/cards')}"><i class="fa fa-credit-card"></i> 银行卡</a>
-            <a class="list-group-item" href="{:url('index/member/address')}"><i class="fa fa-location-arrow"></i> 收货地址</a>
+            <a class="list-group-item" href="{:url('index/member/profile')}"><i class="ion-md-person"></i> 个人资料</a>
+            <a class="list-group-item" href="{:url('index/member/password')}"><i class="ion-md-lock"></i> 修改密码</a>
+            <a class="list-group-item" href="{:url('index/member/cards')}"><i class="ion-md-card"></i> 银行卡</a>
+            <a class="list-group-item" href="{:url('index/member/address')}"><i class="ion-md-map"></i> 收货地址</a>
         </div>
         <div class="list-group">
-            <a class="list-group-item" href="{:url('index/member/order')}"><i class="fa fa-file-text"></i> 我的订单</a>
-            <a class="list-group-item" href="{:url('index/member/moneylog')}"><i class="fa fa-circle-o"></i> 积分记录</a>
-            <a class="list-group-item" href="{:url('index/member/cashlist')}"><i class="fa fa-credit-card"></i> 提现记录</a>
-            <a class="list-group-item" href="{:url('index/member/cash')}"><i class="fa fa-credit-card-alt"></i> 我要提现</a>
+            <a class="list-group-item" href="{:url('index/member/order')}"><i class="ion-md-list"></i> 我的订单</a>
+            <a class="list-group-item" href="{:url('index/member/moneylog')}"><i class="ion-md-paper"></i> 积分记录</a>
+            <a class="list-group-item" href="{:url('index/member/cashlist')}"><i class="ion-md-reorder"></i> 提现记录</a>
+            <a class="list-group-item" href="{:url('index/member/cash')}"><i class="ion-md-cash"></i> 我要提现</a>
         </div>
         <if condition="$user['is_agent'] GT 0">
             <div class="list-group">
-                <a class="list-group-item" href="{:url('index/member/team')}"><i class="fa fa-user"></i> 团队管理</a>
-                <a class="list-group-item" href="{:url('index/member/shares')}"><i class="fa fa-share"></i> 推广二维码</a>
+                <a class="list-group-item" href="{:url('index/member/team')}"><i class="ion-md-people"></i> 团队管理</a>
+                <a class="list-group-item" href="{:url('index/member/shares')}"><i class="ion-md-share"></i> 推广二维码</a>
             </div>
         </if>
         <div class="list-group">
-            <a class="list-group-item" href="{:url('index/member/feedback')}"><i class="fa fa-bug"></i> 反馈中心</a>
-            <a class="list-group-item" href="{:url('index/member/notice')}"><i class="fa fa-bullhorn"></i> 系统公告</a>
-            <a class="list-group-item" href="{:url('index/member/logout')}"><i class="fa fa-sign-out"></i> 退出登录</a>
+            <a class="list-group-item" href="{:url('index/member/feedback')}"><i class="ion-md-text"></i> 反馈中心</a>
+            <a class="list-group-item" href="{:url('index/member/notice')}"><i class="ion-md-notifications"></i> 系统公告</a>
+            <a class="list-group-item" href="{:url('index/member/logout')}"><i class="ion-md-log-out"></i> 退出登录</a>
         </div>
     </div>
 </block>

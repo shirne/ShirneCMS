@@ -51,7 +51,7 @@ class OrderController extends AuthedController
                 if(!empty($item['levels'])){
                     $levels=json_decode($item['levels'],true);
                     if(!in_array($this->user['level_id'],$levels)){
-                        $this->error('您当前会员组不允许购买商品['.$item['title'].']');
+                        $this->error('您当前会员组不允许购买商品['.$item['product_title'].']');
                     }
                 }
             }

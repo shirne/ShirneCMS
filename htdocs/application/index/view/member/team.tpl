@@ -33,5 +33,6 @@
             </li>
             </foreach>
         </ul>
+        {$page|raw}
     </div>
 </block>

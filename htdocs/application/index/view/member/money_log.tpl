@@ -45,6 +45,6 @@
                 </li>
             </foreach>
         </ul>
-        {$page}
+        {$page|raw}
     </div>
 </block>
