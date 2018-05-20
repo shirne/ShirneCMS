@@ -54,7 +54,7 @@
                 <th>上次登陆</th>
                 <th>代理</th>
                 <th>状态</th>
-                <th width="200">操作</th>
+                <th width="240">操作</th>
             </tr>
         </thead>
         <tbody>
@@ -98,13 +98,27 @@
                     <if condition="$v.status eq 1">正常<else/><span style="color:red">禁用</span></if>
                 </td>
                 <td>
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('member/update',array('id'=>$v['id']))}"><i class="ion-md-create"></i> 编辑</a>
-                    <a class="btn btn-outline-dark btn-sm btn-recharge" href="javascript:" data-id="{$v.id}"><i class="ion-md-card"></i> 充值</a>
-                    <if condition="$v.status eq 1">
-                        <a class="btn btn-outline-dark btn-sm" href="{:url('member/delete',array('id'=>$v['id'],'type'=>0))}" onclick="javascript:return del(this,'禁用后用户将不能登陆!\n\n请确认!!!');"><i class="ion-md-close"></i> 禁用</a>
-                    <else/>
-                        <a class="btn btn-outline-dark btn-sm" href="{:url('member/delete',array('id'=>$v['id'],'type'=>1))}" style="color:#50AD1E;"><i class="ion-md-check"></i> 启用</a>
-                    </if>
+                    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                        <div class="btn-group btn-group-sm">
+                            <a class="btn btn-outline-dark" href="{:url('member/update',array('id'=>$v['id']))}"><i class="ion-md-create"></i> 编辑</a>
+
+                            <if condition="$v.status eq 1">
+                                <a class="btn btn-outline-dark text-danger" href="{:url('member/delete',array('id'=>$v['id'],'type'=>0))}" onclick="javascript:return del(this,'禁用后用户将不能登陆!\n\n请确认!!!');"><i class="ion-md-close"></i> 禁用</a>
+                                <else/>
+                                <a class="btn btn-outline-dark text-success" href="{:url('member/delete',array('id'=>$v['id'],'type'=>1))}" style="color:#50AD1E;"><i class="ion-md-check"></i> 启用</a>
+                            </if>
+                        </div>
+                        <div class="btn-group btn-group-sm ml-2">
+                            <a class="btn btn-outline-dark btn-recharge" href="javascript:" data-id="{$v.id}" ><i class="ion-md-card"></i> 充值</a>
+                            <button type="button" class="btn btn-outline-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="{:url('member/money_log',array('id'=>$v['id']))}" ><i class="ion-md-list-box"></i> 明细</a>
+                            </div>
+                        </div>
+                    </div>
                 </td>
             </tr>
         </foreach>

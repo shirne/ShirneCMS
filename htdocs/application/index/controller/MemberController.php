@@ -294,7 +294,8 @@ class MemberController extends AuthedController
 
         $qrurl='/uploads/qrcode/'.($this->userid % 32).'/'.$this->user['agentcode'].'.png';
         if(!file_exists('.'.$qrurl)) {
-            mkdir('.'.dirname($qrurl),0777,true);
+            $dir='.'.dirname($qrurl);
+            if(!file_exists($dir))@mkdir($dir,0777,true);
             $qrCode = new QrCode($shareurl);
             $qrCode->setSize(300);
             $qrCode->setWriterByName('png')

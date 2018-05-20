@@ -16,6 +16,16 @@ h4{font-size:1.2rem;}
 h5{font-size:1.1rem;}
 h6{ font-size :1rem;}
 
+.input-group-middle{
+    display: -ms-flexbox;
+    display: flex;
+}
+.input-group-middle>.input-group-text{
+    border-radius:0;
+    border-left:0;
+    border-right:0;
+}
+
 .media-left{
     width:100px;
     height:60px;

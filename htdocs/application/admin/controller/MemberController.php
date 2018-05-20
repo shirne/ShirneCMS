@@ -88,6 +88,70 @@ class MemberController extends BaseController
         }
     }
 
+    public function money_log($id=0,$from_id=0,$fromdate='',$todate='',$field='all',$type='all'){
+        $model=Db::view('MemberMoneyLog mlog','*')
+            ->view('Member m',['username','level_id','mobile'],'m.id=mlog.member_id','LEFT')
+            ->view('Member fm',['username'=>'from_username','level_id'=>'from_level_id','mobile'=>'from_mobile'],'m.id=mlog.member_id','LEFT');
+
+        $levels=getMemberLevels();
+
+        if($id>0){
+            $model->where('mlog.member_id',$id);
+        }
+        if($from_id>0){
+            $model->where('mlog.from_member_id',$from_id);
+        }
+        if(!empty($type) && $type!='all'){
+            $model->where('mlog.type',$type);
+        }else{
+            $type='all';
+        }
+        if(!empty($field) && $field!='all'){
+            $model->where('mlog.field',$field);
+        }else{
+            $field='all';
+        }
+
+        if(!empty($todate)){
+            $totime=strtotime($todate.' 23:59:59');
+            if($totime===false)$todate='';
+        }
+        if(!empty($fromdate)) {
+            $fromtime = strtotime($fromdate);
+            if ($fromtime === false) $fromdate = '';
+        }
+        if(!empty($fromtime)){
+            if(!empty($totime)){
+                $model->whereBetween('mlog.create_time',array($fromtime,$totime));
+            }else{
+                $model->where('mlog.create_time','EGT',$fromtime);
+            }
+        }else{
+            if(!empty($totime)){
+                $model->where('mlog.create_time','ELT',$totime);
+            }
+        }
+
+        $logs = $model->order('ID DESC')->paginate(15);
+
+        $types=getLogTypes();
+        $fields=getMoneyFields();
+
+        $this->assign('id',$id);
+        $this->assign('from_id',$from_id);
+        $this->assign('fromdate',$fromdate);
+        $this->assign('todate',$todate);
+        $this->assign('type',$type);
+        $this->assign('field',$field);
+
+        $this->assign('types',$types);
+        $this->assign('fields',$fields);
+        $this->assign('levels',$levels);
+        $this->assign('logs', $logs);
+        $this->assign('page',$logs->render());
+        return $this->fetch();
+    }
+
     public function log($type='',$member_id=0){
         $model=Db::view('MemberLog','*')
             ->view('Member',['username'],'MemberLog.member_id=Member.id','LEFT');

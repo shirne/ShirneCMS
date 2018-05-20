@@ -64,6 +64,25 @@ function getOauthTypes(){
     ];
 }
 
+function searchKey($key,$val,$search=''){
+    if(!is_array($search)){
+        $search=request()->param();
+    }
+    if(strpos($key,',')>0){
+        $keys=explode(',',$key);
+        foreach ($keys as $key){
+            $search=searchKey(trim($key),$val,$search);
+        }
+    }else {
+        if (empty($val) || $val == 'all') {
+            if (isset($search[$key])) unset($search[$key]);
+        } else {
+            $search[$key] = $val;
+        }
+    }
+    return $search;
+}
+
 function getMemberLevels()
 {
     static $levels;

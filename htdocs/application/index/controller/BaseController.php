@@ -77,7 +77,7 @@ class BaseController extends Controller {
             }else{
                 $this->userid=null;
                 clearLogin(false);
-                $this->error("登录失效",url('Login/index'));
+                $this->error("登录失效",url('index/login/index'));
             }
         }
     }
@@ -112,7 +112,6 @@ class BaseController extends Controller {
         if($this->isWechat && !empty($this->config['appid'])) {
             $jssdk = new \sdk\WechatAuth($this->config);
             $signPackage = $jssdk->getJsSign(current_url(true));
-            $signPackage['logo'] = 'static/logo.png';
             $this->assign('signPackage', $signPackage);
         }
     }

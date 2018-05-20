@@ -31,6 +31,39 @@ class IndexController extends BaseController{
         return $this->fetch();
     }
 
+    /**
+     * 清空测试数据
+     */
+    public function clear(){
+        $sqls='truncate table `sa_member`;
+            truncate table `sa_member_address`;
+            truncate table `sa_member_cashin`;
+            truncate table `sa_member_log`;
+            truncate table `sa_member_money_log`;
+            truncate table `sa_member_recharge`;
+            truncate table `sa_member_oauth`;
+            truncate table `sa_member_cart`;
+            truncate table `sa_member_card`;
+            truncate table `sa_invite_code`;
+            truncate table `sa_checkcode`;
+            
+            truncate table `sa_order`;
+            truncate table `sa_order_product`;
+            truncate table `sa_subscribe`;
+            truncate table `sa_feedback`;
+            truncate table `sa_manager_log`;';
+        foreach (explode(';',$sqls) as $sql){
+            $sql=trim($sql);
+            if(empty($sql))continue;
+            Db::execute($sql);
+        }
+        @unlink('./uploads/qrcode');
+        @unlink('./uploads/avatar');
+        user_log($this->mid,'cleardata',1,'清空会员数据','manager');
+        
+        $this->success('数据已清空');
+    }
+
     public function newcount(){
         Log::close();
         $newMemberCount=Db::name('Member')->where(array(array('create_time','GT',$this->manage['last_view_member'])))->count();
