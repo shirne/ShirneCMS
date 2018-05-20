@@ -10,13 +10,14 @@ use think\Container;
  */
 class SimpleFacade
 {
-    protected static $instance;
+    protected static $bind=[];
     protected static function createFacade(){
-        if(empty(self::$instance)){
+        $class=static::class;
+        if(empty(static::$bind[$class])){
             $class=static::getFacadeClass();
-            self::$instance=Container::getInstance()->invokeClass($class);
+            static::$bind[$class]=Container::getInstance()->invokeClass($class);
         }
-        return self::$instance;
+        return static::$bind[$class];
     }
 
     protected static function getFacadeClass()

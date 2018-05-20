@@ -9,6 +9,7 @@ use extcore\SimpleFacade;
  * @package app\common\facade
  * @see \app\common\model\MemberCartModel
  * @method array mapCart($product,$sku) static 将产品数据转换为购物车数据
+ * @method array mapProduct($product,$sku) static 将产品数据转换可下单数据
  * @method bool addCart($product,$sku_id,$count,$member_id) static 添加购物车
  * @method bool updateCartData($product,$sku,$member_id) static 更新购物车资料
  * @method bool updateCart($sku_id,$count,$member_id) static 更新购物车

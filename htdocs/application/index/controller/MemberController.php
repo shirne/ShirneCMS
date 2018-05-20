@@ -326,7 +326,7 @@ class MemberController extends AuthedController
                 $this->error('会员不存在');
             }
             $paths=[$member];
-            $maxlayer=count($curLevel['lead_percent']);
+            $maxlayer=$curLevel['commission_layer'];
             while($member['id']!=$this->userid){
                 $member=Db::name('Member')->find($member['referer']);
                 $paths[]=$member;

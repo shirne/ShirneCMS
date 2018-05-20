@@ -330,6 +330,7 @@ CREATE TABLE `sa_member_address` (
   `area` VARCHAR(50) NULL,
   `address` VARCHAR(150) NULL,
   `code` VARCHAR(10) NULL,
+  `locate` VARCHAR(100) NULL,
   `is_default` TINYINT NULL DEFAULT 0,
   PRIMARY KEY (`address_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

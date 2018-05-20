@@ -5,7 +5,7 @@ VALUES
   (61,6,'分类管理','ProductCategory/index','product_category_index','ion-md-medical',0,0),
   (62,6,'商品管理','Product/index','product_index','ion-md-gift',0,0),
   (63,6,'订单管理','Order/index','order_index','ion-md-list-box',0,0),
-  (64,6,'订单统计','OrderStatics/index','order_statics_index','ion-md-list-box',0,0);
+  (64,6,'订单统计','OrderStatics/index','order_statics_index','ion-md-stats',0,0);
 
 CREATE TABLE `sa_member_cart` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
