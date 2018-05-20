@@ -9,7 +9,7 @@
                     <div class="col-xs-3">{$v.amount|showmoney}<br />实收：{$v.real_amount|showmoney}</div>
                     <div class="col-xs-4">{$v.create_at|showdate}</div>
                     <div class="col-xs-3">{$v.remark}</div>
-                    <div class="col-xs-2">{$v.status|o_status}</div>
+                    <div class="col-xs-2">{$v.status|audit_status|raw}</div>
                 </li>
             </foreach>
         </ul>

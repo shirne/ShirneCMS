@@ -54,7 +54,7 @@ class OrderModel extends Model
      * @return mixed
      */
 
-    public function makeOrder($member,$products,$address,$remark,$balance_pay=1){
+    public function makeOrder($member,$products,$address,$remark,$balance_pay=1,$ordertype=1){
 
         //折扣
         $levels=getMemberLevels();
@@ -65,15 +65,16 @@ class OrderModel extends Model
         }
 
         //status 0-待付款 1-已付款
-        $this->startTrans();
-
         $status=0;
         $total_price=0;
         $commission_amount=0;
         foreach ($products as $product){
             if($product['storage']<$product['count']){
-                $this->rollback();
                 $this->error='商品['.$product['product_title'].']库存不足';
+                return false;
+            }
+            if($product['count']<1){
+                $this->error='商品['.$product['product_title'].']数量错误';
                 return false;
             }
 
@@ -89,6 +90,9 @@ class OrderModel extends Model
         }
 
         //todo  优惠券
+
+        
+        $this->startTrans();
 
         if($balance_pay) {
             $debit = money_log($member['id'], -$total_price, "下单支付", 'consume',is_string($balance_pay)?$balance_pay:'money');
@@ -118,7 +122,8 @@ class OrderModel extends Model
             'create_time'=>$time,
             'pay_time'=>0,
             'express_no' =>'',
-            'express_code'=>''
+            'express_code'=>'',
+            'type'=>$ordertype,
         );
         if($status>0){
             $orderdata['pay_time']=time();

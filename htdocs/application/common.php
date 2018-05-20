@@ -478,7 +478,7 @@ function showdate($time,$replace='-',$format='Y-m-d H:i:s'){
  * @param bool $wrap
  * @return string
  */
-function f_status($status,$wrap=true)
+function feedback_status($status,$wrap=true)
 {
     $statusText = array('未审核', '已审核', '隐藏');
 
@@ -491,7 +491,7 @@ function f_status($status,$wrap=true)
  * @param bool $wrap
  * @return mixed
  */
-function o_status($status,$wrap=true)
+function audit_status($status,$wrap=true)
 {
     $statusText = array('待审核', '确认', '无效');
     return $wrap?wrap_label($statusText[$status],status_type($status)):$statusText[$status];
@@ -503,7 +503,7 @@ function o_status($status,$wrap=true)
  * @param bool $wrap
  * @return mixed
  */
-function v_status($status,$wrap=true)
+function show_status($status,$wrap=true)
 {
     $statusText = array('隐藏', '显示');
     return $wrap?wrap_label($statusText[$status],status_type($status)):$statusText[$status];
@@ -518,7 +518,7 @@ function status_type($status){
  * @param bool $wrap
  * @return string
  */
-function showstatus($status,$wrap=true){
+function order_status($status,$wrap=true){
     switch ($status){
         case "-1":
             return $wrap?wrap_label("已作废",'default'):"已作废";
@@ -533,6 +533,16 @@ function showstatus($status,$wrap=true){
 
     }
     return $wrap?wrap_label("未知",'default'):'未知';
+}
+function money_type($type,$wrap=true){
+    switch ($type){
+        case "money":
+            return $wrap?wrap_label("余额",'success'):"余额";
+        case "credit":
+            return $wrap?wrap_label("积分",'info'):"积分";
+
+    }
+    return $wrap?wrap_label("未知币种",'default'):'未知币种';
 }
 function wrap_label($text,$type='secondary'){
     return "<span class=\"badge badge-$type\">$text</span>";

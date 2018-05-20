@@ -32,6 +32,7 @@ class IndexController extends BaseController{
     }
 
     public function newcount(){
+        Log::close();
         $newMemberCount=Db::name('Member')->where(array(array('create_time','GT',$this->manage['last_view_member'])))->count();
         $newOrderCount=0;//Db::name('Order')->where(array('status'=>0))->count();
 

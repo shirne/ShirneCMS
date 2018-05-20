@@ -56,7 +56,7 @@
                 <td>{$v.amount|showmoney}</td>
                 <td>{$v.remark}</td>
                 <td>{$v.create_time|showdate='Y-m-d H:i:s'}</td>
-                <td>{$v.status|o_status|raw}</td>
+                <td>{$v.status|audit_status|raw}</td>
                 <td>
                     <if condition="$v['status'] EQ 0">
                     <a class="btn btn-outline-dark btn-sm" href="{:url('Paylog/rechargeupdate',array('id'=>$v['id']))}"><i class="ion-md-check"></i> 确认</a>

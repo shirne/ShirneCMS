@@ -21,7 +21,7 @@
                         <td>下单日期</td>
                         <td>{$model.create_time|showdate}</td>
                         <td>订单状态</td>
-                        <td>{$model.status|showstatus|raw}</td>
+                        <td>{$model.status|order_status|raw}</td>
                     </tr>
                     <tr>
                         <th colspan="4">订单商品</th>

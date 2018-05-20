@@ -68,7 +68,7 @@
                     <td>{$v.payamount}<br />{$v.commission_amount}</td>
                     <td>{$v.create_time|showdate}</td>
                     <td>
-                        {$v.status|showstatus|raw}
+                        {$v.status|order_status|raw}
                         <if condition="$v['isaudit'] EQ 1">
                             <span class="badge badge-secondary">已审核</span>
                             <else/>

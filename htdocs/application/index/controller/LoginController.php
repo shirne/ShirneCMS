@@ -281,6 +281,7 @@ class LoginController extends BaseController{
         return $this->fetch();
     }
     public function checkusername(){
+        Log::close();
         $username=$this->request->post('username');
         if(empty($username))$this->error("请填写用户名");
         $user=Db::name('member')->where(array('username'=>$username))->find();
@@ -332,17 +333,19 @@ class LoginController extends BaseController{
                     Db::rollback();
                     $this->error("激活码已被使用");
                 }
+                $data['referer']=$invite['member_id'];
+                if($invite['level_id']){
+                    $data['level_id']=$invite['level_id'];
+                }else{
+                    $data['level_id']=getDefaultLevel();
+                }
+            }else{
+                $data['referer']=session('agent');
+                $data['level_id']=getDefaultLevel();
             }
             $data['salt']=random_str(8);
             $data['password']=encode_password($data['password'],$data['salt']);
             $data['login_ip']=$this->request->ip();
-            $data['referer']=empty($invite['member_id'])?session('agent'):$invite['member_id'];
-
-            if($invite['level_id']){
-                $data['level_id']=$invite['level_id'];
-            }else{
-                $data['level_id']=getDefaultLevel();
-            }
 
             unset($data['repassword']);
             $model=MemberModel::create($data);
@@ -372,6 +375,7 @@ class LoginController extends BaseController{
     }
 
     public function checkunique($type='username'){
+        Log::close();
         if(!in_array($type,array('username','email','mobile'))){
             $this->error('参数不合法');
         }

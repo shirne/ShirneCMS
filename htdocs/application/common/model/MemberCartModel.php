@@ -29,8 +29,8 @@ class MemberCartModel extends Model
     }
     public function mapProduct($product,$sku){
         $data=[];
-        $productMaps=['title'=>'product_title','image'=>'product_image','spec_data','levels','is_discount','is_commission','type'];
-        $skuMaps=['storage','sale','goods_no'=>'sku_goods_no','weight','specs','price'=>'product_price','market_price','cost_price','image'=>'sku_image'];
+        $productMaps=['id'=>'product_id','title'=>'product_title','image'=>'product_image','spec_data','levels','is_discount','is_commission','type'];
+        $skuMaps=['sku_id','storage','sale','goods_no'=>'sku_goods_no','weight','specs','price'=>'product_price','market_price','cost_price','image'=>'sku_image'];
         foreach ($productMaps as $k=>$v){
             if(is_string($k)){
                 $data[$v]=$product[$k];
