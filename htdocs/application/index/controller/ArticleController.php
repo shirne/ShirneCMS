@@ -2,7 +2,7 @@
 
 namespace app\index\controller;
 
-use app\common\facade\CategoryModel;
+use app\common\facade\CategoryFacade;
 use app\common\model\ArticleCommentModel;
 use app\common\validate\ArticleCommentValidate;
 use \think\Db;
@@ -21,7 +21,7 @@ class ArticleController extends BaseController{
         $where=array();
         if(!empty($this->category)){
             $this->seo($this->category['title']);
-            $where[]=array('article.cate_id','in',CategoryModel::getSubCateIds($this->category['id']));
+            $where[]=array('article.cate_id','in',CategoryFacade::getSubCateIds($this->category['id']));
         }else{
             $this->seo("新闻中心");
         }
@@ -117,10 +117,10 @@ class ArticleController extends BaseController{
 
     private function category($name=''){
 
-        $this->category=CategoryModel::findCategory($name);
-        $this->categotyTree=CategoryModel::getCategoryTree($name);
+        $this->category=CategoryFacade::findCategory($name);
+        $this->categotyTree=CategoryFacade::getCategoryTree($name);
 
-        $this->categries=CategoryModel::getTreedCategory();
+        $this->categries=CategoryFacade::getTreedCategory();
 
         $this->assign('category',$this->category);
         $this->assign('categotyTree',$this->categotyTree);

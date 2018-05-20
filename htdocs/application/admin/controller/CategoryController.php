@@ -3,7 +3,7 @@
 namespace app\admin\controller;
 
 use app\admin\validate\CategoryValidate;
-use app\common\facade\CategoryModel;
+use app\common\facade\CategoryFacade;
 use think\Db;
 
 /**
@@ -17,7 +17,7 @@ class CategoryController extends BaseController
     public function index()
     {
 
-        $this->assign('model',CategoryModel::getCategories(true));
+        $this->assign('model',CategoryFacade::getCategories(true));
         return $this->fetch();
     }
 
@@ -38,14 +38,14 @@ class CategoryController extends BaseController
 
                 $result=Db::name('category')->insert($data);
                 if ($result) {
-                    CategoryModel::clearCache();
+                    CategoryFacade::clearCache();
                     $this->success("添加成功", url('category/index'));
                 } else {
                     $this->error("添加失败");
                 }
             }
         }
-        $cate = CategoryModel::getCategories();
+        $cate = CategoryFacade::getCategories();
         $model=array('sort'=>99,'pid'=>$pid);
         $this->assign('cate',$cate);
         $this->assign('model',$model);
@@ -84,7 +84,7 @@ class CategoryController extends BaseController
 
                 if ($result) {
                     delete_image($delete_images);
-                    CategoryModel::clearCache();
+                    CategoryFacade::clearCache();
                     $this->success("保存成功", url('category/index'));
                 } else {
                     $this->error("保存失败");
@@ -95,7 +95,7 @@ class CategoryController extends BaseController
             if(empty($model)){
                 $this->error('分类不存在');
             }
-            $cate = CategoryModel::getCategories();
+            $cate = CategoryFacade::getCategories();
 
             $this->assign('cate',$cate);
             $this->assign('model',$model);
@@ -123,7 +123,7 @@ class CategoryController extends BaseController
         //验证通过
         $result = Db::name('Category')->where('pid','in',$id)->delete();
         if($result){
-            CategoryModel::clearCache();
+            CategoryFacade::clearCache();
             $this->success("分类删除成功", url('category/index'));
         }else{
             $this->error("分类删除失败");

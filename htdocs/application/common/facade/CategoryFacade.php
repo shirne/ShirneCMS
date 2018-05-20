@@ -1,9 +1,9 @@
 <?php
 /**
- * 产品分类
+ * 分类模型facade
  * User: shirne
  * Date: 2018/5/11
- * Time: 22:24
+ * Time: 22:08
  */
 
 namespace app\common\facade;
@@ -12,7 +12,7 @@ namespace app\common\facade;
 use extcore\SimpleFacade;
 
 /**
- * Class ProductCategoryModel
+ * Class CategoryFacade
  * @package app\common\facade
  * @see \app\common\model\CategoryModel
  * @method array getCategories($force=false) static 获取分类列表
@@ -23,14 +23,9 @@ use extcore\SimpleFacade;
  * @method array getSubCateIds($pid) static 获取下级分类id列表
  * @method void clearCache() static 清除缓存
  */
-class ProductCategoryModel extends SimpleFacade
+class CategoryFacade extends SimpleFacade
 {
     protected static function getFacadeClass(){
-        return \app\common\model\ProductCategoryModel::class;
-    }
-
-    public static function get($data, $with = [], $cache = false, $failException = false)
-    {
-        return \app\common\model\ProductCategoryModel::get($data, $with, $cache, $failException);
+        return \app\common\model\CategoryModel::class;
     }
 }

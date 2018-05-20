@@ -9,13 +9,13 @@
 namespace app\index\controller;
 
 
-use app\common\facade\MemberCartModel;
+use app\common\facade\MemberCartFacade;
 use think\Db;
 
 class CartController extends AuthedController
 {
     public function index(){
-        $carts=MemberCartModel::getCart($this->userid);
+        $carts=MemberCartFacade::getCart($this->userid);
         $this->assign('carts',$carts);
         return $this->fetch();
     }
@@ -29,7 +29,7 @@ class CartController extends AuthedController
         if(empty($product) || $product['status']==0){
             $this->error('产品已下架');
         }
-        $added=MemberCartModel::addCart($product,$sku,$count,$this->userid);
+        $added=MemberCartFacade::addCart($product,$sku,$count,$this->userid);
         if($added){
             $this->success('添加成功');
         }else{
@@ -38,7 +38,7 @@ class CartController extends AuthedController
 
     }
     public function update($sku_id,$count){
-        $result=MemberCartModel::updateCart($sku_id,$count,$this->userid);
+        $result=MemberCartFacade::updateCart($sku_id,$count,$this->userid);
         if($result){
             $this->success('更新成功');
         }else{
@@ -46,7 +46,7 @@ class CartController extends AuthedController
         }
     }
     public function del($sku_id){
-        $result=MemberCartModel::delCart($sku_id,$this->userid);
+        $result=MemberCartFacade::delCart($sku_id,$this->userid);
         if($result){
             $this->success('移除成功');
         }else{
@@ -55,7 +55,7 @@ class CartController extends AuthedController
     }
 
     public function clear(){
-        $result=MemberCartModel::clearCart($this->userid);
+        $result=MemberCartFacade::clearCart($this->userid);
         if($result){
             $this->success('清除成功');
         }else{

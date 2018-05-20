@@ -24,7 +24,7 @@ class Product extends TagLib
         $recursive =isset($tag['recursive']) ? $tag['recursive'] : 'false';
         $category=isset($tag['category']) ? $tag['category'] : '';
         if(preg_match('/^[a-zA-Z]\w*$/',$category)){
-            $category="\\app\\common\\facade\\ProductCategoryModel::getCategoryId('".$category."')";
+            $category="\\app\\common\\facade\\ProductCategoryFacade::getCategoryId('".$category."')";
         }else{
             $category=intval($category);
         }
@@ -35,7 +35,7 @@ class Product extends TagLib
         $parseStr .= '->view("ProductCategory",["title"=>"category_title","name"=>"category_name","short"=>"category_short","icon"=>"category_icon","image"=>"category_image"],"Product.cate_id=ProductCategory.id","LEFT")';
         if(!empty($category)){
             if($recursive=='true'){
-                $parseStr .= '->where("Product.cate_id", "IN", \app\common\facade\ProductCategoryModel::getSubCateIds(' . $category . '))';
+                $parseStr .= '->where("Product.cate_id", "IN", \app\common\facade\ProductCategoryFacade::getSubCateIds(' . $category . '))';
             }else {
                 $parseStr .= '->where("Product.cate_id",' . $category . ')';
             }
@@ -83,7 +83,7 @@ class Product extends TagLib
 
         $parseStr='<?php ';
 
-        $parseStr.='$'.$var.'=\app\common\facade\ProductCategoryModel::findCategory('.$name.');';
+        $parseStr.='$'.$var.'=\app\common\facade\ProductCategoryFacade::findCategory('.$name.');';
 
         $parseStr .= ' ?>';
         return $parseStr;

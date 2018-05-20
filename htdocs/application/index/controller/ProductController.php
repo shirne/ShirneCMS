@@ -10,7 +10,7 @@ namespace app\index\controller;
 
 
 use app\common\model\ProductModel;
-use app\common\facade\ProductCategoryModel;
+use app\common\facade\ProductCategoryFacade;
 use app\common\model\ProductCommentModel;
 use app\common\model\ProductSkuModel;
 use app\common\validate\ProductCommentValidate;
@@ -28,7 +28,7 @@ class ProductController extends BaseController
         $where=array();
         if(!empty($this->category)){
             $this->seo($this->category['title']);
-            $where[]=array('product.cate_id','in',ProductCategoryModel::getSubCateIds($this->category['id']));
+            $where[]=array('product.cate_id','in',ProductCategoryFacade::getSubCateIds($this->category['id']));
         }else{
             $this->seo("产品中心");
         }
@@ -92,10 +92,10 @@ class ProductController extends BaseController
 
     private function category($name=''){
 
-        $this->category=ProductCategoryModel::findCategory($name);
-        $this->categotyTree=ProductCategoryModel::getCategoryTree($name);
+        $this->category=ProductCategoryFacade::findCategory($name);
+        $this->categotyTree=ProductCategoryFacade::getCategoryTree($name);
 
-        $this->categries=ProductCategoryModel::getTreedCategory();
+        $this->categries=ProductCategoryFacade::getTreedCategory();
 
         $this->assign('category',$this->category);
         $this->assign('categotyTree',$this->categotyTree);

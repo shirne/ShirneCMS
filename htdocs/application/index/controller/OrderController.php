@@ -9,7 +9,7 @@
 namespace app\index\controller;
 
 
-use app\common\facade\MemberCartModel;
+use app\common\facade\MemberCartFacade;
 use app\common\facade\OrderModel;
 use app\common\validate\OrderValidate;
 use think\Db;
@@ -28,7 +28,7 @@ class OrderController extends AuthedController
     {
 
         if($from=='cart'){
-            $products=MemberCartModel::getCart($this->userid,$sku_ids);
+            $products=MemberCartFacade::getCart($this->userid,$sku_ids);
         }else{
             $products=Db::view('ProductSku','*')
                 ->view('Product',['title'=>'product_title','image'=>'product_image','levels','is_discount'],'ProductSku.product_id=Product.id','LEFT')

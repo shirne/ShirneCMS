@@ -13,7 +13,7 @@ use app\common\model\ProductModel;
 use app\common\model\ProductSkuModel;
 use app\admin\validate\ProductSkuValidate;
 use app\admin\validate\ProductValidate;
-use app\common\facade\ProductCategoryModel;
+use app\common\facade\ProductCategoryFacade;
 use think\Db;
 
 class ProductController extends BaseController
@@ -26,7 +26,7 @@ class ProductController extends BaseController
             $where[]=['product.title|productCategory.title','like',"%$key%"];
         }
         if($cate_id>0){
-            $where[]=['product.cate_id','in',ProductCategoryModel::getSubCateIds($cate_id)];
+            $where[]=['product.cate_id','in',ProductCategoryFacade::getSubCateIds($cate_id)];
         }
 
         $lists=$model->where($where)->paginate(10);
@@ -36,7 +36,7 @@ class ProductController extends BaseController
         $this->assign('types',getProductTypes());
         $this->assign('keyword',$key);
         $this->assign('cate_id',$cate_id);
-        $this->assign("category",ProductCategoryModel::getCategories());
+        $this->assign("category",ProductCategoryFacade::getCategories());
 
         return $this->fetch();
     }
@@ -92,7 +92,7 @@ class ProductController extends BaseController
             }
         }
         $model=array('type'=>1,'cate_id'=>$cid,'is_discount'=>1,'is_commission'=>1);
-        $this->assign("category",ProductCategoryModel::getCategories());
+        $this->assign("category",ProductCategoryFacade::getCategories());
         $this->assign('product',$model);
         $this->assign('skus',[[]]);
         $this->assign('levels',getMemberLevels());
@@ -169,7 +169,7 @@ class ProductController extends BaseController
             }
             $skuModel=new ProductSkuModel();
             $skus=$skuModel->where('product_id',$id)->select();
-            $this->assign("category",ProductCategoryModel::getCategories());
+            $this->assign("category",ProductCategoryFacade::getCategories());
             $this->assign('levels',getMemberLevels());
             $this->assign('product',$model);
             $this->assign('skus',$skus->isEmpty()?[[]]:$skus);
@@ -236,7 +236,7 @@ class ProductController extends BaseController
         $this->assign('page',$lists->render());
         $this->assign('keyword',$key);
         $this->assign('product_id',$id);
-        $this->assign("category",ProductCategoryModel::getCategories());
+        $this->assign("category",ProductCategoryFacade::getCategories());
 
         return $this->fetch();
     }

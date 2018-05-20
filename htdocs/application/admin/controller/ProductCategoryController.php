@@ -11,13 +11,13 @@ namespace app\admin\controller;
 
 use app\admin\model\SpecificationsModel;
 use app\admin\validate\ProductCategoryValidate;
-use app\common\facade\ProductCategoryModel;
+use app\common\facade\ProductCategoryFacade;
 use think\Db;
 
 class ProductCategoryController extends BaseController
 {
     public function index(){
-        $this->assign('model',ProductCategoryModel::getCategories(true));
+        $this->assign('model',ProductCategoryFacade::getCategories(true));
         return $this->fetch();
     }
     public function add($pid=0){
@@ -35,16 +35,16 @@ class ProductCategoryController extends BaseController
                 $uploaded=$this->upload('category','upload_image',true);
                 if(!empty($uploaded))$data['image']=$uploaded['url'];
 
-                $model=\app\common\model\ProductCategoryModel::create($data);
+                $model=\app\common\model\ProductCategoryFacade::create($data);
                 if ($model['id']) {
-                    ProductCategoryModel::clearCache();
+                    ProductCategoryFacade::clearCache();
                     $this->success("添加成功", url('productCategory/index'));
                 } else {
                     $this->error("添加失败");
                 }
             }
         }
-        $cate = ProductCategoryModel::getCategories();
+        $cate = ProductCategoryFacade::getCategories();
         $model=array('sort'=>99,'pid'=>$pid,'specs'=>[]);
         $this->assign('cate',$cate);
         $this->assign('model',$model);
@@ -80,18 +80,18 @@ class ProductCategoryController extends BaseController
                 unset($data['delete_icon']);
                 unset($data['delete_image']);
 
-                \app\common\model\ProductCategoryModel::update($data,['id'=>$id]);
+                \app\common\model\ProductCategoryFacade::update($data,['id'=>$id]);
 
                 delete_image($delete_images);
-                ProductCategoryModel::clearCache();
+                ProductCategoryFacade::clearCache();
                 $this->success("保存成功", url('productCategory/index'));
             }
         }else{
-            $model = ProductCategoryModel::get($id);
+            $model = ProductCategoryFacade::get($id);
             if(empty($model) || empty($model['id'])){
                 $this->error('分类不存在');
             }
-            $cate = ProductCategoryModel::getCategories();
+            $cate = ProductCategoryFacade::getCategories();
             if(is_null($model->specs)){
                 $model->specs=[];
             }
@@ -123,7 +123,7 @@ class ProductCategoryController extends BaseController
         //验证通过
         $result = Db::name('ProductCategory')->where('pid','in',$id)->delete();
         if($result){
-            ProductCategoryModel::clearCache();
+            ProductCategoryFacade::clearCache();
             $this->success("分类删除成功", url('productCategory/index'));
         }else{
             $this->error("分类删除失败");

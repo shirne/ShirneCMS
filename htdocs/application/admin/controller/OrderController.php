@@ -1,14 +1,8 @@
 <?php
-/**
- * 订单管理
- * User: shirne
- * Date: 2018/5/11
- * Time: 17:47
- */
 
 namespace app\admin\controller;
 
-
+use app\common\model\OrderModel;
 use think\Db;
 
 class OrderController extends BaseController
