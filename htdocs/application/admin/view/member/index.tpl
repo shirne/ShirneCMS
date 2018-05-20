@@ -120,7 +120,7 @@
             w.actionEnable=function(ids){
                 dialog.confirm('确定将选中会员设置为正常状态？',function() {
                     $.ajax({
-                        url:'{:url('member/delete',['id'=>'__id__','type'=>1])}'.replace('__id__',ids.join(',')),
+                        url:"{:url('member/delete',['id'=>'__id__','type'=>1])}".replace('__id__',ids.join(',')),
                         type:'GET',
                         dataType:'JSON',
                         success:function(json){
@@ -138,7 +138,7 @@
             w.actionDisable=function(ids){
                 dialog.confirm('确定禁用选中会员？',function() {
                     $.ajax({
-                        url:'{:url('member/delete',['id'=>'__id__','type'=>0])}'.replace('__id__',ids.join(',')),
+                        url:"{:url('member/delete',['id'=>'__id__','type'=>0])}".replace('__id__',ids.join(',')),
                         type:'GET',
                         dataType:'JSON',
                         success:function(json){
@@ -156,6 +156,10 @@
         })(window);
         jQuery(function(){
             var tpl='<div class="row" style="margin:0 20%;">' +
+                '<div class="col-12 form-group"><div class="input-group"><div ><span class="input-group-text">充值类型</span> </div><div class="col w-50 text-center" ><div class="btn-group btn-group-toggle" data-toggle="buttons">\n' +
+                '  <label class="btn btn-secondary active"> <input type="radio" name="field" value="money" autocomplete="off" checked> 余额</label>\n' +
+                '  <label class="btn btn-secondary"><input type="radio" name="field" value="credit" autocomplete="off"> 积分</label>\n' +
+                '</div></div> </div></div>' +
                 '<div class="col-12 form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">充值金额</span> </div><input type="text" name="amount" class="form-control" placeholder="请填写充值金额"/> </div></div>' +
                 '<div class="col-12 form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">充值原因</span> </div><input type="text" name="reson" class="form-control" placeholder="请填写充值原因"/> </div> </div>'+
                 '</div>';

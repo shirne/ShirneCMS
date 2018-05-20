@@ -121,6 +121,7 @@ CREATE TABLE `sa_order` (
   `order_no` VARCHAR(30) NULL,
   `member_id` INT NULL,
   `payamount` DECIMAL(10,2) NULL DEFAULT 0,
+  `commission_amount` DECIMAL(10,2) NULL DEFAULT 0,
   `level_id` INT NULL,
   `create_time` INT NULL DEFAULT 0,
   `pay_time` INT NULL DEFAULT 0,
@@ -139,6 +140,7 @@ CREATE TABLE `sa_order` (
   `address` VARCHAR(150) NULL,
   `express_no` VARCHAR(100) NULL,
   `express_code` VARCHAR(20) NULL,
+  `type` TINYINT NULL DEFAULT 1,
   PRIMARY KEY (`order_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

@@ -75,6 +75,7 @@ class ProductController extends BaseController
                 $skus=$data['skus'];
                 $data['max_price']=array_max($skus,'price');
                 $data['min_price']=array_min($skus,'price');
+                $data['storage']=array_sum(array_column($skus,'storage'));
                 unset($data['skus']);
                 $model=ProductModel::create($data);
                 if ($model['id']) {
@@ -139,6 +140,7 @@ class ProductController extends BaseController
                 $skus=$data['skus'];
                 $data['max_price']=array_max($skus,'price');
                 $data['min_price']=array_min($skus,'price');
+                $data['storage']=array_sum(array_column($skus,'storage'));
                 if ($model->allowField(true)->save($data)) {
                     delete_image($delete_images);
                     $existsIds=[];

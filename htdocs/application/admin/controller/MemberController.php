@@ -197,18 +197,23 @@ class MemberController extends BaseController
     }
     public function recharge(){
         $id=$this->request->post('id/d');
+        $field=$this->request->post('field');
         $amount=$this->request->post('amount');
         $reson=$this->request->post('reson');
         if(floatval($amount)!=$amount){
             $this->error('金额错误');
         }
+        if(!in_array($field,['money','credit'])){
+            $this->error('充值类型错误');
+        }
 
-        $logid=money_log($id,intval($amount*100),$reson,'system');
+        $atext=$amount>0?'充值':'扣款';
+        $logid=money_log($id,intval($amount*100),'系统扣款'.$atext.$reson,'system',$field);
         if($logid){
-            user_log($this->mid,'recharge',1,'会员充值 '.$id.','.$logid ,'manager');
-            $this->success('充值成功');
+            user_log($this->mid,'recharge',1,'会员'.$atext.' '.$id.','.$amount ,'manager');
+            $this->success($atext.'成功');
         }else{
-            $this->error('充值失败');
+            $this->error($atext.'失败');
         }
     }
     /**

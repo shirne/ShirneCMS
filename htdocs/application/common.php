@@ -101,15 +101,15 @@ function getDefaultLevel(){
     return 0;
 }
 
-function getMemberParents($userid,$level=5){
+function getMemberParents($userid,$level=5,$getid=true){
     $parents=[];
-    $user=\think\Db::name('Member')->where('id',$userid)->field('referer')->find();
+    $user=\think\Db::name('Member')->where('id',$userid)->field('id,level_id,username,referer')->find();
     while(!empty($user)){
         $userid=$user['referer'];
         if(!$userid)break;
-        $parents[]=$userid;
+        $user=\think\Db::name('Member')->where('id',$userid)->field('id,level_id,username,referer')->find();
+        $parents[] = $getid?$userid:$user;
         if(count($parents)>=$level)break;
-        $user=\think\Db::name('Member')->where('id',$userid)->field('referer')->find();
     }
     return $parents;
 }

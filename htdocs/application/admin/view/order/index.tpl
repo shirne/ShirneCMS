@@ -39,7 +39,7 @@
                 <th width="50">编号</th>
                 <th>商品</th>
                 <th>会员</th>
-                <th>价格</th>
+                <th>价格/返奖额</th>
                 <th>时间</th>
                 <th width="160">状态</th>
                 <th width="280">操作</th>
@@ -65,7 +65,7 @@
                     <td>
                         [{$v.member_id}]{$v['username']}
                     </td>
-                    <td>{$v.payamount}</td>
+                    <td>{$v.payamount}<br />{$v.commission_amount}</td>
                     <td>{$v.create_time|showdate}</td>
                     <td>
                         {$v.status|showstatus|raw}
@@ -73,6 +73,11 @@
                             <span class="badge badge-secondary">已审核</span>
                             <else/>
                             <span class="badge badge-warning">待审核</span>
+                        </if>
+                        <if condition="$v['rebated'] EQ 1">
+                            <span class="badge badge-success">已返奖</span>
+                            <else/>
+                            <span class="badge badge-warning">未返奖</span>
                         </if>
                     </td>
                     <td>
