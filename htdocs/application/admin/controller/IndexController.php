@@ -75,11 +75,17 @@ class IndexController extends BaseController{
         ));
     }
 
-    public function searchMember($key){
-        $lists=Db::name('member')
-            ->where('id|username|realname|mobile','like',"%$key%")
-            ->order('id ASC')
-            ->limit(10)->select();
+    public function searchMember($key,$type=0){
+        $model=Db::name('member')
+            ->where('status',1);
+        if(!empty($key)){
+            $model->where('id|username|realname|mobile','like',"%$key%");
+        }
+        if(!empty($type)){
+            $model->where('type',$type);
+        }
+
+        $lists=$model->order('id ASC')->limit(10)->select();
         return json(['data'=>$lists,'status'=>1]);
     }
 
