@@ -27,12 +27,22 @@
                         </div>
                     </div>
                     <if condition="$id">
-                        <a href="{:url('money_log',searchKey('id',0))}" class="btn btn-outline-secondary">不限会员</a>
-                        &nbsp;&nbsp;
+                        <div class="btn-group ml-3">
+                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">会员: {$member.username}<span class="caret"></span>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="{:url('money_log',searchKey('id',0))}">不限会员</a></a>
+                            </div>
+                        </div>
                     </if>
                     <if condition="$from_id">
-                        <a href="{:url('money_log',searchKey('from_id',0))}" class="btn btn-outline-secondary">不限来源</a>
-                        &nbsp;&nbsp;
+                        <div class="btn-group ml-3">
+                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">来源: {$from_member.username}<span class="caret"></span>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="{:url('money_log',searchKey('from_id',0))}">不限来源</a></a>
+                            </div>
+                        </div>
                     </if>
                     <div class="btn-group ml-3">
                         <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

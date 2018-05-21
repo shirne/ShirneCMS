@@ -91,15 +91,17 @@ class MemberController extends BaseController
     public function money_log($id=0,$from_id=0,$fromdate='',$todate='',$field='all',$type='all'){
         $model=Db::view('MemberMoneyLog mlog','*')
             ->view('Member m',['username','level_id','mobile'],'m.id=mlog.member_id','LEFT')
-            ->view('Member fm',['username'=>'from_username','level_id'=>'from_level_id','mobile'=>'from_mobile'],'m.id=mlog.member_id','LEFT');
+            ->view('Member fm',['username'=>'from_username','level_id'=>'from_level_id','mobile'=>'from_mobile'],'fm.id=mlog.member_id','LEFT');
 
         $levels=getMemberLevels();
 
         if($id>0){
             $model->where('mlog.member_id',$id);
+            $this->assign('member',Db::name('member')->find($id));
         }
         if($from_id>0){
             $model->where('mlog.from_member_id',$from_id);
+            $this->assign('from_member',Db::name('member')->find($from_id));
         }
         if(!empty($type) && $type!='all'){
             $model->where('mlog.type',$type);
