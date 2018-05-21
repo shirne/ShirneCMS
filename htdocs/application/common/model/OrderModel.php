@@ -19,7 +19,7 @@ class OrderModel extends Model
     private function create_no(){
         $maxid=$this->field('max(order_id) as maxid')->find();
         $maxid = $maxid['maxid'];
-        if(empty($maxid))$maxid=10000;
+        if(empty($maxid))$maxid=0;
         return date('YmdHis'.str_pad($maxid+1,8,'0',STR_PAD_LEFT));
     }
 
@@ -68,7 +68,7 @@ class OrderModel extends Model
         $status=0;
         $total_price=0;
         $commission_amount=0;
-        foreach ($products as $product){
+        foreach ($products as $k=>$product){
             if($product['storage']<$product['count']){
                 $this->error='商品['.$product['product_title'].']库存不足';
                 return false;
@@ -84,8 +84,11 @@ class OrderModel extends Model
             }
             $total_price += $price;
 
-            if($product['is_commission']){
-                $commission_amount += $price-$product['cost_price'];
+            if($product['is_commission'] ){
+                $cost_price=intval($product['cost_price']*100)* $product['count'];
+                if($price>$cost_price) {
+                    $commission_amount += $price - $cost_price;
+                }
             }
         }
 
@@ -134,13 +137,18 @@ class OrderModel extends Model
             $i=0;
             foreach ($products as $product){
                 $product['order_id']=$result;
+                $release_price=$product['product_price'];
+                if($product['is_discount']){
+                    $release_price *= $discount;
+                }
                 Db::name('orderProduct')->insert([
                     'order_id'=>$result,
-                    'product_id'=>$product['id'],
+                    'product_id'=>$product['product_id'],
                     'sku_id'=>$product['sku_id'],
-                    'product_title'=>$product['title'],
-                    'product_image'=>$product['image'],
-                    'product_price'=>$product['price'],
+                    'product_title'=>$product['product_title'],
+                    'product_image'=>$product['product_image'],
+                    'product_orig_price'=>$product['product_price'],
+                    'product_price'=>$release_price,
                     'count'=>$product['count'],
                     'sort'=>$i++
                 ]);

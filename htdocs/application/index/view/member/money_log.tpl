@@ -7,7 +7,7 @@
             <div class="col-8 mt-3 text-right" >
                 <div class="btn-group">
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {$types[$type]['name']} <span class="caret"></span>
+                        {$types[$type]} <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu">
                         <foreach name="types" item="t" key="k">
