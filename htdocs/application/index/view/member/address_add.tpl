@@ -19,17 +19,15 @@
             </div>
             <div class="form-row form-group">
                 <label for="province_select" class="col-2 control-label">所在地区</label>
-                <div class="col-10">
-                <div class="input-group" id="ChinaArea">
-                    <select name="province_select" class="form-control"></select>
+                <div class="col-10" id="ChinaArea">
+                    <div class="input-group">
+                        <select name="province_select" class="form-control"></select>
+                        <select name="city_select" class="form-control"></select>
+                        <select name="area_select" class="form-control"></select>
+                    </div>
                     <input type="hidden" name="province" value="{$address.province}"/>
-                    <span class="input-group-addon"></span>
-                    <select name="city_select" class="form-control"></select>
                     <input type="hidden" name="city" value="{$address.city}"/>
-                    <span class="input-group-addon"></span>
                     <input type="hidden" name="area" value="{$address.area}"/>
-                    <select name="area_select" class="form-control"></select>
-                </div>
                 </div>
             </div>
             <div class="form-row form-group">
