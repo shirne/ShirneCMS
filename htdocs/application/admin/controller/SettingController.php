@@ -17,15 +17,13 @@ class SettingController extends BaseController
         if($this->request->isPost()){
             $this->checkPermision("setting_update");
             $data=$this->request->post();
-            $model=Db::name('setting');
             $settings=getSettings(false,false,true);
             foreach ($data as $k=>$v){
                 if(substr($k,0,2)=='v-'){
                     $key=substr($k,2);
                     if(is_array($v))$v=serialize($v);
                     if($settings[$key]!=$v) {
-                        $model->where(array('key' => $key))->update(array('value' => $v));
-                        
+                        Db::name('setting')->where('key', $key)->update(array('value' => $v));
                     }
                 }
             }
