@@ -71,7 +71,7 @@ class NoticeController extends BaseController
                 }
             }
         }
-        $model = Db::name('Notice')->where(["id"=> $id])->find();
+        $model = Db::name('Notice')->where('id', $id)->find();
         if(empty($model)){
             $this->error('公告不存在');
         }

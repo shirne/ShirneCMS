@@ -60,7 +60,7 @@ class BaseController extends Controller {
             return true;
         }
         if(empty($this->permision)){
-            $this->permision=Db::name('ManagerPermision')->where(array('manager_id'=>$this->mid))->find();
+            $this->permision=Db::name('ManagerPermision')->where('manager_id',$this->mid)->find();
             if(empty($this->permision)){
                 $this->error('权限设置有误，请联系管理员');
             }

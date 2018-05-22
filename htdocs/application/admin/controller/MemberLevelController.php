@@ -94,7 +94,7 @@ class MemberLevelController extends BaseController
     public function delete($id)
     {
         $id = intval($id);
-        $count=Db::name('Member')->where(array('level_id'=>$id))->count();
+        $count=Db::name('Member')->where('level_id',$id)->count();
         if($count>0){
             $this->error("该分组尚有会员,不能删除");
         }

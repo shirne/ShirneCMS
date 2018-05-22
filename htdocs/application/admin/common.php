@@ -8,7 +8,7 @@ function setLogin($user){
     session('adminId',$user['id']);
     session('adminLTime',$time);
     session('adminname',empty($user['realname'])?$user['username']:$user['realname']);
-    Db::name('Manager')->where(array('id'=>$user['id']))->update(array(
+    Db::name('Manager')->where('id',$user['id'])->update(array(
         'login_ip'=>Request::ip(),
         'logintime'=>$time
     ));
@@ -29,7 +29,7 @@ function clearLogin($log=true){
 function getMenus(){
     $menus=cache('menus');
     if(empty($menus)){
-        $list=Db::name('permission')->where(array('disable'=>0))->order('parent_id ASC,order_id ASC,id ASC')->select();
+        $list=Db::name('permission')->where('disable',0)->order('parent_id ASC,order_id ASC,id ASC')->select();
         $menus=array();
         foreach ($list as $item){
             $menus[$item['parent_id']][]=$item;

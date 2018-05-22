@@ -80,7 +80,7 @@ class CategoryController extends BaseController
                 unset($data['delete_icon']);
                 unset($data['delete_image']);
 
-                $result=Db::name('category')->where(array('id'=>$id))->update($data);
+                $result=Db::name('category')->where('id',$id)->update($data);
 
                 if ($result) {
                     delete_image($delete_images);

@@ -21,7 +21,7 @@ class LoginController extends Controller {
             $this->error('验证码错误');
         }
         //验证账号密码是否正确
-        $user = $member->where(array('username'=>$username))->find();
+        $user = $member->where('username',$username)->find();
 
         if(empty($user) || $user['password'] !== encode_password($password,$user['salt'])) {
             if(!empty($user)){

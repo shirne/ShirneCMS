@@ -19,16 +19,14 @@ class ArticleController extends BaseController
     {
         $model = Db::view('article','*')->view('category',['name'=>'category_name','title'=>'category_title'],'article.cate_id=category.id','LEFT')
             ->view('manager',['username'],'article.user_id=manager.id','LEFT');
-        $where=array();
         if(!empty($key)){
-            $where[]=['article.title|manager.username|category.title','like',"%$key%"];
+            $model->whereLike('article.title|manager.username|category.title',"%$key%");
         }
         if($cate_id>0){
-            $where[]=['article.cate_id','in',CategoryFacade::getSubCateIds($cate_id)];
+            $model->whereIn('article.cate_id',CategoryFacade::getSubCateIds($cate_id));
         }
 
-        $lists=$model->where($where)->paginate(10);
-
+        $lists=$model->order('id DESC')->paginate(10);
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
         $this->assign('types',getArticleTypes());
@@ -121,11 +119,11 @@ class ArticleController extends BaseController
     public function delete($id)
     {
         $model = Db::name('article');
-        $result = $model->where("id",'in',idArr($id))->delete();
+        $result = $model->whereIn("id",idArr($id))->delete();
         if($result){
-            Db::name('articleComment')->where("article_id",'in',idArr($id))->delete();
-            Db::name('articleDigg')->where("article_id",'in',idArr($id))->delete();
-            Db::name('articleImages')->where("article_id",'in',idArr($id))->delete();
+            Db::name('articleComment')->whereIn("article_id",idArr($id))->delete();
+            Db::name('articleDigg')->whereIn("article_id",idArr($id))->delete();
+            Db::name('articleImages')->whereIn("article_id",idArr($id))->delete();
             user_log($this->mid,'deletearticle',1,'删除文章 '.$id ,'manager');
             $this->success("删除成功", url('Article/index'));
         }else{
@@ -136,7 +134,7 @@ class ArticleController extends BaseController
     {
         $data['status'] = $type==1?1:0;
 
-        $result = Db::name('article')->where("id",'in',idArr($id))->update($data);
+        $result = Db::name('article')->whereIn("id",idArr($id))->update($data);
         if ($result && $data['status'] === 1) {
             user_log($this->mid,'pusharticle',1,'发布文章 '.$id ,'manager');
             $this -> success("发布成功", url('Article/index'));
@@ -207,7 +205,7 @@ class ArticleController extends BaseController
     {
         $data['status'] = $type==1?1:2;
 
-        $result = Db::name('articleComment')->where("id",'in',idArr($id))->update($data);
+        $result = Db::name('articleComment')->where('id','in',idArr($id))->update($data);
         if ($result && $data['status'] === 1) {
             user_log($this->mid,'auditcomment',1,'审核评论 '.$id ,'manager');
             $this -> success("审核成功", url('Article/comments'));
@@ -221,7 +219,7 @@ class ArticleController extends BaseController
     public function commentdelete($id)
     {
         $model = Db::name('articleComment');
-        $result = $model->where("id",'in',idArr($id))->delete();
+        $result = $model->where('id','in',idArr($id))->delete();
         if($result){
             user_log($this->mid,'deletecomment',1,'删除评论 '.$id ,'manager');
             $this->success("删除成功", url('Article/comments'));

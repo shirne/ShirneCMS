@@ -73,7 +73,7 @@ class PermissionController extends BaseController
 
             }
         }
-            $model = Db::name('permission')->where(["id" => $id])->find();
+            $model = Db::name('permission')->where('id' , $id)->find();
         if(empty($model)){
             $this->error('要编辑的项不存在');
         }
@@ -88,7 +88,7 @@ class PermissionController extends BaseController
     {
         $id = intval($id);
         $model = Db::name('Permission');
-        $result = $model->where(["id"=>$id])->delete();
+        $result = $model->where('id',$id)->delete();
         if($result){
             $this->success("删除成功", url('permission/index'));
         }else{

@@ -37,14 +37,14 @@ class MemberTokenModel extends Model
         return $token;
     }
     public function findToken($token){
-        $token=$this->where(array('token'=>$token))->find();
+        $token=$this->where('token',$token)->find();
         if(empty($token)){
             return false;
         }
         return $this->mapToken($token,false);
     }
     public function createToken($member_id){
-        $token=$this->where(array('member_id'=>$member_id))->find();
+        $token=$this->where('member_id',$member_id)->find();
         $data=array(
             'token'=>$this->getToken($member_id),
             'expire_in'=>$this->expire
@@ -59,10 +59,10 @@ class MemberTokenModel extends Model
         }else{
             static::update($data,['member_id'=>$member_id]);
         }
-        return $this->mapToken($this->where(array('member_id'=>$member_id))->find());
+        return $this->mapToken($this->where('member_id',$member_id)->find());
     }
     public function refreshToken($refresh){
-        $token=$this->where(array('refresh_token'=>$refresh))->find();
+        $token=$this->where('refresh_token',$refresh)->find();
         if(empty($token)){
             return false;
         }
@@ -75,6 +75,6 @@ class MemberTokenModel extends Model
 
         static::update($data,['member_id'=>$token['member_id']]);
 
-        return $this->mapToken($this->where(array('member_id'=>$token['member_id']))->find());
+        return $this->mapToken($this->where('member_id',$token['member_id'])->find());
     }
 }

@@ -13,7 +13,7 @@ class MemberController extends BaseController
     {
         parent::initialize();
 
-        Db::name('Manager')->where(array('id'=>$this->manage['id']))->update(array('last_view_member'=>time()));
+        Db::name('Manager')->where('id',$this->manage['id'])->update(array('last_view_member'=>time()));
     }
 
     /**
@@ -31,7 +31,7 @@ class MemberController extends BaseController
         $referer=$this->request->request('referer');
         if(!empty($referer)){
             if($referer!='0'){
-                $member=Db::name('Member')->where(array('id|username'=>$referer))->find();
+                $member=Db::name('Member')->where('id|username',$referer)->find();
                 if(empty($member)){
                     $this->error('填写的会员不存在');
                 }
@@ -185,13 +185,12 @@ class MemberController extends BaseController
         $date=$this->request->get('date');
         $d=strtotime($date);
         if(empty($d)){
-            $date=date_sub(new \DateTime(date('Y-m-d')),new \DateInterval('P1M'));
-            $d=$date->getTimestamp();
+            $d=strtotime('-7days');
         }
 
         $model=Db::name('MemberLog');
 
-        $model->where(array("create_time"=>array('ELT',$d)))->delete();
+        $model->where('create_time','ELT',$d)->delete();
 
         user_log($this->mid,'clearmemberlog',1,'清除会员日志' ,'manager');
         $this->success("清除完成");

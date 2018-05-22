@@ -36,7 +36,7 @@ class OrderModel extends Model
                         self::setLevel($order);
                         $rebated=self::doRebate($order);
                         if($rebated){
-                            Db::name('Order')->where(['order_id'=>$order['order_id']])
+                            Db::name('Order')->where('order_id',$order['order_id'])
                                 ->update(['rebated'=>1,'rebate_time'=>time()]);
                         }
                     }

@@ -27,7 +27,7 @@ class AuthController extends BaseController
         if(empty($username) || empty($password)){
             $this->response('请填写登录账号及密码',ERROR_LOGIN_FAILED);
         }
-        $member = Db::name('Member')->where(array('username'=>$username))->find();
+        $member = Db::name('Member')->where('username',$username)->find();
         if(!empty($member)){
             if(compare_password($member,$password)){
                 $token=MemberTokenModel::createToken($member['id']);

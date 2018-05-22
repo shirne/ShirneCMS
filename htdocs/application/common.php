@@ -317,11 +317,11 @@ function money_log($uid, $money, $reson, $type='',$field='money')
     if(empty($member))return false;
 
     if($money>0) {
-        $result=\think\Db::name('member')->where(array('id' => $uid))
+        $result=\think\Db::name('member')->where('id' , $uid)
             ->setInc($field,$money);
     }else{
         if($member[$field]<abs($money))return false;
-        $result=\think\Db::name('member')->where(array('id' => $uid))
+        $result=\think\Db::name('member')->where('id' , $uid)
             ->setDec($field,abs($money));
     }
     if($result) {
@@ -689,7 +689,7 @@ function getSetting($key){
     else return null;
 }
 function setSetting($key,$v){
-    \think\Db::name('setting')->where(array('key'=>$key))->update(array('value'=>$v));
+    \think\Db::name('setting')->where('key',$key)->update(array('value'=>$v));
     cache('setting', null);
 }
 

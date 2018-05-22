@@ -56,11 +56,10 @@ class ManagerController extends BaseController
         $date=$this->request->get('date');
         $d=strtotime($date);
         if(empty($d)){
-            $date=date_sub(new \DateTime(date('Y-m-d')),new \DateInterval('P1M'));
-            $d=$date->getTimestamp();
+            $d=strtotime('-7days');
         }
 
-        Db::name('ManagerLog')->where(array("create_time"=>array('ELT',$d)))->delete();
+        Db::name('ManagerLog')->where('create_time','ELT',$d)->delete();
         user_log($this->mid,'clearlog',1,'清除日志' ,'manager');
         $this->success("清除完成");
     }
@@ -142,7 +141,7 @@ class ManagerController extends BaseController
     public function permision($id){
         $id=intval($id);
         if($id==0)$this->error('参数错误');
-        $model = Db::name('ManagerPermision')->where(array('manager_id'=>$id))->find();
+        $model = Db::name('ManagerPermision')->where('manager_id',$id)->find();
         if(empty($model)){
             $model=array();
             $model['manager_id']=$id;

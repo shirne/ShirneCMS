@@ -95,7 +95,7 @@ class PaytypeController extends BaseController
         }
 
 
-        $model = Db::name('Paytype')->where(["id"=> $id])->find();
+        $model = Db::name('Paytype')->where('id', $id)->find();
         if(empty($model)){
             $this->error('支付方式不存在');
         }

@@ -21,7 +21,7 @@ class CartController extends AuthedController
     }
 
     public function add($sku_id,$count=1){
-        $sku=Db::name('ProductSku')->where(['sku_id'=>$sku_id])->find();
+        $sku=Db::name('ProductSku')->where('sku_id',$sku_id)->find();
         if(empty($sku)){
             $this->error('产品已下架');
         }

@@ -46,7 +46,7 @@ class InviteController extends BaseController
 
             if($length<8 || $length>16)$this->error('激活码长度需在8-16位之间');
             if($number>1000)$this->error('每次生成数量在 1000以内');
-            $member=Db::name('member')->where(array('id'=>$mem_id))->find();
+            $member=Db::name('member')->where('id',$mem_id)->find();
             if(empty($member))$this->error('指定的会员不存在');
             $invalid=0;
             if(!empty($date)){

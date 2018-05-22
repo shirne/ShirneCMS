@@ -17,11 +17,10 @@ class AdvController extends BaseController
 {
     public function index(){
         $model = Db::name('AdvGroup');
-        $where=array();
         if(!empty($key)){
-            $where[] = array('title|flag','like',"%$key%");
+            $model->whereLike('title|flag',"%$key%");
         }
-        $lists=$model->where($where)->order('id DESC')->paginate(15);
+        $lists=$model->order('id DESC')->paginate(15);
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
         return $this->fetch();
@@ -74,7 +73,7 @@ class AdvController extends BaseController
             }
         }else{
 
-            $model = Db::name('AdvGroup')->where(["id"=> $id])->find();
+            $model = Db::name('AdvGroup')->where('id', $id)->find();
             if(empty($model)){
                 $this->error('广告组不存在');
             }
@@ -91,7 +90,7 @@ class AdvController extends BaseController
         $id = intval($id);
         $force=$this->request->post('force/d',0);
         $model = Db::name('AdvGroup');
-        $count=Db::name('AdvItem')->where(array('group_id'=>$id))->count();
+        $count=Db::name('AdvItem')->where('group_id',$id)->count();
         if($count<1 || $force!=0) {
             $result = $model->delete($id);
         }else{
@@ -99,7 +98,7 @@ class AdvController extends BaseController
         }
         if($result){
             if($count>0){
-                Db::name('AdvItem')->where(array('group_id'=>$id))->delete();
+                Db::name('AdvItem')->where('group_id',$id)->delete();
             }
             $this->success("广告位删除成功", url('adv/index'));
         }else{
@@ -183,7 +182,7 @@ class AdvController extends BaseController
                 }
             }
         }else{
-            $model = Db::name('AdvItem')->where(["id"=> $id])->find();
+            $model = Db::name('AdvItem')->where('id', $id)->find();
             if(empty($model)){
                 $this->error('广告项不存在');
             }

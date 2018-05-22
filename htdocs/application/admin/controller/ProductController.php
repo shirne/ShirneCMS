@@ -184,11 +184,11 @@ class ProductController extends BaseController
     public function delete($id)
     {
         $model = Db::name('product');
-        $result = $model->where("id",'in',idArr($id))->delete();
+        $result = $model->where('id','in',idArr($id))->delete();
         if($result){
-            Db::name('productSku')->where("product_id",'in',idArr($id))->delete();
-            Db::name('productImages')->where("product_id",'in',idArr($id))->delete();
-            Db::name('productComment')->where("product_id",'in',idArr($id))->delete();
+            Db::name('productSku')->where('product_id','in',idArr($id))->delete();
+            Db::name('productImages')->where('product_id','in',idArr($id))->delete();
+            Db::name('productComment')->where('product_id','in',idArr($id))->delete();
             user_log($this->mid,'deleteproduct',1,'删除商品 '.$id ,'manager');
             $this->success("删除成功", url('Product/index'));
         }else{
@@ -199,7 +199,7 @@ class ProductController extends BaseController
     {
         $data['status'] = $type==1?1:0;
 
-        $result = Db::name('product')->where("id",'in',idArr($id))->update($data);
+        $result = Db::name('product')->where('id','in',idArr($id))->update($data);
         if ($result && $data['status'] === 1) {
             user_log($this->mid,'pusharticle',1,'上架商品 '.$id ,'manager');
             $this -> success("上架成功", url('Product/index'));
@@ -269,7 +269,7 @@ class ProductController extends BaseController
     {
         $data['status'] = $type==1?1:2;
 
-        $result = Db::name('productComment')->where("id",'in',idArr($id))->update($data);
+        $result = Db::name('productComment')->where('id','in',idArr($id))->update($data);
         if ($result && $data['status'] === 1) {
             user_log($this->mid,'auditproductcomment',1,'审核评论 '.$id ,'manager');
             $this -> success("审核成功", url('Product/comments'));
@@ -283,7 +283,7 @@ class ProductController extends BaseController
     public function commentdelete($id)
     {
         $model = Db::name('productComment');
-        $result = $model->where("id",'in',idArr($id))->delete();
+        $result = $model->where('id','in',idArr($id))->delete();
         if($result){
             user_log($this->mid,'deleteproductcomment',1,'删除评论 '.$id ,'manager');
             $this->success("删除成功", url('Product/comments'));

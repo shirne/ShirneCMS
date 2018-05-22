@@ -81,7 +81,7 @@ class PageController extends BaseController
                 }
             }
         }
-        $model = Db::name('page')->where(["id"=> $id])->find();
+        $model = Db::name('page')->where('id', $id)->find();
         if(empty($model)){
             $this->error('要编辑的内容不存在');
         }
@@ -150,14 +150,14 @@ class PageController extends BaseController
     public function groupdelete($id)
     {
         $id = idArr($id);
-        $groups=Db::name('PageGroup')->where("id",'in',$id)->select();
+        $groups=Db::name('PageGroup')->where('id','in',$id)->select();
         if(!empty($groups)) {
             $groups=array_column($groups,'group');
             $exists = Db::name('page')->where('group', 'in', $groups)->count();
             if ($exists > 0) {
                 $this->error("选中的页面组还有内容");
             }
-            $result = Db::name('PageGroup')->where("id", 'in', $id)->delete();
+            $result = Db::name('PageGroup')->where('id', 'in', $id)->delete();
         }
         if($result){
             cache('page_group',NULL);

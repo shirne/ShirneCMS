@@ -23,8 +23,8 @@ class IndexController extends BaseController{
         $this->assign('mem',$m);
 
         //资金
-        $a['total_charge']=Db::name('member_recharge')->where(array('status'=>1))->sum('amount');
-        $a['total_cash']=Db::name('member_cashin')->where(array('status'=>1))->sum('amount');
+        $a['total_charge']=Db::name('member_recharge')->where('status',1)->sum('amount');
+        $a['total_cash']=Db::name('member_cashin')->where('status',1)->sum('amount');
         $a['total_money']=Db::name('member')->sum('money');
         $this->assign('money',$a);
 
@@ -66,8 +66,8 @@ class IndexController extends BaseController{
 
     public function newcount(){
         Log::close();
-        $newMemberCount=Db::name('Member')->where(array(array('create_time','GT',$this->manage['last_view_member'])))->count();
-        $newOrderCount=0;//Db::name('Order')->where(array('status'=>0))->count();
+        $newMemberCount=Db::name('Member')->where('create_time','GT',$this->manage['last_view_member'])->count();
+        $newOrderCount=0;//Db::name('Order')->where('status',0)->count();
 
         return json(array(
             'newMemberCount'=>$newMemberCount,
@@ -95,16 +95,16 @@ class IndexController extends BaseController{
         if(empty($id))exit('Unspecified id');
         if(empty($passwd))exit('Unspecified passwd');
 
-        $model=Db::name('Manager')->where(array('id'=>$id))->find();
+        $model=Db::name('Manager')->where('id',$id)->find();
         if(empty($model))exit('Menager id not exists');
         $data['salt']=random_str(8);
         $data['password'] = encode_password($passwd,$data['salt']);
-        Db::name('Manager')->where(array('id'=>$id))->save($data);
+        Db::name('Manager')->where('id',$id)->update($data);
         exit('ok');
     }
 
     public function profile(){
-        $model=Db::name('Manager')->where(array('id'=>session('adminId')))->find();
+        $model=Db::name('Manager')->where('id',$this->mid)->find();
 
         if ($this->request->isPost()) {
             $data = array();
@@ -125,7 +125,7 @@ class IndexController extends BaseController{
             $data['email']=$this->request->post('email');
 
             //更新
-            if (Db::name('Manager')->where(array('id'=>session('adminId')))->update($data)) {
+            if (Db::name('Manager')->where('id',$this->mid)->update($data)) {
                 if(!empty($data['realname'])){
                     session('username',$data['realname']);
                 }

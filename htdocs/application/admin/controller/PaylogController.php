@@ -48,7 +48,7 @@ class PaylogController extends BaseController
         $this->assign('page',$lists->render());
         $paytype=getPaytypes();
 
-        $total=Db::name('MemberRecharge')->where(array('status'=>1))->sum('amount');
+        $total=Db::name('MemberRecharge')->where('status',1)->sum('amount');
         $this->assign('total',$total);
         $this->assign('keyword',$key);
         $this->assign('status',$status);
@@ -70,7 +70,7 @@ class PaylogController extends BaseController
         $recharge=Db::name('member_recharge')->lock(true)->find($id);
         if($recharge['status']!=0)$this->error('充值单已处理过了');
         $data['status']=1;
-        Db::name('member_recharge')->where(array('id'=>$recharge['id']))->update($data);
+        Db::name('member_recharge')->where('id',$recharge['id'])->update($data);
 
         money_log($recharge['member_id'],$recharge['amount'],'充值','charge');
 
@@ -90,7 +90,7 @@ class PaylogController extends BaseController
         $data=array();
         $data['status']=0;
         $data['audit_time']=time();
-        Db::name('member_recharge')->where(array('id'=>$recharge['id']))->update($data);
+        Db::name('member_recharge')->where('id',$recharge['id'])->update($data);
 
         money_log($recharge['member_id'],-$recharge['amount'],'充值撤销','charge');
 
@@ -114,7 +114,7 @@ class PaylogController extends BaseController
         $data=array();
         $data['status']=2;
         $data['audit_time']=time();
-        Db::name('member_recharge')->where(array('id'=>$recharge['id']))->update($data);
+        Db::name('member_recharge')->where('id',$recharge['id'])->update($data);
         user_log($this->mid,'rechargedelete',1,'作废充值单 '.$id ,'manager');
         $this->success('处理成功！');
     }
@@ -131,7 +131,7 @@ class PaylogController extends BaseController
 
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
-        $total=Db::name('MemberCashin')->where(array('status'=>1))->sum('amount');
+        $total=Db::name('MemberCashin')->where('status',1)->sum('amount');
         $this->assign('total',$total);
         $this->assign('keyword',$key);
         return $this->fetch();
@@ -153,7 +153,7 @@ class PaylogController extends BaseController
         $data=array();
         $data['status']=1;
         $data['audit_time']=time();
-        Db::name('member_cashin')->where(array('id'=>$recharge['id']))->update($data);
+        Db::name('member_cashin')->where('id',$recharge['id'])->update($data);
         user_log($this->mid,'cashaudit',1,'处理提现单 '.$id ,'manager');
         $this->success('处理成功！');
     }
@@ -172,7 +172,7 @@ class PaylogController extends BaseController
         $cash=Db::name('member_cashin')->lock(true)->find($id);
         if($cash['status']!=0)$this->error('提现单已处理过了');
         $data['status']=2;
-        Db::name('member_cashin')->where(array('id'=>$cash['id']))->update($data);
+        Db::name('member_cashin')->where('id',$cash['id'])->update($data);
 
         money_log($cash['member_id'],$cash['amount'],'提现驳回','cash');
 

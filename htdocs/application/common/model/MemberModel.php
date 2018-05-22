@@ -29,7 +29,7 @@ class MemberModel extends Model
         });
         self::afterInsert(function ( $model) {
             if ($user['referer']) {
-                Db::name('member')->where(array('id'=>$user->referer))->setInc('total_recommend',1);
+                Db::name('member')->where('id',$user->referer)->setInc('total_recommend',1);
             }
         });
     }
@@ -41,11 +41,11 @@ class MemberModel extends Model
             $data['agentcode']=random_str(8);
         }
         $data['is_agent']=1;
-        return Db::name('member')->where(array('id'=>$member_id))->update($data);
+        return Db::name('member')->where('id',$member_id)->update($data);
     }
     public static function cancelAgent($member_id){
         $data=array();
         $data['is_agent']=0;
-        return Db::name('member')->where(array('id'=>$member_id))->update($data);
+        return Db::name('member')->where('id',$member_id)->update($data);
     }
 }
