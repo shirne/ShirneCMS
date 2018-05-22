@@ -69,7 +69,7 @@
                     <empty name="v.refer_name">
                         -
                         <else/>
-                        {$v.refer_name}[{$v.refer_agent}]<br />
+                        {$v.refer_name}[{$v.referer}]<br />
                         {$v.refer_realname}
                     </empty>
                 </td>
