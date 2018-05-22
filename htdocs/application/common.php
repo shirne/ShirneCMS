@@ -24,6 +24,14 @@ function file_download($filename,$data){
 function getTextStyles(){
     return ['secondary','primary','info','success','warning','danger'];
 }
+function getMoneyFields(){
+    $fields= [
+        'all'=>'不限',
+        'money'=>'消费积分',
+        'credit'=>'现金积分'
+    ];
+    return $fields;
+}
 function getLogTypes(){
     return [
         'consume'=>'消费',

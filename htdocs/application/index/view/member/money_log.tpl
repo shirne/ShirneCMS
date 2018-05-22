@@ -7,13 +7,23 @@
             <div class="col-8 mt-3 text-right" >
                 <div class="btn-group">
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {$types[$type]} <span class="caret"></span>
+                        积分类型：{$fields[$field]} <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu">
-                        <foreach name="types" item="t" key="k">
-                            <li><a href="{:url('index/member/moneylog',array('type'=>$k))}">{$t}</a></li>
+                    <div class="dropdown-menu">
+                        <foreach name="fields" item="t" key="k">
+                            <a class="dropdown-item"  href="{:url('index/member/moneylog',searchKey('field',$k))}">{$t}</a>
                         </foreach>
-                    </ul>
+                    </div>
+                </div>
+                <div class="btn-group ml-3">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        记录类型：{$types[$type]} <span class="caret"></span>
+                    </button>
+                    <div class="dropdown-menu">
+                        <foreach name="types" item="t" key="k">
+                            <a class="dropdown-item" href="{:url('index/member/moneylog',array('type'=>$k))}">{$t}</a>
+                        </foreach>
+                    </div>
                 </div>
             </div>
             </div>

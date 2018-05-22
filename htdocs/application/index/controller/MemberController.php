@@ -267,7 +267,7 @@ class MemberController extends AuthedController
         return $this->fetch();
     }
 
-    public function moneyLog($type=''){
+    public function moneyLog($type='',$field=''){
         $model=Db::view('MemberMoneyLog mlog','*')
         ->view('Member m',['username','level_id'],'m.id=mlog.from_member_id','LEFT')
         ->where('mlog.member_id',$this->userid);
@@ -276,12 +276,20 @@ class MemberController extends AuthedController
         }else{
             $type='all';
         }
+        if(!empty($field) && $field!='all'){
+            $model->where('mlog.field',$field);
+        }else{
+            $field='all';
+        }
 
         $logs = $model->order('mlog.id DESC')->paginate(10);
 
         $types=getLogTypes();
+        $fields=getMoneyFields();
         $this->assign('type',$type);
         $this->assign('types',$types);
+        $this->assign('field',$field);
+        $this->assign('fields',$fields);
         $this->assign('page',$logs->render());
         $this->assign('logs',$logs);
         return $this->fetch();
