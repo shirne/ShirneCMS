@@ -246,10 +246,13 @@ class MemberController extends AuthedController
                 'remark'=>$_POST['remark']
             );
             if(empty($data['amount']) || $data['amount']<$this->config['cash_limit']){
-                $this->error('请填写提现金额');
+                $this->error('提现金额填写错误');
+            }
+            if($this->config['cash_power']>0 && $data['amount']%$this->config['cash_power']>0){
+                $this->error('提现金额必需是'.$this->config['cash_power'].'的倍数');
             }
             if($data['amount']>$this->user['money']){
-                $this->error('余额不足');
+                $this->error('可提现金额不足');
             }
             $addid=Db::name('memberCashin')->insert($data);
             if($addid) {

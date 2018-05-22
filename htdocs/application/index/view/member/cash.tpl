@@ -5,14 +5,14 @@
         <div class="container">
             <form action="" method="post" onsubmit="return checkMoney(this)" class="form-horizontal container-fluid">
                 <div class="form-group">
-                    可用余额：￥{$user.money|showmoney}
+                    可提现金额：￥{$user.money|showmoney}
                 </div>
                 <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon">提现金额：</span>
                         <input class="form-control amount" name="amount"/>
                     </div>
-                    <div class="help-block" id="helpContent"></div>
+                    <div class="help-block text-muted" id="helpContent"></div>
                 </div>
                 <if condition="empty($cards)">
                     <div class="form-group">
@@ -73,16 +73,20 @@
                     $('#helpContent').html('最低提现金额￥'+cash_limit);
                     return;
                 }
+                if(cash_power>0 && v % cash_power>0){
+                    $('#helpContent').html('提现金额必需是'+cash_power+'的倍数');
+                    return;
+                }
                 if(v>balance){
-                    $('#helpContent').html('余额不足');
+                    $('#helpContent').html('可提现金额不足');
                 }else{
                     var fee=v*cash_fee*.01;
                     var release=v-fee;
-                    $('#helpContent').html('手续费：￥'+fee+'，实际到账：￥'+release);
+                    $('#helpContent').html((cash_fee>0?('手续费：￥'+fee+'，'):'')+'实际到账：￥'+release);
                     pass=true;
                 }
             }else{
-                $('#helpContent').html('请输入提现金额（最低金额 ￥'+cash_limit+'），手续费 '+cash_fee+'%。');
+                $('#helpContent').html('请输入提现金额（最低金额 ￥'+cash_limit+'）'+(cash_fee>0?('，手续费 '+cash_fee+'%'):'')+'。');
             }
         }).trigger('input');
         function checkMoney(form){

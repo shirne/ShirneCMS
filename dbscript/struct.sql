@@ -378,7 +378,7 @@ CREATE TABLE `sa_member_recharge` (
   `create_time` int(11) DEFAULT NULL,
   `status` tinyint(4) DEFAULT '0',
   `remark` varchar(45) DEFAULT '',
-  `audit_at` int(11) DEFAULT '0',
+  `audit_time` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -397,7 +397,7 @@ CREATE TABLE `sa_member_cashin` (
   `amount` int(11) DEFAULT '0' COMMENT '金额 单位分',
   `real_amount` int(11) DEFAULT '0',
   `create_time` int(11) DEFAULT NULL,
-  `audit_at` int(11) DEFAULT '0',
+  `audit_time` int(11) DEFAULT '0',
   `bank_id` int(11) DEFAULT '0',
   `bank_name` varchar(50) DEFAULT '',
   `cardno` varchar(20) DEFAULT '',
