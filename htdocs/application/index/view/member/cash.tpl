@@ -9,17 +9,21 @@
                 </div>
                 <div class="form-group">
                     <div class="input-group">
-                        <span class="input-group-addon">提现金额：</span>
+                        <div class="input-group-prepend">
+                        <span class="input-group-text">提现金额：</span>
+                        </div>
                         <input class="form-control amount" name="amount"/>
                     </div>
                     <div class="help-block text-muted" id="helpContent"></div>
                 </div>
                 <if condition="empty($cards)">
                     <div class="form-group">
-                        <label for="bank">银行名称</label>
                         <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">银行名称：</span>
+                            </div>
                             <input type="text" name="bank" class="form-control" placeholder="请填写银行名称">
-                            <span class="input-group-addon">快速填写</span>
+                            <div class="input-group-middle"><span class="input-group-text">快速填写</span></div>
                             <select id="cardlist" class="form-control" onchange="if(this.value)this.form.bank.value=this.value;">
                                 <option value="">从列表中选择自动填写</option>
                                 <foreach name="banklist" item="v">
@@ -29,16 +33,28 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="bankname">开户行</label>
+                        <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">开&ensp;户&ensp;行：</span>
+                        </div>
                         <input type="text" name="bankname" class="form-control" placeholder="请填写开户名">
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="cardname">开户名称</label>
+                        <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">开户名称：</span>
+                        </div>
                         <input type="text" name="cardname" class="form-control" placeholder="请填写开户名">
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label for="cardno">银行卡号</label>
+                        <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">银行卡号：</span>
+                        </div>
                         <input type="text" name="cardno" class="form-control" placeholder="请填写卡号">
+                        </div>
                     </div>
                     <else/>
                     <ul class="list-group">
@@ -49,7 +65,9 @@
                 </if>
                 <div class="form-group">
                     <div class="input-group">
-                        <span class="input-group-addon">备注说明：</span>
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">备注说明：</span>
+                        </div>
                         <input class="form-control" name="remark"/>
                     </div>
                 </div>
