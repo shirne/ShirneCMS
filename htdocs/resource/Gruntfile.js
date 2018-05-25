@@ -39,17 +39,22 @@ module.exports = function(grunt) {
             options: {
                 style: 'compressed'
             },
-            front: {
+            all: {
                 files: [{
                     src: 'scss/style.scss',
                     dest: 'dest/css/style.css'
+                },{
+                    src: 'scss/admin.scss',
+                    dest: 'dest/admin/css/common.css'
                 }]
             }
         },
         copy:{
             all:{
                 files:[{
-                    src:['dest/**'],
+                    expand:true,
+                    cwd:'dest',
+                    src:['**'],
                     dest:'../public/static/'
                 }]
             }
@@ -57,7 +62,7 @@ module.exports = function(grunt) {
         watch: {
             styles: {
                 files: ['scss/*.scss'],
-                tasks: ['sass:front','copy:all'],
+                tasks: ['sass:all','copy:all'],
                 options: {
                     spawn: false
                 }
@@ -79,6 +84,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-watch');
 
-    grunt.registerTask('default', ['sass:front','concat:front','concat:backend','uglify:front','uglify:backend']);
+    grunt.registerTask('default', ['sass:all','concat:front','concat:backend','uglify:front','uglify:backend','copy:all']);
 
 };
