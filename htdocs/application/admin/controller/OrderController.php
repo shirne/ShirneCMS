@@ -40,6 +40,7 @@ class OrderController extends BaseController
         $this->assign('key',$key);
         $this->assign('status',$status);
         $this->assign('audit',$audit);
+        $this->assign('expresscodes',config('express.'));
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
         return $this->fetch();
