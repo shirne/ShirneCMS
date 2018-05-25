@@ -169,7 +169,7 @@
             };
         })(window);
         jQuery(function(){
-            var tpl='<div class="row" style="margin:0 20%;">' +
+            var tpl='<div class="row" style="margin:0 10%;">' +
                 '<div class="col-12 form-group"><div class="input-group"><div ><span class="input-group-text">充值类型</span> </div><div class="col w-50 text-center" ><div class="btn-group btn-group-toggle" data-toggle="buttons">\n' +
                 '  <label class="btn btn-secondary active"> <input type="radio" name="field" value="money" autocomplete="off" checked> 余额</label>\n' +
                 '  <label class="btn btn-secondary"><input type="radio" name="field" value="credit" autocomplete="off"> 积分</label>\n' +

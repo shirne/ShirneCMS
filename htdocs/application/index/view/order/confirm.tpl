@@ -135,7 +135,7 @@
                 }
             }
             if('{$user.money}' * 1<'{$total_price}'*100){
-                alert('积分不足');
+                alert('余额不足');
                 return false;
             }
         }
