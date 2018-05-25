@@ -378,10 +378,10 @@ function Location() {
 }
 
 Location.prototype.find	= function(id) {
-	if(typeof(this.items[id]) == "undefined")
+	if(typeof(this.items[id]) === "undefined")
 		return false;
 	return this.items[id];
-}
+};
 
 Location.prototype.fillOption	= function(el_id , loc_id , selectedText) {
 	var el	= el_id;
@@ -393,10 +393,10 @@ Location.prototype.fillOption	= function(el_id , loc_id , selectedText) {
 		$.each(json , function(k , v) {
 			var option	= '<option value="'+k+'">'+v+'</option>';
 			el.append(option);
-			if (v == selectedText || !selected_index) {
+			if (v === selectedText || !selected_index) {
 				selected_index	= k;
 			}
-		})
+		});
 		el.val(selected_index);
 	}
-}
+};

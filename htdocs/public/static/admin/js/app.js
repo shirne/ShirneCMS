@@ -3,9 +3,7 @@ function del(obj,msg) {
         location.href=$(obj).attr('href');
     });
     return false;
-}
-
-
+};
 Number.prototype.format=function(fix){
     if(fix===undefined)fix=2;
     var num=this.toFixed(fix);
@@ -52,7 +50,7 @@ function callfunc(val,func,args,thisobj){
     if(!args){
         args=[val];
     }else{
-        if(typeof args=='string')args=args.split(',');
+        if(typeof args==='string')args=args.split(',');
         var argidx=args.indexOf('###');
         if(argidx>=0){
             args[argidx]=val;
@@ -65,25 +63,27 @@ function callfunc(val,func,args,thisobj){
 }
 
 function iif(v,m1,m2){
-    if(v=='0')v=0;
+    if(v==='0')v=0;
     return v?m1:m2;
-}
-
-var dialogTpl='<div class="modal fade" id="{@id}" tabindex="-1" role="dialog" aria-labelledby="{@id}Label" aria-hidden="true">\
-    <div class="modal-dialog">\
-    <div class="modal-content">\
-    <div class="modal-header">\
-    <h4 class="modal-title" id="{@id}Label"></h4>\
-    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>\
-    </div>\
-    <div class="modal-body">\
-    </div>\
-    <div class="modal-footer">\
-    <nav class="nav nav-fill"></nav>\
-    </div>\
-    </div>\
-    </div>\
-    </div>';
+};
+var dialogTpl='<div class="modal fade" id="{@id}" tabindex="-1" role="dialog" aria-labelledby="{@id}Label" aria-hidden="true">\n' +
+    '    <div class="modal-dialog">\n' +
+    '        <div class="modal-content">\n' +
+    '            <div class="modal-header">\n' +
+    '                <h4 class="modal-title" id="{@id}Label"></h4>\n' +
+    '                <button type="button" class="close" data-dismiss="modal">\n' +
+    '                    <span aria-hidden="true">&times;</span>\n' +
+    '                    <span class="sr-only">Close</span>\n' +
+    '                </button>\n' +
+    '            </div>\n' +
+    '            <div class="modal-body">\n' +
+    '            </div>\n' +
+    '            <div class="modal-footer">\n' +
+    '                <nav class="nav nav-fill"></nav>\n' +
+    '            </div>\n' +
+    '        </div>\n' +
+    '    </div>\n' +
+    '</div>';
 var dialogIdx=0;
 function Dialog(opts){
     if(!opts)opts={};
@@ -189,8 +189,8 @@ Dialog.prototype.show=function(html,title){
     });
     this.box.find('.modal-footer .btn').click(function(){
         var result=true,idx=$(this).data('index');
-        if(self.options.btns[idx]['click']){
-            result = self.options.btns[idx]['click'].apply(this,[body, self.box]);
+        if(self.options.btns[idx].click){
+            result = self.options.btns[idx].click.apply(this,[body, self.box]);
         }
         if(idx==self.options.defaultBtn) {
             if (self.options.onsure) {
@@ -212,16 +212,17 @@ Dialog.prototype.hide=function(){
 var dialog={
     alert:function(message,callback,title){
         var called=false;
+        var iscallback=typeof callback=='function';
         return new Dialog({
             btns:'确定',
             onsure:function(){
-                if(typeof callback=='function'){
+                if(iscallback){
                     called=true;
                     return callback(true);
                 }
             },
             onhide:function(){
-                if(!called && typeof callback=='function'){
+                if(!called && iscallback){
                     callback(false);
                 }
             }
@@ -328,6 +329,21 @@ var dialog={
     }
 };
 
+jQuery(function($){
+
+    //监控按键
+    $(document).on('keydown', function(e){
+        if(!Dialog.instance)return;
+        var dlg=Dialog.instance;
+        if (e.keyCode == 13) {
+            dlg.box.find('.modal-footer .btn').eq(dlg.options.defaultBtn).trigger('click');
+        }
+        //默认已监听关闭
+        /*if (e.keyCode == 27) {
+         self.hide();
+         }*/
+    });
+});;
 jQuery.extend(jQuery.fn,{
     tags:function(nm){
         var data=[];
@@ -360,69 +376,114 @@ jQuery.extend(jQuery.fn,{
         });
         item.click(function(){
             input.focus();
-        })
+        });
     }
-});
-
-jQuery(function($){
-
-    //监控按键
-    $(document).on('keydown', function(e){
-        if(!Dialog.instance)return;
-        var dlg=Dialog.instance;
-        if (e.keyCode == 13) {
-            dlg.box.find('.modal-footer .btn').eq(dlg.options.defaultBtn).trigger('click');
-        }
-        //默认已监听关闭
-        /*if (e.keyCode == 27) {
-         self.hide();
-         }*/
+});;//日期组件
+if($.fn.datetimepicker) {
+    var tooltips= {
+        today: '定位当前日期',
+        clear: '清除已选日期',
+        close: '关闭选择器',
+        selectMonth: '选择月份',
+        prevMonth: '上个月',
+        nextMonth: '下个月',
+        selectYear: '选择年份',
+        prevYear: '上一年',
+        nextYear: '下一年',
+        selectDecade: '选择年份区间',
+        prevDecade: '上一区间',
+        nextDecade: '下一区间',
+        prevCentury: '上个世纪',
+        nextCentury: '下个世纪'
+    };
+    var icons={
+        time: 'ion-md-time',
+        date: 'ion-md-calendar',
+        up: 'ion-md-arrow-dropup',
+        down: 'ion-md-arrow-dropdown',
+        previous: 'ion-md-arrow-dropleft',
+        next: 'ion-md-arrow-dropright',
+        today: 'ion-md-today',
+        clear: 'ion-md-trash',
+        close: 'ion-md-close'
+    };
+    $('.datepicker').datetimepicker({
+        icons:icons,
+        tooltips:tooltips,
+        format: 'YYYY-MM-DD',
+        locale: 'zh-cn',
+        showClear:true,
+        showTodayButton:true,
+        showClose:true,
+        keepInvalid:true
     });
-});
 
-jQuery(function ($) {
+    $('.date-range').each(function () {
+        var from = $(this).find('[name=fromdate],.fromdate'), to = $(this).find('[name=todate],.todate');
+        var options = {
+            icons:icons,
+            tooltips:tooltips,
+            format: 'YYYY-MM-DD',
+            locale:'zh-cn',
+            showClear:true,
+            showTodayButton:true,
+            showClose:true,
+            keepInvalid:true
+        };
+        from.datetimepicker(options).on('dp.change', function () {
+            if (from.val()) {
+                to.data('DateTimePicker').minDate(from.val());
+            }
+        });
+        to.datetimepicker(options).on('dp.change', function () {
+            if (to.val()) {
+                from.data('DateTimePicker').maxDate(to.val());
+            }
+        });
+    });
+};jQuery(function ($) {
     //高亮当前选中的导航
-    var bread= $(".breadcrumb");
+    var bread = $(".breadcrumb");
     var menu = bread.data('menu');
-    if(menu) {
+    if (menu) {
         var link = $('.side-nav a[data-key=' + menu + ']');
 
-        var html=[];
+        var html = [];
         if (link.length > 0) {
-            if(link.is('.menu_top')){
-                html.push('<li class="breadcrumb-item"><a href="javascript:"><i class="'+link.find('i').attr('class')+'"></i>&nbsp;'+link.text()+'</a></li>');
-            }else {
+            if (link.is('.menu_top')) {
+                html.push('<li class="breadcrumb-item"><a href="javascript:"><i class="' + link.find('i').attr('class') + '"></i>&nbsp;' + link.text() + '</a></li>');
+            } else {
                 var parent = link.parents('.collapse').eq(0);
                 parent.addClass('show');
                 link.addClass("active");
-                var topmenu=parent.siblings('.card-header').find('a.menu_top');
-                html.push('<li class="breadcrumb-item"><a href="javascript:"><i class="'+topmenu.find('i').attr('class')+'"></i>&nbsp;'+topmenu.text()+'</a></li>');
-                html.push('<li class="breadcrumb-item"><a href="javascript:">'+ link.text()+'</a></li>');
+                var topmenu = parent.siblings('.card-header').find('a.menu_top');
+                html.push('<li class="breadcrumb-item"><a href="javascript:"><i class="' + topmenu.find('i').attr('class') + '"></i>&nbsp;' + topmenu.text() + '</a></li>');
+                html.push('<li class="breadcrumb-item"><a href="javascript:">' + link.text() + '</a></li>');
             }
         }
-        var title=bread.data('title');
-        if(title){
-            html.push('<li class="breadcrumb-item active" aria-current="page">'+ title+'</li>');
+        var title = bread.data('title');
+        if (title) {
+            html.push('<li class="breadcrumb-item active" aria-current="page">' + title + '</li>');
         }
         bread.html(html.join("\n"));
     }
 
     //全选、反选按钮
     $('.checkall-btn').click(function (e) {
-        var target=$(this).data('target');
-        if(!target)target='id';
-        var ids=$('[name='+target+']');
-        if($(this).is('.active')){
+        var target = $(this).data('target');
+        if (!target) target = 'id';
+        var ids = $('[name=' + target + ']');
+        if ($(this).is('.active')) {
             ids.removeAttr('checked');
-        }else{
-            ids.attr('checked',true);
+        } else {
+            ids.attr('checked', true);
         }
     });
     $('.checkreverse-btn').click(function (e) {
-        var target=$(this).data('target');
-        if(!target)target='id';
-        var ids=$('[name='+target+']');
-        for(var i=0;i<ids.length;i++) {
+        var target = $(this).data('target');
+        if (!target) target = 'id';
+        var ids = $('[name=' + target + ']');
+        for (var i = 0; i < ids.length; i++) {
             if (ids[i].checked) {
                 ids.eq(i).removeAttr('checked');
             } else {
@@ -431,185 +492,119 @@ jQuery(function ($) {
         }
     });
     //操作按钮
-    $('.action-btn').click(function(e){
+    $('.action-btn').click(function (e) {
         e.preventDefault();
-        var action=$(this).data('action');
-        if(!action){
+        var action = $(this).data('action');
+        if (!action) {
             return toastr.error('未知操作');
         }
-        action='action'+action.replace(/^[a-z]/,function(letter){
+        action = 'action' + action.replace(/^[a-z]/, function (letter) {
             return letter.toUpperCase();
         });
-        if(!window[action] || typeof window[action] !== 'function'){
+        if (!window[action] || typeof window[action] !== 'function') {
             return toastr.error('未知操作');
         }
-        var needChecks=$(this).data('needChecks');
-        if(needChecks===undefined)needChecks=true;
-        if(needChecks){
-            var target=$(this).data('target');
-            if(!target)target='id';
-            var ids=$('[name='+target+']:checked');
-            if(ids.length<1){
+        var needChecks = $(this).data('needChecks');
+        if (needChecks === undefined) needChecks = true;
+        if (needChecks) {
+            var target = $(this).data('target');
+            if (!target) target = 'id';
+            var ids = $('[name=' + target + ']:checked');
+            if (ids.length < 1) {
                 return toastr.warning('请选择需要操作的项目');
-            }else{
-                var idchecks=[];
-                for(var i=0;i<ids.length;i++){
+            } else {
+                var idchecks = [];
+                for (var i = 0; i < ids.length; i++) {
                     idchecks.push(ids.eq(i).val());
                 }
                 window[action](idchecks);
             }
-        }else{
+        } else {
             window[action]();
         }
     });
 
     //异步显示资料链接
-    $('a[rel=ajax]').click(function(e){
-       e.preventDefault();
-        var self=$(this);
-        var title=$(this).data('title');
-        if(!title)title=$(this).text();
-        var dlg=new Dialog({
-            btns:['确定'],
-            onshow:function(body){
+    $('a[rel=ajax]').click(function (e) {
+        e.preventDefault();
+        var self = $(this);
+        var title = $(this).data('title');
+        if (!title) title = $(this).text();
+        var dlg = new Dialog({
+            btns: ['确定'],
+            onshow: function (body) {
                 $.ajax({
-                    url:self.attr('href'),
-                    success:function(text){
+                    url: self.attr('href'),
+                    success: function (text) {
                         body.html(text);
                     }
                 });
             }
-        }).show('<p class="loading">加载中...</p>',title);
+        }).show('<p class="loading">加载中...</p>', title);
 
     });
 
     $('.nav-tabs a').click(function (e) {
         e.preventDefault();
-        $(this).tab('show')
+        $(this).tab('show');
     });
 
     //上传框
-    $('.custom-file .custom-file-input').on('change',function(){
-        var label=$(this).parents('.custom-file').find('.custom-file-label');
+    $('.custom-file .custom-file-input').on('change', function () {
+        var label = $(this).parents('.custom-file').find('.custom-file-label');
         label.text($(this).val());
     });
 
     //表单Ajax提交
-    $('.btn-primary[type=submit]').click(function(e){
-        var form=$(this).parents('form');
-        var btn=this;
-        var options={
-            url:$(form).attr('action'),
-            type:'POST',
-            dataType:'JSON',
-            success:function (json) {
-                if(json.code==1){
+    $('.btn-primary[type=submit]').click(function (e) {
+        var form = $(this).parents('form');
+        var btn = this;
+        var options = {
+            url: $(form).attr('action'),
+            type: 'POST',
+            dataType: 'JSON',
+            success: function (json) {
+                if (json.code == 1) {
                     new Dialog({
-                        onhidden:function(){
-                            if(json.url){
-                                location.href=json.url;
-                            }else{
+                        onhidden: function () {
+                            if (json.url) {
+                                location.href = json.url;
+                            } else {
                                 location.reload();
                             }
                         }
                     }).show(json.msg);
-                }else{
+                } else {
                     toastr.warning(json.msg);
                     $(btn).removeAttr('disabled');
                 }
             }
         };
-        if(form.attr('enctype')=='multipart/form-data'){
-            if(!FormData){
+        if (form.attr('enctype') == 'multipart/form-data') {
+            if (!FormData) {
                 return true;
             }
-            options.data=new FormData(form[0]);
-            options.cache=false;
-            options.processData=false;
-            options.contentType=false;
-        }else{
-            options.data=$(form).serialize();
+            options.data = new FormData(form[0]);
+            options.cache = false;
+            options.processData = false;
+            options.contentType = false;
+        } else {
+            options.data = $(form).serialize();
         }
 
         e.preventDefault();
-        $(this).attr('disabled',true);
+        $(this).attr('disabled', true);
         $.ajax(options);
     });
 
-    $('.pickuser').click(function(e){
-        var group=$(this).parents('.input-group');
-        var idele=group.find('[name=member_id]');
-        var infoele=group.find('[name=member_info]');
-        dialog.pickUser($(this).data('url'),function(user){
+    $('.pickuser').click(function (e) {
+        var group = $(this).parents('.input-group');
+        var idele = group.find('[name=member_id]');
+        var infoele = group.find('[name=member_info]');
+        dialog.pickUser($(this).data('url'), function (user) {
             idele.val(user.id);
-            infoele.val('['+user.id+'] '+user.username+(user.mobile?(' / '+user.mobile):''));
-        },$(this).data('filter'));
+            infoele.val('[' + user.id + '] ' + user.username + (user.mobile ? (' / ' + user.mobile) : ''));
+        }, $(this).data('filter'));
     });
 
-    //日期组件
-    if($.fn.datetimepicker) {
-        var tooltips= {
-            today: '定位当前日期',
-            clear: '清除已选日期',
-            close: '关闭选择器',
-            selectMonth: '选择月份',
-            prevMonth: '上个月',
-            nextMonth: '下个月',
-            selectYear: '选择年份',
-            prevYear: '上一年',
-            nextYear: '下一年',
-            selectDecade: '选择年份区间',
-            prevDecade: '上一区间',
-            nextDecade: '下一区间',
-            prevCentury: '上个世纪',
-            nextCentury: '下个世纪'
-        };
-        var icons={
-            time: 'ion-md-time',
-            date: 'ion-md-calendar',
-            up: 'ion-md-arrow-dropup',
-            down: 'ion-md-arrow-dropdown',
-            previous: 'ion-md-arrow-dropleft',
-            next: 'ion-md-arrow-dropright',
-            today: 'ion-md-today',
-            clear: 'ion-md-trash',
-            close: 'ion-md-close'
-        };
-        $('.datepicker').datetimepicker({
-            icons:icons,
-            tooltips:tooltips,
-            format: 'YYYY-MM-DD',
-            locale: 'zh-cn',
-            showClear:true,
-            showTodayButton:true,
-            showClose:true,
-            keepInvalid:true
-        });
-
-        $('.date-range').each(function () {
-            var from = $(this).find('[name=fromdate],.fromdate'), to = $(this).find('[name=todate],.todate');
-            var options = {
-                icons:icons,
-                tooltips:tooltips,
-                format: 'YYYY-MM-DD',
-                locale:'zh-cn',
-                showClear:true,
-                showTodayButton:true,
-                showClose:true,
-                keepInvalid:true
-            };
-            from.datetimepicker(options).on('dp.change', function () {
-                if (from.val()) {
-                    to.data('DateTimePicker').minDate(from.val());
-                }
-            });
-            to.datetimepicker(options).on('dp.change', function () {
-                if (to.val()) {
-                    from.data('DateTimePicker').maxDate(to.val());
-                }
-            });
-        });
-    }
 });
-
-

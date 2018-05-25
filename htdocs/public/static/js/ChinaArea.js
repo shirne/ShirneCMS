@@ -94,7 +94,7 @@
 			if(o.aspnet){
 				writeInput();
 			}
-		})
+		});
 
 		sCity.change(function() {
 			sCounty.empty();
@@ -102,12 +102,12 @@
 			if(o.aspnet){
 				writeInput();
 			}
-		})
+		});
 		sCounty.change(function(){
 			if(o.aspnet){
 				writeInput();
 			}
-		})
+		});
 
 		function writeInput(){
 				tProvince.val($(":selected",sProvince).text());

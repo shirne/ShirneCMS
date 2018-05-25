@@ -7,3 +7,5 @@
 .env
 /htdocs/public/uploads/*
 !/htdocs/public/uploads/index.html
+/htdocs/resource/node_modules/
+/htdocs/resource/dest/
