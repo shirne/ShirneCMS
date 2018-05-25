@@ -28,8 +28,8 @@ class MemberModel extends Model
             }
         });
         self::afterInsert(function ( $model) {
-            if ($user['referer']) {
-                Db::name('member')->where('id',$user->referer)->setInc('total_recommend',1);
+            if ($model['referer']) {
+                Db::name('member')->where('id',$model->referer)->setInc('total_recommend',1);
             }
         });
     }

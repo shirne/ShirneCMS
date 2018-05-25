@@ -64,7 +64,7 @@ class Product extends TagLib
 
         $parseStr.='$'.$var.'=\think\Db::name("ProductCategory")';
         if(!empty($tag['category'])){
-            $parseStr .= '->where('pid','.$pid.')';
+            $parseStr .= "->where('pid','.$pid.')";
         }
         $parseStr .= '->order("sort ASC, id ASC")';
         $parseStr .= '->select();';

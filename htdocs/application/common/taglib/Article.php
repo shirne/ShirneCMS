@@ -100,7 +100,7 @@ class Article extends TagLib
 
         $parseStr.='$'.$var.'=\think\Db::name("Category")';
         if(!empty($tag['category'])){
-            $parseStr .= '->where('pid','.$pid.')';
+            $parseStr .= "->where('pid','.$pid.')";
         }
         $parseStr .= '->order("sort ASC, id ASC")';
         $parseStr .= '->select();';
