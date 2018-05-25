@@ -28,7 +28,7 @@
 
 <include file="public:footer" />
 <script src="__STATIC__/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="__STATIC__/js/init.js"></script>
+<script src="__STATIC__/js/init.min.js"></script>
 <block name="script" ></block>
 </body>
 
