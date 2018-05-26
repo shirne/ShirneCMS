@@ -274,11 +274,12 @@ h6 {
   font-size: 50px;
   line-height: 60px;
   margin: 0;
+  .announcement-text {
+    margin: 0;
+  }
 }
 
-.announcement-text {
-  margin: 0;
-}
+
 
 /* Table Headers */
 

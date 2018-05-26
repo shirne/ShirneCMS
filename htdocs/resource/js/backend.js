@@ -137,7 +137,7 @@ jQuery(function ($) {
                 }
             }
         };
-        if (form.attr('enctype') == 'multipart/form-data') {
+        if (form.attr('enctype') === 'multipart/form-data') {
             if (!FormData) {
                 return true;
             }
