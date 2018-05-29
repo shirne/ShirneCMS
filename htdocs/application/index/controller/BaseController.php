@@ -2,6 +2,7 @@
 namespace app\index\controller;
 
 use app\admin\model\MemberLevelModel;
+use extcore\traits\Email;
 use think\Controller;
 use think\Db;
 
@@ -9,7 +10,9 @@ use think\Db;
  * 如果某个控制器必须用户登录才可以访问  
  * 请继承该控制器
  */
-class BaseController extends Controller {
+class BaseController extends Controller
+{
+    use Email;
 
     protected $userid;
     protected $user;
@@ -116,40 +119,6 @@ class BaseController extends Controller {
         }
     }
 
-    protected function sendEmail($user,$subject,$body,$attachment=array()){
-        if(!is_array($user)){
-            $split=explode('@',$user);
-            $user=array(
-                'username'=>$split[0],
-                'email'=>$user
-            );
-        }
 
-        $mail             = new \PHPMailer\PHPMailer\PHPMailer();
-        $mail->CharSet    = 'UTF-8';
-        $mail->IsSMTP();
-        $mail->SMTPDebug  = 0;
-        // 1 = errors and messages
-        // 2 = messages only
-        $mail->SMTPAuth   = true;
-        $mail->SMTPSecure = 'ssl';
-        $mail->Host       = $this->config['mail_host'];
-        $mail->Port       = $this->config['mail_port'];
-        $mail->Username   = $this->config['mail_user'];
-        $mail->Password   = $this->config['mail_pass'];
-        $mail->SetFrom($this->config['mail_user'], $this->config['site-name']);
-        /*$replyEmail       = $config['REPLY_EMAIL']?$config['REPLY_EMAIL']:$config['FROM_EMAIL'];
-        $replyName        = $config['REPLY_NAME']?$config['REPLY_NAME']:$config['FROM_NAME'];
-        $mail->AddReplyTo($replyEmail, $replyName);*/
-        $mail->Subject    = $subject;
-        $mail->MsgHTML($body);
-        $mail->AddAddress($user['email'], $user['username']);
-        if(!empty($attachment)){ // 添加附件
-            foreach ($attachment as $file){
-                is_file($file) && $mail->AddAttachment($file);
-            }
-        }
-        return $mail->Send() ? true : $mail->ErrorInfo;
-    }
 
 }

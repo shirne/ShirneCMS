@@ -1,6 +1,8 @@
 <?php
 
-trait Attribute
+namespace extcore\traits;
+
+trait Upload
 {
     /**
      * @var \extcore\upload\UploadInterface
@@ -12,12 +14,13 @@ trait Attribute
      */
     protected $uploadConfig=array(
         'max_size'       =>  1048576, //上传的文件大小限制 默认10M
-        'allow_exts'     =>  array(), //允许的文件后缀
+        'allow_exts'     =>  array('jpg','jpeg','png','gif','bmp','tif','swf','txt','csv','xls','xlsx','doc','docx','ppt','pptx','pdf','zip','rar','json'), //允许的文件后缀
+        'img_exts'       =>  array('gif','jpg','jpeg','bmp','png','swf','tif'),
         'root_path'      =>  './uploads/', //上传根路径
         'save_path'      =>  '', //保存路径
         'save_rule'      =>  'md5_file', //命名规则
-        'driver'        =>	'local',
-        'driverConfig'  =>  array(),
+        'driver'         =>	'local',
+        'driverConfig'   =>  array(),
     );
 
     /**
@@ -26,7 +29,8 @@ trait Attribute
     protected $uploadError;
 
     protected function setUploadDriver(){
-        $this->uploadConfig=config('upload.');
+        $config=config('upload.');
+        $this->uploadConfig=array_merge($this->uploadConfig,$config);
         $uploadDriver = '\\extcore\\upload\\' . ucfirst($this->uploadConfig['driver'] ).'Driver';
         $this->uploader = new $uploadDriver($this->uploadConfig);
         if(!$this->uploader){
@@ -37,9 +41,10 @@ trait Attribute
     /**
      * 检测文件合法性
      * @param  array $file 文件名
+     * @param bool $isImg
      * @return boolean
      */
-    protected function checkFile($file) {
+    protected function checkFile($file,$isImg=false) {
         //文件上传失败
         if($file['error'] !== 0) {
             $this->uploadError= '文件上传失败！';
@@ -62,7 +67,11 @@ trait Attribute
             return false;
         }
         // 如果是图像文件 检测文件格式
-        if( in_array($file['extension'], array('gif','jpg','jpeg','bmp','png','swf')) && false === getimagesize($file['tmp_name']) ) {
+        if($isImg && !in_array($file['extension'], $this->uploadConfig['img_exts'])){
+            $this->uploadError = '只能上传图片！';
+            return false;
+        }
+        if( in_array($file['extension'], $this->uploadConfig['img_exts']) && false === getimagesize($file['tmp_name']) ) {
             $this->uploadError = '非法图像文件！';
             return false;
         }
@@ -80,10 +89,10 @@ trait Attribute
      * 上传文件
      * @param $folder
      * @param $field
-     * @param bool $is_img
+     * @param bool $isImg
      * @return bool|array
      */
-    protected function uploadFile($folder,$field,$is_img=false){
+    protected function uploadFile($folder,$field,$isImg=false){
         if(empty($_FILES)) {
             $this->uploadError = '没有文件上传！';
             return false;
@@ -130,7 +139,7 @@ trait Attribute
             $file['savename'] = $saveRuleFunc( $file['tmp_name'] ) . '.' . $file['extension'];
             $file['driver'] = $this->uploadConfig['driver'];
             //检查文件类型大小和合法性
-            if (!$this->checkFile($file)) {
+            if (!$this->checkFile($file,$isImg)) {
                 return false;
             }
             //存储文件
@@ -144,7 +153,7 @@ trait Attribute
         return $uploadFileInfo;
     }
 
-    protected function upload($folder,$field,$isreturn=false){
+    protected function upload($folder,$field){
         return $this->uploadFile($folder,$field,true);
     }
 }

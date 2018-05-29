@@ -2,10 +2,13 @@
 
 namespace app\admin\controller;
 
+use extcore\traits\Upload;
 use think\Controller;
 use think\Db;
 
 class BaseController extends Controller {
+
+    use Upload;
 
     protected $errMsg;
     protected $table;
@@ -73,37 +76,6 @@ class BaseController extends Controller {
             if(in_array($permitem,$this->permision['global']))return true;
         }
         return false;
-    }
-
-    protected function uploadFile($folder,$field,$isreturn=false,$is_img=false){
-        $uploadpath='/uploads/';
-        $config=array(
-            'maxSize'       =>  2000000, //上传的文件大小限制 (0-不做限制)
-            'exts'          =>  $is_img?array('jpg','jpeg','png','gif','bmp','tif'):array('jpg','jpeg','png','gif','bmp','tif','txt','csv','xls','doc','zip','json'), //允许上传的文件后缀
-            'rootPath'      =>  '.'.$uploadpath, //保存根路径
-            'savePath'      =>  $folder.'/', //保存路径
-        );
-        $file = $this->request->file($field);
-        if(empty($file)){
-            return false;
-        }
-
-        $info = $file->validate(['size'=>$config['maxSize'],'ext'=>$config['exts']])->rule(function() use ($config){
-            return $config['savePath'].date('Y/m/').md5(microtime(true));
-        })->move( $config['rootPath']);
-        if($info){
-            $upload=array();
-            $upload['url']=$uploadpath.$info->getSaveName();
-            return $upload;
-        }else{
-            $this->errMsg=$file->getError();
-            if($isreturn)return false;
-            $this->error($this->errMsg);
-        }
-    }
-
-    protected function upload($folder,$field,$isreturn=false){
-        return $this->uploadFile($folder,$field,$isreturn,true);
     }
 
 }

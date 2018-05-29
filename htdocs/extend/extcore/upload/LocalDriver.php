@@ -38,10 +38,12 @@ class LocalDriver implements UploadInterface{
     }
 
     public function saveFile($file) {
-		if(!move_uploaded_file($file['tmp_name'], $file['savepath'] . $file['savename'])) {
+        $savepath=$file['savepath'] . $file['savename'];
+		if(!move_uploaded_file($file['tmp_name'], $savepath)) {
             $this->errorMsg = '文件上传保存错误！';
             return false;
 		}
+		$file['url']=ltrim($savepath,'.');
         return $file;
     }
 

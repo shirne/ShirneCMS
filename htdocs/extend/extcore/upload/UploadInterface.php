@@ -32,7 +32,7 @@ Interface UploadInterface {
     /**
 	 * 保存文件
 	 * @param  array $file 文件名
-	 * @return boolean
+	 * @return boolean|array
 	 */
     public function saveFile($file);
 
