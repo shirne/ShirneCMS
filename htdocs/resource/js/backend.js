@@ -163,5 +163,11 @@ jQuery(function ($) {
             infoele.val('[' + user.id + '] ' + user.username + (user.mobile ? (' / ' + user.mobile) : ''));
         }, $(this).data('filter'));
     });
-
+    $('.pick-locate').click(function(e){
+        var group=$(this).parents('.input-group');
+        var idele=group.find('input[type=text]');
+        dialog.pickLocate('qq',function(locate){
+            idele.val(locate);
+        });
+    });
 });
