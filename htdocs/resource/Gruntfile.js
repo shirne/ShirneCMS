@@ -25,7 +25,7 @@ module.exports = function(grunt) {
                 options: {
                     banner: '/*! location.js <%= grunt.template.today("yyyy-mm-dd") %> */\n'
                 },
-                src: '<%= concat.front.location%>',
+                src: '<%= concat.location.dest%>',
                 dest: 'dest/js/location.min.js'
             },
             front: {
