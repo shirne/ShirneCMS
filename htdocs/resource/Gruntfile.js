@@ -16,10 +16,18 @@ module.exports = function(grunt) {
             options: {
                 separator: ';'
             },
+            location:{src: ['js/model/areas.js','js/model/location.js'], dest: 'dest/js/location.js'},
             front:{src: ['<%=commons%>', 'js/front.js'], dest: 'dest/js/init.js'},
-            backend:{src: ['<%=commons%>', 'js/backend.js'], dest: 'dest/admin/js/app.js'}
+            backend:{src: ['<%=commons%>','js/model/map.js',  'js/backend.js'], dest: 'dest/admin/js/app.js'}
         },
         uglify: {
+            location: {
+                options: {
+                    banner: '/*! location.js <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+                },
+                src: '<%= concat.front.location%>',
+                dest: 'dest/js/location.min.js'
+            },
             front: {
                 options: {
                     banner: '/*! front.js <%= grunt.template.today("yyyy-mm-dd") %> */\n'
@@ -69,7 +77,7 @@ module.exports = function(grunt) {
             },
             scripts:{
                 files: ['js/*.js','js/model/*.js'],
-                tasks: ['concat:front','concat:backend','uglify:front','uglify:backend','copy:all'],
+                tasks: ['concat:location','concat:front','concat:backend','uglify:location','uglify:front','uglify:backend','copy:all'],
                 options: {
                     spawn: false
                 }
@@ -84,6 +92,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-watch');
 
-    grunt.registerTask('default', ['sass:all','concat:front','concat:backend','uglify:front','uglify:backend','copy:all']);
+    grunt.registerTask('default', ['sass:all','concat:location','concat:front','concat:backend','uglify:location','uglify:front','uglify:backend','copy:all']);
 
 };

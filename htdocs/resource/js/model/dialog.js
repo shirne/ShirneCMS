@@ -260,33 +260,39 @@ var dialog={
             }
         }).show('<div class="input-group"><input type="text" class="form-control searchtext" name="keyword" placeholder="根据会员id或名称，电话来搜索"/><div class="input-group-append"><a class="btn btn-outline-secondary searchbtn"><i class="ion-md-search"></i></a></div></div><div class="list-group mt-2"></div>','请搜索并选择会员');
     },
-    pickLocate:function(type, callback){
-        var locate=null;
+    pickLocate:function(type, callback, locate){
+        var settedLocate=null;
         var dlg=new Dialog({
+            'size':'lg',
             'onshown':function(body){
                 var btn=body.find('.searchbtn');
                 var input=body.find('.searchtext');
                 var mapbox=body.find('.map');
                 var mapinfo=body.find('.mapinfo');
+                mapbox.css('height',$(window).height()*.6);
                 var isloading=false;
+                var map=InitMap('tencent',mapbox,function(address,locate){
+                    mapinfo.html(address+'&nbsp;'+locate.lng+','+locate.lat);
+                    settedLocate=locate;
+                },locate);
                 btn.click(function(){
-
-                }).trigger('click');
-                mapbox.html('<p class="empty">地图功能开发中</p>');
+                    var search=input.val();
+                    map.setLocate(search);
+                });
             },
             'onsure':function(body){
-                if(!user){
+                if(!settedLocate){
                     toastr.warning('没有选择位置!');
                     return false;
                 }
-                if(typeof callback=='function'){
-                    var result = callback(locate);
+                if(typeof callback==='function'){
+                    var result = callback(settedLocate);
                     return result;
                 }
             }
         }).show('<div class="input-group"><input type="text" class="form-control searchtext" name="keyword" placeholder="填写地址检索位置"/><div class="input-group-append"><a class="btn btn-outline-secondary searchbtn"><i class="ion-md-search"></i></a></div></div>' +
-        '<div class="map mt-2"></div>' +
-        '<div class="mapinfo mt-2 text-muted">未选择位置</div>','请选择地图位置');
+            '<div class="map mt-2"></div>' +
+            '<div class="mapinfo mt-2 text-muted">未选择位置</div>','请选择地图位置');
     }
 };
 

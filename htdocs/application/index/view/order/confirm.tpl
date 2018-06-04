@@ -83,8 +83,7 @@
         </div>
         </form>
     </script>
-    <script type="text/javascript" src="__STATIC__/js/location.js"></script>
-    <script type="text/javascript" src="__STATIC__/js/ChinaArea.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/location.min.js"></script>
     <script type="text/javascript">
         jQuery(function($){
             $('.add-address').click(function (e) {

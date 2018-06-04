@@ -167,7 +167,7 @@ jQuery(function ($) {
         var group=$(this).parents('.input-group');
         var idele=group.find('input[type=text]');
         dialog.pickLocate('qq',function(locate){
-            idele.val(locate);
-        });
+            idele.val(locate.lng+','+locate.lat);
+        },idele.val());
     });
 });
