@@ -73,7 +73,7 @@ class ProductController extends BaseController
                     $this->error('请先登录');
                 }
                 $model=ProductCommentModel::create($data);
-                if($model->id){
+                if($model['id']){
                     $this->success('评论成功');
                 }else{
                     $this->error('评论失败');

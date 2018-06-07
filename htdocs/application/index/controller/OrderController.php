@@ -10,7 +10,7 @@ namespace app\index\controller;
 
 
 use app\common\facade\MemberCartFacade;
-use app\common\facade\OrderModel;
+use app\common\facade\OrderFacade;
 use app\common\validate\OrderValidate;
 use think\Db;
 
@@ -71,7 +71,7 @@ class OrderController extends AuthedController
             }else{
                 $address=Db::name('MemberAddress')->where('member_id',$this->userid)
                     ->where('address_id',$data['address_id'])->find();
-                $result=OrderModel::makeOrder($this->user,$products,$address,$data['remark']);
+                $result=OrderFacade::makeOrder($this->user,$products,$address,$data['remark']);
                 if($result){
                     $this->success('下单成功');
                 }else{

@@ -98,7 +98,7 @@ class ArticleController extends BaseController{
                     $data['group_id']=empty($reply['group_id'])?$reply['id']:$reply['group_id'];
                 }
                 $model=ArticleCommentModel::create($data);
-                if($model->id){
+                if($model['id']){
                     $this->success('评论成功');
                 }else{
                     $this->error('评论失败');

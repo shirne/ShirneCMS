@@ -9,6 +9,8 @@
 namespace app\index\controller;
 
 
+use app\common\validate\MemberAddressValidate;
+use app\common\validate\MemberCardValidate;
 use app\common\validate\MemberValidate;
 use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\QrCode;
@@ -87,7 +89,7 @@ class MemberController extends AuthedController
     public function avatar(){
         if($this->request->isPost()){
             $data=[];
-            $uploaded=$this->upload('avatar','upload_avatar',true);
+            $uploaded=$this->upload('avatar','upload_avatar');
             if(empty($uploaded)){
                 $this->error('请选择文件');
             }
@@ -350,7 +352,7 @@ class MemberController extends AuthedController
             $this->assign('paths',$paths);
         }
         $users=Db::name('Member')->where('referer',$pid)->paginate(10);
-        $uids=array_column($users,'id');
+        $uids=array_column($users->items(),'id');
         $soncounts=[];
         if(!empty($uids)) {
             $sondata = Db::name('Member')->where('referer' ,'in', $uids)
@@ -378,18 +380,19 @@ class MemberController extends AuthedController
         if($status>0){
             $model->where('status',$status-1);
         }
-        $orders =$model->select();
-        if(!empty($orders)) {
-            $order_ids = array_column($orders, 'order_id');
+        $orders =$model->paginate();
+        if(!empty($orders) && !$orders->isEmpty()) {
+            $order_ids = array_column($orders->items(), 'order_id');
             $products = Db::view('OrderProduct', '*')
                 ->view('Product', ['id' => 'orig_product_id', 'update_time' => 'orig_product_update'], 'OrderProduct.product_id=Product.id', 'LEFT')
                 ->view('ProductSku', ['sku_id' => 'orig_sku_id', 'price' => 'orig_product_price'], 'ProductSku.sku_id=OrderProduct.sku_id', 'LEFT')
                 ->whereIn('OrderProduct.order_id', $order_ids)
                 ->select();
             $products=array_index($products,'order_id',true);
-            foreach ($orders as &$order){
-                $order['products']=isset($products[$order['order_id']])?$products[$order['order_id']]:[];
-            }
+            $orders->each(function($item) use ($products){
+                $item['products']=isset($products[$order['order_id']])?$products[$item['order_id']]:[];
+                return $item;
+            });
         }
 
         $countlist=Db::name('Order')->where('member_id',$this->userid)

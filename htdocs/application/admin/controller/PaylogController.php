@@ -94,7 +94,7 @@ class PaylogController extends BaseController
 
         money_log($recharge['member_id'],-$recharge['amount'],'充值撤销','charge');
 
-        user_log($this->mid,'rechargecancel',1,'撤销充值单 '.$id.$suf ,'manager');
+        user_log($this->mid,'rechargecancel',1,'撤销充值单 '.$id ,'manager');
         $this->success('处理成功！');
     }
 

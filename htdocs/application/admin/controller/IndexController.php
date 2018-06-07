@@ -3,6 +3,7 @@ namespace app\admin\controller;
 
 
 use think\Db;
+use think\facade\Log;
 
 class IndexController extends BaseController{
 
