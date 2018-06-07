@@ -8,6 +8,7 @@ use sdk\OAuthFactory;
 use sdk\WechatAuth;
 use think\Db;
 use think\Exception;
+use think\facade\Log;
 
 /**
  * 用户本地登陆和第三方登陆
@@ -238,7 +239,7 @@ class LoginController extends BaseController{
             $step--;
             $sendto=$this->request->post('sendto');
             $code=$this->request->post('checkcode');
-            $crow=Db::name('checkcode')->where('sendto'=>$sendto,'checkcode'=>$code,'is_check',0)->order('create_time DESC')->find();
+            $crow=Db::name('checkcode')->where(array('sendto'=>$sendto,'checkcode'=>$code,'is_check',0))->order('create_time DESC')->find();
             $time=time();
             if(!empty($crow) && $crow['create_time']>$time-60*5){
                 Db::name('checkcode')->where('id' , $crow['id'])->update(array('is_check' => 1, 'check_at' => $time));
@@ -302,7 +303,7 @@ class LoginController extends BaseController{
         $this->seo("会员注册");
 
         if(!empty($agent)){
-            $amem=Db::name('Member')->where('is_agent'=>1,'agentcode',$agent)->find();
+            $amem=Db::name('Member')->where(array('is_agent'=>1,'agentcode'=>$agent))->find();
             if(!empty($amem)){
                 session('agent',$amem['id']);
             }
@@ -320,7 +321,7 @@ class LoginController extends BaseController{
             $invite_code=$this->request->post('invite_code');
             if(($this->config['m_invite']==1 && !empty($invite_code)) || $this->config['m_invite']==2) {
                 if (empty($invite_code)) $this->error("请填写激活码");
-                $invite = Db::name('invite_code')->where('code' => $invite_code, 'is_lock' => 0, 'member_use' , 0)->find();
+                $invite = Db::name('invite_code')->where(array('code' => $invite_code, 'is_lock' => 0, 'member_use' => 0))->find();
                 if (empty($invite) || ($invite['invalid_at'] > 0 && $invite['invalid_at'] < time())) {
                     $this->error("激活码不正确");
                 }

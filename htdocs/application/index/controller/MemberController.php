@@ -183,7 +183,7 @@ class MemberController extends AuthedController
     }
     public function cardEdit($id=0){
         if($id>0) {
-            $card = Db::name('MemberCard')->where('id' => $id,'member_id',$this->userid)->find();
+            $card = Db::name('MemberCard')->where(array('id' => $id,'member_id',$this->userid))->find();
         }else{
             $card=array();
         }
@@ -223,7 +223,7 @@ class MemberController extends AuthedController
         return $this->fetch();
     }
     public function cash(){
-        $hascash=Db::name('memberCashin')->where('member_id'=>$this->userid,'status',0)->count();
+        $hascash=Db::name('memberCashin')->where(array('member_id'=>$this->userid,'status'=>0))->count();
         if($hascash>0){
             $this->error('您有提现申请正在处理中',url('index/member/index'));
         }
@@ -231,7 +231,7 @@ class MemberController extends AuthedController
         if($this->request->isPost()){
             $amount=$_POST['amount']*100;
             $bank_id=intval($_POST['card_id']);
-            $card=Db::name('MemberCard')->where('member_id'=>$this->userid,'id',$bank_id)->find();
+            $card=Db::name('MemberCard')->where(array('member_id'=>$this->userid,'id'=>$bank_id))->find();
             $data=array(
                 'member_id'=>$this->userid,
                 'amount'=>$amount,
@@ -431,7 +431,7 @@ class MemberController extends AuthedController
     }
 
     public function feedback(){
-        $unreplyed=Db::name('feedback')->where('member_id'=>$this->userid,'reply_at',0)->count();
+        $unreplyed=Db::name('feedback')->where(array('member_id'=>$this->userid,'reply_at'=>0))->count();
         if($this->request->isPost()){
             if($unreplyed>0)$this->error('您的反馈尚未回复');
             $content=$this->request->post('content');
