@@ -131,7 +131,7 @@ class AdvController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             }else{
-                $uploaded=$this->upload('adv','upload_image',true);
+                $uploaded=$this->upload('adv','upload_image');
                 if(!empty($uploaded)){
                     $data['image']=$uploaded['url'];
                 }
@@ -167,7 +167,7 @@ class AdvController extends BaseController
                 $model = Db::name("AdvItem");
                 $url=url('adv/itemlist',array('gid'=>$data['group_id']));
                 $delete_images=[];
-                $uploaded=$this->upload('adv','upload_image',true);
+                $uploaded=$this->upload('adv','upload_image');
                 if(!empty($uploaded)){
                     $data['image']=$uploaded['url'];
                     $delete_images[]=$data['delete_image'];

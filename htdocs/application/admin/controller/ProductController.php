@@ -65,7 +65,7 @@ class ProductController extends BaseController
                 $this->error($validate->getError());
             } else {
                 $delete_images=[];
-                $uploaded = $this->upload('article', 'upload_image', true);
+                $uploaded = $this->upload('article', 'upload_image');
                 if (!empty($uploaded)) {
                     $data['image'] = $uploaded['url'];
                     $delete_images[]=$data['delete_image'];
@@ -131,7 +131,7 @@ class ProductController extends BaseController
                 $this->error($validate->getError());
             }else{
                 $delete_images=[];
-                $uploaded=$this->upload('article','upload_image',true);
+                $uploaded=$this->upload('article','upload_image');
                 if(!empty($uploaded)){
                     $data['image']=$uploaded['url'];
                     $delete_images[]=$data['delete_image'];

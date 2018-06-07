@@ -35,7 +35,7 @@ class PageController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
-                $uploaded = $this->upload('page', 'upload_icon', true);
+                $uploaded = $this->upload('page', 'upload_icon');
                 if (!empty($uploaded)) {
                     $data['icon'] = $uploaded['url'];
                 }
@@ -68,7 +68,7 @@ class PageController extends BaseController
             } else {
                 $model=PageModel::get($id);
                 $delete_images=[];
-                $uploaded = $this->upload('page', 'upload_icon', true);
+                $uploaded = $this->upload('page', 'upload_icon');
                 if (!empty($uploaded)) {
                     $data['icon'] = $uploaded['url'];
                     $delete_images[]=$data['delete_icon'];

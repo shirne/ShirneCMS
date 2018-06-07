@@ -31,9 +31,9 @@ class CategoryController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
-                $iconupload=$this->upload('category','upload_icon',true);
+                $iconupload=$this->upload('category','upload_icon');
                 if(!empty($iconupload))$data['icon']=$iconupload['url'];
-                $uploaded=$this->upload('category','upload_image',true);
+                $uploaded=$this->upload('category','upload_image');
                 if(!empty($uploaded))$data['image']=$uploaded['url'];
 
                 $result=Db::name('category')->insert($data);
@@ -67,12 +67,12 @@ class CategoryController extends BaseController
                 $this->error($validate->getError());
             } else {
                 $delete_images=[];
-                $iconupload=$this->upload('category','upload_icon',true);
+                $iconupload=$this->upload('category','upload_icon');
                 if(!empty($iconupload)){
                     $data['icon']=$iconupload['url'];
                     $delete_images[]=$data['delete_icon'];
                 }
-                $uploaded=$this->upload('category','upload_image',true);
+                $uploaded=$this->upload('category','upload_image');
                 if(!empty($uploaded)){
                     $data['image']=$uploaded['url'];
                     $delete_images[]=$data['delete_image'];
@@ -121,7 +121,7 @@ class CategoryController extends BaseController
             $this->error("禁止删除含有子分类的分类");
         }
         //验证通过
-        $result = Db::name('Category')->where('pid','in',$id)->delete();
+        $result = Db::name('Category')->where('id','in',$id)->delete();
         if($result){
             CategoryFacade::clearCache();
             $this->success("分类删除成功", url('category/index'));

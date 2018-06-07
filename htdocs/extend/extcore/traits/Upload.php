@@ -93,6 +93,9 @@ trait Upload
      * @return bool|array
      */
     protected function uploadFile($folder,$field,$isImg=false){
+        if(!$this->uploader){
+            $this->setUploadDriver();
+        }
         if(empty($_FILES)) {
             $this->uploadError = '没有文件上传！';
             return false;

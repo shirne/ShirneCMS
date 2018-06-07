@@ -46,7 +46,7 @@ class ArticleController extends BaseController
                 $this->error($validate->getError());
             } else {
                 $delete_images=[];
-                $uploaded = $this->upload('article', 'upload_cover', true);
+                $uploaded = $this->upload('article', 'upload_cover');
                 if (!empty($uploaded)) {
                     $data['cover'] = $uploaded['url'];
                     $delete_images[]=$data['delete_cover'];
@@ -86,7 +86,7 @@ class ArticleController extends BaseController
                 $this->error($validate->getError());
             }else{
                 $delete_images=[];
-                $uploaded=$this->upload('article','upload_cover',true);
+                $uploaded=$this->upload('article','upload_cover');
                 if(!empty($uploaded)){
                     $data['cover']=$uploaded['url'];
                     $delete_images[]=$data['delete_cover'];
