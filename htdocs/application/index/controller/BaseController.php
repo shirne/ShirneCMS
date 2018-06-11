@@ -108,6 +108,16 @@ class BaseController extends Controller
         }
         $this->assign('isWechat',$this->isWechat);
         $this->assign('isMobile',$this->isMobile);
+
+        if(config('template.independence')){
+            $base_path=config('template.view_path');
+            if($this->isMobile){
+                $this->view->config('view_path', $base_path.'mobile'.DIRECTORY_SEPARATOR);
+            }else{
+                $this->view->config('view_path', $base_path.'default'.DIRECTORY_SEPARATOR);
+            }
+        }
+
         /**
         微信JSSDK
         详细用法参考：http://mp.weixin.qq.com/wiki/7/1c97470084b73f8e224fe6d9bab1625b.html
