@@ -18,6 +18,7 @@ module.exports = function(grunt) {
             },
             location:{src: ['js/model/areas.js','js/model/location.js'], dest: 'dest/js/location.js'},
             front:{src: ['<%=commons%>', 'js/front.js'], dest: 'dest/js/init.js'},
+            mobile:{src: ['js/mobile.js'], dest: 'dest/js/mobile.js'},
             backend:{src: ['<%=commons%>','js/model/map.js',  'js/backend.js'], dest: 'dest/admin/js/app.js'}
         },
         uglify: {
@@ -35,6 +36,13 @@ module.exports = function(grunt) {
                 src: '<%= concat.front.dest%>',
                 dest: 'dest/js/init.min.js'
             },
+            mobile: {
+                options: {
+                    banner: '/*! mobile.js <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+                },
+                src: '<%= concat.mobile.dest%>',
+                dest: 'dest/js/mobile.min.js'
+            },
             backend: {
                 options: {
                     banner: '/*! backend.js <%= grunt.template.today("yyyy-mm-dd") %> */\n'
@@ -51,6 +59,9 @@ module.exports = function(grunt) {
                 files: [{
                     src: 'scss/style.scss',
                     dest: 'dest/css/style.css'
+                },{
+                    src: 'scss/mobile.scss',
+                    dest: 'dest/css/mobile.css'
                 },{
                     src: 'scss/admin.scss',
                     dest: 'dest/admin/css/common.css'
@@ -77,7 +88,7 @@ module.exports = function(grunt) {
             },
             scripts:{
                 files: ['js/*.js','js/model/*.js'],
-                tasks: ['concat:location','concat:front','concat:backend','uglify:location','uglify:front','uglify:backend','copy:all'],
+                tasks: ['concat','uglify','copy:all'],
                 options: {
                     spawn: false
                 }
@@ -92,6 +103,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-sass');
     grunt.loadNpmTasks('grunt-contrib-watch');
 
-    grunt.registerTask('default', ['sass:all','concat:location','concat:front','concat:backend','uglify:location','uglify:front','uglify:backend','copy:all']);
+    grunt.registerTask('default', ['sass:all','concat','uglify','copy:all']);
 
 };

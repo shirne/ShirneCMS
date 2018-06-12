@@ -15,6 +15,12 @@ class ArticleController extends BaseController{
     protected $category;
     protected $categotyTree;
 
+    public function initialize()
+    {
+        parent::initialize();
+        $this->assign('navmodel','article');
+    }
+
     public function index($name=""){
         $this->category($name);
 

@@ -16,6 +16,11 @@ use think\Db;
 
 class OrderController extends AuthedController
 {
+    public function initialize()
+    {
+        parent::initialize();
+        $this->assign('navmodel','product');
+    }
 
     /**
      * 确认下单

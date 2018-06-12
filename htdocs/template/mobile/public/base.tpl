@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
     <title>{$title}</title>
 
     <meta name="keywords" content="{$keywords}" />
@@ -15,17 +15,22 @@
 
     <script src="__STATIC__/jquery/jquery.min.js"></script>
 
-    <!--[if lt IE 9]>
-    <script src="http://cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-    <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
 </head>
 <body>
-<include file="public:header" />
+<div class="container">
+    <div class="page tabbar">
+        <div class="page__bd" style="height: 100%;">
+            <div class="weui-tab">
+                <div class="weui-tab__panel">
+                    <block name="body" ></block>
+                    <include file="public:footer" />
+                </div>
 
-<block name="body" ></block>
-
-<include file="public:footer" />
+                <include file="public:header" />
+            </div>
+        </div>
+    </div>
+</div>
 <script src="__STATIC__/weui/js/weui.min.js"></script>
 <script src="__STATIC__/js/mobile.min.js"></script>
 <block name="script" ></block>

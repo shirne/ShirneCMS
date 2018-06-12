@@ -7,6 +7,11 @@ use think\Db;
 
 class PageController extends BaseController{
 
+    public function initialize()
+    {
+        parent::initialize();
+        $this->assign('navmodel','page');
+    }
     public function index($name='',$group='')
     {
         if(!empty($name)) {

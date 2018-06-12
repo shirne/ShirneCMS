@@ -25,6 +25,7 @@ class MemberController extends AuthedController
     public function initialize()
     {
         parent::initialize();
+        $this->assign('navmodel','member');
     }
 
     /**

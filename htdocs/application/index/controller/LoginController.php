@@ -17,8 +17,10 @@ class LoginController extends BaseController{
 
 
 
-    public function initialize(){
+    public function initialize()
+    {
         parent::initialize();
+        $this->assign('navmodel','member');
     }
 
     public function index($type=0)

@@ -14,6 +14,12 @@ use think\Db;
 
 class CartController extends AuthedController
 {
+    public function initialize()
+    {
+        parent::initialize();
+        $this->assign('navmodel','product');
+    }
+
     public function index(){
         $carts=MemberCartFacade::getCart($this->userid);
         $this->assign('carts',$carts);
