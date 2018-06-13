@@ -63,7 +63,7 @@ module.exports = function(grunt) {
                     src: 'scss/mobile.scss',
                     dest: 'dest/css/mobile.css'
                 },{
-                    src: 'scss/admin.scss',
+                    src: 'scss/admin/common.scss',
                     dest: 'dest/admin/css/common.css'
                 }]
             }
