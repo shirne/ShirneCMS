@@ -25,9 +25,10 @@
             <thead>
             <tr>
                 <th width="50">编号</th>
+                <th>类型</th>
                 <th>名称</th>
                 <th>appid</th>
-                <th>优先级</th>
+                <th>功能</th>
                 <th width="200">操作</th>
             </tr>
             </thead>
@@ -37,9 +38,13 @@
                     <td>{$v.id}</td>
                     <td>{$v.title}</td>
                     <td>{$v.url}</td>
-                    <td>{$v.sort}</td>
                     <td>
-                        <a class="btn btn-outline-dark btn-sm" href="{:url('wechat/menu',array('id'=>$v['id']))}"><i class="ion-md-create"></i> 菜单</a>
+                        <div class="btn-group btn-group-sm">
+                            <a class="btn btn-outline-dark qrcode-btn" href="javascript:" data-qrcode="{$model.qrcode}"><i class="ion-md-expand"></i> 二维码</a>
+                            <a class="btn btn-outline-dark" href="{:url('wechat/menu',array('id'=>$v['id']))}"><i class="ion-md-reorder"></i> 菜单</a>
+                        </div>
+                    </td>
+                    <td>
                         <a class="btn btn-outline-dark btn-sm" href="{:url('wechat/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> 编辑</a>
                         <a class="btn btn-outline-dark btn-sm" href="{:url('wechat/delete',array('id'=>$v['id']))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
                     </td>
@@ -49,4 +54,21 @@
         </table>
         {$page|raw}
     </div>
+</block>
+<block name="script">
+    <script type="text/javascript">
+        jQuery(function($){
+            $('.qrcode-btn').click(function() {
+                var qrcode=$(this).data('qrcode');
+                if(qrcode){
+                    dialog.alert('<figure class="figure">\n' +
+                        ' <img src="'+qrcode+'" class="figure-img img-fluid rounded" alt="image">\n' +
+                        ' <figcaption class="figure-caption text-center">扫描二维码关注公众号</figcaption>\n' +
+                        '</figure>');
+                }else{
+                    toastr.info('没有上传二维码');
+                }
+            })
+        })
+    </script>
 </block>

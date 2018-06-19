@@ -26,7 +26,8 @@ VALUES
   (25,5,'管理员','Manager/index','manager_index','ion-md-person',0,0),
   (26,5,'菜单管理','Permission/index','permission_index','ion-md-code-working',0,0),
   (27,5,'操作日志','Manager/log','manager_log','ion-md-clipboard',0,0),
-  (28,5,'付款方式','Paytype/index','paytype_index','ion-md-card',0,0);
+  (28,5,'付款方式','Paytype/index','paytype_index','ion-md-card',0,0),
+  (29,5,'公众号管理','Wechat/index','wechat_index','ion-md-chatboxes',0,0);
 
 /*!40000 ALTER TABLE `sa_permission` ENABLE KEYS */;
 UNLOCK TABLES;

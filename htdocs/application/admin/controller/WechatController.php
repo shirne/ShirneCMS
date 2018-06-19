@@ -37,7 +37,14 @@ class WechatController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
-
+                $uploaded = $this->upload('wechat', 'upload_logo');
+                if (!empty($uploaded)) {
+                    $data['logo'] = $uploaded['url'];
+                }
+                $uploaded = $this->upload('wechat', 'upload_qrcode');
+                if (!empty($uploaded)) {
+                    $data['qrcode'] = $uploaded['url'];
+                }
                 if (Db::name('wechat')->insert($data)) {
                     $this->success("添加成功", url('wechat/index'));
                 } else {
@@ -45,7 +52,7 @@ class WechatController extends BaseController
                 }
             }
         }
-        $model=array('sort'=>99);
+        $model=array();
         $this->assign('model',$model);
         $this->assign('id',0);
         return $this->fetch('edit');
@@ -66,7 +73,19 @@ class WechatController extends BaseController
                 $this->error($validate->getError());
             } else {
                 $data['id']=$id;
+                $delete_images=[];
+                $uploaded = $this->upload('wechat', 'upload_logo');
+                if (!empty($uploaded)) {
+                    $data['logo'] = $uploaded['url'];
+                    $delete_images[]=$data['delete_logo'];
+                }
+                $uploaded = $this->upload('wechat', 'upload_qrcode');
+                if (!empty($uploaded)) {
+                    $data['qrcode'] = $uploaded['url'];
+                    $delete_images[]=$data['delete_qrcode'];
+                }
                 if (Db::name('wechat')->update($data)) {
+                    delete_image($delete_images);
                     $this->success("更新成功", url('wechat/index'));
                 } else {
                     $this->error("更新失败");
