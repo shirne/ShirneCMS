@@ -36,11 +36,12 @@
             <foreach name="lists" item="v">
                 <tr>
                     <td>{$v.id}</td>
+                    <td>{$v.type}{$v.account_type}</td>
                     <td>{$v.title}</td>
                     <td>{$v.url}</td>
                     <td>
                         <div class="btn-group btn-group-sm">
-                            <a class="btn btn-outline-dark qrcode-btn" href="javascript:" data-qrcode="{$model.qrcode}"><i class="ion-md-expand"></i> 二维码</a>
+                            <a class="btn btn-outline-dark qrcode-btn" href="javascript:" data-qrcode="{$v.qrcode}"><i class="ion-md-expand"></i> 二维码</a>
                             <a class="btn btn-outline-dark" href="{:url('wechat/menu',array('id'=>$v['id']))}"><i class="ion-md-reorder"></i> 菜单</a>
                         </div>
                     </td>
@@ -61,10 +62,10 @@
             $('.qrcode-btn').click(function() {
                 var qrcode=$(this).data('qrcode');
                 if(qrcode){
-                    dialog.alert('<figure class="figure">\n' +
+                    dialog.alert('<div class="text-center"><figure class="figure">\n' +
                         ' <img src="'+qrcode+'" class="figure-img img-fluid rounded" alt="image">\n' +
                         ' <figcaption class="figure-caption text-center">扫描二维码关注公众号</figcaption>\n' +
-                        '</figure>');
+                        '</figure></div>','二维码');
                 }else{
                     toastr.info('没有上传二维码');
                 }

@@ -7,7 +7,7 @@
     <div id="page-wrapper">
         <div class="page-header">{$id>0?'编辑':'添加'}公众号</div>
         <div class="page-content">
-            <form method="post" action="">
+            <form method="post" action="" enctype="multipart/form-data">
                 <div class="form-row">
                     <div class="col form-group">
                         <label for="title">名称</label>
@@ -89,14 +89,14 @@
                         <label for="token">Token</label>
                         <div class="input-group">
                         <input type="text" name="token" class="form-control" value="{$model.token}">
-                        <div class="input-group-append"><a href="javascript:" class="btn btn-outline-secondary">随机生成</a> </div>
+                        <div class="input-group-append"><a href="javascript:" class="btn btn-outline-secondary gener-token">随机生成</a> </div>
                         </div>
                     </div>
                     <div class="col form-group">
                         <label for="encodingaeskey">AESKey</label>
                         <div class="input-group">
                         <input type="text" name="encodingaeskey" class="form-control" value="{$model.encodingaeskey}">
-                            <div class="input-group-append"><a href="javascript:" class="btn btn-outline-secondary">随机生成</a> </div>
+                            <div class="input-group-append"><a href="javascript:" class="btn btn-outline-secondary gener-aeskey">随机生成</a> </div>
                         </div>
                     </div>
                 </div>
@@ -111,4 +111,28 @@
             </form>
         </div>
     </div>
+</block>
+<block name="script">
+    <script type="text/javascript">
+        jQuery(function ($) {
+            $('.gener-token').click(function() {
+                var newtoken=randomString(Math.floor(Math.random()*16+16));
+                var input=$(this).parents('.input-group').find('input');
+                if(newtoken!==input.val()){
+                    input.val(newtoken);
+                }else{
+                    $(this).trigger('click');
+                }
+            });
+            $('.gener-aeskey').click(function() {
+                var newtoken=randomString(43);
+                var input=$(this).parents('.input-group').find('input');
+                if(newtoken!==input.val()){
+                    input.val(newtoken);
+                }else{
+                    $(this).trigger('click');
+                }
+            });
+        })
+    </script>
 </block>

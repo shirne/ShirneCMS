@@ -2,6 +2,7 @@
 
 namespace app\admin\controller;
 
+use app\admin\model\WechatModel;
 use app\admin\validate\WechatValidate;
 use think\Db;
 
@@ -45,7 +46,8 @@ class WechatController extends BaseController
                 if (!empty($uploaded)) {
                     $data['qrcode'] = $uploaded['url'];
                 }
-                if (Db::name('wechat')->insert($data)) {
+                $model=WechatModel::create($data);
+                if ($model['id']) {
                     $this->success("添加成功", url('wechat/index'));
                 } else {
                     $this->error("添加失败");
@@ -72,7 +74,6 @@ class WechatController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
-                $data['id']=$id;
                 $delete_images=[];
                 $uploaded = $this->upload('wechat', 'upload_logo');
                 if (!empty($uploaded)) {
@@ -84,11 +85,13 @@ class WechatController extends BaseController
                     $data['qrcode'] = $uploaded['url'];
                     $delete_images[]=$data['delete_qrcode'];
                 }
-                if (Db::name('wechat')->update($data)) {
+                $model=WechatModel::get($id);
+                if ($model->allowField(true)->save($data)) {
                     delete_image($delete_images);
-                    $this->success("更新成功", url('wechat/index'));
+                    $this->success("更新成功".$this->uploadError, url('wechat/index'));
                 } else {
-                    $this->error("更新失败");
+
+                    $this->error("更新失败".$this->uploadError);
                 }
             }
         }

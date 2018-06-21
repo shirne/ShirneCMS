@@ -7,7 +7,7 @@ return [
     // 驱动方式
     'driver' => 'local',
     // 根目录
-    'root_path'   => 'uploads/',
+    'root_path'   => './uploads/',
     // 目录格式
     'save_path'   => 'Y/m/',
 

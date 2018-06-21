@@ -92,6 +92,7 @@ CREATE TABLE `sa_wechat` (
   `original` varchar(50) DEFAULT '',
   `appid` varchar(50) DEFAULT '',
   `appsecret` varchar(64) DEFAULT '',
+  `token` varchar(50) DEFAULT '',
   `encodingaeskey` varchar(100) DEFAULT '',
   `subscribeurl` varchar(200) DEFAULT '',
   `access_token` TEXT,

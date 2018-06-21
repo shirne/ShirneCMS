@@ -153,7 +153,8 @@ trait Upload
             }
             $uploadFileInfo[$key] = $info;
         }
-        return $uploadFileInfo;
+
+        return empty($field)?$uploadFileInfo:$uploadFileInfo[$field];
     }
 
     protected function upload($folder,$field){
