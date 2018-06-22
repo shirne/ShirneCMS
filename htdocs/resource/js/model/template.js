@@ -26,7 +26,7 @@ String.prototype.compile=function(data,list){
             if(m1.indexOf('.')>0){
                 var keys=m1.split('.'),val=data;
                 for(var i=0;i<keys.length;i++){
-                    if(val[keys[i]]){
+                    if(val[keys[i]]!==undefined){
                         val=val[keys[i]];
                     }else{
                         val = '';
@@ -35,7 +35,7 @@ String.prototype.compile=function(data,list){
                 }
                 return callfunc(val,func,args);
             }else{
-                return data[m1]?callfunc(data[m1],func,args,data):'';
+                return data[m1]!==undefined?callfunc(data[m1],func,args,data):'';
             }
         });
     }

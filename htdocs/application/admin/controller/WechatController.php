@@ -119,8 +119,15 @@ class WechatController extends BaseController
         }
     }
 
-    public function menu()
+    public function menu($id)
     {
+        if($this->request->isPost()){
+            $data=$this->request->post('menu');
+            var_export($data);
+        }
+        $menuData=[];
+
+        $this->assign('menuData',$menuData);
         return $this->fetch();
     }
 }
