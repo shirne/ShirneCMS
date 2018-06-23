@@ -124,6 +124,17 @@ class WechatController extends BaseController
         if($this->request->isPost()){
             $data=$this->request->post('menu');
             $data=json_decode($data,true);
+            foreach ($data as &$item) {
+                if(!empty($item['sub_button'])){
+                    foreach ($item as $k=>$val){
+                        if(!in_array($k,['name','sub_button'])){
+                            unset($item[$k]);
+                        }
+                    }
+                }else{
+                    unset($item['sub_button']);
+                }
+            }
             var_export($data);
         }
         $menuData=[];

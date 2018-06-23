@@ -47,29 +47,36 @@ class WeChatController extends Controller{
     public function index(){
 
         $wechat = new Wechat($this->options);
-        $wechat->valid();//明文或兼容模式可以在接口验证通过后注释此句，但加密模式一定不能注释，否则会验证失败
+        $wechat->valid();
         $type = $wechat->getRev()->getRevType();
         switch($type) {
             case Wechat::MSGTYPE_TEXT:
                 $url = url('login/wechatCallback','',true,true);
                 $redirect = $wechat->getOauthRedirect($url);
                 $wechat->text("<a href=\"$redirect\">点击登陆</a>")->reply();
-                exit;
                 break;
             case Wechat::MSGTYPE_LOCATION:
                 $localtion = $wechat->getRevGeo();
                 $wechat->text(json_encode($localtion))->reply();
-                exit;
                 break;
             case Wechat::EVENT_SUBSCRIBE:
                 $wechat->text("谢谢关注")->reply();
-                exit;
                 break;
             case Wechat::MSGTYPE_IMAGE:
                 $wechat->text("...")->reply();
                 break;
+            case Wechat::EVENT_SCAN:
+                //扫码
+                break;
+            case Wechat::EVENT_LOCATION:
+                //上报位置
+                break;
+            case Wechat::EVENT_MENU_CLICK:
+                //菜单点击
+                break;
             default:
-                $wechat->text("Hello World")->reply();
+                $wechat->text("Hello!")->reply();
         }
+        return '';
     }
 }
