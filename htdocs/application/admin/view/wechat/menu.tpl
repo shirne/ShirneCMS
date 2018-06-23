@@ -26,41 +26,70 @@
                             <div class="card-body">
                                 <div class="form-group row">
                                     <label for="menu-name" class="col-sm-2 col-form-label">菜单名称</label>
-                                    <div class="col-sm-10"><input type="text" name="menu-name" class="form-control" onchange="updateMenu()" value="" /><div class="text-muted nametip"></div> </div>
+                                    <div class="col-sm-10"><input type="text" name="menu-name" class="form-control" onchange="updateMenu(this)" value="" /><div class="text-muted nametip"></div> </div>
                                 </div>
                                 <div class="form-group row menu-content">
                                     <label for="content-view" class="col-sm-2 col-form-label">菜单内容</label>
                                     <div class="col-sm-10">
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="click">
-                                            <label class="form-check-label" for="inlineRadio1">发送消息</label>
+                                            <input class="form-check-input" type="radio" name="menu-type" id="menuTypeClick" onclick="setType(this)" value="click">
+                                            <label class="form-check-label" for="menuTypeClick">发送消息</label>
                                         </div>
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="view">
-                                            <label class="form-check-label" for="inlineRadio2">跳转网页</label>
+                                            <input class="form-check-input" type="radio" name="menu-type" id="menuTypeView" onclick="setType(this)" value="view">
+                                            <label class="form-check-label" for="menuTypeView">跳转网页</label>
                                         </div>
                                         <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="miniprogram">
-                                            <label class="form-check-label" for="inlineRadio3">跳转小程序</label>
+                                            <input class="form-check-input" type="radio" name="menu-type" id="menuTypeMpro" onclick="setType(this)" value="miniprogram">
+                                            <label class="form-check-label" for="menuTypeMpro">跳转小程序</label>
                                         </div>
                                     </div>
 
-                                    <div class="col content-view">
+                                    <div class="col content-view type-click">
                                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                                             <li class="nav-item">
-                                                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
+                                                <a class="nav-link active" id="key-tab" data-toggle="tab" href="#key" role="tab" aria-controls="key" aria-selected="true">关键字</a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</a>
+                                                <a class="nav-link" id="picture-tab" data-toggle="tab" href="#picture" role="tab" aria-controls="picture" aria-selected="false">图片</a>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
+                                                <a class="nav-link" id="audio-tab" data-toggle="tab" href="#audio" role="tab" aria-controls="audio" aria-selected="false">音频</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="video-tab" data-toggle="tab" href="#video" role="tab" aria-controls="video" aria-selected="false">视频</a>
                                             </li>
                                         </ul>
                                         <div class="tab-content" id="myTabContent">
-                                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">...</div>
-                                            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
-                                            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+                                            <div class="tab-pane fade show active" id="key" role="tabpanel" aria-labelledby="key-tab">
+                                                <div class="form-group row">
+                                                    <label for="menu-name" class="col-sm-2 col-form-label">关键字</label>
+                                                    <div class="col-sm-10"><input type="text" name="menu-key" class="form-control" onchange="updateMenu(this)" value="" /><div class="text-muted">模拟发送的关键字</div> </div>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane fade" id="picture" role="tabpanel" aria-labelledby="picture-tab">...</div>
+                                            <div class="tab-pane fade" id="audio" role="tabpanel" aria-labelledby="audio-tab">...</div>
+                                            <div class="tab-pane fade" id="video" role="tabpanel" aria-labelledby="video-tab">...</div>
+                                        </div>
+                                    </div>
+                                    <div class="col content-view type-view">
+                                        <div class="form-group row">
+                                            <label for="menu-name" class="col-sm-2 col-form-label">跳转网址</label>
+                                            <div class="col-sm-10"><input type="text" name="menu-url" class="form-control" onchange="updateMenu(this)" value="" /><div class="text-muted">点击按钮跳转的链接地址</div> </div>
+                                        </div>
+                                    </div>
+                                    <div class="col content-view type-miniprogram">
+                                        <div class="form-group row">
+                                            <label for="menu-name" class="col-sm-2 col-form-label">APPID</label>
+                                            <div class="col-sm-10"><input type="text" name="menu-appid" class="form-control" onchange="updateMenu(this)" value="" /><div class="text-muted">关联的小程序的APPID</div> </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="menu-name" class="col-sm-2 col-form-label">跳转页面</label>
+                                            <div class="col-sm-10"><input type="text" name="menu-pagepath" class="form-control" onchange="updateMenu(this)" value="" /><div class="text-muted">要跳转的小程序页面</div> </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label for="menu-name" class="col-sm-2 col-form-label">替代链接</label>
+                                            <div class="col-sm-10"><input type="text" name="menu-url" class="form-control" onchange="updateMenu(this)" value="" /><div class="text-muted">在不支持的设备上使用链接跳转</div> </div>
                                         </div>
                                     </div>
                                 </div>
@@ -72,7 +101,8 @@
                 </div>
                 <div class="form-group">
                     <input type="hidden" name="id" value="{$model.id}">
-                    <button type="submit" class="btn btn-primary">提交</button>
+                    <input type="hidden" name="menu" value="">
+                    <button type="submit" class="btn btn-primary">保存并更新</button>
                 </div>
             </form>
         </div>
@@ -80,7 +110,11 @@
 </block>
 <block name="script">
     <script type="text/javascript">
-        var menuData=JSON.parse('{$menuData|json_encode|raw}');
+        if(!JSON){
+            dialog.alert('您的浏览器版本太低，不支持本页面功能，建议使用edge,chrome,firefox等现代浏览器！');
+        }
+        var menuStr='{$menuData|json_encode|raw}';
+        var menuData=JSON.parse(menuStr);
         var curIdx=-1;
         var curSubIdx=-1;
         var curMenu=null;
@@ -141,6 +175,8 @@
             infobox.find('[name=menu-name]').val(curMenu.name);
             if(curSubIdx>-1){
                 infobox.find('.nametip').text('字数不超过8个汉字或16个字母');
+                infobox.find('.menu-content').show();
+                infobox.find('.menu-tip').hide();
             }else{
                 infobox.find('.nametip').text('字数不超过4个汉字或8个字母');
                 if(curMenu.sub_button&&curMenu.sub_button.length>0){
@@ -151,6 +187,11 @@
                     infobox.find('.menu-tip').hide();
                 }
             }
+            infobox.find('[name=menu-type]').filter('[value='+curMenu.type+']').trigger('click');
+            var keys=[];
+            for(var i=0;i<keys.length;i++){
+                infobox.find('[name=menu-'+keys[i]+']').val(curMenu[keys[i]]===undefined?'':curMenu[keys[i]]);
+            }
 
         }
         function deleteMenu(){
@@ -159,25 +200,47 @@
                 infobox.find('.card-tip').show();
                 infobox.find('.card-body').hide();
                 infobox.find('.card-header').hide();
+                if(curSubIdx>-1){
+                    menuData[curIdx].sub_button.splice(curSubIdx,1);
+                }else{
+                    menuData.splice(curIdx,1);
+                }
+                showMenu(menuData);
             })
         }
-        function updateMenu(){
+        function setType(current) {
             var infobox=$('.menu-info-box');
-            var menuname=infobox.find('[name=menu-name]').val();
-            if(curSubIdx>-1){
-                curMenu=menuData[curIdx].sub_button[curSubIdx]
-            }else{
-                curMenu=menuData[curIdx]
+            infobox.find('.content-view').hide();
+            infobox.find('.type-'+current.value).show();
+            updateMenu(current);
+        }
+        function updateMenu(input){
+            var infobox=$('.menu-info-box');
+            var key=$(input).attr('name');
+            key=key.split('-')[1];
+            if (curSubIdx > -1) {
+                curMenu = menuData[curIdx].sub_button[curSubIdx]
+            } else {
+                curMenu = menuData[curIdx]
             }
-            curMenu.name=menuname;
-            infobox.find('.card-header h4').text(menuname);
-            var menus=$('.menubox .col');
-            if(curSubIdx>-1){
-                menus.eq(curIdx).find('.subitem').eq(curSubIdx).find('span').text(menuname);
+            if(key==='name') {
+                var menuname = $(input).val();
+                curMenu.name = menuname;
+                infobox.find('.card-header h4').text(menuname);
+                var menus = $('.menubox .col');
+                if (curSubIdx > -1) {
+                    menus.eq(curIdx).find('.subitem').eq(curSubIdx).find('span').text(menuname);
+                } else {
+                    menus.eq(curIdx).find('.menutext').html((curMenu.sub_button && curMenu.sub_button.length > 0 ? '<i class="ion-md-menu"></i>' : '') + menuname);
+                }
             }else{
-                menus.eq(curIdx).find('.menutext').html((curMenu.sub_button&&curMenu.sub_button.length>0?'<i class="ion-md-menu"></i>':'')+menuname);
+                curMenu[key]=$(input).val();
+                if(key==='url' && !curMenu[key].match(/^https?:\/\//)){
+                    dialog.alert('链接地址请使用附带完整域名的地址<br />如：http://www.baidu.com/');
+                }
             }
-
+            menuStr=JSON.stringify(menuData);
+            $('[name=menu]').val(menuStr);
         }
         function addMenu(idx){
             if(idx>-1){
@@ -188,14 +251,16 @@
                     return toastr.warning('子菜单数量最多5个');
                 }
                 menuData[idx].sub_button.push({
-                    name:'新建菜单'
+                    name:'新建菜单',
+                    type:'click'
                 })
             }else{
                 if(menuData.length>2){
                     return toastr.warning('主菜单数量最多3个');
                 }
                 menuData.push({
-                    name:'新建菜单'
+                    name:'新建菜单',
+                    type:'click'
                 });
             }
             showMenu(menuData);
@@ -204,7 +269,10 @@
             }else{
                 editMenu(menuData.length-1);
             }
+            menuStr=JSON.stringify(menuData);
+            $('[name=menu]').val(menuStr);
         }
         showMenu(menuData);
+        $('[name=menu]').val(menuStr);
     </script>
 </block>

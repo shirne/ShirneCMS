@@ -123,6 +123,7 @@ class WechatController extends BaseController
     {
         if($this->request->isPost()){
             $data=$this->request->post('menu');
+            $data=json_decode($data,true);
             var_export($data);
         }
         $menuData=[];
