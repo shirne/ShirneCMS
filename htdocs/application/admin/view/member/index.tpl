@@ -53,7 +53,7 @@
                 <th>注册时间</th>
                 <th>上次登陆</th>
                 <th>代理</th>
-                <th>状态</th>
+                <th>类型/级别</th>
                 <th width="240">操作</th>
             </tr>
         </thead>
@@ -61,7 +61,8 @@
         <foreach name="lists" item="v">
             <tr>
                 <td><input type="checkbox" name="id" value="{$v.id}" /></td>
-                <td>{$v.username}<br/>{$v.realname}</td>
+                <td>{$v.username}
+                    <if condition="$v.status eq 1"><else/><span class="badge badge-danger" >禁用</span></if><br/>{$v.realname}</td>
                 <td>{$v.mobile}<br />{$v.email}</td>
                 <td>{$v.money|showmoney}</td>
                 <td>{$v.credit}</td>
@@ -95,7 +96,7 @@
                 </td> 
                 <td>
                     <span class="badge badge-info">{$types[$v['type']]}</span>
-                    <if condition="$v.status eq 1">正常<else/><span style="color:red">禁用</span></if>
+                    <span class="badge badge-info">{$levels[$v['level_id']]['level_name']}</span>
                 </td>
                 <td>
                     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
