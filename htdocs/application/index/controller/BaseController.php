@@ -123,8 +123,8 @@ class BaseController extends Controller
         }
 
         /**
-        微信JSSDK
-        详细用法参考：http://mp.weixin.qq.com/wiki/7/1c97470084b73f8e224fe6d9bab1625b.html
+         * 微信JSSDK
+         * 详细用法参考：http://mp.weixin.qq.com/wiki/7/1c97470084b73f8e224fe6d9bab1625b.html
          */
         if($this->isWechat && !empty($this->config['appid'])) {
             $jssdk = new \sdk\WechatAuth($this->config);
