@@ -103,7 +103,11 @@ function parseNavPage($group,$module){
     return $subs;
 }
 function parseNavProduct($cate,$module){
-    $model=Db::name('ProductCategory')->where('name',$cate)->find();
+    if(empty($cate)){
+        $model=['id'=>0];
+    }else {
+        $model = Db::name('ProductCategory')->where('name', $cate)->find();
+    }
 
     $subs=[];
     if(!empty($model)){
@@ -119,7 +123,11 @@ function parseNavProduct($cate,$module){
     return $subs;
 }
 function parseNavArticle($cate,$module){
-    $model=Db::name('Category')->where('name',$cate)->find();
+    if(empty($cate)){
+        $model=['id'=>0];
+    }else {
+        $model = Db::name('Category')->where('name', $cate)->find();
+    }
 
     $subs=[];
     if(!empty($model)){
