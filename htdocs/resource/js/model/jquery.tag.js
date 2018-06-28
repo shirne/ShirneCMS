@@ -1,6 +1,6 @@
 
 jQuery.extend(jQuery.fn,{
-    tags:function(nm){
+    tags:function(nm,onupdate){
         var data=[];
         var tpl='<span class="badge badge-info">{@label}<input type="hidden" name="'+nm+'" value="{@label}"/><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></span>';
         var item=$(this).parents('.form-control');
@@ -9,6 +9,7 @@ jQuery.extend(jQuery.fn,{
         this.before(labelgroup);
         this.on('keyup',function(){
             var val=$(this).val().replace(/，/g,',');
+            var updated=false;
             if(val && val.indexOf(',')>-1){
                 var vals=val.split(',');
                 for(var i=0;i<vals.length;i++){
@@ -16,9 +17,11 @@ jQuery.extend(jQuery.fn,{
                     if(vals[i] && data.indexOf(vals[i])===-1){
                         data.push(vals[i]);
                         labelgroup.append(tpl.compile({label:vals[i]}));
+                        updated=true;
                     }
                 }
                 input.val('');
+                if(updated && onupdate)onupdate(data);
             }
         }).on('blur',function(){
             $(this).val($(this).val()+',').trigger('keyup');
@@ -28,6 +31,7 @@ jQuery.extend(jQuery.fn,{
             var id=data.indexOf(tag);
             if(id)data.splice(id,1);
             $(this).parents('.badge').remove();
+            if(onupdate)onupdate(data);
         });
         item.click(function(){
             input.focus();

@@ -9,6 +9,7 @@
 namespace app\admin\controller;
 
 
+use app\admin\model\SpecificationsModel;
 use app\common\model\ProductModel;
 use app\common\model\ProductSkuModel;
 use app\admin\validate\ProductSkuValidate;
@@ -178,6 +179,13 @@ class ProductController extends BaseController
             return $this->fetch();
         }
     }
+
+    public function get_specs(){
+        $model = new SpecificationsModel();
+        $lists=$model->order('ID ASC')->select();
+        return json(['lists'=>$lists]);
+    }
+
     /**
      * 删除商品
      */

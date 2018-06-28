@@ -118,6 +118,40 @@ h6 {
   text-align: center;
 }
 
+.list-group .list-group-item {
+  .badge{
+    margin-left:5px;
+  }
+  &.disabled{
+    .title{
+      color:#999;
+    }
+  }
+  &.active {
+    .title {
+      color : #fff;
+    }
+    .badge-secondary{
+      background-color : #f8f9fa;
+      color:#212529;
+    }
+  }
+}
+
+.spec-row{
+  margin-bottom:.5rem;
+  label{
+    width:80px;
+    line-height :2.5rem;
+    margin-bottom:0;
+    text-align: center;
+  }
+  .delete{
+    width: 60px;
+    padding:0 10px;
+  }
+}
+
 /* 标签输入 */
 .form-control {
   .taginput {

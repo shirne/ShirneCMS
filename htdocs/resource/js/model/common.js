@@ -14,3 +14,7 @@ function randomString(len, charSet) {
     }
     return str;
 }
+
+function copy_obj(arr){
+    return JSON.parse(JSON.stringify(arr));
+}

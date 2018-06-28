@@ -54,8 +54,7 @@ function getArticleTypes(){
 }
 function getProductTypes(){
     return [
-        1=>'普通',
-        2=>'入会'
+        1=>'普通'
     ];
 }
 function getOauthTypes(){
