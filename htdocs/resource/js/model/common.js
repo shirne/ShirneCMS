@@ -18,3 +18,42 @@ function randomString(len, charSet) {
 function copy_obj(arr){
     return JSON.parse(JSON.stringify(arr));
 }
+
+function isObjectValueEqual(a, b) {
+    if(!a && !b)return true;
+    if(!a || !b)return false;
+
+    // Of course, we can do it use for in
+    // Create arrays of property names
+    var aProps = Object.getOwnPropertyNames(a);
+    var bProps = Object.getOwnPropertyNames(b);
+
+    // If number of properties is different,
+    // objects are not equivalent
+    if (aProps.length != bProps.length) {
+        return false;
+    }
+
+    for (var i = 0; i < aProps.length; i++) {
+        var propName = aProps[i];
+
+        // If values of same property are not equal,
+        // objects are not equivalent
+        if (a[propName] !== b[propName]) {
+            return false;
+        }
+    }
+
+    // If we made it this far, objects
+    // are considered equivalent
+    return true;
+}
+
+function array_combine(a,b) {
+    var obj={};
+    for(var i=0;i<a.length;i++){
+        if(b.length<i+1)break;
+        obj[a[i]]=b[i];
+    }
+    return obj;
+}

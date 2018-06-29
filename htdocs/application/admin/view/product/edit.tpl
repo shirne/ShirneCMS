@@ -143,17 +143,17 @@
                     <foreach name="skus" item="sku" key="k">
                     <tr data-idx="{$k}">
                         <foreach name="sku['specs']" item="spec" key="sk">
-                            <td><input type="hidden" name="skus[{$k}][specs][{$sk}]" value="{$spec}" />{$spec}</td>
+                            <td><input type="hidden" class="spec-val" data-specid="{$sk}" name="skus[{$k}][specs][{$sk}]" value="{$spec}" />{$spec}</td>
                         </foreach>
                         <td>
-                            <input type="hidden" name="skus[{$k}][sku_id]" value="{$sku.sku_id}"/>
-                            <input type="text" class="form-control" name="skus[{$k}][goods_no]" value="{$sku.goods_no}">
+                            <input type="hidden" class="field-sku_id" name="skus[{$k}][sku_id]" value="{$sku.sku_id}"/>
+                            <input type="text" class="form-control field-goods_no" name="skus[{$k}][goods_no]" value="{$sku.goods_no}">
                         </td>
-                        <td><input type="text" class="form-control" name="skus[{$k}][weight]" value="{$sku.weight}"> </td>
-                        <td><input type="text" class="form-control" name="skus[{$k}][price]" value="{$sku.price}"> </td>
-                        <td><input type="text" class="form-control" name="skus[{$k}][market_price]" value="{$sku.market_price}"> </td>
-                        <td><input type="text" class="form-control" name="skus[{$k}][cost_price]" value="{$sku.cost_price}"> </td>
-                        <td><input type="text" class="form-control" name="skus[{$k}][storage]" value="{$sku.storage}"> </td>
+                        <td><input type="text" class="form-control field-weight" name="skus[{$k}][weight]" value="{$sku.weight}"> </td>
+                        <td><input type="text" class="form-control field-price" name="skus[{$k}][price]" value="{$sku.price}"> </td>
+                        <td><input type="text" class="form-control field-market_price" name="skus[{$k}][market_price]" value="{$sku.market_price}"> </td>
+                        <td><input type="text" class="form-control field-cost_price" name="skus[{$k}][cost_price]" value="{$sku.cost_price}"> </td>
+                        <td><input type="text" class="form-control field-storage" name="skus[{$k}][storage]" value="{$sku.storage}"> </td>
                         <td><a href="javascript:" class="btn btn-outline-secondary delete-btn"><i class="ion-md-trash"></i> </a> </td>
                     </tr>
                     </foreach>
@@ -190,6 +190,8 @@
         var usespecs=[];
         var rows=null;
         var isready=false;
+        var goods_no=$('[name=goods_no]').val();
+        var skus=JSON.parse('{$skus|json_encode|raw}');
 
         function showSpec(body){
             var html=['<div class="list-group">'];
@@ -217,6 +219,31 @@
             }
             return '';
         }
+        function updateSkus(){
+            skus=[];
+            var skurows=$('.spec-table tbody tr');
+            skurows.each(function () {
+                var sku={
+                    sku_id: '',
+                    goods_no: '',
+                    weight: '',
+                    price: '',
+                    market_price: '',
+                    cost_price: '',
+                    storage: ''
+                };
+                for(var i in sku){
+                    sku[i]=$(this).find('.field-'+i).val();
+                }
+                sku.specs={};
+                var speccells=$(this).find('.spec-val');
+                speccells.each(function () {
+                    sku.specs[$(this).data('specid')]=$(this).val();
+                });
+                skus.push(sku);
+            });
+            console.log(skus);
+        }
         function resetSkus(){
             if(!isready)return;
             var nrows=[],specrows=$('.spec-groups .spec-row');
@@ -238,6 +265,7 @@
             var rowhtml='<tr data-idx="{@i}">\n' +
                 '   {@specs}\n' +
                 '   <td>\n' +
+                '       <input type="hidden" class="field-sku_id" name="skus[{@i}][sku_id]" value="{@sku_id}"/>\n'+
                 '       <input type="text" class="form-control field-goods_no" name="skus[{@i}][goods_no]" value="{@goods_no}">\n' +
                 '   </td>\n' +
                 '   <td><input type="text" class="form-control field-weight" name="skus[{@i}][weight]" value="{@weight}"> </td>\n' +
@@ -255,32 +283,51 @@
                 rows=nrows;
             }
 
-
             var allhtml=[];
             var mixed_specs=[[]];
             if(spec_datas.length>0) {
                 mixed_specs = specs_mix(spec_datas);
             }
             for (i = 0; i < mixed_specs.length; i++) {
-                var data = {
-                    specs: spec_cell(mixed_specs[i],i),
-                    i: i,
-                    goods_no: '',
-                    weight: '',
-                    price: '',
-                    market_price: '',
-                    cost_price: '',
-                    storage: ''
-                };
+                var data = findSku(mixed_specs[i]);
+                data.specs=spec_cell(mixed_specs[i],i);
+                data.i= i;
+                if(goods_no)data.goods_no=goods_no+'_'+i;
                 allhtml.push(rowhtml.compile(data));
             }
 
             $('.spec-table tbody').html(allhtml.join('\n'));
+            updateSkus();
+        }
+        function findSku(specs) {
+            var spec_obj=array_combine(usespecs,specs);
+            for(var i=0;i<skus.length;i++){
+                if(isObjectValueEqual(spec_obj, skus[i].specs)){
+                    return {
+                        sku_id:skus[i].sku_id,
+                        goods_no: skus[i].goods_no,
+                        weight: skus[i].weight,
+                        price: skus[i].price,
+                        market_price: skus[i].market_price,
+                        cost_price: skus[i].cost_price,
+                        storage: skus[i].storage
+                    };
+                }
+            }
+            return {
+                sku_id:'',
+                goods_no: '',
+                weight: '',
+                price: '',
+                market_price: '',
+                cost_price: '',
+                storage: ''
+            };
         }
         function spec_cell(arr,idx) {
             var specs=[];
             for(var i=0;i<arr.length;i++){
-                specs.push('<td><input type="hidden" name="skus['+idx+'][specs]['+usespecs[i]+']" value="'+arr[i]+'" />'+arr[i]+'</td>')
+                specs.push('<td><input type="hidden" class="spec-val" data-specid="'+usespecs[i]+'" name="skus['+idx+'][specs]['+usespecs[i]+']" value="'+arr[i]+'" />'+arr[i]+'</td>')
             }
             return specs.join('\n');
         }
@@ -354,8 +401,12 @@
                         toastr.warning('请填写货号');
                         return false;
                     }
+                    if(!goods_no){
+                        goods_no=val;
+                        $('[name=goods_no]').val(val);
+                    }
                     $('.spec-table tbody .field-' + field).each(function () {
-                        console.log(this)
+                        //console.log(this)
                         var row=$(this).parents('tr');
                         $(this).val(val+'_'+row.data('idx'));
                     })
@@ -367,6 +418,7 @@
                     }
                     $('.spec-table tbody .field-' + field).val(val);
                 }
+                updateSkus();
                 return true;
             });
         });
