@@ -27,6 +27,7 @@ class PageController extends BaseController{
         if(!empty($group)){
             $model->where('group',$group);
             $groupset=Db::name('PageGroup')->where('group',$group)->find();
+            $this->assign('navmodel','page-'.$group);
         }
         $lists=$model->field('id,name,group,icon,title')->order('sort ASC,id ASC')->select();
         if(empty($lists))$this->error('页面不存在');

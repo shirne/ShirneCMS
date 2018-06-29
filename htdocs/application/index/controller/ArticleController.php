@@ -131,5 +131,9 @@ class ArticleController extends BaseController{
         $this->assign('category',$this->category);
         $this->assign('categotyTree',$this->categotyTree);
         $this->assign('categories',$this->categries);
+
+        if(!empty($this->categotyTree)) {
+            $this->assign('navmodel', 'article-' . $this->categotyTree[0]['name']);
+        }
     }
 }

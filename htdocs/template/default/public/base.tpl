@@ -29,6 +29,11 @@
 <include file="public:footer" />
 <script src="__STATIC__/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="__STATIC__/js/init.min.js"></script>
+<script type="text/javascript">
+    jQuery(function ($) {
+        setNav('{$navmodel}');
+    })
+</script>
 <block name="script" ></block>
 </body>
 
