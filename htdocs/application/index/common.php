@@ -59,6 +59,7 @@ function parseModel($url){
         $url[0]=explode('/',$url[0]);
         $model[0]=strtolower($url[0][0]);
         if(!empty($url[1]['name']))$model[1]=$url[1]['name'];
+        if(!empty($url[1]['group']))$model[1]=$url[1]['group'];
     }elseif(is_string($url)) {
         if (strpos($url, 'http://') !== 0 &&
             strpos($url, 'https://') !== 0 &&
