@@ -24,8 +24,11 @@ jQuery.extend(jQuery.fn,{
                 if(updated && onupdate)onupdate(data);
             }
         }).on('blur',function(){
-            $(this).val($(this).val()+',').trigger('keyup');
-        }).trigger('keyup');
+            var val=$(this).val();
+            if(val) {
+                $(this).val(val + ',').trigger('keyup');
+            }
+        }).trigger('blur');
         labelgroup.on('click','.close',function(){
             var tag=$(this).parents('.badge').find('input').val();
             var id=data.indexOf(tag);
