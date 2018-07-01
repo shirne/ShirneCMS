@@ -3,6 +3,7 @@ namespace app\admin\controller;
 
 
 use think\Db;
+use think\facade\Cache;
 use think\facade\Log;
 
 class IndexController extends BaseController{
@@ -63,6 +64,11 @@ class IndexController extends BaseController{
         user_log($this->mid,'cleardata',1,'清空会员数据','manager');
         
         $this->success('数据已清空');
+    }
+
+    public function clearcache(){
+        Cache::clear();
+        $this->success('缓存已清除');
     }
 
     public function newcount(){

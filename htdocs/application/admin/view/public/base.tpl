@@ -44,12 +44,13 @@
                 <li class="dropdown user-dropdown">
                     <a href="javascript:" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="ion-md-person"></i> 你好,{:session('adminname')} <b class="caret"></b></a>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="/" target="_blank"><i class="ion-md-home"></i> 浏览</a>
+                        <a class="dropdown-item" href="/" target="_blank"><i class="ion-md-home"></i> 浏览首页</a>
+                        <a class="dropdown-item" href="{:url('index/clearcache')}"><i class="ion-md-sync"></i> 清除缓存</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{:url('setting/index')}"><i class="ion-md-options"></i> 设置</a>
-                        <a class="dropdown-item" href="{:url('Index/profile')}"><i class="ion-md-person"></i> 资料</a>
+                        <a class="dropdown-item" href="{:url('setting/index')}"><i class="ion-md-options"></i> 系统设置</a>
+                        <a class="dropdown-item" href="{:url('index/profile')}"><i class="ion-md-person"></i> 个人资料</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{:url('login/logout')}"><i class="ion-md-log-out"></i> 退出</a>
+                        <a class="dropdown-item" href="{:url('login/logout')}"><i class="ion-md-log-out"></i> 安全退出</a>
                     </div>
                 </li>
             </ul>
