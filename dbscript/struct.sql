@@ -116,7 +116,7 @@ CREATE TABLE `sa_category` (
   `title` varchar(100) DEFAULT NULL COMMENT '分类名称',
   `short` varchar(20) DEFAULT NULL COMMENT '分类简称',
   `name` varchar(50) DEFAULT NULL COMMENT '分类别名',
-  `icon` varchar(100) DEFAULT NULL COMMENT '图标',
+  `icon` varchar(150) DEFAULT NULL COMMENT '图标',
   `image` varchar(100) DEFAULT NULL COMMENT '大图',
   `sort` int(11) DEFAULT NULL COMMENT '排序',
   `use_template` tinyint(11) DEFAULT 0 COMMENT '独立模板',

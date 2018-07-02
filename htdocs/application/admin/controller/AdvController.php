@@ -140,6 +140,7 @@ class AdvController extends BaseController
                 if ($model->insert($data)) {
                     $this->success("添加成功",$url);
                 } else {
+                    delete_image($data['image']);
                     $this->error("添加失败");
                 }
             }
@@ -178,6 +179,7 @@ class AdvController extends BaseController
                     delete_image($delete_images);
                     $this->success("更新成功", $url);
                 } else {
+                    delete_image($data['image']);
                     $this->error("更新失败");
                 }
             }

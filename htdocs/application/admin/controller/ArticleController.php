@@ -59,6 +59,7 @@ class ArticleController extends BaseController
                     user_log($this->mid,'addarticle',1,'添加文章 '.$model->id ,'manager');
                     $this->success("添加成功", url('Article/index'));
                 } else {
+                    delete_image($data['cover']);
                     $this->error("添加失败");
                 }
             }
@@ -97,6 +98,7 @@ class ArticleController extends BaseController
                     user_log($this->mid, 'updatearticle', 1, '修改文章 ' . $id, 'manager');
                     $this->success("编辑成功", url('Article/index'));
                 } else {
+                    delete_image($data['cover']);
                     $this->error("编辑失败");
                 }
             }

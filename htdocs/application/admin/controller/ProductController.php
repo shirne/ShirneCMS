@@ -88,6 +88,7 @@ class ProductController extends BaseController
                     user_log($this->mid,'addproduct',1,'添加商品 '.$model->id ,'manager');
                     $this->success("添加成功", url('Product/index'));
                 } else {
+                    delete_image($data['image']);
                     $this->error("添加失败");
                 }
             }
@@ -159,6 +160,7 @@ class ProductController extends BaseController
                     user_log($this->mid, 'updateproduct', 1, '修改商品 ' . $id, 'manager');
                     $this->success("编辑成功", url('product/index'));
                 } else {
+                    delete_image($data['image']);
                     $this->error("编辑失败");
                 }
             }

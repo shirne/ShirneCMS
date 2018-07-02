@@ -27,6 +27,10 @@ class PageController extends BaseController
         return $this->fetch();
     }
 
+    /**
+     * 添加单页
+     * @return mixed
+     */
     public function add(){
         if ($this->request->isPost()) {
             $data=$this->request->post();
@@ -40,9 +44,10 @@ class PageController extends BaseController
                     $data['icon'] = $uploaded['url'];
                 }
                 $model=PageModel::create($data);
-                if ($model->getLastInsID()) {
+                if ($model['id']) {
                     $this->success("添加成功", url('page/index'));
                 } else {
+                    delete_image($data['icon']);
                     $this->error("添加失败");
                 }
             }
@@ -55,7 +60,7 @@ class PageController extends BaseController
     }
 
     /**
-     * 添加单页
+     * 编辑单页
      */
     public function edit($id)
     {
@@ -77,6 +82,7 @@ class PageController extends BaseController
                     delete_image($delete_images);
                     $this->success("更新成功", url('page/index'));
                 } else {
+                    delete_image($data['icon']);
                     $this->error("更新失败");
                 }
             }

@@ -41,6 +41,7 @@ class CategoryController extends BaseController
                     CategoryFacade::clearCache();
                     $this->success("添加成功", url('category/index'));
                 } else {
+                    delete_image([$data['icon'],$data['image']]);
                     $this->error("添加失败");
                 }
             }
@@ -87,6 +88,7 @@ class CategoryController extends BaseController
                     CategoryFacade::clearCache();
                     $this->success("保存成功", url('category/index'));
                 } else {
+                    delete_image([$data['icon'],$data['image']]);
                     $this->error("保存失败");
                 }
             }

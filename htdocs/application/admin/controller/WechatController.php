@@ -90,7 +90,7 @@ class WechatController extends BaseController
                     delete_image($delete_images);
                     $this->success("更新成功".$this->uploadError, url('wechat/index'));
                 } else {
-
+                    delete_image([$data['logo'],$data['qrcode']]);
                     $this->error("更新失败".$this->uploadError);
                 }
             }

@@ -37,6 +37,9 @@ class PaytypeController extends BaseController
         return $this->fetch();
     }
 
+    /**
+     * 添加付款方式
+     */
     public function add(){
         if ($this->request->isPost()) {
             $data = $this->request->post();
@@ -56,6 +59,7 @@ class PaytypeController extends BaseController
                     delete_image($delete_images);
                     $this->success("添加成功", url('Paytype/index'));
                 } else {
+                    delete_image($data['qrcode']);
                     $this->error("添加失败");
                 }
             }
@@ -68,7 +72,7 @@ class PaytypeController extends BaseController
     }
 
     /**
-     * 添加付款方式
+     * 编辑付款方式
      */
     public function edit($id)
     {
@@ -88,6 +92,7 @@ class PaytypeController extends BaseController
                 if (Db::name('Paytype')->update($data)) {
                     $this->success("更新成功", url('Paytype/index'));
                 } else {
+                    delete_image($data['qrcode']);
                     $this->error("更新失败");
                 }
 
