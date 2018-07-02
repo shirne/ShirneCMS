@@ -584,7 +584,7 @@ DROP TABLE IF EXISTS `sa_article`;
 CREATE TABLE `sa_article` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(100) DEFAULT NULL,
-  `vice_title` varchar(100) DEFAULT NULL,
+  `vice_title` varchar(200) DEFAULT NULL,
   `cover` varchar(100) DEFAULT NULL COMMENT '封面图',
   `description` varchar(250) DEFAULT NULL,
   `content` text,

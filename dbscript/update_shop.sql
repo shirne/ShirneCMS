@@ -47,6 +47,7 @@ CREATE TABLE `sa_product` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `cate_id` int(11) DEFAULT NULL,
   `title` varchar(150) DEFAULT NULL,
+  `vice_title` varchar(200) DEFAULT NULL,
   `goods_no` varchar(50) DEFAULT NULL,
   `image` varchar(150) DEFAULT NULL,
   `spec_data` text,

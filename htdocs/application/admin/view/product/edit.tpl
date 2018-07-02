@@ -16,6 +16,12 @@
                 </div>
                 <div class="form-group">
                     <div class="input-group">
+                        <div class="input-group-prepend"><span class="input-group-text">商品特性</span> </div>
+                        <input type="text" name="vice_title" class="form-control" value="{$product.vice_title}" id="product-vice_title" placeholder="简要概括文字">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
                         <div class="input-group-prepend"><span class="input-group-text">商品货号</span> </div>
                         <input type="text" name="goods_no" class="form-control" value="{$product.goods_no}" id="product-goods_no" placeholder="输入商品货号">
                     </div>
