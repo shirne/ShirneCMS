@@ -47,4 +47,19 @@ class SpecificationsController extends BaseController
         $this->assign('lists',$lists);
         return $this->fetch();
     }
+
+    /**
+     * 删除
+     */
+    public function delete($id)
+    {
+        $id = intval($id);
+        $model = Db::name('Specifications');
+        $result = $model->delete($id);
+        if($result){
+            $this->success("删除成功", url('specifications/index'));
+        }else{
+            $this->error("删除失败");
+        }
+    }
 }

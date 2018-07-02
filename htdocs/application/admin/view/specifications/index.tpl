@@ -35,7 +35,7 @@
                     </td>
                     <td>
                         <a class="btn btn-outline-dark btn-sm btn-edit" href="javascript:" data-id="{$v.id}"><i class="ion-md-create"></i> 编辑</a>
-                        <a class="btn btn-outline-dark btn-sm" href="{:url('oauth/delete',array('id'=>$v['id']))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
+                        <a class="btn btn-outline-dark btn-sm" href="{:url('specifications/delete',array('id'=>$v['id']))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
                     </td>
                 </tr>
             </foreach>
@@ -97,7 +97,7 @@
                                     toastr.warning(json.msg);
                                 }
                             }
-                        })
+                        });
                         return false;
                     }
                 }).show(tpl.compile(data),title);

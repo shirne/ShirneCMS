@@ -90,9 +90,9 @@ class OauthController extends BaseController
         $model = Db::name('OAuth');
         $result = $model->delete($id);
         if($result){
-            $this->success("链接删除成功", url('oauth/index'));
+            $this->success("删除成功", url('oauth/index'));
         }else{
-            $this->error("链接删除失败");
+            $this->error("删除失败");
         }
     }
 }
