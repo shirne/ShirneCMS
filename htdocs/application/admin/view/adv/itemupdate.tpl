@@ -29,8 +29,12 @@
             </if>
         </div>
         <div class="form-group">
-            <label for="url">链接</label>
-            <input type="text" name="url" class="form-control" value="{$model.url}" />
+            <label for="text">文本</label>
+            <input type="text" name="text" class="form-control" value="{$model.text}" placeholder="显示文本">
+        </div>
+        <div class="form-group">
+            <label for="text_vice">附加文本</label>
+            <input type="text" name="text_vice" class="form-control" value="{$model.text_vice}" placeholder="附加文本">
         </div>
         <div class="form-group">
             <label for="image">有效期</label>
@@ -50,9 +54,15 @@
             </div>
 
         </div>
-        <div class="form-group">
-            <label for="image">排序</label>
-            <input type="text" name="sort" class="form-control" value="{$model.sort}" />
+        <div class="form-row">
+            <div class="col form-group">
+                <label for="url">链接</label>
+                <input type="text" name="url" class="form-control" value="{$model.url}" />
+            </div>
+            <div class="col form-group">
+                <label for="image">排序</label>
+                <input type="text" name="sort" class="form-control" value="{$model.sort}" />
+            </div>
         </div>
         <div class="form-group">
             <label for="cc">状态</label>
