@@ -1,7 +1,7 @@
 ShirneCMS
 ===============
 
-基于[ThinkPHP5.1](https://github.com/top-think/think/tree/5.1)+bootstrap4.x开发的后台管理系统
+基于[ThinkPHP5.1](https://github.com/top-think/think/tree/5.1)+[bootstrap4.x](https://v4.bootcss.com/docs/4.0/getting-started/introduction/)开发的后台管理系统
 
 > 运行环境要求PHP5.6以上。
 
