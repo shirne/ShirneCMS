@@ -16,6 +16,12 @@ ShirneCMS
 [codeseven/toastr](http://codeseven.github.io/toastr/)<br />
 [swiper](http://www.swiper.com.cn/)
 
+## 后端库引用
+[EasyWechat](https://www.easywechat.com/docs/3.x/zh-CN/index)<br />
+[phpoffice/phpspreadsheet]()<br />
+[phpmailer]()<br />
+[endroid/qr-code]()
+
 ## 安装说明
 
 PHP库引用[Composer](https://getcomposer.org/download/)
