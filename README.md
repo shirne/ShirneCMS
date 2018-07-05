@@ -26,7 +26,14 @@ ShirneCMS
 
 PHP库引用[Composer](https://getcomposer.org/download/)
 
+>cd htdocs<br />
 >composer install
+
+Javascript/CSS构建[Gulp](https://www.gulpjs.com.cn/)
+
+>cd htdocs/resource<br />
+cnpm install<br />
+生成并监视文件：gulp
 
 Javascript/CSS构建[Grunt](http://www.gruntjs.net/)
 
