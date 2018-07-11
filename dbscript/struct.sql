@@ -483,6 +483,8 @@ CREATE TABLE `sa_member_oauth` (
   `update_time` int(11) DEFAULT 0,
   `is_follow` tinyint(4) DEFAULT 0,
   `nickname` varchar(100) DEFAULT '',
+  `name` varchar(100) DEFAULT '',
+  `email` varchar(150) DEFAULT '',
   `gender` TINYINT DEFAULT 0,
   `avatar` varchar(200) DEFAULT '',
   `city` varchar(100) DEFAULT '',

@@ -1,11 +1,11 @@
 <?php
 
 namespace app\index\controller;
+
 use app\common\model\MemberModel;
 use app\common\model\MemberOauthModel;
 use app\common\validate\MemberValidate;
 use sdk\OAuthFactory;
-use sdk\WechatAuth;
 use think\Db;
 use think\Exception;
 use think\facade\Log;
@@ -72,9 +72,9 @@ class LoginController extends BaseController{
 
             // 使用第三方登陆
             $oauth = OAuthFactory::getInstence($app['type'], $app['appid'], $app['appkey'], $callbackurl);
-            $url=$oauth->getAuthUrl();
-            session('OAUTH_'.$type.'_STATE',$oauth->state);
-            return redirect($url);
+            $url=$oauth->redirect();
+
+            return redirect($url->getTargetUrl());
         }
     }
 
@@ -87,12 +87,26 @@ class LoginController extends BaseController{
         }
         $app = Db::name('OAuth')->find(['id'=>$type]);
         $oauth=OAuthFactory::getInstence($app['type'], $app['appid'], $app['appkey']);
-        $oauth->getAccessToken(session('OAUTH_'.$type.'_STATE'));
         try {
-            $userInfo = $oauth->getUserInfo();
-            $data = call_user_func([$this, 'map_' . $app['type'] . '_info'], $userInfo);
+            $userInfo = $oauth->user();
+            $data['openid'] = $userInfo['id'];
+            $data['nickname'] =$userInfo['nickname'];
+            $data['name'] =$userInfo['name'];
+            $data['email'] =$userInfo['email'];
+            $data['avatar'] =$userInfo['avatar'];
+
+            $origin=$userInfo->getOriginal();
+            $data['gender'] = empty($origin['gender'])?0:$origin['gender'];
+            $data['unionid'] = empty($origin['unionid'])?'':$origin['unionid'];
+            $data['data']=json_encode($origin);
             $data['type'] = $app['type'];
             $data['type_id'] = $type;
+            if(!empty($userInfo['unionid'])){
+                $sameAuth=MemberOauthModel::get(['unionid'=>$userInfo['unionid']]);
+                if(!empty($sameAuth)){
+                    $data['member_id']=$sameAuth['member_id'];
+                }
+            }
             $model = MemberOauthModel::get(['openid' => $data['openid']]);
             if (empty($model)) {
                 if (empty($data['member_id'])) {
@@ -109,107 +123,11 @@ class LoginController extends BaseController{
                 $model->save($data);
             }
             $member = Db::name('Member')->find($model['member_id']);
+            setLogin($member);
         }catch(Exception $e){
             $this->error('登录失败');
         }
-
-        setLogin($member);
         $this->success('登录成功');
-        
-    }
-
-    private function map_oschina_info($userInfo){
-        $data=array();
-        $data['openid'] = $userInfo['openid'];
-        $data['nickname'] =$userInfo['nickname'];
-        $data['avatar'] =$userInfo['avatar'];
-        $data['data']=json_encode($userInfo);
-        return $data;
-    }
-    private function map_github_info($userInfo){
-        $data=array();
-        $data['openid'] = $userInfo['openid'];
-        $data['nickname'] =$userInfo['nickname'];
-        $data['avatar'] =$userInfo['avatar'];
-        $data['data']=json_encode($userInfo);
-        return $data;
-    }
-    private function map_gitee_info($userInfo){
-        $data=array();
-        $data['openid'] = $userInfo['openid'];
-        $data['nickname'] =$userInfo['nickname'];
-        $data['avatar'] =$userInfo['avatar'];
-        $data['data']=json_encode($userInfo);
-        return $data;
-    }
-    private function map_csdn_info($userInfo){
-        $data=array();
-        $data['openid'] = $userInfo['openid'];
-        $data['nickname'] =$userInfo['nickname'];
-        $data['avatar'] =$userInfo['avatar'];
-        $data['data']=json_encode($userInfo);
-        return $data;
-    }
-    private function map_coding_info($userInfo){
-        $data=array();
-        $data['openid'] = $userInfo['openid'];
-        $data['nickname'] =$userInfo['nickname'];
-        $data['avatar'] =$userInfo['avatar'];
-        $data['data']=json_encode($userInfo);
-        return $data;
-    }
-    private function map_baidu_info($userInfo){
-        $data=array();
-        $data['openid'] = $userInfo['openid'];
-        $data['nickname'] =$userInfo['nickname'];
-        $data['avatar'] =$userInfo['avatar'];
-        $data['data']=json_encode($userInfo);
-        return $data;
-    }
-    private function map_weibo_info($userInfo){
-        $data=array();
-        $data['openid'] = $userInfo['openid'];
-        $data['nickname'] =$userInfo['nickname'];
-        $data['avatar'] =$userInfo['avatar'];
-        $data['data']=json_encode($userInfo);
-        return $data;
-    }
-    private function map_qq_info($userInfo){
-        $data=array();
-        $data['openid'] = $userInfo['openid'];
-        $data['unionid'] = $userInfo['unionid'];
-        $data['nickname'] =$userInfo['nickname'];
-        $data['avatar'] =$userInfo['figureurl_qq_1'];
-        $data['gender'] = $userInfo['gender'];
-        $data['data']=json_encode($userInfo);
-        return $data;
-    }
-    
-    /**
-     * 微信登陆回调地址
-     * 如果需要手机微信注册 请用这个方法 
-     * 参考文档：http://mp.weixin.qq.com/wiki/9/01f711493b5a02f24b04365ac5d8fd95.html
-     */
-    private function map_wechat_info($userInfo)
-    {
-        $data=array();
-        $data['openid'] = $userInfo['openid'];
-        $data['unionid'] = $userInfo['unionid'];
-        $data['nickname'] =$userInfo['nickname'];
-        $data['avatar'] =$userInfo['headimgurl'];
-        $data['is_follow'] = $userInfo['subscribe'];
-        $data['gender'] = $userInfo['sex'];
-        $data['province']= $userInfo['province'];
-        $data['city']= $userInfo['city'];
-        $data['country']= $userInfo['country'];
-        $data['data']=json_encode($userInfo);
-        if(!empty($userInfo['unionid'])){
-            $sameAuth=MemberOauthModel::get(['unionid'=>$userInfo['unionid']]);
-            if(!empty($sameAuth)){
-                $data['member_id']=$sameAuth['member_id'];
-            }
-        }
-        return $data;
     }
 
     public function getpassword(){

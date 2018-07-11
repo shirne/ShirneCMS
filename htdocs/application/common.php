@@ -59,15 +59,16 @@ function getProductTypes(){
 }
 function getOauthTypes(){
     return [
-        'weixin'=>'微信登录',
-        'baidu'=>'百度登录',
-        'coding'=>'CODING',
-        'csdn'=>'CSDN',
-        'gitee'=>'Gitee',
-        'github'=>'Github',
-        'oschina'=>'OSChina',
-        'qq'=>'QQ登录',
-        'weibo'=>'新浪微博',
+        'facebook' => 'Facebook',
+        'github' => 'GitHub',
+        'google' => 'Google',
+        'linkedin' => 'Linkedin',
+        'weibo' => 'Weibo',
+        'qq' => 'QQ',
+        'wechat' => 'WeChat',
+        'douban' => 'Douban',
+        'wework' => 'WeWork',
+        'outlook' => 'Outlook',
     ];
 }
 
