@@ -8,7 +8,7 @@ use extcore\SimpleFacade;
 /**
  * Class ProductCategoryFacade
  * @package app\common\facade
- * @see \app\common\model\CategoryModel
+ * @see \app\common\model\ProductCategoryModel
  * @method array getCategories($force=false) static 获取分类列表
  * @method array findCategory($idorname) static 查找分类
  * @method array getCategoryId($idorname) static 查找分类ID

@@ -18,7 +18,7 @@
             data: {
                 labels: JSON.parse('{:json_encode(array_column($statics,"awdate"))}'),
                 datasets: [{
-                    label: '会员注册量曲线图',
+                    label: '会员注册量',
                     data: JSON.parse('{:json_encode(array_column($statics,"member_count"))}'),
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.2)',

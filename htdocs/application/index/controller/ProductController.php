@@ -100,8 +100,11 @@ class ProductController extends BaseController
 
         $this->category=ProductCategoryFacade::findCategory($name);
         $this->categotyTree=ProductCategoryFacade::getCategoryTree($name);
-
         $this->categries=ProductCategoryFacade::getTreedCategory();
+        if(empty($this->category)){
+            $this->category=['id'=>0,'title'=>'产品中心'];
+        }
+
 
         $this->assign('category',$this->category);
         $this->assign('categotyTree',$this->categotyTree);
