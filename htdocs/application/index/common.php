@@ -144,6 +144,16 @@ function parseNavArticle($cate,$module){
     return $subs;
 }
 
+function is_nav($model,$curModel){
+    if($model==$curModel){
+        return true;
+    }
+    if(strpos($curModel,'-')>0){
+        return is_nav($model,substr($curModel,0,strrpos($curModel,'-')));
+    }
+    return false;
+}
+
 function getAdImage($tag,$default=''){
     $adrow=\app\common\model\AdvGroupModel::getAdList($tag,1);
     if(!empty($adrow)){
