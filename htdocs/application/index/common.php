@@ -38,7 +38,7 @@ function parseNavigator(&$config,$module){
             if(isset($item['subnav']) ){
                 if(is_string($item['subnav'])) {
                     $args = explode('/', $item['subnav'].'/');
-                    $item['subnav']=call_user_func('parseNav'.$args[0],$args[1],$module);
+                    $item['subnav']=parseNavModel($args[1],$module,$args[0]);
                 }elseif(is_array($item['subnav'])){
                     foreach ($item['subnav'] as $k=>$sitem){
                         if(!empty($sitem['url'])){
@@ -103,45 +103,37 @@ function parseNavPage($group,$module){
     }
     return $subs;
 }
-function parseNavProduct($cate,$module){
+function parseNavModel($cate,$module,$modelName='Article'){
+    if(strtolower($modelName)=='page')return parseNavPage($cate,$module);
+    $cateModel=$modelName=='Article'?'Category':($modelName.'Category');
     if(empty($cate)){
         $model=['id'=>0];
     }else {
-        $model = Db::name('ProductCategory')->where('name', $cate)->find();
+        $model = Db::name($cateModel)->where('name', $cate)->find();
     }
 
     $subs=[];
     if(!empty($model)){
-        $cates=Db::name('ProductCategory')->where('pid',$model['id'])->select();;
+        $cates=Db::name($cateModel)->where('pid',$model['id'])->select();;
         foreach ($cates as $c){
             $subs[]=array(
                 'title'=>$c['title'],
-                'url'=>url($module.'/product/index',['name'=>$c['name']])
+                'url'=>url($module.'/'.strtolower($modelName).'/index',['name'=>$c['name']])
             );
         }
     }
 
     return $subs;
 }
-function parseNavArticle($cate,$module){
-    if(empty($cate)){
-        $model=['id'=>0];
-    }else {
-        $model = Db::name('Category')->where('name', $cate)->find();
-    }
 
-    $subs=[];
-    if(!empty($model)){
-        $cates=Db::name('Category')->where('pid',$model['id'])->select();;
-        foreach ($cates as $c){
-            $subs[]=array(
-                'title'=>$c['title'],
-                'url'=>url($module.'/article/index',['name'=>$c['name']])
-            );
-        }
+function is_nav($model,$curModel){
+    if($model==$curModel){
+        return true;
     }
-
-    return $subs;
+    if(strpos($curModel,'-')>0){
+        return is_nav($model,substr($curModel,0,strrpos($curModel,'-')));
+    }
+    return false;
 }
 
 function getAdImage($tag,$default=''){

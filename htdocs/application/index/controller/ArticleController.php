@@ -125,8 +125,10 @@ class ArticleController extends BaseController{
 
         $this->category=CategoryFacade::findCategory($name);
         $this->categotyTree=CategoryFacade::getCategoryTree($name);
-
         $this->categries=CategoryFacade::getTreedCategory();
+        if(empty($this->category)){
+            $this->category=['id'=>0,'title'=>'新闻中心'];
+        }
 
         $this->assign('category',$this->category);
         $this->assign('categotyTree',$this->categotyTree);
