@@ -547,7 +547,7 @@ DROP TABLE IF EXISTS `sa_page`;
 CREATE TABLE `sa_page` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(100) NOT NULL,
-  `vice_title` varchar(100) NOT NULL COMMENT '副标题',
+  `vice_title` varchar(100) NOT NULL DEFAULT '' COMMENT '副标题',
   `group` varchar(50) NOT NULL DEFAULT '',
   `icon` varchar(150) NOT NULL DEFAULT '',
   `name` varchar(50) DEFAULT NULL,
