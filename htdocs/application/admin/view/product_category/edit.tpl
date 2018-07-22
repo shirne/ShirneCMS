@@ -106,6 +106,12 @@
                            placeholder="请输入SEO关键词(选填)">
                     </div>
                 </div>
+                <div class="form-group">
+                    <label for="description">产品属性</label>
+                    <div class="form-control">
+                        <input type="text" class="taginput" value="{$model.props|implode_cmp}" placeholder="填写多个值以,分割"  />
+                    </div>
+                </div>
                 <if condition="!empty($specs)">
                 <div class="form-group">
                     <label for="description">绑定规格</label>
@@ -128,4 +134,11 @@
             </form>
         </div>
     </div>
+</block>
+<block name="script">
+    <script type="text/javascript">
+        jQuery(function($){
+            $('.taginput').tags('props[]');
+        })
+    </script>
 </block>

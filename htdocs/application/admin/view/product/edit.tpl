@@ -114,6 +114,22 @@
             </div>
         </div>
         <div class="form-row">
+            <label class="col-2" style="max-width: 80px;">自定义属性</label>
+            <div class="form-group col">
+                <div class="spec-groups">
+                    <foreach name="product['prop_data']" item="prop" key="k">
+                        <div class="d-flex spec-row spec-{$k}" data-specid="{$k}">
+                            <input type="hidden" name="spec_data[{$k}][title]" value="{$spec['title']}"/>
+                            <label>{$spec.title}</label>
+                            <div class="form-control col"><input type="text" class="taginput" data-spec_id="{$k}" value="{:implode(',',$spec['data'])}" ></div>
+                            <div class="delete"><a href="javascript:" class="btn btn-outline-secondary"><i class="ion-md-trash"></i> </a> </div>
+                        </div>
+                    </foreach>
+                </div>
+                <a href="javascript:" class="btn btn-outline-dark btn-sm addspecbtn"><i class="ion-md-add"></i> 添加属性</a>
+            </div>
+        </div>
+        <div class="form-row">
             <label class="col-2" style="max-width: 80px;">商品规格</label>
             <div class="form-group col">
                 <div class="spec-groups">
@@ -137,6 +153,7 @@
                         <th class="specth">{$spec['title']}</th>
                     </foreach>
                     <th class="first" scope="col">规格货号&nbsp;<a class="batch-set" title="批量设置" href="javascript:" data-field="goods_no"><i class="ion-md-create"></i> </a> </th>
+                    <th scope="col">规格图片</th>
                     <th scope="col">重量(克)&nbsp;<a class="batch-set" title="批量设置" href="javascript:" data-field="weight"><i class="ion-md-create"></i> </a> </th>
                     <th scope="col">销售价&nbsp;<a class="batch-set" title="批量设置" href="javascript:" data-field="price"><i class="ion-md-create"></i> </a></th>
                     <th scope="col">市场价&nbsp;<a class="batch-set" title="批量设置" href="javascript:" data-field="market_price"><i class="ion-md-create"></i> </a></th>
@@ -155,6 +172,7 @@
                             <input type="hidden" class="field-sku_id" name="skus[{$k}][sku_id]" value="{$sku.sku_id}"/>
                             <input type="text" class="form-control field-goods_no" name="skus[{$k}][goods_no]" value="{$sku.goods_no}">
                         </td>
+                        <td><input type="hidden" class="field-sku_id" name="skus[{$k}][image]" value="{$sku.image}"/><img src="{$sku.image|default='/static/images/noimage.png'}" /> </td>
                         <td><input type="text" class="form-control field-weight" name="skus[{$k}][weight]" value="{$sku.weight}"> </td>
                         <td><input type="text" class="form-control field-price" name="skus[{$k}][price]" value="{$sku.price}"> </td>
                         <td><input type="text" class="form-control field-market_price" name="skus[{$k}][market_price]" value="{$sku.market_price}"> </td>
@@ -274,6 +292,7 @@
                 '       <input type="hidden" class="field-sku_id" name="skus[{@i}][sku_id]" value="{@sku_id}"/>\n'+
                 '       <input type="text" class="form-control field-goods_no" name="skus[{@i}][goods_no]" value="{@goods_no}">\n' +
                 '   </td>\n' +
+                '   <td><input type="hidden" class="field-image" name="skus[{@i}][image]" value="{@image}"/></td>\n' +
                 '   <td><input type="text" class="form-control field-weight" name="skus[{@i}][weight]" value="{@weight}"> </td>\n' +
                 '   <td><input type="text" class="form-control field-price" name="skus[{@i}][price]" value="{@price}"> </td>\n' +
                 '   <td><input type="text" class="form-control field-market_price" name="skus[{@i}][market_price]" value="{@market_price}"> </td>\n' +
@@ -312,6 +331,7 @@
                     return {
                         sku_id:skus[i].sku_id,
                         goods_no: skus[i].goods_no,
+                        image: skus[i].image,
                         weight: skus[i].weight,
                         price: skus[i].price,
                         market_price: skus[i].market_price,
@@ -322,6 +342,7 @@
             }
             return {
                 sku_id:'',
+                image:'',
                 goods_no: '',
                 weight: '',
                 price: '',

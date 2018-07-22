@@ -268,6 +268,13 @@ function array_combine_cmp($keys,$vals,$pad=FALSE){
     return array_combine($keys, $vals);
 }
 
+function implode_cmp($arr,$glue=','){
+    if(is_array($arr)){
+        return implode($glue,$arr);
+    }
+    return '';
+}
+
 function encode_password($pass, $salt = '')
 {
 
