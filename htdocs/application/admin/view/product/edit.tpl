@@ -116,17 +116,16 @@
         <div class="form-row">
             <label class="col-2" style="max-width: 80px;">自定义属性</label>
             <div class="form-group col">
-                <div class="spec-groups">
+                <div class="prop-groups">
                     <foreach name="product['prop_data']" item="prop" key="k">
-                        <div class="d-flex spec-row spec-{$k}" data-specid="{$k}">
-                            <input type="hidden" name="spec_data[{$k}][title]" value="{$spec['title']}"/>
-                            <label>{$spec.title}</label>
-                            <div class="form-control col"><input type="text" class="taginput" data-spec_id="{$k}" value="{:implode(',',$spec['data'])}" ></div>
-                            <div class="delete"><a href="javascript:" class="btn btn-outline-secondary"><i class="ion-md-trash"></i> </a> </div>
+                        <div class="input-group mb-2" >
+                            <input type="text" class="form-control" style="max-width:120px;" name="prop_data[keys][]" value="{$k}"/>
+                            <input type="text" class="form-control" name="prop_data[values][]" value="{$prop}"/>
+                            <div class="input-group-append delete"><a href="javascript:" class="btn btn-outline-secondary"><i class="ion-md-trash"></i> </a> </div>
                         </div>
                     </foreach>
                 </div>
-                <a href="javascript:" class="btn btn-outline-dark btn-sm addspecbtn"><i class="ion-md-add"></i> 添加属性</a>
+                <a href="javascript:" class="btn btn-outline-dark btn-sm addpropbtn"><i class="ion-md-add"></i> 添加属性</a>
             </div>
         </div>
         <div class="form-row">
@@ -266,7 +265,6 @@
                 });
                 skus.push(sku);
             });
-            console.log(skus);
         }
         function resetSkus(){
             if(!isready)return;
@@ -374,6 +372,13 @@
             }
             return mixed;
         }
+        $('.addpropbtn').click(function (e) {
+            $('.prop-groups').append('<div class="input-group mb-2" >\n' +
+                '                            <input type="text" class="form-control" style="max-width:120px;" name="prop_data[keys][]" />\n' +
+                '                            <input type="text" class="form-control" name="prop_data[values][]" />\n' +
+                '                            <div class="input-group-append delete"><a href="javascript:" class="btn btn-outline-secondary"><i class="ion-md-trash"></i> </a> </div>\n' +
+                '                        </div>');
+        });
         $('.addspecbtn').click(function (e) {
             var dlg=new Dialog({
                 'onshow':function (body) {
@@ -412,8 +417,13 @@
         $('.taginput').each(function () {
             $(this).tags('spec_data['+$(this).data('spec_id')+'][data][]',resetSkus);
         });
+        $('.prop-groups').on('click','.delete .btn',function (e) {
+            var self=$(this);
+            dialog.confirm('确定删除该属性？',function () {
+                self.parents('.input-group').remove();
+            })
+        });
         $('.spec-groups').on('click','.delete .btn',function (e) {
-            //console.log(e);
             var self=$(this);
             dialog.confirm('确定删除该规格？',function () {
                 self.parents('.spec-row').remove();

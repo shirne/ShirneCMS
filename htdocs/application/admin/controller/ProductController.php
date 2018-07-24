@@ -77,6 +77,9 @@ class ProductController extends BaseController
                 $data['max_price']=array_max($skus,'price');
                 $data['min_price']=array_min($skus,'price');
                 $data['storage']=array_sum(array_column($skus,'storage'));
+                if(!empty($data['prop_data'])){
+                    $data['prop_data']=array_combine($data['prop_data']['keys'],$data['prop_data']['values']);
+                }
                 unset($data['skus']);
                 $model=ProductModel::create($data);
                 if ($model['id']) {
@@ -140,6 +143,9 @@ class ProductController extends BaseController
                 }
                 $model=ProductModel::get($id);
                 $skus=$data['skus'];
+                if(!empty($data['prop_data'])){
+                    $data['prop_data']=array_combine($data['prop_data']['keys'],$data['prop_data']['values']);
+                }
                 $data['max_price']=array_max($skus,'price');
                 $data['min_price']=array_min($skus,'price');
                 $data['storage']=array_sum(array_column($skus,'storage'));
