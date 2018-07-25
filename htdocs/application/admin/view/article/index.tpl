@@ -76,6 +76,7 @@
 					</td>
 					<td>
 					<a class="btn btn-outline-dark btn-sm" href="{:url('article/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> 编辑</a>
+					<a class="btn btn-outline-dark btn-sm" href="{:url('article/imagelist',array('aid'=>$v['id']))}"><i class="ion-md-images"></i> 图集</a>
 					<a class="btn btn-outline-dark btn-sm" href="{:url('article/delete',array('id'=>$v['id']))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
 					</td>
 				</tr>

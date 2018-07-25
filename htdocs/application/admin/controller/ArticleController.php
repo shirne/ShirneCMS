@@ -1,7 +1,9 @@
 <?php
 namespace app\admin\controller;
+
 use app\admin\model\ArticleModel;
 use app\admin\validate\ArticleValidate;
+use app\admin\validate\ImagesValidate;
 use app\common\facade\CategoryFacade;
 use app\common\model\ArticleCommentModel;
 use think\Db;
@@ -156,7 +158,118 @@ class ArticleController extends BaseController
         } else {
             $this -> error("操作失败");
         }
-	}
+    }
+    
+    /**
+     * 图集
+     * @param $aid
+     * @return mixed
+     */
+    public function imagelist($aid){
+        $model = Db::name('ArticleImages');
+        $article=Db::name('Article')->find($aid);
+        if(empty($article)){
+            $this->error('文章不存在');
+        }
+        $where=array('article_id'=>$aid);
+        if(!empty($key)){
+            $where[] = array('title','like',"%$key%");
+        }
+        $lists=$model->where($where)->order('sort ASC,id DESC')->paginate(15);
+        $this->assign('article',$article);
+        $this->assign('lists',$lists);
+        $this->assign('page',$lists->render());
+        $this->assign('aid',$aid);
+        return $this->fetch();
+    }
+
+    public function imageadd($aid){
+        if ($this->request->isPost()) {
+            $data=$this->request->post();
+            $validate=new ImagesValidate();
+
+            if (!$validate->check($data)) {
+                $this->error($validate->getError());
+            }else{
+                $uploaded=$this->upload('article','upload_image');
+                if(!empty($uploaded)){
+                    $data['image']=$uploaded['url'];
+                }
+                $model = Db::name("ArticleImages");
+                $url=url('article/imagelist',array('aid'=>$aid));
+                if ($model->insert($data)) {
+                    $this->success("添加成功",$url);
+                } else {
+                    delete_image($data['image']);
+                    $this->error("添加失败");
+                }
+            }
+        }
+        $model=array('status'=>1,'article_id'=>$aid);
+        $this->assign('model',$model);
+        $this->assign('aid',$aid);
+        $this->assign('id',0);
+        return $this->fetch('imageupdate');
+    }
+
+    /**
+     * 添加/修改
+     */
+    public function imageupdate($id)
+    {
+        $id = intval($id);
+
+        if ($this->request->isPost()) {
+            $data=$this->request->post();
+            $validate=new ImagesValidate();
+
+            if (!$validate->check($data)) {
+                $this->error($validate->getError());
+            }else{
+                $model = Db::name("ArticleImages");
+                $url=url('article/imagelist',array('aid'=>$data['article_id']));
+                $delete_images=[];
+                $uploaded=$this->upload('article','upload_image');
+                if(!empty($uploaded)){
+                    $data['image']=$uploaded['url'];
+                    $delete_images[]=$data['delete_image'];
+                }
+                unset($data['delete_image']);
+                $data['id']=$id;
+                if ($model->update($data)) {
+                    delete_image($delete_images);
+                    $this->success("更新成功", $url);
+                } else {
+                    delete_image($data['image']);
+                    $this->error("更新失败");
+                }
+            }
+        }else{
+            $model = Db::name('ArticleImages')->where('id', $id)->find();
+            if(empty($model)){
+                $this->error('图片不存在');
+            }
+
+            $this->assign('model',$model);
+            $this->assign('aid',$model['article_id']);
+            $this->assign('id',$id);
+            return $this->fetch();
+        }
+    }
+    /**
+     * 删除图片
+     */
+    public function imagedelete($aid,$id)
+    {
+        $id = intval($id);
+        $model = Db::name('ArticleImages');
+        $result = $model->delete($id);
+        if($result){
+            $this->success("删除成功", url('article/imagelist',array('aid'=>$aid)));
+        }else{
+            $this->error("删除失败");
+        }
+    }
 
 
     /**

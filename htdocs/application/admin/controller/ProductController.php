@@ -14,6 +14,7 @@ use app\common\model\ProductModel;
 use app\common\model\ProductSkuModel;
 use app\admin\validate\ProductSkuValidate;
 use app\admin\validate\ProductValidate;
+use app\admin\validate\ImagesValidate;
 use app\common\facade\ProductCategoryFacade;
 use think\Db;
 
@@ -66,7 +67,7 @@ class ProductController extends BaseController
                 $this->error($validate->getError());
             } else {
                 $delete_images=[];
-                $uploaded = $this->upload('article', 'upload_image');
+                $uploaded = $this->upload('product', 'upload_image');
                 if (!empty($uploaded)) {
                     $data['image'] = $uploaded['url'];
                     $delete_images[]=$data['delete_image'];
@@ -138,7 +139,7 @@ class ProductController extends BaseController
                 $this->error($validate->getError());
             }else{
                 $delete_images=[];
-                $uploaded=$this->upload('article','upload_image');
+                $uploaded=$this->upload('product','upload_image');
                 if(!empty($uploaded)){
                     $data['image']=$uploaded['url'];
                     $delete_images[]=$data['delete_image'];
@@ -221,7 +222,7 @@ class ProductController extends BaseController
 
         $result = Db::name('product')->where('id','in',idArr($id))->update($data);
         if ($result && $data['status'] === 1) {
-            user_log($this->mid,'pusharticle',1,'上架商品 '.$id ,'manager');
+            user_log($this->mid,'pushproduct',1,'上架商品 '.$id ,'manager');
             $this -> success("上架成功", url('Product/index'));
         } elseif ($result && $data['status'] === 0) {
             user_log($this->mid,'cancelproduct',1,'下架商品 '.$id ,'manager');
@@ -231,6 +232,116 @@ class ProductController extends BaseController
         }
     }
 
+    /**
+     * 图集
+     * @param $aid
+     * @return mixed
+     */
+    public function imagelist($aid){
+        $model = Db::name('ProductImages');
+        $product=Db::name('Product')->find($aid);
+        if(empty($product)){
+            $this->error('产品不存在');
+        }
+        $where=array('$product_id'=>$aid);
+        if(!empty($key)){
+            $where[] = array('title','like',"%$key%");
+        }
+        $lists=$model->where($where)->order('sort ASC,id DESC')->paginate(15);
+        $this->assign('$product',$$product);
+        $this->assign('lists',$lists);
+        $this->assign('page',$lists->render());
+        $this->assign('aid',$aid);
+        return $this->fetch();
+    }
+
+    public function imageadd($aid){
+        if ($this->request->isPost()) {
+            $data=$this->request->post();
+            $validate=new ImagesValidate();
+
+            if (!$validate->check($data)) {
+                $this->error($validate->getError());
+            }else{
+                $uploaded=$this->upload('product','upload_image');
+                if(!empty($uploaded)){
+                    $data['image']=$uploaded['url'];
+                }
+                $model = Db::name("ProductImages");
+                $url=url('product/imagelist',array('aid'=>$aid));
+                if ($model->insert($data)) {
+                    $this->success("添加成功",$url);
+                } else {
+                    delete_image($data['image']);
+                    $this->error("添加失败");
+                }
+            }
+        }
+        $model=array('status'=>1,'product_id'=>$aid);
+        $this->assign('model',$model);
+        $this->assign('aid',$aid);
+        $this->assign('id',0);
+        return $this->fetch('imageupdate');
+    }
+
+    /**
+     * 添加/修改
+     */
+    public function imageupdate($id)
+    {
+        $id = intval($id);
+
+        if ($this->request->isPost()) {
+            $data=$this->request->post();
+            $validate=new ImagesValidate();
+
+            if (!$validate->check($data)) {
+                $this->error($validate->getError());
+            }else{
+                $model = Db::name("ProductImages");
+                $url=url('product/imagelist',array('aid'=>$data['product_id']));
+                $delete_images=[];
+                $uploaded=$this->upload('product','upload_image');
+                if(!empty($uploaded)){
+                    $data['image']=$uploaded['url'];
+                    $delete_images[]=$data['delete_image'];
+                }
+                unset($data['delete_image']);
+                $data['id']=$id;
+                if ($model->update($data)) {
+                    delete_image($delete_images);
+                    $this->success("更新成功", $url);
+                } else {
+                    delete_image($data['image']);
+                    $this->error("更新失败");
+                }
+            }
+        }else{
+            $model = Db::name('ProductImages')->where('id', $id)->find();
+            if(empty($model)){
+                $this->error('图片不存在');
+            }
+
+            $this->assign('model',$model);
+            $this->assign('aid',$model['product_id']);
+            $this->assign('id',$id);
+            return $this->fetch();
+        }
+    }
+    /**
+     * 删除图片
+     */
+    public function imagedelete($aid,$id)
+    {
+        $id = intval($id);
+        $model = Db::name('ProductImages');
+        $result = $model->delete($id);
+        if($result){
+            $this->success("删除成功", url('product/imagelist',array('aid'=>$aid)));
+        }else{
+            $this->error("删除失败");
+        }
+    }
 
     /**
      * 商品评论
@@ -240,7 +351,7 @@ class ProductController extends BaseController
     public function comments($id=0,$key=''){
         $model = Db::view('productComment','*')
             ->view('member',['username','level_id','avatar'],'member.id=productComment.member_id','LEFT')
-            ->view('product',['title'=>'article_title','cate_id','cover'],'article.id=productComment.article_id','LEFT')
+            ->view('product',['title'=>'product_title','cate_id','cover'],'product.id=productComment.product_id','LEFT')
             ->view('productCategory',['name'=>'category_name','title'=>'category_title'],'product.cate_id=productCategory.id','LEFT');
         $where=array();
         if($id>0){
