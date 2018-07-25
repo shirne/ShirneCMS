@@ -53,6 +53,11 @@ class ArticleController extends BaseController
                 }
                 unset($data['delete_cover']);
                 $data['user_id'] = $this->mid;
+                if(!empty($data['prop_data'])){
+                    $data['prop_data']=array_combine($data['prop_data']['keys'],$data['prop_data']['values']);
+                }else{
+                    $data['prop_data']=[];
+                }
                 $model=ArticleModel::create($data);
                 if ($model->id) {
                     delete_image($delete_images);
@@ -92,6 +97,11 @@ class ArticleController extends BaseController
                     $data['cover']=$uploaded['url'];
                     $delete_images[]=$data['delete_cover'];
                 }
+                if(!empty($data['prop_data'])){
+                    $data['prop_data']=array_combine($data['prop_data']['keys'],$data['prop_data']['values']);
+                }else{
+                    $data['prop_data']=[];
+                }
                 $model=ArticleModel::get($id);
                 if ($model->allowField(true)->save($data)) {
                     delete_image($delete_images);
@@ -104,7 +114,7 @@ class ArticleController extends BaseController
             }
         }else{
 
-            $model = Db::name('article')->find($id);
+            $model = ArticleModel::get($id);
             if(empty($model)){
                 $this->error('文章不存在');
             }

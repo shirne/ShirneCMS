@@ -40,6 +40,21 @@
                 <input type="hidden" name="delete_cover" value="{$article.cover}"/>
             </if>
         </div>
+        <div class="form-row">
+            <label class="col-2" style="max-width: 80px;">自定义字段</label>
+            <div class="form-group col">
+                <div class="prop-groups">
+                    <foreach name="article['prop_data']" item="prop" key="k">
+                        <div class="input-group mb-2" >
+                            <input type="text" class="form-control" style="max-width:120px;" name="prop_data[keys][]" value="{$k}"/>
+                            <input type="text" class="form-control" name="prop_data[values][]" value="{$prop}"/>
+                            <div class="input-group-append delete"><a href="javascript:" class="btn btn-outline-secondary"><i class="ion-md-trash"></i> </a> </div>
+                        </div>
+                    </foreach>
+                </div>
+                <a href="javascript:" class="btn btn-outline-dark btn-sm addpropbtn"><i class="ion-md-add"></i> 添加属性</a>
+            </div>
+        </div>
         <div class="form-group">
             <label for="article-content">文章内容</label>
             <script id="article-content" name="content" type="text/plain">{$article.content|raw}</script>
@@ -73,6 +88,21 @@
         toolbars: Toolbars.normal,
         initialFrameHeight:500,
         zIndex:100
+    });
+    jQuery(function ($) {
+        $('.addpropbtn').click(function (e) {
+            $('.prop-groups').append('<div class="input-group mb-2" >\n' +
+                '                            <input type="text" class="form-control" style="max-width:120px;" name="prop_data[keys][]" />\n' +
+                '                            <input type="text" class="form-control" name="prop_data[values][]" />\n' +
+                '                            <div class="input-group-append delete"><a href="javascript:" class="btn btn-outline-secondary"><i class="ion-md-trash"></i> </a> </div>\n' +
+                '                        </div>');
+        });
+        $('.prop-groups').on('click','.delete .btn',function (e) {
+            var self=$(this);
+            dialog.confirm('确定删除该属性？',function () {
+                self.parents('.input-group').remove();
+            })
+        });
     });
 </script>
 </block>
