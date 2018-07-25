@@ -39,6 +39,7 @@ class PageController extends BaseController{
         $this->assign('page',$page);
         $this->assign('group',$groupset);
         $this->assign('lists',$lists);
+        $this->assign('images',Db::name('PageImages')->where('page_id',$page['id'])->select());
         if($page['use_template']){
             if(!empty($groupset) && $groupset['use_template']){
                 return $this->fetch($groupset['group'].'/'.$page['name']);

@@ -61,6 +61,7 @@ class ProductController extends BaseController
         $this->assign('product', $product);
         $skuModel=new ProductSkuModel();
         $this->assign('skus', $skuModel->where('product_id',$product['id'])->select());
+        $this->assign('images',Db::name('ProductImages')->where('product_id',$product['id'])->select());
         return $this->fetch();
     }
     public function comment($id){

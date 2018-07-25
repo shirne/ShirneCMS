@@ -60,6 +60,7 @@ class ArticleController extends BaseController{
         $this->category($article['cate_id']);
 
         $this->assign('article', $article);
+        $this->assign('images',Db::name('ArticleImages')->where('article_id',$article['id'])->select());
         if(!empty($this->categotyTree)){
             for($i=count($this->categotyTree)-1;$i>=0;$i--){
                 if($this->categotyTree[$i]['use_template']){
