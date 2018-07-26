@@ -53,7 +53,7 @@ function delete_image($images){
             delete_image($image);
         }
     }else{
-        if(!empty($images)){
+        if(!empty($images) && strpos($images,'/uploads/')===0){
             @unlink('.'.$images);
         }
     }
