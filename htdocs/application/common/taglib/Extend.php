@@ -9,9 +9,7 @@
 namespace app\common\taglib;
 
 
-use think\template\TagLib;
-
-class Extend extends TagLib
+class Extend extends BaseTabLib
 {
     protected $tags =[
         'links'=>['attr'=>'var,limit','close'=>0],

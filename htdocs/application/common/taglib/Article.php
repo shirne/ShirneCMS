@@ -9,9 +9,7 @@
 namespace app\common\taglib;
 
 
-use think\template\TagLib;
-
-class Article extends TagLib
+class Article extends BaseTabLib
 {
     protected $tags =[
         'list'=>['attr'=>'var,category,type,order,limit,cover,recursive','close'=>0],
@@ -27,15 +25,13 @@ class Article extends TagLib
     public function tagList($tag){
         $var  = isset($tag['var']) ? $tag['var'] : 'article_list';
         $recursive =isset($tag['recursive']) ? $tag['recursive'] : 'false';
-        $category=isset($tag['category']) ? $tag['category'] : '';
+        $category=isset($tag['category']) ? $this->parseArg($tag['category']) : 0;
         $order=isset($tag['order']) ? $tag['order'] : 'id DESC';
         if(strpos($order,' ')<=0){
             $order.=' ASC';
         }
-        if(preg_match('/^[a-zA-Z]\w*$/',$category)){
-            $category="\\app\\common\\facade\\CategoryFacade::getCategoryId('".$category."')";
-        }else{
-            $category=intval($category);
+        if(is_string($category) && strpos($category,"'")===0){
+            $category="\\app\\common\\facade\\CategoryFacade::getCategoryId(".$category.")";
         }
 
         $parseStr='<?php ';
@@ -67,12 +63,10 @@ class Article extends TagLib
     }
     public function tagPrev($tag){
         $var  = isset($tag['var']) ? $tag['var'] : 'prev';
-        $category=isset($tag['category']) ? $tag['category'] : '';
+        $category=isset($tag['category']) ? $this->parseArg($tag['category']) : '';
         $id=isset($tag['id']) ? intval($tag['id']) : 0;
-        if(preg_match('/^[a-zA-Z]\w*$/',$category)){
-            $category="\\app\\common\\facade\\CategoryFacade::getCategoryId('".$category."')";
-        }else{
-            $category=intval($category);
+        if(is_string($category) && strpos($category,"'")===0){
+            $category="\\app\\common\\facade\\CategoryFacade::getCategoryId(".$category.")";
         }
 
         $parseStr='<?php ';
@@ -91,12 +85,10 @@ class Article extends TagLib
     }
     public function tagNext($tag){
         $var  = isset($tag['var']) ? $tag['var'] : 'prev';
-        $category=isset($tag['category']) ? $tag['category'] : '';
+        $category=isset($tag['category']) ? $this->parseArg($tag['category']) : '';
         $id=isset($tag['id']) ? intval($tag['id']) : 0;
-        if(preg_match('/^[a-zA-Z]\w*$/',$category)){
-            $category="\\app\\common\\facade\\CategoryFacade::getCategoryId('".$category."')";
-        }else{
-            $category=intval($category);
+        if(is_string($category) && strpos($category,"'")===0){
+            $category="\\app\\common\\facade\\CategoryFacade::getCategoryId(".$category.")";
         }
 
         $parseStr='<?php ';
@@ -115,13 +107,13 @@ class Article extends TagLib
     }
     public function tagPages($tag){
         $var  = isset($tag['var']) ? $tag['var'] : 'page_list';
-        $group=isset($tag['group']) ? $tag['group'] : '';
+        $group=isset($tag['group']) ? $this->parseArg($tag['group']) : '';
 
         $parseStr='<?php ';
 
         $parseStr.='$'.$var.'=\think\Db::name("page")';
         if(!empty($group)){
-            $parseStr .= '->where(\'group\',\''.$group.'\')';
+            $parseStr .= '->where(\'group\','.$group.')';
         }
         if(!empty($tag['limit'])){
             $parseStr .= '->limit('.intval($tag['limit']).')';
@@ -133,13 +125,13 @@ class Article extends TagLib
     }
     public function tagPage($tag){
         $var  = isset($tag['var']) ? $tag['var'] : 'page_model';
-        $name=isset($tag['name']) ? $tag['name'] : '';
+        $name=isset($tag['name']) ? $this->parseArg($tag['name']) : '';
 
         $parseStr='<?php ';
 
         $parseStr.='$'.$var.'=\think\Db::name("page")';
         if(!empty($group)){
-            $parseStr .= '->where(\'name\',\''.$name.'\')';
+            $parseStr .= '->where(\'name\','.$name.')';
         }
         $parseStr .= '->find();';
 
@@ -149,12 +141,12 @@ class Article extends TagLib
 
     public function tagCates($tag){
         $var  = isset($tag['var']) ? $tag['var'] : 'cates_list';
-        $pid = isset($tag['pid']) ? intval($tag['pid']) : 0;
+        $pid = isset($tag['pid']) ? $this->parseArg($tag['pid']) : 0;
 
         $parseStr='<?php ';
 
         $parseStr.='$'.$var.'=\think\Db::name("Category")';
-        if(!empty($tag['category'])){
+        if(!empty($tag['pid'])){
             $parseStr .= "->where('pid','.$pid.')";
         }
         $parseStr .= '->order("sort ASC, id ASC")';
@@ -165,12 +157,7 @@ class Article extends TagLib
     }
     public function tagCate($tag){
         $var  = isset($tag['var']) ? $tag['var'] : 'cate';
-        $name = isset($tag['name']) ? intval($tag['name']) : 0;
-        if(preg_match('/^[a-zA-Z]\w*$/',$name)){
-            $name="'".$name."'";
-        }else{
-            $name=intval($name);
-        }
+        $name = isset($tag['name']) ? $this->parseArg($tag['name']) : 0;
 
         $parseStr='<?php ';
 

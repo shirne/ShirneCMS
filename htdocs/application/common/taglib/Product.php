@@ -9,9 +9,7 @@
 namespace app\common\taglib;
 
 
-use think\template\TagLib;
-
-class Product extends TagLib
+class Product extends BaseTabLib
 {
     protected $tags =[
         'list'=>['attr'=>'var,category,type,limit,image,recursive','close'=>0],
@@ -22,11 +20,9 @@ class Product extends TagLib
     public function tagList($tag){
         $var  = isset($tag['var']) ? $tag['var'] : 'product_list';
         $recursive =isset($tag['recursive']) ? $tag['recursive'] : 'false';
-        $category=isset($tag['category']) ? $tag['category'] : '';
-        if(preg_match('/^[a-zA-Z]\w*$/',$category)){
-            $category="\\app\\common\\facade\\ProductCategoryFacade::getCategoryId('".$category."')";
-        }else{
-            $category=intval($category);
+        $category=isset($tag['category']) ? $this->parseArg($tag['category']) : '';
+        if(is_string($category) && strpos($category,"'")===0){
+            $category="\\app\\common\\facade\\CategoryFacade::getCategoryId(".$category.")";
         }
 
         $parseStr='<?php ';
@@ -58,12 +54,12 @@ class Product extends TagLib
 
     public function tagCates($tag){
         $var  = isset($tag['var']) ? $tag['var'] : 'cates_list';
-        $pid = isset($tag['pid']) ? intval($tag['pid']) : 0;
+        $pid = isset($tag['pid']) ? $this->parseArg($tag['pid']) : 0;
 
         $parseStr='<?php ';
 
         $parseStr.='$'.$var.'=\think\Db::name("ProductCategory")';
-        if(!empty($tag['category'])){
+        if(!empty($tag['pid'])){
             $parseStr .= "->where('pid','.$pid.')";
         }
         $parseStr .= '->order("sort ASC, id ASC")';
@@ -74,12 +70,7 @@ class Product extends TagLib
     }
     public function tagCate($tag){
         $var  = isset($tag['var']) ? $tag['var'] : 'cate';
-        $name = isset($tag['name']) ? intval($tag['name']) : 0;
-        if(preg_match('/^[a-zA-Z]\w*$/',$name)){
-            $name="'".$name."'";
-        }else{
-            $name=intval($name);
-        }
+        $name = isset($tag['name']) ? $this->parseArg($tag['name']) : 0;
 
         $parseStr='<?php ';
 
