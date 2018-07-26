@@ -13,7 +13,7 @@ class ArticleController extends BaseController{
 
     protected $categries;
     protected $category;
-    protected $categotyTree;
+    protected $categoryTree;
 
     public function initialize()
     {
@@ -125,18 +125,18 @@ class ArticleController extends BaseController{
     private function category($name=''){
 
         $this->category=CategoryFacade::findCategory($name);
-        $this->categotyTree=CategoryFacade::getCategoryTree($name);
+        $this->categoryTree=CategoryFacade::getCategoryTree($name);
         $this->categries=CategoryFacade::getTreedCategory();
         if(empty($this->category)){
             $this->category=['id'=>0,'title'=>'新闻中心'];
         }
 
         $this->assign('category',$this->category);
-        $this->assign('categotyTree',$this->categotyTree);
+        $this->assign('categotyTree',$this->categoryTree);
         $this->assign('categories',$this->categries);
 
-        if(!empty($this->categotyTree)) {
-            $this->assign('navmodel', 'article-' . $this->categotyTree[0]['name']);
+        if(!empty($this->categoryTree)) {
+            $this->assign('navmodel', 'article-' . $this->categoryTree[0]['name']);
         }
     }
 }

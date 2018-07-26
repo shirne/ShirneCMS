@@ -20,7 +20,7 @@ class ProductController extends BaseController
 {
     protected $categries;
     protected $category;
-    protected $categotyTree;
+    protected $categoryTree;
 
     public function initialize()
     {
@@ -100,7 +100,7 @@ class ProductController extends BaseController
     private function category($name=''){
 
         $this->category=ProductCategoryFacade::findCategory($name);
-        $this->categotyTree=ProductCategoryFacade::getCategoryTree($name);
+        $this->categoryTree=ProductCategoryFacade::getCategoryTree($name);
         $this->categries=ProductCategoryFacade::getTreedCategory();
         if(empty($this->category)){
             $this->category=['id'=>0,'title'=>'产品中心'];
@@ -108,11 +108,11 @@ class ProductController extends BaseController
 
 
         $this->assign('category',$this->category);
-        $this->assign('categotyTree',$this->categotyTree);
+        $this->assign('categotyTree',$this->categoryTree);
         $this->assign('categories',$this->categries);
 
-        if(!empty($this->categotyTree)) {
-            $this->assign('navmodel', 'product-' . $this->categotyTree[0]['name']);
+        if(!empty($this->categoryTree)) {
+            $this->assign('navmodel', 'product-' . $this->categoryTree[0]['name']);
         }
     }
 }
