@@ -14,7 +14,9 @@ use think\template\TagLib;
 class Article extends TagLib
 {
     protected $tags =[
-        'list'=>['attr'=>'var,category,type,limit,cover,recursive','close'=>0],
+        'list'=>['attr'=>'var,category,type,order,limit,cover,recursive','close'=>0],
+        'prev'=>['attr'=>'var,category,id','close'=>0],
+        'next'=>['attr'=>'var,category,id','close'=>0],
         'pages'=>['attr'=>'var,group,limit','close'=>0],
         'page'=>['attr'=>'var,name','close'=>0],
         'cates'=>['attr'=>'var,pid','close'=>0],
@@ -26,6 +28,10 @@ class Article extends TagLib
         $var  = isset($tag['var']) ? $tag['var'] : 'article_list';
         $recursive =isset($tag['recursive']) ? $tag['recursive'] : 'false';
         $category=isset($tag['category']) ? $tag['category'] : '';
+        $order=isset($tag['order']) ? $tag['order'] : 'id DESC';
+        if(strpos($order,' ')<=0){
+            $order.=' ASC';
+        }
         if(preg_match('/^[a-zA-Z]\w*$/',$category)){
             $category="\\app\\common\\facade\\CategoryFacade::getCategoryId('".$category."')";
         }else{
@@ -49,11 +55,60 @@ class Article extends TagLib
         if(!empty($tag['cover'])){
             $parseStr .= '->where("Article.cover","<>","")';
         }
+        $parseStr .= '->order("Article.'.$order.'");';
         if(empty($tag['limit'])){
             $tag['limit']=10;
         }
         $parseStr .= '->limit('.intval($tag['limit']).')';
         $parseStr .= '->select();';
+
+        $parseStr .= ' ?>';
+        return $parseStr;
+    }
+    public function tagPrev($tag){
+        $var  = isset($tag['var']) ? $tag['var'] : 'prev';
+        $category=isset($tag['category']) ? $tag['category'] : '';
+        $id=isset($tag['id']) ? intval($tag['id']) : 0;
+        if(preg_match('/^[a-zA-Z]\w*$/',$category)){
+            $category="\\app\\common\\facade\\CategoryFacade::getCategoryId('".$category."')";
+        }else{
+            $category=intval($category);
+        }
+
+        $parseStr='<?php ';
+
+        $parseStr.='$'.$var.'=\think\Db::view("Article","*")';
+        $parseStr .= '->view("Category",["title"=>"category_title","name"=>"category_name","short"=>"category_short","icon"=>"category_icon","image"=>"category_image"],"Article.cate_id=Category.id","LEFT")';
+        $parseStr .= '->where("Article.id", "LT", ' . $id . ')';
+        if(!empty($category)){
+            $parseStr .= '->where("Article.cate_id", "IN", \app\common\facade\CategoryFacade::getSubCateIds(' . $category . '))';
+        }
+        $parseStr .= '->order("Article.id DESC");';
+        $parseStr .= '->find();';
+
+        $parseStr .= ' ?>';
+        return $parseStr;
+    }
+    public function tagNext($tag){
+        $var  = isset($tag['var']) ? $tag['var'] : 'prev';
+        $category=isset($tag['category']) ? $tag['category'] : '';
+        $id=isset($tag['id']) ? intval($tag['id']) : 0;
+        if(preg_match('/^[a-zA-Z]\w*$/',$category)){
+            $category="\\app\\common\\facade\\CategoryFacade::getCategoryId('".$category."')";
+        }else{
+            $category=intval($category);
+        }
+
+        $parseStr='<?php ';
+
+        $parseStr.='$'.$var.'=\think\Db::view("Article","*")';
+        $parseStr .= '->view("Category",["title"=>"category_title","name"=>"category_name","short"=>"category_short","icon"=>"category_icon","image"=>"category_image"],"Article.cate_id=Category.id","LEFT")';
+        $parseStr .= '->where("Article.id", "GT", ' . $id . ')';
+        if(!empty($category)){
+            $parseStr .= '->where("Article.cate_id", "IN", \app\common\facade\CategoryFacade::getSubCateIds(' . $category . '))';
+        }
+        $parseStr .= '->order("Article.id ASC");';
+        $parseStr .= '->find();';
 
         $parseStr .= ' ?>';
         return $parseStr;
