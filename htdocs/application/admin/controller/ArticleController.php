@@ -1,7 +1,7 @@
 <?php
 namespace app\admin\controller;
 
-use app\admin\model\ArticleModel;
+use app\common\model\ArticleModel;
 use app\admin\validate\ArticleValidate;
 use app\admin\validate\ImagesValidate;
 use app\common\facade\CategoryFacade;

@@ -8,7 +8,6 @@
 
 namespace app\index\controller;
 
-
 use app\common\model\ProductModel;
 use app\common\facade\ProductCategoryFacade;
 use app\common\model\ProductCommentModel;
@@ -65,7 +64,7 @@ class ProductController extends BaseController
         return $this->fetch();
     }
     public function comment($id){
-        $article = Db::name('product')->find($id);
+        $article = ProductModel::get($id);
         if(empty($article)){
             $this->error('参数错误');
         }
@@ -108,7 +107,7 @@ class ProductController extends BaseController
 
 
         $this->assign('category',$this->category);
-        $this->assign('categotyTree',$this->categoryTree);
+        $this->assign('categoryTree',$this->categoryTree);
         $this->assign('categories',$this->categries);
 
         if(!empty($this->categoryTree)) {

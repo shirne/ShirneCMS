@@ -51,7 +51,7 @@ class Article extends BaseTabLib
         if(!empty($tag['cover'])){
             $parseStr .= '->where("Article.cover","<>","")';
         }
-        $parseStr .= '->order("Article.'.$order.'");';
+        $parseStr .= '->order("Article.'.$order.'")';
         if(empty($tag['limit'])){
             $tag['limit']=10;
         }
@@ -77,7 +77,7 @@ class Article extends BaseTabLib
         if(!empty($category)){
             $parseStr .= '->where("Article.cate_id", "IN", \app\common\facade\CategoryFacade::getSubCateIds(' . $category . '))';
         }
-        $parseStr .= '->order("Article.id DESC");';
+        $parseStr .= '->order("Article.id DESC")';
         $parseStr .= '->find();';
 
         $parseStr .= ' ?>';
@@ -99,7 +99,7 @@ class Article extends BaseTabLib
         if(!empty($category)){
             $parseStr .= '->where("Article.cate_id", "IN", \app\common\facade\CategoryFacade::getSubCateIds(' . $category . '))';
         }
-        $parseStr .= '->order("Article.id ASC");';
+        $parseStr .= '->order("Article.id ASC")';
         $parseStr .= '->find();';
 
         $parseStr .= ' ?>';

@@ -4,6 +4,7 @@ namespace app\index\controller;
 
 use app\common\facade\CategoryFacade;
 use app\common\model\ArticleCommentModel;
+use app\common\model\ArticleModel;
 use app\common\validate\ArticleCommentValidate;
 use \think\Db;
 /**
@@ -40,10 +41,10 @@ class ArticleController extends BaseController{
 
         $this->assign('lists', $model);
         $this->assign('page',$model->render());
-        if(!empty($this->categotyTree)){
-            for($i=count($this->categotyTree)-1;$i>=0;$i--){
-                if($this->categotyTree[$i]['use_template']){
-                    return $this->fetch($this->categotyTree[$i]['name'].'/index');
+        if(!empty($this->categoryTree)){
+            for($i=count($this->categoryTree)-1;$i>=0;$i--){
+                if($this->categoryTree[$i]['use_template']){
+                    return $this->fetch($this->categoryTree[$i]['name'].'/index');
                 }
             }
         }
@@ -52,7 +53,7 @@ class ArticleController extends BaseController{
     }
 
     public function view($id){
-        $article = Db::name('article')->find($id);
+        $article = ArticleModel::get($id);
         if(empty($article)){
             $this->error('文章不存在');
         }
@@ -61,10 +62,10 @@ class ArticleController extends BaseController{
 
         $this->assign('article', $article);
         $this->assign('images',Db::name('ArticleImages')->where('article_id',$article['id'])->select());
-        if(!empty($this->categotyTree)){
-            for($i=count($this->categotyTree)-1;$i>=0;$i--){
-                if($this->categotyTree[$i]['use_template']){
-                    return $this->fetch($this->categotyTree[$i]['name'].'/view');
+        if(!empty($this->categoryTree)){
+            for($i=count($this->categoryTree)-1;$i>=0;$i--){
+                if($this->categoryTree[$i]['use_template']){
+                    return $this->fetch($this->categoryTree[$i]['name'].'/view');
                 }
             }
         }
@@ -132,7 +133,7 @@ class ArticleController extends BaseController{
         }
 
         $this->assign('category',$this->category);
-        $this->assign('categotyTree',$this->categoryTree);
+        $this->assign('categoryTree',$this->categoryTree);
         $this->assign('categories',$this->categries);
 
         if(!empty($this->categoryTree)) {
