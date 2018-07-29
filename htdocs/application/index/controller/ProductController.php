@@ -43,6 +43,14 @@ class ProductController extends BaseController
             ->where($where)
             ->paginate(10);
 
+        $model->each(function($item){
+            if(!empty($item['prop_data'])){
+                $item['prop_data']=json_decode($item['prop_data'],true);
+            }
+            $item['prop_data']=[];
+            return $item;
+        });
+
         $this->assign('lists', $model);
         $this->assign('page',$model->render());
 
