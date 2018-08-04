@@ -1,7 +1,7 @@
-<extend name="Public:Base" />
+<extend name="public:base" />
 
 <block name="body">
-    <include file="Public/bread" menu="order_index" section="项目" title="订单管理" />
+    <include file="public/bread" menu="order_index" section="项目" title="订单管理" />
 
     <div id="page-wrapper">
         <div class="panel panel-default">
