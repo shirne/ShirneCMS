@@ -865,11 +865,17 @@ function crop_image($file,$opts,$savepath=null){
 //$img = str_replace($img,'http://' . strtolower($_SERVER["SERVER_NAME"]),"");
 
     $imgData=getImgData($img);
+    $imageinfo=getimagesize($imgData);
+
+    if($imageinfo===false || empty($imageinfo)){
+        echo file_get_contents('./static/images/blank.gif');
+        exit;
+    }
     $image=imagecreatefromstring($imgData);
 
 //list($photoWidth ,$photoHeight) = getimagesize($img);
-    $photoWidth = imagesx($image);
-    $photoHeight = imagesy($image);
+    $photoWidth = $imageinfo[0];//imagesx($image);
+    $photoHeight = $imageinfo[1];//imagesy($image);
 
     if($photoWidth>0 And $photoHeight>0 ){
         if($photoWidth > $imgWidth Or $photoHeight > $imgHeight){
@@ -931,9 +937,9 @@ function crop_image($file,$opts,$savepath=null){
             }
             imagedestroy($image);
 
-            outputImage($newimg,$savepath,$imgQuality);
+            outputImage($newimg,$imageinfo['mime'],$savepath,$imgQuality);
         }else{
-            outputImage($image,$savepath,$imgQuality);
+            outputImage($image,$imageinfo['mime'],$savepath,$imgQuality);
         }
     }
 }
@@ -945,9 +951,32 @@ function crop_image($file,$opts,$savepath=null){
  * @param $savepath
  * @param $imgQuality
  */
-function outputImage($image,$savepath=null,$imgQuality=80){
+function outputImage($image,$mime='image/jpeg',$savepath=null,$imgQuality=80){
+    switch (strtolower($mime)){
+        case 'image/png':
+            outputPNG($image,$savepath);
+            break;
+        case 'image/gif':
+            outputGIF($image,$savepath);
+            break;
+        default:
+            outputJPEG($image,$savepath,$imgQuality);
+    }
+    exit;
+}
+function outputPNG($image,$savepath=null){
+    header("Content-type: " . image_type_to_mime_type(IMAGETYPE_PNG));
+    imagepng($image,$savepath);
+    imagedestroy($image);
+}
+function outputJPEG($image,$savepath=null,$imgQuality=80){
     header("Content-type: " . image_type_to_mime_type(IMAGETYPE_JPEG));
     imagejpeg($image,$savepath,$imgQuality);
+    imagedestroy($image);
+}
+function outputGIF($image,$savepath=null){
+    header("Content-type: " . image_type_to_mime_type(IMAGETYPE_GIF));
+    imagegif($image,$savepath);
     imagedestroy($image);
 }
 
