@@ -2,9 +2,11 @@
 namespace app\index\controller;
 
 use app\admin\model\MemberLevelModel;
+use EasyWeChat\Factory;
 use extcore\traits\Email;
 use think\Controller;
 use think\Db;
+use think\facade\Env;
 
 /**
  * 如果某个控制器必须用户登录才可以访问  
@@ -127,8 +129,25 @@ class BaseController extends Controller
          * 详细用法参考：http://mp.weixin.qq.com/wiki/7/1c97470084b73f8e224fe6d9bab1625b.html
          */
         if($this->isWechat && !empty($this->config['appid'])) {
-            $jssdk = new \sdk\WechatAuth($this->config);
-            $signPackage = $jssdk->getJsSign(current_url(true));
+            $app = Factory::officialAccount([
+                'app_id' => $this->config['appid'],
+                'secret' => $this->config['appsecret'],
+                'token' => $this->config['token'],
+                'response_type' => 'array',
+                'log' => [
+                    'level' => 'debug',
+                    'file' => Env::get('runtime_path').'/wechat.log',
+                ],
+            ]);
+            $signPackage=$app->jssdk->buildConfig([
+                'onMenuShareTimeline',
+                'onMenuShareAppMessage',
+                'onMenuShareQQ',
+                'onMenuShareWeibo',
+                'onMenuShareQZone',
+                'checkJsApi',
+                'openAddress'
+            ]);
             $this->assign('signPackage', $signPackage);
         }
     }
