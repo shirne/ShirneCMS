@@ -171,11 +171,11 @@ class ArticleController extends BaseController
         if(empty($article)){
             $this->error('文章不存在');
         }
-        $where=array('article_id'=>$aid);
+        $model->where('article_id',$aid);
         if(!empty($key)){
-            $where[] = array('title','like',"%$key%");
+            $model->where('title','like',"%$key%");
         }
-        $lists=$model->where($where)->order('sort ASC,id DESC')->paginate(15);
+        $lists=$model->order('sort ASC,id DESC')->paginate(15);
         $this->assign('article',$article);
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
