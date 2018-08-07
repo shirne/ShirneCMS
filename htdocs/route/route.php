@@ -35,7 +35,7 @@ Route::group('product',[
 Route::group('order',[
     'confirm'=>'index/order/confirm',
     'wechatpay'=>'index/order/wechatpay'
-])->method('GET');
+])->method('GET|POST');
 
 Route::get('page/:group/[:name]','index/page/index');
 

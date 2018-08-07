@@ -94,10 +94,10 @@ class OrderController extends AuthedController
             $this->error('产品不存在');
         }
 
-        $address=Db::name('MemberAddress')->where('member_id',$this->userid)
+        $addresses=Db::name('MemberAddress')->where('member_id',$this->userid)
             ->select();
         $this->assign('from',$from);
-        $this->assign('address',$address);
+        $this->assign('addresses',$addresses);
         $this->assign('total_price',$total_price);
         $this->assign('products',$products);
         return $this->fetch();
@@ -126,14 +126,42 @@ class OrderController extends AuthedController
         $result = $app->order->unify([
             'body' => '订单-'.$order['order_no'],
             'out_trade_no' => $order['order_no'],
-            'total_fee' => $order['pay_amount'],
+            'total_fee' => $order['payamount']*100,
             //'spbill_create_ip' => '', // 可选，如不传该参数，SDK 将会自动获取相应 IP 地址
-            'notify_url' => 'https://pay.weixin.qq.com/wxpay/pay.action', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
+            'notify_url' => url('api/wechat/payresult'), // 支付结果通知网址，如果不设置则会使用配置里的默认地址
             'trade_type' => 'JSAPI',
             'openid' => $this->wechatUser['openid'],
         ]);
+        if(empty($result) || $result['return_code']!='SUCCESS'){
+            $this->error('支付发起失败');
+        }
 
-        $this->assign('paydata',$result['xml']);
+        $params=[
+            'appId'=>$result['appid'],
+            'timeStamp'=>time(),
+            'nonceStr'=>$result['nonce_str'],
+            'package'=>'prepay_id='.$result['prepay_id'],
+            'signType'=>'MD5'
+        ];
+        ksort($params);
+        $string=$this->ToUrlParams($params)."&key=".$config['key'];
+        $params['paySign']=strtoupper(md5($string));
+
+        $this->assign('paydata',$params);
         return $this->fetch();
+    }
+
+    protected function ToUrlParams($arr)
+    {
+        $buff = "";
+        foreach ($arr as $k => $v)
+        {
+            if($k != "sign" && $v != "" && !is_array($v)){
+                $buff .= $k . "=" . $v . "&";
+            }
+        }
+
+        $buff = trim($buff, "&");
+        return $buff;
     }
 }
