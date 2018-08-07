@@ -76,9 +76,15 @@ class OrderController extends AuthedController
             }else{
                 $address=Db::name('MemberAddress')->where('member_id',$this->userid)
                     ->where('address_id',$data['address_id'])->find();
-                $result=OrderFacade::makeOrder($this->user,$products,$address,$data['remark']);
+                $balancepay=$data['pay_type']=='balance'?1:0;
+                $result=OrderFacade::makeOrder($this->user,$products,$address,$data['remark'],$balancepay);
                 if($result){
-                    $this->success('下单成功');
+                    if($balancepay) {
+                        $this->success('下单成功');
+                    }else{
+
+                        $this->success('下单成功，即将跳转到支付页面',url('index/order/wechatpay',['order_id'=>$result]));
+                    }
                 }else{
                     $this->error('下单失败');
                 }
@@ -94,6 +100,40 @@ class OrderController extends AuthedController
         $this->assign('address',$address);
         $this->assign('total_price',$total_price);
         $this->assign('products',$products);
+        return $this->fetch();
+    }
+
+    public function wechatpay($order_id){
+        $order=OrderModel::get($order_id);
+        if(empty($order)){
+            $this->error('订单已支付或不存在!');
+        }
+        $config = [
+            // 必要配置
+            'app_id'             => $this->config['appid'],
+            'mch_id'             => $this->config['mch_id'],
+            'key'                => $this->config['key'],
+
+            // 如需使用敏感接口（如退款、发送红包等）需要配置 API 证书路径(登录商户平台下载 API 证书)
+            'cert_path'          => $this->config['cert_path'],
+            'key_path'           => $this->config['key_path'],
+
+            'notify_url'         => $this->config['appid'],     // 你也可以在下单时单独设置来想覆盖它
+        ];
+
+        $app = Factory::payment($config);
+
+        $result = $app->order->unify([
+            'body' => '订单-'.$order['order_no'],
+            'out_trade_no' => $order['order_no'],
+            'total_fee' => $order['pay_amount'],
+            //'spbill_create_ip' => '', // 可选，如不传该参数，SDK 将会自动获取相应 IP 地址
+            'notify_url' => 'https://pay.weixin.qq.com/wxpay/pay.action', // 支付结果通知网址，如果不设置则会使用配置里的默认地址
+            'trade_type' => 'JSAPI',
+            'openid' => $this->wechatUser['openid'],
+        ]);
+
+        $this->assign('paydata',$result['xml']);
         return $this->fetch();
     }
 }

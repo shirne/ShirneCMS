@@ -65,10 +65,20 @@ class LoginController extends BaseController{
         }else {
             $app = Db::name('OAuth')->find(['id|type'=>$type]);
             if (empty($app)) {
-                $this->error("不允许使用此方式登陆");
+                if($type=='wechat'){
+                    $authid=Db::name('OAuth')->insert([
+                        'title'=>'微信登录',
+                        'type'=>'wechat',
+                        'appid'=>$this->config['appid'],
+                        'appkey'=>$this->config['appsecret']
+                    ]);
+                    $app = Db::name('OAuth')->find($authid);
+                }else {
+                    $this->error("不允许使用此方式登陆");
+                }
             }
-            $type=$app['id'];
-            $callbackurl = url('index/login/callback', ['type' => $type]);
+
+            $callbackurl = url('index/login/callback', ['type' => $app['id']], true,true);
 
             // 使用第三方登陆
             $oauth = OAuthFactory::getInstence($app['type'], $app['appid'], $app['appkey'], $callbackurl);
@@ -110,12 +120,15 @@ class LoginController extends BaseController{
             $model = MemberOauthModel::get(['openid' => $data['openid']]);
             if (empty($model)) {
                 if (empty($data['member_id'])) {
-                    $member = MemberModel::create([
-                        'username' => $data['openid'],
-                        'realname' => $data['nickname'],
-                        'avatar' => $data['avatar']
-                    ]);
-                    $data['member_id'] = $member['id'];
+                    if($this->config['m_register']!='1') {
+                        $member = MemberModel::create([
+                            'username' => $data['openid'],
+                            'realname' => $data['nickname'],
+                            'avatar' => $data['avatar'],
+                            'referer'=>0
+                        ]);
+                        $data['member_id'] = $member['id'];
+                    }
                 }
                 MemberOauthModel::create($data);
             } else {
@@ -125,9 +138,9 @@ class LoginController extends BaseController{
             $member = Db::name('Member')->find($model['member_id']);
             setLogin($member);
         }catch(Exception $e){
-            $this->error('登录失败');
+            $this->error('登录失败',url('index/index/index'));
         }
-        $this->success('登录成功');
+        return redirect()->restore();
     }
 
     public function getpassword(){

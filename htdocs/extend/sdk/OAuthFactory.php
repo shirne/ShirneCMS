@@ -18,15 +18,19 @@ class OAuthFactory
     {
         $config=[
             $type=>[
-                'identifier' => $appid,
-                'secret' => $appkey,
-                'callback_uri' => $url,
+                'client_id' => $appid,
+                'client_secret' => $appkey,
+                'redirect' => $url,
             ],
             'guzzle'=>[
                 'verify'=>false
             ]
         ];
         $factory=new SocialiteManager($config);
-        return $factory->driver($type);
+        $driver = $factory->driver($type);
+        if($type=='wechat'){
+            $driver->scopes(['snsapi_userinfo']);
+        }
+        return $driver;
     }
 }

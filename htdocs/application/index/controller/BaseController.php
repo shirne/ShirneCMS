@@ -18,6 +18,8 @@ class BaseController extends Controller
 
     protected $userid;
     protected $user;
+    protected $openid;
+    protected $wechatUser;
     protected $userLevel;
     protected $isLogin=false;
     protected $errMsg;
@@ -42,9 +44,6 @@ class BaseController extends Controller
 
         $this->assign('isLogin',$this->isLogin);
 
-        if($this->isWechat && $this->config['wechat_autologin']=='1'){
-            redirect(url('index/login/index',['type'=>'wechat']))->send();exit;
-        }
         $this->seo();
     }
 
@@ -85,6 +84,66 @@ class BaseController extends Controller
                 $this->error("登录失效",url('index/login/index'));
             }
         }
+
+        if($this->config['wechat_autologin']=='1' && $this->wechatLogin() ){
+            redirect()->remember();
+            redirect(url('index/login/index',['type'=>'wechat']))->send();exit;
+            //$this->wechatLogin();
+        }
+        $this->assign('wechatUser', $this->wechatUser);
+    }
+    protected function wechatLogin(){
+        if(!$this->isWechat){
+            $this->errMsg='非微信内部浏览器';
+            return false;
+        }
+        $agree=session('wechat_agree');
+        if($agree=='2'){
+            $this->errMsg='用户拒绝授权';
+            return false;
+        }
+
+        //跳过登录页面
+        if(strtolower($this->request->controller())=='login' &&
+            (strtolower($this->request->action())=='index' || strtolower($this->request->action())=='callback')
+        ){
+            return false;
+        }
+
+        $this->openid=$openid=session('openid');
+
+        if($this->isLogin){
+            if(empty($openid)) {
+                $wechatUser = Db::name('memberOauth')
+                    ->where('member_id', $this->userid)
+                    ->where('type_id', 0)
+                    ->where('type', 'wechat')
+                    ->find();
+                if (!empty($wechatUser)) {
+                    $this->wechatUser = $wechatUser;
+                    session('openid',$this->wechatUser['openid']);
+                    return false;
+                }
+            }else{
+                $this->wechatUser=Db::name('memberOauth')->where('openid',$openid)->find();
+                return false;
+            }
+        }else{
+            if(!empty($openid)){
+                $wechatUser=Db::name('memberOauth')->where('openid',$openid)->find();
+                if($wechatUser['member_id']){
+                    $member=MemberModel::get($wechatUser['member_id']);
+                    if(!empty($member)) {
+                        setLogin($member);
+
+                        redirect()->restore()->send();exit;
+                    }
+                }
+                $this->wechatUser=$wechatUser;
+                return false;
+            }
+        }
+        return true;
     }
     public function initLevel(){
         if($this->isLogin && empty($this->userLevel)){

@@ -32,6 +32,11 @@ Route::group('product',[
     'comment/:id'=>'index/product/comment'
 ])->method('GET');
 
+Route::group('order',[
+    'confirm'=>'index/order/confirm',
+    'wechatpay'=>'index/order/wechatpay'
+])->method('GET');
+
 Route::get('page/:group/[:name]','index/page/index');
 
 Route::get('notice/:id', 'index/article/notice');
