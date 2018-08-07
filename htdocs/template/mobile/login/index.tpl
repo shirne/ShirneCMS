@@ -11,7 +11,6 @@
             <div class="weui-cell">
                 <div class="weui-cell__hd" style="position: relative;margin-right: 10px;">
                     <img src="{$wechatUser['avatar']}" style="width: 50px;display: block;border-radius: 1000px;">
-                    <span class="weui-badge" style="position: absolute;top: -.4em;right: -.4em;">8</span>
                 </div>
                 <div class="weui-cell__bd">
                     <p>{$wechatUser['nickname']}</p>

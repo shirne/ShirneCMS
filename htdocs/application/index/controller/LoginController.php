@@ -54,6 +54,11 @@ class LoginController extends BaseController{
                             $url=$redirect->getTargetUrl();
                         }
 
+                        if(!empty($this->wechatUser)){
+                            Db::name('memberOauth')->where('openid',$this->wechatUser['openid'])
+                                ->update(['member_id'=>$member['id']]);
+                        }
+
                         $this->success("登陆成功",$url);
                     }
                 }else{
@@ -292,6 +297,10 @@ class LoginController extends BaseController{
                 $invite['member_use'] = $model['id'];
                 $invite['use_at'] = time();
                 Db::name('invite_code')->update($invite);
+            }
+            if(!empty($this->wechatUser)){
+                Db::name('memberOauth')->where('openid',$this->wechatUser['openid'])
+                    ->update(['member_id'=>$model['id']]);
             }
             Db::commit();
             setLogin($model);
