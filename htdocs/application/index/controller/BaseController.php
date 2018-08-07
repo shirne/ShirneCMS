@@ -85,7 +85,7 @@ class BaseController extends Controller
             }
         }
 
-        if($this->config['wechat_autologin']=='1' && $this->wechatLogin() ){
+        if($this->wechatLogin() && $this->config['wechat_autologin']=='1' ){
             redirect()->remember();
             redirect(url('index/login/index',['type'=>'wechat']))->send();exit;
             //$this->wechatLogin();
@@ -107,6 +107,19 @@ class BaseController extends Controller
         if(strtolower($this->request->controller())=='login' &&
             (strtolower($this->request->action())=='index' || strtolower($this->request->action())=='callback')
         ){
+            if(!empty($openid)){
+                $wechatUser=Db::name('memberOauth')->where('openid',$openid)->find();
+                if($wechatUser['member_id']){
+                    $member=MemberModel::get($wechatUser['member_id']);
+                    if(!empty($member)) {
+                        setLogin($member);
+
+                        redirect()->restore()->send();exit;
+                    }
+                }
+                $this->wechatUser=$wechatUser;
+                return false;
+            }
             return false;
         }
 
