@@ -377,7 +377,8 @@ class MemberController extends AuthedController
      */
     public function order($status=0){
         //
-        $model=Db::name('Order')->where('member_id',$this->userid);
+        $model=Db::name('Order')->where('member_id',$this->userid)
+            ->where('delete_time',0);
         if($status>0){
             $model->where('status',$status-1);
         }
@@ -391,7 +392,7 @@ class MemberController extends AuthedController
                 ->select();
             $products=array_index($products,'order_id',true);
             $orders->each(function($item) use ($products){
-                $item['products']=isset($products[$order['order_id']])?$products[$item['order_id']]:[];
+                $item['products']=isset($products[$item['order_id']])?$products[$item['order_id']]:[];
                 return $item;
             });
         }
@@ -405,8 +406,26 @@ class MemberController extends AuthedController
 
         $this->assign('counts',$counts);
         $this->assign('orders',$orders);
+        $this->assign('status',$status);
         $this->assign('page',$orders->render());
         return $this->fetch();
+    }
+    /**
+     * 删除订单
+     * @param $id
+     */
+    public function order_delete($id)
+    {
+        $model = Db::name('order');
+        $result = $model->where('member_id',$this->userid)->whereIn("order_id",idArr($id))
+            ->useSoftDelete('delete_time',time())->delete();
+        if($result){
+            //Db::name('orderProduct')->whereIn("order_id",idArr($id))->delete();
+            user_log($this->userid,'deleteorder',1,'删除订单 '.$id );
+            $this->success("删除成功", url('index/member/order'));
+        }else{
+            $this->error("删除失败");
+        }
     }
 
     /**

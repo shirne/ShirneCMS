@@ -275,6 +275,7 @@ CREATE TABLE `sa_member` (
   `alipay` varchar(50) DEFAULT '',
   `create_time` int(11) DEFAULT '0',
   `update_time` int(11) DEFAULT '0',
+  `delete_time` INT NULL DEFAULT 0 COMMENT '删除状态',
   `login_ip` varchar(50) DEFAULT '',
   `status` tinyint(1) DEFAULT '1' COMMENT '0:禁止登陆 1:正常',
   `type` tinyint(1) DEFAULT '1' COMMENT '1:普通会员 ',

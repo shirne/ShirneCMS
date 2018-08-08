@@ -43,6 +43,7 @@ class BaseController extends Controller
         $this->checkLogin();
 
         $this->assign('isLogin',$this->isLogin);
+        $this->assign('protocol',$this->request->scheme());
 
         $this->seo();
     }

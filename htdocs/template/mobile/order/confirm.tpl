@@ -7,25 +7,25 @@
         </div>
         <div class="page__bd" style="padding-bottom:80px;">
             <form method="post" name="orderForm" onsubmit="return checkForm(this)" action="" >
-                <div class="weui-panel weui-panel_access">
-                    <div class="weui-panel__hd">购买产品</div>
-                    <div class="weui-panel__bd">
-                        <volist name="products" id="prod">
-                            <a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
-                                <div class="weui-media-box__hd">
-                                    <img class="weui-media-box__thumb" src="{$prod.image}" alt="">
-                                </div>
-                                <div class="weui-media-box__bd">
-                                    <h4 class="weui-media-box__title">{$prod.product_title} </h4>
-                                    <p class="weui-media-box__desc">{$prod.count}&times;{$prod.product_price}</p>
-                                </div>
-                            </a>
-                        </volist>
-                        <a href="javascript:void(0);" class="weui-cell">
-                            <div class="weui-cell__bd"><span class="float-right">￥ {$total_price}</span>订单总额</div>
-                        </a>
-                    </div>
+            <div class="weui-panel weui-panel_access">
+                <div class="weui-panel__hd">购买产品</div>
+                <div class="weui-panel__bd">
+                    <volist name="products" id="prod">
+                    <a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
+                        <div class="weui-media-box__hd">
+                            <img class="weui-media-box__thumb" src="{$prod.product_image}" alt="">
+                        </div>
+                        <div class="weui-media-box__bd">
+                            <h4 class="weui-media-box__title">{$prod.product_title} </h4>
+                            <p class="weui-media-box__desc">{$prod.count}&times;{$prod.product_price}</p>
+                        </div>
+                    </a>
+                    </volist>
+                    <a href="javascript:void(0);" class="weui-cell">
+                        <div class="weui-cell__bd"><span class="float-right">￥ {$total_price}</span>订单总额</div>
+                    </a>
                 </div>
+            </div>
 
                 <div class="weui-cells__title">收货地址</div>
                 <div class="weui-cells weui-cells_checkbox">
@@ -62,18 +62,31 @@
 
                 <div class="weui-cells__title">支付方式</div>
                 <div class="weui-cells weui-cells_checkbox">
+                    <if condition="$user['money'] EGT $total_price*100">
+                        <label class="weui-cell weui-check__label">
+                            <div class="weui-cell__hd">
+                                <input type="radio" class="weui-check" name="pay_type" value="balance" checked="checked">
+                                <i class="weui-icon-checked"></i>
+                            </div>
+                            <div class="weui-cell__bd">
+                                <p>余额支付 {$user.money|showmoney}</p>
+                            </div>
+                        </label>
+                        <else/>
+
+                        <label class="weui-cell weui-check__label weui-disabled">
+                            <div class="weui-cell__hd">
+                                <input type="radio" class="weui-check" name="pay_type" value="balance" disabled>
+                                <i class="weui-icon-checked"></i>
+                            </div>
+                            <div class="weui-cell__bd">
+                                <p>余额支付 {$user.money|showmoney}</p>
+                            </div>
+                        </label>
+                    </if>
                     <label class="weui-cell weui-check__label">
                         <div class="weui-cell__hd">
-                            <input type="radio" class="weui-check" name="pay_type" value="balance" checked="checked">
-                            <i class="weui-icon-checked"></i>
-                        </div>
-                        <div class="weui-cell__bd">
-                            <p>余额支付 {$user.money|showmoney}</p>
-                        </div>
-                    </label>
-                    <label class="weui-cell weui-check__label">
-                        <div class="weui-cell__hd">
-                            <input type="radio" class="weui-check" name="pay_type" value="wechat" >
+                            <input type="radio" class="weui-check" name="pay_type" value="wechat" {$user['money'] < $total_price*100?'checked':''}>
                             <i class="weui-icon-checked"></i>
                         </div>
                         <div class="weui-cell__bd">

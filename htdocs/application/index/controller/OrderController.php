@@ -11,7 +11,9 @@ namespace app\index\controller;
 
 use app\common\facade\MemberCartFacade;
 use app\common\facade\OrderFacade;
+use app\common\model\OrderModel;
 use app\common\validate\OrderValidate;
+use EasyWeChat\Factory;
 use think\Db;
 
 class OrderController extends AuthedController
@@ -105,7 +107,7 @@ class OrderController extends AuthedController
 
     public function wechatpay($order_id){
         $order=OrderModel::get($order_id);
-        if(empty($order)){
+        if(empty($order) || $order['status']!=0){
             $this->error('订单已支付或不存在!');
         }
         $config = [
@@ -128,7 +130,7 @@ class OrderController extends AuthedController
             'out_trade_no' => $order['order_no'],
             'total_fee' => $order['payamount']*100,
             //'spbill_create_ip' => '', // 可选，如不传该参数，SDK 将会自动获取相应 IP 地址
-            'notify_url' => url('api/wechat/payresult'), // 支付结果通知网址，如果不设置则会使用配置里的默认地址
+            'notify_url' => url('api/wechat/payresult','',true,true),
             'trade_type' => 'JSAPI',
             'openid' => $this->wechatUser['openid'],
         ]);
@@ -150,7 +152,18 @@ class OrderController extends AuthedController
         $this->assign('paydata',$params);
         return $this->fetch();
     }
-
+    public function balancepay($order_id){
+        $order=OrderModel::get($order_id);
+        if(empty($order)|| $order['status']!=0){
+            $this->error('订单已支付或不存在!');
+        }
+        $debit = money_log($order['member_id'], -$order['payamount'], "下单支付", 'consume','money');
+        if ($debit){
+            $order->save(['status'=>1,'pay_time'=>time()]);
+            $this->success('支付成功!');
+        }
+        $this->error('支付失败!');
+    }
     protected function ToUrlParams($arr)
     {
         $buff = "";

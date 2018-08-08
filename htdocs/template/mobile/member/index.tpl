@@ -1,64 +1,83 @@
 <extend name="public:base"/>
 
 <block name="body">
-    <div class="page__hd">
-        <h1 class="page__title">会员中心</h1>
-        <p class="page__desc"></p>
+    <div class="weui-flex userinfo">
+        <div class="member_avatar"><img src="{$user.avatar|default='/static/images/avatar.png'}" /> </div>
+        <div class="weui-flex__item member_name">{$user.username}<br/>{$user.mobile}</div>
+        <div class="member_balance">账号余额<br /><span class="text-muted">￥{$user.money|showmoney}</span></div>
     </div>
-    <div class="weui-grids">
-        <a href="javascript:;" class="weui-grid">
-            <div class="weui-grid__icon">
-                <img src="./images/icon_tabbar.png" alt="">
+    <div class="weui-panel weui-panel_access orders">
+        <div class="weui-panel__hd">
+            <a href="{:url('index/member/order')}" class="float-right">所有订单&gt;</a>
+            我的订单
+        </div>
+        <div class="weui-panel__bd view_menu">
+            <div class="weui-flex">
+                <a href="{:url('index/member/order',['status'=>1])}" class="weui-flex__item">
+                    <div class="item-icon"><img src="__STATIC__/icons/order_1.png" /> </div>
+                    <div class="item-text">待付款</div>
+                    <if condition="$counts[0] GT 0"><span class="counter">{$counts[0]}</span></if>
+                </a>
+                <a href="{:url('index/member/order',['status'=>2])}" class="weui-flex__item">
+                    <div class="item-icon"><img src="__STATIC__/icons/order_2.png" /> </div>
+                    <div class="item-text">待发货</div>
+                    <if condition="$counts[1] GT 0"><span class="counter">{$counts[1]}</span></if>
+                </a>
+                <a href="{:url('index/member/order',['status'=>3])}" class="weui-flex__item">
+                    <div class="item-icon"><img src="__STATIC__/icons/order_3.png" /> </div>
+                    <div class="item-text">待收货</div>
+                    <if condition="$counts[2] GT 0"><span class="counter">{$counts[2]}</span></if>
+                </a>
+                <a href="{:url('index/member/order',['status'=>4])}" class="weui-flex__item">
+                    <div class="item-icon"><img src="__STATIC__/icons/order_5.png" /> </div>
+                    <div class="item-text">待评价</div>
+                    <if condition="$counts[3] GT 0"><span class="counter">{$counts[3]}</span></if>
+                </a>
             </div>
-            <p class="weui-grid__label">Grid</p>
+        </div>
+    </div>
+    <div class="weui-cells member-menus">
+        <a class="weui-cell weui-cell_access" href="{:url('index/member/install')}">
+            <div class="weui-cell__hd"><img src="__STATIC__/icons/menu_time.png" ></div>
+            <div class="weui-cell__bd weui-cell_primary">
+                <p>预约安装</p>
+            </div>
+            <span class="weui-cell__ft"></span>
         </a>
-        <a href="javascript:;" class="weui-grid">
-            <div class="weui-grid__icon">
-                <img src="./images/icon_tabbar.png" alt="">
+        <a class="weui-cell weui-cell_access" href="{:url('index/member/repair')}">
+            <div class="weui-cell__hd"><img src="__STATIC__/icons/menu_repair.png" ></div>
+            <div class="weui-cell__bd weui-cell_primary">
+                <p>维修服务</p>
             </div>
-            <p class="weui-grid__label">Grid</p>
+            <span class="weui-cell__ft"></span>
         </a>
-        <a href="javascript:;" class="weui-grid">
-            <div class="weui-grid__icon">
-                <img src="./images/icon_tabbar.png" alt="">
+        <a class="weui-cell weui-cell_access" href="{:url('index/member/attention')}">
+            <div class="weui-cell__hd"><img src="__STATIC__/icons/menu_dingdan.png" ></div>
+            <div class="weui-cell__bd weui-cell_primary">
+                <p>安装须知</p>
             </div>
-            <p class="weui-grid__label">Grid</p>
+            <span class="weui-cell__ft"></span>
         </a>
-        <a href="javascript:;" class="weui-grid">
-            <div class="weui-grid__icon">
-                <img src="./images/icon_tabbar.png" alt="">
+        <a class="weui-cell weui-cell_access" href="javascript:;">
+            <div class="weui-cell__hd"><img src="__STATIC__/icons/menu_headphone.png" ></div>
+            <div class="weui-cell__bd weui-cell_primary">
+                <p>售后服务</p>
             </div>
-            <p class="weui-grid__label">Grid</p>
+            <span class="weui-cell__ft"></span>
         </a>
-        <a href="javascript:;" class="weui-grid">
-            <div class="weui-grid__icon">
-                <img src="./images/icon_tabbar.png" alt="">
+        <a class="weui-cell weui-cell_access" href="{:url('index/member/password')}">
+            <div class="weui-cell__hd"><img src="__STATIC__/icons/menu_secret.png" ></div>
+            <div class="weui-cell__bd weui-cell_primary">
+                <p>修改密码</p>
             </div>
-            <p class="weui-grid__label">Grid</p>
+            <span class="weui-cell__ft"></span>
         </a>
-        <a href="javascript:;" class="weui-grid">
-            <div class="weui-grid__icon">
-                <img src="./images/icon_tabbar.png" alt="">
+        <a class="weui-cell weui-cell_access" href="{:url('index/member/logout')}">
+            <div class="weui-cell__hd"><img src="__STATIC__/icons/menu_quit.png" ></div>
+            <div class="weui-cell__bd weui-cell_primary">
+                <p>退出登录</p>
             </div>
-            <p class="weui-grid__label">Grid</p>
-        </a>
-        <a href="javascript:;" class="weui-grid">
-            <div class="weui-grid__icon">
-                <img src="./images/icon_tabbar.png" alt="">
-            </div>
-            <p class="weui-grid__label">Grid</p>
-        </a>
-        <a href="javascript:;" class="weui-grid">
-            <div class="weui-grid__icon">
-                <img src="./images/icon_tabbar.png" alt="">
-            </div>
-            <p class="weui-grid__label">Grid</p>
-        </a>
-        <a href="javascript:;" class="weui-grid">
-            <div class="weui-grid__icon">
-                <img src="./images/icon_tabbar.png" alt="">
-            </div>
-            <p class="weui-grid__label">Grid</p>
+            <span class="weui-cell__ft"></span>
         </a>
     </div>
 </block>
