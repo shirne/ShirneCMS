@@ -427,6 +427,7 @@ function settingTypes($key = '')
     $types['check'] = "多选";
     $types['select'] = "下拉选择";
     $types['textarea'] = "多行文本";
+    $types['location'] = "位置选择";
     $types['html'] = "编辑器";
 
     if (empty($key)) {

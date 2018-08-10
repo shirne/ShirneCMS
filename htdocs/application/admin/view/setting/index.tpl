@@ -40,6 +40,14 @@
                                     <case value="text">
                                         <input type="text" class="form-control" name="v-{$key}" value="{$item.value}" placeholder="{$item.description}">
                                     </case>
+                                    <case value="location">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="v-{$key}" value="{$item.value}" placeholder="{$item.description}">
+                                            <div class="input-group-append">
+                                                <a href="javascript:" class="btn btn-outline-secondary locationPick">选择位置</a>
+                                            </div>
+                                        </div>
+                                    </case>
                                     <case value="number">
                                         <input type="number" class="form-control" name="v-{$key}" value="{$item.value}" placeholder="{$item.description}">
                                     </case>
@@ -221,6 +229,14 @@
                     return false;
                 }
             }).show(importTpl,'导入配置');
+        });
+        $('.locationPick').click(function () {
+            var input=$(this).parents('.input-group').find('input[type=text]');
+            var locates=input.val().split(',');
+            dialog.pickLocate('',function (locate) {
+                console.log(locate);
+                input.val(locate.lng+','+locate.lat);
+            },{lng:locates[0],lat:locates[1]});
         })
     });
 </script>
