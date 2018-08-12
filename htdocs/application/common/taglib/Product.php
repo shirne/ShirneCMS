@@ -13,6 +13,7 @@ class Product extends BaseTabLib
 {
     protected $tags =[
         'list'=>['attr'=>'var,category,type,limit,image,recursive','close'=>0],
+        'relation'=>['attr'=>'var,category,id','close'=>0],
         'cates'=>['attr'=>'var,pid','close'=>0],
         'cate'=>['attr'=>'var,name','close'=>0],
     ];
@@ -22,7 +23,7 @@ class Product extends BaseTabLib
         $recursive =isset($tag['recursive']) ? $tag['recursive'] : 'false';
         $category=isset($tag['category']) ? $this->parseArg($tag['category']) : '';
         if(is_string($category) && strpos($category,"'")===0){
-            $category="\\app\\common\\facade\\CategoryFacade::getCategoryId(".$category.")";
+            $category="\\app\\common\\facade\\ProductCategoryFacade::getCategoryId(".$category.")";
         }
 
         $parseStr='<?php ';
@@ -46,6 +47,28 @@ class Product extends BaseTabLib
             $tag['limit']=10;
         }
         $parseStr .= '->limit('.intval($tag['limit']).')';
+        $parseStr .= '->select();';
+
+        $parseStr .= ' ?>';
+        return $parseStr;
+    }
+    public function tagRelation($tag){
+        $var  = isset($tag['var']) ? $tag['var'] : 'relations';
+        $category=isset($tag['category']) ? $tag['category'] : '';
+        $id=isset($tag['id']) ? $tag['id'] : 0;
+        if(preg_match('/^[a-zA-Z]\w*$/',$category)){
+            $category="\\app\\common\\facade\\ProductCategoryFacade::getCategoryId('".$category."')";
+        }
+
+        $parseStr='<?php ';
+
+        $parseStr.='$'.$var.'=\think\Db::view("Product","*")';
+        $parseStr .= '->view("ProductCategory",["title"=>"category_title","name"=>"category_name","short"=>"category_short","icon"=>"category_icon","image"=>"category_image"],"Product.cate_id=ProductCategory.id","LEFT")';
+        $parseStr .= '->where("Product.id", "NEQ", ' . $id . ')';
+        if(!empty($category)){
+            $parseStr .= '->where("Product.cate_id", "IN", \app\common\facade\ProductCategoryFacade::getSubCateIds(' . $category . '))';
+        }
+        $parseStr .= '->order("Product.sale DESC,Product.id DESC")';
         $parseStr .= '->select();';
 
         $parseStr .= ' ?>';
