@@ -13,7 +13,7 @@ class Product extends BaseTabLib
 {
     protected $tags =[
         'list'=>['attr'=>'var,category,type,limit,image,recursive','close'=>0],
-        'relation'=>['attr'=>'var,category,id','close'=>0],
+        'relation'=>['attr'=>'var,category,id,limit','close'=>0],
         'cates'=>['attr'=>'var,pid','close'=>0],
         'cate'=>['attr'=>'var,name','close'=>0],
     ];
@@ -47,6 +47,7 @@ class Product extends BaseTabLib
             $tag['limit']=10;
         }
         $parseStr .= '->limit('.intval($tag['limit']).')';
+        $parseStr .= '->order("Product.sale DESC,Product.id DESC")';
         $parseStr .= '->select();';
 
         $parseStr .= ' ?>';
@@ -68,6 +69,10 @@ class Product extends BaseTabLib
         if(!empty($category)){
             $parseStr .= '->where("Product.cate_id", "IN", \app\common\facade\ProductCategoryFacade::getSubCateIds(' . $category . '))';
         }
+        if(empty($tag['limit'])){
+            $tag['limit']=10;
+        }
+        $parseStr .= '->limit('.intval($tag['limit']).')';
         $parseStr .= '->order("Product.sale DESC,Product.id DESC")';
         $parseStr .= '->select();';
 
