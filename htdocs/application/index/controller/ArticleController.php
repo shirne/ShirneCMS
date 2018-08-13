@@ -120,11 +120,13 @@ class ArticleController extends BaseController{
                 }
             }
         }
-
+        $this->seo($article['title']);
+        $this->category($article['cate_id']);
         $comments=Db::view('articleComment','*')
         ->view('member',['username','realname'],'member.id=articleComment.member_id','LEFT')
         ->where('article_id',$id)->paginate(10);
 
+        $this->assign('article',$article);
         $this->assign('comments',$comments);
         $this->assign('page',$comments->render());
         return $this->fetch();

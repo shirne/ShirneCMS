@@ -840,6 +840,13 @@ function gener_qrcode($text,$size=300,$pad=10,$errLevel='high'){
     $qrCode->render();
 }
 
+function file_rule($file){
+    static $stamp='';
+    if(!$stamp)$stamp=microtime();
+    else $stamp+=1;
+    return md5(md5_file($file).$stamp);
+}
+
 /**
  * 根据参数裁剪图片
  * @param $file

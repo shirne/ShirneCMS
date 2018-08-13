@@ -18,7 +18,7 @@ trait Upload
         'img_exts'       =>  array('gif','jpg','jpeg','bmp','png','swf','tif'),
         'root_path'      =>  './uploads/', //上传根路径
         'save_path'      =>  '', //保存路径
-        'save_rule'      =>  'md5_file', //命名规则
+        'save_rule'      =>  'file_rule', //命名规则
         'driver'         =>	'local',
         'driverConfig'   =>  array(),
     );
