@@ -2,7 +2,7 @@
 
 <block name="body">
 
-    <extend:advs var="banners" flag="banner"/>
+    <extendtag:advs var="banners" flag="banner"/>
     <div id="carouselBannerControls" class="carousel slide" data-ride="carousel">
         <ol class="carousel-indicators">
             <volist name="banners" id="item" key="k">

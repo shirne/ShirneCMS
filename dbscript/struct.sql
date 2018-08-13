@@ -118,8 +118,9 @@ CREATE TABLE `sa_category` (
   `name` varchar(50) DEFAULT NULL COMMENT '分类别名',
   `icon` varchar(150) DEFAULT NULL COMMENT '图标',
   `image` varchar(100) DEFAULT NULL COMMENT '大图',
-  `sort` int(11) DEFAULT NULL COMMENT '排序',
+  `sort` int(11) DEFAULT 0 COMMENT '排序',
   `use_template` tinyint(11) DEFAULT 0 COMMENT '独立模板',
+  `pagesize` int(11) DEFAULT 12 COMMENT '分页',
   `keywords` varchar(255) DEFAULT NULL COMMENT '分类关键词',
   `description` varchar(255) DEFAULT NULL COMMENT '分类描述',
   PRIMARY KEY (`id`)

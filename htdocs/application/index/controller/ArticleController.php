@@ -37,7 +37,7 @@ class ArticleController extends BaseController{
             ->view('category',['name'=>'category_name','title'=>'category_title'],'article.cate_id=category.id','LEFT')
             ->view('manager',['username'],'manager.id=article.user_id','LEFT')
             ->where($where)
-            ->paginate(10);
+            ->paginate($this->category['pagesize']);
         $model->each(function($item){
             if(!empty($item['prop_data'])){
                 $item['prop_data']=json_decode($item['prop_data'],true);

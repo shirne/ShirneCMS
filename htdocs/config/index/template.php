@@ -9,5 +9,5 @@
 return [
     'view_path'=>Env::get('root_path').'template'.DIRECTORY_SEPARATOR,
     'independence'=>true,
-    'taglib_pre_load'=>'app\common\taglib\Article,app\common\taglib\Product,app\common\taglib\Extend'
+    'taglib_pre_load'=>'app\common\taglib\Article,app\common\taglib\Product,app\common\taglib\Extendtag'
 ];

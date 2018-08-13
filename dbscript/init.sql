@@ -5,10 +5,10 @@ LOCK TABLES `sa_permission` WRITE;
 INSERT INTO `sa_permission` (`id`, `parent_id`,`name`, `url`,`key`, `icon`, `order_id`, `disable`)
 VALUES
   (1,0,'主面板','Index/index','Board','ion-md-speedometer',0,0),
-  (2,0,'内容','','Content','ion-md-apps',0,0),
-  (3,0,'其它','','Other','ion-md-cube',0,0),
-  (4,0,'会员','','Member','ion-md-person',0,0),
-  (5,0,'系统','','System','ion-md-cog',0,0),
+  (2,0,'内容','','Content','ion-md-apps',1,0),
+  (3,0,'其它','','Other','ion-md-cube',8,0),
+  (4,0,'会员','','Member','ion-md-person',9,0),
+  (5,0,'系统','','System','ion-md-cog',19,0),
   (11,2,'分类管理','Category/index','category_index','ion-md-medical',0,0),
   (12,2,'文章管理','Article/index','article_index','ion-md-paper',0,0),
   (13,2,'单页管理','Page/index','page_index','ion-md-document',0,0),

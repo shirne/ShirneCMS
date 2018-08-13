@@ -71,7 +71,7 @@
 </article:listwrap>
 ```
 
-## extend
+## extendtag
 
 > 主要用于读取广告，链接，公告等数据的标签库
 

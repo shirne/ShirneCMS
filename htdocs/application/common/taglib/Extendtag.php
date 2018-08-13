@@ -9,7 +9,7 @@
 namespace app\common\taglib;
 
 
-class Extend extends BaseTabLib
+class Extendtag extends BaseTabLib
 {
     protected $tags =[
         'links'=>['attr'=>'var,limit','close'=>0],
