@@ -84,7 +84,8 @@ class ProductController extends BaseController
             }else{
                 $data['member_id']=$this->userid;
                 if(empty($data['member_id'])){
-                    $this->error('请先登录');
+                    redirect()->remember();
+                    $this->error('请先登录',url('index/login/index'));
                 }
                 $model=ProductCommentModel::create($data);
                 if($model['id']){

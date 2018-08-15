@@ -302,7 +302,7 @@ class ArticleController extends BaseController
     }
 
     public function commentview($id){
-	    $model=Db::name('articleComment')->find('id');
+	    $model=Db::name('articleComment')->find($id);
 	    if(empty($model)){
 	        $this->error('评论不存在');
         }

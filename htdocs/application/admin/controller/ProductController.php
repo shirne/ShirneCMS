@@ -373,7 +373,7 @@ class ProductController extends BaseController
     }
 
     public function commentview($id){
-        $model=Db::name('productComment')->find('id');
+        $model=Db::name('productComment')->find($id);
         if(empty($model)){
             $this->error('评论不存在');
         }
