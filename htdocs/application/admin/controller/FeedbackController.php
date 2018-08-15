@@ -68,7 +68,7 @@ class FeedbackController extends BaseController
     {
         $data['status'] = intval($status);
 
-        $result=FeedbackModel::whereIn('id',idArr($id))->save(['status'=>$status]);
+        $result=FeedbackModel::whereIn('id',idArr($id))->update(['status'=>$status]);
         if ($result && $data['status'] === 1) {
             user_log($this->mid,'auditfeedback',1,'审核留言 '.$id ,'manager');
             $this -> success("审核成功", url('Feedback/index'));
