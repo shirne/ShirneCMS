@@ -4,9 +4,12 @@ namespace app\api\controller;
 
 use app\common\model\OrderModel;
 use EasyWeChat\Factory;
+use EasyWeChat\Kernel\Messages\Message;
+use EasyWeChat\Kernel\Messages\Raw;
 use sdk\Wechat;
 use think\Controller;
 use think\Db;
+use think\facade\Env;
 use think\facade\Log;
 
 /**
@@ -26,13 +29,14 @@ class WechatController extends Controller{
         //配置
         $this->options = array(
             'token'=>$this->config['token'],
-            'encodingaeskey'=>$this->config['encodingaeskey'],
-            'appid'=>$this->config['appid'],
-            'appsecret'=>$this->config['appsecret'],
-            'debug'=>true,
-            'logcallback'=>function($log){
-                Log::write($log,'Wechat');
-            }
+            'aes_key'=>$this->config['encodingaeskey'],
+            'app_id'=>$this->config['appid'],
+            'secret'=>$this->config['appsecret'],
+            'response_type' => 'array',
+            'log' => [
+                'level' => 'debug',
+                'file' => Env::get('runtime_path').'/wechat.log',
+            ],
         );
     }
 
@@ -44,47 +48,87 @@ class WechatController extends Controller{
                 Log::write('公众号['.$hash.']不存在','Wechat');
             }
             $this->options['token']=$account['token'];
-            $this->options['encodingaeskey']=$account['encodingaeskey'];
-            $this->options['appid']=$account['appid'];
-            $this->options['appsecret']=$account['appsecret'];
+            $this->options['aes_key']=$account['encodingaeskey'];
+            $this->options['app_id']=$account['appid'];
+            $this->options['secret']=$account['appsecret'];
         }
 
+        $app = Factory::officialAccount($this->options);
+        $app->server->push(function ($message) {
+            switch ($message['MsgType']) {
+                case 'event':
+                    switch ($message['event']){
+                        case 'subscribe':
+                            return '谢谢关注!';
+                            break;
+                        case 'SCAN':
+                            return '已关注扫码';
+                            break;
+                        case 'LOCATION':
+                            return '位置上报事件';
+                            break;
+                        case 'CLICK':
+                            return '菜单点击事件';
+                            break;
+                        case 'VIEW':
+                            return '链接点击事件';
+                            break;
+                        case 'TEMPLATESENDJOBFINISH':
+                            $this->updateTplMsg($message);
+                            break;
+                        default:
+                            return '收到事件消息';
+                    }
+                    break;
+                case 'text':
+                    return '收到文字消息';
+                    break;
+                case 'image':
+                    return '收到图片消息';
+                    break;
+                case 'voice':
+                    return '收到语音消息';
+                    break;
+                case 'video':
+                    return '收到视频消息';
+                    break;
+                case 'location':
+                    return '收到坐标消息';
+                    break;
+                case 'link':
+                    return '收到链接消息';
+                    break;
+                case 'file':
+                    return '收到文件消息';
+                // ... 其它消息
+                default:
+                    return '收到其它消息';
+                    break;
+            }
 
+            return new Raw('');
+        });
 
-        $wechat = new Wechat($this->options);
-        $wechat->valid();
-        $type = $wechat->getRev()->getRevType();
-        switch($type) {
-            case Wechat::MSGTYPE_TEXT:
-                $url = url('login/wechatCallback','',true,true);
-                $redirect = $wechat->getOauthRedirect($url);
-                $wechat->text("<a href=\"$redirect\">点击登陆</a>")->reply();
-                break;
-            case Wechat::MSGTYPE_LOCATION:
-                $localtion = $wechat->getRevGeo();
-                $wechat->text(json_encode($localtion))->reply();
-                break;
-            case Wechat::EVENT_SUBSCRIBE:
-                $wechat->text("谢谢关注")->reply();
-                break;
-            case Wechat::MSGTYPE_IMAGE:
-                $wechat->text("...")->reply();
-                break;
-            case Wechat::EVENT_SCAN:
-                //扫码
-                break;
-            case Wechat::EVENT_LOCATION:
-                //上报位置
-                break;
-            case Wechat::EVENT_MENU_CLICK:
-                //菜单点击
-                break;
-            default:
-                $wechat->text("Hello!")->reply();
-        }
-        return '';
+        $response = $app->server->serve();
+
+        $response->send();
     }
 
+    private function updateTplMsg($message){
+        $result=$message['Status'];
+        $msgid=$message['MsgID'];
+        if($result=='success') {
+            Db::name('taskTemplate')->where('msgid', $msgid)->update([
+                'is_send'=>2,
+                'send_result'=>$result
+            ]);
+        }else{
+            Db::name('taskTemplate')->where('msgid', $msgid)->update([
+                'is_send'=>-2,
+                'send_result'=>$result
+            ]);
+        }
+    }
     public function payresult(){
         $config = [
             'app_id'             => $this->config['appid'],
@@ -150,5 +194,9 @@ class WechatController extends Controller{
         });
 
         $response->send();
+    }
+
+    private function checkClick($message)
+    {
     }
 }

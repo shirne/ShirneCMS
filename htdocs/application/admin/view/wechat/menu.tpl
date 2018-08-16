@@ -4,7 +4,10 @@
     <include file="public/bread" menu="wechat_index" title="公众号菜单" />
 
     <div id="page-wrapper">
-        <div class="page-header">编辑菜单</div>
+        <div class="page-header">
+            <div class="float-right pt-1"><a class="btn d-block btn-outline-warning btn-sm" href="{:url('wechat/menu',['id'=>$model['id'],'refresh'=>1])}">刷新缓存</a> </div>
+            编辑菜单
+        </div>
         <div id="page-content">
             <form method="post" action="">
                 <div class="form-row mb-3">
@@ -29,8 +32,8 @@
                                     <div class="col-sm-10"><input type="text" name="menu-name" class="form-control" onchange="updateMenu(this)" value="" /><div class="text-muted nametip"></div> </div>
                                 </div>
                                 <div class="form-group row menu-content">
-                                    <label for="content-view" class="col-sm-2 col-form-label">菜单内容</label>
-                                    <div class="col-sm-10">
+                                    <label for="content-view" class="col-2 col-form-label">菜单内容</label>
+                                    <div class="col-10">
                                         <div class="form-check form-check-inline">
                                             <input class="form-check-input" type="radio" name="menu-type" id="menuTypeClick" onclick="setType(this)" value="click">
                                             <label class="form-check-label" for="menuTypeClick">发送消息</label>
@@ -45,7 +48,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col content-view type-click">
+                                    <div class="col-12 content-view type-click">
                                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                                             <li class="nav-item">
                                                 <a class="nav-link active" id="key-tab" data-toggle="tab" href="#key" role="tab" aria-controls="key" aria-selected="true">关键字</a>
@@ -63,8 +66,8 @@
                                         <div class="tab-content" id="myTabContent">
                                             <div class="tab-pane fade show active" id="key" role="tabpanel" aria-labelledby="key-tab">
                                                 <div class="form-group row">
-                                                    <label for="menu-name" class="col-sm-2 col-form-label">关键字</label>
-                                                    <div class="col-sm-10"><input type="text" name="menu-key" class="form-control" onchange="updateMenu(this)" value="" /><div class="text-muted">模拟发送的关键字</div> </div>
+                                                    <label for="menu-name" class="col-2 col-form-label">关键字</label>
+                                                    <div class="col-10"><input type="text" name="menu-key" class="form-control" onchange="updateMenu(this)" value="" /><div class="text-muted">模拟发送的关键字</div> </div>
                                                 </div>
                                             </div>
                                             <div class="tab-pane fade" id="picture" role="tabpanel" aria-labelledby="picture-tab">...</div>
@@ -72,24 +75,24 @@
                                             <div class="tab-pane fade" id="video" role="tabpanel" aria-labelledby="video-tab">...</div>
                                         </div>
                                     </div>
-                                    <div class="col content-view type-view">
+                                    <div class="col-12 content-view type-view">
                                         <div class="form-group row">
-                                            <label for="menu-name" class="col-sm-2 col-form-label">跳转网址</label>
-                                            <div class="col-sm-10"><input type="text" name="menu-url" class="form-control" onchange="updateMenu(this)" value="" /><div class="text-muted">点击按钮跳转的链接地址</div> </div>
+                                            <label for="menu-name" class="col-2 col-form-label">跳转网址</label>
+                                            <div class="col-10"><input type="text" name="menu-url" class="form-control" onchange="updateMenu(this)" value="" /><div class="text-muted">点击按钮跳转的链接地址</div> </div>
                                         </div>
                                     </div>
-                                    <div class="col content-view type-miniprogram">
+                                    <div class="col-12 content-view type-miniprogram">
                                         <div class="form-group row">
-                                            <label for="menu-name" class="col-sm-2 col-form-label">APPID</label>
-                                            <div class="col-sm-10"><input type="text" name="menu-appid" class="form-control" onchange="updateMenu(this)" value="" /><div class="text-muted">关联的小程序的APPID</div> </div>
+                                            <label for="menu-name" class="col-2 col-form-label">APPID</label>
+                                            <div class="col-10"><input type="text" name="menu-appid" class="form-control" onchange="updateMenu(this)" value="" /><div class="text-muted">关联的小程序的APPID</div> </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label for="menu-name" class="col-sm-2 col-form-label">跳转页面</label>
+                                            <label for="menu-name" class="col-2 col-form-label">跳转页面</label>
                                             <div class="col-sm-10"><input type="text" name="menu-pagepath" class="form-control" onchange="updateMenu(this)" value="" /><div class="text-muted">要跳转的小程序页面</div> </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label for="menu-name" class="col-sm-2 col-form-label">替代链接</label>
-                                            <div class="col-sm-10"><input type="text" name="menu-url" class="form-control" onchange="updateMenu(this)" value="" /><div class="text-muted">在不支持的设备上使用链接跳转</div> </div>
+                                            <label for="menu-name" class="col-2 col-form-label">替代链接</label>
+                                            <div class="col-10"><input type="text" name="menu-url" class="form-control" onchange="updateMenu(this)" value="" /><div class="text-muted">在不支持的设备上使用链接跳转</div> </div>
                                         </div>
                                     </div>
                                 </div>
@@ -126,7 +129,7 @@
                     'name':data[i].name,
                     'submenu':createSubMenu(data[i].sub_button||[],i),
                     'prefix':data[i].sub_button&& data[i].sub_button.length>0?'<i class="ion-md-menu"></i>':''
-                    
+
                 };
                 html.push('<div class="col"><span class="menutext" onclick="editMenu({@idx})">{@prefix}{@name}</span><div class="submenu">{@submenu}</div></div>'.compile(menu));
             }
@@ -188,7 +191,7 @@
                 }
             }
             infobox.find('[name=menu-type]').filter('[value='+curMenu.type+']').trigger('click');
-            var keys=[];
+            var keys=['key','url','appid','pagepath'];
             for(var i=0;i<keys.length;i++){
                 infobox.find('[name=menu-'+keys[i]+']').val(curMenu[keys[i]]===undefined?'':curMenu[keys[i]]);
             }

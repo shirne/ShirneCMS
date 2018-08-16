@@ -4,6 +4,7 @@ namespace app\admin\controller;
 
 use app\admin\model\WechatModel;
 use app\admin\validate\WechatValidate;
+use EasyWeChat\Factory;
 use think\Db;
 
 /**
@@ -119,8 +120,21 @@ class WechatController extends BaseController
         }
     }
 
-    public function menu($id)
+    public function menu($id,$refresh=0)
     {
+        $model = Db::name('wechat')->find($id);
+        if(empty($model)){
+            $this->error('公众号不存在');
+        }
+        $cacheKey='wechat-menu-'.$model['appid'];
+
+        $app=Factory::officialAccount([
+            'token'=>$model['token'],
+            'aes_key'=>$model['encodingaeskey'],
+            'app_id'=>$model['appid'],
+            'secret'=>$model['appsecret']
+        ]);
+
         if($this->request->isPost()){
             $data=$this->request->post('menu');
             $data=json_decode($data,true);
@@ -135,10 +149,38 @@ class WechatController extends BaseController
                     unset($item['sub_button']);
                 }
             }
-            var_export($data);
+            $result=$app->menu->create($data);
+            if(!empty($result) && $result['errcode']=='0'){
+                cache($cacheKey,$data);
+                $this->success('保存成功');
+            }else{
+                $this->success('保存失败：'.$result['errmsg']);
+            }
         }
-        $menuData=[];
+        $menuData=cache($cacheKey);
+        if(empty($menuData) || $refresh){
+            $menuData=$app->menu->list();
+            if(empty($menuData) || $menuData['errcode']!=0){
+                $menuData=$app->menu->current();
+                if(!empty($menuData) && empty($menuData['errcode'])){
+                    $menuData=$menuData['selfmenu_info']['button'];
+                    foreach ($menuData as $k=>$item){
+                        if(isset($item['sub_button'])){
+                            $menuData[$k]['sub_button']=$item['sub_button']['list'];
+                        }
+                    }
+                }else{
+                    $menuData=[];
+                }
+            }else{
+                $menuData=$menuData['menu']['button'];
+            }
 
+            if(empty($menuData))$menuData=[];
+            cache($cacheKey,$menuData);
+        }
+
+        $this->assign('model',$model);
         $this->assign('menuData',$menuData);
         return $this->fetch();
     }
