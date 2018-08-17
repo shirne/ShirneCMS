@@ -136,6 +136,7 @@ class LoginController extends BaseController{
                     }
                 }
                 MemberOauthModel::create($data);
+                $model = MemberOauthModel::get(['openid' => $data['openid']]);
             } else {
                 unset($data['member_id']);
                 $model->save($data);
