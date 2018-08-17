@@ -140,8 +140,10 @@ class LoginController extends BaseController{
                 unset($data['member_id']);
                 $model->save($data);
             }
-            $member = Db::name('Member')->find($model['member_id']);
-            setLogin($member);
+            if($model['member_id']) {
+                $member = Db::name('Member')->find($model['member_id']);
+                setLogin($member);
+            }
         }catch(Exception $e){
             $this->error('登录失败',url('index/index/index'));
         }
