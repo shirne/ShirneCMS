@@ -12,17 +12,23 @@
                 <input type="text" name="title" class="form-control" value="{$article.title}" id="article-title" placeholder="输入文章标题">
             </div>
             <div class="col form-group">
-                <label for="article-title">副标题</label>
-                <input type="text" name="vice_title" class="form-control" value="{$article.vice_title}" id="article-title" >
+                <label for="vice_title">副标题</label>
+                <input type="text" name="vice_title" class="form-control" value="{$article.vice_title}" >
             </div>
         </div>
-        <div class="form-group">
-            <label for="article-cate">文章分类</label>
-            <select name="cate_id" id="article-cate" class="form-control">
-                <foreach name="category" item="v">
-                    <option value="{$v.id}" {$article['cate_id'] == $v['id']?'selected="selected"':""}>{$v.html} {$v.title}</option>
-                </foreach>
-            </select>
+        <div class="form-row">
+            <div class="col form-group">
+                <label for="article-cate">文章分类</label>
+                <select name="cate_id" id="article-cate" class="form-control">
+                    <foreach name="category" item="v">
+                        <option value="{$v.id}" {$article['cate_id'] == $v['id']?'selected="selected"':""}>{$v.html} {$v.title}</option>
+                    </foreach>
+                </select>
+            </div>
+            <div class="col form-group">
+                <label for="create_time">发布时间</label>
+                <input type="text" name="create_time" class="form-control datepicker" data-format="Y-m-d H:i:s" value="{$article.create_time|showdate}" placeholder="默认取当前系统时间" >
+            </div>
         </div>
         <div class="form-group">
             <label for="image">封面图</label>

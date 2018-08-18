@@ -60,6 +60,8 @@ class ArticleController extends BaseController
                 }else{
                     $data['prop_data']=[];
                 }
+                if(!empty($data['create_time']))$data['create_time']=strtotime($data['create_time']);
+                if(empty($data['create_time']))unset($data['create_time']);
                 $model=ArticleModel::create($data);
                 if ($model->id) {
                     delete_image($delete_images);
@@ -104,6 +106,8 @@ class ArticleController extends BaseController
                 }else{
                     $data['prop_data']=[];
                 }
+                if(!empty($data['create_time']))$data['create_time']=strtotime($data['create_time']);
+                if(empty($data['create_time']))unset($data['create_time']);
                 $model=ArticleModel::get($id);
                 if ($model->allowField(true)->save($data)) {
                     delete_image($delete_images);
