@@ -34,7 +34,7 @@
 
                     <foreach name="settings[$key]" item="item">
                         <div class="form-row form-group">
-                            <label for="{$key}" class="col-2 text-right align-middle">{$item.title}</label>
+                            <label for="v-{$key}" class="col-2 text-right align-middle">{$item.title}</label>
                             <div class="col-5">
                                 <switch name="item.type">
                                     <case value="text">
