@@ -188,12 +188,8 @@ class BaseController extends Controller
             $base_path=config('template.view_path');
             if($this->isMobile){
                 $this->view->config('view_path', $base_path.'mobile'.DIRECTORY_SEPARATOR);
-                config('dispatch_success_tmpl','mobile/'.config('dispatch_success_tmpl'));
-                config('dispatch_error_tmpl','mobile/'.config('dispatch_error_tmpl'));
             }else{
                 $this->view->config('view_path', $base_path.'default'.DIRECTORY_SEPARATOR);
-                config('dispatch_success_tmpl','default/'.config('dispatch_success_tmpl'));
-                config('dispatch_error_tmpl','default/'.config('dispatch_error_tmpl'));
             }
         }
 
