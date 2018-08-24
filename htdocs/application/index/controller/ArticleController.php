@@ -147,6 +147,12 @@ class ArticleController extends BaseController{
 
         if(!empty($this->categoryTree)) {
             $this->assign('navmodel', 'article-' . $this->categoryTree[0]['name']);
+
+            foreach ($this->categoryTree as $cate){
+                if($cate['pagesize']>0){
+                    $this->pagesize=intval($cate['pagesize']);
+                }
+            }
         }
     }
 }

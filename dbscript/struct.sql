@@ -119,6 +119,7 @@ CREATE TABLE `sa_category` (
   `icon` varchar(150) DEFAULT NULL COMMENT '图标',
   `image` varchar(100) DEFAULT NULL COMMENT '大图',
   `sort` int(11) DEFAULT 0 COMMENT '排序',
+  `pagesize` int(11) DEFAULT NULL COMMENT '分页',
   `use_template` tinyint(11) DEFAULT 0 COMMENT '独立模板',
   `pagesize` int(11) DEFAULT 12 COMMENT '分页',
   `keywords` varchar(255) DEFAULT NULL COMMENT '分类关键词',
