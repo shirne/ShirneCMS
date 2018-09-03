@@ -247,12 +247,12 @@ class ProductController extends BaseController
         if(empty($product)){
             $this->error('产品不存在');
         }
-        $where=array('$product_id'=>$aid);
+        $model->where('product_id',$aid);
         if(!empty($key)){
-            $where[] = array('title','like',"%$key%");
+            $model->where('title','like',"%$key%");
         }
-        $lists=$model->where($where)->order('sort ASC,id DESC')->paginate(15);
-        $this->assign('$product',$$product);
+        $lists=$model->order('sort ASC,id DESC')->paginate(15);
+        $this->assign('product',$product);
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
         $this->assign('aid',$aid);
@@ -377,7 +377,7 @@ class ProductController extends BaseController
     }
 
     public function commentview($id){
-        $model=Db::name('productComment')->find('id');
+        $model=Db::name('productComment')->find($id);
         if(empty($model)){
             $this->error('评论不存在');
         }

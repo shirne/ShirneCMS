@@ -38,34 +38,21 @@
 </body>
 
 <if condition="$isWechat">
-<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript" src="{$protocol}://res.wx.qq.com/open/js/jweixin-1.1.0.js"></script>
 <script>
-    wx.config({
-        debug: false,
-        appId: '{$signPackage.appId}',
-        timestamp: {$signPackage.timestamp},
-        nonceStr: '{$signPackage.nonceStr}',
-        signature: '{$signPackage.signature}',
-        jsApiList: [
-        // 所有要调用的 API 都要加到这个列表中
-        'onMenuShareTimeline',
-        'onMenuShareAppMessage',
-        'onMenuShareQQ',
-        'onMenuShareWeibo',
-        'onMenuShareQZone'
-    ]
-    });
+    var imageUrl='__STATIC__/images/logo.png';
+    wx.config({$signPackage|raw});
     wx.ready(function () {
         wx.onMenuShareTimeline({
             title: '{$title}',
             link:  window.location.href,
-            imgUrl: '{$signPackage.logo}'
+            imgUrl: imageUrl
         });
         wx.onMenuShareAppMessage({
             title: '{$title}',
             desc: '{$description}',
             link:  window.location.href,
-            imgUrl: '{$signPackage.logo}',
+            imgUrl: imageUrl,
             type: '',
             dataUrl: ''
         });
@@ -73,20 +60,20 @@
             title: '{$title}',
             desc: '{$description}',
             link:  window.location.href,
-            imgUrl: '{$signPackage.logo}'
+            imgUrl: imageUrl
         });
         wx.onMenuShareWeibo({
             title: '{$title}',
             desc: '{$description}',
             link:  window.location.href,
-            imgUrl: '{$signPackage.logo}'
+            imgUrl: imageUrl
 
         });
         wx.onMenuShareQZone({
             title: '{$title}',
             desc: '{$description}',
             link:  window.location.href,
-            imgUrl: '{$signPackage.logo}'
+            imgUrl: imageUrl
         });
     });
 </script>

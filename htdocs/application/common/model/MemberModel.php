@@ -13,7 +13,7 @@ class MemberModel extends Model
     {
         parent::init();
         self::afterUpdate(function ($model) {
-            $users=$model->where($model->getWhere())->find();
+            $users=$model->where($model->getWhere())->select();
             //代理会员组
             if(!empty($users)) {
                 $levels = getMemberLevels();

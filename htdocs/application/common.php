@@ -427,6 +427,7 @@ function settingTypes($key = '')
     $types['check'] = "多选";
     $types['select'] = "下拉选择";
     $types['textarea'] = "多行文本";
+    $types['location'] = "位置选择";
     $types['html'] = "编辑器";
 
     if (empty($key)) {
@@ -839,6 +840,13 @@ function gener_qrcode($text,$size=300,$pad=10,$errLevel='high'){
     $qrCode->render();
 }
 
+function file_rule($file){
+    static $stamp='';
+    if(!$stamp)$stamp=microtime();
+    else $stamp+=1;
+    return md5(md5_file($file).$stamp);
+}
+
 /**
  * 根据参数裁剪图片
  * @param $file
@@ -865,11 +873,17 @@ function crop_image($file,$opts,$savepath=null){
 //$img = str_replace($img,'http://' . strtolower($_SERVER["SERVER_NAME"]),"");
 
     $imgData=getImgData($img);
+    $imageinfo=getimagesizefromstring($imgData);
+
+    if($imageinfo===false || empty($imageinfo)){
+        echo file_get_contents('./static/images/blank.gif');
+        exit;
+    }
     $image=imagecreatefromstring($imgData);
 
 //list($photoWidth ,$photoHeight) = getimagesize($img);
-    $photoWidth = imagesx($image);
-    $photoHeight = imagesy($image);
+    $photoWidth = $imageinfo[0];//imagesx($image);
+    $photoHeight = $imageinfo[1];//imagesy($image);
 
     if($photoWidth>0 And $photoHeight>0 ){
         if($photoWidth > $imgWidth Or $photoHeight > $imgHeight){
@@ -921,34 +935,52 @@ function crop_image($file,$opts,$savepath=null){
             }
 
             if ($clipLeft>0 Or $clipTop>0){
-                $newimg=imagecreatetruecolor($imgWidth, $imgHeight);
+                $newimg=createImage($imgWidth, $imgHeight);
                 imagecopyresampled($newimg, $image, 0, 0, $clipLeft, $clipTop, $imgWidth, $imgHeight, $tempWidth, $tempHeight);
                 //imagecopyresized($newimg, $image, 0, 0, $clipLeft, $clipTop, $imgWidth, $imgHeight, $tempWidth, $tempHeight);
             }else{
-                $newimg=imagecreatetruecolor($tempWidth, $tempHeight);
+                $newimg=createImage($tempWidth, $tempHeight);
                 imagecopyresampled($newimg, $image, 0, 0, 0, 0, $tempWidth, $tempHeight, $photoWidth, $photoHeight);
                 //imagecopyresized($newimg, $image, 0, 0, 0, 0, $tempWidth, $tempHeight, $photoWidth, $photoHeight);
             }
             imagedestroy($image);
 
-            outputImage($newimg,$savepath,$imgQuality);
+            outputImage($newimg,$imageinfo['mime'],$savepath,$imgQuality);
         }else{
-            outputImage($image,$savepath,$imgQuality);
+            outputImage($image,$imageinfo['mime'],$savepath,$imgQuality);
         }
     }
 }
 
+function createImage($width,$height){
+    $newimg=imagecreatetruecolor($width, $height);
+    imagesavealpha($newimg,true);
+    $trans_colour = imagecolorallocatealpha($newimg, 0, 0, 0, 127);
+    imagefill($newimg, 0, 0, $trans_colour);
+    return $newimg;
+}
 
 /**
  * 输出图片
  * @param $image
+ * @param $mime
  * @param $savepath
  * @param $imgQuality
  */
-function outputImage($image,$savepath=null,$imgQuality=80){
-    header("Content-type: " . image_type_to_mime_type(IMAGETYPE_JPEG));
-    imagejpeg($image,$savepath,$imgQuality);
+function outputImage($image,$mime='image/jpeg',$savepath=null,$imgQuality=80){
+    header("Content-type: ".$mime);
+    switch (strtolower($mime)){
+        case 'image/png':
+            imagepng($image,$savepath);
+            break;
+        case 'image/gif':
+            imagegif($image,$savepath);
+            break;
+        default:
+            imagejpeg($image,$savepath,$imgQuality);
+    }
     imagedestroy($image);
+    exit;
 }
 
 

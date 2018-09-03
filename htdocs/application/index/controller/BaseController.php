@@ -2,9 +2,11 @@
 namespace app\index\controller;
 
 use app\admin\model\MemberLevelModel;
+use EasyWeChat\Factory;
 use extcore\traits\Email;
 use think\Controller;
 use think\Db;
+use think\facade\Env;
 
 /**
  * 如果某个控制器必须用户登录才可以访问  
@@ -16,6 +18,8 @@ class BaseController extends Controller
 
     protected $userid;
     protected $user;
+    protected $openid;
+    protected $wechatUser;
     protected $userLevel;
     protected $isLogin=false;
     protected $errMsg;
@@ -39,10 +43,8 @@ class BaseController extends Controller
         $this->checkLogin();
 
         $this->assign('isLogin',$this->isLogin);
+        $this->assign('protocol',$this->request->scheme());
 
-        if($this->isWechat && $this->config['wechat_autologin']=='1'){
-            redirect(url('index/login/index',['type'=>'wechat']))->send();exit;
-        }
         $this->seo();
     }
 
@@ -83,6 +85,79 @@ class BaseController extends Controller
                 $this->error("登录失效",url('index/login/index'));
             }
         }
+
+        if($this->wechatLogin() && $this->config['wechat_autologin']=='1' ){
+            redirect()->remember();
+            redirect(url('index/login/index',['type'=>'wechat']))->send();exit;
+            //$this->wechatLogin();
+        }
+        $this->assign('wechatUser', $this->wechatUser);
+    }
+    protected function wechatLogin(){
+        if(!$this->isWechat){
+            $this->errMsg='非微信内部浏览器';
+            return false;
+        }
+        $agree=session('wechat_agree');
+        if($agree=='2'){
+            $this->errMsg='用户拒绝授权';
+            return false;
+        }
+
+        //跳过登录页面
+        if(strtolower($this->request->controller())=='login' &&
+            (strtolower($this->request->action())=='index' || strtolower($this->request->action())=='callback')
+        ){
+            if(!empty($openid)){
+                $wechatUser=Db::name('memberOauth')->where('openid',$openid)->find();
+                if($wechatUser['member_id']){
+                    $member=MemberModel::get($wechatUser['member_id']);
+                    if(!empty($member)) {
+                        setLogin($member);
+
+                        redirect()->restore()->send();exit;
+                    }
+                }
+                $this->wechatUser=$wechatUser;
+                return false;
+            }
+            return false;
+        }
+
+        $this->openid=$openid=session('openid');
+
+        if($this->isLogin){
+            if(empty($openid)) {
+                $wechatUser = Db::name('memberOauth')
+                    ->where('member_id', $this->userid)
+                    ->where('type_id', 0)
+                    ->where('type', 'wechat')
+                    ->find();
+                if (!empty($wechatUser)) {
+                    $this->wechatUser = $wechatUser;
+                    session('openid',$this->wechatUser['openid']);
+                    return false;
+                }
+            }else{
+                $this->wechatUser=Db::name('memberOauth')->where('openid',$openid)->find();
+                return false;
+            }
+        }else{
+            if(!empty($openid)){
+                $wechatUser=Db::name('memberOauth')->where('openid',$openid)->find();
+                if($wechatUser['member_id']){
+                    $member=MemberModel::get($wechatUser['member_id']);
+                    if(!empty($member)) {
+                        setLogin($member);
+
+                        redirect()->restore()->send();exit;
+                    }
+                }
+                $this->wechatUser=$wechatUser;
+                return false;
+            }
+        }
+        return true;
     }
     public function initLevel(){
         if($this->isLogin && empty($this->userLevel)){
@@ -113,12 +188,8 @@ class BaseController extends Controller
             $base_path=config('template.view_path');
             if($this->isMobile){
                 $this->view->config('view_path', $base_path.'mobile'.DIRECTORY_SEPARATOR);
-                config('dispatch_success_tmpl','mobile/'.config('dispatch_success_tmpl'));
-                config('dispatch_error_tmpl','mobile/'.config('dispatch_error_tmpl'));
             }else{
                 $this->view->config('view_path', $base_path.'default'.DIRECTORY_SEPARATOR);
-                config('dispatch_success_tmpl','default/'.config('dispatch_success_tmpl'));
-                config('dispatch_error_tmpl','default/'.config('dispatch_error_tmpl'));
             }
         }
 
@@ -127,8 +198,25 @@ class BaseController extends Controller
          * 详细用法参考：http://mp.weixin.qq.com/wiki/7/1c97470084b73f8e224fe6d9bab1625b.html
          */
         if($this->isWechat && !empty($this->config['appid'])) {
-            $jssdk = new \sdk\WechatAuth($this->config);
-            $signPackage = $jssdk->getJsSign(current_url(true));
+            $app = Factory::officialAccount([
+                'app_id' => $this->config['appid'],
+                'secret' => $this->config['appsecret'],
+                'token' => $this->config['token'],
+                'response_type' => 'array',
+                'log' => [
+                    'level' => 'debug',
+                    'file' => Env::get('runtime_path').'/wechat.log',
+                ],
+            ]);
+            $signPackage=$app->jssdk->buildConfig([
+                'onMenuShareTimeline',
+                'onMenuShareAppMessage',
+                'onMenuShareQQ',
+                'onMenuShareWeibo',
+                'onMenuShareQZone',
+                'checkJsApi',
+                'openAddress'
+            ]);
             $this->assign('signPackage', $signPackage);
         }
     }

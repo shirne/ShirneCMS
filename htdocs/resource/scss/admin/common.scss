@@ -92,7 +92,11 @@ h6 {
 .modal-title {
   font-size: 1.2rem;
 }
-
+.modal-body {
+  .mapbox {
+    height: 100%;
+  }
+}
 .modal-footer {
   padding: 0;
 
@@ -136,6 +140,10 @@ h6 {
       color:#212529;
     }
   }
+}
+
+.spec-table td img{
+  max-width:50px;
 }
 
 .spec-row{

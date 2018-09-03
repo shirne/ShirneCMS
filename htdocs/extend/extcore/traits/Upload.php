@@ -14,11 +14,11 @@ trait Upload
      */
     protected $uploadConfig=array(
         'max_size'       =>  1048576, //上传的文件大小限制 默认10M
-        'allow_exts'     =>  array('jpg','jpeg','png','gif','bmp','tif','swf','txt','csv','xls','xlsx','doc','docx','ppt','pptx','pdf','zip','rar','json'), //允许的文件后缀
+        'allow_exts'     =>  array('jpg','jpeg','png','gif','bmp','tif','swf','mp4','mp3','flv','txt','csv','xls','xlsx','doc','docx','ppt','pptx','pdf','zip','rar','json'), //允许的文件后缀
         'img_exts'       =>  array('gif','jpg','jpeg','bmp','png','swf','tif'),
         'root_path'      =>  './uploads/', //上传根路径
         'save_path'      =>  '', //保存路径
-        'save_rule'      =>  'md5_file', //命名规则
+        'save_rule'      =>  'file_rule', //命名规则
         'driver'         =>	'local',
         'driverConfig'   =>  array(),
     );
@@ -104,6 +104,10 @@ trait Upload
             $files = $_FILES;
         } else {
             $files[$field] = $_FILES[$field];
+        }
+        if(empty($files[$field])) {
+            $this->uploadError = '没有文件上传！';
+            return false;
         }
         //上传根目录检查
         if(!$this->uploader->rootPath($this->uploadConfig['root_path'])){

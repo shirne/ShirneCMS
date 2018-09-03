@@ -89,12 +89,22 @@
                     </if>
                 </div>
                 </div>
-                <div class="form-group">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">排序</span>
+                <div class="form-row">
+                    <div class="form-group col">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">排序</span>
+                            </div>
+                        <input type="text" name="sort" class="form-control" value="{$model.sort}" placeholder="排序按从小到大">
                         </div>
-                    <input type="text" name="sort" class="form-control" value="{$model.sort}" placeholder="排序按从小到大">
+                    </div>
+                    <div class="form-group col">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">分页</span>
+                            </div>
+                        <input type="text" name="pagesize" class="form-control" value="{$model.pagesize}" placeholder="列表页分页数量">
+                        </div>
                     </div>
                 </div>
                 <div class="form-row">

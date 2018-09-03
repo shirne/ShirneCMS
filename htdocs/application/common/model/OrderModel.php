@@ -134,6 +134,7 @@ class OrderModel extends Model
         $result= $this->insert($orderdata);
 
         if($result){
+            $result=$this->getLastInsID();
             $i=0;
             foreach ($products as $product){
                 $product['order_id']=$result;

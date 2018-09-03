@@ -66,7 +66,7 @@ class CategoryModel extends Model
             $this->treed=cache($this->precache.'categorietree');
         }
         if(empty($this->treed) || $force==true){
-            $data=$this->order('pid ASC,sort ASC,id ASC')->select();
+            $data=$this->getCategories($force);
             $this->treed=array('0'=>[]);
             foreach ($data as $cate){
                 $this->treed[$cate['pid']][]=$cate;

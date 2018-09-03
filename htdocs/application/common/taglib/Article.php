@@ -13,6 +13,7 @@ class Article extends BaseTabLib
 {
     protected $tags =[
         'list'=>['attr'=>'var,category,type,order,limit,cover,recursive','close'=>0],
+        'relation'=>['attr'=>'var,category,id,limit','close'=>0],
         'prev'=>['attr'=>'var,category,id','close'=>0],
         'next'=>['attr'=>'var,category,id','close'=>0],
         'pages'=>['attr'=>'var,group,limit','close'=>0],
@@ -51,11 +52,37 @@ class Article extends BaseTabLib
         if(!empty($tag['cover'])){
             $parseStr .= '->where("Article.cover","<>","")';
         }
-        $parseStr .= '->order("Article.'.$order.'")';
         if(empty($tag['limit'])){
             $tag['limit']=10;
         }
         $parseStr .= '->limit('.intval($tag['limit']).')';
+        $parseStr .= '->order("Article.'.$order.'")';
+        $parseStr .= '->select();';
+
+        $parseStr .= ' ?>';
+        return $parseStr;
+    }
+    public function tagRelation($tag){
+        $var  = isset($tag['var']) ? $tag['var'] : 'relations';
+        $category=isset($tag['category']) ? $tag['category'] : '';
+        $id=isset($tag['id']) ? $tag['id'] : 0;
+        if(preg_match('/^[a-zA-Z]\w*$/',$category)){
+            $category="\\app\\common\\facade\\CategoryFacade::getCategoryId('".$category."')";
+        }
+
+        $parseStr='<?php ';
+
+        $parseStr.='$'.$var.'=\think\Db::view("Article","*")';
+        $parseStr .= '->view("Category",["title"=>"category_title","name"=>"category_name","short"=>"category_short","icon"=>"category_icon","image"=>"category_image"],"Article.cate_id=Category.id","LEFT")';
+        $parseStr .= '->where("Article.id", "NEQ", ' . $id . ')';
+        if(!empty($category)){
+            $parseStr .= '->where("Article.cate_id", "IN", \app\common\facade\CategoryFacade::getSubCateIds(' . $category . '))';
+        }
+        if(empty($tag['limit'])){
+            $tag['limit']=10;
+        }
+        $parseStr .= '->limit('.intval($tag['limit']).')';
+        $parseStr .= '->order("Article.views DESC,Article.id DESC")';
         $parseStr .= '->select();';
 
         $parseStr .= ' ?>';

@@ -13,20 +13,20 @@ class OrderController extends BaseController
         }
         $key=empty($key)?"":base64_decode($key);
         $model=Db::view('order','*')
-            ->view('member',['username','realname','avatar','level_id'],'member.id=order.member_id','LEFT');
+            ->view('member',['username','realname','avatar','level_id'],'member.id=order.member_id','LEFT')
+            ->where('order.delete_time',0);
 
-        $where=array();
         if(!empty($key)){
-            $where[]=['order.order_no|member.username|member.realname|order.recive_name|order.mobile','LIKE',"%$key%"];
+            $model->whereLike('order.order_no|member.username|member.realname|order.recive_name|order.mobile',"%$key%");
         }
         if($status!==''){
-            $where[]=['order.status',$status];
+            $model->where('order.status',$status);
         }
         if($audit!==''){
-            $where[]=['order.isaudit',$audit];
+            $model->where('order.isaudit',$audit);
         }
 
-        $lists=$model->where($where)->paginate(15);
+        $lists=$model->where('delete_time',0)->paginate(15);
         if(!$lists->isEmpty()) {
             $orderids = array_column($lists->items(), 'order_id');
             $prodata = Db::name('OrderProduct')->where('order_id', 'in', $orderids)->select();
@@ -103,5 +103,22 @@ class OrderController extends BaseController
         $order->save(['isaudit'=>$audit]);
         user_log($this->mid,'auditorder',1,'审核订单 '.$id .' '.$audit,'manager');
         $this->success('操作成功');
+    }
+
+    /**
+     * 删除订单
+     * @param $id
+     */
+    public function delete($id)
+    {
+        $model = Db::name('order');
+        $result = $model->whereIn("order_id",idArr($id))->useSoftDelete('delete_time',time())->delete();
+        if($result){
+            //Db::name('orderProduct')->whereIn("order_id",idArr($id))->delete();
+            user_log($this->mid,'deleteorder',1,'删除订单 '.$id ,'manager');
+            $this->success("删除成功", url('Order/index'));
+        }else{
+            $this->error("删除失败");
+        }
     }
 }

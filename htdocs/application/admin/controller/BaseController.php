@@ -24,22 +24,21 @@ class BaseController extends Controller {
         $this->mid = session('adminId');
         //判断用户是否登陆
         if(empty($this->mid ) ) {
-            $this->error('请登录',url('Login/index'));
+            $this->error('请登录',url('admin/login/index'));
         }
         $this->manage=Db::name('Manager')->find($this->mid);
         if(empty($this->manage)){
             clearLogin();
-            $this->error('账号已失效',url('Login/index'));
+            $this->error('账号已失效',url('admin/login/index'));
         }
         if($this->manage['logintime']!=session('adminLTime')){
             clearLogin();
-            $this->error('该账号在其它地方登录',url('Login/index'));
+            $this->error('该账号在其它地方登录',url('admin/login/index'));
         }
+
         $controller=strtolower($this->request->controller());
-        //if(strpos($controller,'/')!==false)$controller=substr($controller,strrpos($controller,'/')+1);
         if($controller!='index'){
             $action=strtolower($this->request->action());
-            //if(strpos($action,'/')!==false)$action=substr($action,strrpos($action,'/')+1);
             if($this->request->isPost() || $action=='add' || $action=='update'){
                 $this->checkPermision("edit");
             }

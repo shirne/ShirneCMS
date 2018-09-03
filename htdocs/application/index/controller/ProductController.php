@@ -72,8 +72,8 @@ class ProductController extends BaseController
         return $this->fetch();
     }
     public function comment($id){
-        $article = ProductModel::get($id);
-        if(empty($article)){
+        $product = ProductModel::get($id);
+        if(empty($product)){
             $this->error('参数错误');
         }
         if($this->request->isPost()){
@@ -84,7 +84,8 @@ class ProductController extends BaseController
             }else{
                 $data['member_id']=$this->userid;
                 if(empty($data['member_id'])){
-                    $this->error('请先登录');
+                    redirect()->remember();
+                    $this->error('请先登录',url('index/login/index'));
                 }
                 $model=ProductCommentModel::create($data);
                 if($model['id']){
@@ -94,11 +95,13 @@ class ProductController extends BaseController
                 }
             }
         }
-
+        $this->seo($product['title']);
+        $this->category($product['cate_id']);
         $comments=Db::view('productComment','*')
             ->view('member',['username','realname'],'member.id=articleComment.member_id','LEFT')
             ->where('product_id',$id)->paginate(10);
 
+        $this->assign('product',$product);
         $this->assign('comments',$comments);
         $this->assign('page',$comments->render());
         return $this->fetch();

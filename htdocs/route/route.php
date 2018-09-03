@@ -22,15 +22,20 @@ Route::get('index$', 'index/index/index');
 
 Route::group('article',[
     ':id'=>'index/article/view',
-    '[:name]'=>'index/article/index',
-    'comment/:id'=>'index/article/comment'
+    'comment/:id'=>'index/article/comment',
+    '[:name]'=>'index/article/index'
 ])->method('GET');
 
 Route::group('product',[
     ':id'=>'index/product/view',
-    '[:name]'=>'index/product/index',
-    'comment/:id'=>'index/product/comment'
+    'comment/:id'=>'index/product/comment',
+    '[:name]'=>'index/product/index'
 ])->method('GET');
+
+Route::group('order',[
+    'confirm'=>'index/order/confirm',
+    'wechatpay'=>'index/order/wechatpay'
+])->method('GET|POST');
 
 Route::get('page/:group/[:name]','index/page/index');
 

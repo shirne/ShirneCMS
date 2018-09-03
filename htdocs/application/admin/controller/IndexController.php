@@ -92,7 +92,8 @@ class IndexController extends BaseController{
             $model->where('type',$type);
         }
 
-        $lists=$model->order('id ASC')->limit(10)->select();
+        $lists=$model->field('id,username,realname,mobile,avatar,level_id,is_agent,gender,email,create_time')
+            ->order('id ASC')->limit(10)->select();
         return json(['data'=>$lists,'status'=>1]);
     }
 

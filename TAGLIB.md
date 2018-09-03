@@ -11,7 +11,15 @@
    **order** 指定排序规则，可跟 [空格]ASC|DESC<br />
    **limit** 指定读取条数<br />
    **cover** 指定是否含有封面图的文章
-   
+
+* **relation** 标签 [闭合标签]
+
+> 读取相关文章，可用属性：
+>> **var** 指定变量名。<br />
+   **category** 指定分类ID或标识<br />
+   **id** 指定当前文章ID<br />
+   **limit** 指定读取条数
+
 * **prev** 标签 [闭合标签]
 
 > 读取上一篇文章，可用属性：
@@ -71,7 +79,7 @@
 </article:listwrap>
 ```
 
-## extend
+## extendtag
 
 > 主要用于读取广告，链接，公告等数据的标签库
 
@@ -87,3 +95,8 @@
 * **notices** 标签
 > **var** 指定变量名<br />
 **limit** 限制读取条数
+
+* **feedback** 标签
+> **var** 指定变量名<br />
+**limit** 限制读取条数<br />
+**page** 是否分页 分页后可用 $var->render()生成页码

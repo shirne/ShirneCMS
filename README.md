@@ -61,6 +61,6 @@ htdocs/public 网站根目录
 
 分离模板目录配置 template.independence
 
-标签库 [product](TAGLIB.md),[article](TAGLIB.md) 和 [extend](TAGLIB.md)
+标签库 [product](TAGLIB.md),[article](TAGLIB.md) 和 [extendtag](TAGLIB.md)
 
 导航配置 navigator.php

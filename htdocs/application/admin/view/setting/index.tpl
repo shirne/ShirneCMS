@@ -34,11 +34,19 @@
 
                     <foreach name="settings[$key]" item="item">
                         <div class="form-row form-group">
-                            <label for="{$key}" class="col-2 text-right align-middle">{$item.title}</label>
-                            <div class="col-5">
+                            <label for="v-{$key}" class="col-2 text-right align-middle">{$item.title}</label>
+                            <div class="col-8">
                                 <switch name="item.type">
                                     <case value="text">
                                         <input type="text" class="form-control" name="v-{$key}" value="{$item.value}" placeholder="{$item.description}">
+                                    </case>
+                                    <case value="location">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" name="v-{$key}" value="{$item.value}" placeholder="{$item.description}">
+                                            <div class="input-group-append">
+                                                <a href="javascript:" class="btn btn-outline-secondary locationPick">选择位置</a>
+                                            </div>
+                                        </div>
                                     </case>
                                     <case value="number">
                                         <input type="number" class="form-control" name="v-{$key}" value="{$item.value}" placeholder="{$item.description}">
@@ -103,11 +111,9 @@
                                         <textarea name="v-{$key}" class="form-control" placeholder="{$item.description}">{$item.value|raw}</textarea>
                                     </case>
                                     <case value="html">
-                                        <textarea name="v-{$key}" class="form-control" placeholder="{$item.description}">{$item.value|raw}</textarea>
+                                        <textarea name="v-{$key}" id="editor-{$key}" class="w-100 html-content" placeholder="{$item.description}">{$item.value|raw}</textarea>
                                     </case>
                                 </switch>
-                            </div>
-                            <div class="col-5">
                             </div>
                         </div>
                     </foreach>
@@ -158,6 +164,10 @@
     </script>
     </block>
 <block name="script">
+    <!-- 配置文件 -->
+    <script type="text/javascript" src="__STATIC__/ueditor/ueditor.config.js"></script>
+    <!-- 编辑器源码文件 -->
+    <script type="text/javascript" src="__STATIC__/ueditor/ueditor.all.min.js"></script>
 <script type="text/javascript">
     jQuery(function() {
         var agroup='{$group}';
@@ -221,7 +231,22 @@
                     return false;
                 }
             }).show(importTpl,'导入配置');
-        })
+        });
+        $('.locationPick').click(function () {
+            var input=$(this).parents('.input-group').find('input[type=text]');
+            var locates=input.val().split(',');
+            dialog.pickLocate('',function (locate) {
+                console.log(locate);
+                input.val(locate.lng+','+locate.lat);
+            },{lng:locates[0],lat:locates[1]});
+        });
+        $('.html-content').each(function (idx,item) {
+            UE.getEditor($(item).attr('id'),{
+                toolbars: Toolbars.simple,
+                initialFrameHeight:200,
+                zIndex:100
+            });
+        });
     });
 </script>
 

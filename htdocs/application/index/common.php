@@ -118,6 +118,7 @@ function parseNavModel($cate,$module,$modelName='Article'){
         foreach ($cates as $c){
             $subs[]=array(
                 'title'=>$c['title'],
+                'icon'=>$c['icon'],
                 'url'=>url($module.'/'.strtolower($modelName).'/index',['name'=>$c['name']])
             );
         }

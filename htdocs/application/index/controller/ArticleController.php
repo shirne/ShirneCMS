@@ -37,7 +37,7 @@ class ArticleController extends BaseController{
             ->view('category',['name'=>'category_name','title'=>'category_title'],'article.cate_id=category.id','LEFT')
             ->view('manager',['username'],'manager.id=article.user_id','LEFT')
             ->where($where)
-            ->paginate(10);
+            ->paginate($this->category['pagesize']);
         $model->each(function($item){
             if(!empty($item['prop_data'])){
                 $item['prop_data']=json_decode($item['prop_data'],true);
@@ -120,11 +120,13 @@ class ArticleController extends BaseController{
                 }
             }
         }
-
+        $this->seo($article['title']);
+        $this->category($article['cate_id']);
         $comments=Db::view('articleComment','*')
         ->view('member',['username','realname'],'member.id=articleComment.member_id','LEFT')
         ->where('article_id',$id)->paginate(10);
 
+        $this->assign('article',$article);
         $this->assign('comments',$comments);
         $this->assign('page',$comments->render());
         return $this->fetch();
@@ -145,6 +147,12 @@ class ArticleController extends BaseController{
 
         if(!empty($this->categoryTree)) {
             $this->assign('navmodel', 'article-' . $this->categoryTree[0]['name']);
+
+            foreach ($this->categoryTree as $cate){
+                if($cate['pagesize']>0){
+                    $this->pagesize=intval($cate['pagesize']);
+                }
+            }
         }
     }
 }

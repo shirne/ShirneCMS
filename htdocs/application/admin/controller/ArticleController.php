@@ -64,6 +64,8 @@ class ArticleController extends BaseController
                 }else{
                     $data['prop_data']=[];
                 }
+                if(!empty($data['create_time']))$data['create_time']=strtotime($data['create_time']);
+                if(empty($data['create_time']))unset($data['create_time']);
                 $model=ArticleModel::create($data);
                 if ($model->id) {
                     delete_image($delete_images);
@@ -108,6 +110,8 @@ class ArticleController extends BaseController
                 }else{
                     $data['prop_data']=[];
                 }
+                if(!empty($data['create_time']))$data['create_time']=strtotime($data['create_time']);
+                if(empty($data['create_time']))unset($data['create_time']);
                 $model=ArticleModel::get($id);
                 if ($model->allowField(true)->save($data)) {
                     delete_image($delete_images);
@@ -175,11 +179,11 @@ class ArticleController extends BaseController
         if(empty($article)){
             $this->error('文章不存在');
         }
-        $where=array('article_id'=>$aid);
+        $model->where('article_id',$aid);
         if(!empty($key)){
-            $where[] = array('title','like',"%$key%");
+            $model->where('title','like',"%$key%");
         }
-        $lists=$model->where($where)->order('sort ASC,id DESC')->paginate(15);
+        $lists=$model->order('sort ASC,id DESC')->paginate(15);
         $this->assign('article',$article);
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
@@ -306,7 +310,7 @@ class ArticleController extends BaseController
     }
 
     public function commentview($id){
-	    $model=Db::name('articleComment')->find('id');
+	    $model=Db::name('articleComment')->find($id);
 	    if(empty($model)){
 	        $this->error('评论不存在');
         }

@@ -1,7 +1,7 @@
 
 INSERT INTO `sa_permission` (`id`, `parent_id`,`name`, `url`,`key`, `icon`, `order_id`, `disable`)
 VALUES
-  (6,0,'商城','','Shop','ion-md-cart',0,0),
+  (6,0,'商城','','Shop','ion-md-cart',2,0),
   (61,6,'分类管理','ProductCategory/index','product_category_index','ion-md-medical',0,0),
   (62,6,'商品管理','Product/index','product_index','ion-md-gift',0,0),
   (63,6,'订单管理','Order/index','order_index','ion-md-list-box',0,0),
@@ -133,6 +133,7 @@ CREATE TABLE `sa_order` (
   `rebate_time` INT NULL DEFAULT 0,
   `status` TINYINT NULL DEFAULT 0 COMMENT '订单状态',
   `isaudit` TINYINT NULL DEFAULT 0 COMMENT '审核状态',
+  `delete_time` INT NULL DEFAULT 0 COMMENT '删除状态',
   `remark` VARCHAR(250) NULL,
   `address_id` INT NULL,
   `recive_name` VARCHAR(45) NULL,

@@ -27,20 +27,23 @@ if($.fn.datetimepicker) {
         clear: 'ion-md-trash',
         close: 'ion-md-close'
     };
-    $('.datepicker').datetimepicker({
-        icons:icons,
-        tooltips:tooltips,
-        format: 'YYYY-MM-DD',
-        locale: 'zh-cn',
-        showClear:true,
-        showTodayButton:true,
-        showClose:true,
-        keepInvalid:true
+    $('.datepicker').each(function(){
+        var config=$.extend({
+            icons:icons,
+            tooltips:tooltips,
+            format: 'YYYY-MM-DD',
+            locale: 'zh-cn',
+            showClear:true,
+            showTodayButton:true,
+            showClose:true,
+            keepInvalid:true
+        },$(this).data());
+        $(this).datetimepicker(config);
     });
 
     $('.date-range').each(function () {
         var from = $(this).find('[name=fromdate],.fromdate'), to = $(this).find('[name=todate],.todate');
-        var options = {
+        var options = $.extend({
             icons:icons,
             tooltips:tooltips,
             format: 'YYYY-MM-DD',
@@ -49,7 +52,7 @@ if($.fn.datetimepicker) {
             showTodayButton:true,
             showClose:true,
             keepInvalid:true
-        };
+        },$(this).data());
         from.datetimepicker(options).on('dp.change', function () {
             if (from.val()) {
                 to.data('DateTimePicker').minDate(from.val());

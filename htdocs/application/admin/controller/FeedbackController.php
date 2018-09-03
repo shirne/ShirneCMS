@@ -60,11 +60,28 @@ class FeedbackController extends BaseController
         }
         $model = FeedbackModel::get($id);
         $this->assign('model',$model);
+        $this->assign('member',Db::name('member')->where('id',$model['member_id'])->find());
         return $this->fetch();
     }
 
     public function statics(){
         return $this->fetch();
+    }
+
+    public function status($id,$status=0)
+    {
+        $data['status'] = intval($status);
+
+        $result=FeedbackModel::whereIn('id',idArr($id))->update(['status'=>$status]);
+        if ($result && $data['status'] === 1) {
+            user_log($this->mid,'auditfeedback',1,'审核留言 '.$id ,'manager');
+            $this -> success("审核成功", url('Feedback/index'));
+        } elseif ($result && $data['status'] === 2) {
+            user_log($this->mid,'hidefeedback',1,'隐藏留言 '.$id ,'manager');
+            $this -> success("隐藏成功", url('Feedback/index'));
+        } else {
+            $this -> error("操作失败");
+        }
     }
 
     /**
