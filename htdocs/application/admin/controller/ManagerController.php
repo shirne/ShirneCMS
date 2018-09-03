@@ -17,6 +17,10 @@ class ManagerController extends BaseController
      */
     public function index($key="")
     {
+        if($this->request->isPost()){
+            return redirect(url('',['key'=>base64_encode($key)]));
+        }
+        $key=empty($key)?"":base64_decode($key);
         $model=Db::name('Manager');
         $where=array();
         if(!empty($key )){

@@ -21,6 +21,10 @@ use think\Db;
 class ProductController extends BaseController
 {
     public function index($key='',$cate_id=0){
+        if($this->request->isPost()){
+            return redirect(url('',['cate_id'=>$cate_id,'key'=>base64_encode($key)]));
+        }
+        $key=empty($key)?"":base64_decode($key);
         $model = Db::view('product','*')
             ->view('productCategory',['name'=>'category_name','title'=>'category_title'],'product.cate_id=productCategory.id','LEFT');
         $where=array();

@@ -19,6 +19,10 @@ class ArticleController extends BaseController
      */
     public function index($key="",$cate_id=0)
     {
+        if($this->request->isPost()){
+            return redirect(url('',['cate_id'=>$cate_id,'key'=>base64_encode($key)]));
+        }
+        $key=empty($key)?"":base64_decode($key);
         $model = Db::view('article','*')->view('category',['name'=>'category_name','title'=>'category_title'],'article.cate_id=category.id','LEFT')
             ->view('manager',['username'],'article.user_id=manager.id','LEFT');
         if(!empty($key)){

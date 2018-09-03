@@ -15,17 +15,26 @@ class PageController extends BaseController
     /**
      * 单页列表
      */
-    public function index($key="")
+    public function index($key="",$group='')
     {
+        if($this->request->isPost()){
+            return redirect(url('',['group'=>$group,'key'=>base64_encode($key)]));
+        }
+        $key=empty($key)?"":base64_decode($key);
         $model = Db::view('page','*');
-        $where=array();
         if(!empty($key)){
-            $where[] = array('page.title|page.name|page.group','like',"%$key%");
+            $model->whereLike('page.title|page.name|page.group',"%$key%");
+        }
+        if(!empty($group)){
+            $model->where('group',$group);
         }
         $lists=$model->view('pageGroup',['group_name','use_template'=>'group_use_template'],'pageGroup.group=page.group','LEFT')
             ->where($where)->order('sort ASC,ID DESC')->paginate(15);
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
+        $this->assign('group',$group);
+        $this->assign('keyword',$key);
+        $this->assign('groups', getPageGroups());
         return $this->fetch();
     }
 

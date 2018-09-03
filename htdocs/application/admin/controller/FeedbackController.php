@@ -16,6 +16,10 @@ class FeedbackController extends BaseController
      */
     public function index($key="")
     {
+        if($this->request->isPost()){
+            return redirect(url('',['key'=>base64_encode($key)]));
+        }
+        $key=empty($key)?"":base64_decode($key);
         $model=Db::view('Feedback','*')
             ->view('Member',['username','realname'],'Feedback.member_id=Member.id','LEFT')
             ->view('Manager',['username'=>'manager_username','realname'=>'manager_realname'],'Feedback.manager_id=Manager.id','LEFT');

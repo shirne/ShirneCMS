@@ -22,12 +22,25 @@
         </div>
         <div class="col-6">
             <form action="{:url('page/index')}" method="post">
-                <div class="form-group input-group input-group-sm">
-                    <input type="text" class="form-control" name="key" placeholder="输入单页标题或者别名关键词搜索">
-                    <div class="input-group-append">
-                      <button class="btn btn-outline-secondary" type="submit"><i class="ion-md-search"></i></button>
-                    </div>
-                </div>
+                <div class="form-row">
+					<div class="col input-group input-group-sm mr-2">
+						<div class="input-group-prepend">
+							<span class="input-group-text">分组</span>
+						</div>
+						<select name="group" class="form-control">
+							<option value="0">不限分组</option>
+							<foreach name="groups" item="v">
+								<option value="{$v.group}" {$group == $v['group']?'selected="selected"':""}>{$v.group_name}</option>
+							</foreach>
+						</select>
+					</div>
+					<div class="col input-group input-group-sm">
+						<input type="text" class="form-control" name="key" value="{$keyword}" placeholder="输入单页标题或者别名关键词搜索">
+						<div class="input-group-append">
+							<button class="btn btn-outline-secondary" type="submit"><i class="ion-md-search"></i></button>
+						</div>
+					</div>
+				</div>
             </form>
         </div>
     </div>

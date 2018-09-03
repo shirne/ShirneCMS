@@ -8,6 +8,10 @@ use think\Db;
 class OrderController extends BaseController
 {
     public function index($key='',$status='',$audit=''){
+        if($this->request->isPost()){
+            return redirect(url('',['status'=>$status,'audit'=>$audit,'key'=>base64_encode($key)]));
+        }
+        $key=empty($key)?"":base64_decode($key);
         $model=Db::view('order','*')
             ->view('member',['username','realname','avatar','level_id'],'member.id=order.member_id','LEFT');
 
