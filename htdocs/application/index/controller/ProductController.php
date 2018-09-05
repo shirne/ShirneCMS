@@ -20,6 +20,7 @@ class ProductController extends BaseController
     protected $categries;
     protected $category;
     protected $categoryTree;
+    protected $pagesize=12;
 
     public function initialize()
     {
@@ -41,7 +42,7 @@ class ProductController extends BaseController
         $model=Db::view('product','*')
             ->view('productCategory',['name'=>'category_name','title'=>'category_title'],'product.cate_id=productCategory.id','LEFT')
             ->where($where)
-            ->paginate(10);
+            ->paginate($this->pagesize);
 
         $model->each(function($item){
             if(!empty($item['prop_data'])){

@@ -111,7 +111,7 @@ class Article extends BaseTabLib
         return $parseStr;
     }
     public function tagNext($tag){
-        $var  = isset($tag['var']) ? $tag['var'] : 'prev';
+        $var  = isset($tag['var']) ? $tag['var'] : 'next';
         $category=isset($tag['category']) ? $this->parseArg($tag['category']) : '';
         $id=isset($tag['id']) ? intval($tag['id']) : 0;
         if(is_string($category) && strpos($category,"'")===0){

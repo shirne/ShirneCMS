@@ -15,6 +15,7 @@ class ArticleController extends BaseController{
     protected $categries;
     protected $category;
     protected $categoryTree;
+    protected $pagesize=12;
 
     public function initialize()
     {
@@ -37,7 +38,7 @@ class ArticleController extends BaseController{
             ->view('category',['name'=>'category_name','title'=>'category_title'],'article.cate_id=category.id','LEFT')
             ->view('manager',['username'],'manager.id=article.user_id','LEFT')
             ->where($where)
-            ->paginate($this->category['pagesize']);
+            ->paginate($this->pagesize);
         $model->each(function($item){
             if(!empty($item['prop_data'])){
                 $item['prop_data']=json_decode($item['prop_data'],true);
@@ -129,6 +130,13 @@ class ArticleController extends BaseController{
         $this->assign('article',$article);
         $this->assign('comments',$comments);
         $this->assign('page',$comments->render());
+        if(!empty($this->categoryTree)){
+            for($i=count($this->categoryTree)-1;$i>=0;$i--){
+                if($this->categoryTree[$i]['use_template']){
+                    return $this->fetch($this->categoryTree[$i]['name'].'/comment');
+                }
+            }
+        }
         return $this->fetch();
     }
 
