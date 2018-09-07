@@ -135,6 +135,10 @@ jQuery(function ($) {
                     toastr.warning(json.msg);
                     $(btn).removeAttr('disabled');
                 }
+            },
+            error: function (xhr) {
+                $(btn).removeAttr('disabled');
+                toastr.error('服务器处理错误');
             }
         };
         if (form.attr('enctype') === 'multipart/form-data') {
