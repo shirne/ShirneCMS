@@ -1,18 +1,15 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: shirne
- * Date: 2018/5/12
- * Time: 8:26
- */
 
 namespace app\common\model;
 
 
 use think\Db;
-use think\Model;
 
-class OrderModel extends Model
+/**
+ * Class OrderModel
+ * @package app\common\model
+ */
+class OrderModel extends BaseModel
 {
     protected $pk='order_id';
     

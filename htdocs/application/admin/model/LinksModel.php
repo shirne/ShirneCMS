@@ -1,9 +1,13 @@
 <?php
 namespace app\admin\model;
 
-use think\Model;
+use app\common\model\BaseModel;
 
-class LinksModel extends Model
+/**
+ * Class LinksModel
+ * @package app\admin\model
+ */
+class LinksModel extends BaseModel
 {
 
 }

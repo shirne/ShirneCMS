@@ -10,9 +10,8 @@ namespace app\common\model;
 
 
 use think\Db;
-use think\Model;
 
-class AdvGroupModel extends Model
+class AdvGroupModel extends BaseModel
 {
     public static function getAdList($flag,$limit=10)
     {

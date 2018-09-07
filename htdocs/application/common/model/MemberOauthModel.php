@@ -9,9 +9,11 @@
 namespace app\common\model;
 
 
-use think\Model;
-
-class MemberOauthModel extends Model
+/**
+ * Class MemberOauthModel
+ * @package app\common\model
+ */
+class MemberOauthModel extends BaseModel
 {
     protected $autoWriteTimestamp = true;
 }

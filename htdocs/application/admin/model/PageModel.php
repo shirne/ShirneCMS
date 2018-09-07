@@ -1,10 +1,14 @@
 <?php
 namespace app\admin\model;
 
+use app\common\model\BaseModel;
 use think\Db;
-use think\Model;
 
-class PageModel extends Model
+/**
+ * Class PageModel
+ * @package app\admin\model
+ */
+class PageModel extends BaseModel
 {
     public static function init(){
         self::event('after_write', function ($page) {

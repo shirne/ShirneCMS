@@ -1,17 +1,17 @@
 <?php
-/**
- * 会员组
- * User: shirne
- * Date: 2018/4/11
- * Time: 9:01
- */
 
 namespace app\admin\model;
 
+use app\common\model\BaseModel;
 use think\Db;
-use think\Model;
 
-class MemberLevelModel extends Model{
+/**
+ * 会员组
+ * Class MemberLevelModel
+ * @package app\admin\model
+ */
+class MemberLevelModel extends BaseModel
+{
     protected $pk="level_id";
 
     protected $type = ['commission_percent'=>'array'];

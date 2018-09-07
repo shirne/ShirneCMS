@@ -1,9 +1,13 @@
 <?php
 namespace app\admin\model;
 
-use think\Model;
+use app\common\model\BaseModel;
 
-class ManagerModel extends Model
+/**
+ * Class ManagerModel
+ * @package app\admin\model
+ */
+class ManagerModel extends BaseModel
 {
     protected $autoWriteTimestamp = true;
 

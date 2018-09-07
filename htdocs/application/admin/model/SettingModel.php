@@ -1,9 +1,13 @@
 <?php
 namespace app\admin\model;
 
-use think\Model;
+use app\common\model\BaseModel;
 
-class SettingModel extends Model
+/**
+ * Class SettingModel
+ * @package app\admin\model
+ */
+class SettingModel extends BaseModel
 {
 
 }

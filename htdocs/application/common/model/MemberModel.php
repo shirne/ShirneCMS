@@ -2,9 +2,12 @@
 namespace app\common\model;
 
 use think\Db;
-use think\Model;
 
-class MemberModel extends Model
+/**
+ * Class MemberModel
+ * @package app\common\model
+ */
+class MemberModel extends BaseModel
 {
 
     protected $autoWriteTimestamp = true;

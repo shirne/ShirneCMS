@@ -9,9 +9,11 @@
 namespace app\common\model;
 
 
-use think\Model;
-
-class ProductCommentModel extends Model
+/**
+ * Class ProductCommentModel
+ * @package app\common\model
+ */
+class ProductCommentModel extends BaseModel
 {
     protected $autoWriteTimestamp = true;
 

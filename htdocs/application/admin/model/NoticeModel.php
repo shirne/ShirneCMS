@@ -1,17 +1,15 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: shirne
- * Date: 2018/4/30
- * Time: 11:00
- */
 
 namespace app\admin\model;
 
 
-use think\Model;
+use app\common\model\BaseModel;
 
-class NoticeModel extends Model
+/**
+ * Class NoticeModel
+ * @package app\admin\model
+ */
+class NoticeModel extends BaseModel
 {
     protected $autoWriteTimestamp = true;
 }

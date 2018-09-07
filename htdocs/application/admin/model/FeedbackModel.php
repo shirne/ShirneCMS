@@ -1,17 +1,15 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: shirne
- * Date: 2018/4/29
- * Time: 9:57
- */
 
 namespace app\admin\model;
 
 
-use think\Model;
+use app\common\model\BaseModel;
 
-class FeedbackModel extends Model
+/**
+ * Class FeedbackModel
+ * @package app\admin\model
+ */
+class FeedbackModel extends BaseModel
 {
 
 }

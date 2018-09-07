@@ -1,17 +1,15 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: shirn
- * Date: 2018/4/15
- * Time: 18:40
- */
 
 namespace app\api\model;
 
+use app\common\model\BaseModel;
 use think\facade\Log;
-use think\Model;
 
-class MemberTokenModel extends Model
+/**
+ * Class MemberTokenModel
+ * @package app\api\model
+ */
+class MemberTokenModel extends BaseModel
 {
     private $hash='sw4GomU4LXvYqcaLctXCLK43eRcob';
     private $expire=720;

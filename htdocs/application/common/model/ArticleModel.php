@@ -1,9 +1,11 @@
 <?php
 namespace app\common\model;
 
-use think\Model;
-
-class ArticleModel extends Model
+/**
+ * Class ArticleModel
+ * @package app\common\model
+ */
+class ArticleModel extends BaseModel
 {
     protected $autoWriteTimestamp = true;
     protected $type = ['prop_data'=>'array'];

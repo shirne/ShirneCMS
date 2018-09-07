@@ -1,18 +1,16 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: shirne
- * Date: 2018/5/15
- * Time: 22:53
- */
 
 namespace app\admin\model;
 
 
+use app\common\model\BaseModel;
 use think\Db;
-use think\Model;
 
-class SpecificationsModel extends Model
+/**
+ * Class SpecificationsModel
+ * @package app\admin\model
+ */
+class SpecificationsModel extends BaseModel
 {
     protected $type = ['data'=>'array'];
 

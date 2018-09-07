@@ -4,13 +4,12 @@
 namespace app\common\model;
 
 use think\Db;
-use think\Model;
 
 /**
  * Class MemberCartModel
  * @package app\common\model
  */
-class MemberCartModel extends Model
+class MemberCartModel extends BaseModel
 {
     private function getSort($member_id){
         $sort=Db::name('MemberCart')->where('member_id',$member_id)

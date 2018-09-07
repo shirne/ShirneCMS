@@ -68,6 +68,8 @@ class ArticleController extends BaseController{
         $this->seo($article['title']);
         $this->category($article['cate_id']);
 
+        $article->setInc('views',1);
+
         $this->assign('article', $article);
         $this->assign('images',Db::name('ArticleImages')->where('article_id',$article['id'])->select());
         if(!empty($this->categoryTree)){

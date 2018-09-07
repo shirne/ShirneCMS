@@ -9,9 +9,7 @@
 namespace app\common\model;
 
 
-use think\Model;
-
-class ArticleCommentModel extends Model
+class ArticleCommentModel extends BaseModel
 {
     protected $autoWriteTimestamp = true;
 

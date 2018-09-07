@@ -1,10 +1,13 @@
 <?php
 namespace app\common\model;
 
-use think\Model;
 use think\Db;
 
-class CategoryModel extends Model
+/**
+ * Class CategoryModel
+ * @package app\common\model
+ */
+class CategoryModel extends BaseModel
 {
     protected $precache='';
 
