@@ -19,32 +19,34 @@ class MemberController extends BaseController
     /**
      * 用户列表
      */
-    public function index($type=0)
+    public function index($type=0,$keyword='',$referer='')
     {
-        $model = Db::view('__MEMBER__ m','*');
-        $where=array();
-        $keyword=$this->request->request('keyword');
+        if($this->request->isPost()){
+            return redirect(url('',['referer'=>$referer,'type'=>$type,'keyword'=>base64_encode($keyword)]));
+        }
+        $keyword=empty($keyword)?"":base64_decode($keyword);
+        $model = Db::view('__MEMBER__ m','*')
+            ->view('__MEMBER__ rm',['username'=> 'refer_name','realname'=> 'refer_realname','is_agent'=> 'refer_agent'],'m.referer=rm.id','LEFT');
         if(!empty($keyword)){
-            $where[] = array('m.username|m.email|m.realname','like',"%$keyword%");
+            $model->whereLike('m.username|m.email|m.realname',"%$keyword%");
         }
 
-        $referer=$this->request->request('referer');
-        if(!empty($referer)){
+        if($referer !== ''){
             if($referer!='0'){
                 $member=Db::name('Member')->where('id|username',$referer)->find();
                 if(empty($member)){
                     $this->error('填写的会员不存在');
                 }
-                $where['m.referer'] = $member['id'];
+                $model->where('m.referer',$member['id']);
             }else {
-                $where['m.referer'] = intval($referer);
+                $model->where('m.referer',intval($referer));
             }
         }
         if($type>0){
-            $where['m.type'] = intval($type)-1;
+            $model->where('m.type',intval($type)-1);
         }
 
-        $lists=$model->view('__MEMBER__ rm',['username'=> 'refer_name','realname'=> 'refer_realname','is_agent'=> 'refer_agent'],'m.referer=rm.id','LEFT')->where($where)->paginate(15);
+        $lists=$model->order('m.id desc')->paginate(15);
 
         $this->assign('lists',$lists);
         $this->assign('types',getMemberTypes());
