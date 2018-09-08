@@ -7,7 +7,7 @@
 <div id="page-wrapper">
     <div class="page-header">{$id>0?'编辑':'添加'}图片</div>
     <div class="page-content">
-    <form method="post" action="" enctype="multipart/form-data">
+    <form method="post" class="page-form" action="" enctype="multipart/form-data">
         <div class="form-group">
             <label for="title">名称</label>
             <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="名称">
@@ -38,7 +38,7 @@
                 <input type="text" name="sort" class="form-control" value="{$model.sort}" />
             </div>
         </div>
-        <div class="form-group">
+        <div class="form-group submit-btn">
             <input type="hidden" name="article_id" value="{$model.article_id}">
             <button type="submit" class="btn btn-primary">{$id>0?'编辑':'添加'}</button>
         </div>

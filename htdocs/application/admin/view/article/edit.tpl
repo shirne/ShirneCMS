@@ -5,7 +5,7 @@
 <div id="page-wrapper">
     <div class="page-header">{$id>0?'编辑':'添加'}文章</div>
     <div id="page-content">
-    <form method="post" action="" enctype="multipart/form-data">
+    <form method="post" class="page-form" action="" enctype="multipart/form-data">
         <div class="form-row">
             <div class="col form-group">
                 <label for="article-title">文章标题</label>
@@ -77,8 +77,10 @@
                 </div>
             </div>
         </div>
-        <input type="hidden" name="id" value="{$article.id}">
-        <button type="submit" class="btn btn-primary">{$id>0?'保存':'添加'}</button>
+        <div class="form-group submit-btn">
+            <input type="hidden" name="id" value="{$article.id}">
+            <button type="submit" class="btn btn-primary">{$id>0?'保存':'添加'}</button>
+        </div>
     </form>
         </div>
 </div>

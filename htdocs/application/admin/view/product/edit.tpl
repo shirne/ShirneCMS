@@ -5,7 +5,7 @@
 <div id="page-wrapper">
     <div class="page-header">{$id>0?'编辑':'添加'}商品</div>
     <div id="page-content">
-    <form method="post" action="" enctype="multipart/form-data">
+    <form method="post" action="" class="page-form" enctype="multipart/form-data">
         <div class="form-row">
             <div class="col">
                 <div class="form-group">
@@ -188,9 +188,10 @@
             <label for="product-content">商品介绍</label>
             <script id="product-content" name="content" type="text/plain">{$product.content|raw}</script>
         </div>
-
-        <input type="hidden" name="id" value="{$product.id}">
-        <button type="submit" class="btn btn-primary">{$id>0?'保存':'添加'}</button>
+        <div class="form-group submit-btn">
+            <input type="hidden" name="id" value="{$product.id}">
+            <button type="submit" class="btn btn-primary">{$id>0?'保存':'添加'}</button>
+        </div>
     </form>
         </div>
 </div>

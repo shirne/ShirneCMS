@@ -7,7 +7,7 @@
     <div id="page-wrapper">
         <div class="page-header">{$id>0?'编辑':'添加'}分类</div>
         <div class="page-content">
-            <form method="post" action="" enctype="multipart/form-data">
+            <form method="post" class="page-form" action="" enctype="multipart/form-data">
                 <div class="form-row">
                     <div class="form-group col">
                         <div class="input-group">
@@ -137,8 +137,10 @@
                     <textarea name="description" cols="30" rows="10" class="form-control"
                               placeholder="请输入分类描述(选填)">{$model.description}</textarea>
                 </div>
-                <input type="hidden" name="id" value="{$model.id}">
-                <button type="submit" class="btn btn-primary">{$id>0?'保存':'添加'}</button>
+                <div class="form-group submit-btn">
+                    <input type="hidden" name="id" value="{$model.id}">
+                    <button type="submit" class="btn btn-primary">{$id>0?'保存':'添加'}</button>
+                </div>
             </form>
         </div>
     </div>

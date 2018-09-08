@@ -7,7 +7,7 @@
     <div id="page-wrapper">
         <div class="page-header">生成邀请码</div>
         <div id="page-content">
-            <form action="{:url('Invite/add')}" method="post">
+            <form action="{:url('Invite/add')}" class="page-form" method="post">
                 <div class="form-group">
                     <div class="input-group">
                         <div class="input-group-prepend"><span class="input-group-text">绑定邀请人</span></div>
@@ -54,7 +54,7 @@
                                placeholder="要生成邀请码的数量">
                     </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group submit-btn">
                     <button class="btn btn-primary" type="submit">生成</button>
                 </div>
             </form>

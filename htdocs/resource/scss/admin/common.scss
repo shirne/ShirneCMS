@@ -256,6 +256,26 @@ h6 {
   max-width: 300px;
 }
 
+.page-form{
+  padding-bottom:60px;
+  .submit-btn{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    margin: 0;
+    background: #fff;
+    width: 100%;
+    z-index: 9;
+    box-shadow: 0 0 5px rgba(0,0,0,.5);
+    padding: 10px 0;
+    padding-left: 250px;
+    .btn{
+      padding-left:1.5rem;
+      padding-right:1.5rem;
+    }
+  }
+}
+
 
 
 #loginContainer {

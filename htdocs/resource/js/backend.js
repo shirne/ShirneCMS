@@ -117,12 +117,16 @@ jQuery(function ($) {
     $('.btn-primary[type=submit]').click(function (e) {
         var form = $(this).parents('form');
         var btn = this;
+
+        var isbtn=$(btn).prop('tagName').toUpperCase()=='BUTTON';
+        var origText=isbtn?$(btn).text():$(btn).val();
         var options = {
             url: $(form).attr('action'),
             type: 'POST',
             dataType: 'JSON',
             success: function (json) {
                 window.stop_ajax=false;
+                isbtn?$(btn).text(origText):$(btn).val(origText);
                 if (json.code == 1) {
                     dialog.alert(json.msg,function(){
                         if (json.url) {
@@ -138,6 +142,7 @@ jQuery(function ($) {
             },
             error: function (xhr) {
                 window.stop_ajax=false;
+                isbtn?$(btn).text(origText):$(btn).val(origText);
                 $(btn).removeAttr('disabled');
                 toastr.error('服务器处理错误');
             }
@@ -151,6 +156,16 @@ jQuery(function ($) {
             options.cache = false;
             options.processData = false;
             options.contentType = false;
+            options.xhr= function() { //用以显示上传进度
+                var xhr = $.ajaxSettings.xhr();
+                if (xhr.upload) {
+                    xhr.upload.addEventListener('progress', function(event) {
+                        var percent = Math.floor(event.loaded / event.total * 100);
+                        $(btn).text(origText+'  ('+percent+'%)');
+                    }, false);
+                }
+                return xhr;
+            };
         } else {
             options.data = $(form).serialize();
         }

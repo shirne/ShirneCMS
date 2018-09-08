@@ -5,7 +5,7 @@
 <include file="public/bread" menu="Board" section="主面板" title="个人资料" />
 
 <div id="page-wrapper">
-<form action="{:url('index/profile')}" method="post">
+<form action="{:url('index/profile')}" class="page-form" method="post">
 	<div class="form-group">
 		<label>用户名</label>
 		<input class="form-control" type="text" name="username" value="{$model.username}" />
@@ -30,7 +30,7 @@
 		<label>当前密码</label>
 		<input class="form-control" type="password" name="password" placeholder="填写密码才可以保存" />
 	</div>
-	<div class="form-group">
+	<div class="form-group submit-btn">
 		<input type="hidden" name="id" value="{$model.id}">
 		<button class="btn btn-primary" type="submit" >更新</button>
 	</div>
