@@ -9,7 +9,7 @@
 namespace sdk;
 
 
-class AESEnctypt
+class AESEncrypt
 {
     public $key;
     private $len;

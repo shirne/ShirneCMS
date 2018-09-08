@@ -44,7 +44,7 @@ class IndexController extends BaseController
      */
     public function test2(){
 
-        $pc = new \sdk\AESEnctypt('abcdefghijklmnopqrstuvwxyz0123456789ABCDEFG');
+        $pc = new \sdk\AESEncrypt('abcdefghijklmnopqrstuvwxyz0123456789ABCDEFG');
 
         $encode=$this->request->post('encode');
 

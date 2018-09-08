@@ -67,45 +67,52 @@
     <script type="text/javascript">
         (function(){
             var func=arguments.callee;
-            $.ajax('{:url("index/newcount")}', {
-                dataType:'JSON',
-                type:'POST',
-                success:function(json){
-                    //console.log(json);
-                    $('.side-nav .badge').remove();
-                    for(var key in json){
-                        var node=null;
-                        switch (key){
-                            case 'newMemberCount':
-                                node=$('[data-key=member_index]');
-                                break;
-                            case 'newOrderCount':
-                                node=$('[data-key=order_index]');
-                                break;
-                        }
-                        if(node){
-                            if(json[key]>0){
-                                var badge=node.find('.badge');
-                                if(badge.length<1){
-                                    node.append('<span class="badge badge-light">'+json[key]+'</span>');
-                                }else {
-                                    badge.text(json[key]);
-                                }
-                                if(node.parents('.panel-body').length>0){
-                                    var pbadge=node.parents('.panel').find('.panel-title a .badge');
-                                    if(pbadge.length<1){
-                                        node.parents('.panel').find('.panel-title a').append('<span class="badge badge-light">..</span>');
-                                    }else {
-                                        pbadge.text(json[key]);
+            if(window.stop_ajax){
+                setTimeout(func, 2000);
+            }else {
+                $.ajax('{:url("index/newcount")}', {
+                    dataType: 'JSON',
+                    type: 'POST',
+                    success: function (json) {
+                        //console.log(json);
+                        $('.side-nav .badge').remove();
+                        for (var key in json) {
+                            var node = null;
+                            switch (key) {
+                                case 'newMemberCount':
+                                    node = $('[data-key=member_index]');
+                                    break;
+                                case 'newOrderCount':
+                                    node = $('[data-key=order_index]');
+                                    break;
+                            }
+                            if (node) {
+                                if (json[key] > 0) {
+                                    var badge = node.find('.badge');
+                                    if (badge.length < 1) {
+                                        node.append('<span class="badge badge-light">' + json[key] + '</span>');
+                                    } else {
+                                        badge.text(json[key]);
+                                    }
+                                    if (node.parents('.panel-body').length > 0) {
+                                        var pbadge = node.parents('.panel').find('.panel-title a .badge');
+                                        if (pbadge.length < 1) {
+                                            node.parents('.panel').find('.panel-title a').append('<span class="badge badge-light">..</span>');
+                                        } else {
+                                            pbadge.text(json[key]);
+                                        }
                                     }
                                 }
                             }
                         }
-                    }
 
-                    setTimeout(func,5000);
-                }
-            })
+                        setTimeout(func, 5000);
+                    },
+                    error: function () {
+                        setTimeout(func, 5000);
+                    }
+                });
+            }
         })();
     </script>
     <block name="script"></block>

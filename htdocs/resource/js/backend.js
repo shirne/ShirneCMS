@@ -1,3 +1,4 @@
+window.stop_ajax=false;
 jQuery(function ($) {
     //高亮当前选中的导航
     var bread = $(".breadcrumb");
@@ -121,28 +122,29 @@ jQuery(function ($) {
             type: 'POST',
             dataType: 'JSON',
             success: function (json) {
+                window.stop_ajax=false;
                 if (json.code == 1) {
-                    new Dialog({
-                        onhidden: function () {
-                            if (json.url) {
-                                location.href = json.url;
-                            } else {
-                                location.reload();
-                            }
+                    dialog.alert(json.msg,function(){
+                        if (json.url) {
+                            location.href = json.url;
+                        } else {
+                            location.reload();
                         }
-                    }).show(json.msg);
+                    });
                 } else {
                     toastr.warning(json.msg);
                     $(btn).removeAttr('disabled');
                 }
             },
             error: function (xhr) {
+                window.stop_ajax=false;
                 $(btn).removeAttr('disabled');
                 toastr.error('服务器处理错误');
             }
         };
         if (form.attr('enctype') === 'multipart/form-data') {
             if (!FormData) {
+                window.stop_ajax=true;
                 return true;
             }
             options.data = new FormData(form[0]);
@@ -155,6 +157,7 @@ jQuery(function ($) {
 
         e.preventDefault();
         $(this).attr('disabled', true);
+        window.stop_ajax=true;
         $.ajax(options);
     });
 
