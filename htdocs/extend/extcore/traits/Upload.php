@@ -27,6 +27,7 @@ trait Upload
      * @var string
      */
     protected $uploadError;
+    protected $uploadErrorCode;
 
     protected function setUploadDriver(){
         $config=config('upload.');
@@ -98,6 +99,7 @@ trait Upload
         }
         if(empty($_FILES)) {
             $this->uploadError = '没有文件上传！';
+            $this->uploadErrorCode= 101;
             return false;
         }
         if(empty($field)) {
@@ -107,6 +109,7 @@ trait Upload
         }
         if(empty($files[$field])) {
             $this->uploadError = '没有文件上传！';
+            $this->uploadErrorCode= 102;
             return false;
         }
         //上传根目录检查
@@ -118,6 +121,7 @@ trait Upload
         $savePath = $this->uploadConfig['root_path'] . $this->createSavePath($this->uploadConfig['save_path'],$folder);
         if(!$this->uploader->checkPath($savePath)){
             $this->uploadError = $this->uploader->getError();
+            $this->uploadErrorCode= 105;
             return false;
         }
         $uploadFileInfo=array();
@@ -147,12 +151,14 @@ trait Upload
             $file['driver'] = $this->uploadConfig['driver'];
             //检查文件类型大小和合法性
             if (!$this->checkFile($file,$isImg)) {
+                $this->uploadErrorCode= 108;
                 return false;
             }
             //存储文件
             $info = $this->uploader->saveFile($file);
             if(!$info){
                 $this->uploadError = $this->uploader->getError();
+                $this->uploadErrorCode= 109;
                 return false;
             }
             $uploadFileInfo[$key] = $info;
@@ -163,5 +169,40 @@ trait Upload
 
     protected function upload($folder,$field){
         return $this->uploadFile($folder,$field,true);
+    }
+
+    /**
+     * 批量接收多个上传字段
+     * @param $folder string 上传保存的目录名
+     * @param $fields array|string 上传的字段,用逗号分割，用/限制上传类型(文件或图片img/image)
+     * @param int $warnLevel 报错等级 0 不报错, 1 非空文件报错, 2 全部报错
+     * @return array
+     */
+    protected function batchUpload($folder,$fields,$warnLevel=1){
+        if(!is_array($fields)){
+            $fields=explode(',',$fields);
+        }
+        $uploaded=[];
+        foreach ($fields as $field){
+            $isImg=false;
+            if(strpos($field,'/')>0){
+                $fieldArr=explode('/',$field);
+                $field=$fieldArr[0];
+                $isImg=in_array(strtolower($fieldArr[1]),['img','image'])?true:false;
+            }
+            $uploadResult=$this->uploadFile($folder,$field,$isImg);
+            if($uploadResult){
+                $uploaded[$field]=$uploadResult['url'];
+            }else{
+                if($warnLevel==1){
+                    if($this->uploadErrorCode>102){
+                        $this->error($this->uploadError);
+                    }
+                }elseif($warnLevel==2){
+                    $this->error($this->uploadError);
+                }
+            }
+        }
+        return $uploaded;
     }
 }
