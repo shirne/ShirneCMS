@@ -105,6 +105,31 @@ h6{ font-size :1rem;}
   }
 }
 
+@media (max-width:992px) {
+  .navbar{
+    .main-nav{
+      .dropdown-item{
+        text-align: center;
+      }
+    }
+    ul.justify-content-end{
+      display:flex;
+      flex-direction: row;
+      border-top:1px #666 solid;
+      li{
+        width :40%;
+        flex:1;
+        border-right:1px #666 solid;
+        &:last-child{
+          border-right:0;
+        }
+        .nav-link{
+          text-align: center;
+        }
+      }
+    }
+  }
+}
 
 @media (min-width:992px) {
   .control-label {

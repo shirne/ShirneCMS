@@ -130,6 +130,16 @@
 
 </block>
 <block name="script">
+    <script type="text/plain" id="rechargeTpl">
+        <div class="row" style="margin:0 10%;">
+            <div class="col-12 form-group"><div class="input-group"><div ><span class="input-group-text">充值类型</span> </div><div class="col w-50 text-center" ><div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-secondary active"> <input type="radio" name="field" value="money" autocomplete="off" checked> 余额</label>
+                <label class="btn btn-secondary"><input type="radio" name="field" value="credit" autocomplete="off"> 积分</label>
+            </div></div> </div></div>
+            <div class="col-12 form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">充值金额</span> </div><input type="text" name="amount" class="form-control" placeholder="请填写充值金额"/> </div></div>
+            <div class="col-12 form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">充值原因</span> </div><input type="text" name="reson" class="form-control" placeholder="请填写充值原因"/> </div> </div>
+        </div>
+    </script>
     <script type="text/javascript">
         (function(w){
             w.actionEnable=function(ids){
@@ -170,14 +180,7 @@
             };
         })(window);
         jQuery(function(){
-            var tpl='<div class="row" style="margin:0 10%;">' +
-                '<div class="col-12 form-group"><div class="input-group"><div ><span class="input-group-text">充值类型</span> </div><div class="col w-50 text-center" ><div class="btn-group btn-group-toggle" data-toggle="buttons">\n' +
-                '  <label class="btn btn-secondary active"> <input type="radio" name="field" value="money" autocomplete="off" checked> 余额</label>\n' +
-                '  <label class="btn btn-secondary"><input type="radio" name="field" value="credit" autocomplete="off"> 积分</label>\n' +
-                '</div></div> </div></div>' +
-                '<div class="col-12 form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">充值金额</span> </div><input type="text" name="amount" class="form-control" placeholder="请填写充值金额"/> </div></div>' +
-                '<div class="col-12 form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">充值原因</span> </div><input type="text" name="reson" class="form-control" placeholder="请填写充值原因"/> </div> </div>'+
-                '</div>';
+            var tpl=$('#rechargeTpl').text();
             $('.btn-recharge').click(function() {
                 var id=$(this).data('id');
                 var dlg=new Dialog({
