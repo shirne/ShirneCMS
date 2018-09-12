@@ -104,6 +104,8 @@ class BaseController extends Controller
             return false;
         }
 
+        $this->openid=$openid=session('openid');
+
         //跳过登录页面
         if(strtolower($this->request->controller())=='login' &&
             (strtolower($this->request->action())=='index' || strtolower($this->request->action())=='callback')
@@ -123,8 +125,6 @@ class BaseController extends Controller
             }
             return false;
         }
-
-        $this->openid=$openid=session('openid');
 
         if($this->isLogin){
             if(empty($openid)) {

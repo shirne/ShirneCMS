@@ -141,8 +141,21 @@ class LoginController extends BaseController{
                 unset($data['member_id']);
                 $model->save($data);
             }
+            session('openid',$data['openid']);
             if($model['member_id']) {
                 $member = Db::name('Member')->find($model['member_id']);
+                //更新昵称和头像
+                if(!empty($model['avatar']) &&
+                    (empty($member['avatar']) || is_wechat_avatar($member['avatar']))
+                ){
+                    Db::name('member')->where('id',$member['id'])->update(
+                        [
+                            'nickname'=>$model['nickname'],
+                            'avatar'=>$model['avatar']
+                        ]
+                    );
+                }
+
                 setLogin($member);
             }
         }catch(Exception $e){
