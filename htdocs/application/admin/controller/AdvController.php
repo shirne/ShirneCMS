@@ -137,6 +137,8 @@ class AdvController extends BaseController
                 }
                 $model = Db::name("AdvItem");
                 $url=url('adv/itemlist',array('gid'=>$gid));
+                $data['start_date']=empty($data['start_date'])?0:strtotime($data['start_date']);
+                $data['end_date']=empty($data['end_date'])?0:strtotime($data['end_date']);
                 if ($model->insert($data)) {
                     $this->success("添加成功",$url);
                 } else {
@@ -174,6 +176,8 @@ class AdvController extends BaseController
                     $delete_images[]=$data['delete_image'];
                 }
                 unset($data['delete_image']);
+                $data['start_date']=empty($data['start_date'])?0:strtotime($data['start_date']);
+                $data['end_date']=empty($data['end_date'])?0:strtotime($data['end_date']);
                 $data['id']=$id;
                 if ($model->update($data)) {
                     delete_image($delete_images);
