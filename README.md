@@ -45,7 +45,8 @@ cnpm install<br />
 数据库
 
 >scripts/struct.sql 数据表结构<br />
-scripts/init.sql 初始数据
+scripts/init.sql 初始数据<br />
+scripts/update_shop.sql 商城模块
 
 项目目录
 
