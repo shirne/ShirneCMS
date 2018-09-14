@@ -147,13 +147,13 @@ trait Upload
             $file['key'] = $key;
             $file['extension'] = strtolower( $pathinfo['extension'] );
             $file['savepath'] = $savePath;
-            $file['savename'] = $saveRuleFunc( $file['tmp_name'] ) . '.' . $file['extension'];
             $file['driver'] = $this->uploadConfig['driver'];
             //检查文件类型大小和合法性
             if (!$this->checkFile($file,$isImg)) {
                 $this->uploadErrorCode= 108;
                 return false;
-            }
+            }            
+            $file['savename'] = $saveRuleFunc( $file['tmp_name'] ) . '.' . $file['extension'];
             //存储文件
             $info = $this->uploader->saveFile($file);
             if(!$info){
