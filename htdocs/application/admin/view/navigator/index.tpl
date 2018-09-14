@@ -86,6 +86,7 @@
                 <div class="form-row form-group">
                     <div class="col-12">
                         <button type="submit" class="btn btn-primary">保存</button>
+                        <div class="text-muted mt-3">本页面所有操作完成后，请点击<span class="text-danger"> 保存 </span>按钮。<br />然后在本页面右上角弹出菜单点击 <span class="text-danger">清除缓存</span>。<br />如有操作失误，不要保存，直接<span class="text-danger">刷新</span>页面即可还原修改前的状态。</div>
                     </div>
                 </div>
             </form>

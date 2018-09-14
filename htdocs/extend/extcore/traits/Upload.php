@@ -190,16 +190,18 @@ trait Upload
                 $field=$fieldArr[0];
                 $isImg=in_array(strtolower($fieldArr[1]),['img','image'])?true:false;
             }
-            $uploadResult=$this->uploadFile($folder,$field,$isImg);
+            $uploadResult=$this->uploadFile($folder,'upload_'.$field,$isImg);
             if($uploadResult){
                 $uploaded[$field]=$uploadResult['url'];
             }else{
                 if($warnLevel==1){
                     if($this->uploadErrorCode>102){
-                        $this->error($this->uploadError);
+                        delete_image($uploaded);
+                        $this->error($field.':'.$this->uploadError);
                     }
                 }elseif($warnLevel==2){
-                    $this->error($this->uploadError);
+                    delete_image($uploaded);
+                    $this->error($field.':'.$this->uploadError);
                 }
             }
         }
