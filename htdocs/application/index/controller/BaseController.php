@@ -117,7 +117,14 @@ class BaseController extends Controller
                     if(!empty($member)) {
                         setLogin($member);
 
-                        redirect()->restore()->send();exit;
+                        $redirect=redirect()->restore();
+                        $urldata=$redirect->getData();
+                        if(empty($urldata)){
+                            redirect(url('index/member/index'))->send();
+                        }else{
+                            $redirect->send();
+                        }
+                        exit;
                     }
                 }
                 $this->wechatUser=$wechatUser;
@@ -150,7 +157,14 @@ class BaseController extends Controller
                     if(!empty($member)) {
                         setLogin($member);
 
-                        redirect()->restore()->send();exit;
+                        $redirect=redirect()->restore();
+                        $urldata=$redirect->getData();
+                        if(empty($urldata)){
+                            redirect(url('index/member/index'))->send();
+                        }else{
+                            $redirect->send();
+                        }
+                        exit;
                     }
                 }
                 $this->wechatUser=$wechatUser;
