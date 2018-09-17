@@ -117,13 +117,7 @@ class BaseController extends Controller
                     if(!empty($member)) {
                         setLogin($member);
 
-                        $redirect=redirect()->restore();
-                        $urldata=$redirect->getData();
-                        if(empty($urldata)){
-                            redirect(url('index/member/index'))->send();
-                        }else{
-                            $redirect->send();
-                        }
+                        get_redirect(url('index/member/index'))->send();
                         exit;
                     }
                 }
@@ -157,13 +151,7 @@ class BaseController extends Controller
                     if(!empty($member)) {
                         setLogin($member);
 
-                        $redirect=redirect()->restore();
-                        $urldata=$redirect->getData();
-                        if(empty($urldata)){
-                            redirect(url('index/member/index'))->send();
-                        }else{
-                            $redirect->send();
-                        }
+                        get_redirect(url('index/member/index'))->send();
                         exit;
                     }
                 }

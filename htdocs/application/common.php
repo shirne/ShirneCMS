@@ -72,23 +72,83 @@ function getOauthTypes(){
     ];
 }
 
-function searchKey($key,$val,$search=''){
-    if(!is_array($search)){
-        $search=request()->param();
+
+
+function settingGroups($name = '')
+{
+    $groups = array(
+        'common' => '通用配置',
+        'member' => '会员配置',
+        'wechat' => '微信配置',
+        'advance' => '高级配置'
+    );
+    if (empty($name)) {
+        return $groups;
+    } else {
+        return $groups[$name];
     }
-    if(strpos($key,',')>0){
-        $keys=explode(',',$key);
-        foreach ($keys as $key){
-            $search=searchKey(trim($key),$val,$search);
-        }
-    }else {
-        if (empty($val) || $val == 'all') {
-            if (isset($search[$key])) unset($search[$key]);
-        } else {
-            $search[$key] = $val;
-        }
+}
+
+/**
+ * 获取配置字段类型
+ * @param $key string 类型
+ * @return string|array
+ */
+function settingTypes($key = '')
+{
+    $types = array();
+    $types['text'] = "单行文本";
+    $types['number'] = "数字";
+    $types['bool'] = "布尔";
+    $types['radio'] = "单选";
+    $types['check'] = "多选";
+    $types['select'] = "下拉选择";
+    $types['textarea'] = "多行文本";
+    $types['location'] = "位置选择";
+    $types['html'] = "编辑器";
+
+    if (empty($key)) {
+        return $types;
+    } else {
+        return isset($types[$key]) ? $types[$key] : '-';
     }
-    return $search;
+}
+
+function banklist(){
+    return array(
+        "中国工商银行",
+        "招商银行",
+        "中国农业银行",
+        "中国银行",
+        "中国建设银行",
+        "中国邮政储蓄银行",
+        "中国光大银行",
+        "中信银行",
+        "交通银行",
+        "兴业银行",
+        "浦发银行",
+        "华夏银行",
+        "深圳发展银行",
+        "广东发展银行",
+        "中国民生银行",
+        "恒生银行",
+        "汇丰中国银行",
+        "渣打中国银行"
+    );
+}
+
+function payTypes($type = '')
+{
+    $types = array(
+        'wechat' => '微信支付',
+        'alipay' => '支付宝支付',
+        'unioncard' => '银联卡转帐',
+    );
+    if (empty($type)) {
+        return $types;
+    } else {
+        return $types[$type];
+    }
 }
 
 function getMemberLevels()
@@ -128,6 +188,79 @@ function getDefaultLevel(){
     return 0;
 }
 
+
+
+function user_log($uid, $action, $result, $remark = '', $tbl = 'member')
+{
+    return \think\Db::name($tbl . 'Log')->insert(array(
+        'create_time' => time(),
+        $tbl . '_id' => $uid,
+        'ip' => app()->request->ip(),
+        'action' => $action,
+        'result' => intval($result),
+        'remark' => $remark
+    ));
+}
+
+/**
+ * 金额变动
+ * charge 充值/赠送 cash 提现/提现失败
+ * @param $uid
+ * @param $money
+ * @param $reson
+ * @param string $type
+ * @return bool|mixed
+ */
+function money_log($uid, $money, $reson, $type='',$field='money')
+{
+    if($money==0)return true;
+    $from_id=0;
+    if(is_array($uid)){
+        $from_id=intval($uid[1]);
+        $uid=$uid[0];
+    }
+
+    $member=\think\Db::name('member')->lock(true)->find($uid);
+
+    if(empty($member))return false;
+
+    if($money>0) {
+        $result=\think\Db::name('member')->where('id' , $uid)
+            ->setInc($field,$money);
+    }else{
+        if($member[$field]<abs($money))return false;
+        $result=\think\Db::name('member')->where('id' , $uid)
+            ->setDec($field,abs($money));
+    }
+    if($result) {
+        return \think\Db::name('memberMoneyLog')->insert(array(
+            'create_time' => time(),
+            'member_id' => $uid,
+            'from_member_id'=>$from_id,
+            'type' => $type,
+            'before' => $member[$field],
+            'amount' => $money,
+            'after' => $member[$field] + $money,
+            'field'=>$field,
+            'reson' => $reson
+        ));
+    }else{
+        return false;
+    }
+}
+
+function getPaytypes($type = '')
+{
+    $where=array();
+    if(!empty($type))$where['type']=$type;
+    $lists=\think\Db::name('Paytype')->where($where)->select();
+    $ptypes=array();
+    foreach ($lists as $t){
+        $ptypes[$t['id']]=$t;
+    }
+    return $ptypes;
+}
+
 function getMemberParents($userid,$level=5,$getid=true){
     $parents=[];
     $user=\think\Db::name('Member')->where('id',$userid)->field('id,level_id,username,referer')->find();
@@ -141,8 +274,14 @@ function getMemberParents($userid,$level=5,$getid=true){
     return $parents;
 }
 
-function filter_specchar($str){
-    return preg_replace("/\/|\~|\!|\@|\#|\\$|\%|\^|\&|\*|\(|\)|\_|\+|\{|\}|\:|\<|\>|\?|\[|\]|\,|\.|\/|\;|\'|\`|\-|\=|\\\|\|/",'',$str);
+function get_redirect($default=''){
+    $redirect=redirect()->restore();
+    $urldata=$redirect->getData();
+    if(empty($urldata)){
+        if(empty($default))$default=url('index/member/index');
+        return redirect($default);
+    }
+    return $redirect;
 }
 
 function current_url($withqry=true){
@@ -153,6 +292,32 @@ function current_url($withqry=true){
 
 function current_domain(){
     return ($_SERVER['HTTPS']=="On"?"https":"http").'://'.$_SERVER['SERVER_NAME'];
+}
+
+/**
+ * 替换数组中的一个或几个键名对应的值
+ */
+function searchKey($key,$val,$search=''){
+    if(!is_array($search)){
+        $search=request()->param();
+    }
+    if(strpos($key,',')>0){
+        $keys=explode(',',$key);
+        foreach ($keys as $key){
+            $search=searchKey(trim($key),$val,$search);
+        }
+    }else {
+        if (empty($val) || $val == 'all') {
+            if (isset($search[$key])) unset($search[$key]);
+        } else {
+            $search[$key] = $val;
+        }
+    }
+    return $search;
+}
+
+function filter_specchar($str){
+    return preg_replace("/\/|\~|\!|\@|\#|\\$|\%|\^|\&|\*|\(|\)|\_|\+|\{|\}|\:|\<|\>|\?|\[|\]|\,|\.|\/|\;|\'|\`|\-|\=|\\\|\|/",'',$str);
 }
 
 function idArr($id){
@@ -277,7 +442,6 @@ function implode_cmp($arr,$glue=','){
 
 function encode_password($pass, $salt = '')
 {
-
     return md5(md5($pass) . $salt);
 }
 
@@ -287,154 +451,6 @@ function compare_password($user,$password){
 
 function compare_secpassword($user,$password){
     return encode_password($password,md5($user['id']))===$user['secpassword'];
-}
-
-function user_log($uid, $action, $result, $remark = '', $tbl = 'member')
-{
-    return \think\Db::name($tbl . 'Log')->insert(array(
-        'create_time' => time(),
-        $tbl . '_id' => $uid,
-        'ip' => app()->request->ip(),
-        'action' => $action,
-        'result' => intval($result),
-        'remark' => $remark
-    ));
-}
-
-/**
- * 金额变动
- * charge 充值/赠送 cash 提现/提现失败
- * @param $uid
- * @param $money
- * @param $reson
- * @param string $type
- * @return bool|mixed
- */
-function money_log($uid, $money, $reson, $type='',$field='money')
-{
-    if($money==0)return true;
-    $from_id=0;
-    if(is_array($uid)){
-        $from_id=intval($uid[1]);
-        $uid=$uid[0];
-    }
-
-    $member=\think\Db::name('member')->lock(true)->find($uid);
-
-    if(empty($member))return false;
-
-    if($money>0) {
-        $result=\think\Db::name('member')->where('id' , $uid)
-            ->setInc($field,$money);
-    }else{
-        if($member[$field]<abs($money))return false;
-        $result=\think\Db::name('member')->where('id' , $uid)
-            ->setDec($field,abs($money));
-    }
-    if($result) {
-        return \think\Db::name('memberMoneyLog')->insert(array(
-            'create_time' => time(),
-            'member_id' => $uid,
-            'from_member_id'=>$from_id,
-            'type' => $type,
-            'before' => $member[$field],
-            'amount' => $money,
-            'after' => $member[$field] + $money,
-            'field'=>$field,
-            'reson' => $reson
-        ));
-    }else{
-        return false;
-    }
-}
-
-function banklist(){
-    return array(
-        "中国工商银行",
-        "招商银行",
-        "中国农业银行",
-        "中国银行",
-        "中国建设银行",
-        "中国邮政储蓄银行",
-        "中国光大银行",
-        "中信银行",
-        "交通银行",
-        "兴业银行",
-        "浦发银行",
-        "华夏银行",
-        "深圳发展银行",
-        "广东发展银行",
-        "中国民生银行",
-        "恒生银行",
-        "汇丰中国银行",
-        "渣打中国银行"
-    );
-}
-
-function payTypes($type = '')
-{
-    $types = array(
-        'wechat' => '微信支付',
-        'alipay' => '支付宝支付',
-        'unioncard' => '银联卡转帐',
-    );
-    if (empty($type)) {
-        return $types;
-    } else {
-        return $types[$type];
-    }
-}
-
-function getPaytypes($type = '')
-{
-    $where=array();
-    if(!empty($type))$where['type']=$type;
-    $lists=\think\Db::name('Paytype')->where($where)->select();
-    $ptypes=array();
-    foreach ($lists as $t){
-        $ptypes[$t['id']]=$t;
-    }
-    return $ptypes;
-}
-
-function settingGroups($name = '')
-{
-    $groups = array(
-        'common' => '通用配置',
-        'member' => '会员配置',
-        'wechat' => '微信配置',
-        'advance' => '高级配置'
-    );
-    if (empty($name)) {
-        return $groups;
-    } else {
-        return $groups[$name];
-    }
-}
-
-/**
- * 获取配置字段类型
- * @param $key string 类型
- * @return string|array
- */
-function settingTypes($key = '')
-{
-    $types = array();
-    $types['text'] = "单行文本";
-    $types['number'] = "数字";
-    $types['bool'] = "布尔";
-    $types['radio'] = "单选";
-    $types['check'] = "多选";
-    $types['select'] = "下拉选择";
-    $types['textarea'] = "多行文本";
-    $types['location'] = "位置选择";
-    $types['html'] = "编辑器";
-
-    if (empty($key)) {
-        return $types;
-    } else {
-        return isset($types[$key]) ? $types[$key] : '-';
-    }
 }
 
 
