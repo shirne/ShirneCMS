@@ -86,6 +86,12 @@
                                 <input type="text" name="commission_layer" class="form-control"
                                     value="{$model.commission_layer}"
                                     placeholder="佣金层数">
+                                <div class="input-group-append">
+                                    <label class="input-group-text">
+                                        <input type="checkbox" name="is_agent" value="1" {$model['is_agent']?"checked":""} />
+                                        开启分佣
+                                    </label>
+                                </div>
                             </div>
                             <span class="form-text text-muted">层数修改需保存后才能再修改比例</span>
                         </div>

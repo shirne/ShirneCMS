@@ -34,6 +34,14 @@ class MemberModel extends BaseModel
             if ($model['referer']) {
                 Db::name('member')->where('id',$model->referer)->setInc('total_recommend',1);
             }
+            if ($model['level_id']) {
+                $levels = getMemberLevels();
+                if (!$model['is_agent'] ) {
+                    if (!empty($levels[$model['level_id']]) && $levels[$model['level_id']]['is_agent']) {
+                        self::setAgent($model->id);
+                    }
+                }
+            }
         });
     }
 
