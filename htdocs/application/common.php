@@ -21,6 +21,8 @@ function writelog($message,$type=\think\Log::INFO){
 function file_download($filename,$data){
     return \think\Response::create($data, '\\extcore\\FileDownload', 200, [], ['file_name'=>$filename]);
 }
+
+/** =====================================  固态数据类函数  ===================================== **/
 function getTextStyles(){
     return ['secondary','primary','info','success','warning','danger'];
 }
@@ -151,6 +153,8 @@ function payTypes($type = '')
     }
 }
 
+/** =====================================  数据类函数  ===================================== **/
+
 function getMemberLevels()
 {
     static $levels;
@@ -274,6 +278,9 @@ function getMemberParents($userid,$level=5,$getid=true){
     return $parents;
 }
 
+
+/** =====================================  功能类函数  ===================================== **/
+
 function get_redirect($default=''){
     $redirect=redirect()->restore();
     $urldata=$redirect->getData();
@@ -316,10 +323,16 @@ function searchKey($key,$val,$search=''){
     return $search;
 }
 
+/**
+ * 过滤特殊字符
+ */
 function filter_specchar($str){
     return preg_replace("/\/|\~|\!|\@|\#|\\$|\%|\^|\&|\*|\(|\)|\_|\+|\{|\}|\:|\<|\>|\?|\[|\]|\,|\.|\/|\;|\'|\`|\-|\=|\\\|\|/",'',$str);
 }
 
+/**
+ * id参数转换成数组,用于批量操作
+ */
 function idArr($id){
     if(strpos($id,',')>0){
         $ids=explode(',',$id);
