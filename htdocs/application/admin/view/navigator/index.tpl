@@ -229,7 +229,13 @@
                 var parent=$(this).parents('.input-group');
                 var module=$(this).val();
                 if(cates[module]){
-                    initCategory(parent.find('.modulecate'),cates[module]);
+                    if(cates[module]===1){
+                        setTimeout(function() {
+                            modulePickerChange.call(this,e);
+                        },1000);
+                    }else {
+                        initCategory(parent.find('.modulecate'), cates[module]);
+                    }
                 }else {
                     $.ajax({
                         url: "{:url('navigator/getCategories',['module'=>'__MODULE__'])}".replace('__MODULE__', module),
