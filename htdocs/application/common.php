@@ -669,12 +669,12 @@ function getSortedCategory(&$data, $pid = 0, $pre = "")
     foreach ($curdata as $v) {
         $idx++;
         $islast=$idx==$count?true:false;
-        $v['html'] ='<span class="tree-pre">'.($islast?($pre.'└─'):($pre.'├─')).'</span>';
+        $v['html'] =$islast?($pre.'└─'):($pre.'├─');
         $temp[] = $v;
         if($islast){
-            $temp = array_merge($temp, getSortedCategory($data, $v['id'], $pre.'&emsp;&emsp;'));
+            $temp = array_merge($temp, getSortedCategory($data, $v['id'], $pre.'　　'));
         }else{
-            $temp = array_merge($temp, getSortedCategory($data, $v['id'], $pre.'│&emsp;'));
+            $temp = array_merge($temp, getSortedCategory($data, $v['id'], $pre.'│　'));
         }
 
     }
