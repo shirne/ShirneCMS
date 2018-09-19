@@ -1,19 +1,11 @@
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+/*!40101 SET NAMES utf8 */;
 
 --
 -- Table structure for table `sa_manager`
 --
 
 DROP TABLE IF EXISTS `sa_manager`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sa_manager` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(20) NOT NULL,
@@ -32,15 +24,12 @@ CREATE TABLE `sa_manager` (
   `last_view_member` INT(11) NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `sa_manager_permision`
 --
 DROP TABLE IF EXISTS `sa_manager_permision`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sa_manager_permision` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `global` VARCHAR(200) NULL DEFAULT '',
@@ -48,8 +37,7 @@ CREATE TABLE `sa_manager_permision` (
   `manager_id` INT NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `manager_id_UNIQUE` (`manager_id` ASC)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 --
@@ -57,8 +45,6 @@ CREATE TABLE `sa_manager_permision` (
 --
 
 DROP TABLE IF EXISTS `sa_manager_log`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sa_manager_log` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `manager_id` int(11) DEFAULT '0',
@@ -68,8 +54,7 @@ CREATE TABLE `sa_manager_log` (
   `result` tinyint(4) DEFAULT '1',
   `remark` varchar(250) DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 --
@@ -77,8 +62,6 @@ CREATE TABLE `sa_manager_log` (
 --
 
 DROP TABLE IF EXISTS `sa_wechat`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sa_wechat` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `type` varchar(20) DEFAULT 'wechat',
@@ -101,15 +84,12 @@ CREATE TABLE `sa_wechat` (
   `create_time` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `sa_category`
 --
 
 DROP TABLE IF EXISTS `sa_category`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sa_category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `pid` int(11) DEFAULT NULL COMMENT '父分类ID',
@@ -124,16 +104,13 @@ CREATE TABLE `sa_category` (
   `keywords` varchar(255) DEFAULT NULL COMMENT '分类关键词',
   `description` varchar(255) DEFAULT NULL COMMENT '分类描述',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `sa_adv_group`
 --
 
 DROP TABLE IF EXISTS `sa_adv_group`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sa_adv_group` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(100) DEFAULT NULL,
@@ -141,16 +118,13 @@ CREATE TABLE `sa_adv_group` (
   `create_time` int(11) DEFAULT 0,
   `status` int(11) DEFAULT 0,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `sa_adv_item`
 --
 
 DROP TABLE IF EXISTS `sa_adv_item`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sa_adv_item` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `group_id` int(11) DEFAULT NULL COMMENT '分组ID',
@@ -166,16 +140,13 @@ CREATE TABLE `sa_adv_item` (
   `sort` int(11) DEFAULT 0,
   `status` int(11) DEFAULT 0,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `sa_links`
 --
 
 DROP TABLE IF EXISTS `sa_links`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sa_links` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(100) DEFAULT NULL,
@@ -183,16 +154,13 @@ CREATE TABLE `sa_links` (
   `url` varchar(150) DEFAULT NULL,
   `sort` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `sa_notice`
 --
 
 DROP TABLE IF EXISTS `sa_notice`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sa_notice` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(100) DEFAULT NULL,
@@ -203,16 +171,13 @@ CREATE TABLE `sa_notice` (
   `update_time` int(11) DEFAULT '0',
   `content` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `sa_o_auth`
 --
 
 DROP TABLE IF EXISTS `sa_o_auth`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sa_o_auth` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(100) DEFAULT NULL,
@@ -223,15 +188,12 @@ CREATE TABLE `sa_o_auth` (
   `status` tinyint(4) DEFAULT 1,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `sa_subscribe`
 --
 
 DROP TABLE IF EXISTS `sa_subscribe`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sa_subscribe` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `member_id` varchar(20) NOT NULL,
@@ -244,16 +206,13 @@ CREATE TABLE `sa_subscribe` (
   PRIMARY KEY (`id`),
   KEY `mobile` (`mobile`),
   KEY `email` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `sa_member`
 --
 
 DROP TABLE IF EXISTS `sa_member`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sa_member` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(20) NOT NULL,
@@ -297,7 +256,6 @@ CREATE TABLE `sa_member` (
   KEY `mobile` (`mobile`),
   KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 DROP TABLE IF EXISTS `sa_member_token`;
 
@@ -312,7 +270,7 @@ CREATE TABLE `sa_member_token` (
   PRIMARY KEY (`token_id`),
   KEY `member_id` (`member_id`),
   KEY `token` (`token`)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 DROP TABLE IF EXISTS `sa_member_message`;
@@ -354,7 +312,23 @@ CREATE TABLE `sa_member_level` (
   `commission_layer` INT NULL COMMENT '分佣层数',
   `commission_percent` VARCHAR(200) NULL COMMENT '分佣奖励',
   PRIMARY KEY (`level_id`)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS `sa_member_agent`;
+
+CREATE TABLE `sa_member_agent` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(30) NULL,
+  `short_name` VARCHAR(10) NULL,
+  `style` VARCHAR(10) default 'secondary',
+  `is_default` TINYINT NULL DEFAULT 0,
+  `area_sale_award` INT NULL DEFAULT 0,
+  `sibling_sale_award` INT NULL DEFAULT 0,
+  `recom_award` INT NULL DEFAULT 0,
+  `resom_sale_award` INT NULL DEFAULT 0,
+  PRIMARY KEY (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `sa_member_address`;
 
@@ -371,7 +345,7 @@ CREATE TABLE `sa_member_address` (
   `locate` VARCHAR(100) NULL,
   `is_default` TINYINT NULL DEFAULT 0,
   PRIMARY KEY (`address_id`)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 DROP TABLE IF EXISTS `sa_member_log`;
@@ -386,7 +360,7 @@ CREATE TABLE `sa_member_log` (
   `remark` VARCHAR(250) NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `action`(`action`)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `sa_member_card`;
 
@@ -399,15 +373,13 @@ CREATE TABLE `sa_member_card` (
   `bank` varchar(50) DEFAULT NULL,
   `is_default` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `sa_member_recharge`
 --
 
 DROP TABLE IF EXISTS `sa_member_recharge`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sa_member_recharge` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `member_id` int(11) NOT NULL,
@@ -418,8 +390,7 @@ CREATE TABLE `sa_member_recharge` (
   `remark` varchar(45) DEFAULT '',
   `audit_time` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 --
@@ -427,8 +398,6 @@ CREATE TABLE `sa_member_recharge` (
 --
 
 DROP TABLE IF EXISTS `sa_member_cashin`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sa_member_cashin` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `member_id` int(11) NOT NULL,
@@ -444,16 +413,13 @@ CREATE TABLE `sa_member_cashin` (
   `cashtype` varchar(50) DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `member_id` (`member_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `sa_member_money_log`
 --
 
 DROP TABLE IF EXISTS `sa_member_money_log`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sa_member_money_log` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `member_id` int(11) NOT NULL,
@@ -467,11 +433,23 @@ CREATE TABLE `sa_member_money_log` (
   `create_time` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY  `type`(`type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-# Dump of table member_oauth
-# ------------------------------------------------------------
+DROP TABLE IF EXISTS `sa_award_log`;
+
+CREATE TABLE `sa_award_log`(
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `type` varchar(20) DEFAULT '',
+  `from_member_id` int(11) NOT NULL,
+  `amount` int(11) DEFAULT '0' COMMENT '金额 单位分',
+  `real_amount` int(11) DEFAULT '0',
+  `create_time` int(11) DEFAULT NULL,
+  `remark` varchar(50) DEFAULT '',
+  PRIMARY KEY (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 DROP TABLE IF EXISTS `sa_member_oauth`;
 
@@ -497,15 +475,13 @@ CREATE TABLE `sa_member_oauth` (
   `language` varchar(20) DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `type`(`type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `sa_invite_code`
 --
 
 DROP TABLE IF EXISTS `sa_invite_code`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sa_invite_code` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `code` varchar(20) NOT NULL,
@@ -518,16 +494,13 @@ CREATE TABLE `sa_invite_code` (
   `is_lock` tinyint(4) DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `code` (`code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `sa_checkcode`
 --
 
 DROP TABLE IF EXISTS `sa_checkcode`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sa_checkcode` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '0-手机 1-邮箱',
@@ -538,16 +511,13 @@ CREATE TABLE `sa_checkcode` (
   `check_at` int(11) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `sendto` (`sendto`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `sa_page`
 --
 
 DROP TABLE IF EXISTS `sa_page`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sa_page` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(100) NOT NULL,
@@ -560,16 +530,13 @@ CREATE TABLE `sa_page` (
   `use_template` TINYINT NULL DEFAULT 0,
   `content` text,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `sa_page_images`
 --
 
 DROP TABLE IF EXISTS `sa_page_images`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sa_page_images` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(100) DEFAULT NULL,
@@ -579,16 +546,13 @@ CREATE TABLE `sa_page_images` (
   `sort` INT(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `page_id` (`page_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `sa_page_group`
 --
 
 DROP TABLE IF EXISTS `sa_page_group`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sa_page_group` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `group_name` varchar(100) NOT NULL,
@@ -596,16 +560,13 @@ CREATE TABLE `sa_page_group` (
   `sort` int(11) DEFAULT 0,
   `use_template` TINYINT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `sa_article`
 --
 
 DROP TABLE IF EXISTS `sa_article`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sa_article` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(100) DEFAULT NULL,
@@ -626,16 +587,13 @@ CREATE TABLE `sa_article` (
   PRIMARY KEY (`id`),
   KEY `cate_id` (`cate_id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `sa_article_images`
 --
 
 DROP TABLE IF EXISTS `sa_article_images`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sa_article_images` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(100) DEFAULT NULL,
@@ -645,16 +603,13 @@ CREATE TABLE `sa_article_images` (
   `sort` INT(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `article_id` (`article_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `sa_article_digg`
 --
 
 DROP TABLE IF EXISTS `sa_article_digg`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sa_article_digg` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
   `article_id` int(11) DEFAULT NULL,
@@ -664,16 +619,13 @@ CREATE TABLE `sa_article_digg` (
   `ip` varchar(50) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `article_id` (`article_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `sa_article_comment`
 --
 
 DROP TABLE IF EXISTS `sa_article_comment`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sa_article_comment` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `member_id` int(11) NOT NULL DEFAULT '0',
@@ -690,16 +642,13 @@ CREATE TABLE `sa_article_comment` (
   PRIMARY KEY (`id`),
   KEY `member_id` (`member_id`),
   KEY `article_id` (`article_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `sa_setting`
 --
 
 DROP TABLE IF EXISTS `sa_setting`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sa_setting` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `key` varchar(50) NOT NULL DEFAULT '',
@@ -712,16 +661,13 @@ CREATE TABLE `sa_setting` (
   `data` text,
   PRIMARY KEY (`id`),
   KEY `key` (`key`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `sa_paytype`
 --
 
 DROP TABLE IF EXISTS `sa_paytype`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sa_paytype` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` varchar(20) NOT NULL,
@@ -732,16 +678,13 @@ CREATE TABLE `sa_paytype` (
   `title` varchar(45) DEFAULT NULL,
   `status` tinyint(4) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `sa_feedback`
 --
 
 DROP TABLE IF EXISTS `sa_feedback`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sa_feedback` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `member_id` int(11) NOT NULL DEFAULT '0',
@@ -756,8 +699,7 @@ CREATE TABLE `sa_feedback` (
   `reply_at` int(11) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `member_id` (`member_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 --
@@ -765,8 +707,6 @@ CREATE TABLE `sa_feedback` (
 --
 
 DROP TABLE IF EXISTS `sa_permission`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sa_permission` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `parent_id` INT NULL,
@@ -777,12 +717,5 @@ CREATE TABLE `sa_permission` (
   `order_id` INT NULL,
   `disable` TINYINT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
