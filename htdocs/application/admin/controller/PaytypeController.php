@@ -64,7 +64,7 @@ class PaytypeController extends BaseController
                 }
             }
         }
-        $model=array();
+        $model=array('status'=>1,'type'=>'unioncard');
         $this->assign('model',$model);
         $this->assign('id',0);
         $this->assign('banklist',banklist());

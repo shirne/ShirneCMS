@@ -653,21 +653,28 @@ function getPageGroups($force=false){
  * 获取排序后的分类
  * @param  array $data [description]
  * @param  integer $pid [description]
- * @param  string $html [description]
- * @param  integer $level [description]
+ * @param  string $pre [description]
  * @return array
  */
-function getSortedCategory(&$data, $pid = 0, $html = "|---", $level = 0)
+function getSortedCategory(&$data, $pid = 0, $pre = "")
 {
     $temp = array();
-    foreach ($data as $k => $v) {
-        if ($v['pid'] == $pid) {
+    $curdata=array_filter($data,function($item) use ($pid){
+        return $item['pid']==$pid;
+    });
 
-            $str = str_repeat($html, $level);
-            $v['html'] = $str;
-            $temp[] = $v;
+    $count=count($curdata);
 
-            $temp = array_merge($temp, getSortedCategory($data, $v['id'], '|---', $level + 1));
+    $idx=0;
+    foreach ($curdata as $v) {
+        $idx++;
+        $islast=$idx==$count?true:false;
+        $v['html'] ='<span class="tree-pre">'.($islast?($pre.'└─'):($pre.'├─')).'</span>';
+        $temp[] = $v;
+        if($islast){
+            $temp = array_merge($temp, getSortedCategory($data, $v['id'], $pre.'&emsp;&emsp;'));
+        }else{
+            $temp = array_merge($temp, getSortedCategory($data, $v['id'], $pre.'│&emsp;'));
         }
 
     }

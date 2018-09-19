@@ -46,8 +46,7 @@
         <div class="form-group typebox type-unioncard">
             <label for="cc">银行名称</label>
             <div class="input-group">
-            <input type="text" name="bank" class="form-control" placeholder="请填写银行名称" value="{$model.bank}">
-                <span class="input-group-addon">快速填写</span>
+                <input type="text" name="bank" class="form-control" placeholder="请填写银行名称" value="{$model.bank}">
                 <select id="cardlist" class="form-control" onchange="if(this.value)this.form.bank.value=this.value;">
                     <option value="">从列表中选择自动填写</option>
                     <foreach name="banklist" item="v">

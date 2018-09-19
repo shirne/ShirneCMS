@@ -359,8 +359,14 @@ table {
     background-color: #f5f5f5;
   }
 
-  td figure {
-    max-width: 100px;
+  td {
+    .tree-pre{
+      color: #888;
+      font-size: 1.2rem;
+    }
+    figure {
+      max-width : 100px;
+    }
   }
 }
 

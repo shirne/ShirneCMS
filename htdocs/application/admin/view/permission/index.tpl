@@ -37,10 +37,11 @@
                     <a class="btn btn-outline-dark btn-sm" href="{:url('permission/delete',array('id'=>$v['id']))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
                 </td>
             </tr>
+            <php>$soncount=empty($model[$v['id']])?0:count($model[$v['id']]);</php>
             <foreach name="model[$v['id']]" item="sv">
                 <tr>
                     <td>{$sv.id}</td>
-                    <td><span class="fa">┣</span> {$sv.name}</td>
+                    <td><span class="tree-pre">{$soncount==$key+1?'└─':'├─'}</span> {$sv.name}</td>
                     <td>{$sv.key}</td>
                     <td>{$sv.url}</td>
                     <td>
