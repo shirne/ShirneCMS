@@ -64,30 +64,60 @@ class SettingController extends BaseController
         }
         $model=Db::name('setting');
         $settings=getSettings(false,false,true);
-        foreach ($data as $k=>$v){
-            if(is_array($v))$v=serialize($v);
-            if(isset($settings[$k])) {
-                if($settings[$k]!=$v)$model->where('key' , $k)->update(array('value' => $v));
-            }else{
-                $model->setOption('data',[]);
-                $model->insert(array(
-                    'key'=>$k,
-                    'title'=>$k,
-                    'type'=>'text',
-                    'group'=>'advance',
-                    'sort'=>0,
-                    'value'=>$v,
-                    'description'=>'',
-                    'data'=>''
-                ));
+        if($data['mode']=='full'){
+            foreach ($data['data'] as $k=>$v){
+                if(is_array($v['value']))$v['value']=serialize($v['value']);
+                if(isset($settings[$k])) {
+                    if($settings[$k]!=$v)$model->where('key' , $k)->update(array('value' => $v['value']));
+                }else{
+                    $model->setOption('data',[]);
+                    $model->insert(array(
+                        'key'=>$k,
+                        'title'=>$v['title'],
+                        'type'=>$v['type'],
+                        'group'=>$v['group'],
+                        'sort'=>$v['sort'],
+                        'value'=>$v['value'],
+                        'description'=>$v['description'],
+                        'data'=>$v['data']
+                    ));
+                }
+            }
+        }else{
+            foreach ($data['data'] as $k=>$v){
+                if(is_array($v))$v=serialize($v);
+                if(isset($settings[$k])) {
+                    if($settings[$k]!=$v)$model->where('key' , $k)->update(array('value' => $v));
+                }else{
+                    $model->setOption('data',[]);
+                    $model->insert(array(
+                        'key'=>$k,
+                        'title'=>$k,
+                        'type'=>'text',
+                        'group'=>'advance',
+                        'sort'=>0,
+                        'value'=>$v,
+                        'description'=>'',
+                        'data'=>''
+                    ));
+                }
             }
         }
         cache('setting',null);
         $this->success('导入成功');
     }
-    public function export(){
-        $settings=getSettings();
-        return file_download('setting.json',json_encode($settings,JSON_UNESCAPED_UNICODE));
+    public function export($mode='simple'){
+        $data=[];
+        if($mode=='full'){
+            $data['mode']='full';
+            $data['date']=date('Y-m-d H:i:s');
+            $data['data']=getSettings(true);
+        }else{
+            $data['mode']='simple';
+            $data['date']=date('Y-m-d H:i:s');
+            $data['data']=getSettings();
+        }
+        return file_download('setting.json',json_encode($data,JSON_UNESCAPED_UNICODE));
     }
 
     public function advance($key=""){
