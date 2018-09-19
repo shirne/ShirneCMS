@@ -9,8 +9,15 @@
     <div class="container-fluid tab-container" >
         <div class="btn-toolbar tab-toolbar" role="toolbar" aria-label="Toolbar with button groups">
             <div class="btn-group mr-2 btn-group-sm" role="group" aria-label="First group">
-                <a href="{:url('export')}" class="btn btn-outline-secondary"><i class="ion-md-cloud-download"></i> 导出</a>
                 <a href="javascript:" class="btn btn-outline-secondary import-btn"><i class="ion-md-cloud-upload"></i> 导入</a>
+                <a href="{:url('export')}" target="_blank" class="btn btn-outline-secondary"><i class="ion-md-cloud-download"></i> 导出</a>
+                <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                    <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <div class="dropdown-menu" role="menu">
+                    <a href="{:url('export',array('mode'=>'full'))}" class="dropdown-item">完整导出</a>
+                </div>
             </div>
             <div class="btn-group btn-group-sm" role="group" aria-label="Third group">
                 <a href="{:url('oauth/index')}" class="btn btn-outline-info"><i class="ion-md-key"></i> 第三方登录</a>

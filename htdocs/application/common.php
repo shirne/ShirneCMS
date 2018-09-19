@@ -735,7 +735,8 @@ function setSetting($key,$v){
  * @param $d
  * @return array
  */
-function parse_data($d){
+function parse_data($d)
+{
     if(empty($d))return array();
     $arr=array();
     $darr=preg_split('/[\n\r]+/',$d);
@@ -748,6 +749,19 @@ function parse_data($d){
         }
     }
     return $arr;
+}
+
+function serialize_data($arr)
+{
+    $str=[];
+    foreach($arr as $k=>$v){
+        if($k==$v){
+            $str[]=$v;
+        }else{
+            $str[]=$k.':'.$v;
+        }
+    }
+    return implode("\n",$str);
 }
 
 

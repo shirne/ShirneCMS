@@ -85,9 +85,9 @@
                                 <span class="caret"></span>
                                 <span class="sr-only">Toggle Dropdown</span>
                             </button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="{:url('member/index',array('referer'=>$v['id']))}">查看下线</a></li>
-                            </ul>
+                            <div class="dropdown-menu" role="menu">
+                                <a class="dropdown-item" href="{:url('member/index',array('referer'=>$v['id']))}">查看下线</a>
+                            </div>
                         </div>
                     <else/>
                     <a class="btn btn-outline-dark btn-sm {$v.refer_agent>2?'disabled':''}" href="{:url('member/set_agent',array('id'=>$v['id']))}" ><i class="ion-md-check"></i> 设置代理</a>

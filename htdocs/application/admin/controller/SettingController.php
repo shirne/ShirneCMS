@@ -48,14 +48,14 @@ class SettingController extends BaseController
                 $this->error('请将配置文件内容粘贴在输入框内');
             }
         }else{
-            $file=$this->uploadFile('cache','contentFile',true);
+            $file=$this->uploadFile('cache','contentFile',false);
             if($file){
                 $json=file_get_contents('.'.$file['url']);
                 if(empty($json)){
                     $this->error('配置文件内容为空');
                 }
             }else{
-                $this->error('请选择配置文件上传(.json)');
+                $this->error($this->uploadError.'(.json)');
             }
         }
         $data=json_decode($json,TRUE);
@@ -71,6 +71,7 @@ class SettingController extends BaseController
                     if($settings[$k]!=$v)$model->where('key' , $k)->update(array('value' => $v['value']));
                 }else{
                     $model->setOption('data',[]);
+                    if(is_array($v['data']))$v['data']=serialize($v['data']);
                     $model->insert(array(
                         'key'=>$k,
                         'title'=>$v['title'],
@@ -79,7 +80,7 @@ class SettingController extends BaseController
                         'sort'=>$v['sort'],
                         'value'=>$v['value'],
                         'description'=>$v['description'],
-                        'data'=>$v['data']
+                        'data'=>serialize_data($v['data'])
                     ));
                 }
             }
