@@ -190,8 +190,8 @@ class OrderModel extends BaseModel
 
         for ($i = 0; $i < count($parents); $i++) {
             $curLevel=$levels[$parents[$i]['level_id']];
-            if($curLevel['commission_layer']>$i && !empty($levels['commission_percent'][$i])) {
-                $curPercent = $levels['commission_percent'][$i];
+            if($curLevel['commission_layer']>$i && !empty($curLevel['commission_percent'][$i])) {
+                $curPercent = $curLevel['commission_percent'][$i];
                 $amount=$order['commission_amount']*$curPercent;
                 self::award_log($parents[$i]['id'],$order['member_id'],$amount,'消费分佣'.($i+1).'代','commission');
             }
