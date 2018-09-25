@@ -32,9 +32,9 @@ jQuery(function ($) {
         if (!target) target = 'id';
         var ids = $('[name=' + target + ']');
         if ($(this).is('.active')) {
-            ids.removeAttr('checked');
+            ids.prop('checked', false);
         } else {
-            ids.attr('checked', true);
+            ids.prop('checked', true);
         }
     });
     $('.checkreverse-btn').click(function (e) {
@@ -43,9 +43,9 @@ jQuery(function ($) {
         var ids = $('[name=' + target + ']');
         for (var i = 0; i < ids.length; i++) {
             if (ids[i].checked) {
-                ids.eq(i).removeAttr('checked');
+                ids.eq(i).prop('checked', false);
             } else {
-                ids.eq(i).attr('checked', true);
+                ids.eq(i).prop('checked', true);
             }
         }
     });
