@@ -264,7 +264,7 @@ class LoginController extends BaseController{
         }
 
         if($this->request->isPost()){
-            $data=$this->request->only('username,password,repassword,email,realname,mobile','post');
+            $data=$this->request->only('username,password,repassword,email,realname,mobile,mobilecheck','post');
 
             $validate=new MemberValidate();
             $validate->setId();
@@ -279,6 +279,17 @@ class LoginController extends BaseController{
                 if (empty($invite) || ($invite['invalid_at'] > 0 && $invite['invalid_at'] < time())) {
                     $this->error("激活码不正确");
                 }
+            }
+
+            if($this->config['sms_code'] ) {
+                if (empty($data['mobilecheck'])) {
+                    $this->error(' 请填写手机验证码');
+                }
+                $verifyed=$this->verify_checkcode($data['mobile'],$data['mobilecheck']);
+                if(!$verifyed){
+                    $this->error(' 手机验证码填写错误');
+                }
+                unset($data['mobilecheck']);
             }
 
             Db::startTrans();
@@ -345,6 +356,125 @@ class LoginController extends BaseController{
         $json['error']=0;
         if(!empty($m))$json['error']=1;
         return json($json);
+    }
+
+    public function send_checkcode($mobile,$code){
+
+        //图形验证码
+        if(!$this->check_verify($code)){
+            $this->error('验证码错误');
+        }
+
+        //号码格式验证
+        if(!preg_match('/^1[2-9]\d{9}$/',$mobile)){
+            $this->error('手机号码格式错误');
+        }
+
+        //已注册验证
+        $member=Db::name('member')->where('mobile',$mobile)->find();
+        if(!empty($member)){
+            $this->error('该手机号码已注册');
+        }
+
+        //发送限制
+        $ip_address_limit=10;
+        $phone_limit=5;
+        $second_limit=120;
+
+        //根据ip地址限制发送次数
+        $ip=$this->request->ip();
+        $ipcount=Db::name('checkcodeLimit')->where('type','ip')
+            ->where('key',$ip)->find();
+        if(empty($ipcount)){
+            Db::name('checkcodeLimit')->insert([
+                'type'=>'ip',
+                'key'=>$ip,
+                'create_time'=>time(),
+                'count'=>1
+            ]);
+        }else{
+            if($ipcount['create_time']<strtotime(date('Y-m-d'))){
+                Db::name('checkcodeLimit')->where('type','ip')->where('key',$ip)
+                    ->update(['create_time'=>time(),'count'=>1]);
+            }else{
+                if($ipcount['count']>=$ip_address_limit){
+                    $this->error('验证码发送过于频繁');
+                }
+                Db::name('checkcodeLimit')->where('type','ip')->where('key',$ip)
+                    ->setInc('count',1);
+            }
+        }
+
+        //根据手机号码限制发送次数
+        $phonecount=Db::name('checkcodeLimit')->where('type','mobile')
+            ->where('key',$mobile)->find();
+        if(empty($phonecount)){
+            Db::name('checkcodeLimit')->insert([
+                'type'=>'mobile',
+                'key'=>$mobile,
+                'create_time'=>time(),
+                'count'=>1
+            ]);
+        }else{
+            if($phonecount['create_time']<strtotime(date('Y-m-d'))){
+                Db::name('checkcodeLimit')->where('type','mobile')->where('key',$mobile)
+                    ->update(['create_time'=>time(),'count'=>1]);
+            }else{
+                if($phonecount['count']>=$phone_limit){
+                    $this->error('验证码发送过于频繁');
+                }
+                Db::name('checkcodeLimit')->where('type','mobile')->where('key',$mobile)
+                    ->setInc('count',1);
+            }
+        }
+
+        $exist=Db::name('Checkcode')->where('type',0)
+            ->where('sendto',$mobile)
+            ->where('is_check',0)->find();
+        $newcode=random_str(6, 'number');
+        if(empty($exist)) {
+            $data = [
+                'type' => 0,
+                'sendto' => $mobile,
+                'code' => $newcode,
+                'create_time' => time(),
+                'is_check' => 0
+            ];
+            Db::name('Checkcode')->insert($data);
+        }else{
+
+            //验证发送时间间隔
+            if(time()-$exist['create_time']<$second_limit){
+                $this->error('验证码发送过于频繁');
+            }
+
+            Db::name('Checkcode')->where('type',0)->where('sendto',$mobile)
+                ->update(['code'=>$newcode,'create_time'=>time()]);
+        }
+        @session_write_close();
+        $content="您本次验证码为{$newcode}仅用于会员注册。请在10分钟内使用！";
+        $sms=new UmsHttp($this->config);
+        $sended=$sms->send($mobile,$content);
+        if($sended) {
+            $this->success('验证码发送成功！');
+        }else{
+            $this->error($sms->errMsg);
+        }
+    }
+    protected function verify_checkcode($mobile,$code){
+        $checkcode=Db::name('Checkcode')->where('type',0)
+            ->where('sendto',$mobile)
+            ->where('is_check',0)
+            ->where('code',$code)->find();
+        if(empty($checkcode)){
+            return false;
+        }else{
+            Db::name('Checkcode')->where('type',0)
+                ->where('sendto',$mobile)
+                ->where('is_check',0)
+                ->update(['is_check'=>1,'check_at'=>time()]);
+            return true;
+        }
     }
 
     public function verify(){

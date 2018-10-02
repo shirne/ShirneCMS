@@ -2,6 +2,13 @@
   Options +FollowSymlinks -Multiviews
   RewriteEngine On
 
+#  SSL
+#  RewriteCond %{SERVER_NAME} !^www.gdyhjk.cn$
+#  RewriteRule ^.*$ https://www.gdyhjk.cn%{REQUEST_URI} [L,R]
+
+#  RewriteCond %{SERVER_PORT} !^443$
+#  RewriteRule ^.*$ https://www.gdyhjk.cn%{REQUEST_URI} [L,R]
+
   RewriteCond %{REQUEST_URI} !^/uploads/
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteCond %{REQUEST_FILENAME} !-f

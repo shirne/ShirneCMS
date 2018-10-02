@@ -137,7 +137,7 @@ Dialog.prototype.show=function(html,title){
     this.box.modal('show');
     return this;
 };
-Dialog.prototype.hide=function(){
+Dialog.prototype.hide=Dialog.prototype.close=function(){
     this.box.modal('hide');
     return this;
 };
@@ -179,9 +179,27 @@ var dialog={
     },
     prompt:function(message,callback,cancel){
         var called=false;
+        var contentHtml='<div class="form-group">{@input}</div>';
+        var title='请输入信息';
+        if(typeof message=='string'){
+            title=message;
+        }else{
+            title=message.title;
+            if(message.content) {
+                contentHtml = message.content.indexOf('{@input}') > -1 ? message.content : message.content + contentHtml;
+            }
+        }
         return new Dialog({
+            'onshow':function(body){
+                if(message && message.onshow){
+                    message.onshow(body);
+                }
+            },
             'onshown':function(body){
                 body.find('[name=confirm_input]').focus();
+                if(message && message.onshown){
+                    message.onshown(body);
+                }
             },
             'onsure':function(body){
                 var val=body.find('[name=confirm_input]').val();
@@ -198,7 +216,7 @@ var dialog={
                     return cancel();
                 }
             }
-        }).show('<input type="text" name="confirm_input" class="form-control" />',message);
+        }).show(contentHtml.compile({input:'<input type="text" name="confirm_input" class="form-control" />'}),title);
     },
     pickUser:function(url,callback,filter){
         var user=null;

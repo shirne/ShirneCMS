@@ -49,9 +49,9 @@
 									<span class="input-group-text">手机号码</span>
 								</div>
 								<input type="text" class="form-control" name="mobile">
-								<if condition="0">
+								<if condition="$config['sms_code'] EQ 1">
 									<div class="input-group-append">
-										<a class="btn btn-dark input-group-addon">发送验证码</a>
+										<a class="btn btn-outline-secondary input-group-addon sms_send_btn">发送验证码</a>
 									</div>
 								</if>
 							</div>
@@ -59,12 +59,14 @@
 								<span class="form-text text-muted">请填写11位手机号码<i>*</i></span>
 							</div>
 						</div>
-						<if condition="0">
+						<if condition="$config['sms_code'] EQ 1">
+							<div class="form-group">
 							<div class="input-group">
 								<div class="input-group-prepend">
 									<span class="input-group-text">短信验证</span>
 								</div>
 								<input type="text" class="form-control" name="mobilecheck">
+							</div>
 							</div>
 						</if>
 						<if condition="$nocode">
@@ -100,6 +102,72 @@
 <block name="script">
 	<script type="text/javascript">
 		jQuery(function($){
+			var second_limit=120;
+            var last_send=0;
+            var send_btn=$('.sms_send_btn');
+            var origText=send_btn.text();
+            setInterval(function () {
+				var nowtick=new Date().getTime();
+				if(nowtick-last_send<second_limit*1000){
+				    if(!send_btn.is('.disabled')){
+                        send_btn.addClass('disabled');
+                    }
+                    var seconds=parseInt((nowtick-last_send)/1000);
+                    send_btn.text((second_limit-seconds)+'s后重新发送');
+                }else if(send_btn.is('.disabled')){
+                    send_btn.removeClass('disabled').text(origText);
+
+                }
+            },200);
+            send_btn.click(function (e) {
+				var nowtick=new Date().getTime();
+				if(nowtick-last_send<second_limit*1000){
+				    return;
+                }
+                var mobile=$(this).parents('.form-group').find('input[type=text]').val();
+				if(!mobile || !mobile.match(/^1[2-9]\d{9}$/)){
+				    dialog.alert('请填写手机号码');
+				    return false;
+                }
+                var is_sending=false;
+				var dlg=dialog.prompt({
+					title:'请填写验证码',
+					content:'<div class="form-group"><div class="text-center"><img src="" class="verify_img" width="208" height="64" /></div></div>',
+					onshow:function (body) {
+					    var imgurl='{:url("index/login/verify")}';
+						body.find('.verify_img').click(function() {
+                            this.src=imgurl+'?_t='+new Date().getTime();
+                        }).trigger('click');
+                    }
+				},function(code) {
+				    if(!is_sending) {
+                        is_sending = true;
+                        $.ajax({
+                            url: "{:url('index/login/send_checkcode')}",
+                            type: 'POST',
+                            data: {
+                                code: code,
+                                mobile: mobile
+                            },
+                            dataType: 'JSON',
+                            success: function (json) {
+                                is_sending=false;
+                                console.log(json);
+                                dialog.alert(json.msg);
+                                if (json.code == 1) {
+                                    last_send = nowtick;
+                                    dlg.hide();
+                                }else{
+                                    dlg.box.find('.verify_img').trigger('click');
+                                    dlg.box.find('input').val('');
+                                }
+                            }
+                        });
+                    }
+				    return false;
+                });
+            });
+			
 			$('.registerForm').submit(function(e) {
 				e.preventDefault();
 				e.stopPropagation();
@@ -214,7 +282,7 @@
 						}else{
 							ajaxtime[fname]=new Date().getTime();
 							$.ajax({
-								url:'{:url('index/login/checkunique',array('type'=>'mobile'))}',
+								url:"{:url('index/login/checkunique',array('type'=>'mobile'))}",
 								data:{value:val},
 								dataType:'JSON',
 								type:'POST',
@@ -237,6 +305,11 @@
                             if ('{$config["m_invite"]}' == '2') error = '请填写激活码';
                         } else if (!val.match(/^[a-zA-Z0-9\-]{9,20}$/)) {
                             error = '激活码格式错误';
+                        }
+						break;
+					case 'mobilecheck':
+                        if(val=='') {
+                            error = '请填写短信验证码';
                         }
                         break;
 				}
