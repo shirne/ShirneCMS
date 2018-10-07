@@ -166,7 +166,7 @@ class WechatController extends BaseController
             $menuData=$app->menu->list();
             if(empty($menuData) || $menuData['errcode']!=0){
                 $menuData=$app->menu->current();
-                if(!empty($menuData) && empty($menuData['errcode'])){
+                if(!empty($menuData) && empty($menuData['errcode']) && !empty($menuData['selfmenu_info']['button'])){
                     $menuData=$menuData['selfmenu_info']['button'];
                     foreach ($menuData as $k=>$item){
                         if(isset($item['sub_button'])){
