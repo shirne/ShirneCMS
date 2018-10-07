@@ -281,6 +281,21 @@ function getMemberParents($userid,$level=5,$getid=true){
 
 /** =====================================  功能类函数  ===================================== **/
 
+function is_wechat_avatar($avatar){
+    if(empty($avatar)){
+        return false;
+    }
+    $nothttps=str_replace('https://','http://',$avatar);
+    if(strpos($nothttps,'http://thirdwx.qlogo.cn/')===0){
+        return true;
+    }
+    if(strpos($nothttps,'http://wx.qlogo.cn/')===0){
+        return true;
+    }
+
+    return false;
+}
+
 function get_redirect($default=''){
     $redirect=redirect()->restore();
     $urldata=$redirect->getData();
