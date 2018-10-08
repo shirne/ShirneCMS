@@ -68,7 +68,7 @@ class LoginController extends BaseController{
             }
             return $this->fetch();
         }else {
-            $app = Db::name('OAuth')->find(['id|type'=>$type]);
+            $app = Db::name('OAuth')->where('id|type',$type)->find();
             if (empty($app)) {
                 if($type=='wechat'){
                     $authid=Db::name('OAuth')->insert([
