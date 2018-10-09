@@ -26,7 +26,7 @@ class OrderController extends BaseController
             $model->where('order.isaudit',$audit);
         }
 
-        $lists=$model->where('order.delete_time',0)->paginate(15);
+        $lists=$model->where('order.delete_time',0)->order(Db::raw('if(order.status>-1,order.status,3) ASC,order.create_time DESC'))->paginate(15);
         if(!$lists->isEmpty()) {
             $orderids = array_column($lists->items(), 'order_id');
             $prodata = Db::name('OrderProduct')->where('order_id', 'in', $orderids)->select();
