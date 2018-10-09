@@ -82,13 +82,13 @@ class Product extends BaseTabLib
 
     public function tagCates($tag){
         $var  = isset($tag['var']) ? $tag['var'] : 'cates_list';
-        $pid = isset($tag['pid']) ? $this->parseArg($tag['pid']) : 0;
+        $pid = isset($tag['pid']) ? $this->parseArg($tag['pid']) : -1;
 
         $parseStr='<?php ';
 
         $parseStr.='$'.$var.'=\think\Db::name("ProductCategory")';
-        if(!empty($tag['pid'])){
-            $parseStr .= "->where('pid','.$pid.')";
+        if($pid>-1){
+            $parseStr .= "->where('pid',".$pid.")";
         }
         $parseStr .= '->order("sort ASC, id ASC")';
         $parseStr .= '->select();';
