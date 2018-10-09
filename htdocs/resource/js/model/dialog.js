@@ -218,6 +218,32 @@ var dialog={
             }
         }).show(contentHtml.compile({input:'<input type="text" name="confirm_input" class="form-control" />'}),title);
     },
+    action:function (list,callback,title) {
+        var html='<div class="list-group"><a href="javascript:" class="list-group-item list-group-item-action">'+list.join('</a><a href="javascript:" class="list-group-item list-group-item-action">')+'</a></div>';
+        var actions=null;
+        var dlg=new Dialog({
+            'onshow':function(body){
+                actions=body.find('.list-group-item-action');
+                actions.click(function (e) {
+                    actions.removeClass('active');
+                    $(this).addClass('active');
+                })
+            },
+            'onsure':function(body){
+                var action=actions.filter('.active');
+                if(action.length>0){
+                    var val=actions.index(action);
+                    if(typeof callback=='function'){
+                        return callback(val);
+                    }
+                }
+                return false;
+            },
+            'onhide':function () {
+                return true;
+            }
+        }).show(html,title?title:'请选择');
+    },
     pickUser:function(url,callback,filter){
         var user=null;
         if(!filter)filter={};
