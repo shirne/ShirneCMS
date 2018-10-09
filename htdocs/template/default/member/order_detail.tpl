@@ -1,0 +1,103 @@
+<extend name="public:base" />
+<block name="body">
+    <div class="container">
+        <div class="page-header"><h1>订单详情</h1></div>
+        <div class="card">
+            <div class="card-header" style="margin-bottom:10px;">{$order.order_no}
+                <div class="pull-right"><if condition="$order['status'] EQ 0">
+                        <span class="badge badge-warning">未支付</span>
+                        <elseif condition="$order['status'] EQ 1"/>
+                        <if condition="$order['isaudit'] EQ 1">
+                            <span class="badge badge-info">已发货</span>
+                            <else/>
+                            <span class="badge badge-warning">待审核</span>
+                        </if>
+                        <elseif condition="$order['status'] EQ 2"/>
+                        <span class="badge badge-success">已完成</span>
+                        <else/>
+                        <span class="badge badge-default">订单已作废</span>
+                    </if>
+                </div>
+            </div>
+            <div class="card-body">
+                <volist name="products" id="prod">
+                    <div class="media">
+                        <div class="media-left">
+                            <a href="{:url('index/product/view',array('id'=>$prod['product_id']))}">
+                                <img class="media-object" width="50" height="50" src="{$prod['product_image']}" alt="...">
+                            </a>
+                        </div>
+                        <div class="media-body">
+                            <h4 class="media-heading">{$prod['product_title']}</h4>
+                            <div><i class="fa fa-circle-o"></i> {$prod['product_price']}&times;{$prod.count}</div>
+                        </div>
+                    </div>
+                </volist>
+                <div class="float-right mt-2">
+                    订单总计： <span class="text-danger">￥{$order.payamount}</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div>{$order.recive_name}&nbsp;/&nbsp;{$order.mobile}</div>
+                <div>{$order.province}&nbsp;/&nbsp;{$order.city}&nbsp;/&nbsp;{$order.area}</div>
+                <div>{$order.address}</div>
+                <if condition="$order['express_no']">
+                    {$order['express_code']}：{$order['express_no']}
+                </if>
+            </div>
+            <div class="card-body">
+                <p>下单时间：{$order.create_time|showdate}</p>
+            </div>
+            <div class="card-footer order-btns text-right">
+
+                <if condition="$order['status'] EQ 0">
+                    <a href="javascript:" class="btn btn-secondary btn-cancel">取消订单</a>
+                    <a href="javascript:" class="btn btn-danger btn-pay">重新支付</a>
+                    <elseif condition="$order['status'] EQ 1"/>
+                    <if condition="$order['isaudit'] EQ 1">
+                        <a class="btn btn-secondary btn-confirm" href="javascript:" data-id="{$order.order_id}">确认完成</a>
+                    </if>
+                </if>
+            </div>
+        </div>
+    </div>
+</block>
+<block name="script">
+    <script type="text/javascript">
+        jQuery(function($){
+            $('.btn-confirm').click(function() {
+                var id=$(this).data('id');
+                if(confirm('是否确认订单已收货')){
+                    $.ajax({
+                        url:"{:url('index/member/confirm')}?id="+id,
+                        dataType:'JSON',
+                        success:function(j){
+                            if(j.status==1){
+                                alert(j.info);
+                                location.reload();
+                            }else{
+                                alert(j.info);
+                            }
+                        }
+                    })
+                }
+            });
+
+            $('.btn-pay').click(function (e) {
+                dialog.action(['余额支付','微信支付'],function(idx){
+                    if(idx==0){
+                        location.href="{:url('index/order/balancepay',['order_id'=>$order['order_id']])}";
+                    }else if(idx==1){
+                        location.href="{:url('index/order/wechatpay',['order_id'=>$order['order_id']])}";
+                    }
+                });
+            });
+
+            $('.btn-cancel').click(function (e) {
+                dialog.confirm('确定取消订单？',function(){
+                    location.href="{:url('index/member/order_delete',['id'=>$order['order_id']])}";
+                });
+            });
+        })
+    </script>
+</block>

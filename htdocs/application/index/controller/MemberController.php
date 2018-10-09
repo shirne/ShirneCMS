@@ -410,6 +410,17 @@ class MemberController extends AuthedController
         $this->assign('page',$orders->render());
         return $this->fetch();
     }
+
+    public function order_detail($id){
+        $order=OrderModel::get($id);
+        if(empty($order) || $order['delete_time']>0){
+            $this->error('订单不存在或已删除',url('index/member/order'));
+        }
+        $this->assign('order',$order);
+        $this->assign('products',Db::name('OrderProduct')->where('order_id',$id)->select());
+        return $this->fetch();
+    }
+    
     /**
      * 删除订单
      * @param $id
