@@ -382,7 +382,7 @@ class MemberController extends AuthedController
         if($status>0){
             $model->where('status',$status-1);
         }
-        $orders =$model->order(Db::raw('if(order.status>-1,order.status,3) ASC,order.create_time DESC'))->paginate();
+        $orders =$model->order('status ASC,create_time DESC')->paginate();
         if(!empty($orders) && !$orders->isEmpty()) {
             $order_ids = array_column($orders->items(), 'order_id');
             $products = Db::view('OrderProduct', '*')
