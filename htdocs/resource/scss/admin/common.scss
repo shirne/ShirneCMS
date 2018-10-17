@@ -397,58 +397,58 @@ table {
   .card-header {
     padding: 0;
     background: none;
-  }
 
-  h4 {
-    margin: 0;
-    font-size: 1rem;
+    h4 {
+      margin: 0;
+      font-size: 1rem;
+    }
   }
 
   a {
     display: block;
     padding: 8px 15px;
     color: #999999;
+    &:focus, &:hover, &.active {
+      color: #fff;
+      text-decoration: none;
+    }
   }
 
   .card-header a {
     padding: 13px 15px;
-
-    /*border-top: 1px solid rgba(0,0,0,0.1);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);*/
   }
 
   .card-body {
     padding: 0;
-
-    a {
-      padding-left: 25px;
-    }
-
     ul {
       margin: 0;
       padding: 8px 0;
       background: #222;
     }
-  }
 
-  a {
-    &:focus, &:hover, &.active {
-      color: #fff;
-      text-decoration: none;
+    a {
+      padding-left: 25px;
+      position:relative;
+      &:focus, &:hover {
+        background-color: #333;
+      }
 
-      /*background-color: #2e2e2e;*/
-    }
-  }
+      &.active {
+        background-color: #000;
 
-  .card-body a {
-    &:focus, &:hover {
-      background-color: #292929;
-    }
-
-    &.active {
-      background-color: #292929;
-
-      /*background: #111;*/
+      }
+      &.active:after{
+        content:"";
+        display:block;
+        height: 0;
+        width: 0;
+        border-right: 15px #f6f6f6 solid;
+        border-top: 10px transparent solid;
+        border-bottom: 10px transparent solid;
+        position:absolute;
+        right:0;top:50%;
+        margin-top:-10px;
+      }
     }
   }
 
