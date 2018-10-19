@@ -78,11 +78,11 @@ class OrderController extends BaseController
         }elseif($order_ids=='status') {
             $model->where('status',1);
         }else{
-            $model->whereIn('order_id',idArr($order_ids));
+            $model->whereIn('order.order_id',idArr($order_ids));
         }
 
 
-        $rows=$model->select();
+        $rows=$model->order('order.create_time DESC')->select();
         if(empty($rows)){
             $this->error('没有选择要导出的项目');
         }

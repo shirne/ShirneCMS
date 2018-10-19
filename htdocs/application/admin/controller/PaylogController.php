@@ -9,6 +9,8 @@
 namespace app\admin\controller;
 
 
+use excel\Excel;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use think\Db;
 
 class PaylogController extends BaseController
@@ -119,14 +121,21 @@ class PaylogController extends BaseController
         $this->success('处理成功！');
     }
 
-    public function cashin($key=''){
-        $model=Db::view('__MEMBER_CASHIN__ mc','*');
+    public function cashin($key='',$status=''){
+        if($this->request->isPost()){
+            return redirect(url('',['status'=>$status,'key'=>base64_encode($key)]));
+        }
+        $key=empty($key)?'':base64_decode($key);
+        $model=Db::view('__MEMBER_CASHIN__ mc','*')->view('__MEMBER__ m',['username','realname'],'mc.member_id=m.id','LEFT');
         $where=array();
         if(!empty($key)){
-            $where[]=array('m.username','LIKE',"%$key%");
+            $model->where('m.username|mc.card_name','LIKE',"%$key%");
+        }
+        if($status!==''){
+            $model->where('m.status',$status);
         }
 
-        $lists=$model->view('__MEMBER__ m',['username','realname'],'mc.member_id=m.id','LEFT')->order('id DESC')->paginate(15);
+        $lists=$model->order('mc.id DESC')->paginate(15);
 
 
         $this->assign('lists',$lists);
@@ -135,6 +144,54 @@ class PaylogController extends BaseController
         $this->assign('total',$total);
         $this->assign('keyword',$key);
         return $this->fetch();
+    }
+
+
+    public function export($ids='',$status='',$key=''){
+        $model=Db::view('__MEMBER_CASHIN__ mc','*')->view('__MEMBER__ m',['username','realname'],'mc.member_id=m.id','LEFT');
+        if(empty($ids)){
+            if(!empty($key)){
+                $key=base64_decode($key);
+                $model->where('m.username|mc.card_name','LIKE',"%$key%");
+            }
+            if($status!==''){
+                $model->where('m.status',$status);
+            }
+        }elseif($ids=='status'){
+            $model->where('mc.status',0);
+        }else{
+            $model->whereIn('mc.id',idArr($ids));
+        }
+
+        $rows=$model->order('mc.id DESC')->select();
+        if(empty($rows)){
+            $this->error('没有选择要导出的项目');
+        }
+
+        $excel=new Excel();
+        $excel->setHeader(array(
+            '编号','会员ID','会员账号',
+            '提现来源','提现金额','应转款','申请时间',
+            '提现方式','银行','分行','开户名','卡号','状态'
+        ));
+        $excel->setColumnType('A',DataType::TYPE_STRING);
+        $excel->setColumnType('B',DataType::TYPE_STRING);
+        $excel->setColumnType('E',DataType::TYPE_STRING);
+        $excel->setColumnType('F',DataType::TYPE_STRING);
+        $excel->setColumnType('L',DataType::TYPE_STRING);
+
+        foreach ($rows as $row){
+            $excel->addRow(array(
+                $row['id'],$row['member_id'],$row['username'],
+                money_type($row['from_field'],false),showmoney($row['amount']),showmoney($row['real_amount']),
+                date('Y-m-d H:i:s',$row['create_time']),
+                showcashtype($row['cashtype']),
+                $row['bank_name'],$row['bank'],$row['card_name'],$row['cardno'],
+                audit_status($row['status'],false)
+            ));
+        }
+
+        $excel->output(date('Y-m-d-H-i').'-提现单导出['.count($rows).'条]');
     }
 
     /**

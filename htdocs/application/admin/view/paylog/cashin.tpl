@@ -8,14 +8,33 @@
 
     <div class="row list-header">
         <div class="col-6">
-            总有效金额: {$total|showmoney}
+            <div class="btn-group btn-group-sm" role="group" aria-label="Button group with nested dropdown">
+                <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    导出订单
+                </button>
+                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                    <a class="dropdown-item" href="{:url('paylog/export',['order_ids'=>$orderids])}" target="_blank" >导出本页</a>
+                    <a class="dropdown-item" href="{:url('paylog/export',['status'=>1])}" target="_blank">导出未处理</a>
+                    <a class="dropdown-item" href="{:url('paylog/export',['status'=>$status,'key'=>base64_encode($key)])}" target="_blank">导出筛选结果</a>
+                </div>
+            </div>
+            <span class="ml-3">总有效金额: {$total|showmoney}</span>
         </div>
         <div class="col-6">
             <form action="{:url('Paylog/cashin')}" method="post">
-                <div class="form-group input-group input-group-sm">
-                    <input type="text" class="form-control" value="{$keyword}" name="key" placeholder="输入名称搜索">
-                    <div class="input-group-append">
-                      <button class="btn btn-outline-secondary" type="submit"><i class="ion-md-search"></i></button>
+                <div class="form-row">
+                    <div class="col form-group">
+                        <select name="status" class="form-control form-control-sm">
+                            <option value="">全部</option>
+                            <option value="1"{$audit==='1'?' selected':''}>已审核</option>
+                            <option value="0"{$audit==='0'?' selected':''}>未审核</option>
+                        </select>
+                    </div>
+                    <div class="col form-group input-group input-group-sm">
+                        <input type="text" class="form-control" value="{$keyword}" name="key" placeholder="输入名称搜索">
+                        <div class="input-group-append">
+                          <button class="btn btn-outline-secondary" type="submit"><i class="ion-md-search"></i></button>
+                        </div>
                     </div>
                 </div>
             </form>
