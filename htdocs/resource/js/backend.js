@@ -116,6 +116,7 @@ jQuery(function ($) {
     //表单Ajax提交
     $('.btn-primary[type=submit]').click(function (e) {
         var form = $(this).parents('form');
+        if(form.is('.noajax'))return true;
         var btn = this;
 
         var isbtn=$(btn).prop('tagName').toUpperCase()=='BUTTON';

@@ -301,15 +301,45 @@ class MemberController extends BaseController
     /**
      * 会员注册情况统计
      * @param string $type
+     * @param string $start_date
+     * @param string $end_date
      * @return mixed
      */
-    public function statics($type='date')
+    public function statics($type='date',$start_date='',$end_date='')
     {
+        if($this->request->isPost()){
+            if(!in_array($type,['date','month','year']))$type='date';
+            return redirect(url('',['type'=>$type,'start_date'=>$start_date,'end_date'=>$end_date]));
+        }
         $format="'%Y-%m-%d'";
 
-        $statics=Db::name('member')->field('count(id) as member_count,date_format(from_unixtime(create_time),' . $format . ') as awdate')->group('awdate')->select();
+        if($type=='month'){
+            $format="'%Y-%m'";
+        }elseif($type=='year'){
+            $format="'%Y'";
+        }
+
+        $model=Db::name('member')->field('count(id) as member_count,date_format(from_unixtime(create_time),' . $format . ') as awdate');
+        $start_date=format_date($start_date,'Y-m-d');
+        $end_date=format_date($end_date,'Y-m-d');
+        if(!empty($start_date)){
+            if(!empty($end_date)){
+                $model->whereBetween('create_time',[strtotime($start_date),strtotime($end_date.' 23:59:59')]);
+            }else{
+                $model->where('create_time','GT',strtotime($start_date));
+            }
+        }else{
+            if(!empty($end_date)){
+                $model->where('create_time','LT',strtotime($end_date.' 23:59:59'));
+            }
+        }
+
+        $statics=$model->group('awdate')->select();
 
         $this->assign('statics',$statics);
+        $this->assign('static_type',$type);
+        $this->assign('start_date',$start_date);
+        $this->assign('end_date',$end_date);
         return $this->fetch();
     }
 }

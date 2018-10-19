@@ -786,6 +786,13 @@ function serialize_data($arr)
     return implode("\n",$str);
 }
 
+function format_date($date_str, $format){
+    $time=strtotime($date_str);
+    if($time>0){
+        return date($format,$time);
+    }
+    return '';
+}
 
 /**
  * 请求接口返回内容
@@ -852,7 +859,7 @@ function cutstr($str,$len,$dot='...'){
     if (strlen($str) <= $len) {
         return $str;
     }
-    $str = str_replace(array(' ', '&nbsp;', '&amp;', '&quot;', '&lt;', '&gt;'), array('', ' ','&', '"', '<', '>'), $str);
+    $str = str_replace(array( '&nbsp;', '&amp;', '&quot;', '&lt;', '&gt;'), array(' ','&', '"', '<', '>'), $str);
     $strcut = '';
     if (strtolower($charset) == 'utf-8') {
         $n = $tn = $noc = 0;
@@ -886,7 +893,7 @@ function cutstr($str,$len,$dot='...'){
             $strcut.= ord($str[$i]) > 127 ? $str[$i] . $str[++$i] : $str[$i];
         }
     }
-    $strcut = str_replace(array(' ', '&', '"', '<', '>'), array('&nbsp;', '&amp;', '&quot;', '&lt;', '&gt;'), $strcut);
+    $strcut = str_replace(array('&', '"', '<', '>'), array('&amp;', '&quot;', '&lt;', '&gt;'), $strcut);
     return $strcut . $dot;
 }
 
