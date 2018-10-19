@@ -3,6 +3,8 @@
 namespace app\admin\controller;
 
 use app\common\model\OrderModel;
+use excel\Excel;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use think\Db;
 
 class OrderController extends BaseController
@@ -43,11 +45,65 @@ class OrderController extends BaseController
 
         $this->assign('key',$key);
         $this->assign('status',$status);
+        $this->assign('orderids',empty($orderids)?0:implode(',',$orderids));
         $this->assign('audit',$audit);
         $this->assign('expresscodes',config('express.'));
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
         return $this->fetch();
+    }
+
+    /**
+     * 导出订单
+     * @param $order_ids
+     * @param string $key
+     * @param string $status
+     * @param string $audit
+     */
+    public function export($order_ids='',$key='',$status='',$audit=''){
+        $key=empty($key)?"":base64_decode($key);
+        $model=Db::view('order','*')
+            ->view('member',['username','realname','avatar','level_id'],'member.id=order.member_id','LEFT')
+            ->where('order.delete_time',0);
+        if(empty($order_ids)){
+            if(!empty($key)){
+                $model->whereLike('order.order_no|member.username|member.realname|order.recive_name|order.mobile',"%$key%");
+            }
+            if($status!==''){
+                $model->where('order.status',$status);
+            }
+            if($audit!==''){
+                $model->where('order.isaudit',$audit);
+            }
+        }elseif($order_ids=='status') {
+            $model->where('status',1);
+        }else{
+            $model->whereIn('order_id',idArr($order_ids));
+        }
+
+
+        $rows=$model->select();
+        if(empty($rows)){
+            $this->error('没有选择要导出的项目');
+        }
+
+        $excel=new Excel();
+        $excel->setHeader(array(
+            '编号','状态','时间','会员ID','会员账号','购买产品','购买价格','收货人','电话','省','市','区','地址'
+        ));
+        $excel->setColumnType('A',DataType::TYPE_STRING);
+        $excel->setColumnType('D',DataType::TYPE_STRING);
+        $excel->setColumnType('I',DataType::TYPE_STRING);
+
+        foreach ($rows as $row){
+            $prodata = Db::name('OrderProduct')->where('order_id', $row['order_id'])->find();
+            $excel->addRow(array(
+                $row['order_id'],order_status($row['status'],false),date('Y/m/d H:i:s',$row['create_at']),$row['member_id'],$row['username'],
+                $prodata['product_title'],$row['payamount'],$row['recive_name'],$row['mobile'],$row['province'],$row['city'],$row['area'],$row['address']
+            ));
+        }
+
+        $excel->output(date('Y-m-d-H-i').'-订单导出['.count($rows).'条]');
     }
 
     /**

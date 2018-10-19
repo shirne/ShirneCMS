@@ -8,7 +8,19 @@
 
         <div class="row">
             <div class="col-6">
-                &nbsp;
+                <div class="btn-group btn-group-sm" role="group" aria-label="Button group with nested dropdown">
+
+                    <div class="btn-group" role="group">
+                        <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            导出订单
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                            <a class="dropdown-item" href="{:url('order/export',['order_ids'=>$orderids])}" target="_blank" >导出本页</a>
+                            <a class="dropdown-item" href="{:url('order/export',['status'=>1])}" target="_blank">导出未处理</a>
+                            <a class="dropdown-item" href="{:url('order/export',['status'=>$status,'audit'=>$audit,'key'=>base64_encode($key)])}" target="_blank">导出筛选结果</a>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="col-6">
                 <form action="{:url('order/index')}" method="post">
@@ -16,11 +28,17 @@
                         <div class="col-3 form-group">
                             <select class="form-control form-control-sm">
                                 <option value="">全部</option>
+                                <option value="1"{$audit==='1'?' selected':''}>已审核</option>
+                                <option value="0"{$audit==='0'?' selected':''}>未审核</option>
                             </select>
                         </div>
                         <div class="col-3 form-group">
                             <select class="form-control form-control-sm">
                                 <option value="">全部</option>
+                                <option value="1"{$status==='1'?' selected':''}>待发货</option>
+                                <option value="2"{$status==='2'?' selected':''}>待收货</option>
+                                <option value="3"{$status==='3'?' selected':''}>已完成</option>
+                                <option value="-1"{$status==='-1'?' selected':''}>已失效</option>
                             </select>
                         </div>
                         <div class="col-6 form-group input-group input-group-sm">

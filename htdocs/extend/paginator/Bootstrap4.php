@@ -14,6 +14,7 @@ use think\Paginator;
 class Bootstrap4 extends Paginator
 {
     protected $extstyle='';
+    protected $side=3;
 
     public function __construct($items, $listRows, $currentPage = null, $total = null, $simple = false, array $options = [])
     {
@@ -40,6 +41,9 @@ class Bootstrap4 extends Paginator
                     $this->extstyle .= ' pagination-sm';
                     break;
             }
+        }
+        if(isset($this->options['side'])){
+            $this->side=intval($this->options['side']);
         }
     }
 
@@ -94,35 +98,35 @@ class Bootstrap4 extends Paginator
             'last'   => null,
         ];
 
-        $side   = 3;
-        $window = $side * 2;
+        $side   = $this->side;
+        $window = $side * 2 + 1;
 
-        if ($this->lastPage < $window + 6) {
+        if ($this->lastPage < $window + 3) {
             $block['first'] = $this->getUrlRange(1, $this->lastPage);
-        } elseif ($this->currentPage <= $window) {
-            $block['first'] = $this->getUrlRange(1, $window + 2);
-            $block['last']  = $this->getUrlRange($this->lastPage - 1, $this->lastPage);
-        } elseif ($this->currentPage > ($this->lastPage - $window)) {
-            $block['first'] = $this->getUrlRange(1, 2);
-            $block['last']  = $this->getUrlRange($this->lastPage - ($window + 2), $this->lastPage);
+        } elseif ($this->currentPage <= $side + 1) {
+            $block['first'] = $this->getUrlRange(1, $window + 1);
+            $block['last']  = $this->getUrlRange($this->lastPage,$this->lastPage);
+        } elseif ($this->currentPage > ($this->lastPage - $side - 1)) {
+            $block['first'] = $this->getUrlRange(1,1);
+            $block['last']  = $this->getUrlRange($this->lastPage - ($window + 1), $this->lastPage);
         } else {
-            $block['first']  = $this->getUrlRange(1, 2);
+            $block['first']  = $this->getUrlRange(1,1);
             $block['slider'] = $this->getUrlRange($this->currentPage - $side, $this->currentPage + $side);
-            $block['last']   = $this->getUrlRange($this->lastPage - 1, $this->lastPage);
+            $block['last']   = $this->getUrlRange($this->lastPage,$this->lastPage);
         }
 
         $html = '';
 
-        if (is_array($block['first'])) {
+        if (!empty($block['first'])) {
             $html .= $this->getUrlLinks($block['first']);
         }
 
-        if (is_array($block['slider'])) {
+        if (!empty($block['slider'])) {
             $html .= $this->getDots();
             $html .= $this->getUrlLinks($block['slider']);
         }
 
-        if (is_array($block['last'])) {
+        if (!empty($block['last'])) {
             $html .= $this->getDots();
             $html .= $this->getUrlLinks($block['last']);
         }

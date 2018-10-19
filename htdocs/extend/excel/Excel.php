@@ -24,7 +24,7 @@ class Excel {
     /**
      * @param string $fmt Excel5,Excel2007
      */
-    function __construct($fmt='Excel5'){
+    function __construct($fmt='Xls'){
         $this->format=$fmt;
         $this->excel=new Spreadsheet();
         $this->sheet=$this->excel->getActiveSheet();
