@@ -26,8 +26,8 @@
                     <div class="col form-group">
                         <select name="status" class="form-control form-control-sm">
                             <option value="">全部</option>
-                            <option value="1"{$audit==='1'?' selected':''}>已审核</option>
-                            <option value="0"{$audit==='0'?' selected':''}>未审核</option>
+                            <option value="1"{$status==='1'?' selected':''}>已审核</option>
+                            <option value="0"{$status==='0'?' selected':''}>未审核</option>
                         </select>
                     </div>
                     <div class="col form-group input-group input-group-sm">
