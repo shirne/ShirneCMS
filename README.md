@@ -66,7 +66,7 @@ htdocs/public 网站根目录
 
 导航配置 navigator.php
 
-##后台功能截图
+## 后台功能截图
 ![登录](screenshot/login.jpg "登录")
 ![主面板](screenshot/dashboard.jpg "主面板")
 ![分类管理](screenshot/category.jpg "分类管理")
