@@ -65,3 +65,17 @@ htdocs/public 网站根目录
 标签库 [product](TAGLIB.md),[article](TAGLIB.md) 和 [extendtag](TAGLIB.md)
 
 导航配置 navigator.php
+
+##后台功能截图
+![登录](screenshot/login.jpg "登录")
+![主面板](screenshot/dashboard.jpg "主面板")
+![分类管理](screenshot/category.jpg "分类管理")
+![添加分类](screenshot/category-add.jpg "添加分类")
+![发布文章](screenshot/article-add.jpg "发布文章")
+![发布商品](screenshot/product-add.jpg "发布商品")
+![发布商品](screenshot/product-add2.jpg "发布商品")
+![订单统计](screenshot/order-static.jpg "订单统计")
+![广告管理](screenshot/ad.jpg "广告管理")
+![系统设置](screenshot/setting.jpg "系统设置")
+![会员组](screenshot/user-level.jpg "会员组")
+![微信菜单](screenshot/wechat-menu.jpg "微信菜单")
