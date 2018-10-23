@@ -453,7 +453,7 @@ class MemberController extends AuthedController
         if(empty($model) || $model['member_id']!=$this->userid){
             $this->error('订单不存在');
         }
-        Db::name('Order')->where('order_id',$id)->update(array('status'=>2,'confirm_at'=>time()));
+        Db::name('Order')->where('order_id',$id)->update(array('status'=>3,'confirm_time'=>time()));
         $this->success('确认完成');
     }
 

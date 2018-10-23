@@ -46,7 +46,8 @@
                     <if condition="$v['status'] EQ 0">
                         <a href="javascript:" class="btn btn-secondary btn-cancel" data-id="{$v.order_id}">取消订单</a>
                         <a href="javascript:" class="btn btn-danger btn-pay" data-id="{$v.order_id}">重新支付</a>
-                        <elseif condition="$v['status'] EQ 1"/>
+                        <elseif condition="$v['status'] EQ 3"/>
+                        <elseif condition="$v['status'] GT 0"/>
                         <if condition="$v['isaudit'] EQ 1">
                             <a class="btn btn-secondary btn-confirm" href="javascript:" data-id="{$v.order_id}">确认完成</a>
                         </if>
@@ -68,11 +69,11 @@
                         url:"{:url('index/member/confirm')}?id="+id,
                         dataType:'JSON',
                         success:function(j){
-                            if(j.status==1){
-                                alert(j.info);
+                            if(j.code==1){
+                                alert(j.msg);
                                 location.reload();
                             }else{
-                                alert(j.info);
+                                alert(j.msg);
                             }
                         }
                     })

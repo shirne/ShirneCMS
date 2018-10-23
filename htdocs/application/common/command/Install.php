@@ -51,7 +51,8 @@ class Install extends Command
         }
 
         //install code
-        if(empty($sql))$sql='./struct.sql';
+        if(empty($sql))$sql='./install.sql';
+        else $sql ='./'.$sql.'.sql';
         $sqls=$this->explodesql($sql,'sa_',$dbconfig['prefix']);
         foreach ($sqls as $sql){
             Db::execute($sql);

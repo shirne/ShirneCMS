@@ -4,20 +4,7 @@
         <div class="page-header"><h1>订单详情</h1></div>
         <div class="card">
             <div class="card-header" style="margin-bottom:10px;">{$order.order_no}
-                <div class="pull-right"><if condition="$order['status'] EQ 0">
-                        <span class="badge badge-warning">未支付</span>
-                        <elseif condition="$order['status'] EQ 1"/>
-                        <if condition="$order['isaudit'] EQ 1">
-                            <span class="badge badge-info">已发货</span>
-                            <else/>
-                            <span class="badge badge-warning">待审核</span>
-                        </if>
-                        <elseif condition="$order['status'] EQ 2"/>
-                        <span class="badge badge-success">已完成</span>
-                        <else/>
-                        <span class="badge badge-default">订单已作废</span>
-                    </if>
-                </div>
+                <div class="float-right">{$v.status|order_status|raw}</div>
             </div>
             <div class="card-body">
                 <volist name="products" id="prod">
@@ -53,7 +40,8 @@
                 <if condition="$order['status'] EQ 0">
                     <a href="javascript:" class="btn btn-secondary btn-cancel">取消订单</a>
                     <a href="javascript:" class="btn btn-danger btn-pay">重新支付</a>
-                    <elseif condition="$order['status'] EQ 1"/>
+                    <elseif condition="$order['status'] EQ 3"/>
+                    <elseif condition="$order['status'] GT 0"/>
                     <if condition="$order['isaudit'] EQ 1">
                         <a class="btn btn-secondary btn-confirm" href="javascript:" data-id="{$order.order_id}">确认完成</a>
                     </if>
@@ -72,11 +60,11 @@
                         url:"{:url('index/member/confirm')}?id="+id,
                         dataType:'JSON',
                         success:function(j){
-                            if(j.status==1){
-                                alert(j.info);
+                            if(j.code==1){
+                                alert(j.msg);
                                 location.reload();
                             }else{
-                                alert(j.info);
+                                alert(j.msg);
                             }
                         }
                     })

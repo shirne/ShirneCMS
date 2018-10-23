@@ -206,4 +206,32 @@ class OrderModel extends BaseModel
         //返奖同时可以处理其它
 
     }
+
+     /**
+     * @param bool $force
+     * @return array
+     */
+    public function fetchExpress($force=false)
+    {
+        if($force || $this->express_time<time()-3600)
+        {
+            if(!$force && !empty($this->express_data)){
+                $express=json_decode($this->express_data);
+                if($express['Success']==true && $express['State']==3){
+                    return $express;
+                }
+            }
+            if(!empty($this->express_no) && !empty($this->express_code)) {
+                $express = new KdExpress([
+                    'appid'=>getSetting('kd_userid'),
+                    'appsecret'=>getSetting('kd_apikey')
+                ]);
+                $data = $express->QueryExpressTraces($this->express_code, $this->express_no);
+                $this->express_data=$data;
+                $this->express_time=time();
+                $this->save();
+            }
+        }
+        return empty($this->express_data)?[]:json_decode($this->express_data,TRUE);
+    }
 }

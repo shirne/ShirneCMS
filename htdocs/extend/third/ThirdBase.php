@@ -76,7 +76,7 @@ class ThirdBase
         $sContent = curl_exec($oCurl);
         $aStatus = curl_getinfo($oCurl);
         curl_close($oCurl);
-        Log::write($url."\n".var_export($sContent,TRUE),'HTTP');
+        Log::write($url.(empty($data)?'':("\n".var_export($data,true)))."\n".var_export($sContent,TRUE),'HTTP');
         if(intval($aStatus["http_code"])==200){
             return $sContent;
         }else{

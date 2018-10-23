@@ -66,12 +66,20 @@ VALUES
   (22, 'mail_port', '邮箱端口', 'text', 'advance', '0', '', '', ''),
   (23, 'mail_user', '邮箱账户', 'text', 'advance', '0', '', '', ''),
   (24, 'mail_pass', '邮箱密码', 'text', 'advance', '0', '', '', ''),
+  (25, 'sms_code', '短信验证', 'radio', 'advance', '0', '1', '', '1:开启\r\n2:关闭'),
+  (26, 'sms_spcode', '企业编号', 'text', 'advance', '0', '', '', ''),
+  (27, 'sms_loginname', '登录名称', 'text', 'advance', '0', '', '', ''),
+  (28, 'sms_password', '登录密码', 'text', 'advance', '0', '', '', ''),
+  (29, 'kd_userid', '快递鸟用户ID', 'text', 'advance', '0', '', '', ''),
+  (30, 'kd_apikey', '快递鸟API Key', 'text', 'advance', '0', '', '', ''),
   (31, 'm_invite', '邀请注册', 'radio', 'member', '0', '1', '', '0:关闭\r\n1:启用\r\n2:强制'),
   (32, 'm_register', '强制注册', 'radio', 'member', '0', '1', '', '0:关闭\r\n1:启用'),
-  (33, 'cash_fee', '提现手续费', 'text', 'member', '0', '10', '', ''),
-  (34, 'cash_limit', '最低提现金额', 'text', 'member', '0', '10', '', ''),
-  (35, 'cash_max', '最高提现金额', 'text', 'member', '0', '100000', '', ''),
-  (36, 'cash_power', '提现倍数', 'text', 'member', '0', '100', '', '');
+  (33, 'm_checkcode', '验证码', 'radio', 'member', '0', '1', '', '0:关闭\r\n1:启用'),
+  (34, 'autoaudit', '订单自动审核', 'radio', 'member', '0', '1', '', '0:关闭\r\n1:启用'),
+  (35, 'cash_fee', '提现手续费', 'text', 'member', '0', '10', '', ''),
+  (36, 'cash_limit', '最低提现金额', 'text', 'member', '0', '10', '', ''),
+  (37, 'cash_max', '最高提现金额', 'text', 'member', '0', '100000', '', ''),
+  (38, 'cash_power', '提现倍数', 'text', 'member', '0', '100', '', '');
 
 /*!40000 ALTER TABLE `sa_setting` ENABLE KEYS */;
 UNLOCK TABLES;

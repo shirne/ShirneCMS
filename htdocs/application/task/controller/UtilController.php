@@ -10,6 +10,8 @@ namespace app\task\controller;
 
 
 use app\common\command\Install;
+use think\console\Input;
+use think\console\Output;
 use think\Controller;
 
 class UtilController extends Controller
@@ -21,6 +23,10 @@ class UtilController extends Controller
 
     public function install(){
         $install=new Install();
-        $install->run();
+        $output=new Output('buffer');
+        $input=new Input();
+
+        $install->run($input, $output);
+        return $output->fetch();
     }
 }
