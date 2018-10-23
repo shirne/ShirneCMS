@@ -1,11 +1,24 @@
 ShirneCMS
 ===============
 
-基于[ThinkPHP5.1](https://github.com/top-think/think/tree/5.1)+[bootstrap4.x](https://v4.bootcss.com/docs/4.0/getting-started/introduction/)开发的后台管理系统<br />
-本项目侧重于二次开发使用，后台功能在逐步完善。前台功能仅用于功能演示。目前个人及团队的一些订制项目均基于此后台开发。
+基于[ThinkPHP5.1](https://github.com/top-think/think/tree/5.1)+[bootstrap4.x](https://v4.bootcss.com/docs/4.0/getting-started/introduction/)开发的后台管理系统
 
 > 运行环境要求PHP7.1.3以上。
 
+## 功能说明
+
+本项目侧重于二次开发使用，后台功能在逐步完善。前台功能仅用于功能演示。目前个人及团队的一些订制项目均基于此后台开发。
+> 后台管理员登录验证，基于方法名的全局权限验证系统
+> 管理员/会员操作日志
+> 系统配置，可后台自定义配置项
+> 会员/会员组 可自定义分销层级
+> 无限级分类/文章系统，分类可独立设置模板
+> 无限级分类/产品/订单  产品采用多选项SKU模式
+> 广告管理（多用于网站banner图）/公告/链接/留言 等独立小功能
+> 基于bs的Modal写的Dialog组件，支持alert,prompt,confirm,以及常用的列表搜索/选择对话框，地图位置选择对话框（支持腾讯/高德/百度/谷哥地图）
+> 后台表单异步提交/文件上传进度显示
+> bs日期组件本地化，自动初始化
+> excel封装类，第三方接口（短信/快递等），文件上传封装 等便于开发的优化
 
 ## 前端库引用
 
