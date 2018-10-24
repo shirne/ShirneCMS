@@ -23,4 +23,5 @@ return [
     'type'           => '',
     // 是否自动开启 SESSION
     'auto_start'     => true,
+    'sec_key'        => '5Jtr3l2z',
 ];

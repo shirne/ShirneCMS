@@ -44,15 +44,17 @@ class LoginController extends Controller {
 
     //验证码
     public function verify(){
-        $Verify = new \think\captcha\Captcha();
-        $Verify->codeSet = '0123456789';
-        $Verify->fontSize = 13;
-        $Verify->length = 4;
-        return $Verify->entry();
+        $verify = new \think\captcha\Captcha();
+        //$Verify->codeSet = '0123456789';
+        $verify->seKey=config('session.sec_key');
+        $verify->fontSize = 13;
+        $verify->length = 4;
+        return $verify->entry('backend');
     }
     protected function check_verify($code){
         $verify = new \think\captcha\Captcha();
-        return $verify->check($code);
+        $verify->seKey=config('session.sec_key');
+        return $verify->check($code,'backend');
     }
 
     public function logout(){

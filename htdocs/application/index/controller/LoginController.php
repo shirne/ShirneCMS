@@ -478,15 +478,15 @@ class LoginController extends BaseController{
     }
 
     public function verify(){
-        $Verify = new \think\captcha\Captcha(array('seKey'=>'foreign'));
-        $Verify->codeSet = '0123456789';
-        $Verify->fontSize = 13;
-        $Verify->length = 4;
-        return $Verify->entry();
+        $verify = new \think\captcha\Captcha(array('seKey'=>config('session.sec_key')));
+        //$Verify->codeSet = '0123456789';
+        $verify->fontSize = 13;
+        $verify->length = 4;
+        return $verify->entry('foreign');
     }
     protected function check_verify($code){
-        $verify = new \think\captcha\Captcha(array('seKey'=>'foreign'));
-        return $verify->check($code);
+        $verify = new \think\captcha\Captcha(array('seKey'=>config('session.sec_key')));
+        return $verify->check($code,'foreign');
     }
 
     public function logout()
