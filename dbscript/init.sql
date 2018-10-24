@@ -39,7 +39,7 @@ LOCK TABLES `sa_manager` WRITE;
 
 INSERT INTO `sa_manager` (`id`, `username`,`realname`, `email`, `password`, `salt`, `avatar`, `create_time`, `update_time`, `login_ip`, `status`, `type`)
 VALUES
-  (1,'admin','','515343908@qq.com','60271966bbad6ead5faa991772a9277f', 'z5La7s0P',NULL,'1436679338','1436935104','0.0.0.0',1,1);
+  (1,'admin','','79099818@qq.com','60271966bbad6ead5faa991772a9277f', 'z5La7s0P',NULL,'1436679338','1436935104','0.0.0.0',1,1);
 
 /*!40000 ALTER TABLE `sa_manager` ENABLE KEYS */;
 UNLOCK TABLES;

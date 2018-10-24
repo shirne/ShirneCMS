@@ -17,9 +17,8 @@ class ImageCrop
 
     /**
      * 根据参数裁剪图片
-     * @param $file
-     * @param $opts
      * @param null|string $savepath
+     * @param $opts array
      * @return \think\Response
      */
     public function crop($savepath=null,$opts=[]){
@@ -40,17 +39,14 @@ class ImageCrop
             $imgQuality = config('upload.default_quality');
         }
 
-//$img = str_replace($img,'http://' . strtolower($_SERVER["SERVER_NAME"]),"");
-
         $imgData=$this->getImgData($img);
 
         if($imgData!==false && !empty($imgData)) {
             $imageinfo = getimagesizefromstring($imgData);
             $image = imagecreatefromstring($imgData);
 
-//list($photoWidth ,$photoHeight) = getimagesize($img);
-            $photoWidth = $imageinfo[0];//imagesx($image);
-            $photoHeight = $imageinfo[1];//imagesy($image);
+            $photoWidth = $imageinfo[0];
+            $photoHeight = $imageinfo[1];
 
             if ($photoWidth > 0 And $photoHeight > 0) {
                 if ($photoWidth > $imgWidth Or $photoHeight > $imgHeight) {
