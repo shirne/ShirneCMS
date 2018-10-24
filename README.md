@@ -67,10 +67,9 @@ scripts/update_shop.sql 商城模块
 >htdocs 项目根据目录<br />
 htdocs/public 网站根目录
 
-后台登录账号及密码
-
+后台默认登录账号 [演示网站](http://host3.shirne.net/admin)
 >admin<br />
-123456
+密码：123456
 
 ## 模板说明
 

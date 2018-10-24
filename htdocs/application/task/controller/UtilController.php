@@ -29,4 +29,20 @@ class UtilController extends Controller
         $install->run($input, $output);
         return $output->fetch();
     }
+
+    public function test(){
+        $im = imagecreatetruecolor(120, 20);
+        $text_color = imagecolorallocate($im, 233, 14, 91);
+        imagestring($im, 1, 5, 5,  'A Simple Text String', $text_color);
+
+// 设置内容类型标头 —— 这个例子里是 image/jpeg
+        header('Content-Type: image/jpeg');
+
+// 使用 NULL 跳过 filename 参数，并设置图像质量为 75%
+        imagejpeg($im, NULL, 75);
+
+// 释放内存
+        imagedestroy($im);
+        exit;
+    }
 }
