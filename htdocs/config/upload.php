@@ -11,6 +11,12 @@ return [
     // 目录格式
     'save_path'   => 'Y/m/',
 
+    'default_img' => './static/images/blank.gif',
+
+    'default_size' => 300,
+
+    'default_quality' => 80,
+
     'driverConfig'=>[]
 ];
 //oss driverConfig

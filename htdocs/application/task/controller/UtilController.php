@@ -16,9 +16,26 @@ use think\Controller;
 
 class UtilController extends Controller
 {
-    public function cropimage(){
-        crop_image($_GET['img'],$_GET);
-        exit;
+    public function cropimage($img){
+        return crop_image($img,$_GET);
+    }
+
+    public function cacheimage($img){
+        $paths=explode('.',$img);
+        if(count($paths)==3) {
+            preg_match_all('/(w|h|q|m)(\d+)(?:_|$)/', $paths[1], $matches);
+            $args = [];
+            foreach ($matches[1] as $idx=>$key){
+                $args[$key]=$matches[2][$idx];
+            }
+            $response = crop_image($paths[0].'.'.$paths[2], $args);
+            if($response->getCode()==200) {
+                file_put_contents(DOC_ROOT . '/' . $img, $response->getData());
+            }
+            return $response;
+        }else{
+            return redirect(ltrim(config('upload.default_img'),'.'));
+        }
     }
 
     public function install(){
