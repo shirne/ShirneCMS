@@ -9,6 +9,7 @@ use sdk\OAuthFactory;
 use think\Db;
 use think\Exception;
 use think\facade\Log;
+use third\UmsHttp;
 
 /**
  * 用户本地登陆和第三方登陆

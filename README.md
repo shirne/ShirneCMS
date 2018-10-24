@@ -49,7 +49,7 @@ Javascript/CSS构建[Gulp](https://www.gulpjs.com.cn/)
 cnpm install<br />
 生成并监视文件：gulp
 
-Javascript/CSS构建[Grunt](http://www.gruntjs.net/)
+~~Javascript/CSS构建~~[~~Grunt~~](http://www.gruntjs.net/)
 
 >cd htdocs/resource<br />
 cnpm install<br />
@@ -64,7 +64,7 @@ scripts/update_shop.sql 商城模块
 
 项目目录
 
->htdocs 项目根据目录<br />
+>htdocs 项目根目录<br />
 htdocs/public 网站根目录
 
 后台默认登录账号 [演示网站](http://host3.shirne.net/admin)
