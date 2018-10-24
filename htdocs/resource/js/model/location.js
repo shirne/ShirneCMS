@@ -62,7 +62,8 @@
 			aspnet:false,
 			s1:null,
 			s2:null,
-			s3:null
+			s3:null,
+			onEmpty:function(){}
     	}, o || {});
         var wrap=$(this);
 		var sel=$("select",wrap);
@@ -76,8 +77,10 @@
 		sCounty.empty();
 		loc.fillOption(sProvince , '0',o.s1);
 		loc.fillOption(sCity , '0,'+sProvince.val(),o.s2);
+        o.onEmpty(sCity);
 		loc.fillOption(sCounty , '0,' + sProvince.val() + ',' + sCity.val(),o.s3);
-		
+        o.onEmpty(sCounty);
+
 		if(o.aspnet){
 			var input=$("input",wrap);
 			var tProvince=input.eq(0);
@@ -89,8 +92,10 @@
 		sProvince.change(function() {
 			sCity.empty();
 			loc.fillOption(sCity , '0,'+sProvince.val());
+            o.onEmpty(sCity);
 			sCounty.empty();
 			loc.fillOption(sCounty , '0,' + sProvince.val() + ',' + sCity.val());
+            o.onEmpty(sCounty);
 			if(o.aspnet){
 				writeInput();
 			}
@@ -99,6 +104,7 @@
 		sCity.change(function() {
 			sCounty.empty();
 			loc.fillOption(sCounty , '0,' + sProvince.val() + ',' + sCity.val());
+            o.onEmpty(sCounty);
 			if(o.aspnet){
 				writeInput();
 			}
@@ -110,9 +116,9 @@
 		});
 
 		function writeInput(){
-				tProvince.val($(":selected",sProvince).text());
-				tCity.val($(":selected",sCity).text());
-				tCounty.val($(":selected",sCounty).text());
+			tProvince.val($(":selected",sProvince).text());
+			tCity.val($(":selected",sCity).text());
+			tCounty.val($(":selected",sCounty).text());
 		}
 	};
 		
