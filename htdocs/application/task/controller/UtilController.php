@@ -40,6 +40,11 @@ class UtilController extends Controller
         }
     }
 
+    public function daily()
+    {
+        # code...
+    }
+
     public function install($sql='',$mode=''){
 
         $console=Console::init(false);

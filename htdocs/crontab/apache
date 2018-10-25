@@ -1,0 +1,3 @@
+#js script
+30 0 * * * /usr/bin/php /data/www/website/task type/0
+10 * * * * /usr/bin/php /data/www/website/task type/1
