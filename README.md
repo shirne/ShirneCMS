@@ -37,7 +37,7 @@ ShirneCMS
 [phpmailer]()<br />
 [endroid/qr-code]()
 
-## 安装说明
+## 开发说明
 
 PHP库引用[Composer](https://getcomposer.org/download/)
 
@@ -67,6 +67,11 @@ scripts/update_shop.sql 商城模块
 
 >htdocs 项目根目录<br />
 htdocs/public 网站根目录
+
+安装方法
+
+> 修改数据库配置文件 config/database.php<br />
+> 手动安装数据库脚本 或者 通过命令行(php think install)或网页安装(/task/util/install)
 
 后台默认登录账号 [演示网站](http://host3.shirne.net/admin)
 >admin<br />
