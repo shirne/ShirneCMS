@@ -273,7 +273,7 @@ function getMemberParents($userid,$level=5,$getid=true){
         if(!$userid)break;
         $user=\think\Db::name('Member')->where('id',$userid)->field('id,level_id,username,referer')->find();
         $parents[] = $getid?$userid:$user;
-        if(count($parents)>=$level)break;
+        if($level>0 && count($parents)>=$level)break;
     }
     return $parents;
 }

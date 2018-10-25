@@ -36,6 +36,20 @@ class OrderModel extends BaseModel
                             Db::name('Order')->where('order_id',$order['order_id'])
                                 ->update(['rebated'=>1,'rebate_time'=>time()]);
                         }
+                    }elseif($order['status']<0 && $order['cancel_time']==0){
+                        $products=Db::name('orderProduct')->where('order_id',$order['order_id'])->select();
+                        foreach ($products as $product) {
+                            Db::name('ProductSku')->where('sku_id', $product['sku_id'])
+                                ->dec('storage', -$product['count'])
+                                ->inc('sale', $product['count'])
+                                ->update();
+                            Db::name('Product')->where('id', $product['product_id'])
+                                ->dec('storage', -$product['count'])
+                                ->inc('sale', $product['count'])
+                                ->update();
+                        }
+                        Db::name('Order')->where('order_id',$order['order_id'])
+                            ->update(['cancel_time'=>time()]);
                     }
                 }
             }
@@ -109,7 +123,7 @@ class OrderModel extends BaseModel
             'level_id'=>0,
             'payamount'=>$total_price*.01,
             'commission_amount'=>$commission_amount*.01,
-            'status'=>$status,
+            'status'=>0,
             'isaudit'=>getSetting('autoaudit')==1?1:0,
             'remark'=>$remark,
             'address_id'=>$address['address_id'],
@@ -125,13 +139,9 @@ class OrderModel extends BaseModel
             'express_code'=>'',
             'type'=>$ordertype,
         );
-        if($status>0){
-            $orderdata['pay_time']=time();
-        }
-        $result= $this->insert($orderdata);
+        $result= $this->insert($orderdata,false,true);
 
         if($result){
-            $result=$this->getLastInsID();
             $i=0;
             foreach ($products as $product){
                 $product['order_id']=$result;
@@ -164,6 +174,9 @@ class OrderModel extends BaseModel
         }else{
             $this->error = "入单失败";
             $this->rollback();
+        }
+        if($status>0 ){
+            self::update(['status'=>$status,'pay_time'=>time()],['order_id'=>$result]);
         }
         return $result;
     }

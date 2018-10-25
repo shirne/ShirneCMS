@@ -129,6 +129,7 @@ CREATE TABLE `sa_order` (
   `create_time` INT NULL DEFAULT 0,
   `pay_time` INT NULL DEFAULT 0,
   `confirm_time` INT NULL DEFAULT 0,
+  `cancel_time` INT NULL DEFAULT 0,
   `rebated` INT NULL DEFAULT 0,
   `rebate_time` INT NULL DEFAULT 0,
   `status` TINYINT NULL DEFAULT 0 COMMENT '订单状态',

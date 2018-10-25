@@ -11,11 +11,7 @@
                     <div class="form-group col">
                         <div class="input-group">
                             <div class="input-group-prepend">
-                            <span class="input-group-text">等级名称</span>
-                                <label class="input-group-text">
-                                    <input type="checkbox" name="is_default" value="1" {$model['is_default']?"checked":""} />
-                                    默认
-                                </label>
+                                <span class="input-group-text">等级名称</span>
                             </div>
                             <input type="text" name="level_name" class="form-control" value="{$model.level_name}"
                                    placeholder="输入名称">
@@ -75,6 +71,34 @@
                         </div>
                     </div>
                 </div>
+                <div class="form-row">
+                    <div class="form-group col form-row">
+                        <label class="col-2" for="is_default">是否默认</label>
+                        <div class="col">
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                <label class="btn btn-outline-primary {$model['is_default']?"active":""}">
+                                    <input type="radio" name="is_default" value="1" autocomplete="off" {$model['is_default']?"checked":""}> 是
+                                </label>
+                                <label class="btn btn-outline-secondary {$model['is_default']?"":"active"}">
+                                    <input type="radio" name="is_default" value="0" autocomplete="off" {$model['is_default']?"":"checked"}> 否
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group col form-row">
+                        <label class="col-2" for="is_default">是否代理</label>
+                        <div class="col">
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                <label class="btn btn-outline-primary {$model['is_agent']?"active":""}">
+                                    <input type="radio" name="is_agent" value="1" autocomplete="off" {$model['is_agent']?"checked":""}> 是
+                                </label>
+                                <label class="btn btn-outline-secondary {$model['is_agent']?"":"active"}">
+                                    <input type="radio" name="is_agent" value="0" autocomplete="off" {$model['is_agent']?"":"checked"}> 否
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="card">
                     <div class="card-header">消费返佣</div>
                     <div class="card-body">
@@ -86,12 +110,6 @@
                                 <input type="text" name="commission_layer" class="form-control"
                                     value="{$model.commission_layer}"
                                     placeholder="佣金层数">
-                                <div class="input-group-append">
-                                    <label class="input-group-text">
-                                        <input type="checkbox" name="is_agent" value="1" {$model['is_agent']?"checked":""} />
-                                        开启分佣
-                                    </label>
-                                </div>
                             </div>
                             <span class="form-text text-muted">层数修改需保存后才能再修改比例</span>
                         </div>

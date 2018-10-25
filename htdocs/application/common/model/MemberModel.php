@@ -24,7 +24,9 @@ class MemberModel extends BaseModel
                     //代理会员组
                     if (!$user['is_agent'] && $user['level_id'] > 0) {
                         if (!empty($levels[$user['level_id']]) && $levels[$user['level_id']]['is_agent']) {
-                            self::setAgent($user->id);
+                            if(self::setAgent($model->id)){
+                                self::updateRecommend($model['referer']);
+                            }
                         }
                     }
                 }
@@ -32,17 +34,31 @@ class MemberModel extends BaseModel
         });
         self::afterInsert(function ( $model) {
             if ($model['referer']) {
-                Db::name('member')->where('id',$model->referer)->setInc('total_recommend',1);
+                Db::name('member')->where('id',$model->referer)->setInc('recom_total',1);
             }
             if ($model['level_id']) {
                 $levels = getMemberLevels();
                 if (!$model['is_agent'] ) {
                     if (!empty($levels[$model['level_id']]) && $levels[$model['level_id']]['is_agent']) {
-                        self::setAgent($model->id);
+                        if(self::setAgent($model->id)){
+                            self::updateRecommend($model['referer']);
+                        }
                     }
                 }
             }
         });
+    }
+
+    public static function updateRecommend($referer){
+        if($referer){
+            Db::name('member')->where('id',$referer)->setInc('recom_count',1);
+            $parents=getMemberParents($referer,0);
+            array_unshift($parents,$referer);
+            Db::name('member')->whereIn('id',$parents)->setInc('team_count',1);
+
+            //代理等级自动升级
+
+        }
     }
 
     public static function setAgent($member_id){
@@ -57,6 +73,12 @@ class MemberModel extends BaseModel
     public static function cancelAgent($member_id){
         $data=array();
         $data['is_agent']=0;
-        return Db::name('member')->where('id',$member_id)->update($data);
+        $count= Db::name('member')->where('id',$member_id)->update($data);
+        if($count){
+            $parents=getMemberParents($member_id,0);
+            Db::name('member')->where('id',$parents[0])->setDec('recom_count',1);
+            Db::name('member')->whereIn('id',$parents)->setDec('team_count',1);
+        }
+        return $count;
     }
 }

@@ -21,17 +21,30 @@ class Install extends Command
     protected function configure()
     {
         $this->setName('install')
-            ->addArgument('name', Argument::OPTIONAL, "database connect args like  username:password@dataname or username:password@host:dataname")
-            ->addOption('mode', null, Option::VALUE_REQUIRED, 'install mode full(with test data) or cms or shop')
+            ->addOption('name', NULL, Option::VALUE_OPTIONAL, "database connect args like  username:password@dataname or username:password@host:dataname")
+            ->addOption('file', 'f', Option::VALUE_OPTIONAL, "script file name")
+            ->addOption('mode', 'm', Option::VALUE_REQUIRED, 'install mode full(with test data) or cms or shop')
             ->setDescription('Install db script');
     }
 
+    /**
+     * 执行安装
+     * @param Input $input
+     * @param Output $output
+     * @return void
+     */
     protected function execute(Input $input, Output $output)
     {
+        $lockfile=app()->getRuntimePath().'.lock';
+        if(file_exists($lockfile)){
+            $output->error('The system has been installed. If you want to reinstall, please delete the file '.$lockfile.' and run this command again.');
+            return;
+        }
+
         $dbconfig=config('database.');
-        $name = trim($input->getArgument('name'));
-        $sql = trim($input->getArgument('sql'));
-        if(!empty($name)){
+
+        if($input->hasOption('name')){
+            $name = trim($input->getOption('name'));
             $args=explode('@',$name);
             if(empty($args) || count($args)<2 || strpos(':',$args[0])===false){
                 $output->writeln("Install aborted with error: arguments error.");
@@ -51,14 +64,56 @@ class Install extends Command
         }
 
         //install code
-        if(empty($sql))$sql='./install.sql';
-        else $sql ='./'.$sql.'.sql';
-        $sqls=$this->explodesql($sql,'sa_',$dbconfig['prefix']);
+        if($input->hasOption('sql')){
+            $sql ='./'.trim($input->getOption('sql')).'.sql';
+            if(!file_exists($sql)){
+                $output->error('The specified sql script not exists.');
+                return;
+            }
+            $this->runsql($sql,$dbconfig['prefix']);
+        }
+        else{
+            $path=app()->getAppPath();
+            $sqlpath=$path.'../dbscript';
+            if(!is_dir($sqlpath)){
+                $sqlpath=$path.'../../dbscript';
+            }
+            if(!is_dir($sqlpath)){
+                $output->error('Please upload the dbscript folder or specify sql option.');
+                return;
+            }else{
+                foreach (['struct','init'] as $script){
+                    $sql = $sqlpath.'/'.$script.'.sql';
+                    if(file_exists($sql)){
+                        $this->runsql($sql,$dbconfig['prefix']);
+                    }else{
+                        $output->warning('Sql file '.$script.'.sql not exists!');
+                    }
+                }
+                if($input->hasOption('mode')){
+                    $mode=$input->getOption('mode');
+                    if($mode=='shop'){
+                        $sql = $sqlpath.'/update_shop.sql';
+                        if(file_exists($sql)) {
+                            $this->runsql($sql, $dbconfig['prefix']);
+                        }else{
+                            $output->warning('Sql file update_shop.sql not exists!');
+                        }
+                    }
+                }
+            }
+        }
+
+        file_put_contents($lockfile,time());
+
+        $output->writeln("Install finished success.");
+    }
+
+    protected function runsql($file,$prefix){
+        $sqls=$this->explodesql($file,'sa_',$prefix);
         foreach ($sqls as $sql){
             Db::execute($sql);
         }
-
-        $output->writeln("Install finished success.");
     }
 
     protected function explodesql($sql_path,$old_prefix="",$new_prefix="",$separator=";\n")

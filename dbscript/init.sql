@@ -1,6 +1,4 @@
 TRUNCATE TABLE `sa_permission`;
-LOCK TABLES `sa_permission` WRITE;
-/*!40000 ALTER TABLE `sa_permission` DISABLE KEYS */;
 
 INSERT INTO `sa_permission` (`id`, `parent_id`,`name`, `url`,`key`, `icon`, `order_id`, `disable`)
 VALUES
@@ -30,23 +28,15 @@ VALUES
   (96,9,'付款方式','Paytype/index','paytype_index','ion-md-card',0,0),
   (97,9,'公众号管理','Wechat/index','wechat_index','ion-md-chatboxes',0,0);
 
-/*!40000 ALTER TABLE `sa_permission` ENABLE KEYS */;
-UNLOCK TABLES;
 
 TRUNCATE TABLE `sa_manager`;
-LOCK TABLES `sa_manager` WRITE;
-/*!40000 ALTER TABLE `sa_manager` DISABLE KEYS */;
 
 INSERT INTO `sa_manager` (`id`, `username`,`realname`, `email`, `password`, `salt`, `avatar`, `create_time`, `update_time`, `login_ip`, `status`, `type`)
 VALUES
   (1,'admin','','79099818@qq.com','60271966bbad6ead5faa991772a9277f', 'z5La7s0P',NULL,'1436679338','1436935104','0.0.0.0',1,1);
 
-/*!40000 ALTER TABLE `sa_manager` ENABLE KEYS */;
-UNLOCK TABLES;
 
 TRUNCATE TABLE `sa_setting`;
-LOCK TABLES `sa_setting` WRITE;
-/*!40000 ALTER TABLE `sa_setting` DISABLE KEYS */;
 
 INSERT INTO `sa_setting` (`id`, `key`,`title`,`type`,`group`,`sort`, `value`, `description`,`data`)
 VALUES
@@ -81,19 +71,14 @@ VALUES
   (37, 'cash_max', '最高提现金额', 'text', 'member', '0', '100000', '', ''),
   (38, 'cash_power', '提现倍数', 'text', 'member', '0', '100', '', '');
 
-/*!40000 ALTER TABLE `sa_setting` ENABLE KEYS */;
-UNLOCK TABLES;
 
 TRUNCATE TABLE `sa_member_level`;
-LOCK TABLES `sa_member_level` WRITE;
-/*!40000 ALTER TABLE `sa_member_level` DISABLE KEYS */;
+
 INSERT INTO `sa_member_level`(`level_id`,`level_name`,`short_name`,`is_default`,`level_price`,`sort`,`commission_layer`,`commission_percent`) VALUES (1,'普通会员','普',1,0.00,0,3,'[\"0\",\"0\",\"0\"]');
-/*!40000 ALTER TABLE `sa_member_level` ENABLE KEYS */;
-UNLOCK TABLES;
+
 
 TRUNCATE TABLE `sa_category`;
-LOCK TABLES `sa_category` WRITE;
-/*!40000 ALTER TABLE `sa_category` DISABLE KEYS */;
+
 INSERT INTO `sa_category`(`id`,`pid`,`title`,`short`,`name`,`icon`,`image`,`sort`,`keywords`,`description`)VALUES
 (1,0,'新闻动态','新闻','news','','',0,'',''),
 (2,0,'案例中心','案例','cases','','',0,'',''),
@@ -104,5 +89,3 @@ INSERT INTO `sa_category`(`id`,`pid`,`title`,`short`,`name`,`icon`,`image`,`sort
 (7,2,'微信平台','微信','wechat','','',0,'',''),
 (8,2,'企业APP','APP','app','','',0,'',''),
 (9,2,'画册/LOGO','AI','design','','',0,'','');
-/*!40000 ALTER TABLE `sa_category` ENABLE KEYS */;
-UNLOCK TABLES;

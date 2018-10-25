@@ -10,9 +10,11 @@ namespace app\task\controller;
 
 
 use app\common\command\Install;
+use think\Console;
 use think\console\Input;
 use think\console\Output;
 use think\Controller;
+use think\Response;
 
 class UtilController extends Controller
 {
@@ -38,28 +40,23 @@ class UtilController extends Controller
         }
     }
 
-    public function install(){
-        $install=new Install();
-        $output=new Output('buffer');
-        $input=new Input();
+    public function install($sql='',$mode=''){
 
-        $install->run($input, $output);
+        $console=Console::init(false);
+        $output=new Output('buffer');
+        $args=['install'];
+        if(!empty($sql)){
+            $args[]='--sql';
+            $args[]=$sql;
+        }
+        if(!empty($mode)){
+            $args[]='--mode';
+            $args[]=$mode;
+        }
+        $input=new Input($args);
+
+        $console->doRun($input, $output);
         return $output->fetch();
     }
 
-    public function test(){
-        $im = imagecreatetruecolor(120, 20);
-        $text_color = imagecolorallocate($im, 233, 14, 91);
-        imagestring($im, 1, 5, 5,  'A Simple Text String', $text_color);
-
-// 设置内容类型标头 —— 这个例子里是 image/jpeg
-        header('Content-Type: image/jpeg');
-
-// 使用 NULL 跳过 filename 参数，并设置图像质量为 75%
-        imagejpeg($im, NULL, 75);
-
-// 释放内存
-        imagedestroy($im);
-        exit;
-    }
 }
