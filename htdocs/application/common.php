@@ -268,14 +268,30 @@ function getPaytypes($type = '')
 function getMemberParents($userid,$level=5,$getid=true){
     $parents=[];
     $user=\think\Db::name('Member')->where('id',$userid)->field('id,level_id,username,referer')->find();
+    $layer=0;
     while(!empty($user)){
+        $layer++;
         $userid=$user['referer'];
         if(!$userid)break;
         $user=\think\Db::name('Member')->where('id',$userid)->field('id,level_id,username,referer')->find();
         $parents[] = $getid?$userid:$user;
-        if($level>0 && count($parents)>=$level)break;
+        if($level>0 && $layer>=$level)break;
     }
     return $parents;
+}
+
+function getMemberSons($userid,$level=1,$getid=true){
+    $sons=[];
+    $users=\think\Db::name('Member')->where('referer',$userid)->field('id,level_id,username,referer')->select();
+    $layer=0;
+    while(!empty($users)){
+        $layer++;
+        $userids=array_column($users,'id');
+        $sons = array_merge($sons, $getid?$userids:$users);
+        if($level>0 && $layer>=$level)break;
+        $users=\think\Db::name('Member')->whereIn('referer',$userids)->field('id,level_id,username,referer')->select();
+    }
+    return $sons;
 }
 
 
