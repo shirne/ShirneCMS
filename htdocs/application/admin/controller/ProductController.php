@@ -75,6 +75,8 @@ class ProductController extends BaseController
                 if (!empty($uploaded)) {
                     $data['image'] = $uploaded['url'];
                     $delete_images[]=$data['delete_image'];
+                }elseif($this->uploadErrorCode>102){
+                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
                 }
                 unset($data['delete_image']);
                 $data['user_id'] = $this->mid;
@@ -147,6 +149,8 @@ class ProductController extends BaseController
                 if(!empty($uploaded)){
                     $data['image']=$uploaded['url'];
                     $delete_images[]=$data['delete_image'];
+                }elseif($this->uploadErrorCode>102){
+                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
                 }
                 $model=ProductModel::get($id);
                 $skus=$data['skus'];

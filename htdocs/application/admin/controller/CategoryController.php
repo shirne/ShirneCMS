@@ -33,8 +33,15 @@ class CategoryController extends BaseController
             } else {
                 $iconupload=$this->upload('category','upload_icon');
                 if(!empty($iconupload))$data['icon']=$iconupload['url'];
+                elseif($this->uploadErrorCode>102){
+                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
+                }
                 $uploaded=$this->upload('category','upload_image');
                 if(!empty($uploaded))$data['image']=$uploaded['url'];
+                elseif($this->uploadErrorCode>102){
+                    delete_image($data['icon']);
+                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
+                }
 
                 $result=Db::name('category')->insert($data);
                 if ($result) {

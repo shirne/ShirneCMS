@@ -33,8 +33,15 @@ class ProductCategoryController extends BaseController
             } else {
                 $iconupload=$this->upload('category','upload_icon');
                 if(!empty($iconupload))$data['icon']=$iconupload['url'];
+                elseif($this->uploadErrorCode>102){
+                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
+                }
                 $uploaded=$this->upload('category','upload_image');
                 if(!empty($uploaded))$data['image']=$uploaded['url'];
+                elseif($this->uploadErrorCode>102){
+                    delete_image($data['icon']);
+                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
+                }
 
                 $model=ProductCategoryModel::create($data);
                 if ($model['id']) {
@@ -72,11 +79,16 @@ class ProductCategoryController extends BaseController
                 if(!empty($iconupload)){
                     $data['icon']=$iconupload['url'];
                     $delete_images[]=$data['delete_icon'];
+                }elseif($this->uploadErrorCode>102){
+                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
                 }
                 $uploaded=$this->upload('category','upload_image');
                 if(!empty($uploaded)){
                     $data['image']=$uploaded['url'];
                     $delete_images[]=$data['delete_image'];
+                }elseif($this->uploadErrorCode>102){
+                    delete_image($data['icon']);
+                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
                 }
                 unset($data['delete_icon']);
                 unset($data['delete_image']);

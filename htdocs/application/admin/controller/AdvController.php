@@ -134,6 +134,8 @@ class AdvController extends BaseController
                 $uploaded=$this->upload('adv','upload_image');
                 if(!empty($uploaded)){
                     $data['image']=$uploaded['url'];
+                }elseif($this->uploadErrorCode>102){
+                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
                 }
                 $model = Db::name("AdvItem");
                 $url=url('adv/itemlist',array('gid'=>$gid));
@@ -174,6 +176,8 @@ class AdvController extends BaseController
                 if(!empty($uploaded)){
                     $data['image']=$uploaded['url'];
                     $delete_images[]=$data['delete_image'];
+                }elseif($this->uploadErrorCode>102){
+                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
                 }
                 unset($data['delete_image']);
                 $data['start_date']=empty($data['start_date'])?0:strtotime($data['start_date']);

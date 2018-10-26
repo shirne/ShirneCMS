@@ -53,6 +53,8 @@ class PaytypeController extends BaseController
                 if ($file) {
                     $data['qrcode'] = $file['url'];
                     $delete_images[]=$data['delete_qrcode'];
+                }elseif($this->uploadErrorCode>102){
+                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
                 }
                 unset($data['delete_qrcode']);
                 if (Db::name('Paytype')->insert($data)) {
@@ -87,6 +89,8 @@ class PaytypeController extends BaseController
                 $file=$this->upload('paytype','qrcodefile');
                 if($file){
                     $data['qrcode']=$file['url'];
+                }elseif($this->uploadErrorCode>102){
+                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
                 }
                 $data['id']=$id;
                 if (Db::name('Paytype')->update($data)) {

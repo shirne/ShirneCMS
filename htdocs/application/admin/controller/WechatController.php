@@ -46,10 +46,15 @@ class WechatController extends BaseController
                 $uploaded = $this->upload('wechat', 'upload_logo');
                 if (!empty($uploaded)) {
                     $data['logo'] = $uploaded['url'];
+                }elseif($this->uploadErrorCode>102){
+                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
                 }
                 $uploaded = $this->upload('wechat', 'upload_qrcode');
                 if (!empty($uploaded)) {
                     $data['qrcode'] = $uploaded['url'];
+                }elseif($this->uploadErrorCode>102){
+                    delete_image($data['logo']);
+                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
                 }
                 $model=WechatModel::create($data);
                 if ($model['id']) {
@@ -84,11 +89,16 @@ class WechatController extends BaseController
                 if (!empty($uploaded)) {
                     $data['logo'] = $uploaded['url'];
                     $delete_images[]=$data['delete_logo'];
+                }elseif($this->uploadErrorCode>102){
+                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
                 }
                 $uploaded = $this->upload('wechat', 'upload_qrcode');
                 if (!empty($uploaded)) {
                     $data['qrcode'] = $uploaded['url'];
                     $delete_images[]=$data['delete_qrcode'];
+                }elseif($this->uploadErrorCode>102){
+                    delete_image($data['logo']);
+                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
                 }
                 $model=WechatModel::get($id);
                 if ($model->allowField(true)->save($data)) {

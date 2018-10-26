@@ -53,6 +53,8 @@ class PageController extends BaseController
                 $uploaded = $this->upload('page', 'upload_icon');
                 if (!empty($uploaded)) {
                     $data['icon'] = $uploaded['url'];
+                }elseif($this->uploadErrorCode>102){
+                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
                 }
                 $model=PageModel::create($data);
                 if ($model['id']) {
@@ -88,6 +90,8 @@ class PageController extends BaseController
                 if (!empty($uploaded)) {
                     $data['icon'] = $uploaded['url'];
                     $delete_images[]=$data['delete_icon'];
+                }elseif($this->uploadErrorCode>102){
+                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
                 }
                 if ($model->allowField(true)->save($data)) {
                     delete_image($delete_images);

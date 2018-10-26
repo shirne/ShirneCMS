@@ -56,6 +56,8 @@ class ArticleController extends BaseController
                 if (!empty($uploaded)) {
                     $data['cover'] = $uploaded['url'];
                     $delete_images[]=$data['delete_cover'];
+                }elseif($this->uploadErrorCode>102){
+                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
                 }
                 unset($data['delete_cover']);
                 $data['user_id'] = $this->mid;
@@ -104,6 +106,8 @@ class ArticleController extends BaseController
                 if(!empty($uploaded)){
                     $data['cover']=$uploaded['url'];
                     $delete_images[]=$data['delete_cover'];
+                }elseif($this->uploadErrorCode>102){
+                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
                 }
                 if(!empty($data['prop_data'])){
                     $data['prop_data']=array_combine($data['prop_data']['keys'],$data['prop_data']['values']);
