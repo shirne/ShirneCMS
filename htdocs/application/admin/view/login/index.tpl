@@ -124,6 +124,12 @@
                         $('.btn-primary').removeAttr('disabled');
                         verify.trigger('click');
                     }
+                },
+                error:function () {
+                    $('.alert-content').html('<i class="ion-md-information-circle-outline"></i> 服务器错误');
+                    $('.alert').addClass('alert-danger').show();
+                    $('.btn-primary').removeAttr('disabled');
+                    verify.trigger('click');
                 }
             })
         })

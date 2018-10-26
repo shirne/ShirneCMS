@@ -325,10 +325,10 @@ CREATE TABLE `sa_member_agent` (
   `short_name` VARCHAR(10) NULL,
   `style` VARCHAR(10) default 'secondary',
   `is_default` TINYINT NULL DEFAULT 0,
-  `area_sale_award` INT NULL DEFAULT 0,
-  `sibling_sale_award` INT NULL DEFAULT 0,
-  `recom_award` INT NULL DEFAULT 0,
-  `resom_sale_award` INT NULL DEFAULT 0,
+  `recom_count` INT NULL DEFAULT 0,
+  `team_count` INT NULL DEFAULT 0,
+  `sale_award` INT NULL DEFAULT 0,
+  `global_sale_award` INT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

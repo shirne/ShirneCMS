@@ -29,6 +29,59 @@ class MemberLevelController extends BaseController
     }
 
     /**
+     * 代理级别列表
+     */
+    public function agent()
+    {
+
+        $names=['普通','初级','中级','高级'];
+        $snames=['普','初','中','高'];
+        $styles=['secondary','info','warning','danger'];
+
+        if($this->request->isPost()){
+            $agents=$this->request->post('agents');
+            $default=$this->request->post('is_default');
+            foreach ($agents as $id=>$data){
+                if($default==$id){
+                    $data['is_default']=1;
+                }else{
+                    $data['is_default']=0;
+                }
+                $data['style']=$styles[$id-1];
+                Db::name('memberAgent')->where('id',$id)->update($data);
+            }
+
+            $this->success('保存成功！',url('memberLevel/agent'));
+            
+        }
+
+        $model = Db::name('memberAgent');
+        $lists=$model->order('id ASC')->select();
+        $count=count($names);
+        if(count($lists)<$count){
+            $lists=array_index($lists,'id');
+            for($i=0;$i<$count;$i++){
+                if(!isset($lists[$i+1])){
+                    $model->insert([
+                        'id'=>$i+1,
+                        'name'=>$names[$i],
+                        'short_name'=>$snames[$i],
+                        'style'=>$styles[$i],
+                        'is_default'=>$i==0?1:0,
+                        'recom_count'=>0,
+                        'team_count'=>0,
+                        'sale_award'=>0,
+                        'global_sale_award'=>0
+                    ]);
+                }
+            }
+            $lists=$model->order('id ASC')->select();
+        }
+        $this->assign('lists',$lists);
+        return $this->fetch();
+    }
+    
+    /**
      * 添加等级
      */
     public function add()

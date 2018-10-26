@@ -8,33 +8,59 @@
 
         <div class="row list-header">
             <div class="col-6">
-                <a href="{:url('MemberLevel/add')}" class="btn btn-outline-primary btn-sm"><i class="ion-md-add"></i> 添加等级</a>
+                <a href="{:url('MemberLevel/index')}" class="btn btn-outline-primary btn-sm"><i class="ion-md-arrow-back"></i> 返回</a>
             </div>
             <div class="col-6">
             </div>
         </div>
+        <form name="agents_form" method="post">
         <table class="table table-hover table-striped">
             <thead>
             <tr>
                 <th width="50">编号</th>
                 <th>名称</th>
+                <th>简称</th>
                 <th>默认</th>
-                <th>区域分红</th>
-                <th>大区分红</th>
-                <th>推荐奖励</th>
-                <th>推荐分红</th>
+                <th>条件</th>
+                <th>奖励比例</th>
+                <th>全国分红</th>
             </tr>
             </thead>
             <tbody>
             <foreach name="lists" item="v">
                 <tr>
                     <td>{$v.id}</td>
-                    <td><input type="text" name="agents[{$v.id}][name]" value="{$v.name}"></td>
+                    <td><input type="text" class="form-control" name="agents[{$v.id}][name]" value="{$v.name}"></td>
+                    <td><input type="text" class="form-control" name="agents[{$v.id}][short_name]" value="{$v.short_name}"></td>
                     <td><input type="radio" name="is_default" value="{$v.id}" {$v['is_default']?'checked':''}></td>
-                    <td><input type="text" name="agents[{$v.id}][area_sale_award]" value="{$v.area_sale_award}"></td>
-                    <td><input type="text" name="agents[{$v.id}][sibling_sale_award]" value="{$v.sibling_sale_award}"></td>
-                    <td><input type="text" name="agents[{$v.id}][recom_award]" value="{$v.recom_award}"></td>
-                    <td><input type="text" name="agents[{$v.id}][resom_sale_award]" value="{$v.resom_sale_award}"></td>
+                    <td>
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">直推</span>
+                            </div>
+                            <input type="text" class="form-control" name="agents[{$v.id}][recom_count]" value="{$v.recom_count}">
+                            <div class="input-group-middle">
+                                <span class="input-group-text">团队</span>
+                            </div>
+                            <input type="text" class="form-control" name="agents[{$v.id}][team_count]" value="{$v.team_count}">
+                        </div>
+                    </td>
+                    <td>
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="agents[{$v.id}][sale_award]" value="{$v.sale_award}">
+                            <div class="input-group-append">
+                                <span class="input-group-text">%</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="agents[{$v.id}][global_sale_award]" value="{$v.global_sale_award}">
+                            <div class="input-group-append">
+                                <span class="input-group-text">%</span>
+                            </div>
+                        </div>
+                    </td>
                 </tr>
             </foreach>
             </tbody>
@@ -46,5 +72,6 @@
                 </tr>
             </tfoot>
         </table>
+        </form>
     </div>
 </block>
