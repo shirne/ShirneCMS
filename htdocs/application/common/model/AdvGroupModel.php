@@ -29,4 +29,20 @@ class AdvGroupModel extends BaseModel
             ->limit($limit)
             ->select();
     }
+
+    public static function getAdItem($flag)
+    {
+        $model=self::get(['flag'=>$flag]);
+        if(empty($model)){
+            return [];
+        }
+        $time=strtotime(date('Y-m-d'));
+        return Db::name('AdvItem')
+            ->where('group_id',$model->id)
+            ->where('status',1)
+            ->where('start_date',['=',0],['<=',$time],'OR')
+            ->where('end_date',['=',0],['>=',$time],'OR')
+            ->order('sort ASC, id DESC')
+            ->find();
+    }
 }
