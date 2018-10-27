@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: shirn
- * Date: 2016/9/16
- * Time: 16:25
- */
 
 namespace app\admin\controller;
 
@@ -13,6 +7,10 @@ use excel\Excel;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use think\Db;
 
+/**
+ * Class PaylogController
+ * @package app\admin\controller
+ */
 class PaylogController extends BaseController
 {
     public function recharge($key='',$status=0){
@@ -89,15 +87,19 @@ class PaylogController extends BaseController
 
         $recharge=Db::name('member_recharge')->lock(true)->find($id);
         if($recharge['status']!=1)$this->error('充值单未成功');
-        $data=array();
-        $data['status']=0;
-        $data['audit_time']=time();
-        Db::name('member_recharge')->where('id',$recharge['id'])->update($data);
 
-        money_log($recharge['member_id'],-$recharge['amount'],'充值撤销','charge');
+        $loged=money_log($recharge['member_id'],-$recharge['amount'],'充值撤销','charge');
+        if($loged){
+            $data=array();
+            $data['status']=0;
+            $data['audit_time']=time();
+            Db::name('member_recharge')->where('id',$recharge['id'])->update($data);
 
-        user_log($this->mid,'rechargecancel',1,'撤销充值单 '.$id ,'manager');
-        $this->success('处理成功！');
+            user_log($this->mid,'rechargecancel',1,'撤销充值单 '.$id ,'manager');
+            $this->success('处理成功！');
+        }else{
+            $this->error('处理失败！');
+        }
     }
 
     /**
