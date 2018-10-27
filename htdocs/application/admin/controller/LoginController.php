@@ -1,15 +1,27 @@
 <?php
 namespace app\admin\controller;
+
 use think\Controller;
 use think\Db;
 
+/**
+ * 后台登录
+ * Class LoginController
+ * @package app\admin\controller
+ */
 class LoginController extends Controller {
 
-    //登陆主页
+    /**
+     * 登陆主页
+     * @return mixed
+     */
     public function index(){
         return $this->fetch();
     }
-    //登陆验证
+
+    /**
+     * 登陆验证
+     */
     public function login(){
         if(!$this->request->isPost())$this->error("非法请求");
         $member = Db::name('Manager');
@@ -42,7 +54,10 @@ class LoginController extends Controller {
         $this->success("登陆成功",url('Index/index'));
     }
 
-    //验证码
+    /**
+     * 验证码
+     * @return \think\Response
+     */
     public function verify(){
         $verify = new \think\captcha\Captcha();
         //$Verify->codeSet = '0123456789';
@@ -57,6 +72,9 @@ class LoginController extends Controller {
         return $verify->check($code,'backend');
     }
 
+    /**
+     * 退出登录
+     */
     public function logout(){
         clearLogin();
         $this->redirect(url('index'));

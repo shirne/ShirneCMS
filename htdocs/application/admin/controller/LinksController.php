@@ -1,15 +1,20 @@
 <?php
 namespace app\admin\controller;
+
 use app\admin\validate\LinksValidate;
 use think\Db;
 
 /**
  * 链接管理
+ * Class LinksController
+ * @package app\admin\controller
  */
 class LinksController extends BaseController
 {
     /**
      * 链接列表
+     * @param string $key
+     * @return mixed|\think\response\Redirect
      */
     public function index($key="")
     {
@@ -28,6 +33,10 @@ class LinksController extends BaseController
         return $this->fetch();
     }
 
+    /**
+     * 添加链接
+     * @return mixed
+     */
     public function add(){
         if ($this->request->isPost()) {
             //如果用户提交数据
@@ -37,6 +46,12 @@ class LinksController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
+                $uploaded=$this->upload('links','upload_logo');
+                if(!empty($uploaded)){
+                    $data['logo']=$uploaded['url'];
+                }elseif($this->uploadErrorCode>102){
+                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
+                }
 
                 if (Db::name('Links')->insert($data)) {
                     $this->success("链接添加成功", url('links/index'));
@@ -53,6 +68,8 @@ class LinksController extends BaseController
 
     /**
      * 编辑链接
+     * @param $id
+     * @return mixed
      */
     public function edit($id)
     {
@@ -64,8 +81,19 @@ class LinksController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
+                $delete_images=[];
+                $uploaded=$this->upload('adv','upload_logo');
+                if(!empty($uploaded)){
+                    $data['logo']=$uploaded['url'];
+                    $delete_images[]=$data['delete_logo'];
+                }elseif($this->uploadErrorCode>102){
+                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
+                }
+                unset($data['delete_image']);
+
                 $data['id']=$id;
                 if (Db::name('Links')->update($data)) {
+                    delete_image($delete_images);
                     $this->success("更新成功", url('links/index'));
                 } else {
                     $this->error("更新失败");
@@ -81,8 +109,10 @@ class LinksController extends BaseController
         $this->assign('id',$id);
         return $this->fetch();
     }
+
     /**
      * 删除链接
+     * @param $id
      */
     public function delete($id)
     {

@@ -11,11 +11,16 @@ use think\Response;
 
 /**
  * 文章管理
+ * Class ArticleController
+ * @package app\admin\controller
  */
 class ArticleController extends BaseController
 {
     /**
      * 文章列表
+     * @param string $key
+     * @param int $cate_id
+     * @return mixed|\think\response\Redirect
      */
     public function index($key="",$cate_id=0)
     {
@@ -43,6 +48,11 @@ class ArticleController extends BaseController
         return $this->fetch();
     }
 
+    /**
+     * 添加
+     * @param int $cid
+     * @return mixed
+     */
     public function add($cid=0){
         if ($this->request->isPost()) {
             $data = $this->request->post();
@@ -88,7 +98,9 @@ class ArticleController extends BaseController
     }
 
     /**
-     * 更新文章信息
+     * 修改
+     * @param $id
+     * @return mixed
      */
     public function edit($id)
     {
@@ -139,8 +151,10 @@ class ArticleController extends BaseController
             return $this->fetch();
         }
     }
+
     /**
      * 删除文章
+     * @param $id
      */
     public function delete($id)
     {
@@ -156,6 +170,12 @@ class ArticleController extends BaseController
             $this->error("删除失败");
         }
     }
+
+    /**
+     * 发布
+     * @param $id
+     * @param int $type
+     */
 	public function push($id,$type=0)
     {
         $data['status'] = $type==1?1:0;
@@ -195,6 +215,11 @@ class ArticleController extends BaseController
         return $this->fetch();
     }
 
+    /**
+     * 添加图片
+     * @param $aid
+     * @return mixed
+     */
     public function imageadd($aid){
         if ($this->request->isPost()) {
             $data=$this->request->post();
@@ -225,7 +250,9 @@ class ArticleController extends BaseController
     }
 
     /**
-     * 添加/修改
+     * 修改图片
+     * @param $id
+     * @return mixed
      */
     public function imageupdate($id)
     {
@@ -268,8 +295,11 @@ class ArticleController extends BaseController
             return $this->fetch();
         }
     }
+
     /**
      * 删除图片
+     * @param $aid
+     * @param $id
      */
     public function imagedelete($aid,$id)
     {
@@ -285,9 +315,10 @@ class ArticleController extends BaseController
 
 
     /**
-     * 文章评论
+     * 评论管理
      * @param int $id
-     * @return Response
+     * @param string $key
+     * @return mixed
      */
 	public function comments($id=0,$key=''){
         $model = Db::view('articleComment','*')
@@ -313,6 +344,11 @@ class ArticleController extends BaseController
         return $this->fetch();
     }
 
+    /**
+     * 评论查看/回复
+     * @param $id
+     * @return mixed
+     */
     public function commentview($id){
 	    $model=Db::name('articleComment')->find($id);
 	    if(empty($model)){
@@ -338,6 +374,11 @@ class ArticleController extends BaseController
         return $this->fetch();
     }
 
+    /**
+     * 评论状态
+     * @param $id
+     * @param int $type
+     */
     public function commentstatus($id,$type=1)
     {
         $data['status'] = $type==1?1:2;
@@ -353,6 +394,11 @@ class ArticleController extends BaseController
             $this -> error("操作失败");
         }
     }
+
+    /**
+     * 删除评论
+     * @param $id
+     */
     public function commentdelete($id)
     {
         $model = Db::name('articleComment');

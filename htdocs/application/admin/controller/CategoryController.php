@@ -7,7 +7,7 @@ use app\common\facade\CategoryFacade;
 use think\Db;
 
 /**
- * 分类管理
+ * 文章分类管理
  */
 class CategoryController extends BaseController
 {
@@ -21,6 +21,11 @@ class CategoryController extends BaseController
         return $this->fetch();
     }
 
+    /**
+     * 添加
+     * @param int $pid
+     * @return mixed
+     */
     public function add($pid=0){
         $pid=intval($pid);
         if ($this->request->isPost()) {
@@ -62,7 +67,9 @@ class CategoryController extends BaseController
     }
 
     /**
-     * 编辑分类
+     * 编辑
+     * @param $id
+     * @return mixed
      */
     public function edit($id)
     {
@@ -115,6 +122,7 @@ class CategoryController extends BaseController
 
     /**
      * 删除分类
+     * @param $id
      */
     public function delete($id)
     {

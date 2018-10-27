@@ -1,20 +1,20 @@
 <?php
-/**
- * 订单统计
- * User: shirne
- * Date: 2018/5/11
- * Time: 18:17
- */
+
 
 namespace app\admin\controller;
 
 
 use think\Db;
 
+/**
+ * 订单统计
+ * Class OrderStaticsController
+ * @package app\admin\controller
+ */
 class OrderStaticsController extends BaseController
 {
     /**
-     * 下单情况统计
+     * 订单统计
      * @param string $type
      * @param string $start_date
      * @param string $end_date

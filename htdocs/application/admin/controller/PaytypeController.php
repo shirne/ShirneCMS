@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: shirn
- * Date: 2016/9/14
- * Time: 12:05
- */
 
 namespace app\admin\controller;
 
@@ -12,6 +6,11 @@ namespace app\admin\controller;
 use app\admin\validate\PaytypeValidate;
 use think\Db;
 
+/**
+ * 充值方式管理
+ * Class PaytypeController
+ * @package app\admin\controller
+ */
 class PaytypeController extends BaseController
 {
     protected $paytypes;
@@ -23,6 +22,11 @@ class PaytypeController extends BaseController
         $this->assign('paytypes',$this->paytypes);
     }
 
+    /**
+     * 列表
+     * @param string $type
+     * @return mixed
+     */
     public function index($type='')
     {
         $model = Db::name('Paytype');
@@ -74,7 +78,9 @@ class PaytypeController extends BaseController
     }
 
     /**
-     * 编辑付款方式
+     * 修改
+     * @param $id
+     * @return mixed
      */
     public function edit($id)
     {
@@ -115,7 +121,8 @@ class PaytypeController extends BaseController
     }
 
     /**
-     * 删除付款方式
+     * 删除
+     * @param $id
      */
     public function delete($id)
     {

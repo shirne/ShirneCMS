@@ -26,6 +26,10 @@ class OauthController extends BaseController
         return $this->fetch();
     }
 
+    /**
+     * 添加
+     * @return mixed
+     */
     public function add(){
         if ($this->request->isPost()) {
             //如果用户提交数据
@@ -51,7 +55,9 @@ class OauthController extends BaseController
     }
 
     /**
-     * 编辑
+     * 修改
+     * @param $id
+     * @return mixed
      */
     public function edit($id)
     {
@@ -81,8 +87,10 @@ class OauthController extends BaseController
         $this->assign('id',$id);
         return $this->fetch();
     }
+
     /**
      * 删除
+     * @param $id
      */
     public function delete($id)
     {

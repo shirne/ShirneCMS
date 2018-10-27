@@ -9,11 +9,16 @@ use think\Db;
 
 /**
  * 单页管理
+ * Class PageController
+ * @package app\admin\controller
  */
 class PageController extends BaseController
 {
     /**
      * 单页列表
+     * @param string $key
+     * @param string $group
+     * @return mixed|\think\response\Redirect
      */
     public function index($key="",$group='')
     {
@@ -29,7 +34,7 @@ class PageController extends BaseController
             $model->where('group',$group);
         }
         $lists=$model->view('pageGroup',['group_name','use_template'=>'group_use_template'],'pageGroup.group=page.group','LEFT')
-            ->where($where)->order('sort ASC,ID DESC')->paginate(15);
+            ->order('sort ASC,ID DESC')->paginate(15);
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
         $this->assign('group',$group);
@@ -73,7 +78,9 @@ class PageController extends BaseController
     }
 
     /**
-     * 编辑单页
+     * 修改单页
+     * @param $id
+     * @return mixed
      */
     public function edit($id)
     {
@@ -112,6 +119,11 @@ class PageController extends BaseController
         return $this->fetch();
     }
 
+    /**
+     * 状态设置
+     * @param $id
+     * @param int $type
+     */
     public function status($id,$type=0){
         $model = Db::name('page');
         $result = $model->where('id','in',idArr($id))->update(['status'=>intval($type)]);
@@ -121,8 +133,10 @@ class PageController extends BaseController
             $this->error("设置失败");
         }
     }
+
     /**
      * 删除单页
+     * @param $id
      */
     public function delete($id)
     {
@@ -158,6 +172,11 @@ class PageController extends BaseController
         return $this->fetch();
     }
 
+    /**
+     * 添加图片
+     * @param $aid
+     * @return mixed
+     */
     public function imageadd($aid){
         if ($this->request->isPost()) {
             $data=$this->request->post();
@@ -188,7 +207,9 @@ class PageController extends BaseController
     }
 
     /**
-     * 添加/修改
+     * 修改图片
+     * @param $id
+     * @return mixed
      */
     public function imageupdate($id)
     {
@@ -231,8 +252,11 @@ class PageController extends BaseController
             return $this->fetch();
         }
     }
+
     /**
      * 删除图片
+     * @param $aid
+     * @param $id
      */
     public function imagedelete($aid,$id)
     {
@@ -246,12 +270,22 @@ class PageController extends BaseController
         }
     }
 
+    /**
+     * 分组管理
+     * @return mixed
+     */
     public function groups(){
         $groups=getPageGroups(true);
 
         $this->assign('lists', $groups);
         return $this->fetch();
     }
+
+    /**
+     * 编辑分组
+     * @param int $id
+     * @return mixed
+     */
     public function groupedit($id=0){
         if($this->request->isPost()){
             $data=$this->request->post();
@@ -279,6 +313,11 @@ class PageController extends BaseController
         $this->assign('id', $id);
         return $this->fetch();
     }
+
+    /**
+     * 删除分组
+     * @param $id
+     */
     public function groupdelete($id)
     {
         $id = idArr($id);

@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: shirne
- * Date: 2017/5/8
- * Time: 7:56
- */
 
 namespace app\admin\controller;
 
@@ -12,10 +6,15 @@ namespace app\admin\controller;
 use app\admin\validate\PermissionValidate;
 use think\Db;
 
+/**
+ * 菜单管理
+ * Class PermissionController
+ * @package app\admin\controller
+ */
 class PermissionController extends BaseController
 {
     /**
-     * 权限列表
+     * 菜单列表
      */
     public function index()
     {
@@ -24,11 +23,19 @@ class PermissionController extends BaseController
         return $this->fetch();
     }
 
+    /**
+     * 清除缓存
+     */
     public function clearcache(){
         cache('menus',null);
         $this->success("清除成功", url('permission/index'));
     }
 
+    /**
+     * 添加
+     * @param $pid
+     * @return mixed
+     */
     public function add($pid){
         if ($this->request->isPost()) {
             $data = $this->request->post();
@@ -51,7 +58,9 @@ class PermissionController extends BaseController
     }
 
     /**
-     * 添加权限
+     * 修改
+     * @param int $id
+     * @return mixed
      */
     public function edit($id=0)
     {
@@ -80,8 +89,9 @@ class PermissionController extends BaseController
         $this->assign('perm',$model);
         return $this->fetch();
     }
+
     /**
-     * 删除权限
+     * 删除
      * @param $id int|string
      */
     public function delete($id)

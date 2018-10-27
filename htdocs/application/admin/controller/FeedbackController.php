@@ -6,6 +6,8 @@ use think\Db;
 
 /**
  * 留言管理
+ * Class FeedbackController
+ * @package app\admin\controller
  */
 class FeedbackController extends BaseController
 {
@@ -13,6 +15,7 @@ class FeedbackController extends BaseController
     /**
      * 留言列表
      * @param string $key
+     * @return mixed
      */
     public function index($key="")
     {
@@ -38,6 +41,7 @@ class FeedbackController extends BaseController
     /**
      * 回复留言
      * @param $id
+     * @return mixed
      */
     public function reply($id)
     {
@@ -64,10 +68,20 @@ class FeedbackController extends BaseController
         return $this->fetch();
     }
 
+    /**
+     * 统计
+     * todo 统计数据
+     * @return mixed
+     */
     public function statics(){
         return $this->fetch();
     }
 
+    /**
+     * 留言状态
+     * @param $id
+     * @param int $status
+     */
     public function status($id,$status=0)
     {
         $data['status'] = intval($status);

@@ -1,23 +1,20 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: shirne
- * Date: 2018/4/11
- * Time: 9:03
- */
 
 namespace app\admin\controller;
+
 use app\admin\model\MemberLevelModel;
 use app\admin\validate\MemberLevelValidate;
 use think\Db;
 
 /**
  * 会员组管理
+ * Class MemberLevelController
+ * @package app\admin\controller
  */
 class MemberLevelController extends BaseController
 {
     /**
-     * 会员级别列表
+     * 会员组列表
      */
     public function index()
     {
@@ -29,7 +26,7 @@ class MemberLevelController extends BaseController
     }
 
     /**
-     * 代理级别列表
+     * 代理级别管理
      */
     public function agent()
     {
@@ -82,7 +79,7 @@ class MemberLevelController extends BaseController
     }
     
     /**
-     * 添加等级
+     * 添加会员组
      */
     public function add()
     {
@@ -113,8 +110,9 @@ class MemberLevelController extends BaseController
         $this->assign('styles',getTextStyles());
         return $this->fetch('update');
     }
+
     /**
-     * 更新会员组
+     * 修改会员组
      */
     public function update($id)
     {
@@ -141,8 +139,10 @@ class MemberLevelController extends BaseController
         $this->assign('styles',getTextStyles());
         return $this->fetch();
     }
+
     /**
      * 删除会员组
+     * @param $id
      */
     public function delete($id)
     {

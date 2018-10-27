@@ -1,11 +1,14 @@
 <?php
 namespace app\admin\controller;
+
 use app\common\model\MemberModel;
 use app\common\validate\MemberValidate;
 use think\Db;
 
 /**
- * 用户管理
+ * 会员管理
+ * Class MemberController
+ * @package app\admin\controller
  */
 class MemberController extends BaseController
 {
@@ -17,7 +20,11 @@ class MemberController extends BaseController
     }
 
     /**
-     * 用户列表
+     * 会员列表
+     * @param int $type
+     * @param string $keyword
+     * @param string $referer
+     * @return mixed|\think\response\Redirect
      */
     public function index($type=0,$keyword='',$referer='')
     {
@@ -57,6 +64,11 @@ class MemberController extends BaseController
         $this->assign('keyword',$keyword);
         return $this->fetch();
     }
+
+    /**
+     * 设置代理
+     * @param int $id
+     */
     public function set_agent($id=0){
         if(empty($id))$this->error('会员不存在');
         $member=Db::name('member')->find($id);
@@ -74,6 +86,11 @@ class MemberController extends BaseController
             $this->error('设置失败');
         }
     }
+
+    /**
+     * 取消代理
+     * @param int $id
+     */
     public function cancel_agent($id=0){
         if(empty($id))$this->error('会员不存在');
         $member=Db::name('member')->find($id);
@@ -90,6 +107,16 @@ class MemberController extends BaseController
         }
     }
 
+    /**
+     * 余额记录
+     * @param int $id
+     * @param int $from_id
+     * @param string $fromdate
+     * @param string $todate
+     * @param string $field
+     * @param string $type
+     * @return mixed
+     */
     public function money_log($id=0,$from_id=0,$fromdate='',$todate='',$field='all',$type='all'){
         $model=Db::view('MemberMoneyLog mlog','*')
             ->view('Member m',['username','level_id','mobile'],'m.id=mlog.member_id','LEFT')
@@ -156,6 +183,12 @@ class MemberController extends BaseController
         return $this->fetch();
     }
 
+    /**
+     * 会员日志
+     * @param string $type
+     * @param int $member_id
+     * @return mixed
+     */
     public function log($type='',$member_id=0){
         $model=Db::view('MemberLog','*')
             ->view('Member',['username'],'MemberLog.member_id=Member.id','LEFT');
@@ -172,6 +205,12 @@ class MemberController extends BaseController
         $this->assign('page',$logs->render());
         return $this->fetch();
     }
+
+    /**
+     * 日志详情
+     * @param $id
+     * @return mixed
+     */
     public function logview($id){
         $model=Db::name('MemberLog');
 
@@ -183,6 +222,9 @@ class MemberController extends BaseController
         return $this->fetch();
     }
 
+    /**
+     * 清除日志
+     */
     public function logclear(){
         $date=$this->request->get('date');
         $d=strtotime($date);
@@ -199,7 +241,7 @@ class MemberController extends BaseController
     }
 
     /**
-     * 添加用户
+     * 添加
      */
     public function add()
     {
@@ -227,8 +269,11 @@ class MemberController extends BaseController
         $this->assign('types',getMemberTypes());
         return $this->fetch('update');
     }
+
     /**
-     * 更新会员信息
+     * 修改
+     * @param $id
+     * @return mixed
      */
     public function update($id)
     {
@@ -262,6 +307,10 @@ class MemberController extends BaseController
         $this->assign('model',$model);
         return $this->fetch();
     }
+
+    /**
+     * 充值
+     */
     public function recharge(){
         $id=$this->request->post('id/d');
         $field=$this->request->post('field');
@@ -283,6 +332,7 @@ class MemberController extends BaseController
             $this->error($atext.'失败');
         }
     }
+
     /**
      * 删除会员
      */

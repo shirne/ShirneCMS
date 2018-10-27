@@ -2,7 +2,6 @@
 
 namespace app\admin\controller;
 
-
 use app\admin\model\SpecificationsModel;
 use app\admin\validate\SpecificationsValidate;
 use think\Db;

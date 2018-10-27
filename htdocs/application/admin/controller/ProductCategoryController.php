@@ -1,10 +1,4 @@
 <?php
-/**
- * 商品分类
- * User: shirne
- * Date: 2018/5/11
- * Time: 17:48
- */
 
 namespace app\admin\controller;
 
@@ -15,12 +9,27 @@ use app\common\facade\ProductCategoryFacade;
 use app\common\model\ProductCategoryModel;
 use think\Db;
 
+/**
+ * 商品分类
+ * Class ProductCategoryController
+ * @package app\admin\controller
+ */
 class ProductCategoryController extends BaseController
 {
+    /**
+     * 分类列表
+     * @return mixed
+     */
     public function index(){
         $this->assign('model',ProductCategoryFacade::getCategories(true));
         return $this->fetch();
     }
+
+    /**
+     * 添加
+     * @param int $pid
+     * @return mixed
+     */
     public function add($pid=0){
         $pid=intval($pid);
         if ($this->request->isPost()) {
@@ -62,7 +71,9 @@ class ProductCategoryController extends BaseController
     }
 
     /**
-     * 编辑分类
+     * 修改
+     * @param $id
+     * @return mixed
      */
     public function edit($id)
     {
@@ -118,7 +129,8 @@ class ProductCategoryController extends BaseController
     }
 
     /**
-     * 删除分类
+     * 删除
+     * @param $id
      */
     public function delete($id)
     {

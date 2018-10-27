@@ -1,14 +1,19 @@
 <?php
 namespace app\admin\controller;
+
 use think\Db;
 
 /**
  * 邀请码管理
+ * Class InviteController
+ * @package app\admin\controller
  */
 class InviteController extends BaseController
 {
     /**
-     * 用户列表
+     * 邀请码列表
+     * @param string $key
+     * @return mixed
      */
     public function index($key="")
     {
@@ -32,6 +37,7 @@ class InviteController extends BaseController
 
     /**
      * 生成邀请码
+     * @return mixed
      */
     public function add()
     {
@@ -75,8 +81,11 @@ class InviteController extends BaseController
             return $this->fetch();
         }
     }
+
     /**
-     * 转赠送 功能暂无
+     * 转赠
+     * @param $id
+     * @return mixed
      */
     public function update($id)
     {
@@ -98,6 +107,12 @@ class InviteController extends BaseController
         $this->assign('model',$model);
         return $this->fetch();
     }
+
+    /**
+     * 生成激活码
+     * @param $length
+     * @return string
+     */
     protected function create($length){
         $c=random_str($length);
         $r='';

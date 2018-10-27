@@ -8,11 +8,18 @@ use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use think\Db;
 
 /**
+ * 充值提现管理
  * Class PaylogController
  * @package app\admin\controller
  */
 class PaylogController extends BaseController
 {
+    /**
+     * 充值管理
+     * @param string $key
+     * @param int $status
+     * @return mixed
+     */
     public function recharge($key='',$status=0){
         $model=Db::view('__MEMBER_RECHARGE__ mr','*');
         $where=array();
@@ -78,6 +85,10 @@ class PaylogController extends BaseController
         $this->success('处理成功！');
     }
 
+    /**
+     * 充值撤销
+     * @param string $id
+     */
     public function rechargecancel($id=''){
         $id=intval($id);
         if($id==0)$this->error('参数错误 ');
@@ -123,6 +134,12 @@ class PaylogController extends BaseController
         $this->success('处理成功！');
     }
 
+    /**
+     * 提现管理
+     * @param string $key
+     * @param string $status
+     * @return mixed|\think\response\Redirect
+     */
     public function cashin($key='',$status=''){
         if($this->request->isPost()){
             return redirect(url('',['status'=>$status,'key'=>base64_encode($key)]));
@@ -149,7 +166,12 @@ class PaylogController extends BaseController
         return $this->fetch();
     }
 
-
+    /**
+     * 导出提现记录
+     * @param string $ids
+     * @param string $status
+     * @param string $key
+     */
     public function export($ids='',$status='',$key=''){
         $model=Db::view('__MEMBER_CASHIN__ mc','*')->view('__MEMBER__ m',['username','realname'],'mc.member_id=m.id','LEFT');
         if(empty($ids)){
@@ -219,7 +241,7 @@ class PaylogController extends BaseController
     }
 
     /**
-     * 提现单驳回并返还金额
+     * 提现驳回
      * @param string $id
      */
     public function cashdelete($id=''){

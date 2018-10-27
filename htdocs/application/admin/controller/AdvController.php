@@ -1,10 +1,4 @@
 <?php
-/**
- * 广告功能
- * User: shirne
- * Date: 2018/4/17
- * Time: 8:36
- */
 
 namespace app\admin\controller;
 
@@ -13,8 +7,17 @@ use app\admin\validate\AdvGroupValidate;
 use app\admin\validate\AdvItemValidate;
 use think\Db;
 
+/**
+ * 广告功能
+ * Class AdvController
+ * @package app\admin\controller
+ */
 class AdvController extends BaseController
 {
+    /**
+     * 管理
+     * @return mixed
+     */
     public function index(){
         $model = Db::name('AdvGroup');
         if(!empty($key)){
@@ -26,6 +29,10 @@ class AdvController extends BaseController
         return $this->fetch();
     }
 
+    /**
+     * 添加
+     * @return mixed
+     */
     public function add(){
         if ($this->request->isPost()) {
             $data=$this->request->post();
@@ -48,7 +55,7 @@ class AdvController extends BaseController
     }
 
     /**
-     * 添加/修改
+     * 修改
      */
     public function update($id)
     {
@@ -82,6 +89,7 @@ class AdvController extends BaseController
             return $this->fetch();
         }
     }
+
     /**
      * 删除广告位
      */
@@ -123,6 +131,11 @@ class AdvController extends BaseController
         return $this->fetch();
     }
 
+    /**
+     * 添加
+     * @param $gid
+     * @return mixed
+     */
     public function itemadd($gid){
         if ($this->request->isPost()) {
             $data=$this->request->post();
@@ -156,7 +169,7 @@ class AdvController extends BaseController
     }
 
     /**
-     * 添加/修改
+     * 修改
      */
     public function itemupdate($id)
     {

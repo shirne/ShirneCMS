@@ -6,8 +6,17 @@ use think\Db;
 use think\facade\Cache;
 use think\facade\Log;
 
+/**
+ * 控制台
+ * Class IndexController
+ * @package app\admin\controller
+ */
 class IndexController extends BaseController{
 
+    /**
+     * 首页
+     * @return mixed
+     */
     public function index(){
 
         $stat=array();
@@ -66,11 +75,18 @@ class IndexController extends BaseController{
         $this->success('数据已清空');
     }
 
+    /**
+     * 清除缓存
+     */
     public function clearcache(){
         Cache::clear();
         $this->success('缓存已清除');
     }
 
+    /**
+     * 新消息
+     * @return \think\response\Json
+     */
     public function newcount(){
         Log::close();
         $newMemberCount=Db::name('Member')->where('create_time','GT',$this->manage['last_view_member'])->count();
@@ -82,6 +98,12 @@ class IndexController extends BaseController{
         ));
     }
 
+    /**
+     * 会员搜索接口
+     * @param $key
+     * @param int $type
+     * @return \think\response\Json
+     */
     public function searchMember($key,$type=0){
         $model=Db::name('member')
             ->where('status',1);
@@ -111,6 +133,10 @@ class IndexController extends BaseController{
         exit('ok');
     }
 
+    /**
+     * 个人资料
+     * @return mixed
+     */
     public function profile(){
         $model=Db::name('Manager')->where('id',$this->mid)->find();
 

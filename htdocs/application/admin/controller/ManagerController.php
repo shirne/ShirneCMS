@@ -8,12 +8,16 @@ use think\Db;
 
 /**
  * 管理员管理
+ * Class ManagerController
+ * @package app\admin\controller
  */
 class ManagerController extends BaseController
 {
 
     /**
      * 用户列表
+     * @param string $key
+     * @return mixed|\think\response\Redirect
      */
     public function index($key="")
     {
@@ -33,6 +37,11 @@ class ManagerController extends BaseController
         return $this->fetch();
     }
 
+    /**
+     * 管理员日志
+     * @param string $key
+     * @return mixed
+     */
     public function log($key=''){
         $model=Db::view('ManagerLog','*')
             ->view('Manager',['username'],'ManagerLog.manager_id=Manager.id','LEFT');
@@ -46,6 +55,12 @@ class ManagerController extends BaseController
         $this->assign('page',$logs->render());
         return $this->fetch();
     }
+
+    /**
+     * 日志详情
+     * @param $id
+     * @return mixed
+     */
     public function logview($id){
 
         $model=Db::name('ManagerLog')->find($id);
@@ -56,6 +71,9 @@ class ManagerController extends BaseController
         return $this->fetch();
     }
 
+    /**
+     * 清除日志
+     */
     public function logclear(){
         $date=$this->request->get('date');
         $d=strtotime($date);
@@ -69,7 +87,8 @@ class ManagerController extends BaseController
     }
 
     /**
-     * 添加用户
+     * 添加
+     * @return mixed
      */
     public function add()
     {
@@ -99,8 +118,11 @@ class ManagerController extends BaseController
         $this->assign('model',$model);
         return $this->fetch('update');
     }
+
     /**
-     * 更新管理员信息
+     * 修改
+     * @param $id
+     * @return mixed
      */
     public function update($id)
     {
@@ -141,6 +163,8 @@ class ManagerController extends BaseController
 
     /**
      * 管理员权限
+     * @param $id
+     * @return mixed
      */
     public function permision($id){
         $id=intval($id);
@@ -172,8 +196,10 @@ class ManagerController extends BaseController
         $this->assign('perms',config('permisions.'));
         return $this->fetch();
     }
+
     /**
      * 删除管理员
+     * @param $id
      */
     public function delete($id)
     {

@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: shirn
- * Date: 2016/9/14
- * Time: 12:16
- */
 
 namespace app\admin\controller;
 
@@ -13,8 +7,18 @@ use app\admin\model\NoticeModel;
 use app\admin\validate\NoticeValidate;
 use think\Db;
 
+/**
+ * 公告管理
+ * Class NoticeController
+ * @package app\admin\controller
+ */
 class NoticeController extends BaseController
 {
+    /**
+     * 公告列表
+     * @param string $type
+     * @return mixed
+     */
     public function index($type='')
     {
         $model = Db::name('Notice');
@@ -29,6 +33,10 @@ class NoticeController extends BaseController
         return $this->fetch();
     }
 
+    /**
+     * 添加
+     * @return mixed
+     */
     public function add(){
         if ($this->request->isPost()) {
             $data = $this->request->post();
@@ -52,7 +60,9 @@ class NoticeController extends BaseController
     }
 
     /**
-     * 公告添加
+     * 编辑
+     * @param $id
+     * @return mixed
      */
     public function edit($id)
     {
@@ -81,7 +91,8 @@ class NoticeController extends BaseController
     }
 
     /**
-     * 公告删除
+     * 删除
+     * @param $id
      */
     public function delete($id)
     {

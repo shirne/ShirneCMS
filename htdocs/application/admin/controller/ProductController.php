@@ -1,10 +1,4 @@
 <?php
-/**
- * 商品管理
- * User: shirne
- * Date: 2018/5/11
- * Time: 17:47
- */
 
 namespace app\admin\controller;
 
@@ -18,8 +12,19 @@ use app\admin\validate\ImagesValidate;
 use app\common\facade\ProductCategoryFacade;
 use think\Db;
 
+/**
+ * 商品管理
+ * Class ProductController
+ * @package app\admin\controller
+ */
 class ProductController extends BaseController
 {
+    /**
+     * 商品列表
+     * @param string $key
+     * @param int $cate_id
+     * @return mixed|\think\response\Redirect
+     */
     public function index($key='',$cate_id=0){
         if($this->request->isPost()){
             return redirect(url('',['cate_id'=>$cate_id,'key'=>base64_encode($key)]));
@@ -47,6 +52,11 @@ class ProductController extends BaseController
         return $this->fetch();
     }
 
+    /**
+     * 添加
+     * @param int $cid
+     * @return mixed
+     */
     public function add($cid=0){
         if ($this->request->isPost()) {
             $data = $this->request->post();
@@ -116,7 +126,9 @@ class ProductController extends BaseController
     }
 
     /**
-     * 更新商品信息
+     * 修改
+     * @param $id
+     * @return mixed
      */
     public function edit($id)
     {
@@ -201,6 +213,10 @@ class ProductController extends BaseController
         }
     }
 
+    /**
+     * 获取规格
+     * @return \think\response\Json
+     */
     public function get_specs(){
         $model = new SpecificationsModel();
         $lists=$model->order('ID ASC')->select();
@@ -208,7 +224,8 @@ class ProductController extends BaseController
     }
 
     /**
-     * 删除商品
+     * 删除
+     * @param $id
      */
     public function delete($id)
     {
@@ -224,6 +241,12 @@ class ProductController extends BaseController
             $this->error("删除失败");
         }
     }
+
+    /**
+     * 上下架
+     * @param $id
+     * @param int $type
+     */
     public function push($id,$type=0)
     {
         $data['status'] = $type==1?1:0;
@@ -263,6 +286,11 @@ class ProductController extends BaseController
         return $this->fetch();
     }
 
+    /**
+     * 添加图片
+     * @param $aid
+     * @return mixed
+     */
     public function imageadd($aid){
         if ($this->request->isPost()) {
             $data=$this->request->post();
@@ -293,7 +321,9 @@ class ProductController extends BaseController
     }
 
     /**
-     * 添加/修改
+     * 修改图片
+     * @param $id
+     * @return mixed
      */
     public function imageupdate($id)
     {
@@ -336,8 +366,11 @@ class ProductController extends BaseController
             return $this->fetch();
         }
     }
+
     /**
      * 删除图片
+     * @param $aid
+     * @param $id
      */
     public function imagedelete($aid,$id)
     {
@@ -380,6 +413,11 @@ class ProductController extends BaseController
         return $this->fetch();
     }
 
+    /**
+     * 评论查看回复
+     * @param $id
+     * @return mixed
+     */
     public function commentview($id){
         $model=Db::name('productComment')->find($id);
         if(empty($model)){
@@ -404,6 +442,11 @@ class ProductController extends BaseController
         return $this->fetch();
     }
 
+    /**
+     * 评论状态
+     * @param $id
+     * @param int $type
+     */
     public function commentstatus($id,$type=1)
     {
         $data['status'] = $type==1?1:2;
@@ -419,6 +462,11 @@ class ProductController extends BaseController
             $this -> error("操作失败");
         }
     }
+
+    /**
+     * 删除评论
+     * @param $id
+     */
     public function commentdelete($id)
     {
         $model = Db::name('productComment');

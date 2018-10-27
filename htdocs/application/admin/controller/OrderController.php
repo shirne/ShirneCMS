@@ -7,8 +7,20 @@ use excel\Excel;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use think\Db;
 
+/**
+ * 订单管理
+ * Class OrderController
+ * @package app\admin\controller
+ */
 class OrderController extends BaseController
 {
+    /**
+     * 订单列表
+     * @param string $key
+     * @param string $status
+     * @param string $audit
+     * @return mixed|\think\response\Redirect
+     */
     public function index($key='',$status='',$audit=''){
         if($this->request->isPost()){
             return redirect(url('',['status'=>$status,'audit'=>$audit,'key'=>base64_encode($key)]));

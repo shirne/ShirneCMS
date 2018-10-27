@@ -1,22 +1,24 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: shirne
- * Date: 2018/8/19
- * Time: 8:26
- */
 
 namespace app\admin\controller;
-
-
 
 use app\common\facade\CategoryFacade;
 use app\common\facade\ProductCategoryFacade;
 use think\Db;
 use think\facade\Env;
 
+/**
+ * 导航管理
+ * Class NavigatorController
+ * @package app\admin\controller
+ */
 class NavigatorController extends BaseController
 {
+    /**
+     * 编辑导航
+     * @param string $model
+     * @return mixed
+     */
     public function index($model='index')
     {
         $path=Env::get('config_path').'/'.$model.'/navigator.php';
@@ -87,6 +89,11 @@ class NavigatorController extends BaseController
         return $this->fetch();
     }
 
+    /**
+     * 获取模型分类
+     * @param string $module
+     * @return \think\response\Json
+     */
     public function getCategories($module='Article'){
         $cates=[];
         switch ($module){

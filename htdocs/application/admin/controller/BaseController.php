@@ -6,6 +6,12 @@ use extcore\traits\Upload;
 use think\Controller;
 use think\Db;
 
+/**
+ * 后台基类
+ * 自带基于方法名的权限验证
+ * Class BaseController
+ * @package app\admin\controller
+ */
 class BaseController extends Controller {
 
     use Upload;
@@ -51,11 +57,22 @@ class BaseController extends Controller {
 
         $this->assign('menus',getMenus());
     }
+
+    /**
+     * 检查权限
+     * @param $permitem
+     */
     protected function checkPermision($permitem){
         if($this->getPermision($permitem)==false){
             $this->error('您无权进行此操作');
         }
     }
+
+    /**
+     * 检查是否有权限
+     * @param $permitem
+     * @return bool
+     */
     protected function getPermision($permitem)
     {
         if($this->manage['type']==1){

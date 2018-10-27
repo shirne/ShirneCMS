@@ -1,16 +1,22 @@
 <?php
+
 namespace app\admin\controller;
+
 use app\admin\model\SettingModel;
 use app\admin\validate\SettingValidate;
 use think\Db;
 
 /**
- * 字段管理
+ * 配置管理
+ * Class SettingController
+ * @package app\admin\controller
  */
 class SettingController extends BaseController
 {
     /**
-     * 配置列表
+     * 配置设置
+     * @param string $group
+     * @return mixed
      */
     public function index($group="")
     {
@@ -36,10 +42,18 @@ class SettingController extends BaseController
         $this->assign('settings',getSettings(true,true));
         return $this->fetch();
     }
+
+    /**
+     * 清除缓存
+     */
     public function refresh(){
         cache('setting',null);
         $this->success("刷新成功",url('setting/index'));
     }
+
+    /**
+     * 导入配置
+     */
     public function import(){
         $type=$this->request->post('type');
         if($type=='content') {
@@ -107,6 +121,12 @@ class SettingController extends BaseController
         cache('setting',null);
         $this->success('导入成功');
     }
+
+    /**
+     * 导出配置
+     * @param string $mode
+     * @return \think\Response
+     */
     public function export($mode='simple'){
         $data=[];
         if($mode=='full'){
@@ -121,6 +141,11 @@ class SettingController extends BaseController
         return file_download('setting.json',json_encode($data,JSON_UNESCAPED_UNICODE));
     }
 
+    /**
+     * 高级模式
+     * @param string $key
+     * @return mixed
+     */
     public function advance($key=""){
 
         $model = Db::name('setting');
@@ -138,6 +163,10 @@ class SettingController extends BaseController
         return $this->fetch();
     }
 
+    /**
+     * 添加配置
+     * @return mixed
+     */
     public function add(){
         if ($this->request->isPost()) {
             $data=$this->request->post();
@@ -164,7 +193,9 @@ class SettingController extends BaseController
     }
 
     /**
-     * 添加分类
+     * 编辑配置
+     * @param $id
+     * @return mixed
      */
     public function edit($id)
     {
@@ -197,15 +228,16 @@ class SettingController extends BaseController
             return $this->fetch();
         }
     }
+
     /**
      * 删除配置
+     * @param $id
      */
     public function delete($id)
     {
         $id = intval($id);
         $model = Db::name('setting');
- 
-        //验证通过
+
         $result = $model->delete($id);
         if($result){
             $this->success("删除成功", url('setting/advance'));

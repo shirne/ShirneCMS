@@ -8,6 +8,7 @@ use EasyWeChat\Factory;
 use think\Db;
 
 /**
+ * 公众号管理
  * Class WechatController
  * @package app\admin\controller
  */
@@ -15,6 +16,8 @@ class WechatController extends BaseController
 {
     /**
      * 公众号列表
+     * @param string $key
+     * @return mixed|\think\response\Redirect
      */
     public function index($key="")
     {
@@ -33,6 +36,10 @@ class WechatController extends BaseController
         return $this->fetch();
     }
 
+    /**
+     * 添加公众号
+     * @return mixed
+     */
     public function add(){
         if ($this->request->isPost()) {
             //如果用户提交数据
@@ -71,7 +78,9 @@ class WechatController extends BaseController
     }
 
     /**
-     * 编辑公众号
+     * 修改公众号
+     * @param $id
+     * @return mixed
      */
     public function edit($id)
     {
@@ -119,8 +128,10 @@ class WechatController extends BaseController
         $this->assign('id',$id);
         return $this->fetch();
     }
+
     /**
      * 删除公众号
+     * @param $id
      */
     public function delete($id)
     {
@@ -134,6 +145,12 @@ class WechatController extends BaseController
         }
     }
 
+    /**
+     * 自定义菜单
+     * @param $id
+     * @param int $refresh
+     * @return mixed
+     */
     public function menu($id,$refresh=0)
     {
         $model = Db::name('wechat')->find($id);
