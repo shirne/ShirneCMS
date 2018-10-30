@@ -92,12 +92,15 @@ class Install extends Command
                 }
                 if($input->hasOption('mode')){
                     $mode=$input->getOption('mode');
-                    if($mode=='shop'){
-                        $sql = $sqlpath.'/update_shop.sql';
-                        if(file_exists($sql)) {
-                            $this->runsql($sql, $dbconfig['prefix']);
-                        }else{
-                            $output->warning('Sql file update_shop.sql not exists!');
+                    if(!empty($mode)){
+                        $modes=explode(',',$mode);
+                        foreach ($modes as $mode){
+                            $sql = $sqlpath.'/update_'.$mode.'.sql';
+                            if(file_exists($sql)) {
+                                $this->runsql($sql, $dbconfig['prefix']);
+                            }else{
+                                $output->warning('Sql file update_'.$mode.'.sql not exists!');
+                            }
                         }
                     }
                 }
