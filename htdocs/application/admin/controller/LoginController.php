@@ -28,20 +28,53 @@ class LoginController extends Controller {
         $username =$this->request->post('username','','trim');
         $password =$this->request->post('password');
         $code = $this->request->post('verify','','strtolower');
+
+        if(empty($username) || empty($password)){
+            $this->error('请填写登录信息');
+        }
+
         //验证验证码是否正确
         if(!($this->check_verify($code))){
             $this->error('验证码错误');
         }
+
+        $sess_key='back_login_error';
+        $error_count=session($sess_key);
+        if(is_null($error_count)){
+            $error_count=0;
+        }elseif($error_count>5){
+            $this->error('登录错误次数过多');
+        }
+
+        $ip=$this->request->ip();
+        $cache_key='back_login_error_'.str_replace(['.',':'],['_','-'],$ip);
+        $iperror_count=cache($cache_key);
+        if(is_null($iperror_count)){
+            $iperror_count=0;
+        }elseif($iperror_count>10){
+            $this->error('登录错误次数过多');
+        }
+
         //验证账号密码是否正确
         $user = $member->where('username',$username)->find();
 
         if(empty($user) || $user['password'] !== encode_password($password,$user['salt'])) {
+
+            $error_count++;
+            $iperror_count++;
+            session($sess_key,$error_count);
+            cache($cache_key,$iperror_count,['expire'=>3600]);
+
             if(!empty($user)){
                 //登录日志
                 user_log($user['id'],'login',0,'密码错误:'.$password,'manager');
             }
             $this->error('账号或密码错误 :(') ;
         }
+
+        //登录成功清除限制
+        session($sess_key,null);
+        cache($cache_key,null);
 
         //验证账户是否被禁用
         if($user['status'] == 0){
