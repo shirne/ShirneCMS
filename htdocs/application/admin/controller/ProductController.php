@@ -32,15 +32,28 @@ class ProductController extends BaseController
         $key=empty($key)?"":base64_decode($key);
         $model = Db::view('product','*')
             ->view('productCategory',['name'=>'category_name','title'=>'category_title'],'product.cate_id=productCategory.id','LEFT');
-        $where=array();
+        
         if(!empty($key)){
-            $where[]=['product.title|productCategory.title','like',"%$key%"];
+            $model->whereLike('product.title|productCategory.title',"%$key%");
         }
         if($cate_id>0){
-            $where[]=['product.cate_id','in',ProductCategoryFacade::getSubCateIds($cate_id)];
+            $model->whereIn('product.cate_id',ProductCategoryFacade::getSubCateIds($cate_id));
         }
 
-        $lists=$model->where($where)->paginate(10);
+        $lists=$model->order('create_time ASC')->paginate(10);
+        if(!$lists->isEmpty()){
+            $ids=array_column($lists->items(),'id');
+            $skus=Db::name('productSku')->whereIn('product_id',$ids)->select();
+            $skugroups=array_index($skus,'product_id',true);
+            $lists->each(function($item) use ($skugroups){
+                if(isset($skugroups[$item['id']])){
+                    $item['skus']=$skugroups[$item['id']];
+                }else {
+                    $item['skus'] = [];
+                }
+                return $item;
+            });
+        }
 
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());

@@ -48,8 +48,8 @@
 			<tr>
 				<th width="50">编号</th>
 				<th>图片</th>
-				<th>标题</th>
-				<th>类型</th>
+				<th>产品名称</th>
+				<th>SKU</th>
 				<th>发布时间</th>
 				<th>分类</th>
 				<th>状态</th>
@@ -63,9 +63,20 @@
 					<td><figure class="figure" >
 							<img src="{$v.image}?w=100" class="figure-img img-fluid rounded" alt="image">
 						</figure></td>
-					<td>{$v.title}</td>
+					<td><if condition="$v['type'] GT 1"><span class="badge badge-warning">{$types[$v['type']]}</span></if>{$v.title}</td>
 					<td>
-						<span class="badge badge-info">{$types[$v['type']]}</span>
+						<foreach name="v['skus']" item="sku">
+							<div class="input-group input-group-sm mb-2">
+								<span class="input-group-prepend">
+									<span class="input-group-text">{$sku.goods_no}</span>
+								</span>
+								<span class="form-control">￥{$sku.price}</span>
+								<span class="input-group-middle">
+									<span class="input-group-text">库存</span>
+								</span>
+								<span class="form-control">{$sku.storage}</span>
+							</div>
+						</foreach>
 					</td>
 					<td>{$v.create_time|showdate}</td>
 					<td>{$v.category_title}</td>
