@@ -95,7 +95,7 @@ class LoginController extends Controller {
         $verify = new \think\captcha\Captcha();
         //$Verify->codeSet = '0123456789';
         $verify->seKey=config('session.sec_key');
-        $verify->fontSize = 13;
+        $verify->fontSize = 28;
         $verify->length = 4;
         return $verify->entry('backend');
     }

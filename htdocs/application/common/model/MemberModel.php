@@ -64,7 +64,7 @@ class MemberModel extends BaseModel
     public static function setAgent($member_id){
         $data=array();
         $data['agentcode']=random_str(8);
-        while(Db::name('member')->find(['agentcode'=>$data['agentcode']])){
+        while(Db::name('member')->where('agentcode',$data['agentcode'])->find()){
             $data['agentcode']=random_str(8);
         }
         $data['is_agent']=1;

@@ -56,12 +56,13 @@
                             <span class="input-group-text"><i class="ion-md-checkmark-circle"></i> </span>
                         </div>
                         <input type="text" name="verify" class="form-control" id="exampleInputCode" placeholder="验证码">
-                        <div class="input-group-append">
-                            <span class="input-group-text" style="padding:0;">
-                                <img class="verify" src="{:url('login/verify')}" alt="点击刷新"/>
-                            </span>
-                        </div>
                     </div>
+                </div>
+                <div class="form-group text-center">
+                    <figure class="figure m-0 text-center">
+                        <img class="figure-img img-fluid rounded verify" src="{:url('login/verify')}" alt="点击刷新"/>
+                        <figcaption class="figure-caption">看不清？点击图片刷新</figcaption>
+                    </figure>
                 </div>
                 <button type="submit" class="btn btn-block btn-primary">登陆</button>
                 <div class="alert fade show" role="alert">

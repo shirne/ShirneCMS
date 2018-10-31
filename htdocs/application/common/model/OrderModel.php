@@ -185,7 +185,24 @@ class OrderModel extends BaseModel
      * 根据设置或升级原则进行升级
      */
     public static function setLevel($order){
-        
+        if($order['type']==2){
+            $member=Db::name('Member')->find($order['member_id']);
+            $levels=getMemberLevels();
+            if(!empty($member)){
+                if($member['level_id']==0)$member['level_id']=getDefaultLevel();
+                $level=$levels[$member['level_id']];
+                if($level['is_default']){
+                    foreach ($levels as $lv){
+                        if($lv['level_price'] > $order['payamount']){
+                            break;
+                        }
+                        $level=$lv;
+                    }
+                    if($level['is_default'])return;
+                    MemberModel::update(['level_id'=>$level['level_id']],['id'=>$order['member_id']]);
+                }
+            }
+        }
     }
 
     public static function doRebate($order){
