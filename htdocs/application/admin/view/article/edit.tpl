@@ -27,7 +27,7 @@
             </div>
             <div class="col form-group">
                 <label for="create_time">发布时间</label>
-                <input type="text" name="create_time" class="form-control datepicker" data-format="YYYY-MM-DD hh:mm:ss" value="{$article.create_time|showdate}" placeholder="默认取当前系统时间" >
+                <input type="text" name="create_time" class="form-control datepicker" data-format="YYYY-MM-DD hh:mm:ss"  value="{$article.create_time|showdate}" placeholder="默认取当前系统时间" >
             </div>
         </div>
         <div class="form-group">

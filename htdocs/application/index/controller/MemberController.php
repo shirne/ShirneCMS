@@ -186,7 +186,8 @@ class MemberController extends AuthedController
     }
     public function cardEdit($id=0){
         if($id>0) {
-            $card = Db::name('MemberCard')->where(array('id' => $id,'member_id',$this->userid))->find();
+            $card = Db::name('MemberCard')->where('id' , $id)
+                ->where('member_id',$this->userid)->find();
         }else{
             $card=array();
         }
@@ -196,7 +197,7 @@ class MemberController extends AuthedController
             $validate=new MemberCardValidate();
 
             if(!$validate->check($card)){
-                $this->error('请填写开户银行');
+                $this->error($validate->getError());
             }else {
                 if ($id > 0) {
                     Db::name('MemberCard')->where('id' , $id)->update($card);
@@ -205,7 +206,8 @@ class MemberController extends AuthedController
                     $id = Db::name('MemberCard')->insert($card,false,true);
                 }
                 if ($card['is_default']) {
-                    Db::name('MemberCard')->where(array('id' => array('NEQ', $id), 'member_id' => $this->userid))
+                    Db::name('MemberCard')->where('id' , 'NEQ', $id)
+                        ->where( 'member_id' , $this->userid)
                         ->update(array('is_default' => 0));
                 }
                 $this->success('保存成功',url('index/member/cards'));
