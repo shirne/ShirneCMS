@@ -136,7 +136,7 @@ class Bootstrap4 extends Paginator
         $side   = $this->side;
         $window = $side * 2 + 1;
 
-        if ($this->lastPage < $window + 3) {
+        if ($this->lastPage < $window + 4) {
             $block['first'] = $this->getUrlRange(1, $this->lastPage);
         } elseif ($this->currentPage <= $side + 1) {
             $block['first'] = $this->getUrlRange(1, $window + 1);
