@@ -8,7 +8,6 @@
 
 namespace app\api\Controller;
 
-
 use app\api\facade\MemberTokenModel;
 use app\common\model\MemberModel;
 use app\common\model\MemberOauthModel;
@@ -140,5 +139,11 @@ class AuthController extends BaseController
         $this->response('刷新失败',ERROR_REFRESH_TOKEN_INVAILD);
     }
 
+    /**
+     * 注册会员
+     */
+    public function register(){
+
+    }
 
 }
