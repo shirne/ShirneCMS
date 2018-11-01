@@ -48,6 +48,25 @@ class Bootstrap4 extends Paginator
     }
 
     /**
+     * 第一页按钮
+     * @param string $text
+     * @return string
+     */
+    protected function getFirstButton($text = "First")
+    {
+
+        if ($this->currentPage() <= 1) {
+            return $this->getDisabledTextWrapper($text);
+        }
+
+        $url = $this->url(
+            1
+        );
+
+        return $this->getPageLinkWrapper($url, $text);
+    }
+
+    /**
      * 上一页按钮
      * @param string $text
      * @return string
@@ -78,6 +97,22 @@ class Bootstrap4 extends Paginator
         }
 
         $url = $this->url($this->currentPage() + 1);
+
+        return $this->getPageLinkWrapper($url, $text);
+    }
+
+    /**
+     * 最后一页按钮
+     * @param string $text
+     * @return string
+     */
+    protected function getLastButton($text = 'Last')
+    {
+        if (!$this->hasMore) {
+            return $this->getDisabledTextWrapper($text);
+        }
+
+        $url = $this->url($this->lastPage());
 
         return $this->getPageLinkWrapper($url, $text);
     }
@@ -143,9 +178,19 @@ class Bootstrap4 extends Paginator
         if ($this->hasPages()) {
             if ($this->simple) {
                 return sprintf(
-                    '<nav aria-label="Page navigation"><ul class="pagination'.$this->extstyle.'">%s %s</ul></nav>',
+                    '<nav aria-label="Page navigation"><ul class="pagination'.$this->extstyle.'">%s %s %s</ul></nav>',
                     $this->getPreviousButton(),
+                    $this->getActivePageWrapper($this->currentPage()),
                     $this->getNextButton()
+                );
+            }elseif ($this->options['simple']) {
+                return sprintf(
+                    '<nav aria-label="Page navigation"><ul class="pagination'.$this->extstyle.'">%s %s %s %s %s</ul></nav>',
+                    $this->getFirstButton(),
+                    $this->getPreviousButton(),
+                    $this->getActivePageWrapper($this->currentPage()),
+                    $this->getNextButton(),
+                    $this->getLastButton()
                 );
             } else {
                 return sprintf(
