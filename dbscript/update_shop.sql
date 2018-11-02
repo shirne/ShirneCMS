@@ -46,6 +46,8 @@ CREATE TABLE `sa_product_category` (
 
 CREATE TABLE `sa_product` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `lang` varchar(10) DEFAULT NULL COMMENT '语言',
+  `main_id` int(11) DEFAULT NULL COMMENT '主id',
   `cate_id` int(11) DEFAULT NULL,
   `title` varchar(150) DEFAULT NULL,
   `vice_title` varchar(200) DEFAULT NULL,

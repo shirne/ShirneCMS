@@ -2,6 +2,22 @@
 /*!40101 SET NAMES utf8 */;
 
 --
+-- Table structure for table `sa_lang`
+--
+
+DROP TABLE IF EXISTS `sa_lang`;
+CREATE TABLE `sa_lang` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `lang` varchar(10) NOT NULL,
+  `table` varchar(20) NOT NULL DEFAULT '',
+  `field` varchar(20) DEFAULT '',
+  `key_id` int(11) DEFAULT '',
+  `value` TEXT,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `lang` (`lang`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
 -- Table structure for table `sa_manager`
 --
 
@@ -127,6 +143,8 @@ CREATE TABLE `sa_adv_group` (
 DROP TABLE IF EXISTS `sa_adv_item`;
 CREATE TABLE `sa_adv_item` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `lang` varchar(10) DEFAULT NULL COMMENT '语言',
+  `main_id` int(11) DEFAULT NULL COMMENT '主id',
   `group_id` int(11) DEFAULT NULL COMMENT '分组ID',
   `title` varchar(100) DEFAULT NULL,
   `image` varchar(150) DEFAULT '',
@@ -149,6 +167,8 @@ CREATE TABLE `sa_adv_item` (
 DROP TABLE IF EXISTS `sa_links`;
 CREATE TABLE `sa_links` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `lang` varchar(10) DEFAULT NULL COMMENT '语言',
+  `main_id` int(11) DEFAULT NULL COMMENT '主id',
   `title` varchar(100) DEFAULT NULL,
   `logo` varchar(150) DEFAULT '',
   `url` varchar(150) DEFAULT NULL,
@@ -163,6 +183,8 @@ CREATE TABLE `sa_links` (
 DROP TABLE IF EXISTS `sa_notice`;
 CREATE TABLE `sa_notice` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `lang` varchar(10) DEFAULT NULL COMMENT '语言',
+  `main_id` int(11) DEFAULT NULL COMMENT '主id',
   `title` varchar(100) DEFAULT NULL,
   `url` varchar(150) DEFAULT NULL,
   `status` tinyint(4) DEFAULT NULL,
@@ -218,6 +240,7 @@ CREATE TABLE `sa_member` (
   `username` varchar(20) NOT NULL,
   `realname` varchar(20) NOT NULL DEFAULT '',
   `level_id` int(11) DEFAULT '0',
+  `lang` varchar(10) DEFAULT NULL COMMENT '语言',
   `mobile` varchar(20) NOT NULL DEFAULT '',
   `mobile_bind` tinyint(4) DEFAULT '0',
   `email` varchar(100) DEFAULT '',
@@ -539,6 +562,8 @@ CREATE TABLE `sa_checkcode_limit` (
 DROP TABLE IF EXISTS `sa_page`;
 CREATE TABLE `sa_page` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `lang` varchar(10) DEFAULT NULL COMMENT '语言',
+  `main_id` int(11) DEFAULT NULL COMMENT '主id',
   `title` varchar(100) NOT NULL,
   `vice_title` varchar(100) NOT NULL DEFAULT '' COMMENT '副标题',
   `group` varchar(50) NOT NULL DEFAULT '',
@@ -574,6 +599,8 @@ CREATE TABLE `sa_page_images` (
 DROP TABLE IF EXISTS `sa_page_group`;
 CREATE TABLE `sa_page_group` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `lang` varchar(10) DEFAULT NULL COMMENT '语言',
+  `main_id` int(11) DEFAULT NULL COMMENT '主id',
   `group_name` varchar(100) NOT NULL,
   `group` varchar(50) NOT NULL DEFAULT '',
   `sort` int(11) DEFAULT 0,
@@ -588,6 +615,8 @@ CREATE TABLE `sa_page_group` (
 DROP TABLE IF EXISTS `sa_article`;
 CREATE TABLE `sa_article` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `lang` varchar(10) DEFAULT NULL COMMENT '语言',
+  `main_id` int(11) DEFAULT NULL COMMENT '主id',
   `title` varchar(100) DEFAULT NULL,
   `vice_title` varchar(200) DEFAULT NULL,
   `cover` varchar(100) DEFAULT NULL COMMENT '封面图',
