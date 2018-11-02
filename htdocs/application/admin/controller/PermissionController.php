@@ -46,9 +46,9 @@ class PermissionController extends BaseController
                 $this->error($validate->getError());
             } else {
                 if (Db::name('Permission')->insert($data)) {
-                    $this->success("添加成功", url('permission/index'));
+                    $this->success(lang('Add success!'), url('permission/index'));
                 } else {
-                    $this->error("添加失败");
+                    $this->error(lang('Add failed!'));
                 }
             }
         }
@@ -75,9 +75,9 @@ class PermissionController extends BaseController
             } else {
                 $data['id']=$id;
                 if (Db::name('Permission')->update()) {
-                    $this->success("更新成功", url('permission/index'));
+                    $this->success(lang('Update success!'), url('permission/index'));
                 } else {
-                    $this->error("更新失败");
+                    $this->error(lang('Update failed!'));
                 }
 
             }
@@ -100,9 +100,9 @@ class PermissionController extends BaseController
         $model = Db::name('Permission');
         $result = $model->where('id',$id)->delete();
         if($result){
-            $this->success("删除成功", url('permission/index'));
+            $this->success(lang('Delete success!'), url('permission/index'));
         }else{
-            $this->error("删除失败");
+            $this->error(lang('Delete failed!'));
         }
     }
 }

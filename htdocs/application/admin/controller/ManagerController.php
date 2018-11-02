@@ -108,9 +108,9 @@ class ManagerController extends BaseController
                 $model=ManagerModel::create($data);
                 if ($model->id) {
                     user_log($this->mid,'addmanager',1,'添加管理员'.$model->id ,'manager');
-                    $this->success("添加成功", url('manager/index'));
+                    $this->success(lang('Add success!'), url('manager/index'));
                 } else {
-                    $this->error("添加失败");
+                    $this->error(lang('Add failed!'));
                 }
             }
         }
@@ -150,9 +150,9 @@ class ManagerController extends BaseController
                 //更新
                 if ($model->allowField(true)->update($data)) {
                     user_log($this->mid,'addmanager',1,'修改管理员'.$model->id ,'manager');
-                    $this->success("更新成功", url('manager/index'));
+                    $this->success(lang('Update success!'), url('manager/index'));
                 } else {
-                    $this->error("未做任何修改,更新失败");
+                    $this->error(lang('Update failed!'));
                 }        
             }
         }
@@ -185,9 +185,9 @@ class ManagerController extends BaseController
             if(!is_array($model['detail']))$model['detail']=array();
             $model['detail']=implode(',',$model['detail']);
             if(Db::name('ManagerPermision')->update($model)){
-                $this->success("更新成功", url('manager/index'));
+                $this->success(lang('Update success!'), url('manager/index'));
             }else {
-                $this->error("未做任何修改,更新失败");
+                $this->error(lang('Update failed!'));
             }
         }
         $model['global']=explode(',',$model['global']);
@@ -216,9 +216,9 @@ class ManagerController extends BaseController
         	$data['status']=1;
         }
         if($result->save($data)){
-            $this->success("状态更新成功", url('manager/index'));
+            $this->success(lang('Update success!'), url('manager/index'));
         }else{
-            $this->error("状态更新失败");
+            $this->error(lang('Update failed!'));
         }
     }
 }

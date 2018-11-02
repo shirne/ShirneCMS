@@ -258,9 +258,9 @@ class MemberController extends BaseController
                 $member=MemberModel::create($data);
                 if ($member->id) {
                     user_log($this->mid,'adduser',1,'添加会员'.$member->id ,'manager');
-                    $this->success("用户添加成功", url('member/index'));
+                    $this->success(lang('Add success!'), url('member/index'));
                 } else {
-                    $this->error("用户添加失败");
+                    $this->error(lang('Add failed!'));
                 }
             }
         }
@@ -296,9 +296,9 @@ class MemberController extends BaseController
                 $member=MemberModel::get($id);
                 if ($member->allowField(true)->save($data)) {
                     user_log($this->mid,'updateuser',1,'修改会员资料'.$id ,'manager');
-                    $this->success("用户信息更新成功", url('member/index'));
+                    $this->success(lang('Update success!'), url('member/index'));
                 } else {
-                    $this->error("未做任何修改,用户信息更新失败");
+                    $this->error(lang('Update failed!'));
                 }        
             }
         }
@@ -342,9 +342,9 @@ class MemberController extends BaseController
         $data['status']=$type==1?1:0;
         if($model->where('id','in',idArr($id))->update($data)){
             user_log($this->mid,$type==1?'enableuser':'disableuser',1,($type==1?'启用会员':'禁用会员').':'.$id ,'manager');
-            $this->success("状态更新成功", url('member/index'));
+            $this->success(lang('Update success!'), url('member/index'));
         }else{
-            $this->error("状态更新失败");
+            $this->error(lang('Update failed!'));
         }
     }
 

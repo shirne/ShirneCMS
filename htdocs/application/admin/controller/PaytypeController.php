@@ -63,10 +63,10 @@ class PaytypeController extends BaseController
                 unset($data['delete_qrcode']);
                 if (Db::name('Paytype')->insert($data)) {
                     delete_image($delete_images);
-                    $this->success("添加成功", url('Paytype/index'));
+                    $this->success(lang('Add success!'), url('Paytype/index'));
                 } else {
                     delete_image($data['qrcode']);
-                    $this->error("添加失败");
+                    $this->error(lang('Add failed!'));
                 }
             }
         }
@@ -100,10 +100,10 @@ class PaytypeController extends BaseController
                 }
                 $data['id']=$id;
                 if (Db::name('Paytype')->update($data)) {
-                    $this->success("更新成功", url('Paytype/index'));
+                    $this->success(lang('Update success!'), url('Paytype/index'));
                 } else {
                     delete_image($data['qrcode']);
-                    $this->error("更新失败");
+                    $this->error(lang('Update failed!'));
                 }
 
             }
@@ -130,9 +130,9 @@ class PaytypeController extends BaseController
         $model = Db::name('Paytype');
         $result = $model->delete($id);
         if($result){
-            $this->success("付款方式删除成功", url('Paytype/index'));
+            $this->success(lang('Delete success!'), url('Paytype/index'));
         }else{
-            $this->error("付款方式删除失败");
+            $this->error(lang('Delete failed!'));
         }
     }
 

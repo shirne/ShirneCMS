@@ -56,9 +56,9 @@ class SpecificationsController extends BaseController
         $model = Db::name('Specifications');
         $result = $model->delete($id);
         if($result){
-            $this->success("删除成功", url('specifications/index'));
+            $this->success(lang('Delete success!'), url('specifications/index'));
         }else{
-            $this->error("删除失败");
+            $this->error(lang('Delete failed!'));
         }
     }
 }

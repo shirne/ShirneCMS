@@ -54,9 +54,9 @@ class LinksController extends BaseController
                 }
 
                 if (Db::name('Links')->insert($data)) {
-                    $this->success("链接添加成功", url('links/index'));
+                    $this->success(lang('Add success!'), url('links/index'));
                 } else {
-                    $this->error("链接添加失败");
+                    $this->error(lang('Add failed!'));
                 }
             }
         }
@@ -94,9 +94,9 @@ class LinksController extends BaseController
                 $data['id']=$id;
                 if (Db::name('Links')->update($data)) {
                     delete_image($delete_images);
-                    $this->success("更新成功", url('links/index'));
+                    $this->success(lang('Update success!'), url('links/index'));
                 } else {
-                    $this->error("更新失败");
+                    $this->error(lang('Update failed!'));
                 }
             }
         }
@@ -120,9 +120,9 @@ class LinksController extends BaseController
         $model = Db::name('links');
         $result = $model->delete($id);
         if($result){
-            $this->success("链接删除成功", url('links/index'));
+            $this->success(lang('Delete success!'), url('links/index'));
         }else{
-            $this->error("链接删除失败");
+            $this->error(lang('Delete failed!'));
         }
     }
 }

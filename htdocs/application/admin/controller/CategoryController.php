@@ -51,10 +51,10 @@ class CategoryController extends BaseController
                 $result=Db::name('category')->insert($data);
                 if ($result) {
                     CategoryFacade::clearCache();
-                    $this->success("添加成功", url('category/index'));
+                    $this->success(lang('Add success!'), url('category/index'));
                 } else {
                     delete_image([$data['icon'],$data['image']]);
-                    $this->error("添加失败");
+                    $this->error(lang('Add failed!'));
                 }
             }
         }
@@ -100,10 +100,10 @@ class CategoryController extends BaseController
                 if ($result) {
                     delete_image($delete_images);
                     CategoryFacade::clearCache();
-                    $this->success("保存成功", url('category/index'));
+                    $this->success(lang('Update success!'), url('category/index'));
                 } else {
                     delete_image([$data['icon'],$data['image']]);
-                    $this->error("保存失败");
+                    $this->error(lang('Update failed!'));
                 }
             }
         }else{
@@ -141,9 +141,9 @@ class CategoryController extends BaseController
         $result = Db::name('Category')->where('id','in',$id)->delete();
         if($result){
             CategoryFacade::clearCache();
-            $this->success("分类删除成功", url('category/index'));
+            $this->success(lang('Delete success!'), url('category/index'));
         }else{
-            $this->error("分类删除失败");
+            $this->error(lang('Delete failed!'));
         }
     }
 }

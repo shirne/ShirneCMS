@@ -18,8 +18,22 @@ function writelog($message,$type=\think\Log::INFO){
     }
 }
 
-function file_download($filename,$data){
-    return \think\Response::create($data, '\\extcore\\FileDownload', 200, [], ['file_name'=>$filename]);
+/**
+ * tp已支持下载输出
+ * @param $filename
+ * @param $data
+ * @param $mime
+ * @return \think\Response
+ */
+function file_download($filename,$data='',$mime=''){
+    //return \think\Response::create($data, '\\extcore\\FileDownload', 200, [], ['file_name'=>$filename]);
+    $response = \think\Response::create($data?:$filename, 'download', 200);
+    if($mime)$response->mimeType($mime);
+    if(!empty($data)){
+        $response->isContent(true);
+        $response->name($filename);
+    }
+    return $response;
 }
 
 /** =====================================  固态数据类函数  ===================================== **/
@@ -36,27 +50,27 @@ function getMoneyFields(){
 }
 function getLogTypes(){
     return [
-        'consume'=>'消费',
-        'recharge'=>'充值'
+        'consume'=>lang('Consume'),
+        'recharge'=>lang('Recharge'),
     ];
 }
 function getMemberTypes(){
     return [
-        1=>'普通会员',
-        2=>'内部员工'
+        1=>lang('Member'),
+        2=>lang('Employee')
     ];
 }
 function getArticleTypes(){
     return [
-        1=>'普通',
-        2=>'置顶',
-        3=>'热门',
-        4=>'推荐'
+        1=>lang('Normal'),
+        2=>lang('Top'),
+        3=>lang('Hot'),
+        4=>lang('Recommend')
     ];
 }
 function getProductTypes(){
     return [
-        1=>'普通'
+        1=>lang('Normal')
     ];
 }
 function getOauthTypes(){
@@ -79,10 +93,10 @@ function getOauthTypes(){
 function settingGroups($name = '')
 {
     $groups = array(
-        'common' => '通用配置',
-        'member' => '会员配置',
-        'wechat' => '微信配置',
-        'advance' => '高级配置'
+        'common' => lang('Common Settings'),
+        'member' => lang('Member Settings'),
+        'third' => lang('Third Settings'),
+        'advance' => lang('Advance Settings'),
     );
     if (empty($name)) {
         return $groups;
@@ -99,15 +113,15 @@ function settingGroups($name = '')
 function settingTypes($key = '')
 {
     $types = array();
-    $types['text'] = "单行文本";
-    $types['number'] = "数字";
-    $types['bool'] = "布尔";
-    $types['radio'] = "单选";
-    $types['check'] = "多选";
-    $types['select'] = "下拉选择";
-    $types['textarea'] = "多行文本";
-    $types['location'] = "位置选择";
-    $types['html'] = "编辑器";
+    $types['text'] = lang('Text Field');
+    $types['number'] = lang('Numberic');
+    $types['bool'] = lang('True False');
+    $types['radio'] = lang('Radio Box');
+    $types['check'] = lang('Check Box');
+    $types['select'] = lang('Select');
+    $types['textarea'] = lang('Textarea');
+    $types['location'] = lang('Location Picker');
+    $types['html'] = lang('Editor');
 
     if (empty($key)) {
         return $types;
@@ -142,15 +156,229 @@ function banklist(){
 function payTypes($type = '')
 {
     $types = array(
-        'wechat' => '微信支付',
-        'alipay' => '支付宝支付',
-        'unioncard' => '银联卡转帐',
+        'wechat' => lang('Wechat Pay'),
+        'alipay' => lang('Alipay '),
+        'unioncard' => lang('Unionpay'),
     );
     if (empty($type)) {
         return $types;
     } else {
         return $types[$type];
     }
+}
+
+
+/** =====================================  模板类函数  ===================================== **/
+
+/**
+ * 显示金额 (除以 100)
+ * @param $amount
+ * @return float|int
+ */
+function showmoney($amount){
+    return round($amount/100,2);
+}
+
+/**
+ * 显示卡号
+ * @param $cardno
+ * @param int $pos
+ * @param bool $fulllen
+ * @return string
+ */
+function showcardno($cardno,$pos=6,$fulllen=false){
+    $l=strlen($cardno)-$pos;
+    return str_repeat('*',$fulllen?$l:3).substr($cardno,$l);
+}
+
+
+function showcashtype($type){
+    switch ($type){
+        case 'wechat':
+            return lang('Wechat');
+        case 'alipay':
+            return lang('Alipay');
+        default:
+            return lang('Unioncard');
+    }
+}
+
+/**
+ * 根据数据的最低价和最高价显示范围
+ * @param $row
+ * @return string
+ */
+function show_price($row){
+    $price=$row['min_price'];
+    if($row['max_price']>$row['min_price']){
+        $price .= ' ~ '.$row['min_price'];
+    }
+    return $price;
+}
+
+/**
+ * 仅转换参数，方便调用
+ * @param $time
+ * @param $replace
+ * @param $format
+ * @return false|string
+ */
+function showdate($time,$replace='-',$format='Y-m-d H:i:s'){
+    if(!empty($replace)){
+        if($replace!='-'){
+            $format=$replace;
+            $replace='';
+        }
+    }
+    return $time==0?$replace:date($format,$time);
+}
+
+/**
+ * 留言状态
+ * @param $status int
+ * @param bool $wrap
+ * @return string
+ */
+function feedback_status($status,$wrap=true)
+{
+    $statusText = array(lang('Unaudited'), lang('Audited'), lang('Hidden'));
+
+    return $wrap?wrap_label($statusText[$status],status_type($status)):$statusText[$status];
+}
+
+/**
+ * 审核状态
+ * @param $status
+ * @param bool $wrap
+ * @return mixed
+ */
+function audit_status($status,$wrap=true)
+{
+    $statusText = array(lang('Unaudited'), lang('Confirmed'), lang('Invalid'));
+    return $wrap?wrap_label($statusText[$status],status_type($status)):$statusText[$status];
+}
+
+/**
+ * 显示状态
+ * @param $status
+ * @param bool $wrap
+ * @return mixed
+ */
+function show_status($status,$wrap=true)
+{
+    $statusText = array(lang('Hidden'), lang('Shown'));
+    return $wrap?wrap_label($statusText[$status],status_type($status)):$statusText[$status];
+}
+function status_type($status){
+    return ['warning','success','default'][$status];
+}
+
+/**
+ * 订单状态
+ * @param $status
+ * @param bool $wrap
+ * @return string
+ */
+function order_status($status,$wrap=true){
+    switch ($status){
+        case "-2":
+            return $wrap?wrap_label(lang('Cancelled'),'default'):lang('Cancelled');
+        case "-1":
+            return $wrap?wrap_label(lang('Invalid'),'default'):lang('Invalid');
+        case "0":
+            return $wrap?wrap_label(lang('Unpaid'),'warning'):lang('Unpaid');
+        case "1":
+            return $wrap?wrap_label(lang('Unshipped'),'danger'):lang('Unshipped');
+        case "2":
+            return $wrap?wrap_label(lang('Unreceived'),'secondary'):lang('Unreceived');
+        case "3":
+            return $wrap?wrap_label(lang('Unevaluate'),'info'):lang('Unevaluate');
+        case "4":
+            return $wrap?wrap_label(lang('Completed'),'success'):lang('Completed');
+
+    }
+    return $wrap?wrap_label(lang('Unknown'),'default'):lang('Unknown');
+}
+function money_type($type,$wrap=true){
+    switch ($type){
+        case "money":
+            return $wrap?wrap_label(lang('Balance'),'success'):lang('Balance');
+        case "credit":
+            return $wrap?wrap_label(lang('Credit'),'info'):lang('Credit');
+
+    }
+    return $wrap?wrap_label(lang('Unknown'),'default'):lang('Unknown');
+}
+function wrap_label($text,$type='secondary'){
+    return "<span class=\"badge badge-$type\">$text</span>";
+}
+
+function maskphone($phone){
+    $l=strlen($phone);
+    return substr($phone,0,3).str_repeat('*',$l-7).substr($phone,$l-4);
+}
+
+
+function getWeek($d){
+    $time=strtotime($d);
+    $w=date('N',$time);
+    static $weeks=array('','星期一','星期二','星期三','星期四','星期五','星期六','星期日');
+    return $weeks[intval($w)];
+}
+
+/**
+ * 字符串截取
+ * @param $str
+ * @param $len
+ * @param string $dot
+ * @return mixed|string
+ */
+function cutstr($str,$len,$dot='...'){
+    $str=html_entity_decode($str);
+    $str=strip_tags($str,'');
+
+    $charset = 'utf-8';
+    if (strlen($str) <= $len) {
+        return $str;
+    }
+
+    $str = str_replace(array( '&nbsp;', '&amp;', '&quot;', '&lt;', '&gt;'), array(' ','&', '"', '<', '>'), $str);
+    $str = preg_replace('/\s+/',' ',$str);
+    $strcut = '';
+    if (strtolower($charset) == 'utf-8') {
+        $n = $tn = $noc = 0;
+        while ($n < strlen($str)) {
+            $t = ord($str[$n]);
+            if ($t == 9 || $t == 10 || (32 <= $t && $t <= 126)) {
+                $tn = 1; $n++; $noc++;
+            } elseif (194 <= $t && $t <= 223) {
+                $tn = 2; $n += 2; $noc += 2;
+            } elseif (224 <= $t && $t <= 239) {
+                $tn = 3; $n += 3; $noc += 2;
+            } elseif (240 <= $t && $t <= 247) {
+                $tn = 4; $n += 4; $noc += 2;
+            } elseif (248 <= $t && $t <= 251) {
+                $tn = 5; $n += 5; $noc += 2;
+            } elseif ($t == 252 || $t == 253) {
+                $tn = 6; $n += 6; $noc += 2;
+            } else {
+                $n++;
+            }
+            if($noc >= $len) {
+                break;
+            }
+        }
+        if ($noc > $len) {
+            $n -= $tn;
+        }
+        $strcut = substr($str, 0, $n);
+    } else {
+        for ($i = 0; $i < $len; $i++) {
+            $strcut.= ord($str[$i]) > 127 ? $str[$i] . $str[++$i] : $str[$i];
+        }
+    }
+    $strcut = str_replace(array('"', '<', '>'), array( '&quot;', '&lt;', '&gt;'), $strcut);
+    return $strcut . $dot;
 }
 
 /** =====================================  数据类函数  ===================================== **/
@@ -202,7 +430,7 @@ function user_log($uid, $action, $result, $remark = '', $tbl = 'member')
         'ip' => app()->request->ip(),
         'action' => $action,
         'result' => intval($result),
-        'remark' => $remark
+        'remark' => json_encode(is_array($remark)?$remark:[$remark])
     ));
 }
 
@@ -213,6 +441,7 @@ function user_log($uid, $action, $result, $remark = '', $tbl = 'member')
  * @param $money
  * @param $reson
  * @param string $type
+ * @param string $field
  * @return bool|mixed
  */
 function money_log($uid, $money, $reson, $type='',$field='money')
@@ -294,9 +523,103 @@ function getMemberSons($userid,$level=1,$getid=true){
     return $sons;
 }
 
+/**
+ * 获取全部配置
+ * @param $all bool 是否全部数据
+ * @param $group bool 是否分组
+ * @param $parse bool 是否解析值 针对多选解析成数组
+ * @return array
+ */
+function getSettings($all = false, $group = false, $parse=true)
+{
+    static $settings;
+    if (empty($settings)) {
+        $settings = cache('setting');
+        if (empty($settings)) {
+            $settings = \think\Db::name('setting')->order('sort ASC,id ASC')->select();
+            foreach ($settings as $k=>$v){
+                if($v['type']=='bool' && empty($v['data']))$v['data']="1:Yes\n0:No";
+                $settings[$k]['data']=parse_data($v['data']);
+            }
+            cache('setting', $settings);
+        }
+    }
+
+    $return = array();
+    if ($group) {
+        foreach ($settings as $set) {
+            if (empty($set['group'])) $set['group'] = 'common';
+            if (!isset($return[$set['group']])) $return[$set['group']] = array();
+            if($parse && $set['type']=='check') {
+                $set['value'] = @unserialize($set['value']);
+                if(empty($set['value']))$set['value']=array();
+            }
+            $return[$set['group']][$set['key']] = $all ? $set : $set['value'];
+        }
+    } else {
+        foreach ($settings as $set) {
+            if($parse && $set['type']=='check') {
+                $set['value'] = @unserialize($set['value']);
+                if(empty($set['value']))$set['value']=array();
+            }
+            $return[$set['key']] = $all ? $set : $set['value'];
+        }
+    }
+    return $return;
+}
+
+function getSetting($key){
+    $settings=getSettings();
+    if(isset($settings[$key]))return $settings[$key];
+    else return null;
+}
+function setSetting($key,$v){
+    \think\Db::name('setting')->where('key',$key)->update(array('value'=>$v));
+    cache('setting', null);
+}
+
+/**
+ * 解析数据
+ * @param $d
+ * @return array
+ */
+function parse_data($d)
+{
+    if(empty($d))return array();
+    $arr=array();
+    $darr=preg_split('/[\n\r]+/',$d);
+    foreach ($darr as $a){
+        $idx=stripos($a,':');
+        if($idx>0){
+            $arr[substr($a,0,$idx)]=substr($a,$idx+1);
+        }else{
+            $arr[$a]=$a;
+        }
+    }
+    return $arr;
+}
+
+function serialize_data($arr)
+{
+    $str=[];
+    foreach($arr as $k=>$v){
+        if($k==$v){
+            $str[]=$v;
+        }else{
+            $str[]=$k.':'.$v;
+        }
+    }
+    return implode("\n",$str);
+}
 
 /** =====================================  功能类函数  ===================================== **/
 
+/**
+ * 判断头像图片是否微信头像
+ * 以确定更新用户资料时是否更新头像
+ * @param $avatar
+ * @return bool
+ */
 function is_wechat_avatar($avatar){
     if(empty($avatar)){
         return false;
@@ -312,14 +635,14 @@ function is_wechat_avatar($avatar){
     return false;
 }
 
+/**
+ * tp中已支持restore传入默认参数
+ * @param string $default
+ * @return $this|\think\response\Redirect
+ */
 function get_redirect($default=''){
-    $redirect=redirect()->restore();
-    $urldata=$redirect->getData();
-    if(empty($urldata)){
-        if(empty($default))$default=url('index/member/index');
-        return redirect($default);
-    }
-    return $redirect;
+    if(empty($default))$default=url('index/member/index');
+    return redirect()->restore($default);
 }
 
 function current_url($withqry=true){
@@ -329,11 +652,15 @@ function current_url($withqry=true){
 }
 
 function current_domain(){
-    return ($_SERVER['HTTPS']=="On"?"https":"http").'://'.$_SERVER['SERVER_NAME'];
+    return rtrim(url('/','',false,true),'/');
 }
 
 /**
  * 替换数组中的一个或几个键名对应的值
+ * @param $key
+ * @param $val
+ * @param string $search
+ * @return array|mixed|string
  */
 function searchKey($key,$val,$search=''){
     if(!is_array($search)){
@@ -356,13 +683,19 @@ function searchKey($key,$val,$search=''){
 
 /**
  * 过滤特殊字符
+ * 主要用于搜索关键字的过滤
+ * @param $str
+ * @return mixed
  */
 function filter_specchar($str){
     return preg_replace("/\/|\~|\!|\@|\#|\\$|\%|\^|\&|\*|\(|\)|\_|\+|\{|\}|\:|\<|\>|\?|\[|\]|\,|\.|\/|\;|\'|\`|\-|\=|\\\|\|/",'',$str);
 }
 
 /**
- * id参数转换成数组,用于批量操作
+ * id参数转换成数组
+ * 用于数据库主键批量操作
+ * @param $id
+ * @return array
  */
 function idArr($id){
     if(strpos($id,',')>0){
@@ -484,57 +817,6 @@ function implode_cmp($arr,$glue=','){
     return '';
 }
 
-function encode_password($pass, $salt = '')
-{
-    return md5(md5($pass) . $salt);
-}
-
-function compare_password($user,$password){
-    return encode_password($password,$user['salt'])===$user['password'];
-}
-
-function compare_secpassword($user,$password){
-    return encode_password($password,md5($user['id']))===$user['secpassword'];
-}
-
-
-/**
- * 显示金额 (除以 100)
- * @param $amount
- * @return float|int
- */
-function showmoney($amount){
-    return round($amount/100,2);
-}
-
-/**
- * 显示卡号
- */
-function showcardno($cardno,$pos=6,$fulllen=false){
-    $l=strlen($cardno)-$pos;
-    return str_repeat('*',$fulllen?$l:3).substr($cardno,$l);
-}
-
-
-function showcashtype($type){
-    switch ($type){
-        case 'wechat':
-            return "微信";
-        case 'alipay':
-            return "支付宝";
-        default:
-            return "银行卡";
-    }
-}
-
-function show_price($row){
-    $price=$row['min_price'];
-    if($row['max_price']>$row['min_price']){
-        $price .= ' ~ '.$row['min_price'];
-    }
-    return $price;
-}
-
 function fix_in_array($val,$arr){
     if(empty($arr))return false;
     return in_array($val,(array)$arr);
@@ -550,103 +832,21 @@ function array_min($arr,$column){
     $data=array_column($arr,$column);
     return min($data);
 }
-/**
- * 仅转换参数，方便调用
- * @param $time
- * @param $replace
- * @param $format
- * @return false|string
- */
-function showdate($time,$replace='-',$format='Y-m-d H:i:s'){
-    if(!empty($replace)){
-        if($replace!='-'){
-            $format=$replace;
-            $replace='';
-        }
-    }
-    return $time==0?$replace:date($format,$time);
-}
 
-/**
- * 留言状态
- * @param $status int
- * @param bool $wrap
- * @return string
- */
-function feedback_status($status,$wrap=true)
+function encode_password($pass, $salt = '')
 {
-    $statusText = array('未审核', '已审核', '隐藏');
-
-    return $wrap?wrap_label($statusText[$status],status_type($status)):$statusText[$status];
+    return md5(md5($pass) . $salt);
 }
 
-/**
- * 审核状态
- * @param $status
- * @param bool $wrap
- * @return mixed
- */
-function audit_status($status,$wrap=true)
-{
-    $statusText = array('待审核', '确认', '无效');
-    return $wrap?wrap_label($statusText[$status],status_type($status)):$statusText[$status];
+function compare_password($user,$password){
+    return encode_password($password,$user['salt'])===$user['password'];
 }
 
-/**
- * 显示状态
- * @param $status
- * @param bool $wrap
- * @return mixed
- */
-function show_status($status,$wrap=true)
-{
-    $statusText = array('隐藏', '显示');
-    return $wrap?wrap_label($statusText[$status],status_type($status)):$statusText[$status];
-}
-function status_type($status){
-    return ['warning','success','default'][$status];
+function compare_secpassword($user,$password){
+    return encode_password($password,md5($user['id']))===$user['secpassword'];
 }
 
-/**
- * 订单状态
- * @param $status
- * @param bool $wrap
- * @return string
- */
-function order_status($status,$wrap=true){
-    switch ($status){
-        case "-1":
-            return $wrap?wrap_label("已作废",'default'):"已作废";
-        case "0":
-            return $wrap?wrap_label("待支付",'warning'):"待支付";
-        case "1":
-            return $wrap?wrap_label("已支付",'danger'):"已支付";
-        case "2":
-            return $wrap?wrap_label("已发货",'info'):"已发货";
-        case "3":
-            return $wrap?wrap_label("已完成",'success'):"已完成";
 
-    }
-    return $wrap?wrap_label("未知",'default'):'未知';
-}
-function money_type($type,$wrap=true){
-    switch ($type){
-        case "money":
-            return $wrap?wrap_label("余额",'success'):"余额";
-        case "credit":
-            return $wrap?wrap_label("积分",'info'):"积分";
-
-    }
-    return $wrap?wrap_label("未知币种",'default'):'未知币种';
-}
-function wrap_label($text,$type='secondary'){
-    return "<span class=\"badge badge-$type\">$text</span>";
-}
-
-function maskphone($phone){
-    $l=strlen($phone);
-    return substr($phone,0,3).str_repeat('*',$l-7).substr($phone,$l-4);
-}
 
 function random_str($length = 6, $type = 'string', $convert = 0)
 {
@@ -713,95 +913,6 @@ function getSortedCategory(&$data, $pid = 0, $pre = "")
 }
 
 
-/**
- * 获取全部配置
- * @param $all bool 是否全部数据
- * @param $group bool 是否分组
- * @param $parse bool 是否解析值 针对多选解析成数组
- * @return array
- */
-function getSettings($all = false, $group = false, $parse=true)
-{
-    static $settings;
-    if (empty($settings)) {
-        $settings = cache('setting');
-        if (empty($settings)) {
-            $settings = \think\Db::name('setting')->order('sort ASC,id ASC')->select();
-            foreach ($settings as $k=>$v){
-                if($v['type']=='bool' && empty($v['data']))$v['data']="1:是\n0:否";
-                $settings[$k]['data']=parse_data($v['data']);
-            }
-            cache('setting', $settings);
-        }
-    }
-
-    $return = array();
-    if ($group) {
-        foreach ($settings as $set) {
-            if (empty($set['group'])) $set['group'] = 'common';
-            if (!isset($return[$set['group']])) $return[$set['group']] = array();
-            if($parse && $set['type']=='check') {
-                $set['value'] = @unserialize($set['value']);
-                if(empty($set['value']))$set['value']=array();
-            }
-            $return[$set['group']][$set['key']] = $all ? $set : $set['value'];
-        }
-    } else {
-        foreach ($settings as $set) {
-            if($parse && $set['type']=='check') {
-                $set['value'] = @unserialize($set['value']);
-                if(empty($set['value']))$set['value']=array();
-            }
-            $return[$set['key']] = $all ? $set : $set['value'];
-        }
-    }
-    return $return;
-}
-
-function getSetting($key){
-    $settings=getSettings();
-    if(isset($settings[$key]))return $settings[$key];
-    else return null;
-}
-function setSetting($key,$v){
-    \think\Db::name('setting')->where('key',$key)->update(array('value'=>$v));
-    cache('setting', null);
-}
-
-/**
- * 解析数据
- * @param $d
- * @return array
- */
-function parse_data($d)
-{
-    if(empty($d))return array();
-    $arr=array();
-    $darr=preg_split('/[\n\r]+/',$d);
-    foreach ($darr as $a){
-        $idx=stripos($a,':');
-        if($idx>0){
-            $arr[substr($a,0,$idx)]=substr($a,$idx+1);
-        }else{
-            $arr[$a]=$a;
-        }
-    }
-    return $arr;
-}
-
-function serialize_data($arr)
-{
-    $str=[];
-    foreach($arr as $k=>$v){
-        if($k==$v){
-            $str[]=$v;
-        }else{
-            $str[]=$k.':'.$v;
-        }
-    }
-    return implode("\n",$str);
-}
-
 function format_date($date_str, $format){
     $time=strtotime($date_str);
     if($time>0){
@@ -853,65 +964,6 @@ function http_request($url, $params = false, $ispost = 0)
     return $response;
 }
 
-function getWeek($d){
-    $time=strtotime($d);
-    $w=date('N',$time);
-    static $weeks=array('','星期一','星期二','星期三','星期四','星期五','星期六','星期日');
-    return $weeks[intval($w)];
-}
-
-/**
- * 字符串截取
- * @param $str
- * @param $len
- * @param string $dot
- * @return mixed|string
- */
-function cutstr($str,$len,$dot='...'){
-    $str=html_entity_decode($str);
-    $str=strip_tags($str,'');
-
-    $charset = 'utf-8';
-    if (strlen($str) <= $len) {
-        return $str;
-    }
-    $str = str_replace(array( '&nbsp;', '&amp;', '&quot;', '&lt;', '&gt;'), array(' ','&', '"', '<', '>'), $str);
-    $strcut = '';
-    if (strtolower($charset) == 'utf-8') {
-        $n = $tn = $noc = 0;
-        while ($n < strlen($str)) {
-            $t = ord($str[$n]);
-            if ($t == 9 || $t == 10 || (32 <= $t && $t <= 126)) {
-                $tn = 1; $n++; $noc++;
-            } elseif (194 <= $t && $t <= 223) {
-                $tn = 2; $n += 2; $noc += 2;
-            } elseif (224 <= $t && $t <= 239) {
-                $tn = 3; $n += 3; $noc += 2;
-            } elseif (240 <= $t && $t <= 247) {
-                $tn = 4; $n += 4; $noc += 2;
-            } elseif (248 <= $t && $t <= 251) {
-                $tn = 5; $n += 5; $noc += 2;
-            } elseif ($t == 252 || $t == 253) {
-                $tn = 6; $n += 6; $noc += 2;
-            } else {
-                $n++;
-            }
-            if($noc >= $len) {
-                break;
-            }
-        }
-        if ($noc > $len) {
-            $n -= $tn;
-        }
-        $strcut = substr($str, 0, $n);
-    } else {
-        for ($i = 0; $i < $len; $i++) {
-            $strcut.= ord($str[$i]) > 127 ? $str[$i] . $str[++$i] : $str[$i];
-        }
-    }
-    $strcut = str_replace(array('&', '"', '<', '>'), array('&amp;', '&quot;', '&lt;', '&gt;'), $strcut);
-    return $strcut . $dot;
-}
 
 function gener_qrcode($text,$size=300,$pad=10,$errLevel='high'){
     $qrCode = new \Endroid\QrCode\QrCode();

@@ -47,9 +47,9 @@ class NoticeController extends BaseController
                 $data['manager_id'] = session('adminId');
                 $model=NoticeModel::create($data);
                 if ($model->getLastInsID()) {
-                    $this->success("添加成功", url('Notice/index'));
+                    $this->success(lang('Add success!'), url('Notice/index'));
                 } else {
-                    $this->error("添加失败");
+                    $this->error(lang('Add failed!'));
                 }
             }
         }
@@ -75,9 +75,9 @@ class NoticeController extends BaseController
                 $model=NoticeModel::get($id);
 
                 if ($model->allowField(true)->save($data)) {
-                    $this->success("更新成功", url('Notice/index'));
+                    $this->success(lang('Update success!'), url('Notice/index'));
                 } else {
-                    $this->error("更新失败");
+                    $this->error(lang('Update failed!'));
                 }
             }
         }
@@ -100,9 +100,9 @@ class NoticeController extends BaseController
         $model = Db::name('Notice');
         $result = $model->delete($id);
         if($result){
-            $this->success("删除成功", url('Notice/index'));
+            $this->success(lang('Delete success!'), url('Notice/index'));
         }else{
-            $this->error("删除失败");
+            $this->error(lang('Delete failed!'));
         }
     }
 

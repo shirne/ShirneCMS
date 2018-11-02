@@ -63,10 +63,10 @@ class PageController extends BaseController
                 }
                 $model=PageModel::create($data);
                 if ($model['id']) {
-                    $this->success("添加成功", url('page/index'));
+                    $this->success(lang('Add success!'), url('page/index'));
                 } else {
                     delete_image($data['icon']);
-                    $this->error("添加失败");
+                    $this->error(lang('Add failed!'));
                 }
             }
         }
@@ -102,10 +102,10 @@ class PageController extends BaseController
                 }
                 if ($model->allowField(true)->save($data)) {
                     delete_image($delete_images);
-                    $this->success("更新成功", url('page/index'));
+                    $this->success(lang('Update success!'), url('page/index'));
                 } else {
                     delete_image($data['icon']);
-                    $this->error("更新失败");
+                    $this->error(lang('Update failed!'));
                 }
             }
         }
@@ -143,9 +143,9 @@ class PageController extends BaseController
         $model = Db::name('page');
         $result = $model->where('id','in',idArr($id))->delete();
         if($result){
-            $this->success("删除成功", url('page/index'));
+            $this->success(lang('Delete success!'), url('page/index'));
         }else{
-            $this->error("删除失败");
+            $this->error(lang('Delete failed!'));
         }
     }
 
@@ -192,10 +192,10 @@ class PageController extends BaseController
                 $model = Db::name("PageImages");
                 $url=url('page/imagelist',array('aid'=>$aid));
                 if ($model->insert($data)) {
-                    $this->success("添加成功",$url);
+                    $this->success(lang('Add success!'),$url);
                 } else {
                     delete_image($data['image']);
-                    $this->error("添加失败");
+                    $this->error(lang('Add failed!'));
                 }
             }
         }
@@ -234,10 +234,10 @@ class PageController extends BaseController
                 $data['id']=$id;
                 if ($model->update($data)) {
                     delete_image($delete_images);
-                    $this->success("更新成功", $url);
+                    $this->success(lang('Update success!'), $url);
                 } else {
                     delete_image($data['image']);
-                    $this->error("更新失败");
+                    $this->error(lang('Update failed!'));
                 }
             }
         }else{
@@ -264,9 +264,9 @@ class PageController extends BaseController
         $model = Db::name('PageImages');
         $result = $model->delete($id);
         if($result){
-            $this->success("删除成功", url('page/imagelist',array('aid'=>$aid)));
+            $this->success(lang('Delete success!'), url('page/imagelist',array('aid'=>$aid)));
         }else{
-            $this->error("删除失败");
+            $this->error(lang('Delete failed!'));
         }
     }
 
@@ -332,9 +332,9 @@ class PageController extends BaseController
         }
         if($result){
             cache('page_group',NULL);
-            $this->success("删除成功", url('page/groups'));
+            $this->success(lang('Delete success!'), url('page/groups'));
         }else{
-            $this->error("删除失败");
+            $this->error(lang('Delete failed!'));
         }
     }
 }

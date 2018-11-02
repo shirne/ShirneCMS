@@ -82,10 +82,10 @@ class ArticleController extends BaseController
                 if ($model->id) {
                     delete_image($delete_images);
                     user_log($this->mid,'addarticle',1,'添加文章 '.$model->id ,'manager');
-                    $this->success("添加成功", url('Article/index'));
+                    $this->success(lang('Add success!'), url('Article/index'));
                 } else {
                     delete_image($data['cover']);
-                    $this->error("添加失败");
+                    $this->error(lang('Add failed!'));
                 }
             }
         }
@@ -165,9 +165,9 @@ class ArticleController extends BaseController
             Db::name('articleDigg')->whereIn("article_id",idArr($id))->delete();
             Db::name('articleImages')->whereIn("article_id",idArr($id))->delete();
             user_log($this->mid,'deletearticle',1,'删除文章 '.$id ,'manager');
-            $this->success("删除成功", url('Article/index'));
+            $this->success(lang('Delete success!'), url('Article/index'));
         }else{
-            $this->error("删除失败");
+            $this->error(lang('Delete failed!'));
         }
     }
 
@@ -235,10 +235,10 @@ class ArticleController extends BaseController
                 $model = Db::name("ArticleImages");
                 $url=url('article/imagelist',array('aid'=>$aid));
                 if ($model->insert($data)) {
-                    $this->success("添加成功",$url);
+                    $this->success(lang('Add success!'),$url);
                 } else {
                     delete_image($data['image']);
-                    $this->error("添加失败");
+                    $this->error(lang('Add failed!'));
                 }
             }
         }
@@ -277,10 +277,10 @@ class ArticleController extends BaseController
                 $data['id']=$id;
                 if ($model->update($data)) {
                     delete_image($delete_images);
-                    $this->success("更新成功", $url);
+                    $this->success(lang('Update success!'), $url);
                 } else {
                     delete_image($data['image']);
-                    $this->error("更新失败");
+                    $this->error(lang('Update failed!'));
                 }
             }
         }else{
@@ -307,9 +307,9 @@ class ArticleController extends BaseController
         $model = Db::name('ArticleImages');
         $result = $model->delete($id);
         if($result){
-            $this->success("删除成功", url('article/imagelist',array('aid'=>$aid)));
+            $this->success(lang('Delete success!'), url('article/imagelist',array('aid'=>$aid)));
         }else{
-            $this->error("删除失败");
+            $this->error(lang('Delete failed!'));
         }
     }
 
@@ -405,9 +405,9 @@ class ArticleController extends BaseController
         $result = $model->where('id','in',idArr($id))->delete();
         if($result){
             user_log($this->mid,'deletecomment',1,'删除评论 '.$id ,'manager');
-            $this->success("删除成功", url('Article/comments'));
+            $this->success(lang('Delete success!'), url('Article/comments'));
         }else{
-            $this->error("删除失败");
+            $this->error(lang('Delete failed!'));
         }
     }
 }

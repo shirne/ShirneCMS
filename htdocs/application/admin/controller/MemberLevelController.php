@@ -98,9 +98,9 @@ class MemberLevelController extends BaseController
                 if ($insertId!==false) {
                     cache('levels', null);
                     user_log($this->mid,'addlevel',1,'添加会员组'.$insertId ,'manager');
-                    $this->success("添加成功", url('memberLevel/index'));
+                    $this->success(lang('Add success!'), url('memberLevel/index'));
                 } else {
-                    $this->error("添加失败");
+                    $this->error(lang('Add failed!'));
                 }
             }
         }
@@ -128,9 +128,9 @@ class MemberLevelController extends BaseController
                 if ($model->allowField(true)->save($data)) {
                     cache('levels', null);
                     user_log($this->mid,'updatelevel',1,'修改会员组'.$id ,'manager');
-                    $this->success("更新成功", url('memberLevel/index'));
+                    $this->success(lang('Update success!'), url('memberLevel/index'));
                 } else {
-                    $this->error("更新失败");
+                    $this->error(lang('Update failed!'));
                 }
             }
         }
@@ -155,9 +155,9 @@ class MemberLevelController extends BaseController
         $result = $model->delete($id);
         if($result){
             cache('levels', null);
-            $this->success("删除成功", url('memberLevel/index'));
+            $this->success(lang('Delete success!'), url('memberLevel/index'));
         }else{
-            $this->error("删除失败");
+            $this->error(lang('Delete failed!'));
         }
     }
 }

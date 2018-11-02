@@ -177,9 +177,9 @@ class SettingController extends BaseController
             } else {
                 if (SettingModel::create($data)) {
                     cache('setting', null);
-                    $this->success("字段添加成功", url('setting/advance'));
+                    $this->success(lang('Add success!'), url('setting/advance'));
                 } else {
-                    $this->error("字段添加失败");
+                    $this->error(lang('Add failed!'));
                 }
             }
 
@@ -210,9 +210,9 @@ class SettingController extends BaseController
                 $model=SettingModel::get($id);
                 if ($model->allowField(true)->save($data)) {
                     cache('setting',null);
-                    $this->success("字段更新成功", url('setting/advance'));
+                    $this->success(lang('Update success!'), url('setting/advance'));
                 } else {
-                    $this->error("字段更新失败");
+                    $this->error(lang('Update failed!'));
                 }
 
             }
@@ -240,9 +240,9 @@ class SettingController extends BaseController
 
         $result = $model->delete($id);
         if($result){
-            $this->success("删除成功", url('setting/advance'));
+            $this->success(lang('Delete success!'), url('setting/advance'));
         }else{
-            $this->error("删除失败");
+            $this->error(lang('Delete failed!'));
         }
     }
 

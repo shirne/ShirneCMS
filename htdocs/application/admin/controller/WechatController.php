@@ -65,9 +65,9 @@ class WechatController extends BaseController
                 }
                 $model=WechatModel::create($data);
                 if ($model['id']) {
-                    $this->success("添加成功", url('wechat/index'));
+                    $this->success(lang('Add success!'), url('wechat/index'));
                 } else {
-                    $this->error("添加失败");
+                    $this->error(lang('Add failed!'));
                 }
             }
         }
@@ -112,10 +112,10 @@ class WechatController extends BaseController
                 $model=WechatModel::get($id);
                 if ($model->allowField(true)->save($data)) {
                     delete_image($delete_images);
-                    $this->success("更新成功".$this->uploadError, url('wechat/index'));
+                    $this->success(lang('Update success!').$this->uploadError, url('wechat/index'));
                 } else {
                     delete_image([$data['logo'],$data['qrcode']]);
-                    $this->error("更新失败".$this->uploadError);
+                    $this->error(lang('Update failed!').$this->uploadError);
                 }
             }
         }
@@ -139,9 +139,9 @@ class WechatController extends BaseController
         $model = Db::name('wechat');
         $result = $model->delete($id);
         if($result){
-            $this->success("删除成功", url('wechat/index'));
+            $this->success(lang('Delete success!'), url('wechat/index'));
         }else{
-            $this->error("删除失败");
+            $this->error(lang('Delete failed!'));
         }
     }
 

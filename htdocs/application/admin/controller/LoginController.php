@@ -23,19 +23,19 @@ class LoginController extends Controller {
      * 登陆验证
      */
     public function login(){
-        if(!$this->request->isPost())$this->error("非法请求");
+        if(!$this->request->isPost())$this->error(lang('Bad Request!'));
         $member = Db::name('Manager');
         $username =$this->request->post('username','','trim');
         $password =$this->request->post('password');
         $code = $this->request->post('verify','','strtolower');
 
         if(empty($username) || empty($password)){
-            $this->error('请填写登录信息');
+            $this->error(lang('Please fill in the login field!'));
         }
 
         //验证验证码是否正确
         if(!($this->check_verify($code))){
-            $this->error('验证码错误');
+            $this->error(lang('Verify code error!'));
         }
 
         $sess_key='back_login_error';
@@ -43,7 +43,7 @@ class LoginController extends Controller {
         if(is_null($error_count)){
             $error_count=0;
         }elseif($error_count>5){
-            $this->error('登录错误次数过多');
+            $this->error(lang('Login error of too many times!'));
         }
 
         $ip=$this->request->ip();
@@ -52,7 +52,7 @@ class LoginController extends Controller {
         if(is_null($iperror_count)){
             $iperror_count=0;
         }elseif($iperror_count>10){
-            $this->error('登录错误次数过多');
+            $this->error(lang('Login error of too many times!'));
         }
 
         //验证账号密码是否正确
@@ -67,9 +67,9 @@ class LoginController extends Controller {
 
             if(!empty($user)){
                 //登录日志
-                user_log($user['id'],'login',0,'密码错误:'.$password,'manager');
+                user_log($user['id'],'login',0,['Incorrect password: %s',$password],'manager');
             }
-            $this->error('账号或密码错误 :(') ;
+            $this->error(lang('Account or password incorrect!')) ;
         }
 
         //登录成功清除限制
@@ -78,13 +78,13 @@ class LoginController extends Controller {
 
         //验证账户是否被禁用
         if($user['status'] == 0){
-            user_log($user['id'],'login',0,'账号已禁用' ,'manager');
-            $this->error('账号被禁用，请联系超级管理员 :(') ;
+            user_log($user['id'],'login',0,lang('Account is disabled!') ,'manager');
+            $this->error(lang('Account is disabled, pls contact the super master!'));
         }
 
         setLogin($user);
 
-        $this->success("登陆成功",url('Index/index'));
+        $this->success(lang('Login success!'),url('Index/index'));
     }
 
     /**

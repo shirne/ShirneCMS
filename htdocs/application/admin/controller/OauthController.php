@@ -41,9 +41,9 @@ class OauthController extends BaseController
             } else {
 
                 if (Db::name('OAuth')->insert($data)) {
-                    $this->success("添加成功", url('oauth/index'));
+                    $this->success(lang('Add success!'), url('oauth/index'));
                 } else {
-                    $this->error("添加失败");
+                    $this->error(lang('Add failed!'));
                 }
             }
         }
@@ -71,9 +71,9 @@ class OauthController extends BaseController
             } else {
                 $data['id']=$id;
                 if (Db::name('OAuth')->update($data)) {
-                    $this->success("更新成功", url('oauth/index'));
+                    $this->success(lang('Update success!'), url('oauth/index'));
                 } else {
-                    $this->error("更新失败");
+                    $this->error(lang('Update failed!'));
                 }
             }
         }
@@ -98,9 +98,9 @@ class OauthController extends BaseController
         $model = Db::name('OAuth');
         $result = $model->delete($id);
         if($result){
-            $this->success("删除成功", url('oauth/index'));
+            $this->success(lang('Delete success!'), url('oauth/index'));
         }else{
-            $this->error("删除失败");
+            $this->error(lang('Delete failed!'));
         }
     }
 }

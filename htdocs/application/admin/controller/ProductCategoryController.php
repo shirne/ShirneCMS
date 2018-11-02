@@ -55,9 +55,9 @@ class ProductCategoryController extends BaseController
                 $model=ProductCategoryModel::create($data);
                 if ($model['id']) {
                     ProductCategoryFacade::clearCache();
-                    $this->success("添加成功", url('productCategory/index'));
+                    $this->success(lang('Add success!'), url('productCategory/index'));
                 } else {
-                    $this->error("添加失败");
+                    $this->error(lang('Add failed!'));
                 }
             }
         }
@@ -108,7 +108,7 @@ class ProductCategoryController extends BaseController
 
                 delete_image($delete_images);
                 ProductCategoryFacade::clearCache();
-                $this->success("保存成功", url('productCategory/index'));
+                $this->success(lang('Update success!'), url('productCategory/index'));
             }
         }else{
             $model = ProductCategoryModel::get($id);
@@ -149,9 +149,9 @@ class ProductCategoryController extends BaseController
         $result = Db::name('ProductCategory')->where('id','in',$id)->delete();
         if($result){
             ProductCategoryFacade::clearCache();
-            $this->success("分类删除成功", url('productCategory/index'));
+            $this->success(lang('Delete success!'), url('productCategory/index'));
         }else{
-            $this->error("分类删除失败");
+            $this->error(lang('Delete failed!'));
         }
     }
 }

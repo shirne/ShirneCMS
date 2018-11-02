@@ -121,10 +121,10 @@ class ProductController extends BaseController
                         ProductSkuModel::create($sku);
                     }
                     user_log($this->mid,'addproduct',1,'添加商品 '.$model->id ,'manager');
-                    $this->success("添加成功", url('Product/index'));
+                    $this->success(lang('Add success!'), url('Product/index'));
                 } else {
                     delete_image($data['image']);
-                    $this->error("添加失败");
+                    $this->error(lang('Add failed!'));
                 }
             }
         }
@@ -249,9 +249,9 @@ class ProductController extends BaseController
             Db::name('productImages')->where('product_id','in',idArr($id))->delete();
             Db::name('productComment')->where('product_id','in',idArr($id))->delete();
             user_log($this->mid,'deleteproduct',1,'删除商品 '.$id ,'manager');
-            $this->success("删除成功", url('Product/index'));
+            $this->success(lang('Delete success!'), url('Product/index'));
         }else{
-            $this->error("删除失败");
+            $this->error(lang('Delete failed!'));
         }
     }
 
@@ -319,10 +319,10 @@ class ProductController extends BaseController
                 $model = Db::name("ProductImages");
                 $url=url('product/imagelist',array('aid'=>$aid));
                 if ($model->insert($data)) {
-                    $this->success("添加成功",$url);
+                    $this->success(lang('Add success!'),$url);
                 } else {
                     delete_image($data['image']);
-                    $this->error("添加失败");
+                    $this->error(lang('Add failed!'));
                 }
             }
         }
@@ -361,10 +361,10 @@ class ProductController extends BaseController
                 $data['id']=$id;
                 if ($model->update($data)) {
                     delete_image($delete_images);
-                    $this->success("更新成功", $url);
+                    $this->success(lang('Update success!'), $url);
                 } else {
                     delete_image($data['image']);
-                    $this->error("更新失败");
+                    $this->error(lang('Update failed!'));
                 }
             }
         }else{
@@ -391,9 +391,9 @@ class ProductController extends BaseController
         $model = Db::name('ProductImages');
         $result = $model->delete($id);
         if($result){
-            $this->success("删除成功", url('product/imagelist',array('aid'=>$aid)));
+            $this->success(lang('Delete success!'), url('product/imagelist',array('aid'=>$aid)));
         }else{
-            $this->error("删除失败");
+            $this->error(lang('Delete failed!'));
         }
     }
 
@@ -486,9 +486,9 @@ class ProductController extends BaseController
         $result = $model->where('id','in',idArr($id))->delete();
         if($result){
             user_log($this->mid,'deleteproductcomment',1,'删除评论 '.$id ,'manager');
-            $this->success("删除成功", url('Product/comments'));
+            $this->success(lang('Delete success!'), url('Product/comments'));
         }else{
-            $this->error("删除失败");
+            $this->error(lang('Delete failed!'));
         }
     }
 }

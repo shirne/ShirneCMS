@@ -30,16 +30,16 @@ class BaseController extends Controller {
         $this->mid = session('adminId');
         //判断用户是否登陆
         if(empty($this->mid ) ) {
-            $this->error('请登录',url('admin/login/index'));
+            $this->error(lang('Please login first!'),url('admin/login/index'));
         }
         $this->manage=Db::name('Manager')->find($this->mid);
         if(empty($this->manage)){
             clearLogin();
-            $this->error('账号已失效',url('admin/login/index'));
+            $this->error(lang('Invalid account!'),url('admin/login/index'));
         }
         if($this->manage['logintime']!=session('adminLTime')){
             clearLogin();
-            $this->error('该账号在其它地方登录',url('admin/login/index'));
+            $this->error(lang('The account has login in other places!'),url('admin/login/index'));
         }
 
         $controller=strtolower($this->request->controller());
@@ -64,7 +64,7 @@ class BaseController extends Controller {
      */
     protected function checkPermision($permitem){
         if($this->getPermision($permitem)==false){
-            $this->error('您无权进行此操作');
+            $this->error(lang('You have no permission to do this operation!'));
         }
     }
 
@@ -81,7 +81,7 @@ class BaseController extends Controller {
         if(empty($this->permision)){
             $this->permision=Db::name('ManagerPermision')->where('manager_id',$this->mid)->find();
             if(empty($this->permision)){
-                $this->error('权限设置有误，请联系管理员');
+                $this->error(lang('Bad permission settings, pls contact the manager!'));
             }
             $this->permision['global']=explode(',',$this->permision['global']);
             $this->permision['detail']=explode(',',$this->permision['detail']);

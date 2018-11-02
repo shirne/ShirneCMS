@@ -163,9 +163,9 @@ class IndexController extends BaseController{
                 if(!empty($data['realname'])){
                     session('username',$data['realname']);
                 }
-                $this->success("更新成功", url('Index/profile'));
+                $this->success(lang('Update success!'), url('Index/profile'));
             } else {
-                $this->error("未做任何修改,更新失败");
+                $this->error(lang('Update failed!'));
             }
         }
 

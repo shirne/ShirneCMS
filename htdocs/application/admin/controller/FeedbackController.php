@@ -56,9 +56,9 @@ class FeedbackController extends BaseController
                 $data['reply_at']=time();
                 $model=FeedbackModel::get($id);
                 if ($model->allowField(true)->save($data)) {
-                    $this->success("更新成功", url('feedback/index'));
+                    $this->success(lang('Update success!'), url('feedback/index'));
                 } else {
-                    $this->error("更新失败");
+                    $this->error(lang('Update failed!'));
                 }        
             }
         }
@@ -108,9 +108,9 @@ class FeedbackController extends BaseController
         $model=FeedbackModel::get($id);
         $result = $model->delete();
         if($result){
-            $this->success("留言删除成功", url('feedback/index'));
+            $this->success(lang('Delete success!'), url('feedback/index'));
         }else{
-            $this->error("留言删除失败");
+            $this->error(lang('Delete failed!'));
         }
     }
 }

@@ -42,9 +42,9 @@ class AdvController extends BaseController
                 $this->error($validate->getError());
             }else{
                 if (Db::name("AdvGroup")->insert($data)) {
-                    $this->success("添加成功", url('adv/index'));
+                    $this->success(lang('Add success!'), url('adv/index'));
                 } else {
-                    $this->error("添加失败");
+                    $this->error(lang('Add failed!'));
                 }
             }
         }
@@ -73,9 +73,9 @@ class AdvController extends BaseController
 
                 $data['id']=$id;
                 if ($model->update($data)) {
-                    $this->success("更新成功", url('adv/index'));
+                    $this->success(lang('Update success!'), url('adv/index'));
                 } else {
-                    $this->error("更新失败");
+                    $this->error(lang('Update failed!'));
                 }
             }
         }else{
@@ -108,9 +108,9 @@ class AdvController extends BaseController
             if($count>0){
                 Db::name('AdvItem')->where('group_id',$id)->delete();
             }
-            $this->success("广告位删除成功", url('adv/index'));
+            $this->success(lang('Delete success!'), url('adv/index'));
         }else{
-            $this->error("广告位删除失败");
+            $this->error(lang('Delete failed!'));
         }
     }
 
@@ -155,10 +155,10 @@ class AdvController extends BaseController
                 $data['start_date']=empty($data['start_date'])?0:strtotime($data['start_date']);
                 $data['end_date']=empty($data['end_date'])?0:strtotime($data['end_date']);
                 if ($model->insert($data)) {
-                    $this->success("添加成功",$url);
+                    $this->success(lang('Add success!'),$url);
                 } else {
                     delete_image($data['image']);
-                    $this->error("添加失败");
+                    $this->error(lang('Add failed!'));
                 }
             }
         }
@@ -198,10 +198,10 @@ class AdvController extends BaseController
                 $data['id']=$id;
                 if ($model->update($data)) {
                     delete_image($delete_images);
-                    $this->success("更新成功", $url);
+                    $this->success(lang('Update success!'), $url);
                 } else {
                     delete_image($data['image']);
-                    $this->error("更新失败");
+                    $this->error(lang('Update failed!'));
                 }
             }
         }else{
@@ -224,9 +224,9 @@ class AdvController extends BaseController
         $model = Db::name('AdvItem');
         $result = $model->delete($id);
         if($result){
-            $this->success("广告删除成功", url('adv/itemlist',array('gid'=>$gid)));
+            $this->success(lang('Delete success!'), url('adv/itemlist',array('gid'=>$gid)));
         }else{
-            $this->error("广告删除失败");
+            $this->error(lang('Delete failed!'));
         }
     }
 }
