@@ -3,7 +3,7 @@
     <div class="container user-index">
         <div class="text-center user-header">
             <a href="javascript:">
-                <img class="user-avatar img-circle" src="__STATIC__/images/avatar.png" width="60" >
+                <img class="user-avatar img-circle" src="{$user.avatar|default='/static/images/avatar.png'}" width="60" >
             </a>
             <h4 class="user-name">{$user.username}<span class="badge badge-info">{$userLevel['level_name']}</span></h4>
             <div class="row inforow">

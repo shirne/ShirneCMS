@@ -10,6 +10,32 @@
 				<div class="card-body">
 
 					<form class="form-horizontal registerForm" role="form" method="post" action="{:url('index/login/register')}">
+						<if condition="!empty($agent)">
+							<div class="form-group">
+								<div class="row">
+									<div class="col" style="max-width: 65px;">
+										<img src="{$agent.avatar|default='/static/images/avatar.png'}" style="width: 50px;display: block;border-radius: 1000px;">
+									</div>
+									<div class="col">
+										<p style="margin-bottom:0.5rem;">{$agent['username']}</p>
+										<p style="font-size: 13px;color: #888888;">推荐您注册</p>
+									</div>
+								</div>
+							</div>
+						</if>
+						<if condition="!empty($wechatUser)">
+							<div class="form-group">
+								<div class="row">
+									<div class="col" style="max-width: 65px;">
+										<img src="{$wechatUser['avatar']}" style="width: 50px;display: block;border-radius: 1000px;">
+									</div>
+									<div class="col">
+										<p style="margin-bottom:0.5rem;">{$wechatUser['nickname']}</p>
+										<p style="font-size: 13px;color: #888888;">注册后将与微信账号绑定</p>
+									</div>
+								</div>
+							</div>
+						</if>
 						<div class="form-group">
 							<div class="input-group">
 								<div class="input-group-prepend">
