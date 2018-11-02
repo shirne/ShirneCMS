@@ -6,7 +6,7 @@
 			<div class="row justify-content-center">
 				<div class="col-10 col-md-5">
 			<div class="card">
-				<div class="card-header">会员注册</div>
+				<div class="card-header">{:lang('User sign up')}</div>
 				<div class="card-body">
 
 					<form class="form-horizontal registerForm" role="form" method="post" action="{:url('index/login/register')}">
@@ -18,7 +18,7 @@
 									</div>
 									<div class="col">
 										<p style="margin-bottom:0.5rem;">{$agent['username']}</p>
-										<p style="font-size: 13px;color: #888888;">推荐您注册</p>
+										<p style="font-size: 13px;color: #888888;">{:lang('Your reference')}</p>
 									</div>
 								</div>
 							</div>
@@ -31,7 +31,7 @@
 									</div>
 									<div class="col">
 										<p style="margin-bottom:0.5rem;">{$wechatUser['nickname']}</p>
-										<p style="font-size: 13px;color: #888888;">注册后将与微信账号绑定</p>
+										<p style="font-size: 13px;color: #888888;">{:lang('Bind to this wechat after sign up')}</p>
 									</div>
 								</div>
 							</div>
@@ -39,7 +39,7 @@
 						<div class="form-group">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">用户名</span>
+									<span class="input-group-text">{:lang('Username')}</span>
 								</div>
 								<input type="text" class="form-control" name="username">
 							</div>
@@ -50,7 +50,7 @@
 						<div class="form-group">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">密&emsp;码</span>
+									<span class="input-group-text">{:lang('Password')}</span>
 								</div>
 								<input type="password" class="form-control" name="password">
 							</div>
@@ -61,7 +61,7 @@
 						<div class="form-group">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">确认密码</span>
+									<span class="input-group-text">{:lang('Confirm password')}</span>
 								</div>
 								<input type="password" class="form-control" name="repassword">
 							</div>
@@ -72,7 +72,7 @@
 						<div class="form-group">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">手机号码</span>
+									<span class="input-group-text">{:lang('Mobile')}</span>
 								</div>
 								<input type="text" class="form-control" name="mobile">
 								<if condition="$config['sms_code'] EQ 1">
@@ -110,11 +110,11 @@
 						</div>
 						</if>
 						<div class="form-group submitline">
-							<button type="submit" class="btn btn-primary btn-block create">创建我的账户</button>
+							<button type="submit" class="btn btn-primary btn-block create">{:lang('Create account')}</button>
 						</div>
 						<div class="form-group">
 							<div class="text-center">
-								已有账号?<a href="{:url('index/login/index')}">返回登录</a>
+								{:lang('Have an account?')}<a href="{:url('index/login/index')}">{:lang('Goto sign in')}</a>
 							</div>
 						</div>
 					</form>

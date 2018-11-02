@@ -14,7 +14,7 @@
 				<div class="btn-group btn-group-sm mr-2" role="group" aria-label="action button group">
 					<a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="publish">发布</a>
 					<a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="cancel">撤销</a>
-					<a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="delete">删除</a>
+					<a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="delete">{:lang('Delete')}</a>
 				</div>
 				<a href="{:url('article/add')}" class="btn btn-outline-primary btn-sm"><i class="ion-md-add"></i> 添加文章</a>
 			</div>
@@ -78,7 +78,7 @@
 					<a class="btn btn-outline-dark btn-sm" href="{:url('article/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> 编辑</a>
 					<a class="btn btn-outline-dark btn-sm" href="{:url('article/imagelist',array('aid'=>$v['id']))}"><i class="ion-md-images"></i> 图集</a>
 						<a class="btn btn-outline-dark btn-sm" href="{:url('article/comments',array('aid'=>$v['id']))}"><i class="ion-md-chatboxes"></i> 评论</a>
-					<a class="btn btn-outline-dark btn-sm" href="{:url('article/delete',array('id'=>$v['id']))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
+					<a class="btn btn-outline-dark btn-sm" href="{:url('article/delete',array('id'=>$v['id']))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> {:lang('Delete')}</a>
 					</td>
 				</tr>
 			</foreach>

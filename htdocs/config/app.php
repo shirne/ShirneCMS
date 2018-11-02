@@ -13,6 +13,10 @@
 // | 应用设置
 // +----------------------------------------------------------------------
 
+//tp 多语言初始化问题，暂时用这种方法解决
+\think\facade\Lang::setLangCookieVar('cms_lang');
+\think\facade\Lang::setAllowLangList(['zh-cn','en-us']);
+
 return [
     // 应用名称
     'app_name'               => '',
@@ -40,6 +44,10 @@ return [
     'default_timezone'       => 'Asia/Shanghai',
     // 是否开启多语言
     'lang_switch_on'         => true,
+    //保存到cookie的键
+    'lang_cookie_var'        => 'cms_lang',
+    //留空并开启多语言时不限制客户端语言
+    'allow_lang_list'        => '',
     // 默认全局过滤方法 用逗号分隔多个
     'default_filter'         => '',
     // 默认语言

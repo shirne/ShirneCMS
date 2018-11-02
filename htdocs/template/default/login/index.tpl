@@ -5,7 +5,7 @@
 			<div class="row justify-content-center">
 				<div class="col-10 col-md-5">
 			<div class="card">
-				<div class="card-header">会员登录</div>
+				<div class="card-header">{:lang('User sign in')}</div>
 				<div class="card-body">
 
 					<form class="form-horizontal" role="form" method="post" action="{:url('index/login/index')}">
@@ -17,7 +17,7 @@
 								</div>
 								<div class="col">
 									<p style="margin-bottom:0.5rem;">{$wechatUser['nickname']}</p>
-									<p style="font-size: 13px;color: #888888;">登录后将与微信账号绑定</p>
+									<p style="font-size: 13px;color: #888888;">{:lang('Bind to this wechat after sign in')}</p>
 								</div>
 								</div>
 							</div>
@@ -25,36 +25,36 @@
 						<div class="form-group">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">用户名</span>
+									<span class="input-group-text"><i class="ion-md-person"></i></span>
 								</div>
-								<input type="text" class="form-control" name="username">
+								<input type="text" class="form-control" name="username" placeholder="{:lang('Username')}" />
 							</div>
 						</div>
 						<div class="form-group">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">密&emsp;码</span>
+									<span class="input-group-text"><i class="ion-md-lock"></i></span>
 								</div>
-								<input type="password" class="form-control" name="password">
+								<input type="password" class="form-control" name="password" placeholder="{:lang('Password')}" />
 							</div>
 						</div>
 						<div class="form-group">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">验证码</span>
+									<span class="input-group-text"><i class="ion-md-checkmark"></i></span>
 								</div>
-								<input type="text" class="form-control" name="verify">
+								<input type="text" class="form-control" name="verify" placeholder="{:lang('Verify')}" />
 								<div class="input-group-append">
 									<a href="javascript:" class="input-group-text verifybox" style="padding:0;"><img src="{:url('index/login/verify')}" alt=""></a>
 								</div>
 							</div>
 						</div>
 						<div class="form-group submitline">
-							<button type="submit" class="btn btn-primary btn-block create">登陆</button>
+							<button type="submit" class="btn btn-primary btn-block create">{:lang('Sign in')}</button>
 						</div>
 						<div class="form-group">
 							<div class="text-center">
-							没有账号?<a href="{:url('index/login/register')}">立即注册</a>
+							{:lang('No account yet?')}<a href="{:url('index/login/register')}">{:lang('Create an account')}</a>
 							</div>
 						</div>
 					</form>

@@ -61,6 +61,15 @@ return [
     'Bad Request!'=>'非法请求！',
     'Arguments error!'=>'参数错误！',
 
+    'Sign in'=>'登录',
+    'Sign up'=>'注册',
+
+    'Username'=>'用户名',
+    'Mobile'=>'手机号',
+    'Email'=>'邮 箱',
+    'Password'=>'密 码',
+    'Verify'=>'验证码',
+
     'Please login first!'=>'请先登录！',
     'Invalid account!'=>'账号已失效！',
     'The account has login in other places!'=>'该账号已在其它地方登录！',
@@ -76,6 +85,9 @@ return [
     'Incorrect password: %s'=>'密码错误: %s',
     'Verify code error!'=>'验证码错误！',
 
+    'Add'=>'添加',
+    'Save'=>'保存',
+    'Delete'=>'删除',
     'Add success!'=>'添加成功！',
     'Update success!'=>'保存成功！',
     'Delete success!'=>'删除成功！',

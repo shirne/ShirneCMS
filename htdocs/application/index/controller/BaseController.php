@@ -7,6 +7,7 @@ use extcore\traits\Email;
 use think\Controller;
 use think\Db;
 use think\facade\Env;
+use think\facade\Lang;
 
 /**
  * 如果某个控制器必须用户登录才可以访问  
@@ -27,8 +28,23 @@ class BaseController extends Controller
     protected $isWechat=false;
     protected $isMobile=false;
 
+    protected $lang;
+    protected $lang_switch;
+
     public function initialize(){
         parent::initialize();
+
+        //初始化语言
+        $this->lang_switch=config('lang_switch_on');
+        if($this->lang_switch){
+            $cookie_var=config('lang_cookie_var');
+
+            $this->lang=Lang::range();
+
+            if($this->lang != cookie($cookie_var)){
+                cookie($cookie_var,$this->lang);
+            }
+        }
 
         $this->config=getSettings();
         $this->assign('config',$this->config);

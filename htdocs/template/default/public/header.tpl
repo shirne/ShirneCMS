@@ -36,8 +36,8 @@
                             </div>
                         </li>
                         <else/>
-                        <li class="nav-item"><a class="nav-link" href="{:url('index/login/index')}">登录</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{:url('index/login/register')}">注册</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{:url('index/login/index')}">{:lang('Sign in')}</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{:url('index/login/register')}">{:lang('Sign up')}</a></li>
                     </if>
                 </ul>
             </div>
