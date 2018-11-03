@@ -138,7 +138,7 @@ class SettingController extends BaseController
             $data['date']=date('Y-m-d H:i:s');
             $data['data']=getSettings();
         }
-        return file_download('setting.json',json_encode($data,JSON_UNESCAPED_UNICODE));
+        return file_download(json_encode($data,JSON_UNESCAPED_UNICODE),'setting.json');
     }
 
     /**

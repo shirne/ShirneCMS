@@ -31,7 +31,7 @@ class ArticleController extends BaseController{
             $this->seo($this->category['title']);
             $where[]=array('article.cate_id','in',CategoryFacade::getSubCateIds($this->category['id']));
         }else{
-            $this->seo("新闻中心");
+            $this->seo(lang('News'));
         }
 
         $model=Db::view('article','*')
@@ -63,7 +63,7 @@ class ArticleController extends BaseController{
     public function view($id){
         $article = ArticleModel::get($id);
         if(empty($article)){
-            $this->error('文章不存在');
+            $this->error(lang('Article not exists!'));
         }
         $this->seo($article['title']);
         $this->category($article['cate_id']);
@@ -92,7 +92,7 @@ class ArticleController extends BaseController{
     public function comment($id){
         $article = Db::name('article')->find($id);
         if(empty($article)){
-            $this->error('参数错误');
+            $this->error(lang('Arguments error!'));
         }
         if($this->request->isPost()){
             $data=$this->request->only('article_id,email,is_anonymous,content,reply_id','POST');

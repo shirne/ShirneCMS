@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>管理面板</title>
+    <title>{:lang('Dashboard')}</title>
 
     <!-- Bootstrap core CSS -->
     <link href="__STATIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -31,7 +31,7 @@
     <!-- Sidebar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" role="navigation">
 
-        <a class="navbar-brand" href="{:url('index/index')}">管理后台</a>
+        <a class="navbar-brand" href="{:url('index/index')}">{:lang('Management')}</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -43,15 +43,15 @@
             <div class="nav navbar-nav navbar-user">
 
                 <li class="dropdown user-dropdown">
-                    <a href="javascript:" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="ion-md-person"></i> 你好,{:session('adminname')} <b class="caret"></b></a>
+                    <a href="javascript:" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="ion-md-person"></i> {:lang('Welcome %s',[session('adminname')])} <b class="caret"></b></a>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="/" target="_blank"><i class="ion-md-home"></i> 浏览首页</a>
-                        <a class="dropdown-item" href="{:url('index/clearcache')}"><i class="ion-md-sync"></i> 清除缓存</a>
+                        <a class="dropdown-item" href="/" target="_blank"><i class="ion-md-home"></i> {:lang('Home ')}</a>
+                        <a class="dropdown-item" href="{:url('index/clearcache')}"><i class="ion-md-sync"></i> {:lang('Clear Cache')}</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{:url('setting/index')}"><i class="ion-md-options"></i> 系统设置</a>
-                        <a class="dropdown-item" href="{:url('index/profile')}"><i class="ion-md-person"></i> 个人资料</a>
+                        <a class="dropdown-item" href="{:url('setting/index')}"><i class="ion-md-options"></i> {:lang('Settings')}</a>
+                        <a class="dropdown-item" href="{:url('index/profile')}"><i class="ion-md-person"></i> {:lang('Profile')}</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="{:url('login/logout')}"><i class="ion-md-log-out"></i> 安全退出</a>
+                        <a class="dropdown-item" href="{:url('login/logout')}"><i class="ion-md-log-out"></i> {:lang('Sign out')}</a>
                     </div>
                 </li>
             </ul>

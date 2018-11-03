@@ -15,4 +15,9 @@ return [
     'Bind to this wechat after sign up'=>'注册后将与微信账号绑定',
 
     'Confirm password'=>'确认密码',
+    'Pls login first'=>'请先登录',
+
+
+    'News'=>'新闻中心',
+    'Article not exists!'=>'文章不存在！',
 ];

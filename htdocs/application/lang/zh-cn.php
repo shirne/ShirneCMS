@@ -4,6 +4,8 @@ return [
     'Yes'=>'是',
     'No'=>'否',
 
+    'All'=>'全部',
+
     'Member'=>'会员',
     'Emplyee'=>'员工',
 
@@ -63,6 +65,9 @@ return [
 
     'Sign in'=>'登录',
     'Sign up'=>'注册',
+    'Sign out'=>'安全退出',
+    'Profile'=>'个人资料',
+    'Settings'=>'系统设置',
 
     'Username'=>'用户名',
     'Mobile'=>'手机号',
@@ -87,6 +92,8 @@ return [
 
     'Add'=>'添加',
     'Save'=>'保存',
+    'Edit'=>'编辑',
+    'Update'=>'更新',
     'Delete'=>'删除',
     'Add success!'=>'添加成功！',
     'Update success!'=>'保存成功！',

@@ -98,8 +98,37 @@ jQuery(function ($) {
                     }
                 });
             }
-        }).show('<p class="loading">加载中...</p>', title);
+        }).show('<p class="loading">'+lang('loading...')+'</p>', title);
 
+    });
+
+    //确认操作
+    $('.link-confirm').click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var text=$(this).data('confirm');
+        var url=$(this).data('href');
+        if(!text)text=lang('Confirm operation?');
+
+        dialog.confirm(text,function () {
+            $.ajax({
+                url:url,
+                dataType:'JSON',
+                success:function (json) {
+                    dialog.alert(json.msg);
+                    if(json.code==1){
+                        if(json.url){
+                            location.href=json.url;
+                        }else{
+                            location.reload();
+                        }
+                    }
+                },
+                error:function () {
+                    dialog.alert(lang('Server error.'));
+                }
+            })
+        });
     });
 
     $('.nav-tabs a').click(function (e) {

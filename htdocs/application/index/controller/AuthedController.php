@@ -1,16 +1,15 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: shirn
- * Date: 2016/9/10
- * Time: 11:46
- */
 
 namespace app\index\controller;
 
 
 use extcore\traits\Upload;
 
+/**
+ * 需要登录的控制器基类
+ * Class AuthedController
+ * @package app\index\controller
+ */
 class AuthedController extends BaseController
 {
     use Upload;
@@ -27,7 +26,7 @@ class AuthedController extends BaseController
         //如果没有的登录 重定向至登录页面
         if(empty($this->userid ) ) {
             redirect()->remember();
-            $this->error('请先登录',url('index/login/index'));
+            $this->error(lang('Pls login first'),url('index/login/index'));
         }
 
     }

@@ -5,6 +5,13 @@ function del(obj,msg) {
     return false;
 }
 
+function lang(key) {
+    if(window.language && window.language[key]){
+        return window.language[key];
+    }
+    return key;
+}
+
 function randomString(len, charSet) {
     charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     var str = '',allLen=charSet.length;

@@ -47,7 +47,7 @@ return [
     //保存到cookie的键
     'lang_cookie_var'        => 'cms_lang',
     //留空并开启多语言时不限制客户端语言
-    'allow_lang_list'        => '',
+    'allow_lang_list'        => ['zh-cn','en-us'],
     // 默认全局过滤方法 用逗号分隔多个
     'default_filter'         => '',
     // 默认语言

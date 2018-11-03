@@ -202,8 +202,15 @@ class BaseController extends Controller
         $this->assign('isWechat',$this->isWechat);
         $this->assign('isMobile',$this->isMobile);
 
+        $base_path=config('template.view_path');
+
+        //加载模板语言
+        $temp_lang=$base_path.'lang'.DIRECTORY_SEPARATOR.$this->lang.'.php';
+        if(is_file($temp_lang)){
+            Lang::load($temp_lang);
+        }
+
         if(config('template.independence')){
-            $base_path=config('template.view_path');
             if($this->isMobile){
                 $this->view->config('view_path', $base_path.'mobile'.DIRECTORY_SEPARATOR);
             }else{

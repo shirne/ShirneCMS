@@ -20,17 +20,22 @@ function writelog($message,$type=\think\Log::INFO){
 
 /**
  * tp已支持下载输出
- * @param $filename
  * @param $data
+ * @param $filename
+ * @param $isContent
  * @param $mime
  * @return \think\Response
  */
-function file_download($filename,$data='',$mime=''){
+function file_download($data,$filename='',$isContent=true,$mime=''){
     //return \think\Response::create($data, '\\extcore\\FileDownload', 200, [], ['file_name'=>$filename]);
     $response = \think\Response::create($data?:$filename, 'download', 200);
-    if($mime)$response->mimeType($mime);
-    if(!empty($data)){
+    if($mime){
+        $response->mimeType($mime);
+    }
+    if($isContent){
         $response->isContent(true);
+    }
+    if($filename){
         $response->name($filename);
     }
     return $response;
@@ -42,9 +47,9 @@ function getTextStyles(){
 }
 function getMoneyFields(){
     $fields= [
-        'all'=>'不限',
-        'money'=>'消费积分',
-        'credit'=>'现金积分'
+        'all'=>lang('All'),
+        'money'=>lang('Balance'),
+        'credit'=>lang('Credit')
     ];
     return $fields;
 }
@@ -274,30 +279,57 @@ function status_type($status){
 }
 
 /**
+ * 获取订单状态
+ * @param $status
+ * @return string
+ */
+function get_order_status($status){
+    switch ($status){
+        case "-2":
+            return lang('Cancelled');
+        case "-1":
+            return lang('Invalid');
+        case "0":
+            return lang('Unpaid');
+        case "1":
+            return lang('Unshipped');
+        case "2":
+            return lang('Unreceived');
+        case "3":
+            return lang('Unevaluate');
+        case "4":
+            return lang('Completed');
+
+    }
+    return lang('Unknown');
+}
+/**
  * 订单状态
  * @param $status
  * @param bool $wrap
  * @return string
  */
 function order_status($status,$wrap=true){
+    $style='default';
     switch ($status){
-        case "-2":
-            return $wrap?wrap_label(lang('Cancelled'),'default'):lang('Cancelled');
-        case "-1":
-            return $wrap?wrap_label(lang('Invalid'),'default'):lang('Invalid');
         case "0":
-            return $wrap?wrap_label(lang('Unpaid'),'warning'):lang('Unpaid');
+            $style='warning';
+            break;
         case "1":
-            return $wrap?wrap_label(lang('Unshipped'),'danger'):lang('Unshipped');
+            $style='danger';
+            break;
         case "2":
-            return $wrap?wrap_label(lang('Unreceived'),'secondary'):lang('Unreceived');
+            $style='secondary';
+            break;
         case "3":
-            return $wrap?wrap_label(lang('Unevaluate'),'info'):lang('Unevaluate');
+            $style='info';
+            break;
         case "4":
-            return $wrap?wrap_label(lang('Completed'),'success'):lang('Completed');
+            $style='success';
+            break;
 
     }
-    return $wrap?wrap_label(lang('Unknown'),'default'):lang('Unknown');
+    return $wrap?wrap_label(get_order_status($status),$style):get_order_status($status);
 }
 function money_type($type,$wrap=true){
     switch ($type){
@@ -382,6 +414,31 @@ function cutstr($str,$len,$dot='...'){
 }
 
 /** =====================================  数据类函数  ===================================== **/
+
+/**
+ * 获取翻译到指定语言的数据
+ * @param $data
+ * @param $table
+ * @param string $key
+ * @param string $lang 默认当前语言
+ * @return array
+ */
+function translate($data,$table,$key='id',$lang=''){
+    return \app\common\facade\TranslateFacade::trans_list($data,$table,$key,$lang);
+}
+
+/**
+ * 获取指定行或字段的翻译
+ * @param $table
+ * @param $key
+ * @param $field
+ * @param string $lang
+ * @return array|string
+ */
+function get_translate($table,$key,$field='',$lang=''){
+    return \app\common\facade\TranslateFacade::get_trans($table,$key,$field,$lang);
+}
+
 
 function getMemberLevels()
 {

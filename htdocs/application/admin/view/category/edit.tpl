@@ -2,17 +2,17 @@
 
 <block name="body">
 
-    <include file="public/bread" menu="category_index" title="分类信息"/>
+    <include file="public/bread" menu="category_index" title="{:lang('Category update')}"/>
 
     <div id="page-wrapper">
-        <div class="page-header">{$id>0?'编辑':'添加'}分类</div>
+        <div class="page-header">{:lang($id>0?'Edit':'Add')}{:lang('Category')}</div>
         <div class="page-content">
             <form method="post" class="page-form" action="" enctype="multipart/form-data">
                 <div class="form-row">
                     <div class="form-group col">
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <span class="input-group-text">分类名称</span>
+                                <span class="input-group-text">{:lang('Category Title')}</span>
                             </div>
                             <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="输入分类名称"/>
                         </div>
