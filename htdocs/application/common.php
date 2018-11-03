@@ -481,14 +481,18 @@ function getDefaultLevel(){
 
 function user_log($uid, $action, $result, $remark = '', $tbl = 'member')
 {
-    return \think\Db::name($tbl . 'Log')->insert(array(
+    $data=[
         'create_time' => time(),
         $tbl . '_id' => $uid,
         'ip' => app()->request->ip(),
         'action' => $action,
         'result' => intval($result),
         'remark' => json_encode(is_array($remark)?$remark:[$remark])
-    ));
+    ];
+    if($tbl==='member'){
+        $data['model']=request()->module();
+    }
+    return \think\Db::name($tbl . 'Log')->insert($data);
 }
 
 /**

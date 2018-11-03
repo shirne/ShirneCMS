@@ -378,6 +378,7 @@ DROP TABLE IF EXISTS `sa_member_log`;
 CREATE TABLE `sa_member_log` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `member_id` INT NULL DEFAULT 0,
+  `model` VARCHAR(45) NULL,
   `ip` VARCHAR(50) DEFAULT '',
   `create_time` INT NULL,
   `action` VARCHAR(45) NULL,

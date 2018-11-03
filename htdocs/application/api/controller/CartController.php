@@ -9,5 +9,23 @@ namespace app\api\Controller;
  */
 class CartController extends AuthedController
 {
+    public function getall(){
 
+    }
+
+    public function add(){
+
+    }
+
+    public function update(){
+
+    }
+
+    public function delete(){
+
+    }
+
+    public function clear(){
+
+    }
 }

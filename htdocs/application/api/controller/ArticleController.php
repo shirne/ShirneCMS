@@ -9,7 +9,15 @@ namespace app\api\Controller;
  */
 class ArticleController extends BaseController
 {
-    public function get_list(){
+    public function get_all_cates($pid=0){
+
+    }
+
+    public function get_cates($pid=0){
+
+    }
+
+    public function get_list($cate='',$page=1){
 
     }
 

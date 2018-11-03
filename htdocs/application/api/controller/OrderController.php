@@ -10,5 +10,7 @@ namespace app\api\Controller;
  */
 class OrderController extends AuthedController
 {
+    public function confirm(){
 
+    }
 }

@@ -9,5 +9,15 @@ namespace app\api\Controller;
  */
 class PageController extends BaseController
 {
+    public function groups(){
 
+    }
+
+    public function pages($group=''){
+
+    }
+
+    public function page($name){
+
+    }
 }
