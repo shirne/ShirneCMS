@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: shirne
- * Date: 2018/7/1
- * Time: 15:23
- */
+
 
 namespace app\common\command;
 
@@ -16,6 +11,11 @@ use think\console\input\Option;
 use think\console\Output;
 use think\Db;
 
+/**
+ * 安装命令
+ * Class Install
+ * @package app\common\command
+ */
 class Install extends Command
 {
     protected function configure()
@@ -23,7 +23,9 @@ class Install extends Command
         $this->setName('install')
             ->addOption('name', NULL, Option::VALUE_OPTIONAL, "database connect args like  username:password@dataname or username:password@host:dataname")
             ->addOption('file', 'f', Option::VALUE_OPTIONAL, "script file name")
-            ->addOption('mode', 'm', Option::VALUE_REQUIRED, 'install mode full(with test data) or cms or shop')
+            ->addOption('mode', 'm', Option::VALUE_REQUIRED, 'install extend model ex. shop')
+            ->addOption('username', 'u', Option::VALUE_OPTIONAL, "Specify the super admin account")
+            ->addOption('password', 'p', Option::VALUE_REQUIRED, 'Specify the super admin password')
             ->setDescription('Install db script');
     }
 
@@ -105,6 +107,19 @@ class Install extends Command
                     }
                 }
             }
+        }
+
+        $admin='admin';
+        if($input->hasOption('admin')){
+            $admin=$input->getOption('admin');
+        }
+        if($input->hasOption('password')){
+            $password=$input->getOption('password');
+
+            $data['username']=$admin;
+            $data['salt']=random_str(8);
+            $data['password'] = encode_password($password,$data['salt']);
+            Db::name('Manager')->where('id',1)->update($data);
         }
 
         file_put_contents($lockfile,time());

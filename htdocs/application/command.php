@@ -10,5 +10,6 @@
 // +----------------------------------------------------------------------
 
 return [
-    'app\common\command\Install',
+    'install'=>'app\common\command\Install',
+    'manager'=>'app\common\command\Manager',
 ];

@@ -63,7 +63,7 @@
     <script src="__STATIC__/moment/min/moment.min.js"></script>
     <script src="__STATIC__/moment/locale/zh-cn.js"></script>
     <script src="__STATIC__/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
-    <script src="__STATIC__/admin/js/app.min.js?v=20180406"></script>
+    <script src="__STATIC__/admin/js/app.min.js?v={:config('template.static_version')}"></script>
     <script type="text/javascript">
         (function(){
             var func=arguments.callee;

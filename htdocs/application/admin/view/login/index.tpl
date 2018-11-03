@@ -29,7 +29,7 @@
 <script type="text/javascript" src="__STATIC__/admin/js/effect-dot.js"></script>
 <div class="container" id="loginContainer">
     <div class="row justify-content-center">
-        <div class="col-10 col-md-5" id="loginBox">
+        <div class="col-10 col-md-7 col-lg-5" id="loginBox">
             <h1>管理员登陆</h1>
 
             <form action="{:url('login/login')}" method="post">

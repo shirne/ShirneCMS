@@ -11,7 +11,7 @@ CREATE TABLE `sa_lang` (
   `lang` varchar(10) NOT NULL,
   `table` varchar(20) NOT NULL DEFAULT '',
   `field` varchar(20) DEFAULT '',
-  `key_id` int(11) DEFAULT '',
+  `key_id` int(11) DEFAULT '0',
   `value` TEXT,
   PRIMARY KEY (`id`),
   UNIQUE KEY `lang` (`lang`) USING BTREE

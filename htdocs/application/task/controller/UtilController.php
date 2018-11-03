@@ -58,6 +58,14 @@ class UtilController extends Controller
             $args[]='--mode';
             $args[]=$mode;
         }
+        if($this->request->has('admin','post')){
+            $args[]='--admin';
+            $args[]=$this->request->post('admin');
+        }
+        if($this->request->has('password','post')){
+            $args[]='--password';
+            $args[]=$this->request->post('password');
+        }
         $input=new Input($args);
 
         $console->doRun($input, $output);
