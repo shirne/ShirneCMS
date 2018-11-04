@@ -60,7 +60,7 @@
 			<foreach name="lists" item="v">
 				<tr>
 					<td><input type="checkbox" name="id" value="{$v.id}" /></td>
-					<td>{$v.title}</td>
+					<td><a href="{:url('index/article/view',['id'=>$v['id']])}" target="_blank">{$v.title}</a> </td>
 					<td>
 						<span class="badge badge-info">{$types[$v['type']]}</span>
 					</td>

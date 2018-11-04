@@ -131,6 +131,14 @@ jQuery(function ($) {
         });
     });
 
+    $('.img-view').click(function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var url=$(this).attr('href');
+        if(!url)url=$(this).data('img');
+        dialog.alert('<a href="'+url+'" class="d-block text-center" target="_blank"><img class="img-fluid" src="'+url+'" /></a><div class="text-muted text-center">点击图片在新页面放大查看</div>',null,'查看图片');
+    });
+
     $('.nav-tabs a').click(function (e) {
         e.preventDefault();
         $(this).tab('show');

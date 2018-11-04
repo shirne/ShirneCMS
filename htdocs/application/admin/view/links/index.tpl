@@ -25,6 +25,7 @@
         <thead>
             <tr>
                 <th width="50">编号</th>
+                <th>LOGO</th>
                 <th>标题</th>
                 <th>地址</th>
                 <th>优先级</th>
@@ -35,8 +36,17 @@
         <foreach name="lists" item="v">
             <tr>
                 <td>{$v.id}</td>
+                <td>
+                    <if condition="!empty($v['logo'])">
+                    <figure class="figure img-view" data-img="{$v.logo}" >
+                        <img src="{$v.logo}?w=100" class="figure-img img-fluid rounded" alt="image">
+                    </figure>
+                        <else/>
+                        -
+                    </if>
+                </td>
                 <td>{$v.title}</td>
-                <td>{$v.url}</td>
+                <td><a href="{$v.url}" target="_blank">{$v.url}</a> </td>
                 <td>{$v.sort}</td> 
                 <td>
                     <a class="btn btn-outline-dark btn-sm" href="{:url('links/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> 编辑</a>

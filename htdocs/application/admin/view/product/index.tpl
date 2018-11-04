@@ -60,10 +60,15 @@
 			<foreach name="lists" item="v">
 				<tr>
 					<td><input type="checkbox" name="id" value="{$v.id}" /></td>
-					<td><figure class="figure" >
+					<td>
+						<figure class="figure img-view" data-img="{$v.image}" >
 							<img src="{$v.image}?w=100" class="figure-img img-fluid rounded" alt="image">
-						</figure></td>
-					<td><if condition="$v['type'] GT 1"><span class="badge badge-warning">{$types[$v['type']]}</span></if>{$v.title}</td>
+						</figure>
+					</td>
+					<td>
+						<if condition="$v['type'] GT 1"><span class="badge badge-warning">{$types[$v['type']]}</span></if>
+						<a href="{:url('index/product/view',['id'=>$v['id']])}" target="_blank">{$v.title}</a>
+					</td>
 					<td>
 						<foreach name="v['skus']" item="sku">
 							<div class="input-group input-group-sm mb-2">
