@@ -25,21 +25,20 @@ class ArticleController extends BaseController{
 
     public function index($name=""){
         $this->category($name);
+        $model=Db::view('article','*')
+            ->view('category',['name'=>'category_name','title'=>'category_title'],'article.cate_id=category.id','LEFT')
+            ->view('manager',['username'],'manager.id=article.user_id','LEFT');
 
-        $where=array();
+        $model->where('status',1);
         if(!empty($this->category)){
             $this->seo($this->category['title']);
-            $where[]=array('article.cate_id','in',CategoryFacade::getSubCateIds($this->category['id']));
+            $model->whereIn('article.cate_id',CategoryFacade::getSubCateIds($this->category['id']));
         }else{
             $this->seo(lang('News'));
         }
 
-        $model=Db::view('article','*')
-            ->view('category',['name'=>'category_name','title'=>'category_title'],'article.cate_id=category.id','LEFT')
-            ->view('manager',['username'],'manager.id=article.user_id','LEFT')
-            ->where($where)
-            ->paginate($this->pagesize);
-        $model->each(function($item){
+        $lists=$model->paginate($this->pagesize);
+        $lists->each(function($item){
             if(!empty($item['prop_data'])){
                 $item['prop_data']=json_decode($item['prop_data'],true);
             }
@@ -47,8 +46,8 @@ class ArticleController extends BaseController{
             return $item;
         });
 
-        $this->assign('lists', $model);
-        $this->assign('page',$model->render());
+        $this->assign('lists', $lists);
+        $this->assign('page',$lists->render());
         if(!empty($this->categoryTree)){
             for($i=count($this->categoryTree)-1;$i>=0;$i--){
                 if($this->categoryTree[$i]['use_template']){

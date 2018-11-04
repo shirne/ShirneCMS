@@ -65,7 +65,7 @@ class BaseController extends Controller
                 $this->isLogin=true;
             }else{
                 $this->token=null;
-                $this->response("登录失效",$errorno);
+                return $this->response("登录失效",$errorno);
             }
         }
     }

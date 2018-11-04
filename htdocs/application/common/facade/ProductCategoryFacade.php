@@ -14,7 +14,8 @@ use extcore\SimpleFacade;
  * @method array getCategoryId($idorname) static 查找分类ID
  * @method array getCategoryTree($idorname) static 获取当前分类所在的层级树
  * @method array getTreedCategory($force=false) static 获取排序后的分类
- * @method array getSubCateIds($pid) static 获取下级分类id列表
+ * @method array getSubCategory($pid=0) static 获取指定id的下级分类列表
+ * @method array getSubCateIds($pid, $recursive=false) static 获取下级分类id列表
  * @method void clearCache() static 清除缓存
  */
 class ProductCategoryFacade extends SimpleFacade

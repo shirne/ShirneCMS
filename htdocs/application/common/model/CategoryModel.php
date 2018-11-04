@@ -63,6 +63,7 @@ class CategoryModel extends BaseModel
 
         return $tree;
     }
+
     public function getTreedCategory($force=false)
     {
         if(empty($this->treed)){
@@ -77,6 +78,14 @@ class CategoryModel extends BaseModel
             cache($this->precache.'categorietree',$this->treed);
         }
         return $this->treed;
+    }
+
+    public function getSubCategory($pid=0){
+        $treedCategories=$this->getTreedCategory();
+        if(isset($treedCategories[$pid])){
+            return $treedCategories[$pid];
+        }
+        return [];
     }
 
     public function getSubCateIds($pid,$recursive=false)
