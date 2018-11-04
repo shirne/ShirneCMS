@@ -24,7 +24,7 @@ class AuthController extends BaseController
         $username=$this->input['username'];
         $password=$this->input['password'];
         if(empty($username) || empty($password)){
-            $this->response('请填写登录账号及密码',ERROR_LOGIN_FAILED);
+            $this->error('请填写登录账号及密码',ERROR_LOGIN_FAILED);
         }
         $member = Db::name('Member')->where('username',$username)->find();
         if(!empty($member)){
@@ -36,7 +36,7 @@ class AuthController extends BaseController
             }
         }
 
-        $this->response('登录失败',ERROR_LOGIN_FAILED);
+        $this->error('登录失败',ERROR_LOGIN_FAILED);
     }
 
     public function wxLogin(){
@@ -44,7 +44,7 @@ class AuthController extends BaseController
         $weauth=new WechatAuth(array('appid'=>$this->config['weapp_appid'],'appsecret'=>$this->config['weapp_appsecret']));
         $session=$weauth->getOauthAccessToken($code);
         if(empty($session) || empty($session['openid'])){
-            $this->response('登录失败',ERROR_LOGIN_FAILED);
+            $this->error('登录失败',ERROR_LOGIN_FAILED);
         }
 
         $rowData=$this->input['rawData'];
@@ -62,7 +62,7 @@ class AuthController extends BaseController
         if(empty($member)){
             $register=getSetting('m_register');
             if($register=='1'){
-                $this->response('登录失败',ERROR_LOGIN_FAILED);
+                $this->error('登录失败',ERROR_LOGIN_FAILED);
             }elseif(!empty($userinfo)){
                 //自动注册
                 $data=$this->wxMapdata($userinfo,$rowData);
@@ -85,11 +85,11 @@ class AuthController extends BaseController
                         MemberOauthModel::update($data);
                     }
                 }else{
-                    $this->response('登录失败',ERROR_LOGIN_FAILED);
+                    $this->error('登录失败',ERROR_LOGIN_FAILED);
                 }
                 $member=MemberModel::get($member_id);
             }else{
-                $this->response('登录授权失败',ERROR_LOGIN_FAILED);
+                $this->error('登录授权失败',ERROR_LOGIN_FAILED);
             }
         }elseif(!empty($userinfo)){
             //更新资料
@@ -111,7 +111,7 @@ class AuthController extends BaseController
         if(!empty($token)) {
             $this->response($token);
         }
-        $this->response('登录失败',ERROR_LOGIN_FAILED);
+        $this->error('登录失败',ERROR_LOGIN_FAILED);
     }
     private function wxMapdata($userinfo,$rowData){
         return array(
@@ -136,7 +136,7 @@ class AuthController extends BaseController
                 $this->response($token);
             }
         }
-        $this->response('刷新失败',ERROR_REFRESH_TOKEN_INVAILD);
+        $this->error('刷新失败',ERROR_REFRESH_TOKEN_INVAILD);
     }
 
     /**

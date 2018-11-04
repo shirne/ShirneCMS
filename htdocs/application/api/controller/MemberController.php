@@ -35,12 +35,12 @@ class MemberController extends AuthedController
         $validate=new MemberValidate();
         $validate->setId($this->user['id']);
         if(!$validate->scene('edit')->check($data)){
-            $this->response($validate->getError(),0);
+            $this->error($validate->getError(),0);
         }else{
             $data['id']=$this->user['id'];
             Db::name('Member')->update($data);
             user_log($this->user['id'],'addressadd',1,'修改个人资料');
-            $this->response('保存成功');
+            $this->success('保存成功');
         }
     }
 
@@ -48,16 +48,16 @@ class MemberController extends AuthedController
         $data=[];
         $uploaded=$this->upload('avatar','upload_avatar');
         if(empty($uploaded)){
-            $this->response('请选择文件',0);
+            $this->error('请选择文件',0);
         }
         $data['avatar']=$uploaded['url'];
         $result=Db::name('Member')->where('id',$this->user['id'])->update($data);
         if($result){
             if(!empty($this->user['avatar']))delete_image($this->user['avatar']);
             user_log($this->user['id'], 'avatar', 1, '修改头像');
-            $this->response('更新成功');
+            $this->success('更新成功');
         }else{
-            $this->response('更新失败',0);
+            $this->error('更新失败',0);
         }
     }
 
@@ -81,25 +81,25 @@ class MemberController extends AuthedController
         $data['is_default']=empty($data['is_default'])?0:1;
         $validate=new MemberAddressValidate();
         if(!$validate->check($data)){
-            $this->response($validate->getError(),0);
+            $this->error($validate->getError(),0);
         }else{
             if($id>0){
                 $result=Db::name('MemberAddress')->where('member_id',$this->user['id'])
                     ->where('address_id',$id)->update($data);
                 if($result){
                     user_log($this->user['id'],'addressedit',1,'修改收货地址:'.$id);
-                    $this->response('修改成功');
+                    $this->success('修改成功');
                 }else{
-                    $this->response('修改失败',0);
+                    $this->error('修改失败',0);
                 }
             }else{
                 $data['member_id']=$this->user['id'];
                 $id=Db::name('MemberAddress')->insert($data,false,true);
                 if($id){
                     user_log($this->user['id'],'addressadd',1,'添加收货地址:'.$id);
-                    $this->response('添加成功');
+                    $this->success('添加成功');
                 }else{
-                    $this->response('添加失败',0);
+                    $this->error('添加失败',0);
                 }
             }
         }
@@ -109,7 +109,7 @@ class MemberController extends AuthedController
     public function change_password(){
         $password=$this->request->post('password');
         if(!compare_password($this->user,$password)){
-            $this->error('密码输入错误');
+            $this->error('密码输入错误',0);
         }
 
         $newpassword=$this->request->post('newpassword');
@@ -119,7 +119,7 @@ class MemberController extends AuthedController
             'salt'=>$salt
         );
         Db::name('Member')->where('id',$this->user['id'])->update($data);
-        $this->response('密码修改成功');
+        $this->success('密码修改成功');
     }
 
     public function sec_password(){
@@ -165,7 +165,7 @@ class MemberController extends AuthedController
     public function order_view($id){
         $order=Db::name('Order')->where('order_id',intval($id))->find();
         if(empty($order) || $order['delete_time']>0){
-            $this->response('订单不存在或已删除',0);
+            $this->error('订单不存在或已删除',0);
         }
         $order['products']=Db::view('OrderProduct', '*')
             ->view('Product', ['id' => 'orig_product_id', 'update_time' => 'orig_product_update'], 'OrderProduct.product_id=Product.id', 'LEFT')

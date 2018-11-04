@@ -60,7 +60,7 @@ class ArticleController extends BaseController
         $id=intval($id);
         $article = ArticleModel::get($id);
         if(empty($article)){
-            $this->response('文章不存在',0);
+            $this->error('文章不存在',0);
         }
         $article->setInc('views',1);
         $images=Db::name('ArticleImages')->where('article_id',$article['id'])->select();
@@ -88,28 +88,28 @@ class ArticleController extends BaseController
         $data=$this->request->only('article_id,email,is_anonymous,content,reply_id','POST');
         $validate=new ArticleCommentValidate();
         if(!$validate->check($data)){
-            $this->response($validate->getError(),0);
+            $this->error($validate->getError(),0);
         }else{
             $data['member_id']=$this->isLogin?$this->user['id']:0;
             if(!empty($data['member_id'])){
                 $data['email']=$this->user['email'];
             }else{
                 if(empty($data['email'])){
-                    $this->response('请填写邮箱',0);
+                    $this->error('请填写邮箱',0);
                 }
             }
             if(!empty($data['reply_id'])){
                 $reply=Db::name('ArticleComment')->find($data['reply_id']);
                 if(empty($reply)){
-                    $this->response('回复的评论不存在',0);
+                    $this->error('回复的评论不存在',0);
                 }
                 $data['group_id']=empty($reply['group_id'])?$reply['id']:$reply['group_id'];
             }
             $model=ArticleCommentModel::create($data);
             if($model['id']){
-                $this->response('评论成功');
+                $this->success('评论成功');
             }else{
-                $this->response('评论失败',0);
+                $this->error('评论失败',0);
             }
         }
     }

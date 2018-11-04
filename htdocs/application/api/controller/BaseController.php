@@ -1,10 +1,5 @@
 <?php
-/**
- * API基类.
- * User: shirne
- * Date: 2018/3/21
- * Time: 7:30
- */
+
 namespace app\api\controller;
 
 use app\api\facade\MemberTokenModel;
@@ -17,6 +12,11 @@ define('ERROR_TOKEN_INVAILD',102);//token无效
 define('ERROR_TOKEN_EXPIRE',103);//token过期
 define('ERROR_REFRESH_TOKEN_INVAILD',105);//refresh_token失效
 
+/**
+ * API基类.
+ * Class BaseController
+ * @package app\api\controller
+ */
 class BaseController extends Controller
 {
     protected $token;
@@ -65,20 +65,26 @@ class BaseController extends Controller
                 $this->isLogin=true;
             }else{
                 $this->token=null;
-                return $this->response("登录失效",$errorno);
+                $this->error("登录失效",$errorno);
             }
         }
     }
 
-    protected function response($message,$status=1){
-        $data           =   array();
-        if(is_array($message)){
-            $data['data'] = $message;
-        }else {
-            $data['info'] = $message;
+    protected function error($msg = '', $code = 0, $data = '', $wait = 3, array $header = [])
+    {
+        $this->result($data,$code,$msg);
+    }
+
+    protected function success($data = '', $code = 1, $msg = '', $wait = 3, array $header = [])
+    {
+        if(empty($msg) && is_string($data)){
+            $msg=$data;
+            $data=[];
         }
-        $data['status'] =   is_int($data)?$data:$status;
-        json($data)->send();
-        exit;
+        $this->result($data,$code,$msg);
+    }
+
+    protected function response($data,$code=1){
+        $this->result($data,$code);
     }
 }
