@@ -64,4 +64,7 @@
             </form>
         </div>
     </div>
+    <script src="__STATIC__/moment/min/moment.min.js"></script>
+    <script src="__STATIC__/moment/locale/zh-cn.js"></script>
+    <script src="__STATIC__/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
 </block>

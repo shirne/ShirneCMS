@@ -10,7 +10,7 @@
     <meta name="description" content="{$description}" />
 
     <link href="__STATIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="__STATIC__/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link href="__STATIC__/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
     <link href="__STATIC__/ionicons/css/ionicons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="__STATIC__/css/style.css">
 

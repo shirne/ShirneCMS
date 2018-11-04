@@ -10,7 +10,7 @@
     <link href="__STATIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Add custom CSS here -->
-    <link href="__STATIC__/bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link href="__STATIC__/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
     <link rel="stylesheet" href="__STATIC__/ionicons/css/ionicons.min.css">
     <link href="__STATIC__/toastr/toastr.min.css" rel="stylesheet">
     <link href="__STATIC__/admin/css/common.css" rel="stylesheet">
@@ -62,7 +62,7 @@
 
     <script src="__STATIC__/moment/min/moment.min.js"></script>
     <script src="__STATIC__/moment/locale/zh-cn.js"></script>
-    <script src="__STATIC__/bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="__STATIC__/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
     <script src="__STATIC__/admin/js/app.min.js?v={:config('template.static_version')}"></script>
     <script type="text/javascript">
         (function(){

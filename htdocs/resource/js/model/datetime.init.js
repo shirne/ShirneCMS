@@ -11,25 +11,32 @@ if($.fn.datetimepicker) {
         prevYear: '上一年',
         nextYear: '下一年',
         selectDecade: '选择年份区间',
+        selectTime:'选择时间',
         prevDecade: '上一区间',
         nextDecade: '下一区间',
         prevCentury: '上个世纪',
         nextCentury: '下个世纪'
     };
-    var icons={
-        time: 'ion-md-time',
-        date: 'ion-md-calendar',
-        up: 'ion-md-arrow-dropup',
-        down: 'ion-md-arrow-dropdown',
-        previous: 'ion-md-arrow-dropleft',
-        next: 'ion-md-arrow-dropright',
-        today: 'ion-md-today',
-        clear: 'ion-md-trash',
-        close: 'ion-md-close'
-    };
+
+    function transOption(option) {
+        if(!option)return {};
+        var newopt={};
+        for(var i in option){
+            switch (i){
+                case 'viewmode':
+                    newopt['viewMode']=option[i];
+                    break;
+                case 'keepopen':
+                    newopt['keepOpen']=option[i];
+                    break;
+                default:
+                    newopt[i]=option[i];
+            }
+        }
+        return newopt;
+    }
     $('.datepicker').each(function(){
         var config=$.extend({
-            icons:icons,
             tooltips:tooltips,
             format: 'YYYY-MM-DD',
             locale: 'zh-cn',
@@ -37,14 +44,14 @@ if($.fn.datetimepicker) {
             showTodayButton:true,
             showClose:true,
             keepInvalid:true
-        },$(this).data());
+        },transOption($(this).data()));
+
         $(this).datetimepicker(config);
     });
 
     $('.date-range').each(function () {
         var from = $(this).find('[name=fromdate],.fromdate'), to = $(this).find('[name=todate],.todate');
         var options = $.extend({
-            icons:icons,
             tooltips:tooltips,
             format: 'YYYY-MM-DD',
             locale:'zh-cn',
