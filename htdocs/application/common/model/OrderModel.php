@@ -62,6 +62,7 @@ class OrderModel extends BaseModel
      * @param $address
      * @param $remark
      * @param $balance_pay
+     * @param $ordertype
      * @return mixed
      */
 
