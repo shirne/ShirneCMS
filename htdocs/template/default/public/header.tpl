@@ -10,13 +10,13 @@
                 <ul class="navbar-nav nav-fill main-nav">
                     <volist name="navigator" id="nav">
                         <if condition="empty($nav['subnav'])">
-                            <li class="nav-item" data-model="{$nav['model']}"><a class="nav-link" href="{$nav['url']}">{$nav['title']}</a></li>
+                            <li class="nav-item" data-model="{$nav['model']}"><a class="nav-link" href="{$nav['url']}" target="{$nav['target']}">{$nav['title']}</a></li>
                             <else/>
                             <li class="nav-item dropdown" data-model="{$nav['model']}">
-                                <a href="javascript:" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{$nav['title']} <span class="caret"></span></a>
+                                <a href="javascript:" target="{$nav['target']}" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{$nav['title']} <span class="caret"></span></a>
                                 <div class="dropdown-menu">
                                     <volist name="nav['subnav']" id="nav">
-                                        <a class="dropdown-item" href="{$nav['url']}">{$nav['title']}</a>
+                                        <a class="dropdown-item" target="{$nav['target']}" href="{$nav['url']}">{$nav['title']}</a>
                                     </volist>
                                 </div>
                             </li>
