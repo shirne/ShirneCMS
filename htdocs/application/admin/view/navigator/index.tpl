@@ -13,6 +13,7 @@
                     <tr>
                         <th width="40">&nbsp;</th>
                         <th width="150">名称</th>
+                        <th width="70">打开方式</th>
                         <th width="50">底部显示</th>
                         <th>链接</th>
                         <th width="120">子菜单</th>
@@ -25,6 +26,13 @@
                             <td><i class="ion-md-apps"></i> </td>
                             <td>
                                 <input type="text" class="form-control" name="navs[{$key}][title]" value="{$item.title}"/>
+                            </td>
+                            <td>
+                                <select class="form-control" name="navs[{$key}][target]">
+                                    <option value="">无</option>
+                                    <option value="_blank" {$item['target']=='_blank'?'selected':''}>新窗口</option>
+                                    <option value="_self" {$item['target']=='_self'?'selected':''}>本窗口</option>
+                                </select>
                             </td>
                             <td>
                                 <label><input type="checkbox" name="navs[{$key}][footer]" value="1" {$item['footer']?'checked':''}/>&nbsp;是</label>
@@ -101,6 +109,13 @@
                 <input type="text" class="form-control" name="navs[{@key}][title]" />
             </td>
             <td>
+                <select class="form-control" name="navs[{$key}][target]">
+                    <option value="">无</option>
+                    <option value="_blank">新窗口</option>
+                    <option value="_self">本窗口</option>
+                </select>
+            </td>
+            <td>
                 <label><input type="checkbox" name="navs[{@key}][footer]" value="1" />&nbsp;是</label>
             </td>
             <td>
@@ -138,6 +153,13 @@
             <td><i class="ion-md-apps"></i> </td>
             <td>
                 <input type="text" class="form-control" name="navs[{@key}][subnav][{@index}][title]" />
+            </td>
+            <td>
+                <select class="form-control" name="navs[{@key}][subnav][{@index}][target]">
+                    <option value="">无</option>
+                    <option value="_blank">新窗口</option>
+                    <option value="_self">本窗口</option>
+                </select>
             </td>
             <td>
                 &nbsp;
@@ -228,10 +250,11 @@
             function modulePickerChange(e) {
                 var parent=$(this).parents('.input-group');
                 var module=$(this).val();
+                var self=this;
                 if(cates[module]){
                     if(cates[module]===1){
                         setTimeout(function() {
-                            modulePickerChange.call(this,e);
+                            modulePickerChange.call(self,e);
                         },1000);
                     }else {
                         initCategory(parent.find('.modulecate'), cates[module]);
