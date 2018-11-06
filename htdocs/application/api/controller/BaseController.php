@@ -70,9 +70,17 @@ class BaseController extends Controller
         }
     }
 
+    protected function get_param($key){
+        if(isset($this->input[$key])){
+            return $this->input[$key];
+        }
+        return $this->request->param($key);
+    }
+
     protected function error($msg = '', $code = 0, $data = '', $wait = 3, array $header = [])
     {
-        $this->result($data,$code,$msg);
+        $this->response($data,$code,$msg);
+        exit;
     }
 
     protected function success($data = '', $code = 1, $msg = '', $wait = 3, array $header = [])
@@ -81,10 +89,24 @@ class BaseController extends Controller
             $msg=$data;
             $data=[];
         }
-        $this->result($data,$code,$msg);
+        $this->response($data,$code,$msg)->send();
+        exit;
     }
 
-    protected function response($data,$code=1){
-        $this->result($data,$code);
+    /**
+     * ajax输出
+     * @param $data
+     * @param int $code
+     * @param string $msg
+     * @return \think\response\Json
+     */
+    protected function response($data,$code=1,$msg = ''){
+
+        return json([
+            'code' => $code,
+            'msg'  => $msg,
+            'time' => time(),
+            'data' => $data,
+        ]);
     }
 }

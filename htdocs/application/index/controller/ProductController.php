@@ -99,7 +99,7 @@ class ProductController extends BaseController
         $this->seo($product['title']);
         $this->category($product['cate_id']);
         $comments=Db::view('productComment','*')
-            ->view('member',['username','realname'],'member.id=articleComment.member_id','LEFT')
+            ->view('member',['username','realname'],'member.id=productComment.member_id','LEFT')
             ->where('product_id',$id)->paginate(10);
 
         $this->assign('product',$product);

@@ -16,7 +16,7 @@ use think\Db;
 class ArticleController extends BaseController
 {
     public function get_all_cates(){
-        $this->response(CategoryFacade::getTreedCategory());
+        return $this->response(CategoryFacade::getTreedCategory());
     }
 
     public function get_cates($pid=0){
@@ -27,7 +27,7 @@ class ArticleController extends BaseController
             }
             $pid=$current['id'];
         }
-        $this->response(CategoryFacade::getSubCategory($pid));
+        return $this->response(CategoryFacade::getSubCategory($pid));
     }
 
     public function get_list($cate=''){
@@ -35,7 +35,7 @@ class ArticleController extends BaseController
             ->view('category',['name'=>'category_name','title'=>'category_title'],'article.cate_id=category.id','LEFT')
             ->view('manager',['username'],'manager.id=article.user_id','LEFT');
 
-        $model->where('status',1);
+        $model->where('article.status',1);
         if($cate){
             $category=CategoryFacade::findCategory($cate);
             $model->whereIn('cate_id',CategoryFacade::getSubCateIds($category['id']));
@@ -48,7 +48,7 @@ class ArticleController extends BaseController
             $item['prop_data']=[];
             return $item;
         });
-        $this->response([
+        return $this->response([
             'lists'=>$lists->items(),
             'page'=>$lists->currentPage(),
             'count'=>$lists->total(),
@@ -65,7 +65,7 @@ class ArticleController extends BaseController
         $article->setInc('views',1);
         $images=Db::name('ArticleImages')->where('article_id',$article['id'])->select();
 
-        $this->response([
+        return $this->response([
             'article'=>$article,
             'images'=>$images
         ]);
@@ -73,10 +73,10 @@ class ArticleController extends BaseController
 
     public function comments($id){
         $comments=Db::view('articleComment','*')
-            ->view('member',['username','realname'],'member.id=articleComment.member_id','LEFT')
+            ->view('member',['username','realname','avatar'],'member.id=articleComment.member_id','LEFT')
             ->where('article_id',$id)->paginate(10);
 
-        $this->response([
+        return $this->response([
             'lists'=>$comments->items(),
             'page'=>$comments->currentPage(),
             'count'=>$comments->total(),

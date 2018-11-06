@@ -13,7 +13,7 @@ class PageController extends BaseController
 {
     public function groups(){
         $groups=Db::name('PageGroup')->select();
-        $this->response($groups);
+        return $this->response($groups);
     }
 
     public function pages($group=''){
@@ -23,7 +23,7 @@ class PageController extends BaseController
             $model->where('group',$group);
         }
         $lists=$model->order('sort ASC,id ASC')->select();
-        $this->response($lists);
+        return $this->response($lists);
     }
 
     public function page($name){
@@ -31,7 +31,7 @@ class PageController extends BaseController
         if (empty($page)) $this->error('页面不存在',0);
         $images=Db::name('PageImages')->where('page_id' , $page['id'])->select();
 
-        $this->response([
+        return $this->response([
             'page'=>$page,
             'images'=>$images
         ]);

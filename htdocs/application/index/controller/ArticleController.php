@@ -29,7 +29,7 @@ class ArticleController extends BaseController{
             ->view('category',['name'=>'category_name','title'=>'category_title'],'article.cate_id=category.id','LEFT')
             ->view('manager',['username'],'manager.id=article.user_id','LEFT');
 
-        $model->where('status',1);
+        $model->where('article.status',1);
         if(!empty($this->category)){
             $this->seo($this->category['title']);
             $model->whereIn('article.cate_id',CategoryFacade::getSubCateIds($this->category['id']));
