@@ -29,7 +29,7 @@ class BaseController extends Controller
         parent::initialize();
         $this->config=getSettings();
 
-        $format=$this->request->get('format','json');
+        /*$format=$this->request->get('format','json');
         $data=file_get_contents('php://input');
         if(!empty($data)) {
             if ($format == 'xml') {
@@ -42,7 +42,8 @@ class BaseController extends Controller
             if(!is_array($this->input)){
                 $this->input=array();
             }
-        }
+        }*/
+        $this->input=$this->request->put();
 
         $this->checkLogin();
 
@@ -75,6 +76,12 @@ class BaseController extends Controller
             return $this->input[$key];
         }
         return $this->request->param($key);
+    }
+    protected function has_param($key){
+        if(!isset($this->input[$key])){
+            return $this->request->has($key);
+        }
+        return true;
     }
 
     protected function error($msg = '', $code = 0, $data = '', $wait = 3, array $header = [])

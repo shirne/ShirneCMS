@@ -33,7 +33,7 @@ class ProductController extends BaseController
         $model=Db::view('product','*')
             ->view('productCategory',['name'=>'category_name','title'=>'category_title'],'product.cate_id=productCategory.id','LEFT');
 
-        $model->where('article.status',1);
+        $model->where('product.status',1);
         if($cate){
             $category=ProductCategoryFacade::findCategory($cate);
             $model->whereIn('product.cate_id',ProductCategoryFacade::getSubCateIds($category['id']));

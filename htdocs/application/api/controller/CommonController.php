@@ -24,21 +24,64 @@ class CommonController extends BaseController
 
             foreach ($methods as $method) {
                 $m = explode('.', $method);
-                if (count($m) == 2) {
-                    $controller = $this;
-                    $m = $m[0];
-                } else {
+                if (count($m) > 1) {
                     if(strtolower($m[0])=='common'){
                         $controller = $this;
                     }else {
                         $controller = \container()->make('\\app\\api\\controller\\' . ucfirst($m[0]) . 'Controller');
                     }
                     $m = $m[1];
+                } else {
+                    $controller = $this;
+                    $m = $m[0];
                 }
 
                 if (method_exists($controller, $m)) {
-                    $response = call_user_func([$controller, $m]);
-                    $data[$method] = $response->data();
+                    $args=[];
+                    $reflect=new \ReflectionMethod( $controller, $m);
+                    foreach ($reflect->getParameters() as $param){
+                        if($this->has_param($param->name)){
+                            $args[]=$this->get_param($param->name);
+                        }else{
+                            break;
+                        }
+                    }
+                    $response = call_user_func_array([$controller, $m],$args);
+                    $curData = $response->getData();
+                    $data[$method] =$curData['data'];
+                }
+            }
+        }else{
+
+            foreach ($this->input as $method=>$arguments) {
+                $m = explode('.', $method);
+                if (count($m) > 1) {
+                    if(strtolower($m[0])=='common'){
+                        $controller = $this;
+                    }else {
+                        $controller = \container()->make('\\app\\api\\controller\\' . ucfirst($m[0]) . 'Controller');
+                    }
+                    $m = $m[1];
+                } else {
+                    $controller = $this;
+                    $m = $m[0];
+                }
+
+                if (method_exists($controller, $m)) {
+                    $args=[];
+                    $reflect=new \ReflectionMethod( $controller, $m);
+                    foreach ($reflect->getParameters() as $param){
+                        if(isset($arguments[$param->name])){
+                            $args[]=$arguments[$param->name];
+                        }elseif($this->request->has($param->name,'get')){
+                            $args[]=$this->request->get($param->name);
+                        }else{
+                            break;
+                        }
+                    }
+                    $response = call_user_func_array([$controller, $m],$args);
+                    $curData = $response->getData();
+                    $data[$method] =$curData['data'];
                 }
             }
         }
@@ -56,6 +99,14 @@ class CommonController extends BaseController
 
     public function siteinfo(){
         $settings=getSettings(false,true);
-        return $this->response($settings['common']);
+        $data=[];
+        foreach ($settings['common'] as $k=>$v){
+            if(strpos($k,'site-')===0){
+                $data[substr($k,5)]=$v;
+            }else{
+                $data[$k]=$v;
+            }
+        }
+        return $this->response($data);
     }
 }

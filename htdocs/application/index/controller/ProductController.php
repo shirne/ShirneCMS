@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: shirne
- * Date: 2018/5/13
- * Time: 9:55
- */
 
 namespace app\index\controller;
 
@@ -15,6 +9,11 @@ use app\common\model\ProductSkuModel;
 use app\common\validate\ProductCommentValidate;
 use think\Db;
 
+/**
+ * 产品控制器
+ * Class ProductController
+ * @package app\index\controller
+ */
 class ProductController extends BaseController
 {
     protected $categries;
@@ -31,20 +30,23 @@ class ProductController extends BaseController
     public function index($name=""){
         $this->category($name);
 
-        $where=array();
+        $model=Db::view('product','*')
+            ->view('productCategory',
+                ['name'=>'category_name','title'=>'category_title'],
+                'product.cate_id=productCategory.id',
+                'LEFT');
+
         if(!empty($this->category)){
             $this->seo($this->category['title']);
-            $where[]=array('product.cate_id','in',ProductCategoryFacade::getSubCateIds($this->category['id']));
+            $model->whereIn('product.cate_id',ProductCategoryFacade::getSubCateIds($this->category['id']));
         }else{
             $this->seo("产品中心");
         }
 
-        $model=Db::view('product','*')
-            ->view('productCategory',['name'=>'category_name','title'=>'category_title'],'product.cate_id=productCategory.id','LEFT')
-            ->where($where)
+        $lists=$model->where('product.status',1)
             ->paginate($this->pagesize);
 
-        $model->each(function($item){
+        $lists->each(function($item){
             if(!empty($item['prop_data'])){
                 $item['prop_data']=json_decode($item['prop_data'],true);
             }
@@ -52,8 +54,8 @@ class ProductController extends BaseController
             return $item;
         });
 
-        $this->assign('lists', $model);
-        $this->assign('page',$model->render());
+        $this->assign('lists', $lists);
+        $this->assign('page',$lists->render());
 
         return $this->fetch();
     }
