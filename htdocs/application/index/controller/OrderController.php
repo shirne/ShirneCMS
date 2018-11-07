@@ -157,7 +157,7 @@ class OrderController extends AuthedController
         if(empty($order)|| $order['status']!=0){
             $this->error('订单已支付或不存在!');
         }
-        $debit = money_log($order['member_id'], -$order['payamount'], "下单支付", 'consume','money');
+        $debit = money_log($order['member_id'], -$order['payamount']*100, "下单支付", 'consume','money');
         if ($debit){
             $order->save(['status'=>1,'pay_time'=>time()]);
             $this->success('支付成功!');
