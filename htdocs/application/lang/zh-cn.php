@@ -7,7 +7,7 @@ return [
     'All'=>'全部',
 
     'Member'=>'会员',
-    'Emplyee'=>'员工',
+    'Employee'=>'员工',
 
     'Balance'=>'余额',
     'Credit'=>'积分',

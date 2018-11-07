@@ -45,12 +45,13 @@ function file_download($data,$filename='',$isContent=true,$mime=''){
 function getTextStyles(){
     return ['secondary','primary','info','success','warning','danger'];
 }
-function getMoneyFields(){
+function getMoneyFields($withall=true){
     $fields= [
         'all'=>lang('All'),
         'money'=>lang('Balance'),
         'credit'=>lang('Credit')
     ];
+    if(!$withall)unset($fields['all']);
     return $fields;
 }
 function getLogTypes(){

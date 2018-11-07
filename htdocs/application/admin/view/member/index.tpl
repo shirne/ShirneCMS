@@ -48,7 +48,6 @@
                 <th>用户名</th>
                 <th>手机/邮箱</th>
                 <th>余额</th>
-                <th>积分</th>
                 <th>推荐人</th>
                 <th>注册时间</th>
                 <th>上次登陆</th>
@@ -64,8 +63,16 @@
                 <td>{$v.username}
                     <if condition="$v.status eq 1"><else/><span class="badge badge-danger" >禁用</span></if><br/>{$v.realname}</td>
                 <td>{$v.mobile}<br />{$v.email}</td>
-                <td>{$v.money|showmoney}</td>
-                <td>{$v.credit}</td>
+                <td>
+                    <foreach name="moneyTypes" item="mt" key="k">
+                        <div class="input-group input-group-sm mb-2">
+								<span class="input-group-prepend">
+									<span class="input-group-text">{$mt}</span>
+								</span>
+                            <span class="form-control">{$v[$k]|showmoney}</span>
+                        </div>
+                    </foreach>
+                </td>
                 <td>
                     <empty name="v.refer_name">
                         -
@@ -133,8 +140,9 @@
     <script type="text/plain" id="rechargeTpl">
         <div class="row" style="margin:0 10%;">
             <div class="col-12 form-group"><div class="input-group"><div ><span class="input-group-text">充值类型</span> </div><div class="col w-50 text-center" ><div class="btn-group btn-group-toggle" data-toggle="buttons">
-                <label class="btn btn-secondary active"> <input type="radio" name="field" value="money" autocomplete="off" checked> 余额</label>
-                <label class="btn btn-secondary"><input type="radio" name="field" value="credit" autocomplete="off"> 积分</label>
+                <foreach name="moneyTypes" item="mt" key="k">
+                <label class="btn btn-outline-primary active"> <input type="radio" name="field" value="{$k}" autocomplete="off" {$k=='money'?'checked':''}> {$mt}</label>
+                </foreach>
             </div></div> </div></div>
             <div class="col-12 form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">充值金额</span> </div><input type="text" name="amount" class="form-control" placeholder="请填写充值金额"/> </div></div>
             <div class="col-12 form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">充值原因</span> </div><input type="text" name="reson" class="form-control" placeholder="请填写充值原因"/> </div> </div>

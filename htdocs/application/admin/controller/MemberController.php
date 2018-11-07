@@ -56,6 +56,7 @@ class MemberController extends BaseController
         $lists=$model->order('m.id desc')->paginate(15);
 
         $this->assign('lists',$lists);
+        $this->assign('moneyTypes',getMoneyFields(false));
         $this->assign('types',getMemberTypes());
         $this->assign('levels',getMemberLevels());
         $this->assign('type',$type);
