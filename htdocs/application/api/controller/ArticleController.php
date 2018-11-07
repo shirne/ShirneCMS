@@ -20,7 +20,7 @@ class ArticleController extends BaseController
     }
 
     public function get_cates($pid=0){
-        if($pid!=0 && preg_match('/^[a-zA-Z]\w+/',$pid)){
+        if($pid != '0' && preg_match('/^[a-zA-Z]\w+$/',$pid)){
             $current=CategoryFacade::findCategory($pid);
             if(empty($current)){
                 $this->response([]);
@@ -36,6 +36,7 @@ class ArticleController extends BaseController
             ->view('manager',['username'],'manager.id=article.user_id','LEFT');
 
         $model->where('article.status',1);
+        $category=null;
         if($cate){
             $category=CategoryFacade::findCategory($cate);
             $model->whereIn('cate_id',CategoryFacade::getSubCateIds($category['id']));
@@ -50,6 +51,7 @@ class ArticleController extends BaseController
         });
         return $this->response([
             'lists'=>$lists->items(),
+            'category'=>$category?:[],
             'page'=>$lists->currentPage(),
             'count'=>$lists->total(),
             'total_page'=>$lists->lastPage(),
