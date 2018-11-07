@@ -23,19 +23,33 @@ class SettingController extends BaseController
         if($this->request->isPost()){
             $this->checkPermision("setting_update");
             $data=$this->request->post();
-            $settings=getSettings(false,false,true);
+            $settings=getSettings(true,false,true);
             foreach ($data as $k=>$v){
                 if(substr($k,0,2)=='v-'){
                     $key=substr($k,2);
                     if(is_array($v))$v=serialize($v);
-                    if($settings[$key]!=$v) {
+                    if(isset($settings[$key]) && $settings[$key]['value']!=$v) {
                         Db::name('setting')->where('key', $key)->update(array('value' => $v));
+                    }
+                }
+            }
+            $delete_images=[];
+            $errmsgs=[];
+            foreach ($settings as $k=>$row){
+                if($row['type']=='image'){
+                    $uploaded=$this->upload('setting','upload_'.$k);
+                    if($uploaded){
+                        Db::name('setting')->where('key', $k)->update(array('value' => $uploaded['url']));
+                        $delete_images[]=$data['delete_'.$k];
+                    }elseif($this->uploadErrorCode>102){
+                        $errmsgs[]=$row['title'].':'.$this->uploadError;
                     }
                 }
             }
             cache('setting',null);
             user_log($this->mid,'sysconfig',1,'修改系统配置' ,'manager');
-            $this->success('配置已更新',url('setting/index',array('group'=>$group)));
+            delete_image($delete_images);
+            $this->success('配置已更新<br />'.implode(',',$errmsgs),url('setting/index',array('group'=>$group)));
         }
         $this->assign('group',$group);
         $this->assign('groups', settingGroups());

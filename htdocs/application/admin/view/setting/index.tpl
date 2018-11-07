@@ -32,7 +32,7 @@
             </foreach>
         </ul>
 
-        <form class="form-horizontal" role="form" method="post">
+        <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
             <input type="hidden" name="group" value="{$group}" />
             <!-- Tab panes -->
             <div class="tab-content">
@@ -46,6 +46,21 @@
                                 <switch name="item.type">
                                     <case value="text">
                                         <input type="text" class="form-control" name="v-{$key}" value="{$item.value}" placeholder="{$item.description}">
+                                    </case>
+                                    <case value="image">
+                                        <div class="input-group">
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input" name="upload_{$key}"/>
+                                                <label class="custom-file-label" for="upload_{$key}">选择文件</label>
+                                            </div>
+                                        </div>
+                                        <if condition="$item['value']">
+                                            <figure class="figure">
+                                                <img src="{$item.value}" class="figure-img img-fluid rounded" alt="image">
+                                                <figcaption class="figure-caption text-center">{$item.value}</figcaption>
+                                            </figure>
+                                            <input type="hidden" name="delete_{$key}" value="{$item.value}"/>
+                                        </if>
                                     </case>
                                     <case value="location">
                                         <div class="input-group">

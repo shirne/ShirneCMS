@@ -126,6 +126,7 @@ function settingTypes($key = '')
     $types['select'] = lang('Select');
     $types['textarea'] = lang('Textarea');
     $types['location'] = lang('Location Picker');
+    $types['image'] = lang('Upload Image');
     $types['html'] = lang('Editor');
 
     if (empty($key)) {

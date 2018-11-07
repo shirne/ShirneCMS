@@ -49,6 +49,7 @@ return [
     'Select'=>'下拉选择',
     'Textarea'=>'多行文本',
     'Location Picker'=>'位置选择',
+    'Upload Image'=>'上传图片',
     'Editor'=>'编辑器',
 
     'Wechat Pay'=>'微信支付',
