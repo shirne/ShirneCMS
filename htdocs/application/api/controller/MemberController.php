@@ -61,6 +61,14 @@ class MemberController extends AuthedController
         }
     }
 
+    public function uploadImage(){
+        $uploaded=$this->upload('member','file_upload');
+
+        return $this->response([
+            'url'=>$uploaded['url']
+        ]);
+    }
+
     public function addresses(){
         $lists=Db::name('memberAddress')
             ->where('member_id',$this->user['id'])
