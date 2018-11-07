@@ -87,7 +87,7 @@
 
                     <if condition="$v.is_agent neq 0">
                         <div class="btn-group btn-group-sm">
-                                <a class="btn btn-outline-dark" href="{:url('member/cancel_agent',array('id'=>$v['id']))}" style="color:green;" onclick="javascript:return del(this,'取消代理不能更改已注册的用户!!!');"><i class="ion-md-close"></i> 取消代理</a>
+                                <a class="btn btn-outline-dark" href="{:url('member/cancel_agent',array('id'=>$v['id']))}" onclick="javascript:return del(this,'取消代理不能更改已注册的用户!!!');"><i class="ion-md-close"></i> 取消代理</a>
                             <button type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown">
                                 <span class="caret"></span>
                                 <span class="sr-only">Toggle Dropdown</span>

@@ -54,11 +54,14 @@ function getMoneyFields($withall=true){
     if(!$withall)unset($fields['all']);
     return $fields;
 }
-function getLogTypes(){
-    return [
+function getLogTypes($withall=true){
+    $fields = [
+        'all'=>lang('All'),
         'consume'=>lang('Consume'),
         'recharge'=>lang('Recharge'),
     ];
+    if(!$withall)unset($fields['all']);
+    return $fields;
 }
 function getMemberTypes(){
     return [
