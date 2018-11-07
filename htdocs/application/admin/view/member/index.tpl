@@ -141,7 +141,7 @@
         <div class="row" style="margin:0 10%;">
             <div class="col-12 form-group"><div class="input-group"><div ><span class="input-group-text">充值类型</span> </div><div class="col w-50 text-center" ><div class="btn-group btn-group-toggle" data-toggle="buttons">
                 <foreach name="moneyTypes" item="mt" key="k">
-                <label class="btn btn-outline-primary active"> <input type="radio" name="field" value="{$k}" autocomplete="off" {$k=='money'?'checked':''}> {$mt}</label>
+                <label class="btn btn-outline-primary {$k=='money'?'active':''}"> <input type="radio" name="field" value="{$k}" autocomplete="off" {$k=='money'?'checked':''}> {$mt}</label>
                 </foreach>
             </div></div> </div></div>
             <div class="col-12 form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">充值金额</span> </div><input type="text" name="amount" class="form-control" placeholder="请填写充值金额"/> </div></div>
