@@ -67,9 +67,52 @@ class ArticleController extends BaseController
         $article->setInc('views',1);
         $images=Db::name('ArticleImages')->where('article_id',$article['id'])->select();
 
+        $digg=false;
+        if($this->isLogin) {
+            $digg = Db::name('articleDigg')->where('article_id', $id)
+                ->where('member_id', $this->user['id'])
+                ->find();
+        }
         return $this->response([
             'article'=>$article,
-            'images'=>$images
+            'images'=>$images,
+            'digged'=>empty($digg)?0:1
+        ]);
+    }
+
+    public function digg($id,$type='up'){
+        $id=intval($id);
+        $article = ArticleModel::get($id);
+        if(empty($article)){
+            $this->error('文章不存在',0);
+        }
+        if(!$this->isLogin){
+            $this->error('请先登录',ERROR_NEED_LOGIN);
+        }
+
+        $digg=Db::name('articleDigg')->where('article_id',$id)
+            ->where('member_id',$this->user['id'])
+            ->find();
+        if(empty($digg)){
+            if($type=='up') {
+                $article->setInc('digg', 1);
+                Db::name('articleDigg')->insert();
+                $article['digg'] += 1;
+            }else{
+                $this->error('您没对这篇文章点过赞',0);
+            }
+        }else{
+            if($type!=='up'){
+                $article->setDec('digg',1);
+                Db::name('articleDigg')->where('id',$digg['id'])->delete();
+                $article['digg']-=1;
+            }else{
+                $this->error('您已经点过赞啦',0);
+            }
+        }
+
+        return $this->response([
+            'digg'=>$article['digg']
         ]);
     }
 

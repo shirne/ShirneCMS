@@ -13,7 +13,7 @@
                         </button>
                         <div class="dropdown-menu">
                             <foreach name="fields" item="t" key="k">
-                                <a class="dropdown-item" href="{:url('money_log',searchKey('field',$k))}">{$t}</a></a>
+                                <a class="dropdown-item" href="{:url('money_log',searchKey('field',$k))}">{$t}</a>
                             </foreach>
                         </div>
                     </div>
@@ -31,7 +31,7 @@
                             <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">会员: {$member.username}<span class="caret"></span>
                             </button>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="{:url('money_log',searchKey('id',0))}">不限会员</a></a>
+                                <a class="dropdown-item" href="{:url('money_log',searchKey('id',0))}">不限会员</a>
                             </div>
                         </div>
                     </if>
@@ -40,7 +40,7 @@
                             <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">来源: {$from_member.username}<span class="caret"></span>
                             </button>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="{:url('money_log',searchKey('from_id',0))}">不限来源</a></a>
+                                <a class="dropdown-item" href="{:url('money_log',searchKey('from_id',0))}">不限来源</a>
                             </div>
                         </div>
                     </if>
@@ -50,13 +50,41 @@
                         </button>
                         <div class="dropdown-menu">
                             <foreach name="types" item="t" key="k">
-                                <a class="dropdown-item" href="{:url('money_log',searchKey('type',$k))}">{$t}</a></a>
+                                <a class="dropdown-item" href="{:url('money_log',searchKey('type',$k))}">{$t}</a>
                             </foreach>
                         </div>
                     </div>
                 </form>
             </div>
         </div>
+        <table class="table table-hover table-bordered">
+            <thead>
+            <tr>
+                <th class="text-center">\</th>
+                <foreach name="types" item="t" key="k">
+                    <if condition="$k NEQ 'all'">
+                    <th>{$t}</th>
+                    </if>
+                </foreach>
+                <th>合计</th>
+            </tr>
+            <tbody>
+                <foreach name="fields" item="f" key="fk">
+                    <if condition="$fk NEQ 'all'">
+                    <tr>
+                        <th>{$f}</th>
+                        <foreach name="types" item="t" key="tk">
+                            <if condition="$tk NEQ 'all'">
+                            <td>{$statics[$fk][$tk]|showmoney}</td>
+                            </if>
+                        </foreach>
+                        <td>{$statics[$fk]['sum']|showmoney}</td>
+                    </tr>
+                    </if>
+                </foreach>
+            </tbody>
+            </thead>
+        </table>
         <table class="table table-hover table-striped">
             <thead>
             <tr>

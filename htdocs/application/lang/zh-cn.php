@@ -12,6 +12,7 @@ return [
     'Balance'=>'余额',
     'Credit'=>'积分',
 
+    'System Opt.'=>'系统操作',
     'Consume'=>'消费',
     'Recharge'=>'充值',
 

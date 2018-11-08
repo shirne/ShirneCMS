@@ -57,6 +57,7 @@ function getMoneyFields($withall=true){
 function getLogTypes($withall=true){
     $fields = [
         'all'=>lang('All'),
+        'system'=>lang('System Opt.'),
         'consume'=>lang('Consume'),
         'recharge'=>lang('Recharge'),
     ];
@@ -731,6 +732,9 @@ function current_domain(){
 function searchKey($key,$val,$search=''){
     if(!is_array($search)){
         $search=request()->param();
+    }
+    if(isset($search['page'])){
+        unset($search['page']);
     }
     if(strpos($key,',')>0){
         $keys=explode(',',$key);

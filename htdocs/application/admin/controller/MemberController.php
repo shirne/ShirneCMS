@@ -169,6 +169,15 @@ class MemberController extends BaseController
         $types=getLogTypes();
         $fields=getMoneyFields();
 
+        $stacrows=$model->group('mlog.field,mlog.type')->field('mlog.field,mlog.type,sum(mlog.amount) as total_amount')->select();
+        $statics=[];
+        foreach ($stacrows as $row){
+            $statics[$row['field']][$row['type']]=$row['total_amount'];
+        }
+        foreach ($statics as $k=>$list){
+            $statics[$k]['sum']=array_sum($statics[$k]);
+        }
+
         $this->assign('id',$id);
         $this->assign('from_id',$from_id);
         $this->assign('fromdate',$fromdate);
@@ -179,6 +188,7 @@ class MemberController extends BaseController
         $this->assign('types',$types);
         $this->assign('fields',$fields);
         $this->assign('levels',$levels);
+        $this->assign('statics', $statics);
         $this->assign('logs', $logs);
         $this->assign('page',$logs->render());
         return $this->fetch();

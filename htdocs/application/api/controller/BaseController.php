@@ -6,6 +6,7 @@ use app\api\facade\MemberTokenModel;
 use think\Controller;
 use think\Db;
 
+define('ERROR_NEED_LOGIN',99);//登录失败
 define('ERROR_LOGIN_FAILED',101);//登录失败
 define('ERROR_REGISTER_FAILED',111);//注册失败
 define('ERROR_TOKEN_INVAILD',102);//token无效
@@ -86,7 +87,7 @@ class BaseController extends Controller
 
     protected function error($msg = '', $code = 0, $data = '', $wait = 3, array $header = [])
     {
-        $this->response($data,$code,$msg);
+        $this->response($data,$code,$msg)->send();
         exit;
     }
 
