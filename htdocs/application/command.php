@@ -12,4 +12,5 @@
 return [
     'install'=>'app\common\command\Install',
     'manager'=>'app\common\command\Manager',
+    'bootstrap'=>'app\common\command\Bootstrap',
 ];
