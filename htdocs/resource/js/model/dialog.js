@@ -244,8 +244,17 @@ var dialog={
             }
         }).show(html,title?title:'请选择');
     },
-    pickUser:function(url,callback,filter){
-        var user=null;
+    pickList:function (config,callback,filter) {
+        if(typeof config==='string')config={url:config};
+        config=$.extend({
+            'url':'',
+            'name':'对象',
+            'searchHolder':'根据名称搜索',
+            'idkey':'id',
+            'onRow':null,
+            'rowTemplate':'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action">[{@id}]&nbsp;<i class="ion-md-person"></i> {@username}&nbsp;&nbsp;&nbsp;<small><i class="ion-md-phone-portrait"></i> {@mobile}</small></a>'
+        },config||{});
+        var current=null;
         if(!filter)filter={};
         var dlg=new Dialog({
             'onshown':function(body){
@@ -260,7 +269,7 @@ var dialog={
                     filter['key']=input.val();
                     $.ajax(
                         {
-                            url:url,
+                            url:config.url,
                             type:'GET',
                             dataType:'JSON',
                             data:filter,
@@ -268,12 +277,12 @@ var dialog={
                                 isloading=false;
                                 if(json.status){
                                     if(json.data && json.data.length) {
-                                        listbox.html('<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action">[{@id}]&nbsp;<i class="ion-md-person"></i> {@username}&nbsp;&nbsp;&nbsp;<small><i class="ion-md-phone-portrait"></i> {@mobile}</small></a>'.compile(json.data, true));
+                                        listbox.html(config.rowTemplate.compile(json.data, true));
                                         listbox.find('a.list-group-item').click(function () {
                                             var id = $(this).data('id');
                                             for (var i = 0; i < json.data.length; i++) {
-                                                if(json.data[i].id==id){
-                                                    user=json.data[i];
+                                                if(json.data[i][config.idkey]==id){
+                                                    current=json.data[i];
                                                     listbox.find('a.list-group-item').removeClass('active');
                                                     $(this).addClass('active');
                                                     break;
@@ -281,7 +290,7 @@ var dialog={
                                             }
                                         })
                                     }else{
-                                        listbox.html('<span class="list-loading"><i class="ion-md-warning"></i> 没有检索到会员</span>');
+                                        listbox.html('<span class="list-loading"><i class="ion-md-warning"></i> 没有检索到'+config.name+'</span>');
                                     }
                                 }else{
                                     listbox.html('<span class="text-danger"><i class="ion-md-warning"></i> 加载失败</span>');
@@ -293,16 +302,41 @@ var dialog={
                 }).trigger('click');
             },
             'onsure':function(body){
-                if(!user){
-                    toastr.warning('没有选择会员!');
+                if(!current){
+                    toastr.warning('没有选择'+config.name+'!');
                     return false;
                 }
                 if(typeof callback=='function'){
-                    var result = callback(user);
+                    var result = callback(current);
                     return result;
                 }
             }
-        }).show('<div class="input-group"><input type="text" class="form-control searchtext" name="keyword" placeholder="根据会员id或名称，电话来搜索"/><div class="input-group-append"><a class="btn btn-outline-secondary searchbtn"><i class="ion-md-search"></i></a></div></div><div class="list-group mt-2"></div>','请搜索并选择会员');
+        }).show('<div class="input-group"><input type="text" class="form-control searchtext" name="keyword" placeholder="'+config.searchHolder+'"/><div class="input-group-append"><a class="btn btn-outline-secondary searchbtn"><i class="ion-md-search"></i></a></div></div><div class="list-group mt-2"></div>','请搜索并选择'+config.name);
+    },
+    pickUser:function(url,callback,filter){
+        return this.pickList({
+            'url':url,
+            'name':'会员',
+            'searchHolder':'根据会员id或名称，电话来搜索'
+        },callback,filter);
+    },
+    pickArticle:function(url,callback,filter){
+        return this.pickList({
+            'url':url,
+            rowTemplate:'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action"><img src="[@cover]" class="img-fluid" />[{@id}]&nbsp;{@title}&nbsp;</a>',
+            name:'文章',
+            idkey:'id',
+            'searchHolder':'根据文章标题搜索'
+        },callback,filter);
+    },
+    pickProduct:function(url,callback,filter){
+        return this.pickList({
+            'url':url,
+            rowTemplate:'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action"><img src="[@image]" class="img-fluid" />[{@id}]&nbsp;{@title}&nbsp;</a>',
+            name:'产品',
+            idkey:'id',
+            'searchHolder':'根据产品名称搜索'
+        },callback,filter);
     },
     pickLocate:function(type, callback, locate){
         var settedLocate=null;
