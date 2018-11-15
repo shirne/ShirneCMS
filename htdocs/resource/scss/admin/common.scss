@@ -602,6 +602,49 @@ table {
   }
 }
 
+.list-group-picker {
+  .list-group-item {
+    display: -ms-flexbox;
+    display:-webkit-flex;
+    display:flex;
+    -ms-flex-direction: row;
+    -webkit-flex-direction: row;
+    flex-direction: row;
+    .imgview {
+      width:20%;
+      min-width: 20%;
+      margin-right:20px;
+      flex:0 ;
+      padding-top:20%;
+      background-size:cover;
+      background-position: center center;
+      background-repeat: no-repeat;
+    }
+    .text-block{
+      -ms-flex: 1 1 auto;
+      -webkit-flex: 1 1 auto;
+      flex:1 1 auto;
+    }
+  }
+}
+
+.news-group{
+  h3{
+    font-size:14px;
+  }
+  .list-group-item{
+    h3{
+      color:#333;
+    }
+  }
+  .list-group-add{
+    h3{
+      color:#00a2d4;
+      text-align: center;
+      margin:0;
+    }
+  }
+}
 
 @media (max-width: 992px) {
   .navbar-right {

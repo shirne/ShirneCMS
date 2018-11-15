@@ -21,7 +21,19 @@ String.prototype.compile=function(data,list){
         }
         return temps.join("\n");
     }else{
-        return this.replace(/\{@([\w\d\.]+)(?:\|([\w\d]+)(?:\s*=\s*([\w\d,\s#]+))?)?\}/g,function(all,m1,func,args){
+        return this.replace(/\{if\s+([^\}]+)\}(.*?){\/if}/g,function(all, condition, cont){
+            if(condition.indexOf('==')>0){
+                var part=condition.split(/=+/);
+                if(part[0].indexOf('@')>0){
+                    if (data[part[0].replace('@','')] === part[1]) return cont;
+                }else{
+                    if (data[part[1].replace('@','')] === part[0]) return cont;
+                }
+            }else {
+                if (data[condition.replace('@','')]) return cont;
+            }
+            return '';
+        }).replace(/\{@([\w\d\.]+)(?:\|([\w\d]+)(?:\s*=\s*([\w\d,\s#]+))?)?\}/g,function(all,m1,func,args){
 
             if(m1.indexOf('.')>0){
                 var keys=m1.split('.'),val=data;

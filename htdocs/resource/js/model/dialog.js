@@ -252,9 +252,14 @@ var dialog={
             'searchHolder':'根据名称搜索',
             'idkey':'id',
             'onRow':null,
+            'extend':null,
             'rowTemplate':'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action">[{@id}]&nbsp;<i class="ion-md-person"></i> {@username}&nbsp;&nbsp;&nbsp;<small><i class="ion-md-phone-portrait"></i> {@mobile}</small></a>'
         },config||{});
         var current=null;
+        var exthtml='';
+        if(config.extend){
+            exthtml='<select name="'+config.extend.name+'" class="form-control"><option value="">'+config.extend.title+'</option></select>';
+        }
         if(!filter)filter={};
         var dlg=new Dialog({
             'onshown':function(body){
@@ -262,11 +267,26 @@ var dialog={
                 var input=body.find('.searchtext');
                 var listbox=body.find('.list-group');
                 var isloading=false;
+                var extField=null;
+                if(config.extend){
+                    extField=body.find('[name='+config.extend.name+']');
+                    $.ajax({
+                       url:config.extend.url,
+                        type:'GET',
+                        dataType:'JSON',
+                        success:function (json) {
+                            extField.append(config.extend.htmlRow.compile(json.data,true));
+                        }
+                    });
+                }
                 btn.click(function(){
                     if(isloading)return;
                     isloading=true;
                     listbox.html('<span class="list-loading">加载中...</span>');
                     filter['key']=input.val();
+                    if(config.extend){
+                        filter[config.extend.name]=extField.val();
+                    }
                     $.ajax(
                         {
                             url:config.url,
@@ -311,7 +331,7 @@ var dialog={
                     return result;
                 }
             }
-        }).show('<div class="input-group"><input type="text" class="form-control searchtext" name="keyword" placeholder="'+config.searchHolder+'"/><div class="input-group-append"><a class="btn btn-outline-secondary searchbtn"><i class="ion-md-search"></i></a></div></div><div class="list-group mt-2"></div>','请搜索并选择'+config.name);
+        }).show('<div class="input-group">'+exthtml+'<input type="text" class="form-control searchtext" name="keyword" placeholder="'+config.searchHolder+'"/><div class="input-group-append"><a class="btn btn-outline-secondary searchbtn"><i class="ion-md-search"></i></a></div></div><div class="list-group list-group-picker mt-2"></div>','请搜索并选择'+config.name);
     },
     pickUser:function(url,callback,filter){
         return this.pickList({
@@ -323,18 +343,30 @@ var dialog={
     pickArticle:function(url,callback,filter){
         return this.pickList({
             'url':url,
-            rowTemplate:'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action"><img src="[@cover]" class="img-fluid" />[{@id}]&nbsp;{@title}&nbsp;</a>',
+            rowTemplate:'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action">{if @cover}<div style="background-image:url({@cover})" class="imgview" ></div>{/if}<div class="text-block">[{@id}]&nbsp;{@title}&nbsp;<br />{@description}</div></a>',
             name:'文章',
             idkey:'id',
+            extend:{
+               name:'cate',
+                title:'按分类搜索',
+                url:get_cate_url('article'),
+                htmlRow:'<option value="{@id}">{@html}{@title}</option>'
+            },
             'searchHolder':'根据文章标题搜索'
         },callback,filter);
     },
     pickProduct:function(url,callback,filter){
         return this.pickList({
             'url':url,
-            rowTemplate:'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action"><img src="[@image]" class="img-fluid" />[{@id}]&nbsp;{@title}&nbsp;</a>',
+            rowTemplate:'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action">{if @image}<div style="background-image:url({@image})" class="imgview" ></div>{/if}<div class="text-block">[{@id}]&nbsp;{@title}&nbsp;<br />{@min_price}~{@max_price}</div></a>',
             name:'产品',
             idkey:'id',
+            extend:{
+                name:'cate',
+                title:'按分类搜索',
+                url:get_cate_url('product'),
+                htmlRow:'<option value="{@id}">{@html}{@title}</option>'
+            },
             'searchHolder':'根据产品名称搜索'
         },callback,filter);
     },

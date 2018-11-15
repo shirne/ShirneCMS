@@ -144,7 +144,7 @@ class IndexController extends BaseController{
             $model->where('type',$type);
         }
 
-        $lists=$model->field('id,title,cover,create_time')
+        $lists=$model->field('id,title,cover,description,create_time')
             ->order('id ASC')->limit(10)->select();
         return json(['data'=>$lists,'status'=>1]);
     }
@@ -161,7 +161,7 @@ class IndexController extends BaseController{
             $model->where('type',$type);
         }
 
-        $lists=$model->field('id,title,cover,create_time')
+        $lists=$model->field('id,title,image,min_price,max_price,goods_no,create_time')
             ->order('id ASC')->limit(10)->select();
         return json(['data'=>$lists,'status'=>1]);
     }

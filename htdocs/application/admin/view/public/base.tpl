@@ -19,6 +19,11 @@
     <script src="__STATIC__/jquery/jquery.min.js"></script>
     <script src="__STATIC__/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="__STATIC__/toastr/toastr.min.js"></script>
+    <script type="text/javascript">
+        window.get_cate_url=function (model) {
+            return "{:url('admin/index/getCate',['model'=>'__MODEL__'])}".replace('__MODEL__',model);
+        }
+    </script>
 
     <block name="header"></block>
 
