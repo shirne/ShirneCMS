@@ -2,6 +2,8 @@
 namespace app\admin\controller;
 
 
+use app\common\facade\CategoryFacade;
+use app\common\facade\ProductCategoryFacade;
 use think\Db;
 use think\facade\Cache;
 use think\facade\Log;
@@ -115,6 +117,51 @@ class IndexController extends BaseController{
         }
 
         $lists=$model->field('id,username,realname,mobile,avatar,level_id,is_agent,gender,email,create_time')
+            ->order('id ASC')->limit(10)->select();
+        return json(['data'=>$lists,'status'=>1]);
+    }
+    public function getCate($model='article'){
+        switch ($model){
+            case 'product':
+                $lists=ProductCategoryFacade::getCategories();
+                break;
+            default:
+                $lists=CategoryFacade::getCategories();
+                break;
+        }
+        return json(['data'=>$lists,'status'=>1]);
+    }
+    public function searchArticle($key,$cate=0,$type=0){
+        $model=Db::name('article')
+            ->where('status',1);
+        if(!empty($key)){
+            $model->where('id|title','like',"%$key%");
+        }
+        if($cate>0){
+            $model->whereIn('cate_id',CategoryFacade::getSubCateIds($cate));
+        }
+        if(!empty($type)){
+            $model->where('type',$type);
+        }
+
+        $lists=$model->field('id,title,cover,create_time')
+            ->order('id ASC')->limit(10)->select();
+        return json(['data'=>$lists,'status'=>1]);
+    }
+    public function searchProduct($key,$cate=0,$type=0){
+        $model=Db::name('product')
+            ->where('status',1);
+        if(!empty($key)){
+            $model->where('id|title','like',"%$key%");
+        }
+        if($cate>0){
+            $model->whereIn('cate_id',CategoryFacade::getSubCateIds($cate));
+        }
+        if(!empty($type)){
+            $model->where('type',$type);
+        }
+
+        $lists=$model->field('id,title,cover,create_time')
             ->order('id ASC')->limit(10)->select();
         return json(['data'=>$lists,'status'=>1]);
     }

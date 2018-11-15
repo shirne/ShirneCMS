@@ -76,6 +76,7 @@ class ArticleController extends BaseController
                 }else{
                     $data['prop_data']=[];
                 }
+                if(empty($data['description']))$data['description']=cutstr($data['content'],240);
                 if(!empty($data['create_time']))$data['create_time']=strtotime($data['create_time']);
                 if(empty($data['create_time']))unset($data['create_time']);
                 $model=ArticleModel::create($data);
@@ -126,6 +127,7 @@ class ArticleController extends BaseController
                 }else{
                     $data['prop_data']=[];
                 }
+                if(empty($data['description']))$data['description']=cutstr($data['content'],240);
                 if(!empty($data['create_time']))$data['create_time']=strtotime($data['create_time']);
                 if(empty($data['create_time']))unset($data['create_time']);
                 $model=ArticleModel::get($id);

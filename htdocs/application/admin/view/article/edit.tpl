@@ -61,10 +61,6 @@
                 <a href="javascript:" class="btn btn-outline-dark btn-sm addpropbtn"><i class="ion-md-add"></i> 添加属性</a>
             </div>
         </div>
-        <div class="form-group">
-            <label for="article-content">文章内容</label>
-            <script id="article-content" name="content" type="text/plain">{$article.content|raw}</script>
-        </div>
         <div class="form-row">
             <label class="col-2 col-md-1">文章类型</label>
             <div class="form-group col-4 col-md-2">
@@ -76,6 +72,14 @@
                     </volist>
                 </div>
             </div>
+        </div>
+        <div class="form-group">
+            <label for="article-content">文章摘要</label>
+            <textarea name="description" class="form-control" >{$article.description}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="article-content">文章内容</label>
+            <script id="article-content" name="content" type="text/plain">{$article.content|raw}</script>
         </div>
         <div class="form-group submit-btn">
             <input type="hidden" name="id" value="{$article.id}">
