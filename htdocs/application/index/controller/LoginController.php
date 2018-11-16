@@ -71,17 +71,7 @@ class LoginController extends BaseController{
         }else {
             $app = Db::name('OAuth')->where('id|type',$type)->find();
             if (empty($app)) {
-                if($type=='wechat'){
-                    $authid=Db::name('OAuth')->insert([
-                        'title'=>'微信登录',
-                        'type'=>'wechat',
-                        'appid'=>$this->config['appid'],
-                        'appkey'=>$this->config['appsecret']
-                    ]);
-                    $app = Db::name('OAuth')->find($authid);
-                }else {
-                    $this->error("不允许使用此方式登陆");
-                }
+                $this->error("不允许使用此方式登陆");
             }
 
             $callbackurl = url('index/login/callback', ['type' => $app['id']], true,true);
@@ -97,12 +87,23 @@ class LoginController extends BaseController{
     //登录回调地址
     public function callback($type = null, $code = null) 
     {
-      
         if(empty($type) || empty($code)){
-            $this->error('参数错误');  
+            $this->error('参数错误');
         }
-        $app = Db::name('OAuth')->find(['id'=>$type]);
-        $oauth=OAuthFactory::getInstence($app['type'], $app['appid'], $app['appkey']);
+        if(strpos($type,'_')>0){
+            list($type,$type_id)=explode('_',$type);
+            if(!in_array($type,['wechat']))$this->error('参数错误');
+            $app = Db::name($type)->where('id',$type_id)
+                ->find();
+            $oauth=OAuthFactory::getInstence($type, $app['appid'], $app['appsecret'],'',true);
+        }else{
+            $type_id=$type;
+            $type='oauth';
+            $app = Db::name('OAuth')->where('id',$type_id)
+                ->find();
+            $oauth=OAuthFactory::getInstence($app['type'], $app['appid'], $app['appkey']);
+        }
+
         try {
             $userInfo = $oauth->user();
             $data['openid'] = $userInfo['id'];
@@ -115,8 +116,8 @@ class LoginController extends BaseController{
             $data['gender'] = empty($origin['gender'])?0:$origin['gender'];
             $data['unionid'] = empty($origin['unionid'])?'':$origin['unionid'];
             $data['data']=json_encode($origin);
-            $data['type'] = $app['type'];
-            $data['type_id'] = $type;
+            $data['type'] = $type;
+            $data['type_id'] = $type_id;
             if(!empty($userInfo['unionid'])){
                 $sameAuth=MemberOauthModel::get(['unionid'=>$userInfo['unionid']]);
                 if(!empty($sameAuth)){

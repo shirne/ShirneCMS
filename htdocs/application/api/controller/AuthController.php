@@ -11,8 +11,11 @@ namespace app\api\Controller;
 use app\api\facade\MemberTokenModel;
 use app\common\model\MemberModel;
 use app\common\model\MemberOauthModel;
+use app\common\model\WechatModel;
+use EasyWeChat\Factory;
 use sdk\WechatAuth;
 use think\Db;
+use think\facade\Env;
 
 class AuthController extends BaseController
 {
@@ -40,9 +43,29 @@ class AuthController extends BaseController
     }
 
     public function wxLogin(){
+        $wechat_id=$this->input['wxid'];
         $code=$this->input['code'];
-        $weauth=new WechatAuth(array('appid'=>$this->config['weapp_appid'],'appsecret'=>$this->config['weapp_appsecret']));
-        $session=$weauth->getOauthAccessToken($code);
+        $wechat=Db::name('wechat')->where('type','wechat')
+            ->where('id|account_type',$wechat_id)->find();
+        if(empty($wechat)){
+            $this->error('服务器配置错误',ERROR_LOGIN_FAILED);
+        }
+        $options=WechatModel::to_config($wechat);
+        switch ($wechat['account_type']) {
+            case 'wechat':
+            case 'subscribe':
+            case 'service':
+                $this->error('该接口不支持公众号登录',ERROR_LOGIN_FAILED);
+                break;
+            case 'miniprogram':
+            case 'minigame':
+                $weapp=Factory::miniProgram($options);
+                break;
+            default:
+                $this->error('配置错误',ERROR_LOGIN_FAILED);
+                break;
+        }
+        $session=$weapp->auth->session($code);
         if(empty($session) || empty($session['openid'])){
             $this->error('登录失败',ERROR_LOGIN_FAILED);
         }
@@ -54,7 +77,7 @@ class AuthController extends BaseController
                 $userinfo = json_decode($rowData, TRUE);
             }
         }
-        $type='wxapp';
+        $type='wechat';
 
         $condition=array('type'=>$type,'openid'=>$session['openid']);
         $oauth=MemberOauthModel::get($condition);

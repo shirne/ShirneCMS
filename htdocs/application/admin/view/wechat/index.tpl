@@ -42,6 +42,8 @@
                     <td>
                         <div class="btn-group btn-group-sm">
                             <a class="btn btn-outline-dark qrcode-btn" href="javascript:" data-qrcode="{$v.qrcode}"><i class="ion-md-expand"></i> 二维码</a>
+                            <a class="btn btn-outline-dark" href="{:url('wechat/fans',array('wid'=>$v['id']))}" ><i class="ion-md-contacts"></i> 粉丝</a>
+                            <a class="btn btn-outline-dark" href="{:url('wechat/reply',array('wid'=>$v['id']))}" ><i class="ion-md-chatboxes"></i> 回复</a>
                             <a class="btn btn-outline-dark" href="{:url('wechat/menu',array('id'=>$v['id']))}"><i class="ion-md-reorder"></i> 菜单</a>
                         </div>
                     </td>

@@ -27,4 +27,22 @@ return [
     'max_files'   => 0,
     // 是否关闭日志写入
     'close'       => false,
+
+    'wechat'      => [
+        'default' => 'dev', // 默认使用的 channel，生产环境可以改为下面的 prod
+        'channels' => [
+            // 测试环境
+            'dev' => [
+                'driver' => 'single',
+                'path' => Env::get('runtime_path').'/wechat/wechat-'.date('Y-m-d').'.log',
+                'level' => 'debug',
+            ],
+            // 生产环境
+            'prod' => [
+                'driver' => 'daily',
+                'path' => Env::get('runtime_path').'/wechat/wechat-'.date('Y-m-d').'.log',
+                'level' => 'info',
+            ],
+        ],
+    ]
 ];

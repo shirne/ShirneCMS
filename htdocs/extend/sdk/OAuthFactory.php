@@ -1,20 +1,17 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: shirne
- * Date: 2018/5/14
- * Time: 11:40
- */
 
 namespace sdk;
-
 
 use Overtrue\Socialite\SocialiteManager;
 use think\Exception;
 
+/**
+ * Class OAuthFactory
+ * @package sdk
+ */
 class OAuthFactory
 {
-    public static function getInstence($type,$appid,$appkey,$url='')
+    public static function getInstence($type,$appid,$appkey,$url='',$iswechat=false)
     {
         $config=[
             $type=>[
@@ -28,7 +25,7 @@ class OAuthFactory
         ];
         $factory=new SocialiteManager($config);
         $driver = $factory->driver($type);
-        if($type=='wechat'){
+        if($iswechat){
             $driver->scopes(['snsapi_userinfo']);
         }
         return $driver;

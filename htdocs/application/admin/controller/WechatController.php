@@ -2,8 +2,11 @@
 
 namespace app\admin\controller;
 
-use app\admin\model\WechatModel;
+use app\common\model\WechatModel;
+use app\common\model\WechatReplyModel;
+use app\admin\validate\WechatReplyValidate;
 use app\admin\validate\WechatValidate;
+use app\common\model\MemberOauthModel;
 use EasyWeChat\Factory;
 use think\Db;
 
@@ -147,6 +150,7 @@ class WechatController extends BaseController
 
     /**
      * 自定义菜单
+     * todo 个性化菜单列表及编辑
      * @param $id
      * @param int $refresh
      * @return mixed
@@ -214,5 +218,242 @@ class WechatController extends BaseController
         $this->assign('model',$model);
         $this->assign('menuData',$menuData);
         return $this->fetch();
+    }
+
+    public function fans($wid){
+        $wechat=Db::name('Wechat')->where('id',$wid)->find();
+        if(empty($wechat)){
+            $this->error('公众号信息不存在');
+        }
+        $model=Db::name('MemberOauth')->where('type_id',$wid);
+
+        $lists=$model->paginate(15);
+        $this->assign('lists',$lists);
+        $this->assign('page',$lists->render());
+        $this->assign('wid',$wid);
+        return $this->fetch();
+    }
+
+    /**
+     * 同步粉丝资料
+     * @param $wid
+     * @param string $openid
+     * @param bool $single
+     */
+    public function syncfans($wid,$openid='',$single=false){
+        $wechat=Db::name('Wechat')->where('id',$wid)->find();
+        if(empty($wechat)){
+            $this->error('公众号信息不存在');
+        }
+
+        $app = Factory::officialAccount([
+            'app_id'=>$wechat['appid'],
+            'secret'=>$wechat['appsecret'],
+            'aes_key'=>$wechat['encodingaeskey']
+        ]);
+
+        if($single) {
+            if(strpos($openid,',')===false) {
+                $user = $app->user->get($openid);
+                Db::name('MemberOauth')->where('openid',$openid)
+                ->update(MemberOauthModel::mapUserInfo($user));
+            }else {
+                $users = $app->user->select(explode(',', $openid));
+                foreach ($users as $user){
+                    Db::name('MemberOauth')->where('openid',$user['openid'])
+                        ->update(MemberOauthModel::mapUserInfo($user));
+                }
+            }
+        }else{
+            $result=$app->user->list($openid);
+            $users = $app->user->select($result['data']['openid']);
+            $this->updateUsers($users,$wid);
+
+            $sesskey='fans_count_'.$wechat['appid'];
+            $count=(int)session($sesskey);
+            $count+=$result['count'];
+            if($count<$result['total']) {
+                session($sesskey,$count);
+                $this->success('已同步：' . $count, '', ['next_openid' => $result['next_openid'],'count'=>$count,'total'=>$result['total']]);
+            }else{
+                session($sesskey,null);
+            }
+        }
+
+
+        $this->success('同步成功');
+    }
+    private function updateUsers($userinfos,$wid){
+        $openids=array_column($userinfos,'openid');
+        $userauths=Db::name('MemberOauth')->whereIn('openid',$openids)->select();
+        $userauths=array_index($userauths,'openid');
+        foreach ($userinfos as $user){
+            $userData=MemberOauthModel::mapUserInfo($user);
+            if(isset($userauths[$user['openid']])) {
+                Db::name('MemberOauth')->where('openid', $user['openid'])
+                    ->update($userData);
+            }else{
+                $userData['email']='';
+                $userData['is_follow']=1;
+                $userData['member_id']=0;
+                $userData['type']='wechat';
+                $userData['type_id']=$wid;
+                Db::name('MemberOauth')->where('openid', $user['openid'])
+                    ->update($userData);
+            }
+        }
+    }
+
+    public function reply($wid){
+        $model=Db::name('WechatReply')->where('wechat_id',$wid);
+
+        $lists=$model->paginate(15);
+        $this->assign('lists',$lists);
+        $this->assign('types',getWechatTypes());
+        $this->assign('reply_types',getWechatReplyTypes());
+        $this->assign('page',$lists->render());
+        $this->assign('wid',$wid);
+        return $this->fetch();
+    }
+    public function replyadd($wid){
+        $wechat=Db::name('Wechat')->where('id',$wid)->find();
+        if(empty($wechat)){
+            $this->error('公众号信息不存在');
+        }
+        if($this->request->isPost()){
+            $data=$this->request->post();
+            $validate=new WechatReplyValidate();
+            $validate->setId(0);
+            if(!$validate->check($data)){
+                $this->error($validate->getError());
+            }else{
+                switch($data['reply_type']){
+                    case 'text':
+                        break;
+                    case 'article':
+                        $data['content']=json_encode($data['article']);
+                        break;
+                    case 'image':
+                        $uploaded = $this->upload('wechat', 'upload_image');
+                        if (!empty($uploaded)) {
+                            $data['content'] = json_encode(['image'=>$uploaded['url']]);
+                        }elseif($this->uploadErrorCode>102){
+                            $this->error($this->uploadErrorCode.':'.$this->uploadError);
+                        }
+                        break;
+                    case 'custom':
+                        $data['content']=json_encode($data['custom']);
+                        break;
+                    default:
+                        $this->error('回复类型错误');
+                        break;
+                }
+
+                unset($data['article']);
+                unset($data['custom']);
+
+                $added=WechatReplyModel::create($data);
+                if($added){
+                    $this->error('添加成功');
+                }else{
+                    $this->error('添加失败');
+                }
+            }
+        }
+
+        $model=[
+            'wechat_id'=>$wid,
+            'sort'=>1,
+            'type'=>'keyword',
+            'reply_type'=>'text',
+            'news'=>[],
+            'module'=>[]
+        ];
+        $this->assign('wechat',$wechat);
+        $this->assign('model',$model);
+        $this->assign('types',getWechatTypes());
+        $this->assign('reply_types',getWechatReplyTypes());
+        return $this->fetch('replyedit');
+    }
+    public function replyedit($id,$wid=0){
+        $model=Db::name('WechatReply')->where('id',$id)->find();
+        if(empty($model)){
+            $this->error('数据不存在');
+        }
+        if($this->request->isPost()){
+            $data=$this->request->post();
+            $validate=new WechatReplyValidate();
+            $validate->setId(0);
+            if(!$validate->check($data)){
+                $this->error($validate->getError());
+            }else{
+                $delete_images=[$data['delete_image']];
+                switch($data['reply_type']){
+                    case 'text':
+                        break;
+                    case 'article':
+                        $data['content']=json_encode($data['article']);
+                        break;
+                    case 'image':
+                        $uploaded = $this->upload('wechat', 'upload_image');
+                        if (!empty($uploaded)) {
+                            $data['content'] = json_encode(['image'=>$uploaded['url']]);
+                        }elseif($this->uploadErrorCode>102){
+                            $this->error($this->uploadErrorCode.':'.$this->uploadError);
+                        }else{
+                            unset($data['content']);
+                            unset($delete_images[0]);
+                        }
+                        break;
+                    case 'custom':
+                        $data['content']=json_encode($data['custom']);
+                        break;
+                    default:
+                        $this->error('回复类型错误');
+                        break;
+                }
+
+                unset($data['article']);
+                unset($data['custom']);
+
+
+                $added=WechatReplyModel::update($data,['id'=>$id]);
+                if($added){
+                    delete_image($delete_images);
+                    $this->error('保存成功');
+                }else{
+                    $this->error('保存失败');
+                }
+            }
+        }
+        if($model['reply_type']=='article'){
+            $model['news']=json_decode($model['content'],TRUE);
+            $model['content']='';
+        }elseif($model['reply_type']=='image'){
+            $model['data']=json_decode($model['content'],TRUE);
+            $model['content']='';
+        }elseif($model['reply_type']=='custom'){
+            $model['module']=json_decode($model['content'],TRUE);
+            $model['content']='';
+        }
+
+        $wechat=Db::name('Wechat')->where('id',$model['wechat_id'])->find();
+        $this->assign('wechat',$wechat);
+        $this->assign('model',$model);
+        $this->assign('types',getWechatTypes());
+        $this->assign('reply_types',getWechatReplyTypes());
+        return $this->fetch();
+    }
+
+    public function replydelete($id,$wid)
+    {
+        $model = Db::name('wechatReply');
+        $result = $model->where('id','in',idArr($id))->delete();
+        if($result){
+            user_log($this->mid,'deletewechatreply',1,'删除回复消息 '.$id ,'manager');
+            $this->success("删除成功", url('wechat/reply',['wid'=>$wid]));
+        }else{
+            $this->error("删除失败");
+        }
     }
 }

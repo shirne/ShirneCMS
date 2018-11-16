@@ -4,6 +4,7 @@ namespace app\index\controller;
 use app\admin\model\MemberLevelModel;
 use EasyWeChat\Factory;
 use extcore\traits\Email;
+use sdk\OAuthFactory;
 use think\Controller;
 use think\Db;
 use think\facade\Env;
@@ -65,7 +66,7 @@ class BaseController extends Controller
     }
 
     public function seo($title='',$keys='',$desc=''){
-        $sitename=$this->config['site-name'];
+        $sitename=$this->config['site-webname'];
         if(empty($title)){
             $title .= $sitename;
         }elseif($title!=$sitename){
@@ -104,8 +105,13 @@ class BaseController extends Controller
 
         if($this->wechatLogin() && $this->config['wechat_autologin']=='1' ){
             redirect()->remember();
-            redirect(url('index/login/index',['type'=>'wechat']))->send();exit;
-            //$this->wechatLogin();
+
+            $callbackurl = url('index/login/callback', ['type' => 'wechat_'.$this->config['wechat_id']], true,true);
+
+            // 使用第三方登陆
+            $oauth = OAuthFactory::getInstence('wechat', $this->config['appid'], $this->config['appsecret'], $callbackurl,true);
+            $oauth->redirect()->send();
+            exit;
         }
         $this->assign('wechatUser', $this->wechatUser);
     }
@@ -222,27 +228,40 @@ class BaseController extends Controller
          * 微信JSSDK
          * 详细用法参考：http://mp.weixin.qq.com/wiki/7/1c97470084b73f8e224fe6d9bab1625b.html
          */
-        if($this->isWechat && !empty($this->config['appid'])) {
-            $app = Factory::officialAccount([
-                'app_id' => $this->config['appid'],
-                'secret' => $this->config['appsecret'],
-                'token' => $this->config['token'],
-                'response_type' => 'array',
-                'log' => [
-                    'level' => 'debug',
-                    'file' => Env::get('runtime_path').'/wechat.log',
-                ],
-            ]);
-            $signPackage=$app->jssdk->buildConfig([
-                'onMenuShareTimeline',
-                'onMenuShareAppMessage',
-                'onMenuShareQQ',
-                'onMenuShareWeibo',
-                'onMenuShareQZone',
-                'checkJsApi',
-                'openAddress'
-            ]);
-            $this->assign('signPackage', $signPackage);
+        if($this->isWechat ) {
+            if(empty($this->config['appid'])){
+                $wechat=Db::name('Wechat')->where('type','wechat')
+                    ->where('account_type','service')
+                    ->order('is_default DESC')->find();
+                if(!empty($wechat)){
+                    $this->config['wechat_id']=$wechat['id'];
+                    $this->config['appid']=$wechat['appid'];
+                    $this->config['appsecret']=$wechat['appsecret'];
+                    $this->config['token']=$wechat['token'];
+                }
+            }
+            if(!empty($this->config['appid'])) {
+                $app = Factory::officialAccount([
+                    'app_id' => $this->config['appid'],
+                    'secret' => $this->config['appsecret'],
+                    'token' => $this->config['token'],
+                    'response_type' => 'array',
+                    'log' => [
+                        'level' => 'debug',
+                        'file' => Env::get('runtime_path') . '/wechat.log',
+                    ],
+                ]);
+                $signPackage = $app->jssdk->buildConfig([
+                    'onMenuShareTimeline',
+                    'onMenuShareAppMessage',
+                    'onMenuShareQQ',
+                    'onMenuShareWeibo',
+                    'onMenuShareQZone',
+                    'checkJsApi',
+                    'openAddress'
+                ]);
+                $this->assign('signPackage', $signPackage);
+            }
         }
     }
 

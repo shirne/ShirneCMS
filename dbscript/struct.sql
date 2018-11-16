@@ -102,6 +102,25 @@ CREATE TABLE `sa_wechat` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
+-- Table structure for table `sa_wechat_reply`
+--
+
+DROP TABLE IF EXISTS `sa_wechat_reply`;
+CREATE TABLE `sa_wechat_reply` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `wechat_id` INT NOT NULL,
+  `type` VARCHAR(30) NULL,
+  `reply_type` VARCHAR(30) NULL,
+  `title` VARCHAR(50) NULL,
+  `keyword` VARCHAR(50) NULL,
+  `sort` INT NULL,
+  `content` TEXT NULL,
+  `create_time` INT NULL,
+  `update_time` INT NULL,
+  PRIMARY KEY (`id`)
+ )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
 -- Table structure for table `sa_category`
 --
 
