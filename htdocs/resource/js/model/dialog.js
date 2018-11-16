@@ -25,24 +25,23 @@ function Dialog(opts){
         if (typeof(opts.btns) == 'string') {
             opts.btns = [opts.btns];
         }
-        var dft=-1;
+        //var dft=-1;
         for (var i = 0; i < opts.btns.length; i++) {
             if(typeof(opts.btns[i])=='string'){
                 opts.btns[i]={'text':opts.btns[i]};
             }
             if(opts.btns[i].isdefault){
-                dft=i;
+                opts.defaultBtn=i;
             }
         }
-        if(dft<0){
-            dft=opts.btns.length-1;
-            opts.btns[dft].isdefault=true;
+        if(opts.defaultBtn===undefined){
+            opts.defaultBtn=opts.btns.length-1;
+            opts.btns[opts.defaultBtn].isdefault=true;
         }
 
-        if(!opts.btns[dft]['type']){
-            opts.btns[dft]['type']='primary';
+        if(opts.btns[opts.defaultBtn] && !opts.btns[opts.defaultBtn]['type']){
+            opts.btns[opts.defaultBtn]['type']='primary';
         }
-        opts.defaultBtn=dft;
     }
 
     this.options=$.extend({
@@ -70,7 +69,7 @@ Dialog.prototype.show=function(html,title){
     this.box=$('#'+this.options.id);
     if(!title)title='系统提示';
     if(this.box.length<1) {
-        $(document.body).append(dialogTpl.compile({'id': this.options.id}));
+        $(document.body).append(dialogTpl.replace('modal-body','modal-body'+(this.options.bodyClass?(' '+this.options.bodyClass):'')).compile({'id': this.options.id}));
         this.box=$('#'+this.options.id);
     }else{
         this.box.unbind();
@@ -222,22 +221,27 @@ var dialog={
         var html='<div class="list-group"><a href="javascript:" class="list-group-item list-group-item-action">'+list.join('</a><a href="javascript:" class="list-group-item list-group-item-action">')+'</a></div>';
         var actions=null;
         var dlg=new Dialog({
+            'bodyClass':'modal-action',
+            'btns':[
+                {'text':'取消','type':'secondary'}
+            ],
             'onshow':function(body){
                 actions=body.find('.list-group-item-action');
                 actions.click(function (e) {
                     actions.removeClass('active');
                     $(this).addClass('active');
+                    var val=actions.index(this);
+                    if(typeof callback=='function'){
+                        if( callback(val)!==false){
+                            dlg.close();
+                        }
+                    }else {
+                        dlg.close();
+                    }
                 })
             },
             'onsure':function(body){
-                var action=actions.filter('.active');
-                if(action.length>0){
-                    var val=actions.index(action);
-                    if(typeof callback=='function'){
-                        return callback(val);
-                    }
-                }
-                return false;
+                return true;
             },
             'onhide':function () {
                 return true;
