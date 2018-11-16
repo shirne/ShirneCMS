@@ -70,6 +70,23 @@ function getMemberTypes(){
         2=>lang('Employee')
     ];
 }
+function getWechatTypes(){
+    return [
+        'subscribe'=>'关注回复消息',
+        'resubscribe'=>'二次关注回复消息',
+        'default'=>'默认回复',
+        'keyword'=>'关键字回复',
+        'click'=>'点击事件回复'
+    ];
+}
+function getWechatReplyTypes(){
+    return [
+        'text'=>'文本消息',
+        'article'=>'文章消息',
+        'image'=>'图片消息',
+        'custom'=>'托管消息'
+    ];
+}
 function getArticleTypes(){
     return [
         1=>lang('Normal'),
