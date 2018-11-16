@@ -218,7 +218,7 @@ jQuery(function ($) {
         var group = $(this).parents('.input-group');
         var idele = group.find('[name=member_id]');
         var infoele = group.find('[name=member_info]');
-        dialog.pickUser($(this).data('url'), function (user) {
+        dialog.pickUser( function (user) {
             idele.val(user.id);
             infoele.val('[' + user.id + '] ' + user.username + (user.mobile ? (' / ' + user.mobile) : ''));
         }, $(this).data('filter'));

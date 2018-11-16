@@ -100,26 +100,7 @@ class IndexController extends BaseController{
         ));
     }
 
-    /**
-     * 会员搜索接口
-     * @param $key
-     * @param int $type
-     * @return \think\response\Json
-     */
-    public function searchMember($key,$type=0){
-        $model=Db::name('member')
-            ->where('status',1);
-        if(!empty($key)){
-            $model->where('id|username|realname|mobile','like',"%$key%");
-        }
-        if(!empty($type)){
-            $model->where('type',$type);
-        }
 
-        $lists=$model->field('id,username,realname,mobile,avatar,level_id,is_agent,gender,email,create_time')
-            ->order('id ASC')->limit(10)->select();
-        return json(['data'=>$lists,'status'=>1]);
-    }
     public function getCate($model='article'){
         switch ($model){
             case 'product':
@@ -129,40 +110,6 @@ class IndexController extends BaseController{
                 $lists=CategoryFacade::getCategories();
                 break;
         }
-        return json(['data'=>$lists,'status'=>1]);
-    }
-    public function searchArticle($key,$cate=0,$type=0){
-        $model=Db::name('article')
-            ->where('status',1);
-        if(!empty($key)){
-            $model->where('id|title','like',"%$key%");
-        }
-        if($cate>0){
-            $model->whereIn('cate_id',CategoryFacade::getSubCateIds($cate));
-        }
-        if(!empty($type)){
-            $model->where('type',$type);
-        }
-
-        $lists=$model->field('id,title,cover,description,create_time')
-            ->order('id ASC')->limit(10)->select();
-        return json(['data'=>$lists,'status'=>1]);
-    }
-    public function searchProduct($key,$cate=0,$type=0){
-        $model=Db::name('product')
-            ->where('status',1);
-        if(!empty($key)){
-            $model->where('id|title','like',"%$key%");
-        }
-        if($cate>0){
-            $model->whereIn('cate_id',CategoryFacade::getSubCateIds($cate));
-        }
-        if(!empty($type)){
-            $model->where('type',$type);
-        }
-
-        $lists=$model->field('id,title,image,min_price,max_price,goods_no,create_time')
-            ->order('id ASC')->limit(10)->select();
         return json(['data'=>$lists,'status'=>1]);
     }
 

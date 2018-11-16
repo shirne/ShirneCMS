@@ -14,7 +14,7 @@
                         <input class="form-control" type="text" name="member_info" readonly placeholder="选择会员">
                         <div class="input-group-append">
                             <input type="hidden" name="member_id" value=""/>
-                            <a class="btn btn-outline-secondary pickuser" data-url="{:url('index/searchMember')}"><i class="ion-md-person"></i> 选择会员</a>
+                            <a class="btn btn-outline-secondary pickuser" ><i class="ion-md-person"></i> 选择会员</a>
                         </div>
                     </div>
                 </div>

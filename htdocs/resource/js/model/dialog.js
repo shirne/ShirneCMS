@@ -337,16 +337,16 @@ var dialog={
             }
         }).show('<div class="input-group">'+exthtml+'<input type="text" class="form-control searchtext" name="keyword" placeholder="'+config.searchHolder+'"/><div class="input-group-append"><a class="btn btn-outline-secondary searchbtn"><i class="ion-md-search"></i></a></div></div><div class="list-group list-group-picker mt-2"></div>','请搜索并选择'+config.name);
     },
-    pickUser:function(url,callback,filter){
+    pickUser:function(callback,filter){
         return this.pickList({
-            'url':url,
+            'url':window.get_search_url('member'),
             'name':'会员',
             'searchHolder':'根据会员id或名称，电话来搜索'
         },callback,filter);
     },
-    pickArticle:function(url,callback,filter){
+    pickArticle:function(callback,filter){
         return this.pickList({
-            'url':url,
+            'url':window.get_search_url('article'),
             rowTemplate:'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action">{if @cover}<div style="background-image:url({@cover})" class="imgview" ></div>{/if}<div class="text-block">[{@id}]&nbsp;{@title}&nbsp;<br />{@description}</div></a>',
             name:'文章',
             idkey:'id',
@@ -359,9 +359,9 @@ var dialog={
             'searchHolder':'根据文章标题搜索'
         },callback,filter);
     },
-    pickProduct:function(url,callback,filter){
+    pickProduct:function(callback,filter){
         return this.pickList({
-            'url':url,
+            'url':window.get_search_url('product'),
             rowTemplate:'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action">{if @image}<div style="background-image:url({@image})" class="imgview" ></div>{/if}<div class="text-block">[{@id}]&nbsp;{@title}&nbsp;<br />{@min_price}~{@max_price}</div></a>',
             name:'产品',
             idkey:'id',

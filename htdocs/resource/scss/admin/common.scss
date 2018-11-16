@@ -602,6 +602,21 @@ table {
   }
 }
 
+.modal-action{
+  padding:0;
+  .list-group-item{
+    border-left:0;
+    border-right:0;
+    &:first-child{
+      border-radius:0;
+      border-top:0;
+    }
+    &:last-child{
+      border-radius:0;
+      border-bottom:0;
+    }
+  }
+}
 .list-group-picker {
   .list-group-item {
     display: -ms-flexbox;

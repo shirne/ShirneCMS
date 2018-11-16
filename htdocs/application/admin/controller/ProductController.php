@@ -19,6 +19,25 @@ use think\Db;
  */
 class ProductController extends BaseController
 {
+
+    public function search($key,$cate=0,$type=0){
+        $model=Db::name('product')
+            ->where('status',1);
+        if(!empty($key)){
+            $model->where('id|title','like',"%$key%");
+        }
+        if($cate>0){
+            $model->whereIn('cate_id',ProductCategoryFacade::getSubCateIds($cate));
+        }
+        if(!empty($type)){
+            $model->where('type',$type);
+        }
+
+        $lists=$model->field('id,title,image,min_price,max_price,goods_no,create_time')
+            ->order('id ASC')->limit(10)->select();
+        return json(['data'=>$lists,'status'=>1]);
+    }
+
     /**
      * 商品列表
      * @param string $key

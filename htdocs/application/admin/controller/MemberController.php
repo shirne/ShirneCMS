@@ -20,6 +20,27 @@ class MemberController extends BaseController
     }
 
     /**
+     * 会员搜索接口
+     * @param $key
+     * @param int $type
+     * @return \think\response\Json
+     */
+    public function search($key,$type=0){
+        $model=Db::name('member')
+            ->where('status',1);
+        if(!empty($key)){
+            $model->where('id|username|realname|mobile','like',"%$key%");
+        }
+        if(!empty($type)){
+            $model->where('type',$type);
+        }
+
+        $lists=$model->field('id,username,realname,mobile,avatar,level_id,is_agent,gender,email,create_time')
+            ->order('id ASC')->limit(10)->select();
+        return json(['data'=>$lists,'status'=>1]);
+    }
+
+    /**
      * 会员列表
      * @param int $type
      * @param string $keyword
