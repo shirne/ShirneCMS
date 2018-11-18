@@ -14,6 +14,7 @@ class ArticleController extends BaseController{
 
     protected $categries;
     protected $category;
+    protected $topCategory;
     protected $categoryTree;
     protected $pagesize=12;
 
@@ -148,9 +149,13 @@ class ArticleController extends BaseController{
         $this->categries=CategoryFacade::getTreedCategory();
         if(empty($this->category)){
             $this->category=['id'=>0,'title'=>'新闻中心'];
+            $this->topCategory=$this->category;
+        }else{
+            $this->topCategory=$this->categoryTree[0];
         }
 
         $this->assign('category',$this->category);
+        $this->assign('topCategory',$this->topCategory);
         $this->assign('categoryTree',$this->categoryTree);
         $this->assign('categories',$this->categries);
 

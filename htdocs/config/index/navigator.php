@@ -1,45 +1,56 @@
 <?php
-/**
- * 导航配置
- * User: shirne
- * Date: 2018/5/5
- * Time: 16:04
- */
-return [
-    [
-        'title'=>'首页',
-        'url'=>'Index/index'
-    ],
-    [
-        'title'=>'服务范围',
-        'footer'=>true,
-        'url'=>['Page/index',['group'=>'services']],
-        'subnav'=>'Page/services'
-    ],
-    [
-        'title'=>'解决方案',
-        'footer'=>true,
-        'url'=>['Page/index',['group'=>'solutions']],
-        'subnav'=>'Page/solutions'
-    ],
-    [
-        'title'=>'案例中心',
-        'url'=>['Article/index',['name'=>'cases']],
-        'subnav'=>'Article/cases'
-    ],
-    [
-        'title'=>'关于原设',
-        'footer'=>true,
-        'url'=>['Page/index',['group'=>'about']],
-        'subnav'=>'Page/about'
-    ],
-    [
-        'title'=>'新闻动态',
-        'url'=>['Article/index',['name'=>'news']],
-        'subnav'=>'Article/news'
-    ],
-    [
-        'title'=>'云计算',
-        'url'=>'http://cloud.shirne.cn'
-    ]
-];
+return array (
+  0 => 
+  array (
+    'title' => '首页',
+    'target' => '',
+    'url' => 
+    array (
+      0 => 'Index/index',
+    ),
+  ),
+  1 => 
+  array (
+    'title' => '文章',
+    'target' => '',
+    'footer' => '1',
+    'url' => 
+    array (
+      0 => 'Article/index',
+      1 => 
+      array (
+        'name' => 'news',
+      ),
+    ),
+    'subnav' => 'Article/news',
+  ),
+  2 => 
+  array (
+    'title' => '案例',
+    'target' => '',
+    'url' => 
+    array (
+      0 => 'Article/index',
+      1 => 
+      array (
+        'name' => 'cases',
+      ),
+    ),
+    'subnav' => 'Article/cases',
+  ),
+  3 => 
+  array (
+    'title' => '关于',
+    'target' => '',
+    'footer' => '1',
+    'url' => 
+    array (
+      0 => 'Page/index',
+      1 => 
+      array (
+        'group' => 'about',
+      ),
+    ),
+    'subnav' => 'Page/about',
+  ),
+);
