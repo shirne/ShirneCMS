@@ -12,6 +12,7 @@ namespace app\index\controller;
 use app\common\facade\MemberCartFacade;
 use app\common\facade\OrderFacade;
 use app\common\model\OrderModel;
+use app\common\model\WechatModel;
 use app\common\validate\OrderValidate;
 use EasyWeChat\Factory;
 use think\Db;
@@ -71,7 +72,7 @@ class OrderController extends AuthedController
         }
 
         if($this->request->isPost()){
-            $data=$this->request->only('address_id,remark','post');
+            $data=$this->request->only('address_id,remark,pay_type','post');
             $validate=new OrderValidate();
             if(!$validate->check($data)){
                 $this->error($validate->getError());
@@ -81,11 +82,18 @@ class OrderController extends AuthedController
                 $balancepay=$data['pay_type']=='balance'?1:0;
                 $result=OrderFacade::makeOrder($this->user,$products,$address,$data['remark'],$balancepay);
                 if($result){
+                    if($from=='cart'){
+                        MemberCartFacade::delCart($sku_ids,$this->userid);
+                    }
                     if($balancepay) {
                         $this->success('下单成功');
                     }else{
-
-                        $this->success('下单成功，即将跳转到支付页面',url('index/order/wechatpay',['order_id'=>$result]));
+                        $method=$data['pay_type'].'pay';
+                        if(method_exists($this,$method)) {
+                            $this->success('下单成功，即将跳转到支付页面', url('index/order/' . $method, ['order_id' => $result]));
+                        }else{
+                            $this->success('下单成功，请尽快支付');
+                        }
                     }
                 }else{
                     $this->error('下单失败');
@@ -110,18 +118,12 @@ class OrderController extends AuthedController
         if(empty($order) || $order['status']!=0){
             $this->error('订单已支付或不存在!');
         }
-        $config = [
-            // 必要配置
-            'app_id'             => $this->config['appid'],
-            'mch_id'             => $this->config['mch_id'],
-            'key'                => $this->config['key'],
-
-            // 如需使用敏感接口（如退款、发送红包等）需要配置 API 证书路径(登录商户平台下载 API 证书)
-            'cert_path'          => $this->config['cert_path'],
-            'key_path'           => $this->config['key_path'],
-
-            'notify_url'         => $this->config['appid'],     // 你也可以在下单时单独设置来想覆盖它
-        ];
+        if(empty($this->wechatUser)){
+            $this->error('未能获取用户微信授权!');
+        }
+        $wechat=WechatModel::where('id',$this->wechatUser['type_id'])
+        ->where('type','wechat')->find();
+        $config=WechatModel::to_pay_config($wechat);
 
         $app = Factory::payment($config);
 

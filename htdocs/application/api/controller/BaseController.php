@@ -13,6 +13,8 @@ define('ERROR_TOKEN_INVAILD',102);//token无效
 define('ERROR_TOKEN_EXPIRE',103);//token过期
 define('ERROR_REFRESH_TOKEN_INVAILD',105);//refresh_token失效
 
+define('ERROR_NEED_OPENID',111);
+
 /**
  * API基类.
  * Class BaseController
