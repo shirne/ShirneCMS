@@ -14,7 +14,7 @@
                             <li class="nav-item" data-model="{$nav['model']}"><a class="nav-link" href="{$nav['url']}" target="{$nav['target']}">{$nav['title']}</a></li>
                             <else/>
                             <li class="nav-item dropdown" data-model="{$nav['model']}">
-                                <a href="javascript:" target="{$nav['target']}" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{$nav['title']} <span class="caret"></span></a>
+                                <a href="{$nav['url']}" target="{$nav['target']}" class="nav-link dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false">{$nav['title']} <span class="caret"></span></a>
                                 <div class="dropdown-menu">
                                     <volist name="nav['subnav']" id="nav">
                                         <a class="dropdown-item" target="{$nav['target']}" href="{$nav['url']}">{$nav['title']}</a>
@@ -25,7 +25,7 @@
                     </volist>
                     <if condition="$isLogin">
                         <li class="nav-item dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">会员中心 <span class="caret"></span></a>
+                            <a href="javascript:" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">会员中心 <span class="caret"></span></a>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="{:url('index/member/index')}">个人中心</a>
                                 <a class="dropdown-item" href="{:url('index/member/profile')}">修改资料</a>

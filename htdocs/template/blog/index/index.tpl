@@ -28,7 +28,7 @@
     </div>
 <div class="container index-body">
     <div class="row">
-        <div class="col-md-9">
+        <div class="col-lg-9">
             <ul class="list-group article-list">
                 <article:list var="articles" />
                 <volist name="articles" id="art">
@@ -51,17 +51,22 @@
                 </volist>
             </ul>
         </div>
-        <div class="col-md-3 sidecolumn">
+        <div class="col-lg-3 sidecolumn">
             <div class="card">
                 <div class="card-header">支持一下</div>
-                <div class="card-body">
+                <div class="card-body text-center">
                     <img src="__STATIC__/images/qrcode.png"/>
                 </div>
             </div>
             <div class="card">
                 <div class="card-header">推荐阅读</div>
                 <div class="card-body">
-
+                    <article:list var="articles" order="views DESC" />
+                    <div class="list-side">
+                    <volist name="articles" id="art">
+                        <a href="{:url('index/article/view',['id'=>$art['id']])}">{$art.title}</a>
+                    </volist>
+                    </div>
                 </div>
             </div>
         </div>

@@ -3,14 +3,14 @@
 <block name="body">
     <div class="main">
         <div class="subbanner">
-            <div class="inner" style="background-image:url({:getAdImage('news')})"></div>
+            <div class="inner" style="background-image:url({:getAdImage($topCategory['name'])})"></div>
         </div>
 
         <div class="container list-body">
             <div class="row">
-            <div class="col-md-9">
+            <div class="col-lg-9">
                 <ul class="list-group article-list">
-                    <php>$empty='<li class="list-group-item"><p class="empty">暂时没有内容</p></li>';</php>
+                    <php>$empty='<li class="list-group-item empty-box"><p class="empty">暂时没有内容</p></li>';</php>
                     <Volist name="lists" id="art" empty="$empty">
                         <li class="list-group-item">
                             <if condition="!empty($art['cover'])">
@@ -32,23 +32,7 @@
                 </ul>
                 {$page|raw}
             </div>
-            <div class="col-md-3 sidecolumn">
-                <php>
-                    $catelist=$categories[$topCategory['id']];
-                </php>
-                <div class="card">
-                    <div class="card-header">
-                        {$topCategory.title}
-                    </div>
-                    <div class="card-body">
-                        <div class="list-group">
-                        <Volist name="catelist" id="c">
-                            <a class="list-group-item {$c['id']==$category['id']?'active':''}" href="{:url('index/article/index',['name'=>$c['name']])}">{$c.title}</a>
-                        </Volist>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <include file="article:_left" />
             </div>
         </div>
     </div>

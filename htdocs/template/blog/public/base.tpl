@@ -12,7 +12,7 @@
     <link href="__STATIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="__STATIC__/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
     <link href="__STATIC__/ionicons/css/ionicons.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="__STATIC__/css/blog.css?v={:config('static_version')}">
+    <link rel="stylesheet" href="__STATIC__/css/blog.css?v={:config('template.static_version')}">
 
     <script src="__STATIC__/jquery/jquery.min.js"></script>
 

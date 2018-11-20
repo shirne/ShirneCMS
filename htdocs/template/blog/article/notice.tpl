@@ -11,8 +11,8 @@ extend name="public:base"/>
 
         <div class="container">
             <div class="row">
-                <div class="col-md-3">
-                    <include file="article/side"/>
+                <div class="col-lg-3">
+                    <include file="article/_left"/>
                 </div>
                 <div class="col">
                     <div class="card main_right news_list">

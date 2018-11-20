@@ -4,7 +4,7 @@
     <div class="main">
         <div class="container view-body">
             <div class="row">
-                <div class="col-md-9">
+                <div class="col-lg-9">
                     <div class="article-body">
                         <h1 class="article-title">{$article.title}</h1>
                         <div class="article-info text-muted text-center">
@@ -19,23 +19,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 sidecolumn">
-                    <php>
-                        $catelist=$categories[$topCategory['id']];
-                    </php>
-                    <div class="card">
-                        <div class="card-header">
-                            {$topCategory.title}
-                        </div>
-                        <div class="card-body">
-                            <div class="list-group">
-                                <Volist name="catelist" id="c">
-                                    <a class="list-group-item {$c['id']==$category['id']?'active':''}" href="{:url('index/article/index',['name'=>$c['name']])}">{$c.title}</a>
-                                </Volist>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <include file="article:_left" />
             </div>
         </div>
     </div>
