@@ -55,25 +55,33 @@
                         <div class="list-group news-group">
                             <foreach name="$model['news']" id="news" key="k">
                                 <if condition="$k EQ 0">
-                                    <a href="{$news.Url}" class="list-group-item list-group-first" target="_blank" style="background-image:url({$news.PicUrl})">
+                                    <a href="{$news.url}" class="list-group-item list-group-first" target="_blank" style="background-image:url({$news.image})">
                                         <div class="text-danger delbtn"><i class="ion-md-remove-circle"></i></div>
-                                        <h3>{$news.Title}</h3>
-                                        <div class="text-muted">{$news.Description}</div>
+                                        <h3>{$news.title}</h3>
+                                        <input type="hidden" name="news[{$k}][title]" value="{$news.title}"/>
+                                        <input type="hidden" name="news[{$k}][url]" value="{$news.url}"/>
+                                        <input type="hidden" name="news[{$k}][image]" value="{$news.image}"/>
+                                        <input type="hidden" name="news[{$k}][description]" value="{$news.description}"/>
+                                        <div class="text-muted">{$news.description}</div>
                                     </a>
                                     <else/>
-                                    <a href="{$news.Url}" class="list-group-item" target="_blank">
+                                    <a href="{$news.url}" class="list-group-item" target="_blank">
                                         <div class="text-danger delbtn"><i class="ion-md-remove-circle"></i></div>
-                                        <h3>{$news.Title}</h3>
-                                        <if condition="!empty($news['PicUrl'])">
-                                            <div class="imgbox" style="background-image:url({$news.PicUrl})">
-                                                <img src="{$news.PicUrl}" />
+                                        <input type="hidden" name="news[{$k}][title]" value="{$news.title}"/>
+                                        <input type="hidden" name="news[{$k}][url]" value="{$news.url}"/>
+                                        <input type="hidden" name="news[{$k}][image]" value="{$news.image}"/>
+                                        <input type="hidden" name="news[{$k}][description]" value="{$news.description}"/>
+                                        <h3>{$news.title}</h3>
+                                        <if condition="!empty($news['image'])">
+                                            <div class="imgbox" style="background-image:url({$news.image})">
+                                                <img src="{$news.image}" />
                                             </div>
                                         </if>
                                     </a>
                                 </if>
                             </foreach>
                             <if condition="count($model['news']) LT 8">
-                                <a href="{$news.Url}" class="list-group-item list-group-add">
+                                <a href="javascript:" class="list-group-item list-group-add">
                                     <h3><i class="ion-md-add"></i> 添加</h3>
                                 </a>
                             </if>
@@ -107,6 +115,34 @@
     </div>
 </block>
 <block name="script">
+    <script type="text/plain" id="firstArticleTpl">
+        <a href="{@url}" class="list-group-item list-group-first" target="_blank" style="background-image:url({@image})">
+            <div class="text-danger delbtn"><i class="ion-md-remove-circle"></i></div>
+            <div class="hiddenbox">
+                <input type="hidden" name="news[{@k}][title]" value="{@title}"/>
+                <input type="hidden" name="news[{@k}][url]" value="{@url}"/>
+                <input type="hidden" name="news[{@k}][image]" value="{@image}"/>
+                <input type="hidden" name="news[{@k}][description]" value="{@description}"/>
+            </div>
+            <h3>{@title}</h3>
+            <div class="text-muted">{@description}</div>
+        </a>
+    </script>
+    <script type="text/plain" id="normalArticleTpl">
+        <a href="{@url}" class="list-group-item" target="_blank">
+            <div class="text-danger delbtn"><i class="ion-md-remove-circle"></i></div>
+            <input type="hidden" name="news[{@k}][title]" value="{@title}"/>
+            <input type="hidden" name="news[{@k}][url]" value="{@url}"/>
+            <input type="hidden" name="news[{@k}][image]" value="{@image}"/>
+            <input type="hidden" name="news[{@k}][description]" value="{@description}"/>
+            <h3>{@title}</h3>
+            {if @image}
+                <div class="imgbox" style="background-image:url({@image})">
+                    <img src="{@image}" />
+                </div>
+            {/if}
+        </a>
+    </script>
     <script type="text/javascript" src="__STATIC__/ueditor/ueditor.config.js"></script>
     <script type="text/javascript" src="__STATIC__/ueditor/ueditor.all.min.js"></script>
     <script type="text/javascript">
@@ -148,7 +184,6 @@
                 e.stopPropagation();
                 e.preventDefault();
                 dialog.action(['从文章添加','从产品添加','从素材添加','自定义内容'],function (idx) {
-                    console.log(idx);
                     switch (idx){
                         case 0:
                             selectArticle();
@@ -169,22 +204,54 @@
                 });
             });
             function selectArticle(){
-                dialog.pickArticle("{:url('admin/index/searchArticle')}",function (article) {
-                    console.log(article)
+                dialog.pickArticle(function (article) {
+                    createArticle(
+                        article.title,
+                        article.cover,
+                        article.description,
+                        get_view_url('article',article.id)
+                    )
                 });
             }
             function selectProduct(){
-                dialog.pickProduct("{:url('admin/index/searchProduct')}",function (product) {
-                    console.log(product)
+                dialog.pickProduct(function (product) {
+                    createArticle(
+                        product.title,
+                        product.image,
+                        '￥'+product.min_price+(product.max_price>product.min_price?('~'+product.max_price):''),
+                        get_view_url('product',product.id)
+                    )
                 });
             }
             function selectMaterial(){
-                dialog.pickList("{:url('admin/index/searchMaterial')}",function (article) {
-                    console.log(article)
-                });
+                dialog.alert('暂不支持');
             }
-            function createArticle(){
-
+            function createArticle(title,img,description,url){
+                var boxgroup=$('.news-group');
+                var sons=boxgroup.find('.list-group-item');
+                var k=sons.length-1;
+                if(sons.length>4){
+                    sons.eq(-1).remove();
+                }
+                var newson='';
+                var data={
+                    'k'           : k,
+                    'title'       : title,
+                    'description' : description,
+                    'url'         : url,
+                    'image'       : img
+                };
+                if(sons.length<2){
+                    newson=$('#firstArticleTpl').text().compile(data);
+                }else{
+                    newson=$('#normalArticleTpl').text().compile(data);
+                }
+                var addbtn=boxgroup.find('.list-group-add');
+                if(addbtn.length>0){
+                    addbtn.before(newson);
+                }else{
+                    boxgroup.append(newson);
+                }
             }
             $('.news-group').bind('click','.delbtn',function (e) {
 

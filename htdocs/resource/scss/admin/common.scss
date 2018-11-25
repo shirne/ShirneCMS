@@ -644,12 +644,45 @@ table {
 }
 
 .news-group{
-  h3{
-    font-size:14px;
-  }
   .list-group-item{
+    position: relative;
+    display:flex;
+    flex-direction: row;
+    .delbtn{
+      position: absolute;
+      right:5px;
+      top:5px;
+    }
     h3{
       color:#333;
+      font-size:14px;
+      line-height:1.6;
+      flex:1 1 auto;
+    }
+    .imgbox{
+      width:80px;
+      height:60px;
+      flex:0 0 auto;
+      background-position:center center;
+      background-size:cover;
+      img{
+        display:none;
+      }
+    }
+  }
+  .list-group-first{
+    padding-top:120px;
+    flex-direction: column;
+    .hiddenbox{
+      flex:1 1 auto;
+    }
+    h3{
+      flex:0 0 auto;
+      color:#fff;
+      text-shadow: 1px 1px 3px rgba(0,0,0,.5);
+    }
+    .text-muted{
+      color:#ddd !important;
     }
   }
   .list-group-add{

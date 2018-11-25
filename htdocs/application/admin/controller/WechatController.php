@@ -304,6 +304,10 @@ class WechatController extends BaseController
         }
     }
 
+    public function material($type='news',$page=1){
+        return $this->fetch();
+    }
+
     public function reply($wid){
         $model=Db::name('WechatReply')->where('wechat_id',$wid);
 

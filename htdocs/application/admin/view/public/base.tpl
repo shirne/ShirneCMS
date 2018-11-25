@@ -26,6 +26,18 @@
         window.get_search_url=function (model) {
             return "{:url('admin/--model--/search')}".replace('--model--',model);
         }
+        window.get_view_url=function (model,id) {
+            var baseurl='';
+            switch (model){
+                case 'article':
+                    baseurl="{:url('index/article/view',['id'=>0])}";
+                    break;
+                case 'product':
+                    baseurl="{:url('index/product/view',['id'=>0])}";
+                    break;
+            }
+            return baseurl.replace('0',id);
+        }
     </script>
 
     <block name="header"></block>
