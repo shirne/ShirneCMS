@@ -26,7 +26,7 @@ String.prototype.compile=function(data,list){
         }
         return temps.join("\n");
     }else{
-        return this.replace(/\{if\s+([^\}]+)\}(.*?){\/if}/g,function(all, condition, cont){
+        return this.replace(/\{if\s+([^\}]+)\}([\W\w]*){\/if}/g,function(all, condition, cont){
             var operation;
             if(operation=condition.match(/\s+(=+|<|>)\s+/)){
                 operation=operation[0];
