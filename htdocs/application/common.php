@@ -109,6 +109,7 @@ function getOauthTypes(){
         'weibo' => 'Weibo',
         'qq' => 'QQ',
         'wechat' => 'WeChat',
+        'wechat_open' => 'Wechat Open',
         'douban' => 'Douban',
         'wework' => 'WeWork',
         'outlook' => 'Outlook',

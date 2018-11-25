@@ -74,7 +74,7 @@ class LoginController extends BaseController{
                 $this->error("不允许使用此方式登陆");
             }
 
-            $callbackurl = url('index/login/callback', ['type' => $app['id']], true,true);
+            $callbackurl = url('index/login/callback', ['type' => $type], false,true);
 
             // 使用第三方登陆
             $oauth = OAuthFactory::getInstence($app['type'], $app['appid'], $app['appkey'], $callbackurl);
@@ -99,8 +99,10 @@ class LoginController extends BaseController{
         }else{
             $type_id=$type;
             $type='oauth';
-            $app = Db::name('OAuth')->where('id',$type_id)
+            $app = Db::name('OAuth')
+                ->where('id|type',$type_id)
                 ->find();
+            $type_id=$app['id'];
             $oauth=OAuthFactory::getInstence($app['type'], $app['appid'], $app['appkey']);
         }
 
@@ -118,7 +120,9 @@ class LoginController extends BaseController{
             $data['data']=json_encode($origin);
             $data['type'] = $type;
             $data['type_id'] = $type_id;
-            if(!empty($userInfo['unionid'])){
+            if($this->isLogin) {
+                $data['member_id']=$this->userid;
+            }elseif(!empty($userInfo['unionid'])){
                 $sameAuth=MemberOauthModel::get(['unionid'=>$userInfo['unionid']]);
                 if(!empty($sameAuth)){
                     $data['member_id']=$sameAuth['member_id'];
@@ -142,6 +146,9 @@ class LoginController extends BaseController{
             } else {
                 unset($data['member_id']);
                 $model->save($data);
+            }
+            if($this->isLogin){
+                $this->success('绑定成功',redirect()->restore(url('index/member/index'))->getTargetUrl());
             }
             session('openid',$data['openid']);
             if($model['member_id']) {
