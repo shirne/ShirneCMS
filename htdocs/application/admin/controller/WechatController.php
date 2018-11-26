@@ -334,8 +334,9 @@ class WechatController extends BaseController
                 switch($data['reply_type']){
                     case 'text':
                         break;
-                    case 'article':
-                        $data['content']=json_encode($data['article']);
+                    case 'news':
+                        $data['news']=empty($data['news'])?[]:array_values($data['news']);
+                        $data['content']=json_encode($data['news']);
                         break;
                     case 'image':
                         $uploaded = $this->upload('wechat', 'upload_image');
@@ -353,12 +354,12 @@ class WechatController extends BaseController
                         break;
                 }
 
-                unset($data['article']);
+                unset($data['news']);
                 unset($data['custom']);
 
                 $added=WechatReplyModel::create($data);
                 if($added){
-                    $this->error('添加成功');
+                    $this->success('添加成功');
                 }else{
                     $this->error('添加失败');
                 }
@@ -387,7 +388,7 @@ class WechatController extends BaseController
         if($this->request->isPost()){
             $data=$this->request->post();
             $validate=new WechatReplyValidate();
-            $validate->setId(0);
+            $validate->setId($id);
             if(!$validate->check($data)){
                 $this->error($validate->getError());
             }else{
@@ -395,8 +396,9 @@ class WechatController extends BaseController
                 switch($data['reply_type']){
                     case 'text':
                         break;
-                    case 'article':
-                        $data['content']=json_encode($data['article']);
+                    case 'news':
+                        $data['news']=empty($data['news'])?[]:array_values($data['news']);
+                        $data['content']=json_encode($data['news']);
                         break;
                     case 'image':
                         $uploaded = $this->upload('wechat', 'upload_image');
@@ -417,27 +419,27 @@ class WechatController extends BaseController
                         break;
                 }
 
-                unset($data['article']);
+                unset($data['news']);
                 unset($data['custom']);
 
 
                 $added=WechatReplyModel::update($data,['id'=>$id]);
                 if($added){
                     delete_image($delete_images);
-                    $this->error('保存成功');
+                    $this->success('保存成功');
                 }else{
                     $this->error('保存失败');
                 }
             }
         }
-        if($model['reply_type']=='article'){
-            $model['news']=json_decode($model['content'],TRUE);
+        if($model['reply_type']=='news'){
+            $model['news']=$this->decodeContent($model['content']);
             $model['content']='';
         }elseif($model['reply_type']=='image'){
-            $model['data']=json_decode($model['content'],TRUE);
+            $model['data']=$this->decodeContent($model['content']);
             $model['content']='';
         }elseif($model['reply_type']=='custom'){
-            $model['module']=json_decode($model['content'],TRUE);
+            $model['module']=$this->decodeContent($model['content']);
             $model['content']='';
         }
 
@@ -447,6 +449,11 @@ class WechatController extends BaseController
         $this->assign('types',getWechatTypes());
         $this->assign('reply_types',getWechatReplyTypes());
         return $this->fetch();
+    }
+
+    private function decodeContent($content){
+        $result=json_decode($content,TRUE);
+        return empty($result)?[]:$result;
     }
 
     public function replydelete($id,$wid)

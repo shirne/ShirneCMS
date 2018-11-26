@@ -82,7 +82,7 @@ function getWechatTypes(){
 function getWechatReplyTypes(){
     return [
         'text'=>'文本消息',
-        'article'=>'文章消息',
+        'news'=>'图文消息',
         'image'=>'图片消息',
         'custom'=>'托管消息'
     ];

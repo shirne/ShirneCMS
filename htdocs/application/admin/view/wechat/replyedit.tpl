@@ -49,7 +49,7 @@
                         <script id="reply-content" name="content" type="text/plain">{$reply.content|raw}</script>
                     </div>
                 </div>
-                <div class="form-group rtype-row rtype-article">
+                <div class="form-group rtype-row rtype-news">
                     <label for="text">回复内容</label>
                     <div style="width:480px;">
                         <div class="list-group news-group">
@@ -80,7 +80,7 @@
                                     </a>
                                 </if>
                             </foreach>
-                            <if condition="count($model['news']) LT 8">
+                            <if condition="empty($model['news']) OR count($model['news']) LT 8">
                                 <a href="javascript:" class="list-group-item list-group-add">
                                     <h3><i class="ion-md-add"></i> 添加</h3>
                                 </a>
@@ -108,7 +108,7 @@
                 </div>
                 <div class="form-group">
                     <input type="hidden" name="wechat_id" value="{$model.wechat_id}">
-                    <button type="submit" class="btn btn-primary">{$id>0?'保存':'添加'}</button>
+                    <button type="submit" class="btn btn-primary">{$model['id']>0?'保存':'添加'}</button>
                 </div>
             </form>
         </div>
@@ -180,7 +180,9 @@
                 $('.rtype-row').hide();
                 $('.rtype-'+rtype).show();
             }).filter(':checked').trigger('change');
-            $('.list-group-add').click(function (e) {
+            var addhtml=$('.list-group-add').prop('outerHTML');
+            $('.list-group-add').click(addbtnEvent);
+            function addbtnEvent(e) {
                 e.stopPropagation();
                 e.preventDefault();
                 dialog.action(['从文章添加','从产品添加','从素材添加','自定义内容'],function (idx) {
@@ -202,7 +204,7 @@
                             break;
                     }
                 });
-            });
+            }
             function selectArticle(){
                 dialog.pickArticle(function (article) {
                     createArticle(
@@ -226,16 +228,16 @@
             function selectMaterial(){
                 dialog.alert('暂不支持');
             }
+            var newsCount=0;
             function createArticle(title,img,description,url){
                 var boxgroup=$('.news-group');
                 var sons=boxgroup.find('.list-group-item');
-                var k=sons.length-1;
                 if(sons.length>4){
                     sons.eq(-1).remove();
                 }
                 var newson='';
                 var data={
-                    'k'           : k,
+                    'k'           : newsCount++,
                     'title'       : title,
                     'description' : description,
                     'url'         : url,
@@ -252,10 +254,27 @@
                 }else{
                     boxgroup.append(newson);
                 }
-            }
-            $('.news-group').bind('click','.delbtn',function (e) {
 
-            })
+                setBind();
+            }
+            function setBind() {
+                $('.news-group .delbtn').unbind('click').bind('click',function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var parent=$(this).parents('.list-group-item');
+                    dialog.confirm('确定要删除该条？',function () {
+                        parent.remove();
+                        var boxgroup=$('.news-group');
+                        var addbtn=boxgroup.find('.list-group-add');
+
+                        if(addbtn.length<1){
+                            boxgroup.append(addhtml);
+                            boxgroup.find('.list-group-add').click(addbtnEvent);
+                        }
+                    })
+                })
+            }
+            setBind();
         });
     </script>
 </block>

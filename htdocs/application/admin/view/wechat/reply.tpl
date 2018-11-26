@@ -44,8 +44,8 @@
                     <td>{$v.keyword}</td>
                     <td>{$v.sort}</td>
                     <td>
-                        <a class="btn btn-outline-dark btn-sm" href="{:url('article/replyupdate',array('id'=>$v['id'],'wid'=>$wid))}"><i class="ion-md-create"></i> 编辑</a>
-                        <a class="btn btn-outline-dark btn-sm" href="{:url('article/replydelete',array('id'=>$v['id'],'wid'=>$wid))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
+                        <a class="btn btn-outline-dark btn-sm" href="{:url('wechat/replyedit',array('id'=>$v['id'],'wid'=>$wid))}"><i class="ion-md-create"></i> 编辑</a>
+                        <a class="btn btn-outline-dark btn-sm" href="{:url('wechat/replydelete',array('id'=>$v['id'],'wid'=>$wid))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
                     </td>
                 </tr>
             </foreach>
