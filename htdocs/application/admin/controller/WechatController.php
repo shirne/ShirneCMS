@@ -304,7 +304,32 @@ class WechatController extends BaseController
         }
     }
 
-    public function material($type='news',$page=1){
+    /**
+     * 素材管理  todo 管理功能
+     * @param $wid
+     * @param string $type
+     * @param int $page
+     * @return mixed
+     */
+    public function material($wid,$type='news',$page=1){
+        return $this->fetch();
+    }
+
+    /**
+     * 素材同步 todo 同步
+     * @param $wid
+     */
+    public function materialsync($wid){
+        $this->success('同步成功');
+    }
+
+    /**
+     * 素材删除 todo 删除
+     * @param $media_id
+     * @param $wid
+     * @return mixed
+     */
+    public function materialdelete($media_id,$wid){
         return $this->fetch();
     }
 
