@@ -82,6 +82,9 @@ class LoginController extends Controller {
             $this->error(lang('Account is disabled, pls contact the super master!'));
         }
 
+        //密码复杂度检查
+        check_password($password);
+
         setLogin($user);
 
         $this->success(lang('Login success!'),url('Index/index'));

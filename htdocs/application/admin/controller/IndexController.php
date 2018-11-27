@@ -41,6 +41,17 @@ class IndexController extends BaseController{
         $a['total_money']=Db::name('member')->sum('money');
         $this->assign('money',$a);
 
+        $notices=[];
+        $password_error=session('password_error');
+        if($password_error){
+            $notices[]=[
+                'message'=>'您的密码过于简单，建议使用<strong>6</strong>位长度以上<strong>大小写字母</strong>及<strong>数字</strong>，<strong>特殊符号</strong>混合的密码，请<a href="'.url('admin/index/profile').'">立即修改</a>!',
+                'level'=>$password_error,
+                'type'=>$password_error>2?'warning':'danger'
+            ];
+        }
+
+        $this->assign('notices',$notices);
         return $this->fetch();
     }
 
@@ -156,6 +167,9 @@ class IndexController extends BaseController{
             if (Db::name('Manager')->where('id',$this->mid)->update($data)) {
                 if(!empty($data['realname'])){
                     session('username',$data['realname']);
+                }
+                if(!empty($password)){
+                    check_password($password);
                 }
                 $this->success(lang('Update success!'), url('Index/profile'));
             } else {
