@@ -87,6 +87,14 @@ function getWechatReplyTypes(){
         'custom'=>'托管消息'
     ];
 }
+function getWechatMaterialTypes(){
+    return [
+        'image'=>'图片',
+        'voice'=>'语音',
+        'video'=>'视频',
+        'article'=>'图文'
+    ];
+}
 function getArticleTypes(){
     return [
         1=>lang('Normal'),

@@ -148,6 +148,27 @@ class WechatController extends BaseController
         }
     }
 
+    private $currentWechat=null;
+
+    private function get_app($wid){
+        if(is_array($wid)){
+            $wechat=$wid;
+        }else {
+            $wechat = Db::name('Wechat')->where('id', $wid)->find();
+            if(empty($wechat)){
+                $this->error('公众号信息不存在');
+            }
+        }
+        $this->currentWechat=$wechat;
+
+        return Factory::officialAccount([
+            'token'=>$wechat['token'],
+            'app_id'=>$wechat['appid'],
+            'secret'=>$wechat['appsecret'],
+            'aes_key'=>$wechat['encodingaeskey']
+        ]);
+    }
+
     /**
      * 自定义菜单
      * todo 个性化菜单列表及编辑
@@ -157,18 +178,9 @@ class WechatController extends BaseController
      */
     public function menu($id,$refresh=0)
     {
-        $model = Db::name('wechat')->find($id);
-        if(empty($model)){
-            $this->error('公众号不存在');
-        }
+        $app=$this->get_app($id);
+        $model=$this->currentWechat;
         $cacheKey='wechat-menu-'.$model['appid'];
-
-        $app=Factory::officialAccount([
-            'token'=>$model['token'],
-            'aes_key'=>$model['encodingaeskey'],
-            'app_id'=>$model['appid'],
-            'secret'=>$model['appsecret']
-        ]);
 
         if($this->request->isPost()){
             $data=$this->request->post('menu');
@@ -241,16 +253,8 @@ class WechatController extends BaseController
      * @param bool $single
      */
     public function syncfans($wid,$openid='',$single=false){
-        $wechat=Db::name('Wechat')->where('id',$wid)->find();
-        if(empty($wechat)){
-            $this->error('公众号信息不存在');
-        }
-
-        $app = Factory::officialAccount([
-            'app_id'=>$wechat['appid'],
-            'secret'=>$wechat['appsecret'],
-            'aes_key'=>$wechat['encodingaeskey']
-        ]);
+        $app=$this->get_app($wid);
+        $wechat=$this->currentWechat;
 
         if($single) {
             if(strpos($openid,',')===false) {
@@ -305,32 +309,84 @@ class WechatController extends BaseController
     }
 
     /**
-     * 素材管理  todo 管理功能
+     * 素材管理
      * @param $wid
+     * @param $key
      * @param string $type
      * @param int $page
      * @return mixed
      */
-    public function material($wid,$type='news',$page=1){
+    public function material($wid,$key='',$type='news',$page=1){
+        if($this->request->isPost()){
+            return redirect(url('',['wid'=>$wid,'key'=>base64_encode($key),'type'=>$type]));
+        }
+        $key=empty($key)?"":base64_decode($key);
+        $model = Db::name('wechatMaterial');
+        $where=array();
+        if(!empty($key)){
+            $where[] = array('title|keyword','like',"%$key%");
+        }
+        $lists=$model->where($where)->order('update_time DESC')->paginate(15);
+        $this->assign('lists',$lists);
+        $this->assign('page',$lists->render());
         return $this->fetch();
     }
 
     /**
-     * 素材同步 todo 同步
+     * 素材同步
      * @param $wid
+     * @param $type
      */
-    public function materialsync($wid){
+    public function materialsync($wid,$type){
+        $app=$this->get_app($wid);
+
+        $count=0;
+        $totals=$app->material->stats();
+        $total_count=$totals[$type.'_count'];
+        while($count<$total_count){
+            $materials=$app->material->list($type,$count,20);
+            if(!empty($materials['item'])){
+                foreach ($materials['item'] as $item){
+                    $exist=Db::name('wechatMaterial')->where('media_id',$item['media_id'])->find();
+                    $data=[
+                        'type'=>$type,
+                        'wechat_id'=>$wid,
+                        'update_time'=>$item['update_time']
+                    ];
+                    if(in_array($type,['image','voice','video'])){
+                        $data['url']=$item['url'];
+                        $data['title']=$item['name'];
+                    }
+                    if($type=='news'){
+                        $data['content']=json_encode($item['content'],JSON_UNESCAPED_UNICODE);
+                    }
+                    if(empty($exist)){
+                        $data['media_id']=$item['media_id'];
+                        Db::name('wechatMaterial')->insert($data);
+                    }else{
+                        Db::name('wechatMaterial')->where('id',$exist['id'])
+                            ->update($data);
+                    }
+                }
+            }
+
+            $count += $materials['ITEM_COUNT'];
+        }
         $this->success('同步成功');
     }
 
     /**
-     * 素材删除 todo 删除
+     * 素材删除
      * @param $media_id
      * @param $wid
-     * @return mixed
      */
     public function materialdelete($media_id,$wid){
-        return $this->fetch();
+        $app=$this->get_app($wid);
+
+        $app->material->delete($media_id);
+        Db::name('wechatMaterial')->where('media_id',$media_id)->delete();
+
+        $this->success('删除成功');
     }
 
     public function reply($wid){

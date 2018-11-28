@@ -43,7 +43,6 @@
                     <td>{$v.update_time|showdate}</td>
                     <td>{$v.keyword}</td>
                     <td>
-                        <a class="btn btn-outline-dark btn-sm" href="{:url('wechat/replyedit',array('id'=>$v['id'],'wid'=>$wid))}"><i class="ion-md-create"></i> 编辑</a>
                         <a class="btn btn-outline-dark btn-sm" href="{:url('wechat/materialdelete',array('media_id'=>$v['media_id'],'wid'=>$wid))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
                     </td>
                 </tr>
