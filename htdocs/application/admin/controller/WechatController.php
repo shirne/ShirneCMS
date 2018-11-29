@@ -389,10 +389,24 @@ class WechatController extends BaseController
         $this->success('删除成功');
     }
 
-    public function reply($wid){
+    /**
+     * 回复管理
+     * @param $wid
+     * @param $key
+     * @return mixed
+     */
+    public function reply($wid,$key=''){
+        if($this->request->isPost()){
+            return redirect(url('wechat/reply',['wid'=>$wid,'key'=>base64_encode($key)]));
+        }
         $model=Db::name('WechatReply')->where('wechat_id',$wid);
+        if(!empty($key)){
+            $key=base64_decode($key);
+            $model->whereLike('title|keyword',"%$key%");
+        }
 
         $lists=$model->paginate(15);
+        $this->assign('keyword',$key);
         $this->assign('lists',$lists);
         $this->assign('types',getWechatTypes());
         $this->assign('reply_types',getWechatReplyTypes());
@@ -400,6 +414,12 @@ class WechatController extends BaseController
         $this->assign('wid',$wid);
         return $this->fetch();
     }
+
+    /**
+     * 新建回复
+     * @param $wid
+     * @return mixed
+     */
     public function replyadd($wid){
         $wechat=Db::name('Wechat')->where('id',$wid)->find();
         if(empty($wechat)){
@@ -461,6 +481,13 @@ class WechatController extends BaseController
         $this->assign('reply_types',getWechatReplyTypes());
         return $this->fetch('replyedit');
     }
+
+    /**
+     * 编辑回复
+     * @param $id
+     * @param int $wid
+     * @return mixed
+     */
     public function replyedit($id,$wid=0){
         $model=Db::name('WechatReply')->where('id',$id)->find();
         if(empty($model)){
@@ -537,6 +564,11 @@ class WechatController extends BaseController
         return empty($result)?[]:$result;
     }
 
+    /**
+     * 删除回复
+     * @param $id
+     * @param $wid
+     */
     public function replydelete($id,$wid)
     {
         $model = Db::name('wechatReply');

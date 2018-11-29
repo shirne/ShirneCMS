@@ -9,7 +9,7 @@
         <div class="row list-header">
             <div class="col-6">
                 <a href="{:url('wechat/index')}" class="btn btn-outline-primary btn-sm"><i class="ion-md-arrow-back"></i> 返回列表</a>
-                <a href="{:url('wechat/materialsync',array('wid'=>$wid))}" class="btn btn-outline-primary btn-sm"><i class="ion-md-sync"></i> 同步素材</a>
+                <a href="{:url('wechat/materialsync',array('wid'=>$wid))}" class="btn btn-outline-primary btn-sm btn-sync"><i class="ion-md-sync"></i> 同步素材</a>
                 <a href="javascript:" class="btn btn-outline-primary btn-sm"><i class="ion-md-add"></i> 添加素材</a>
             </div>
             <div class="col-6">
@@ -51,4 +51,29 @@
         </table>
         {$page|raw}
     </div>
+</block>
+<block name="script">
+    <script type="text/javascript">
+        jQuery(function ($) {
+            $('.btn-sync').click(function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+                var self=$(this);
+                if(self.data('syncing'))return;
+                self.data('syncing',1);
+                self.addClass('disabled');
+                var url=self.attr('href');
+                $.ajax({
+                    url:url,
+                    dataType:'JSON',
+                    type:'GET',
+                    success:function (json) {
+                        self.data('syncing',0);
+                        self.removeClass('disabled');
+                        dialog.alert(json.msg);
+                    }
+                })
+            })
+        })
+    </script>
 </block>

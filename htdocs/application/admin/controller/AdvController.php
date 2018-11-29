@@ -16,9 +16,10 @@ class AdvController extends BaseController
 {
     /**
      * 管理
+     * @param $key
      * @return mixed
      */
-    public function index(){
+    public function index($key=''){
         $model = Db::name('AdvGroup');
         if(!empty($key)){
             $model->whereLike('title|flag',"%$key%");

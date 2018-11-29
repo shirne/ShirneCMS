@@ -2,8 +2,10 @@
 
 namespace app\api\controller;
 
+use app\api\Processer\BaseProcesser;
 use app\common\model\MemberOauthModel;
 use app\common\model\OrderModel;
+use EasyWeChat\BasicService\Application;
 use EasyWeChat\Factory;
 use EasyWeChat\Kernel\Messages\Image;
 use EasyWeChat\Kernel\Messages\Media;
@@ -30,6 +32,9 @@ class WechatController extends Controller{
     protected $config=array();
     protected $account_id=0;
 
+    /**
+     * @var Application
+     */
     protected $app=null;
 
     public function initialize(){
@@ -211,7 +216,7 @@ class WechatController extends Controller{
         $result=$model->find();
         if(empty($result)) {
             if ($type == 'resubscribe') {
-                return $this->getTypeReply($type);
+                return $this->getTypeReply('subscribe');
             }
         }
         return $this->getReply($result);
@@ -243,6 +248,14 @@ class WechatController extends Controller{
                         ]);
                 }
                 return new Image(new Media($media_id));
+            case "custom":
+                $config=json_decode($reply['content'],TRUE);
+                $processer=$config['processer'];
+                if($processer){
+                    $processer=BaseProcesser::factory($processer,$this->app);
+                    $processer->process($config);
+                }
+                return 'error';
             default:
                 return $reply['content'];
         }
