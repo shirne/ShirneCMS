@@ -60,9 +60,9 @@ ShirneCMS
 
 ## 后端库引用
 [EasyWechat](https://www.easywechat.com/docs/3.x/zh-CN/index)<br />
-[phpoffice/phpspreadsheet]()<br />
-[phpmailer]()<br />
-[endroid/qr-code]()
+[phpoffice/phpspreadsheet](https://phpspreadsheet.readthedocs.io/en/develop/)<br />
+[phpmailer](https://github.com/PHPMailer/PHPMailer)<br />
+[endroid/qr-code](https://github.com/endroid/qr-code)
 
 ## 开发说明
 
@@ -109,6 +109,8 @@ htdocs/public 网站根目录
 分离模板目录配置 template.independence
 
 标签库 [product](TAGLIB.md),[article](TAGLIB.md) 和 [extendtag](TAGLIB.md)
+
+弹出框组件说明 [Dialog](DIALOG.md)
 
 导航配置 navigator.php
 
