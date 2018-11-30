@@ -90,12 +90,13 @@ class LoginController extends BaseController{
         if(empty($type) || empty($code)){
             $this->error('参数错误');
         }
+        $callbackurl = url('index/login/callback', ['type' => $type],false,true);
         if(preg_match('/_\d+$/',$type)>0){
             list($type,$type_id)=explode('_',$type);
             if(!in_array($type,['wechat']))$this->error('参数错误');
             $app = Db::name($type)->where('id',$type_id)
                 ->find();
-            $oauth=OAuthFactory::getInstence($type, $app['appid'], $app['appsecret'],'',true);
+            $oauth=OAuthFactory::getInstence($type, $app['appid'], $app['appsecret'],$callbackurl,true);
         }else{
             $type_id=$type;
             $type='oauth';
@@ -103,7 +104,7 @@ class LoginController extends BaseController{
                 ->where('id|type',$type_id)
                 ->find();
             $type_id=$app['id'];
-            $oauth=OAuthFactory::getInstence($app['type'], $app['appid'], $app['appkey']);
+            $oauth=OAuthFactory::getInstence($app['type'], $app['appid'], $app['appkey'],$callbackurl);
         }
 
         try {
@@ -115,12 +116,11 @@ class LoginController extends BaseController{
             $data['avatar'] =$userInfo['avatar'];
 
             $origin=$userInfo->getOriginal();
-            $data['gender'] = empty($origin['gender'])?0:$origin['gender'];
+            $data['gender'] = empty($origin['gender'])?0:$this->parseGender($origin['gender']);
             $data['unionid'] = empty($origin['unionid'])?'':$origin['unionid'];
             $data['data']=json_encode($origin);
             $data['type'] = $type;
             $data['type_id'] = $type_id;
-            $data['member_id'] = 0;
             if($this->isLogin) {
                 $data['member_id']=$this->userid;
             }elseif(!empty($userInfo['unionid'])){
@@ -131,10 +131,13 @@ class LoginController extends BaseController{
             }
             $model = MemberOauthModel::where('openid', $data['openid'])->find();
             if (empty($model)) {
+                if(!isset($data['member_id']))$data['member_id']=0;
                 $model = MemberOauthModel::create($data);
             } else {
-                if($model['member_id'] && $model['member_id']!=$data['member_id']){
-                    //todo 自动生成的账户资料处理
+                if($data['member_id']) {
+                    if($model['member_id'] && $model['member_id']!=$data['member_id']){
+                        //todo 自动生成的账户资料处理
+                    }
                 }
                 $model->save($data);
             }
@@ -146,11 +149,12 @@ class LoginController extends BaseController{
                 //根据设置自动生成账户
                 if($this->config['m_register']!='1') {
                     $member = MemberModel::create([
-                        'username' => $model['openid'],
-                        'realname' => $model['nickname'],
+                        'username' => '',
+                        'nickname' => $model['nickname'],
                         'password' => '',
-                        'avatar' => $model['avatar'],
-                        'referer'=>0
+                        'gender'   => $model['gender'],
+                        'avatar'   => $model['avatar'],
+                        'referer'  => 0
                     ]);
                     $model->save(['member_id' => $member['id']]);
                 }
@@ -177,6 +181,19 @@ class LoginController extends BaseController{
             $this->error('登录失败',url('index/login/index'));
         }
         return redirect()->restore(url('index/member/index'));
+    }
+
+    private function parseGender($gender){
+        if(in_array($gender,[0,1,2])){
+            return $gender;
+        }
+        if(strpos($gender,'男')!==false){
+            return 1;
+        }
+        if(strpos($gender,'女')!==false){
+            return 2;
+        }
+        return 0;
     }
 
     public function getpassword(){
