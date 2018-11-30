@@ -90,7 +90,7 @@ class LoginController extends BaseController{
         if(empty($type) || empty($code)){
             $this->error('参数错误');
         }
-        if(strpos($type,'_')>0){
+        if(preg_match('/_\d+$/',$type)>0){
             list($type,$type_id)=explode('_',$type);
             if(!in_array($type,['wechat']))$this->error('参数错误');
             $app = Db::name($type)->where('id',$type_id)
@@ -120,35 +120,40 @@ class LoginController extends BaseController{
             $data['data']=json_encode($origin);
             $data['type'] = $type;
             $data['type_id'] = $type_id;
+            $data['member_id'] = 0;
             if($this->isLogin) {
                 $data['member_id']=$this->userid;
             }elseif(!empty($userInfo['unionid'])){
-                $sameAuth=MemberOauthModel::get(['unionid'=>$userInfo['unionid']]);
+                $sameAuth=MemberOauthModel::where('unionid',$userInfo['unionid'])->find();
                 if(!empty($sameAuth)){
                     $data['member_id']=$sameAuth['member_id'];
                 }
             }
-            $model = MemberOauthModel::get(['openid' => $data['openid']]);
+            $model = MemberOauthModel::where('openid', $data['openid'])->find();
             if (empty($model)) {
-                if (empty($data['member_id'])) {
-                    if($this->config['m_register']!='1') {
-                        $member = MemberModel::create([
-                            'username' => $data['openid'],
-                            'realname' => $data['nickname'],
-                            'avatar' => $data['avatar'],
-                            'referer'=>0
-                        ]);
-                        $data['member_id'] = $member['id'];
-                    }
-                }
-                MemberOauthModel::create($data);
-                $model = MemberOauthModel::get(['openid' => $data['openid']]);
+                $model = MemberOauthModel::create($data);
             } else {
-                unset($data['member_id']);
+                if($model['member_id'] && $model['member_id']!=$data['member_id']){
+                    //todo 自动生成的账户资料处理
+                }
                 $model->save($data);
             }
             if($this->isLogin){
                 $this->success('绑定成功',redirect()->restore(url('index/member/index'))->getTargetUrl());
+            }
+            
+            if (empty($model['member_id'])) {
+                //根据设置自动生成账户
+                if($this->config['m_register']!='1') {
+                    $member = MemberModel::create([
+                        'username' => $model['openid'],
+                        'realname' => $model['nickname'],
+                        'password' => '',
+                        'avatar' => $model['avatar'],
+                        'referer'=>0
+                    ]);
+                    $model->save(['member_id' => $member['id']]);
+                }
             }
             session('openid',$data['openid']);
             if($model['member_id']) {
@@ -168,9 +173,10 @@ class LoginController extends BaseController{
                 setLogin($member);
             }
         }catch(Exception $e){
-            $this->error('登录失败',url('index/index/index'));
+            Log::write($e->getMessage()."\n".$e->getFile().$e->getLine().$e->getCode(),'ERROR');
+            $this->error('登录失败',url('index/login/index'));
         }
-        return redirect()->restore();
+        return redirect()->restore(url('index/member/index'));
     }
 
     public function getpassword(){
