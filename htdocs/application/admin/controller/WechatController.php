@@ -39,6 +39,15 @@ class WechatController extends BaseController
         return $this->fetch();
     }
 
+    private function createHash($id=0){
+        $hash=random_str(rand(6,10));
+        $exists=Db::name('wechat')->where('hash',$hash)->where('id','NEQ',$id)->find();
+        if(!empty($exists)){
+            return $this->createHash($id);
+        }
+        return $hash;
+    }
+
     /**
      * 添加公众号
      * @return mixed
@@ -53,23 +62,16 @@ class WechatController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
-                $uploaded = $this->upload('wechat', 'upload_logo');
-                if (!empty($uploaded)) {
-                    $data['logo'] = $uploaded['url'];
-                }elseif($this->uploadErrorCode>102){
-                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
+                $uploads=$this->batchUpload('wechat',['logo','qrcode','cert_path','key_path']);
+                if($uploads){
+                    $data=array_merge($data,$uploads);
                 }
-                $uploaded = $this->upload('wechat', 'upload_qrcode');
-                if (!empty($uploaded)) {
-                    $data['qrcode'] = $uploaded['url'];
-                }elseif($this->uploadErrorCode>102){
-                    delete_image($data['logo']);
-                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
-                }
+                $data['hash']=$this->createHash();
                 $model=WechatModel::create($data);
                 if ($model['id']) {
                     $this->success(lang('Add success!'), url('wechat/index'));
                 } else {
+                    delete_image($uploads);
                     $this->error(lang('Add failed!'));
                 }
             }
@@ -87,6 +89,8 @@ class WechatController extends BaseController
      */
     public function edit($id)
     {
+        $id=intval($id);
+        if($id==0)$this->error('数据不存在');
         if ($this->request->isPost()) {
             //如果用户提交数据
             $data = $this->request->post();
@@ -96,28 +100,19 @@ class WechatController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
-                $delete_images=[];
-                $uploaded = $this->upload('wechat', 'upload_logo');
-                if (!empty($uploaded)) {
-                    $data['logo'] = $uploaded['url'];
-                    $delete_images[]=$data['delete_logo'];
-                }elseif($this->uploadErrorCode>102){
-                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
-                }
-                $uploaded = $this->upload('wechat', 'upload_qrcode');
-                if (!empty($uploaded)) {
-                    $data['qrcode'] = $uploaded['url'];
-                    $delete_images[]=$data['delete_qrcode'];
-                }elseif($this->uploadErrorCode>102){
-                    delete_image($data['logo']);
-                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
+                $uploads=$this->batchUpload('wechat',['logo','qrcode','cert_path','key_path']);
+                if($uploads){
+                    $data=array_merge($data,$uploads);
                 }
                 $model=WechatModel::get($id);
+                if(empty($model['hash'])){
+                    $data['hash']=$this->createHash();
+                }
                 if ($model->allowField(true)->save($data)) {
-                    delete_image($delete_images);
+                    delete_image($this->deleteFiles);
                     $this->success(lang('Update success!').$this->uploadError, url('wechat/index'));
                 } else {
-                    delete_image([$data['logo'],$data['qrcode']]);
+                    delete_image($uploads);
                     $this->error(lang('Update failed!').$this->uploadError);
                 }
             }
@@ -130,6 +125,44 @@ class WechatController extends BaseController
         $this->assign('model',$model);
         $this->assign('id',$id);
         return $this->fetch();
+    }
+
+    /**
+     * 上传域名验证文件
+     * @param $name
+     * @param $content
+     */
+    public function uploadVerify($name,$content){
+        if(is_writable(DOC_ROOT)){
+            if(preg_match('/^MP_verify_[a-zA-Z0-9]+\.txt$/',$name)) {
+                if(preg_match('/^[a-zA-Z0-9=\\/]+$/',$content)) {
+                    file_put_contents(DOC_ROOT . '/' . $name, $content);
+                    $this->success('上传成功！');
+                }
+            }
+            $this->error('非法格式');
+        }
+        $this->error('网站目录无写入权限，请手动上传');
+    }
+
+    /**
+     * 更新指定字段
+     * @param $id
+     * @param $field
+     * @param $value
+     */
+    public function updateField($id,$field,$value){
+        $id=intval($id);
+        if($id==0)$this->error('数据不存在');
+        $model = Db::name('wechat')->find($id);
+        if(empty($model)){
+            $this->error('数据不存在');
+        }
+        if(!in_array($field,['hash','token','encodingaeskey'])){
+            $this->error('不允许更新的字段');
+        }
+        Db::name('wechat')->where('id',$id)->update([$field=>$value]);
+        $this->success('更新成功');
     }
 
     /**

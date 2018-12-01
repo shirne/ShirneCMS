@@ -2,29 +2,6 @@
 
 use think\Db;
 
-function setLogin($member){
-    session('userid', $member['id']);
-    session('username',empty($member['realname'])? $member['username']:$member['realname']);
-    $time=time();
-    session('logintime',$time);
-    Db::name('member')->where('id',$member['id'])->update(array(
-        'login_ip'=>request()->ip(),
-        'logintime'=>$time
-    ));
-    user_log($member['id'], 'login', 1, '登录成功');
-}
-
-function clearLogin($log=true){
-    $id=session('userid');
-    if($log && !empty($id)) {
-        user_log($id, 'logout', 1, '退出登录');
-    }
-
-    session('userid',null);
-    session('username',null);
-    session('logintime',null);
-}
-
 
 function parseNavigator(&$config,$module){
     $navigators=cache($module.'_navigator');

@@ -47,7 +47,7 @@ class LoginController extends BaseController{
                         user_log($member['id'], 'login', 0, '账号已禁用' );
                         $this->error("您的账号已禁用");
                     }else {
-                        setLogin($member);
+                        $this->setLogin($member);
                         $redirect=redirect()->restore();
                         if(empty($redirect->getData())){
                             $url=url('index/member/index');
@@ -174,7 +174,7 @@ class LoginController extends BaseController{
                     );
                 }
 
-                setLogin($member);
+                $this->setLogin($member);
             }
         }catch(Exception $e){
             Log::write($e->getMessage()."\n".$e->getFile().$e->getLine().$e->getCode(),'ERROR');
@@ -362,7 +362,7 @@ class LoginController extends BaseController{
                     ->update(['member_id'=>$model['id']]);
             }
             Db::commit();
-            setLogin($model);
+            $this->setLogin($model);
             $redirect=redirect()->restore();
             if(empty($redirect->getData())){
                 $url=url('index/member/index');
@@ -523,7 +523,7 @@ class LoginController extends BaseController{
 
     public function logout()
     {
-        clearLogin();
+        $this->clearLogin();
         $this->success("已成功退出登陆");
 
     }

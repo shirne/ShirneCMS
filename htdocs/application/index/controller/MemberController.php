@@ -495,7 +495,7 @@ class MemberController extends AuthedController
     }
 
     public function logout(){
-        clearLogin();
+        $this->clearLogin();
         $this->success('退出成功',url('index/login/index'));
     }
 }

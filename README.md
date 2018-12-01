@@ -52,7 +52,7 @@ ShirneCMS
 
 [twbs/bootstrap 4.x](https://v4.bootcss.com/docs/4.0/getting-started/introduction/)<br />
 [components/jquery 3.3.1](http://api.jquery.com/)<br />
-[eonasdan/bootstrap-datetimepicker](https://github.com/Eonasdan/bootstrap-datetimepicker/blob/master/docs/Options.md)<br />
+[eonasdan/bootstrap-datetimepicker](https://github.com/Eonasdan/bootstrap-datetimepicker/blob/master/docs/Options.md) 针对bootstrap4.x修改<br />
 [driftyco/ionicons](http://ionicons.com/)<br />
 [chartjs/Chart.js 2.7.2](https://chartjs.bootcss.com/docs/)<br />
 [codeseven/toastr](http://codeseven.github.io/toastr/)<br />
@@ -77,18 +77,12 @@ Javascript/CSS构建[Gulp](https://www.gulpjs.com.cn/)
 cnpm install<br />
 生成并监视文件：gulp
 
-~~Javascript/CSS构建~~[~~Grunt~~](http://www.gruntjs.net/)
-
->cd htdocs/resource<br />
-cnpm install<br />
-监视文件：grunt watch<br />
-生成文件：grunt
-
 数据库
 
 >scripts/struct.sql 数据表结构<br />
 scripts/init.sql 初始数据<br />
-scripts/update_shop.sql 商城模块
+scripts/update_shop.sql 商城模块<br />
+scripts/update_wechat.sql 微信模块
 
 项目目录
 

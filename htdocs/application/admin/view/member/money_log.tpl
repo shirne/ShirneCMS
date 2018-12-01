@@ -114,7 +114,7 @@
                             -
                         </if>
                     </td>
-                    <td>{$v.create_at|showdate}</td>
+                    <td>{$v.create_time|showdate}</td>
                     <td>{$v.reson}</td>
                     <td>
 

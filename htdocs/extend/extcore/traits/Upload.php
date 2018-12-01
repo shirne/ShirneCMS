@@ -13,12 +13,19 @@ trait Upload
      * @var array
      */
     protected $uploadConfig=array(
-        'max_size'       =>  10485760, //上传的文件大小限制 默认10M
-        'allow_exts'     =>  array('jpg','jpeg','png','gif','bmp','tif','swf','mp4','mp3','flv','txt','csv','xls','xlsx','doc','docx','ppt','pptx','pdf','zip','rar','json'), //允许的文件后缀
+        //上传的文件大小限制 默认10M
+        'max_size'       =>  10485760,
+        //允许的文件后缀
+        'allow_exts'     =>  array(
+            'jpg','jpeg','png','gif','bmp','tif',
+            'swf','mp4','mp3','flv',
+            'txt','csv','xls','xlsx','doc','docx','ppt','pptx','pdf',
+            'zip','rar','json','pem'
+        ),
         'img_exts'       =>  array('gif','jpg','jpeg','bmp','png','swf','tif'),
-        'root_path'      =>  './uploads/', //上传根路径
-        'save_path'      =>  '', //保存路径
-        'save_rule'      =>  'file_rule', //命名规则
+        'root_path'      =>  './uploads/',
+        'save_path'      =>  '',
+        'save_rule'      =>  'file_rule',
         'driver'         =>	'local',
         'driverConfig'   =>  array(),
     );
@@ -171,6 +178,8 @@ trait Upload
         return $this->uploadFile($folder,$field,true);
     }
 
+    protected $deleteFiles;
+
     /**
      * 批量接收多个上传字段
      * @param $folder string 上传保存的目录名
@@ -182,6 +191,8 @@ trait Upload
         if(!is_array($fields)){
             $fields=explode(',',$fields);
         }
+        $this->deleteFiles=[];
+        $request=request()->post();
         $uploaded=[];
         foreach ($fields as $field){
             $isImg=false;
@@ -193,6 +204,9 @@ trait Upload
             $uploadResult=$this->uploadFile($folder,'upload_'.$field,$isImg);
             if($uploadResult){
                 $uploaded[$field]=$uploadResult['url'];
+                if(!empty($request['delete_'.$field])){
+                    $this->deleteFiles[]=$request['delete_'.$field];
+                }
             }else{
                 if($warnLevel==1){
                     if($this->uploadErrorCode>102){
@@ -206,5 +220,19 @@ trait Upload
             }
         }
         return $uploaded;
+    }
+
+    /**
+     * 移除删除用的字段
+     * @param $data
+     * @return mixed
+     */
+    protected function removeDeleteFields($data){
+        foreach ($data as $field=>$val){
+            if(strpos($field,'delete_')===0){
+                unset($data[$field]);
+            }
+        }
+        return $data;
     }
 }

@@ -88,14 +88,14 @@
                     <div class="col form-group">
                         <label for="token">Token</label>
                         <div class="input-group">
-                        <input type="text" name="token" class="form-control" value="{$model.token}">
+                        <input type="text" name="token" readonly class="form-control" value="{$model.token}">
                         <div class="input-group-append"><a href="javascript:" class="btn btn-outline-secondary gener-token">随机生成</a> </div>
                         </div>
                     </div>
                     <div class="col form-group">
                         <label for="encodingaeskey">AESKey</label>
                         <div class="input-group">
-                        <input type="text" name="encodingaeskey" class="form-control" value="{$model.encodingaeskey}">
+                        <input type="text" name="encodingaeskey" readonly class="form-control" value="{$model.encodingaeskey}">
                             <div class="input-group-append"><a href="javascript:" class="btn btn-outline-secondary gener-aeskey">随机生成</a> </div>
                         </div>
                     </div>
@@ -103,6 +103,54 @@
                 <div class="form-group">
                     <label for="subscribeurl">订阅链接</label>
                     <input type="text" name="subscribeurl" class="form-control" value="{$model.subscribeurl}">
+                </div>
+                <h3>支付参数</h3>
+                <hr/>
+                <div class="form-row">
+                    <div class="col form-group">
+                        <label for="token">商户ID</label>
+                        <div class="input-group">
+                            <input type="text" name="mch_id" class="form-control" value="{$model.mch_id}">
+                        </div>
+                    </div>
+                    <div class="col form-group">
+                        <label for="encodingaeskey">支付密钥</label>
+                        <div class="input-group">
+                            <input type="text" name="key" class="form-control" value="{$model.key}">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col form-group">
+                        <label for="account">证书文件(cert.pem)</label>
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" name="upload_cert_path"/>
+                                <label class="custom-file-label" for="upload_cert_path">选择文件</label>
+                            </div>
+                        </div>
+                        <if condition="$model['cert_path']">
+                            <figure class="figure">
+                                <figcaption class="figure-caption text-center">{$model.cert_path}</figcaption>
+                            </figure>
+                            <input type="hidden" name="delete_cert_path" value="{$model.cert_path}"/>
+                        </if>
+                    </div>
+                    <div class="col form-group">
+                        <label for="original">密钥文件(key.pem)</label>
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" name="upload_key_path"/>
+                                <label class="custom-file-label" for="upload_key_path">选择文件</label>
+                            </div>
+                        </div>
+                        <if condition="$model['key_path']">
+                            <figure class="figure">
+                                <figcaption class="figure-caption text-center">{$model.key_path}</figcaption>
+                            </figure>
+                            <input type="hidden" name="delete_key_path" value="{$model.key_path}"/>
+                        </if>
+                    </div>
                 </div>
                 <div class="form-group">
                     <input type="hidden" name="id" value="{$model.id}">

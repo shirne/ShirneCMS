@@ -276,7 +276,7 @@ class WechatController extends Controller{
             ]);
         }
     }
-    public function payresult(){
+    public function payresult($hash=''){
         $config = [
             'app_id'             => $this->config['appid'],
             'mch_id'             => $this->config['mch_id'],
@@ -321,7 +321,7 @@ class WechatController extends Controller{
 
         $response->send();
     }
-    public function scanpay(){
+    public function scanpay($hash=''){
         $config = [
             'app_id'             => $this->config['appid'],
             'mch_id'             => $this->config['mch_id'],

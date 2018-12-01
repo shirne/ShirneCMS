@@ -60,6 +60,19 @@
                     <div class="card-header">商品属性</div>
                     <div class="card-body">
                         <div class="form-row">
+                            <label class="col-3">是否发布</label>
+                            <div class="form-group col">
+                                <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
+                                    <label class="btn btn-outline-secondary{$product['status']=='1'?' active':''}">
+                                        <input type="radio" name="status" value="1" autocomplete="off" {$product['type']=='1'?'checked':''}>是
+                                    </label>
+                                    <label class="btn btn-outline-secondary{$product['status']=='0'?' active':''}">
+                                        <input type="radio" name="status" value="0" autocomplete="off" {$product['type']=='0'?'checked':''}>否
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
                             <label class="col-3">商品类型</label>
                             <div class="form-group col">
                                 <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">

@@ -65,6 +65,12 @@ class BaseController extends Controller
         $this->seo();
     }
 
+    /**
+     * 设置seo信息
+     * @param string $title
+     * @param string $keys
+     * @param string $desc
+     */
     public function seo($title='',$keys='',$desc=''){
         $sitename=$this->config['site-webname'];
         if(empty($title)){
@@ -84,6 +90,43 @@ class BaseController extends Controller
         $this->assign('description',$desc);
     }
 
+    /**
+     * 写入会员登录状态
+     * @param $member
+     */
+    protected function setLogin($member){
+        if($member['status']!='1'){
+            $this->error('会员已禁用');
+        }
+        session('userid', $member['id']);
+        session('username',empty($member['realname'])? $member['username']:$member['realname']);
+        $time=time();
+        session('logintime',$time);
+        Db::name('member')->where('id',$member['id'])->update(array(
+            'login_ip'=>request()->ip(),
+            'logintime'=>$time
+        ));
+        user_log($member['id'], 'login', 1, '登录成功');
+    }
+
+    /**
+     * 清除会员登录状态
+     * @param bool $log
+     */
+    protected function clearLogin($log=true){
+        $id=session('userid');
+        if($log && !empty($id)) {
+            user_log($id, 'logout', 1, '退出登录');
+        }
+
+        session('userid',null);
+        session('username',null);
+        session('logintime',null);
+    }
+
+    /**
+     * 检测用户是否登录并初始化资料
+     */
     public function checkLogin(){
         $this->userid = session('userid');
         if(!empty($this->userid)){
@@ -98,7 +141,7 @@ class BaseController extends Controller
                 $this->assign('user', $this->user);
             }else{
                 $this->userid=null;
-                clearLogin(false);
+                $this->clearLogin(false);
                 $this->error("登录失效",url('index/login/index'));
             }
         }
@@ -115,6 +158,11 @@ class BaseController extends Controller
         }
         $this->assign('wechatUser', $this->wechatUser);
     }
+
+    /**
+     * 检测并自动登录微信
+     * @return bool
+     */
     protected function wechatLogin(){
         if(!$this->isWechat){
             $this->errMsg='非微信内部浏览器';
@@ -137,7 +185,7 @@ class BaseController extends Controller
                 if($wechatUser['member_id']){
                     $member=MemberModel::get($wechatUser['member_id']);
                     if(!empty($member)) {
-                        setLogin($member);
+                        $this->setLogin($member);
 
                         get_redirect(url('index/member/index'))->send();
                         exit;
@@ -171,7 +219,7 @@ class BaseController extends Controller
                 if($wechatUser['member_id']){
                     $member=MemberModel::get($wechatUser['member_id']);
                     if(!empty($member)) {
-                        setLogin($member);
+                        $this->setLogin($member);
 
                         get_redirect(url('index/member/index'))->send();
                         exit;
@@ -183,11 +231,19 @@ class BaseController extends Controller
         }
         return true;
     }
+
+    /**
+     * 初始化会员等级资料
+     */
     public function initLevel(){
         if($this->isLogin && empty($this->userLevel)){
             $this->userLevel=MemberLevelModel::get($this->user['level_id']);
         }
     }
+
+    /**
+     * 检测客户端平台，并注册对应平台的环境所需资源
+     */
     public function checkPlatform(){
         $detected=session('detected');
         if(empty($detected)) {

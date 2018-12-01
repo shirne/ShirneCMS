@@ -13,6 +13,7 @@ class OAuthFactory
 {
     public static function getInstence($type,$appid,$appkey,$url='',$iswechat=false)
     {
+        if($type=='wechat')$iswechat=true;
         if($type=='wechat_open')$type='wechat';
         $config=[
             $type=>[
