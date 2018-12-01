@@ -49,7 +49,7 @@
                         </div>
                     </td>
                     <td>
-                        <a class="btn btn-outline-dark btn-sm btn-config" href="javascript:" data-url="{:url('api/wechat/index',['hash'=>$v['hash']],false,true)}" data-token="{$v['token']}" data-aeskey="{$v['encodingaeskey']}" data-id="{$v.id}"><i class="ion-md-cog"></i> 配置</a>
+                        <a class="btn btn-outline-dark btn-sm btn-config" href="javascript:" data-payurl="{:url('index/order/wechatpay',[],false,true)}/order_id/" data-url="{:url('api/wechat/index',['hash'=>$v['hash']],false,true)}" data-token="{$v['token']}" data-aeskey="{$v['encodingaeskey']}" data-id="{$v.id}"><i class="ion-md-cog"></i> 配置</a>
                         <a class="btn btn-outline-dark btn-sm" href="{:url('wechat/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> 编辑</a>
                         <a class="btn btn-outline-dark btn-sm" href="{:url('wechat/delete',array('id'=>$v['id']))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
                     </td>
@@ -81,6 +81,12 @@
             <div class="input-group">
             <input type="text" name="encodingaeskey" readonly class="form-control" value="{@aeskey}">
                 <div class="input-group-append"><a href="javascript:" class="btn btn-outline-secondary gener-aeskey">随机生成</a> </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="token">支付目录</label>
+            <div class="input-group">
+                <input type="text" name="token" readonly class="form-control" value="{@payurl}">
             </div>
         </div>
         <div class="form-group">
