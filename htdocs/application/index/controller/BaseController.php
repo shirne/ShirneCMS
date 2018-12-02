@@ -2,6 +2,7 @@
 namespace app\index\controller;
 
 use app\admin\model\MemberLevelModel;
+use app\common\model\WechatModel;
 use EasyWeChat\Factory;
 use extcore\traits\Email;
 use sdk\OAuthFactory;
@@ -21,6 +22,7 @@ class BaseController extends Controller
     protected $userid;
     protected $user;
     protected $openid;
+    protected $wechat;
     protected $wechatUser;
     protected $userLevel;
     protected $isLogin=false;
@@ -149,10 +151,10 @@ class BaseController extends Controller
         if($this->wechatLogin() && $this->config['wechat_autologin']=='1' ){
             redirect()->remember();
 
-            $callbackurl = url('index/login/callback', ['type' => 'wechat_'.$this->config['wechat_id']], true,true);
+            $callbackurl = url('index/login/callback', ['type' => 'wechat_'.$this->wechat['id']], true,true);
 
             // 使用第三方登陆
-            $oauth = OAuthFactory::getInstence('wechat', $this->config['appid'], $this->config['appsecret'], $callbackurl,true);
+            $oauth = OAuthFactory::getInstence('wechat', $this->wechat['appid'], $this->wechat['appsecret'], $callbackurl,true);
             $oauth->redirect()->send();
             exit;
         }
@@ -201,7 +203,7 @@ class BaseController extends Controller
             if(empty($openid)) {
                 $wechatUser = Db::name('memberOauth')
                     ->where('member_id', $this->userid)
-                    ->where('type_id', 0)
+                    ->where('type_id', $this->wechat['id'])
                     ->where('type', 'wechat')
                     ->find();
                 if (!empty($wechatUser)) {
@@ -285,28 +287,10 @@ class BaseController extends Controller
          * 详细用法参考：http://mp.weixin.qq.com/wiki/7/1c97470084b73f8e224fe6d9bab1625b.html
          */
         if($this->isWechat ) {
-            if(empty($this->config['appid'])){
-                $wechat=Db::name('Wechat')->where('type','wechat')
-                    ->where('account_type','service')
-                    ->order('is_default DESC')->find();
-                if(!empty($wechat)){
-                    $this->config['wechat_id']=$wechat['id'];
-                    $this->config['appid']=$wechat['appid'];
-                    $this->config['appsecret']=$wechat['appsecret'];
-                    $this->config['token']=$wechat['token'];
-                }
-            }
-            if(!empty($this->config['appid'])) {
-                $app = Factory::officialAccount([
-                    'app_id' => $this->config['appid'],
-                    'secret' => $this->config['appsecret'],
-                    'token' => $this->config['token'],
-                    'response_type' => 'array',
-                    'log' => [
-                        'level' => 'debug',
-                        'file' => Env::get('runtime_path') . '/wechat.log',
-                    ],
-                ]);
+            $this->wechat=getWechatAccount('wechat');
+
+            if(!empty($this->wechat['appid'])) {
+                $app = Factory::officialAccount(WechatModel::to_config($this->wechat));
                 $signPackage = $app->jssdk->buildConfig([
                     'onMenuShareTimeline',
                     'onMenuShareAppMessage',

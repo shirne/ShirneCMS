@@ -67,8 +67,25 @@ class WechatController extends BaseController
                     $data=array_merge($data,$uploads);
                 }
                 $data['hash']=$this->createHash();
+                if(!isset($data['is_default'])){
+                    $data['is_default']=0;
+                }
+                if($data['account_type']=='service') {
+                    $default = Db::name('wechat')->where('type', $data['type'])
+                        ->where('is_default', 1)->find();
+                    if(empty($default)){
+                        $data['is_default']=1;
+                    }
+                }else{
+                    $data['is_default']=0;
+                }
                 $model=WechatModel::create($data);
                 if ($model['id']) {
+                    if($data['is_default']){
+                        Db::name('wechat')->where('type', $data['type'])
+                            ->where('is_default', 1)
+                        ->where('id','NEQ',$model['id'])->update(['is_default'=>0]);
+                    }
                     $this->success(lang('Add success!'), url('wechat/index'));
                 } else {
                     delete_image($uploads);
@@ -104,12 +121,29 @@ class WechatController extends BaseController
                 if($uploads){
                     $data=array_merge($data,$uploads);
                 }
+                if(!isset($data['is_default'])){
+                    $data['is_default']=0;
+                }
+                if($data['account_type']=='service') {
+                    $default = Db::name('wechat')->where('type', $data['type'])
+                        ->where('is_default', 1)->find();
+                    if(empty($default)){
+                        $data['is_default']=1;
+                    }
+                }else{
+                    $data['is_default']=0;
+                }
                 $model=WechatModel::get($id);
                 if(empty($model['hash'])){
                     $data['hash']=$this->createHash();
                 }
                 if ($model->allowField(true)->save($data)) {
                     delete_image($this->deleteFiles);
+                    if($data['is_default']){
+                        Db::name('wechat')->where('type', $data['type'])
+                            ->where('is_default', 1)
+                            ->where('id','NEQ',$id)->update(['is_default'=>0]);
+                    }
                     $this->success(lang('Update success!').$this->uploadError, url('wechat/index'));
                 } else {
                     delete_image($uploads);

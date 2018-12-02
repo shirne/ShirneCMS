@@ -578,13 +578,13 @@ function money_log($uid, $money, $reson, $type='',$field='money')
 function getPaytypes($type = '')
 {
     $where=array();
-    if(!empty($type))$where['type']=$type;
-    $lists=\think\Db::name('Paytype')->where($where)->select();
-    $ptypes=array();
-    foreach ($lists as $t){
-        $ptypes[$t['id']]=$t;
+
+    $model=\think\Db::name('Paytype');
+    if(!empty($type)){
+        $model->where('type',$type);
     }
-    return $ptypes;
+    $lists=$model->select();
+    return array_index($lists,'id');
 }
 
 function getMemberParents($userid,$level=5,$getid=true){
@@ -614,6 +614,26 @@ function getMemberSons($userid,$level=1,$getid=true){
         $users=\think\Db::name('Member')->whereIn('referer',$userids)->field('id,level_id,username,referer')->select();
     }
     return $sons;
+}
+
+function getPageGroups($force=false){
+    $groups=cache('page_group');
+    if(empty($groups) || $force==true){
+        $groups=\think\Db::name('PageGroup')->order('sort ASC,id ASC')->select();
+        cache('page_group',$groups);
+    }
+    return $groups;
+}
+
+function getWechatAccount($type='wechat',$force=false){
+    $wechat=cache('default_'.$type);
+    if(empty($wechat) || $force==true){
+        $wechat=\think\Db::name('Wechat')->where('type',$type)
+            ->where('account_type','service')
+            ->order('is_default DESC')->find();
+        cache('default_'.$type,$wechat);
+    }
+    return $wechat;
 }
 
 /**
@@ -967,15 +987,6 @@ function random_str($length = 6, $type = 'string', $convert = 0)
     return $code;
 }
 
-function getPageGroups($force=false){
-    $groups=cache('page_group');
-    if(empty($groups) || $force==true){
-        $groups=\think\Db::name('PageGroup')->order('sort ASC,id ASC')->select();
-        cache('page_group',$groups);
-    }
-    return $groups;
-}
-
 /**
  * 获取排序后的分类
  * @param  array $data [description]
@@ -1035,6 +1046,11 @@ function http_request($url, $params = false, $ispost = 0)
     curl_setopt($ch, CURLOPT_TIMEOUT, 60);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    if(stripos($url,"https://")!==FALSE){
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+        //curl_setopt($ch, CURLOPT_SSLVERSION, 1);
+    }
     if(is_array($params)){
         $params=http_build_query($params);
     }

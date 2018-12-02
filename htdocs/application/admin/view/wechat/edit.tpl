@@ -11,7 +11,15 @@
                 <div class="form-row">
                     <div class="col form-group">
                         <label for="title">名称</label>
-                        <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="输入公众号名称">
+                        <div class="input-group">
+                            <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="输入公众号名称">
+                            <div class="input-group-append">
+                                <label class="input-group-text">
+                                    <input type="checkbox" name="is_default" value="1" {$model['is_default']?'checked':''}>
+                                    默认
+                                </label>
+                            </div>
+                        </div>
                     </div>
                     <div class="col form-group">
                         <label for="type">平台类型</label>
@@ -30,6 +38,7 @@
                         </select>
                     </div>
                 </div>
+                <div class="text-muted">只有服务号才能设置默认为默认</div>
                 <div class="form-row">
                     <div class="col form-group">
                         <label for="account">账号</label>

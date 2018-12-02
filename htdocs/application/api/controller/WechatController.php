@@ -5,6 +5,7 @@ namespace app\api\controller;
 use app\api\Processer\BaseProcesser;
 use app\common\model\MemberOauthModel;
 use app\common\model\OrderModel;
+use app\common\model\WechatModel;
 use EasyWeChat\BasicService\Application;
 use EasyWeChat\Factory;
 use EasyWeChat\Kernel\Messages\Image;
@@ -15,6 +16,7 @@ use EasyWeChat\Kernel\Messages\Raw;
 use sdk\Wechat;
 use think\Controller;
 use think\Db;
+use think\Exception;
 use think\facade\Env;
 use think\facade\Log;
 
@@ -52,20 +54,31 @@ class WechatController extends Controller{
         );
     }
 
-    //微信入口文件
-    public function index($hash=''){
+    protected function getAccount($hash=''){
         if(!empty($hash)){
             $account=Db::name('wechat')->where('hash',$hash)->find();
             if(empty($account)){
                 Log::write('公众号['.$hash.']不存在','Wechat');
             }
-            $this->type = $account['account_type'];
-            $this->account_id=$account['id'];
-            $this->options['token']=$account['token'];
-            $this->options['aes_key']=$account['encodingaeskey'];
-            $this->options['app_id']=$account['appid'];
-            $this->options['secret']=$account['appsecret'];
+        }else{
+            $account=Db::name('wechat')->where('is_default',1)->where('type','wechat')->find();
+            if(empty($account)){
+                Log::write('没有设置默认公众号','Wechat');
+            }
         }
+        if(empty($account)){
+            throw new Exception('公众号设置错误');
+        }
+        return $account;
+    }
+
+    //微信入口文件
+    public function index($hash=''){
+        $account=$this->getAccount($hash);
+        $this->type = $account['account_type'];
+        $this->account_id=$account['id'];
+
+        $this->options=WechatModel::to_config($account);
 
         switch ($this->type) {
             case 'wechat':
@@ -277,14 +290,8 @@ class WechatController extends Controller{
         }
     }
     public function payresult($hash=''){
-        $config = [
-            'app_id'             => $this->config['appid'],
-            'mch_id'             => $this->config['mch_id'],
-            'key'                => $this->config['key'],
-
-            'cert_path'          => $this->config['cert_path'],
-            'key_path'           => $this->config['key_path']
-        ];
+        $account=$this->getAccount($hash);
+        $config = WechatModel::to_pay_config($account);
 
         $app = Factory::payment($config);
 
@@ -322,14 +329,8 @@ class WechatController extends Controller{
         $response->send();
     }
     public function scanpay($hash=''){
-        $config = [
-            'app_id'             => $this->config['appid'],
-            'mch_id'             => $this->config['mch_id'],
-            'key'                => $this->config['key'],
-
-            'cert_path'          => $this->config['cert_path'],
-            'key_path'           => $this->config['key_path']
-        ];
+        $account=$this->getAccount($hash);
+        $config = WechatModel::to_pay_config($account);
 
         $app = Factory::payment($config);
 

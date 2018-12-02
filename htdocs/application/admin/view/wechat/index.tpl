@@ -37,7 +37,7 @@
                 <tr>
                     <td>{$v.id}</td>
                     <td>{$v.type}{$v.account_type}</td>
-                    <td>{$v.title}</td>
+                    <td>{$v.title}<if condition="$v['is_default']"><span class="badge badge-info">默认</span></if></td>
                     <td>{$v.appid}</td>
                     <td>
                         <div class="btn-group btn-group-sm">
