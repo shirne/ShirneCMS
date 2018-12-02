@@ -31,7 +31,7 @@
                         <div class="input-group-prepend"><span class="input-group-text">商品分类</span> </div>
                         <select name="cate_id" id="product-cate" class="form-control">
                             <foreach name="category" item="v">
-                                <option value="{$v.id}" {$product['cate_id'] == $v['id']?'selected="selected"':""}>{$v.html} {$v.title}</option>
+                                <option value="{$v.id}" data-props="{$v['props']}" data-specs="{$v['specs']}" {$product['cate_id'] == $v['id']?'selected="selected"':""}>{$v.html} {$v.title}</option>
                             </foreach>
                         </select>
                     </div>
@@ -222,40 +222,73 @@
         zIndex:100
     });
     jQuery(function ($) {
-        var specs=null;
-        var spec=null;
         var usespecs=[];
         var rows=null;
         var isready=false;
         var goods_no=$('[name=goods_no]').val();
         var skus=JSON.parse('{$skus|json_encode|raw}');
 
-        function showSpec(body){
-            var html=['<div class="list-group">'];
-            if(specs && specs.length) {
-                for (var i = 0; i < specs.length; i++) {
-                    html.push('<a class="list-group-item list-group-item-action'+checkUsed(specs[i].id)+' d-flex justify-content-between" data-idx="'+i+'"><span class="title">' + specs[i].title + '</span><div><span class="badge badge-secondary badge-pill">'+specs[i].data.join('</span><span class="badge badge-secondary badge-pill">')+'</span></div></a>');
+        function setSpecs(specids) {
+            $.ajax({
+                url: "{:url('get_specs')}",
+                dataType: 'JSON',
+                data: {
+                    ids: specids.join(',')
+                },
+                type: 'POST',
+                success: function (json) {
+                    $('.spec-groups').html('');
+                    if (json.code === 1 && json.data) {
+                        addSpec(json.data);
+                    }
+                    resetSkus();
                 }
-            }else{
-                html.push('<p class="empty">暂时没有规格数据</p>');
-            }
-            html.push('</div>');
-            var htmlstr= html.join("\n");
-            body.html(htmlstr);
-            var lists=body.find('.list-group-item');
-            lists.click(function() {
-                if($(this).is('.disabled'))return;
-                lists.removeClass('active');
-                $(this).addClass('active');
-                spec=specs[$(this).data('idx')];
             })
         }
-        function checkUsed(id) {
+        function changeCategory(select,force) {
+            var option=$(select).find('option:selected');
+            var curProps=[];
+            $('.prop-groups .input-group').each(function () {
+                var input=$(this).find('input');
+                curProps.push(input.val());
+            });
+            var props=$(option).data('props');
+            for(var i=0;i<props.length;i++){
+                if(curProps.indexOf(props[i])<0){
+                    addProp(props[i]);
+                }
+            }
+            var newspecs = $(option).data('specs');
+            if(force===true){
+                setSpecs(newspecs);
+            }else {
+                usespecs = usespecs.sort(function (a, b){return a<b?-1:1});
+                newspecs = newspecs.sort(function (a, b){return a<b?-1:1});
+                if (usespecs.join(',') !== newspecs.join(',')) {
+                    dialog.confirm('是否重置规格?', function () {
+                        setSpecs(newspecs);
+                    })
+                }
+            }
+        }
+        $('#product-cate').change(function (e) {
+            changeCategory(this);
+        });
+        if('add'==="{$product['id']?'':'add'}"){
+            changeCategory($('#product-cate'),true);
+        }
+
+        window.checkUsed=function(id) {
             if(usespecs.indexOf(id)>-1){
                 return ' disabled';
             }
             return '';
-        }
+        };
+        window.joinTags=function (data) {
+            return data?('<span class="badge badge-secondary badge-pill">'+
+                data.join('</span><span class="badge badge-secondary badge-pill">')+
+                '</span>'):'';
+        };
         function updateSkus(){
             skus=[];
             var skurows=$('.spec-table tbody tr');
@@ -296,8 +329,7 @@
                 }
                 spec_datas.push(datas);
             }
-            //console.log(usespecs);
-            //console.log(spec_datas);
+
             var rowhtml='<tr data-idx="{@i}">\n' +
                 '   {@specs}\n' +
                 '   <td>\n' +
@@ -386,46 +418,47 @@
             }
             return mixed;
         }
-        $('.addpropbtn').click(function (e) {
+        function addProp(key,value) {
             $('.prop-groups').append('<div class="input-group mb-2" >\n' +
-                '                            <input type="text" class="form-control" style="max-width:120px;" name="prop_data[keys][]" />\n' +
-                '                            <input type="text" class="form-control" name="prop_data[values][]" />\n' +
+                '                            <input type="text" class="form-control" style="max-width:120px;" name="prop_data[keys][]" value="'+(key?key:'')+'" />\n' +
+                '                            <input type="text" class="form-control" name="prop_data[values][]" value="'+(value?value:'')+'" />\n' +
                 '                            <div class="input-group-append delete"><a href="javascript:" class="btn btn-outline-secondary"><i class="ion-md-trash"></i> </a> </div>\n' +
                 '                        </div>');
+        }
+        $('.addpropbtn').click(function (e) {
+            addProp();
         });
-        $('.addspecbtn').click(function (e) {
-            var dlg=new Dialog({
-                'onshow':function (body) {
-                    if(!specs){
-                        $.ajax({
-                            'url':'{:url("get_specs")}',
-                            'dataType':'JSON',
-                            'success':function (json) {
-                                specs=json.lists;
-                                showSpec(body);
-                            }
-                        })
-                    }else{
-                        showSpec(body);
-                    }
-                },
-                'onsure':function(){
-                    if(!spec){
-                        toastr.info('请选择规格');
-                        return false;
-                    }
-                    //console.log(spec);
-                    $('.spec-groups').append(('<div class="spec-row d-flex spec-{@id}" data-specid="{@id}">\n' +
-                        '   <input type="hidden" name="spec_data[{@id}][title]" value="{@title}"/>\n'+
-                        '   <label>{@title}</label>\n' +
-                        '   <div class="form-control col"><input type="text" class="taginput" value="{@data}" ></div>\n'+
-                        '   <div class="delete"><a href="javascript:" class="btn btn-outline-secondary"><i class="ion-md-trash"></i> </a> </div>\n' +
-                    '</div>').compile(spec));
-                    var lastrow=$('.spec-groups .spec-row').eq(-1);
-                    lastrow.find('.taginput').tags('spec_data['+spec.id+'][data][]',resetSkus);
-                    spec=null;
+        function addSpec(spec,update) {
+            if(spec instanceof Array){
+                for(var i=0;i<spec.length;i++){
+                    addSpec(spec[i],false);
                 }
-            }).show('<p>数据加载中...</p>','添加规格');
+                if(update!==false)resetSkus();
+            }else {
+                $('.spec-groups').append(('<div class="spec-row d-flex spec-{@id}" data-specid="{@id}">\n' +
+                    '   <input type="hidden" name="spec_data[{@id}][title]" value="{@title}"/>\n' +
+                    '   <label>{@title}</label>\n' +
+                    '   <div class="form-control col"><input type="text" class="taginput" value="{@data}" ></div>\n' +
+                    '   <div class="delete"><a href="javascript:" class="btn btn-outline-secondary"><i class="ion-md-trash"></i> </a> </div>\n' +
+                    '</div>').compile(spec));
+                var lastrow = $('.spec-groups .spec-row').eq(-1);
+                lastrow.find('.taginput').tags('spec_data[' + spec.id + '][data][]');
+
+                if(update!==false)resetSkus();
+            }
+        }
+        $('.addspecbtn').click(function (e) {
+            dialog.pickList({
+                'url':'{:url("get_specs")}',
+                'name':'规格',
+                'rowTemplate':'<a class="list-group-item list-group-item-action{@id|checkUsed} d-flex justify-content-between"  data-id="{@id}" ><span class="title">{@title}</span><div>{@data|joinTags}</div></a>'
+            },function (spec) {
+                if(!spec){
+                    toastr.info('请选择规格');
+                    return false;
+                }
+                addSpec(spec);
+            });
         });
 
         $('.taginput').each(function () {

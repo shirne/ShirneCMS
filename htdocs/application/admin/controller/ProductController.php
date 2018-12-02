@@ -227,32 +227,42 @@ class ProductController extends BaseController
                     $this->error("编辑失败");
                 }
             }
-        }else{
-
-            $model = ProductModel::get($id);
-            if(empty($model)){
-                $this->error('商品不存在');
-            }
-            $skuModel=new ProductSkuModel();
-            $skus=$skuModel->where('product_id',$id)->select();
-            $this->assign("category",ProductCategoryFacade::getCategories());
-            $this->assign('levels',getMemberLevels());
-            $this->assign('product',$model);
-            $this->assign('skus',$skus->isEmpty()?[[]]:$skus);
-            $this->assign('types',getProductTypes());
-            $this->assign('id',$id);
-            return $this->fetch();
         }
+
+        $model = ProductModel::get($id);
+        if(empty($model)){
+            $this->error('商品不存在');
+        }
+        $skuModel=new ProductSkuModel();
+        $skus=$skuModel->where('product_id',$id)->select();
+        $this->assign("category",ProductCategoryFacade::getCategories());
+        $this->assign('levels',getMemberLevels());
+        $this->assign('product',$model);
+        $this->assign('skus',$skus->isEmpty()?[[]]:$skus);
+        $this->assign('types',getProductTypes());
+        $this->assign('id',$id);
+        return $this->fetch();
     }
 
     /**
      * 获取规格
+     * @param $key
+     * @param $ids
      * @return \think\response\Json
      */
-    public function get_specs(){
+    public function get_specs($key='',$ids=''){
         $model = new SpecificationsModel();
-        $lists=$model->order('ID ASC')->select();
-        return json(['lists'=>$lists]);
+        $limit=10;
+        if(!empty($key)){
+            $model->whereLike('title',"%$key%");
+        }
+        if($ids){
+            $ids=idArr($ids);
+            $model->whereIn('id',$ids);
+            $limit=count($ids);
+        }
+        $lists=$model->order('ID ASC')->limit($limit)->select();
+        return json(['data'=>$lists,'code'=>1]);
     }
 
     /**
