@@ -31,7 +31,7 @@ class ArticleController extends BaseController
 
         $lists=$model->field('id,title,cover,description,create_time')
             ->order('id ASC')->limit(10)->select();
-        return json(['data'=>$lists,'status'=>1]);
+        return json(['data'=>$lists,'code'=>1]);
     }
 
     /**

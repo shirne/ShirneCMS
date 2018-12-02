@@ -35,7 +35,7 @@ class ProductController extends BaseController
 
         $lists=$model->field('id,title,image,min_price,max_price,goods_no,create_time')
             ->order('id ASC')->limit(10)->select();
-        return json(['data'=>$lists,'status'=>1]);
+        return json(['data'=>$lists,'code'=>1]);
     }
 
     /**

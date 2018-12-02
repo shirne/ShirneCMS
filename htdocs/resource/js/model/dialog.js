@@ -299,7 +299,7 @@ var dialog={
                             data:filter,
                             success:function(json){
                                 isloading=false;
-                                if(json.status){
+                                if(json.code===1){
                                     if(json.data && json.data.length) {
                                         listbox.html(config.rowTemplate.compile(json.data, true));
                                         listbox.find('a.list-group-item').click(function () {

@@ -102,13 +102,18 @@ class IndexController extends BaseController{
      */
     public function newcount(){
         Log::close();
-        $newMemberCount=Db::name('Member')->where('create_time','GT',$this->manage['last_view_member'])->count();
-        $newOrderCount=0;//Db::name('Order')->where('status',0)->count();
+        session_write_close();
+        $result=[];
+        $count=0;
+        while(array_sum($result)==0) {
+            $result['newMemberCount'] = Db::name('Member')->where('create_time', 'GT', $this->manage['last_view_member'])->count();
+            $result['newOrderCount'] = Db::name('Order')->where('status',0)->count();
+            sleep(1);
+            $count++;
+            if($count>10)break;
+        }
 
-        return json(array(
-            'newMemberCount'=>$newMemberCount,
-            'newOrderCount'=>$newOrderCount
-        ));
+        return json($result);
     }
 
 

@@ -37,7 +37,7 @@ class MemberController extends BaseController
 
         $lists=$model->field('id,username,realname,mobile,avatar,level_id,is_agent,gender,email,create_time')
             ->order('id ASC')->limit(10)->select();
-        return json(['data'=>$lists,'status'=>1]);
+        return json(['data'=>$lists,'code'=>1]);
     }
 
     /**

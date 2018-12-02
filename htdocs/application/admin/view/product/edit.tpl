@@ -457,6 +457,10 @@
                     toastr.info('请选择规格');
                     return false;
                 }
+                if(checkUsed(spec.id)){
+                    toastr.info('该规格已使用');
+                    return false;
+                }
                 addSpec(spec);
             });
         });

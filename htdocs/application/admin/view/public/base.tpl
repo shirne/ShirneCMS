@@ -126,10 +126,10 @@
                             }
                         }
 
-                        setTimeout(func, 5000);
+                        setTimeout(func, 10000);
                     },
                     error: function () {
-                        setTimeout(func, 5000);
+                        setTimeout(func, 10000);
                     }
                 });
             }
