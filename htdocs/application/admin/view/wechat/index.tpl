@@ -194,6 +194,10 @@
 
                 body.find('.btn-upload').click(function (e) {
                     if($(this).data('ajaxing'))return;
+                    if(!FileReader){
+                        dialog.alert('您的浏览器接口较旧，请手动上传');
+                        return;
+                    }
                     var fileField=$(this).parents('.input-group').find('input');
                     var filename=fileField.val().split(/[\/\\]/g);
                     filename=filename[filename.length-1];
