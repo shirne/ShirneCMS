@@ -382,6 +382,13 @@ function maskphone($phone){
     return substr($phone,0,3).str_repeat('*',$l-7).substr($phone,$l-4);
 }
 
+function maskemail($email){
+    if(empty($email) || strpos($email,'@')<1)return '';
+    $part=explode('@',$email);
+    $l=strlen($part[0]);
+    if($l<=3)$l=5;
+    return substr($part[0],0,3).str_repeat('*',$l-3).'@'.$part[1];
+}
 
 function getWeek($d){
     $time=strtotime($d);

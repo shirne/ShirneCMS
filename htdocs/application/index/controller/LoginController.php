@@ -4,12 +4,13 @@ namespace app\index\controller;
 
 use app\common\model\MemberModel;
 use app\common\model\MemberOauthModel;
+use app\common\service\CheckcodeService;
 use app\common\validate\MemberValidate;
 use sdk\OAuthFactory;
+use think\captcha\Captcha;
 use think\Db;
 use think\Exception;
 use think\facade\Log;
-use third\UmsHttp;
 
 /**
  * 用户本地登陆和第三方登陆
@@ -184,7 +185,7 @@ class LoginController extends BaseController{
     }
 
     private function parseGender($gender){
-        if(in_array($gender,[0,1,2])){
+        if(in_array($gender,['0','1','2'])){
             return $gender;
         }
         if(strpos($gender,'男')!==false){
@@ -197,74 +198,84 @@ class LoginController extends BaseController{
     }
 
     public function getpassword(){
-        $step=$this->request->get('step/d',1);
-        $username=$this->request->post('username');
-        $authtype=$this->request->post('authtype');
+        if($this->request->isPost()) {
+            $step = $this->request->post('step/d', 1);
+            $username = $this->request->post('username');
+            $authtype = $this->request->post('authtype');
 
-        if($step==2 || $step==3){
-            $step--;
-            if(empty($username))$this->error("请填写用户名");
-            if(empty($authtype))$this->error("请选择认证方式");
-            $user=Db::name('member')->where('username',$username)->find();
-            if(empty($user)){
-                $this->error("该用户不存在");
-            }
-            if(empty($user[$authtype.'_bind']))$this->error("认证方式无效");
+            if ($step == 2 || $step == 3) {
 
-            switch ($authtype){
-                case 'email':
-                    $this->assign('sendtoname',"邮箱");
-                    break;
-                case 'mobile':
-                    $this->assign('sendtoname',"手机");
-                    break;
+                if (empty($username)) $this->error("请填写用户名");
+                if (empty($authtype)) $this->error("请选择认证方式");
+                $user = Db::name('member')->where('username', $username)->find();
+                if (empty($user)) {
+                    $this->error("该用户不存在");
+                }
+                if (empty($user[$authtype . '_bind'])) $this->error("认证方式无效");
+
+                $result=[];
+                switch ($authtype) {
+                    case 'email':
+                        $result['sendtoname']="邮箱";
+                        $result['sendto']=maskemail($user[$authtype]);
+                        break;
+                    case 'mobile':
+                        $result['sendtoname']="手机";
+                        $result['sendto']=maskphone($user[$authtype]);
+                        break;
+                }
+                $service=new CheckcodeService();
+                if($step==2){
+                    $sendto = $user[$authtype];
+                    $verify = $this->request->post('verify');
+                    if(!$this->check_verify($verify)){
+                        $this->error('请填写正确的图形验证码');
+                    }
+                    $result=$service->sendCode($authtype,$sendto);
+                    if($result) {
+                        $this->success('', '', $result);
+                    }else{
+                        $this->success('验证码发送失败', '');
+                    }
+                }
+                if ($step == 3) {
+
+                    $sendto = $user[$authtype];
+                    $code = $this->request->post('checkcode');
+                    if ($service->verifyCode($sendto,$code)) {
+                        session('passed', $username);
+                        $this->success('验证通过');
+                    } else {
+                        $this->error("验证码已失效");
+                    }
+                }
             }
-            $step++;
+
+            if ($step == 4) {
+                $passed = session('passed');
+                if (empty($passed)) {
+                    $this->error("非法操作");
+                }
+                $password = $this->request->post('password');
+                $repassword = $this->request->post('repassword');
+
+                if (empty($password)) $this->error("请填写密码");
+                if (strlen($password) < 6 || strlen($password) > 20) $this->error("密码长度 6-20");
+
+                if ($password != $repassword) {
+                    $this->error("两次密码输入不一致");
+                }
+                $data['salt'] = random_str(8);
+                $data['password'] = encode_password($password, $data['salt']);
+                $data['update_time'] = time();
+                if (Db::name('member')->where('username', $passed)->update($data)) {
+                    $this->success("密码设置成功", url('index/login/index'));
+                }else{
+                    $this->error('密码设置失败');
+                }
+            }
         }
-        if($step==3){
-            $step--;
-            $sendto=$this->request->post('sendto');
-            $code=$this->request->post('checkcode');
-            $crow=Db::name('checkcode')->where(array('sendto'=>$sendto,'checkcode'=>$code,'is_check',0))->order('create_time DESC')->find();
-            $time=time();
-            if(!empty($crow) && $crow['create_time']>$time-60*5){
-                Db::name('checkcode')->where('id' , $crow['id'])->update(array('is_check' => 1, 'check_at' => $time));
-                session('passed',$username);
-            }else{
-                $this->error("验证码已失效");
-            }
 
-
-            $step++;
-        }
-
-        if($step==4){
-            $step--;
-            $passed=session('passed');
-            if(empty($passed)){
-                $this->error("非法操作");
-            }
-            $password=$this->request->post('password');
-            $repassword=$this->request->post('repassword');
-
-            if(empty($password))$this->error("请填写密码");
-            if(strlen($password)<6 || strlen($password)>20)$this->error("密码长度 6-20");
-
-            if($password != $repassword){
-                $this->error("两次密码输入不一致");
-            }
-            $data['salt'] = random_str(8);
-            $data['password'] = encode_password($password, $data['salt']);
-            $data['update_time'] = time();
-            if (Db::name('member')->where('username',$passed)->update($data)) {
-                $this->success("密码设置成功",url('index/login/index'));
-            }
-        }
-
-        $this->assign('username',$username);
-        $this->assign('authtype',$authtype);
-        $this->assign('step',$step);
-        $this->assign('nextstep',$step+1);
         return $this->fetch();
     }
     public function checkusername(){
@@ -317,10 +328,12 @@ class LoginController extends BaseController{
                 if (empty($data['mobilecheck'])) {
                     $this->error(' 请填写手机验证码');
                 }
-                $verifyed=$this->verify_checkcode($data['mobile'],$data['mobilecheck']);
+                $service=new CheckcodeService();
+                $verifyed=$service->verifyCode($data['mobile'],$data['mobilecheck']);
                 if(!$verifyed){
                     $this->error(' 手机验证码填写错误');
                 }
+                $data['mobile_bind']=1;
                 unset($data['mobilecheck']);
             }
 
@@ -370,10 +383,10 @@ class LoginController extends BaseController{
                 $url=$redirect->getTargetUrl();
             }
             $this->success("注册成功",$url);
-        }else{
-            $this->assign('nocode',$this->config['m_invite']<1);
-            return $this->fetch();
         }
+
+        $this->assign('nocode',$this->config['m_invite']<1);
+        return $this->fetch();
     }
 
     public function checkunique($type='username'){
@@ -408,116 +421,24 @@ class LoginController extends BaseController{
             $this->error('该手机号码已注册');
         }
 
-        //发送限制
-        $ip_address_limit=10;
-        $phone_limit=5;
-        $second_limit=120;
-
-        //根据ip地址限制发送次数
-        $ip=$this->request->ip();
-        $ipcount=Db::name('checkcodeLimit')->where('type','ip')
-            ->where('key',$ip)->find();
-        if(empty($ipcount)){
-            Db::name('checkcodeLimit')->insert([
-                'type'=>'ip',
-                'key'=>$ip,
-                'create_time'=>time(),
-                'count'=>1
-            ]);
-        }else{
-            if($ipcount['create_time']<strtotime(date('Y-m-d'))){
-                Db::name('checkcodeLimit')->where('type','ip')->where('key',$ip)
-                    ->update(['create_time'=>time(),'count'=>1]);
-            }else{
-                if($ipcount['count']>=$ip_address_limit){
-                    $this->error('验证码发送过于频繁');
-                }
-                Db::name('checkcodeLimit')->where('type','ip')->where('key',$ip)
-                    ->setInc('count',1);
-            }
-        }
-
-        //根据手机号码限制发送次数
-        $phonecount=Db::name('checkcodeLimit')->where('type','mobile')
-            ->where('key',$mobile)->find();
-        if(empty($phonecount)){
-            Db::name('checkcodeLimit')->insert([
-                'type'=>'mobile',
-                'key'=>$mobile,
-                'create_time'=>time(),
-                'count'=>1
-            ]);
-        }else{
-            if($phonecount['create_time']<strtotime(date('Y-m-d'))){
-                Db::name('checkcodeLimit')->where('type','mobile')->where('key',$mobile)
-                    ->update(['create_time'=>time(),'count'=>1]);
-            }else{
-                if($phonecount['count']>=$phone_limit){
-                    $this->error('验证码发送过于频繁');
-                }
-                Db::name('checkcodeLimit')->where('type','mobile')->where('key',$mobile)
-                    ->setInc('count',1);
-            }
-        }
-
-        $exist=Db::name('Checkcode')->where('type',0)
-            ->where('sendto',$mobile)
-            ->where('is_check',0)->find();
-        $newcode=random_str(6, 'number');
-        if(empty($exist)) {
-            $data = [
-                'type' => 0,
-                'sendto' => $mobile,
-                'code' => $newcode,
-                'create_time' => time(),
-                'is_check' => 0
-            ];
-            Db::name('Checkcode')->insert($data);
-        }else{
-
-            //验证发送时间间隔
-            if(time()-$exist['create_time']<$second_limit){
-                $this->error('验证码发送过于频繁');
-            }
-
-            Db::name('Checkcode')->where('type',0)->where('sendto',$mobile)
-                ->update(['code'=>$newcode,'create_time'=>time()]);
-        }
-        @session_write_close();
-        $content="您本次验证码为{$newcode}仅用于会员注册。请在10分钟内使用！";
-        $sms=new UmsHttp($this->config);
-        $sended=$sms->send($mobile,$content);
+        $service=new CheckcodeService();
+        $sended=$service->sendCode('mobile',$mobile);
         if($sended) {
             $this->success('验证码发送成功！');
         }else{
-            $this->error($sms->errMsg);
-        }
-    }
-    protected function verify_checkcode($mobile,$code){
-        $checkcode=Db::name('Checkcode')->where('type',0)
-            ->where('sendto',$mobile)
-            ->where('is_check',0)
-            ->where('code',$code)->find();
-        if(empty($checkcode)){
-            return false;
-        }else{
-            Db::name('Checkcode')->where('type',0)
-                ->where('sendto',$mobile)
-                ->where('is_check',0)
-                ->update(['is_check'=>1,'check_at'=>time()]);
-            return true;
+            $this->error($service->getError());
         }
     }
 
     public function verify(){
-        $verify = new \think\captcha\Captcha(array('seKey'=>config('session.sec_key')));
-        //$Verify->codeSet = '0123456789';
+        $verify = new Captcha(array('seKey'=>config('session.sec_key')));
+
         $verify->fontSize = 13;
         $verify->length = 4;
         return $verify->entry('foreign');
     }
     protected function check_verify($code){
-        $verify = new \think\captcha\Captcha(array('seKey'=>config('session.sec_key')));
+        $verify = new Captcha(array('seKey'=>config('session.sec_key')));
         return $verify->check($code,'foreign');
     }
 
