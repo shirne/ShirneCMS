@@ -2,7 +2,7 @@
 
 <block name="body">
 
-    <include file="public/bread" menu="setting_index" title="" />
+    <include file="public/bread" menu="navigator_index" title="" />
 
     <div id="page-wrapper">
 
@@ -22,7 +22,7 @@
                     </thead>
                     <tbody>
                     <foreach name="navigator" item="item">
-                        <tr>
+                        <tr class="navrow row-{$key}" data-key="{$key}">
                             <td><i class="ion-md-apps"></i> </td>
                             <td>
                                 <input type="text" class="form-control" name="navs[{$key}][title]" value="{$item.title}"/>
@@ -82,12 +82,45 @@
                                 <a href="javascript:" class="btn btn-outline-danger rowdelete">删除</a>
                             </td>
                         </tr>
+                        <if condition="$item['subnavtype'] EQ 'customer' && !empty($item['subnav'])">
+                            <foreach name="item['subnav']" item="subnav" key="index">
+                                <tr class="subrow row-{$key}-{$index}" data-key="{$key}" data-index="{$index}">
+                                    <td><i class="ion-md-apps"></i> </td>
+                                    <td>
+                                        <input type="text" class="form-control" name="navs[{$key}][subnav][{$index}][title]" value="{$subnav.title}" />
+                                    </td>
+                                    <td>
+                                        <select class="form-control" name="navs[{$key}][subnav][{$index}][target]">
+                                            <option value="">无</option>
+                                            <option value="_blank" {$subnav['target']=='_blank'?'selected':''}>新窗口</option>
+                                            <option value="_self" {$subnav['target']=='_self'?'selected':''}>本窗口</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control urlfield" name="navs[{$key}][subnav][{$index}][url]" value="{$subnav.url}"/>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        &nbsp;
+                                    </td>
+                                    <td>
+                                        <a href="javascript:" class="btn btn-outline-primary rowup">上移</a>
+                                        <a href="javascript:" class="btn btn-outline-primary rowdown">下移</a>
+                                        <a href="javascript:" class="btn btn-outline-danger rowdelete">删除</a>
+                                    </td>
+                                </tr>
+                            </foreach>
+                        </if>
                     </foreach>
                     </tbody>
                     <tfoot>
                     <tr>
                         <td>&nbsp;</td>
-                        <td colspan="5"><a href="javascript:" class="btn btn-outline-primary addrow">添加行</a> </td>
+                        <td colspan="6"><a href="javascript:" class="btn btn-outline-primary addrow">添加行</a> </td>
                     </tr>
                     </tfoot>
                 </table>
@@ -103,7 +136,7 @@
 </block>
 <block name="script">
     <script type="text/plain" id="rowTemplate">
-        <tr class="row-{@key}">
+        <tr class="navrow row-{@key}" data-key="{@key}">
             <td><i class="ion-md-apps"></i> </td>
             <td>
                 <input type="text" class="form-control" name="navs[{@key}][title]" />
@@ -149,7 +182,7 @@
         </tr>
     </script>
     <script type="text/plain" id="subRowTemplate">
-        <tr class="subrow row-{@key}-{@index}">
+        <tr class="subrow row-{@key}-{@index}" data-key="{@key}" data-index="{@index}">
             <td><i class="ion-md-apps"></i> </td>
             <td>
                 <input type="text" class="form-control" name="navs[{@key}][subnav][{@index}][title]" />
@@ -211,7 +244,8 @@
                         if($(this).val()!='customer'){
                             $(this).prop('disabled',false);
                         }
-                    })
+                    });
+                    row.find('.modulepicker').trigger('change');
                 }else{
                     parent.find('.modulefield').hide();
                     parent.find('.urlfield').show();
@@ -224,7 +258,6 @@
                     row.find('.subpicker').val('customer');
                 }
                 row.find('.subpicker').trigger('change');
-                row.find('.modulepicker').trigger('change');
             }
             function initCategory(select,cates){
                 if (cates.length) {
@@ -297,10 +330,153 @@
             });
             $('.table').on('click','.rowup',function (e) {
                 var row=$(this).parents('tr');
+                var prev=row.prev();
                 if(row.is('.subrow')){
-
+                    if(prev.is('.subrow')){
+                        row.insertBefore(prev);
+                        var key=row.data('key');
+                        var curIndex=row.data('index');
+                        var prevIndex=prev.data('index');
+                        var curNavPre='navs['+key+'][subnav]['+curIndex+']';
+                        var prevNavPre='navs['+key+'][subnav]['+prevIndex+']';
+                        row.data('index',prevIndex)
+                            .attr('class','subrow row-'+key+'-'+prevIndex)
+                            .find('[name^=navs]').each(function () {
+                            $(this).prop('name',$(this).prop('name').replace(curNavPre,prevNavPre));
+                        });
+                        prev.data('index',curIndex)
+                            .attr('class','subrow row-'+key+'-'+curIndex)
+                            .find('[name^=navs]').each(function () {
+                            $(this).prop('name',$(this).prop('name').replace(prevNavPre, curNavPre));
+                        });
+                    }
                 }else{
+                    var prevSons=[];
+                    while(prev.is('.subrow')){
+                        prevSons.push(prev[0]);
+                        prev=prev.prev();
+                        if(!prev.length) {
+                            return false;
+                        }
+                    }
+                    var curSons=[];
+                    var son=row.next();
+                    while(son.is('.subrow')){
+                        curSons.push(son[0]);
+                        son=son.next();
+                        if(!son.length) {
+                            break;
+                        }
+                    }
+                    row.insertBefore(prev);
+                    var curKey=row.data('key');
+                    var prevKey=prev.data('key');
+                    var curPre='navs['+curKey+']';
+                    var prevPre='navs['+prevKey+']';
+                    row.data('key',prevKey)
+                        .attr('class','navrow row-'+prevKey)
+                        .find('[name^=navs]').each(function () {
+                        $(this).attr('name',$(this).attr('name').replace(curPre,prevPre));
+                    });
+                    prev.data('key',curKey)
+                        .attr('class','navrow row-'+curKey)
+                        .find('[name^=navs]').each(function () {
+                        $(this).attr('name',$(this).attr('name').replace(prevPre, curPre));
+                    });
 
+                    if(prevSons.length>0){
+                        prevSons=prevSons.reverse();
+                        $(prevSons).each(function () {
+                            $(this).find('[name^=navs]').each(function () {
+                                $(this).attr('name',$(this).attr('name').replace(prevPre, curPre));
+                            });
+                            $(this).insertAfter(prev);
+                        })
+                    }
+                    if(curSons.length>0){
+                        $(curSons).each(function () {
+                            $(this).find('[name^=navs]').each(function () {
+                                $(this).attr('name',$(this).attr('name').replace(curPre, prevPre));
+                            });
+                            $(this).insertAfter(row);
+                        })
+                    }
+                }
+
+            });
+
+            $('.table').on('click','.rowdown',function (e) {
+                var row=$(this).parents('tr');
+                var next=row.next();
+                if(row.is('.subrow')){
+                    if(next.is('.subrow')){
+                        row.insertAfter(next);
+                        var key=row.data('key');
+                        var curIndex=row.data('index');
+                        var nextIndex=prev.data('index');
+                        var curNavPre='navs['+key+'][subnav]['+curIndex+']';
+                        var nextNavPre='navs['+key+'][subnav]['+nextIndex+']';
+                        row.data('index',nextIndex)
+                            .attr('class','subrow row-'+key+'-'+nextIndex)
+                            .find('[name^=navs]').each(function () {
+                            $(this).prop('name',$(this).prop('name').replace(curNavPre,nextNavPre));
+                        });
+                        next.data('index',curIndex)
+                            .attr('class','subrow row-'+key+'-'+curIndex)
+                            .find('[name^=navs]').each(function () {
+                            $(this).prop('name',$(this).prop('name').replace(nextNavPre, curNavPre));
+                        });
+                    }
+                }else{
+                    var curSons=[];
+                    while(next.is('.subrow')){
+                        curSons.push(next[0]);
+                        next=next.next();
+                        if(!next.length) {
+                            return false;
+                        }
+                    }
+                    var nextSons=[];
+                    var son=next.next();
+                    while(son.is('.subrow')){
+                        nextSons.push(son[0]);
+                        son=son.next();
+                        if(!son.length) {
+                            break;
+                        }
+                    }
+                    row.insertAfter(next);
+                    var curKey=row.data('key');
+                    var nextKey=prev.data('key');
+                    var curPre='navs['+curKey+']';
+                    var nextPre='navs['+nextKey+']';
+                    row.data('key',nextKey)
+                        .attr('class','navrow row-'+nextKey)
+                        .find('[name^=navs]').each(function () {
+                        $(this).attr('name',$(this).attr('name').replace(curPre,nextPre));
+                    });
+                    next.data('key',curKey)
+                        .attr('class','navrow row-'+curKey)
+                        .find('[name^=navs]').each(function () {
+                        $(this).attr('name',$(this).attr('name').replace(nextPre, curPre));
+                    });
+
+                    if(nextSons.length>0){
+                        $(nextSons).each(function () {
+                            $(this).find('[name^=navs]').each(function () {
+                                $(this).attr('name',$(this).attr('name').replace(nextPre, curPre));
+                            });
+                            $(this).insertAfter(row);
+                        })
+                    }
+                    if(curSons.length>0){
+                        $(curSons).each(function () {
+                            $(this).find('[name^=navs]').each(function () {
+                                $(this).attr('name',$(this).attr('name').replace(curPre, nextPre));
+                            });
+                            $(this).insertAfter(next);
+                        })
+                    }
                 }
 
             });
