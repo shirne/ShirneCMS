@@ -31,7 +31,7 @@
                 <th>分组</th>
                 <th>类型</th>
                 <th>说明</th>
-                <th width="200">操作</th>
+                <th width="160">&nbsp;</th>
             </tr>
         </thead>
         <tbody>
@@ -43,9 +43,9 @@
                 <td>{$v.group|settingGroups}</td>
                 <td>{$v.type|settingTypes}</td>
                 <td>{$v.description}</td> 
-                <td>
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('setting/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> 编辑</a>
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('setting/delete',array('id'=>$v['id']))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
+                <td class="operations">
+                    <a class="btn btn-outline-primary" title="编辑" href="{:url('setting/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> </a>
+                    <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('setting/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
                 </td>
             </tr>
         </foreach>

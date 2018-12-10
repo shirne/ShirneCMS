@@ -31,7 +31,7 @@
                 <th>类型</th>
                 <th>更新日期</th>
                 <th>关键字</th>
-                <th width="200">操作</th>
+                <th width="160">&nbsp;</th>
             </tr>
             </thead>
             <tbody>
@@ -42,8 +42,8 @@
                     <td>{$v.type}</td>
                     <td>{$v.update_time|showdate}</td>
                     <td>{$v.keyword}</td>
-                    <td>
-                        <a class="btn btn-outline-dark btn-sm" href="{:url('wechat/materialdelete',array('media_id'=>$v['media_id'],'wid'=>$wid))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
+                    <td class="operations">
+                        <a class="btn btn-outline-primary link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('wechat/materialdelete',array('media_id'=>$v['media_id'],'wid'=>$wid))}" ><i class="ion-md-trash"></i> </a>
                     </td>
                 </tr>
             </foreach>

@@ -21,7 +21,7 @@
                 <th>分组</th>
                 <th>组名</th>
                 <th>排序</th>
-                <th width="200">操作</th>
+                <th width="160">&nbsp;</th>
             </tr>
             </thead>
             <tbody>
@@ -31,9 +31,9 @@
                     <td>{$v.group}<if condition="$v.use_template EQ 1">&nbsp;<span class="badge badge-warning">独立模板</span></if></td>
                     <td>{$v.group_name}</td>
                     <td>{$v.sort}</td>
-                    <td>
-                        <a class="btn btn-outline-dark btn-sm" href="{:url('page/groupedit',array('id'=>$v['id']))}" ><i class="ion-md-create"></i> 编辑</a>
-                        <a class="btn btn-outline-dark btn-sm" href="{:url('page/groupdelete',array('id'=>$v['id']))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
+                    <td class="operations">
+                        <a class="btn btn-outline-primary" title="编辑" href="{:url('page/groupedit',array('id'=>$v['id']))}" ><i class="ion-md-create"></i> </a>
+                        <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('page/groupdelete',array('id'=>$v['id']))}"><i class="ion-md-trash"></i> </a>
                     </td>
                 </tr>
             </foreach>

@@ -57,7 +57,7 @@
                 <th>价格/返奖额</th>
                 <th>时间</th>
                 <th width="160">状态</th>
-                <th width="280">操作</th>
+                <th width="160">&nbsp;</th>
             </tr>
             </thead>
             <tbody>
@@ -95,11 +95,13 @@
                             <span class="badge badge-warning">未返奖</span>
                         </if>
                     </td>
-                    <td>
-                        <a class="btn btn-outline-dark btn-sm" href="{:url('order/detail',array('id'=>$v['order_id']))}"><i class="ion-md-create"></i> 详情</a>
-                        <a class="btn btn-outline-dark btn-sm btn-status" href="javascript:" data-id="{$v.order_id}"  data-status="2"><i class="ion-md-create"></i> 状态</a>
-                        <if condition="$v['rebated'] NEQ 1"><a class="btn btn-outline-dark btn-sm btn-audit" href="javascript:" data-id="{$v.order_id}"  data-status="1"><i class="ion-md-lock"></i> 审核</a></if>
-                        <a class="btn btn-outline-dark btn-sm" href="{:url('order/delete',array('id'=>$v['order_id']))}" style="color:red;" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
+                    <td class="operations">
+                        <a class="btn btn-outline-primary" title="详情" href="{:url('order/detail',array('id'=>$v['order_id']))}"><i class="ion-md-document"></i> </a>
+                        <a class="btn btn-outline-primary btn-status" title="状态" href="javascript:" data-id="{$v.order_id}"  data-status="{$v['status']+1}"><i class="ion-md-checkbox-outline"></i> </a>
+                        <if condition="$v['rebated'] NEQ 1">
+                            <a class="btn btn-outline-success btn-audit" title="审核" href="javascript:" data-id="{$v.order_id}"  data-status="1"><i class="ion-md-checkmark-circle"></i> </a>
+                        </if>
+                        <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('order/delete',array('id'=>$v['order_id']))}"><i class="ion-md-trash"></i> </a>
                     </td>
                 </tr>
             </volist>

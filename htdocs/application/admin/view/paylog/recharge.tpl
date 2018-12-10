@@ -39,7 +39,7 @@
             <th>支付说明</th>
             <th>下单时间</th>
             <th>状态</th>
-            <th width="200">操作</th>
+            <th width="160">&nbsp;</th>
         </tr>
         </thead>
         <tbody>
@@ -57,12 +57,12 @@
                 <td>{$v.remark}</td>
                 <td>{$v.create_time|showdate='Y-m-d H:i:s'}</td>
                 <td>{$v.status|audit_status|raw}</td>
-                <td>
+                <td class="operations">
                     <if condition="$v['status'] EQ 0">
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('Paylog/rechargeupdate',array('id'=>$v['id']))}"><i class="ion-md-check"></i> 确认</a>
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('Paylog/rechargedelete',array('id'=>$v['id']))}" onclick="javascript:return del(this,'您真的确定要作废吗？');"><i class="ion-md-trash"></i> 无效</a>
+                    <a class="btn btn-outline-success link-confirm" title="确认" href="{:url('Paylog/rechargeupdate',array('id'=>$v['id']))}"><i class="ion-md-check"></i> </a>
+                    <a class="btn btn-outline-danger link-confirm" title="无效" data-confirm="您真的确定要作废吗？" href="{:url('Paylog/rechargedelete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
                         <elseif condition="$v['status'] EQ 1"/>
-                        <a class="btn btn-outline-dark btn-sm" href="{:url('Paylog/rechargecancel',array('id'=>$v['id']))}" ><i class="ion-md-history"></i> 撤销</a>
+                        <a class="btn btn-outline-primary link-confirm" title="撤销" href="{:url('Paylog/rechargecancel',array('id'=>$v['id']))}" ><i class="ion-md-history"></i> </a>
                         <else/>
                         -
                     </if>

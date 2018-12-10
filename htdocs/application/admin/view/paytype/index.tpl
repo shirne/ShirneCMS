@@ -28,7 +28,7 @@
                 <th>名称</th>
                 <th>类型</th>
                 <th>状态</th>
-                <th width="200">操作</th>
+                <th width="160">&nbsp;</th>
             </tr>
         </thead>
         <tbody>
@@ -38,9 +38,9 @@
                 <td>{$v.title}</td>
                 <td>{$v.type|payTypes}</td>
                 <td>{$v['status']?'显示':'隐藏'}</td>
-                <td>
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('Paytype/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> 编辑</a>
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('Paytype/delete',array('id'=>$v['id']))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
+                <td class="operations">
+                    <a class="btn btn-outline-primary" href="{:url('Paytype/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> 编辑</a>
+                    <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('Paytype/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
                 </td>
             </tr>
         </foreach>

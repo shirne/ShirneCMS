@@ -34,7 +34,7 @@
                 <th>会员</th>
                 <th>关注时间</th>
                 <th>状态</th>
-                <th width="240">操作</th>
+                <th width="160">&nbsp;</th>
             </tr>
             </thead>
             <tbody>
@@ -56,12 +56,8 @@
                     <td>
                         <span class="badge badge-{$levels[$v['level_id']]['style']}">{$levels[$v['level_id']]['level_name']}</span>
                     </td>
-                    <td>
-                        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-                            <div class="btn-group btn-group-sm">
-                                <a class="btn btn-outline-dark" href="{:url('member/update',array('id'=>$v['id']))}"><i class="ion-md-sync"></i> 同步</a>
-                            </div>
-                        </div>
+                    <td class="operations">
+                        <a class="btn btn-outline-primary" title="同步" href="{:url('member/update',array('id'=>$v['id']))}"><i class="ion-md-sync"></i> </a>
                     </td>
                 </tr>
             </foreach>

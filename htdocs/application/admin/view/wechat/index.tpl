@@ -29,7 +29,7 @@
                 <th>名称</th>
                 <th>appid</th>
                 <th>功能</th>
-                <th width="200">操作</th>
+                <th width="160">&nbsp;</th>
             </tr>
             </thead>
             <tbody>
@@ -48,10 +48,10 @@
                             <a class="btn btn-outline-dark" href="{:url('wechat/menu',array('id'=>$v['id']))}"><i class="ion-md-reorder"></i> 菜单</a>
                         </div>
                     </td>
-                    <td>
-                        <a class="btn btn-outline-dark btn-sm btn-config" href="javascript:" data-payurl="{:url('index/order/wechatpay',[],false,true)}/order_id/" data-url="{:url('api/wechat/index',['hash'=>$v['hash']],false,true)}" data-token="{$v['token']}" data-aeskey="{$v['encodingaeskey']}" data-id="{$v.id}"><i class="ion-md-cog"></i> 配置</a>
-                        <a class="btn btn-outline-dark btn-sm" href="{:url('wechat/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> 编辑</a>
-                        <a class="btn btn-outline-dark btn-sm" href="{:url('wechat/delete',array('id'=>$v['id']))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
+                    <td class="operations">
+                        <a class="btn btn-outline-primary btn-config" title="配置" href="javascript:" data-payurl="{:url('index/order/wechatpay',[],false,true)}/order_id/" data-url="{:url('api/wechat/index',['hash'=>$v['hash']],false,true)}" data-token="{$v['token']}" data-aeskey="{$v['encodingaeskey']}" data-id="{$v.id}"><i class="ion-md-cog"></i> </a>
+                        <a class="btn btn-outline-primary" title="编辑" href="{:url('wechat/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> </a>
+                        <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('wechat/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
                     </td>
                 </tr>
             </foreach>

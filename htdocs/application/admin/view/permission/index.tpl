@@ -21,7 +21,7 @@
                 <th>菜单名</th>
                 <th>键值</th>
                 <th>链接</th>
-                <th width="300">操作</th>
+                <th width="160">&nbsp;</th>
             </tr>
         </thead>
         <tbody>
@@ -31,10 +31,10 @@
                 <td>{$v.name}</td>
                 <td>{$v.key}</td>
                 <td>{$v.url}</td>
-                <td>
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('permission/add',array('pid'=>$v['id']))}"><i class="ion-md-add"></i> 添加</a>
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('permission/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> 编辑</a>
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('permission/delete',array('id'=>$v['id']))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
+                <td class="operations">
+                    <a class="btn btn-outline-primary" title="添加" href="{:url('permission/add',array('pid'=>$v['id']))}"><i class="ion-md-add"></i> </a>
+                    <a class="btn btn-outline-primary" title="编辑" href="{:url('permission/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> </a>
+                    <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('permission/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
                 </td>
             </tr>
             <php>$soncount=empty($model[$v['id']])?0:count($model[$v['id']]);</php>
@@ -44,10 +44,10 @@
                     <td><span class="tree-pre">{$soncount==$key+1?'└─':'├─'}</span> {$sv.name}</td>
                     <td>{$sv.key}</td>
                     <td>{$sv.url}</td>
-                    <td>
-                        <a class="btn btn-outline-dark btn-sm" href="{:url('permission/add',array('pid'=>$sv['id']))}"><i class="ion-md-add"></i> 添加</a>
-                        <a class="btn btn-outline-dark btn-sm" href="{:url('permission/edit',array('id'=>$sv['id']))}"><i class="ion-md-create"></i> 编辑</a>
-                        <a class="btn btn-outline-dark btn-sm" href="{:url('permission/delete',array('id'=>$sv['id']))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
+                    <td class="operations">
+                        <a class="btn btn-outline-primary" title="添加" href="{:url('permission/add',array('pid'=>$sv['id']))}"><i class="ion-md-add"></i> </a>
+                        <a class="btn btn-outline-primary" title="编辑" href="{:url('permission/edit',array('id'=>$sv['id']))}"><i class="ion-md-create"></i> </a>
+                        <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('permission/delete',array('id'=>$sv['id']))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> </a>
                     </td>
                 </tr>
                 <foreach name="model[$sv['id']]" item="mv">
@@ -56,9 +56,9 @@
                         <td><span class="fa">&nbsp;</span><span class="fa">┣</span> {$mv.name}</td>
                         <td>{$mv.key}</td>
                         <td>{$mv.url}</td>
-                        <td>
-                            <a class="btn btn-outline-dark btn-sm" href="{:url('permission/edit',array('id'=>$mv['id']))}"><i class="ion-md-create"></i> 编辑</a>
-                            <a class="btn btn-outline-dark btn-sm" href="{:url('permission/delete',array('id'=>$mv['id']))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
+                        <td class="operations">
+                            <a class="btn btn-outline-primary" title="编辑" href="{:url('permission/edit',array('id'=>$mv['id']))}"><i class="ion-md-create"></i> </a>
+                            <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('permission/delete',array('id'=>$mv['id']))}" ><i class="ion-md-trash"></i> </a>
                         </td>
                     </tr>
                 </foreach>
