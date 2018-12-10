@@ -43,7 +43,7 @@
                     <td>{$v.reply_type}</td>
                     <td>{$v.keyword}</td>
                     <td>{$v.sort}</td>
-                    <td>
+                    <td class="operations">
                         <a class="btn btn-outline-primary" title="编辑" href="{:url('wechat/replyedit',array('id'=>$v['id'],'wid'=>$wid))}"><i class="ion-md-create"></i> </a>
                         <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('wechat/replydelete',array('id'=>$v['id'],'wid'=>$wid))}" ><i class="ion-md-trash"></i> </a>
                     </td>

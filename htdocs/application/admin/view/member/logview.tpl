@@ -26,7 +26,7 @@
             </tr>
             <tr>
                 <th>备注</th>
-                <td>{$m.remark}</td>
+                <td>{$m.remark|print_remark}</td>
             </tr>
         </tbody>
     </table>

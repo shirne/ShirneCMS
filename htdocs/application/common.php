@@ -377,6 +377,16 @@ function wrap_label($text,$type='secondary'){
     return "<span class=\"badge badge-$type\">$text</span>";
 }
 
+function print_remark($data){
+    if(!empty($data) && !is_array($data)){
+        $data=@json_decode($data);
+    }
+    if(is_array($data)){
+        return call_user_func_array('lang',$data);
+    }
+    return $data;
+}
+
 function maskphone($phone){
     $l=strlen($phone);
     return substr($phone,0,3).str_repeat('*',$l-7).substr($phone,$l-4);

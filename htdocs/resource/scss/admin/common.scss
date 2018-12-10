@@ -52,16 +52,6 @@ h6 {
   line-height: 1.5;
 }
 
-.dropdown-toggle::after{
-  font-family: "Ionicons";
-  content:"\f27f";
-  font-size:1em;
-  border:0;
-  text-align: center;
-  width :auto;
-  height :auto;
-}
-
 .media-left {
   width: 100px;
   height: 60px;
@@ -251,13 +241,6 @@ h6 {
 }
 
 .tab-container {
-  position: relative;
-
-  .tab-toolbar {
-    position: absolute;
-    right: 1rem;
-    top: 0.4rem;
-  }
   .tab-pane {
     width: 90%;
     padding-top: 30px;
@@ -269,6 +252,10 @@ h6 {
 .form-group figure {
   margin-top: 10px;
   max-width: 300px;
+  max-height:200px;
+  .img-fluid{
+    max-height:100%;
+  }
 }
 
 .page-form{
@@ -727,6 +714,12 @@ table {
   #loginBar {
     display: block;
   }
+
+  .tab-container {
+    .tab-toolbar {
+      margin-bottom:20px;
+    }
+  }
 }
 
 @media (min-width: 992px) {
@@ -748,6 +741,16 @@ table {
   #loginContainer {
     margin-top: 50px;
     padding-top: 120px;
+  }
+
+  .tab-container {
+    position: relative;
+
+    .tab-toolbar {
+      position: absolute;
+      right: 1rem;
+      top: 0.4rem;
+    }
   }
 
   /* Side Nav */

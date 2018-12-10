@@ -41,7 +41,7 @@
                 <td><if condition="$v.result EQ 1"><span class="badge badge-success">成功</span><else/><span class="badge badge-danger">失败</span> </if></td>
                 <td>{$v.create_time|showdate}</td>
                 <td>{$v.ip}</td>
-                <td>{$v.remark}</td>
+                <td>{$v.remark|print_remark}</td>
                 <td class="operations">
                     <a class="btn btn-outline-primary" title="查看" data-title="查看详情" rel="ajax" href="{:url('member/logview',array('id'=>$v['id']))}"><i class="ion-md-document"></i> </a>
                 </td>
