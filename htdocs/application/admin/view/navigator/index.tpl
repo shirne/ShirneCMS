@@ -17,7 +17,7 @@
                         <th width="50">底部显示</th>
                         <th>链接</th>
                         <th width="120">子菜单</th>
-                        <th width="240">操作</th>
+                        <th width="160">&nbsp;</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -75,11 +75,11 @@
                                     <option value="module" {$item['subnavtype']=='module'?'selected':''}>自动调用</option>
                                 </select>
                             </td>
-                            <td>
-                                <a href="javascript:" class="btn btn-outline-primary rowadd">添加</a>
-                                <a href="javascript:" class="btn btn-outline-primary rowup">上移</a>
-                                <a href="javascript:" class="btn btn-outline-primary rowdown">下移</a>
-                                <a href="javascript:" class="btn btn-outline-danger rowdelete">删除</a>
+                            <td class="operations">
+                                <a href="javascript:" title="添加" class="btn btn-outline-primary rowadd"><i class="ion-md-add"></i></a>
+                                <a href="javascript:" title="上移" class="btn btn-outline-primary rowup"><i class="ion-md-arrow-round-up"></i> </a>
+                                <a href="javascript:" title="下移" class="btn btn-outline-primary rowdown"><i class="ion-md-arrow-round-down"></i> </a>
+                                <a href="javascript:" class="btn btn-outline-danger rowdelete" title="删除"><i class="ion-md-trash"></i> </a>
                             </td>
                         </tr>
                         <if condition="$item['subnavtype'] EQ 'customer' && !empty($item['subnav'])">
@@ -107,10 +107,10 @@
                                     <td>
                                         &nbsp;
                                     </td>
-                                    <td>
-                                        <a href="javascript:" class="btn btn-outline-primary rowup">上移</a>
-                                        <a href="javascript:" class="btn btn-outline-primary rowdown">下移</a>
-                                        <a href="javascript:" class="btn btn-outline-danger rowdelete">删除</a>
+                                    <td class="operations">
+                                        <a href="javascript:" title="上移" class="btn btn-outline-primary rowup"><i class="ion-md-arrow-round-up"></i> </a>
+                                        <a href="javascript:" title="下移" class="btn btn-outline-primary rowdown"><i class="ion-md-arrow-round-down"></i> </a>
+                                        <a href="javascript:" class="btn btn-outline-danger rowdelete" title="删除"><i class="ion-md-trash"></i> </a>
                                     </td>
                                 </tr>
                             </foreach>
@@ -173,11 +173,11 @@
                     <option value="module">自动调用</option>
                 </select>
             </td>
-            <td>
-                <a href="javascript:" class="btn btn-outline-primary rowadd">添加</a>
-                <a href="javascript:" class="btn btn-outline-primary rowup">上移</a>
-                <a href="javascript:" class="btn btn-outline-primary rowdown">下移</a>
-                <a href="javascript:" class="btn btn-outline-danger rowdelete">删除</a>
+            <td class="operations">
+                <a href="javascript:" title="添加" class="btn btn-outline-primary rowadd"><i class="ion-md-add"></i></a>
+                <a href="javascript:" title="上移" class="btn btn-outline-primary rowup"><i class="ion-md-arrow-round-up"></i> </a>
+                <a href="javascript:" title="下移" class="btn btn-outline-primary rowdown"><i class="ion-md-arrow-round-down"></i> </a>
+                <a href="javascript:" class="btn btn-outline-danger rowdelete" title="删除"><i class="ion-md-trash"></i> </a>
             </td>
         </tr>
     </script>
@@ -205,10 +205,10 @@
             <td>
                 &nbsp;
             </td>
-            <td>
-                <a href="javascript:" class="btn btn-outline-primary rowup">上移</a>
-                <a href="javascript:" class="btn btn-outline-primary rowdown">下移</a>
-                <a href="javascript:" class="btn btn-outline-danger rowdelete">删除</a>
+            <td class="operations">
+                <a href="javascript:" title="上移" class="btn btn-outline-primary rowup"><i class="ion-md-arrow-round-up"></i> </a>
+                <a href="javascript:" title="下移" class="btn btn-outline-primary rowdown"><i class="ion-md-arrow-round-down"></i> </a>
+                <a href="javascript:" class="btn btn-outline-danger rowdelete" title="删除"><i class="ion-md-trash"></i> </a>
             </td>
         </tr>
     </script>

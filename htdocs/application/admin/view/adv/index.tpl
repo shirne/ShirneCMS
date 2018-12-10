@@ -27,7 +27,7 @@
                 <th width="50">编号</th>
                 <th>名称</th>
                 <th>调用标识</th>
-                <th width="300">操作</th>
+                <th width="160">&nbsp;</th>
             </tr>
         </thead>
         <tbody>
@@ -36,19 +36,13 @@
                 <td>{$v.id}</td>
                 <td>{$v.title}</td>
                 <td>{$v.flag}</td>
-                <td>
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('adv/update',array('id'=>$v['id']))}"><i class="ion-md-create"></i> 编辑</a>
-                    <div class="btn-group btn-group-sm">
-                        <a class="btn btn-outline-dark" href="{:url('adv/itemlist',array('gid'=>$v['id']))}"><i class="ion-md-list"></i> 广告列表</a>
-                        <button type="button" class="btn btn-outline-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="caret"></span>
-                            <span class="sr-only">Toggle Dropdown</span>
-                        </button>
-                        <div class="dropdown-menu">
-                            <a class="dropdown-item" href="{:url('adv/itemadd',array('gid'=>$v['id']))}">添加广告</a>
-                        </div>
-                    </div>
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('adv/delete',array('id'=>$v['id']))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
+                <td class="operations">
+                    <a class="btn btn-outline-primary" title="编辑" href="{:url('adv/update',array('id'=>$v['id']))}"><i class="ion-md-create"></i></a>
+                    <a class="btn btn-outline-primary" title="广告列表" href="{:url('adv/itemlist',array('gid'=>$v['id']))}"><i class="ion-md-menu"></i></a>
+                    <a class="btn btn-outline-primary" title="添加广告" href="{:url('adv/itemadd',array('gid'=>$v['id']))}"><i class="ion-md-add"></i></a>
+                    <a class="btn btn-outline-danger link-confirm" data-confirm="您真的确定要删除吗？
+
+删除后将不能恢复!" title="删除" href="{:url('adv/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i></a>
                 </td>
             </tr>
         </foreach>

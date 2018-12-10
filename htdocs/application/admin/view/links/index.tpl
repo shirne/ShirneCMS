@@ -29,7 +29,7 @@
                 <th>标题</th>
                 <th>地址</th>
                 <th>优先级</th>
-                <th width="200">操作</th>
+                <th width="160">&nbsp;</th>
             </tr>
         </thead>
         <tbody>
@@ -48,9 +48,9 @@
                 <td>{$v.title}</td>
                 <td><a href="{$v.url}" target="_blank">{$v.url}</a> </td>
                 <td>{$v.sort}</td> 
-                <td>
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('links/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> 编辑</a>
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('links/delete',array('id'=>$v['id']))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
+                <td class="operations">
+                    <a class="btn btn-outline-primary" title="编辑" href="{:url('links/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> </a>
+                    <a class="btn btn-outline-danger link-confirm" title="删除" data-configm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('links/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
                 </td>
             </tr>
         </foreach>

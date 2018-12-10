@@ -29,7 +29,7 @@
                 <th>上次登陆</th>
                 <th>类型</th>
                 <th>状态</th>
-                <th width="240">操作</th>
+                <th width="160">&nbsp;</th>
             </tr>
         </thead>
         <tbody>
@@ -46,13 +46,15 @@
                     </if>
                 </td> 
                 <td><if condition="$v.status eq 1">正常<else/><span style="color:red">禁用</span></if></td>
-                <td>
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('manager/update',array('id'=>$v['id']))}"><i class="ion-md-create"></i> 编辑</a>
-                <if condition="$v.type neq 1">	<a class="btn btn-outline-dark btn-sm" href="{:url('manager/permision',array('id'=>$v['id']))}"><i class="ion-md-create"></i> 权限</a></if>
+                <td class="operations">
+                    <a class="btn btn-outline-primary" title="编辑" href="{:url('manager/update',array('id'=>$v['id']))}"><i class="ion-md-create"></i> </a>
+                <if condition="$v.type neq 1">
+                    <a class="btn btn-outline-primary" title="权限" href="{:url('manager/permision',array('id'=>$v['id']))}"><i class="ion-md-key"></i> </a>
+                </if>
                 <if condition="$v.status eq 1">	
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('manager/delete',array('id'=>$v['id']))}" onclick="javascript:return del(this,'禁用后用户将不能登陆后台!\n\n请确认!!!');"><i class="ion-md-close"></i> 禁用</a>
+                    <a class="btn btn-outline-danger link-confirm" title="禁用" data-confirm="禁用后用户将不能登陆后台!\n请确认!!!" href="{:url('manager/delete',array('id'=>$v['id']))}" ><i class="ion-md-close"></i> </a>
             	<else/>
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('manager/delete',array('id'=>$v['id']))}" style="color:#50AD1E;"><i class="ion-md-check"></i> 启用</a>
+                    <a class="btn btn-outline-success" title="启用" href="{:url('manager/delete',array('id'=>$v['id']))}" ><i class="ion-md-checkmark-circle"></i> </a>
             	</if>
                 </td>
             </tr>

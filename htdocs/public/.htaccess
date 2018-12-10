@@ -9,7 +9,7 @@
 #  RewriteCond %{SERVER_PORT} !^443$
 #  RewriteRule ^.*$ https://www.gdyhjk.cn%{REQUEST_URI} [L,R]
 
-  RewriteCond %{REQUEST_URI} !^/uploads/
+  RewriteCond %{REQUEST_URI} !^/(uploads|static)/
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^(.*)$ index.php/$1 [QSA,PT,L]

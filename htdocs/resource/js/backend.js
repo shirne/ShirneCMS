@@ -49,7 +49,8 @@ jQuery(function ($) {
             }
         }
     });
-    //操作按钮
+
+    //全局操作按钮
     $('.action-btn').click(function (e) {
         e.preventDefault();
         var action = $(this).data('action');
@@ -82,12 +83,16 @@ jQuery(function ($) {
         }
     });
 
+    //表格行操作提示
+    $('.operations .btn').tooltip();
+
     //异步显示资料链接
     $('a[rel=ajax]').click(function (e) {
         e.preventDefault();
         var self = $(this);
         var title = $(this).data('title');
         if (!title) title = $(this).text();
+        if (!title) title = $(this).attr('title');
         var dlg = new Dialog({
             btns: ['确定'],
             onshow: function (body) {
@@ -107,7 +112,8 @@ jQuery(function ($) {
         e.preventDefault();
         e.stopPropagation();
         var text=$(this).data('confirm');
-        var url=$(this).data('href');
+        var url=$(this).attr('href');
+        text=text.replace(/(\\n|\n)+/g,"<br />");
         if(!text)text=lang('Confirm operation?');
 
         dialog.confirm(text,function () {

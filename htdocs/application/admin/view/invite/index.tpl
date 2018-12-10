@@ -32,7 +32,7 @@
                 <th>使用日期</th>
                 <th>有效期</th>
                 <th>状态</th>
-                <th width="200">操作</th>
+                <th width="160">&nbsp;</th>
             </tr>
         </thead>
         <tbody>
@@ -53,12 +53,12 @@
                 <td>{$v.use_at|showdate}</td>
                 <td>{$v.valid_at|showdate}</td>
                 <td><if condition="$v.status eq 1"><span class="badge badge-danger">锁定</span><else/><span class="badge badge-secondary">正常</span></if></td>
-                <td>
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('Invite/update',array('id'=>$v['id']))}"><i class="ion-md-create"></i> 转赠</a>
+                <td class="operations">
+                    <a class="btn btn-outline-primary" title="转赠" href="{:url('Invite/update',array('id'=>$v['id']))}"><i class="ion-md-repeat"></i> </a>
                     <if condition="$v.status eq 0">
-                        <a class="btn btn-outline-dark btn-sm" href="{:url('Invite/lock',array('id'=>$v['id']))}" onclick="javascript:return del(this,'锁定后将不能使用此激活码注册!\n\n请确认!!!');"><i class="ion-md-close"></i> 锁定</a>
+                        <a class="btn btn-outline-danger link-confirm" title="锁定" data-confirm="锁定后将不能使用此激活码注册!\n请确认!!!" href="{:url('Invite/lock',array('id'=>$v['id']))}" ><i class="ion-md-close"></i> </a>
                     <else/>
-                        <a class="btn btn-outline-dark btn-sm" href="{:url('Invite/unlock',array('id'=>$v['id']))}" style="color:#50AD1E;"><i class="ion-md-check"></i> 解锁</a>
+                        <a class="btn btn-outline-success link-confirm" title="解锁" href="{:url('Invite/unlock',array('id'=>$v['id']))}" style="color:#50AD1E;"><i class="ion-md-check"></i> </a>
                     </if>
                 </td>
             </tr>

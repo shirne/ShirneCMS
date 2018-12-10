@@ -52,6 +52,16 @@ h6 {
   line-height: 1.5;
 }
 
+.dropdown-toggle::after{
+  font-family: "Ionicons";
+  content:"\f27f";
+  font-size:1em;
+  border:0;
+  text-align: center;
+  width :auto;
+  height :auto;
+}
+
 .media-left {
   width: 100px;
   height: 60px;
@@ -199,11 +209,11 @@ h6 {
 }
 
 #page-wrapper {
-  margin: 5px 15px;
-  padding: 5px 10px;
+  margin: 15px;
+  padding: 10px;
   background: #fff;
-  border-radius: 2px;
-  box-shadow: 1px 1px 2px 2px rgba(0, 0, 0, 0.04);
+  border-radius: 5px;
+  box-shadow: 1px 1px 6px 2px rgba(0, 0, 0, 0.02);
 
   .page-header {
     border-bottom: 1px #ccc solid;
@@ -372,6 +382,14 @@ table {
     figure {
       max-width : 100px;
     }
+    &.operations{
+      text-align: right;
+      .btn{
+        border:0;
+        padding:0 7px;
+        font-size:16px;
+      }
+    }
   }
 }
 
@@ -421,6 +439,10 @@ table {
 
   .card-header a {
     padding: 13px 15px;
+    font-size:15px;
+    i{
+      margin-right:10px;
+    }
   }
 
   .card-body {
@@ -434,6 +456,9 @@ table {
     a {
       padding-left: 25px;
       position:relative;
+      i{
+        margin-right:5px;
+      }
       &:focus, &:hover {
         background-color: #333;
       }
@@ -447,7 +472,7 @@ table {
         display:block;
         height: 0;
         width: 0;
-        border-right: 15px #f6f6f6 solid;
+        border-right: 10px #f6f6f6 solid;
         border-top: 10px transparent solid;
         border-bottom: 10px transparent solid;
         position:absolute;
@@ -716,8 +741,8 @@ table {
   }
 
   #page-wrapper {
-    padding: 10px 20px;
-    margin: 15px 25px;
+    padding: 20px;
+    margin: 25px;
   }
 
   #loginContainer {

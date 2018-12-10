@@ -1,10 +1,10 @@
 
 (function(window,$) {
     var apis = {
-        'baidu': 'https://api.map.baidu.com/api?ak=rO9tOdEWFfvyGgDkiWqFjxK6&v=1.5&services=false&callback=',
-        'google': 'https://maps.google.com/maps/api/js?key=AIzaSyB8lorvl6EtqIWz67bjWBruOhm9NYS1e24&callback=',
-        'tencent': 'https://map.qq.com/api/js?v=2.exp&key=7I5BZ-QUE6R-JXLWV-WTVAA-CJMYF-7PBBI&callback=',
-        'gaode': 'https://webapi.amap.com/maps?v=1.3&key=3ec311b5db0d597e79422eeb9a6d4449&callback='
+        'baidu': '//api.map.baidu.com/api?ak=rO9tOdEWFfvyGgDkiWqFjxK6&v=1.5&services=false&callback=',
+        'google': '//maps.google.com/maps/api/js?key=AIzaSyB8lorvl6EtqIWz67bjWBruOhm9NYS1e24&callback=',
+        'tencent': '//map.qq.com/api/js?v=2.exp&key=7I5BZ-QUE6R-JXLWV-WTVAA-CJMYF-7PBBI&callback=',
+        'gaode': '//webapi.amap.com/maps?v=1.3&key=3ec311b5db0d597e79422eeb9a6d4449&callback='
     };
 
     function loadScript(src) {
@@ -67,9 +67,15 @@
     BaseMap.prototype.isAPIReady = function () {
         return false;
     };
+    BaseMap.prototype.pointToObject = function () {
+    };
+    BaseMap.prototype.objectToPoint = function () {
+    };
     BaseMap.prototype.setMap = function () {
     };
     BaseMap.prototype.showInfo = function () {
+    };
+    BaseMap.prototype.getCenter = function () {
     };
     BaseMap.prototype.getAddress = function (rs) {
         return "";
@@ -101,15 +107,6 @@
             return true;
         }
     };
-    BaseMap.prototype.bindEvents = function () {
-        var self = this;
-        $('#txtTitle').unbind().blur(function () {
-            self.showInfo();
-        });
-        $('#txtContent').unbind().blur(function () {
-            self.showInfo();
-        });
-    };
     BaseMap.prototype.setInfoContent = function () {
         if (!this.infoWindow) return;
         var title = '<b>当前位置</b>';
@@ -121,6 +118,10 @@
             var content = '<h3>' + title + '</h3><div style="width:250px">' + addr + '</div>';
             this.infoWindow.setContent(content);
         }
+    };
+    BaseMap.prototype.showAtCenter=function () {
+        var center=this.getCenter();
+        this.showInfo(center);
     };
     BaseMap.prototype.showLocationInfo = function (pt, rs) {
 
@@ -162,6 +163,7 @@
     BaiduMap.prototype.isAPIReady = function () {
         return !!window['BMap'];
     };
+
     BaiduMap.prototype.setMap = function () {
         var self = this;
         if (this.isshow || this.ishide) return;
@@ -173,7 +175,7 @@
         map.addControl(new BMap.OverviewMapControl());
         map.enableScrollWheelZoom();
 
-        var point = new BMap.Point(this.locate.lng, this.locate.lat);
+        var point = this.objectToPoint(this.locate);
         map.centerAndZoom(point, 15); //初始化地图中心点
         this.marker = new BMap.Marker(point); //初始化地图标记
         this.marker.enableDragging(); //标记开启拖拽
@@ -205,20 +207,35 @@
             title: ""
         });
 
-        this.bindEvents();
-
         this.isshow = true;
         if (this.toshow) {
             this.showInfo();
             this.toshow = false;
         }
     };
+    BaiduMap.prototype.pointToObject = function (point) {
+        return {
+            lng:point.lng,
+            lat:point.lat
+        };
+    };
+    BaiduMap.prototype.objectToPoint = function (object) {
+        return new BMap.Point(parseFloat(object.lng),parseFloat(object.lat));
+    };
+    BaiduMap.prototype.getCenter = function () {
+        var center=this.map.getCenter();
+        return this.pointToObject(center);
+    };
 
-    BaiduMap.prototype.showInfo = function () {
+    BaiduMap.prototype.showInfo = function (point) {
         if (this.ishide) return;
         if (!this.isshow) {
             this.toshow = true;
             return;
+        }
+        if(point){
+            this.locate=point;
+            this.marker.panTo(new BMap.Point(point.lng,point.lat));
         }
         this.setInfoContent();
 
@@ -279,7 +296,7 @@
         });
 
         //获取经纬度坐标值
-        var point = new google.maps.LatLng(this.locate);
+        var point = this.objectToPoint(this.locate);
         map.panTo(point);
         this.marker = new google.maps.Marker({position: point, map: map, draggable: true});
 
@@ -301,8 +318,6 @@
             });
         });
 
-        this.bindEvents();
-
         gc.geocode({'location': point}, function (rs) {
             self.showLocationInfo(point, rs);
         });
@@ -316,11 +331,29 @@
         }
     };
 
-    GoogleMap.prototype.showInfo = function () {
+    GoogleMap.prototype.pointToObject = function (point) {
+        return {
+            lng:point.lng,
+            lat:point.lat
+        };
+    };
+    GoogleMap.prototype.objectToPoint = function (object) {
+        return new google.maps.LatLng(parseFloat(object.lat),parseFloat(object.lng));
+    };
+    GoogleMap.prototype.getCenter = function () {
+        var center=this.map.getCenter();
+        return this.pointToObject(center);
+    };
+
+    GoogleMap.prototype.showInfo = function (point) {
         if (this.ishide) return;
         if (!this.isshow) {
             this.toshow = true;
             return;
+        }
+        if(point){
+            this.locate=point;
+            this.marker.setPosition(this.objectToPoint(point));
         }
         this.infoWindow.setOptions({position: this.marker.getPosition()});
         this.setInfoContent();
@@ -357,7 +390,15 @@
     TencentMap.prototype.isAPIReady = function () {
         return window['qq'] && window['qq']['maps'];
     };
-
+    TencentMap.prototype.pointToObject = function (point) {
+        return {
+            lng:point.getLng(),
+            lat:point.getLat()
+        };
+    };
+    TencentMap.prototype.objectToPoint = function (object) {
+        return new qq.maps.LatLng(parseFloat(object.lat),parseFloat(object.lng));
+    };
     TencentMap.prototype.setMap = function () {
         var self = this;
         if (this.isshow || this.ishide) return;
@@ -376,7 +417,7 @@
         //map.enableScrollWheelZoom();
 
         //获取经纬度坐标值
-        var point = new qq.maps.LatLng(this.locate.lat, this.locate.lng);
+        var point = this.objectToPoint(this.locate);
         map.panTo(point); //初始化地图中心点
 
         //初始化地图标记
@@ -406,8 +447,6 @@
 
         gc.getAddress(point);
 
-        this.bindEvents();
-
         this.infoWindow = new qq.maps.InfoWindow({map: map});
 
         this.isshow = true;
@@ -417,15 +456,24 @@
         }
     };
 
-    TencentMap.prototype.showInfo = function () {
+    TencentMap.prototype.getCenter = function () {
+        var center=this.map.getCenter();
+        return this.pointToObject(center);
+    };
+
+    TencentMap.prototype.showInfo = function (point) {
         if (this.ishide) return;
         if (!this.isshow) {
             this.toshow = true;
             return;
         }
+        if(point){
+            this.locate=point;
+            this.marker.setPosition(this.objectToPoint(point));
+        }
+        this.infoWindow.setPosition(this.marker.getPosition());
         this.infoWindow.open();
         this.setInfoContent();
-        this.infoWindow.setPosition(this.marker.getPosition());
     };
 
     TencentMap.prototype.getAddress = function (rs) {
@@ -495,7 +543,7 @@
 
 
         //获取经纬度坐标值
-        var point = new AMap.LngLat(this.locate.lng, this.locate.lat);
+        var point = this.objectToPoint(this.locate);
         map.setCenter(point);
 
         this.marker = new AMap.Marker({position: point, map: map}); //初始化地图标记
@@ -527,20 +575,34 @@
             });
         });
 
-        this.bindEvents();
-
         this.isshow = true;
         if (this.toshow) {
             this.showInfo();
             this.toshow = false;
         }
     };
+    GaodeMap.prototype.pointToObject = function (point) {
+        return {
+            lng:point.getLng(),
+            lat:point.getLat()
+        };
+    };
+    GaodeMap.prototype.objectToPoint = function (object) {
+        return new AMap.LngLat(object.lng, object.lat);
+    };
+    GaodeMap.prototype.getCenter = function () {
+        var center=this.map.center();
+        return this.pointToObject(center);
+    };
 
-    GaodeMap.prototype.showInfo = function () {
+    GaodeMap.prototype.showInfo = function (point) {
         if (this.ishide) return;
         if (!this.isshow) {
             this.toshow = true;
             return;
+        }
+        if(point){
+            this.marker.setPosition(this.objectToPoint(point));
         }
         this.setInfoContent();
         this.infoWindow.setPosition(this.marker.getPosition());

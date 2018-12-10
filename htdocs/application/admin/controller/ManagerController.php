@@ -204,10 +204,10 @@ class ManagerController extends BaseController
     public function delete($id)
     {
     	$id = intval($id);
-    	if(config('SUPER_ADMIN_ID') == $id) $this->error("超级管理员不可禁用!");
+    	if(1 == $id) $this->error("超级管理员不可禁用!");
 
         //查询status字段值
-        $result = Db::name('Manager')->find($id);
+        $result = ManagerModel::where('id',$id)->find();
         $data=array();
         if($result['status'] == 1){
         	$data['status']=0;

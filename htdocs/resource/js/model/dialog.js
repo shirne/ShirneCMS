@@ -46,6 +46,8 @@ function Dialog(opts){
 
     this.options=$.extend({
         'id':'dlgModal'+dialogIdx++,
+        'header':true,
+        'backdrop':true,
         'size':'',
         'btns':[
             {'text':'取消','type':'secondary'},
@@ -68,11 +70,21 @@ Dialog.prototype.generBtn=function(opt,idx){
 Dialog.prototype.show=function(html,title){
     this.box=$('#'+this.options.id);
     if(!title)title='系统提示';
+
     if(this.box.length<1) {
         $(document.body).append(dialogTpl.replace('modal-body','modal-body'+(this.options.bodyClass?(' '+this.options.bodyClass):'')).compile({'id': this.options.id}));
         this.box=$('#'+this.options.id);
     }else{
         this.box.unbind();
+    }
+    if(!this.options.header){
+        this.box.find('.modal-header').remove();
+    }
+    if(this.options.backdrop!==true){
+        this.box.data('backdrop',this.options.backdrop);
+    }
+    if(!this.options.keyboard){
+        this.box.data('keyboard',false);
     }
 
     //this.box.find('.modal-footer .btn-primary').unbind();
@@ -142,11 +154,32 @@ Dialog.prototype.hide=Dialog.prototype.close=function(){
 };
 
 var dialog={
-    alert:function(message,callback,title){
+    alert:function(message,callback,icon){
         var called=false;
         var iscallback=typeof callback=='function';
+        if(callback && !iscallback){
+            icon=callback;
+        }
+        var iconMap= {
+            'success':'checkmark-circle',
+            'info': 'information-circle',
+            'warning':'alert',
+            'error':'remove-circle'
+        };
+        var color='primary';
+        if(!icon)icon='information-circle';
+        else if(iconMap[icon]){
+            color=icon=='error'?'danger':icon;
+            icon=iconMap[icon];
+        }
+        var html='<div class="row" style="align-items: center;"><div class="col-4 text-right"><i class="ion-md-{@icon} text-{@color}" style="font-size:3em;"></i> </div><div class="col-8" >{@message}</div> </div>'.compile({
+            message:message,
+            icon:icon,
+            color:color
+        });
         return new Dialog({
             btns:'确定',
+            header:false,
             onsure:function(){
                 if(iscallback){
                     called=true;
@@ -158,23 +191,51 @@ var dialog={
                     callback(false);
                 }
             }
-        }).show(message,title);
+        }).show(html,'');
     },
-    confirm:function(message,confirm,cancel){
+    confirm:function(message,confirm,cancel,icon){
         var called=false;
+        if(typeof confirm=='string'){
+            icon=confirm;
+            if(typeof cancel=='function'){
+                confirm=cancel;
+                cancel=null;
+            }
+        }else if(typeof calcel=='string'){
+            icon=cancel;
+        }
+        var iconMap= {
+            'success':'checkmark-circle',
+            'info': 'information-circle',
+            'warning':'alert',
+            'error':'remove-circle'
+        };
+        var color='primary';
+        if(!icon)icon='information-circle';
+        else if(iconMap[icon]){
+            color=icon=='error'?'danger':icon;
+            icon=iconMap[icon];
+        }
+        var html='<div class="row" style="align-items: center;"><div class="col-4 text-right"><i class="ion-md-{@icon} text-{@color}" style="font-size:3em;"></i> </div><div class="col-8" >{@message}</div> </div>'.compile({
+            message:message,
+            icon:icon,
+            color:color
+        });
         return new Dialog({
+            'header':false,
+            'backdrop':'static',
             'onsure':function(){
-                if(typeof confirm=='function'){
+                if(confirm && typeof confirm=='function'){
                     called=true;
                     return confirm();
                 }
             },
             'onhide':function () {
-                if(called=false && typeof cancel=='function'){
+                if(called==false && typeof cancel=='function'){
                     return cancel();
                 }
             }
-        }).show(message);
+        }).show(html);
     },
     prompt:function(message,callback,cancel){
         var called=false;
@@ -189,6 +250,7 @@ var dialog={
             }
         }
         return new Dialog({
+            'backdrop':'static',
             'onshow':function(body){
                 if(message && message.onshow){
                     message.onshow(body);
@@ -222,6 +284,7 @@ var dialog={
         var actions=null;
         var dlg=new Dialog({
             'bodyClass':'modal-action',
+            'backdrop':'static',
             'btns':[
                 {'text':'取消','type':'secondary'}
             ],
@@ -266,6 +329,7 @@ var dialog={
         }
         if(!filter)filter={};
         var dlg=new Dialog({
+            'backdrop':'static',
             'onshown':function(body){
                 var btn=body.find('.searchbtn');
                 var input=body.find('.searchtext');
@@ -378,6 +442,7 @@ var dialog={
         var settedLocate=null;
         var dlg=new Dialog({
             'size':'lg',
+            'backdrop':'static',
             'onshown':function(body){
                 var btn=body.find('.searchbtn');
                 var input=body.find('.searchtext');
@@ -393,6 +458,9 @@ var dialog={
                     var search=input.val();
                     map.setLocate(search);
                 });
+                body.find('.setToCenter').click(function (e) {
+                    map.showAtCenter();
+                })
             },
             'onsure':function(body){
                 if(!settedLocate){
@@ -406,6 +474,7 @@ var dialog={
             }
         }).show('<div class="input-group"><input type="text" class="form-control searchtext" name="keyword" placeholder="填写地址检索位置"/><div class="input-group-append"><a class="btn btn-outline-secondary searchbtn"><i class="ion-md-search"></i></a></div></div>' +
             '<div class="map mt-2"></div>' +
+            '<div class="float-right mt-2 mapactions"><a href="javascript:" class="setToCenter">定位到地图中心</a></div>' +
             '<div class="mapinfo mt-2 text-muted">未选择位置</div>','请选择地图位置');
     }
 };

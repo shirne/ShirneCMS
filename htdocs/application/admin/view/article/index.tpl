@@ -53,7 +53,7 @@
 				<th>作者</th>
 				<th>分类</th>
 				<th>状态</th>
-				<th width="200">操作</th>
+				<th width="160">&nbsp;</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -74,11 +74,11 @@
 							<span class="badge badge-secondary">未发布</span>
 						</if>
 					</td>
-					<td>
-					<a class="btn btn-outline-dark btn-sm" href="{:url('article/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> 编辑</a>
-					<a class="btn btn-outline-dark btn-sm" href="{:url('article/imagelist',array('aid'=>$v['id']))}"><i class="ion-md-images"></i> 图集</a>
-						<a class="btn btn-outline-dark btn-sm" href="{:url('article/comments',array('aid'=>$v['id']))}"><i class="ion-md-chatboxes"></i> 评论</a>
-					<a class="btn btn-outline-dark btn-sm" href="{:url('article/delete',array('id'=>$v['id']))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> {:lang('Delete')}</a>
+					<td class="operations">
+					<a class="btn btn-outline-primary" title="编辑" href="{:url('article/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> </a>
+					<a class="btn btn-outline-primary" title="图集" href="{:url('article/imagelist',array('aid'=>$v['id']))}"><i class="ion-md-images"></i> </a>
+						<a class="btn btn-outline-primary" title="评论" href="{:url('article/comments',array('aid'=>$v['id']))}"><i class="ion-md-chatboxes"></i> </a>
+					<a class="btn btn-outline-danger link-confirm" title="{:lang('Delete')}" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('article/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
 					</td>
 				</tr>
 			</foreach>

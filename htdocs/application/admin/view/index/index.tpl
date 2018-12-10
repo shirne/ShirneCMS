@@ -13,7 +13,7 @@
         </div>
     </foreach>
     <div class="row">
-        <div class="col-lg-3">
+        <div class="col-lg-3 col-md-6 mb-3">
             <div class="card border-info">
                 <div class="card-body">
                     <div class="row">
@@ -34,8 +34,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-3">
-            <div class="card border-warning">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card border-info">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-6">
@@ -55,8 +55,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-3">
-            <div class="card border-danger">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card border-info">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-6">
@@ -76,8 +76,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-3">
-            <div class="card border-success">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="card border-info">
                 <div class="card-body">
                     <div class="row">
                         <div class="col-6">

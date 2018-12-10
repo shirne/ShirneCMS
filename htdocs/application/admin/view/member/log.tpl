@@ -29,7 +29,7 @@
                 <th>时间</th>
                 <th>IP</th>
                 <th>备注</th>
-                <th width="80">操作</th>
+                <th width="80">&nbsp;</th>
             </tr>
         </thead>
         <tbody>
@@ -42,8 +42,8 @@
                 <td>{$v.create_time|showdate}</td>
                 <td>{$v.ip}</td>
                 <td>{$v.remark}</td>
-                <td>
-                    <a class="btn btn-outline-dark btn-sm" rel="ajax" href="{:url('member/logview',array('id'=>$v['id']))}"><i class="ion-md-file-text"></i> 查看</a>
+                <td class="operations">
+                    <a class="btn btn-outline-primary" title="查看" data-title="查看详情" rel="ajax" href="{:url('member/logview',array('id'=>$v['id']))}"><i class="ion-md-document"></i> </a>
                 </td>
             </tr>
         </foreach>

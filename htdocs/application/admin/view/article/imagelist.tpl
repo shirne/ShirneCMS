@@ -29,7 +29,7 @@
                 <th>图片</th>
                 <th>标题</th>
                 <th>排序</th>
-                <th width="200">操作</th>
+                <th width="160">&nbsp;</th>
             </tr>
         </thead>
         <tbody>
@@ -41,9 +41,9 @@
                     </figure></td>
                 <td>{$v.title}</td>
                 <td>{$v.sort}</td>
-                <td>
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('article/imageupdate',array('id'=>$v['id'],'aid'=>$aid))}"><i class="ion-md-create"></i> 编辑</a>
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('article/imagedelete',array('id'=>$v['id'],'aid'=>$aid))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
+                <td class="operations">
+                    <a class="btn btn-outline-primary" title="编辑" href="{:url('article/imageupdate',array('id'=>$v['id'],'aid'=>$aid))}"><i class="ion-md-create"></i> </a>
+                    <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('article/imagedelete',array('id'=>$v['id'],'aid'=>$aid))}"><i class="ion-md-trash"></i> </a>
                 </td>
             </tr>
         </foreach>

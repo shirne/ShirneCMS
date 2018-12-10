@@ -31,7 +31,7 @@
                 <th>有效期</th>
                 <th>排序</th>
                 <th>状态</th>
-                <th width="200">操作</th>
+                <th width="160">&nbsp;</th>
             </tr>
         </thead>
         <tbody>
@@ -46,9 +46,9 @@
                 <td>{$v.start_date|showdate}<br />{$v.end_date|showdate}</td>
                 <td>{$v.sort}</td>
                 <td>{$v.status|show_status|raw}</td>
-                <td>
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('adv/itemupdate',array('id'=>$v['id'],'gid'=>$gid))}"><i class="ion-md-create"></i> 编辑</a>
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('adv/itemdelete',array('id'=>$v['id'],'gid'=>$gid))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
+                <td class="operations">
+                    <a class="btn btn-outline-primary" title="编辑" href="{:url('adv/itemupdate',array('id'=>$v['id'],'gid'=>$gid))}"><i class="ion-md-create"></i> </a>
+                    <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n\n删除后将不能恢复!" href="{:url('adv/itemdelete',array('id'=>$v['id'],'gid'=>$gid))}" ><i class="ion-md-trash"></i> </a>
                 </td>
             </tr>
         </foreach>

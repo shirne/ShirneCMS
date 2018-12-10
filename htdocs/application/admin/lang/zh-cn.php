@@ -15,7 +15,9 @@ return [
     'Operate'=>'操作',
 
     'Publish'=>'发布',
+    'Publish Article'=>'发布文章',
     'Add Category'=>'添加分类',
+    'Add Sub Category'=>'添加子分类',
     'Independ Template'=>'独立模板',
     'Independent'=>'独立',
     'Inherit'=>'继承',

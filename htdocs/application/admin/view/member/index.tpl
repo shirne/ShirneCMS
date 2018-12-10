@@ -53,7 +53,7 @@
                 <th>上次登陆</th>
                 <th>代理</th>
                 <th>类型/级别</th>
-                <th width="240">操作</th>
+                <th width="160">&nbsp;</th>
             </tr>
         </thead>
         <tbody>
@@ -83,21 +83,13 @@
                 </td>
                 <td>{$v.create_time|showdate}</td>
                 <td>{$v.login_ip}<br />{$v.logintime|showdate}</td>
-                <td>
+                <td class="operations">
 
                     <if condition="$v.is_agent neq 0">
-                        <div class="btn-group btn-group-sm">
-                                <a class="btn btn-outline-dark" href="{:url('member/cancel_agent',array('id'=>$v['id']))}" onclick="javascript:return del(this,'取消代理不能更改已注册的用户!!!');"><i class="ion-md-close"></i> 取消代理</a>
-                            <button type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown">
-                                <span class="caret"></span>
-                                <span class="sr-only">Toggle Dropdown</span>
-                            </button>
-                            <div class="dropdown-menu" role="menu">
-                                <a class="dropdown-item" href="{:url('member/index',array('referer'=>$v['id']))}">查看下线</a>
-                            </div>
-                        </div>
+                        <a class="btn btn-outline-primary" title="查看下线" href="{:url('member/index',array('referer'=>$v['id']))}"><i class="ion-md-people"></i> </a>
+                        <a class="btn btn-outline-danger link-confirm" data-confirm="取消代理不能更改已注册的用户!!!" title="取消代理" href="{:url('member/cancel_agent',array('id'=>$v['id']))}" ><i class="ion-md-log-out"></i> </a>
                     <else/>
-                    <a class="btn btn-outline-dark btn-sm {$v.refer_agent>2?'disabled':''}" href="{:url('member/set_agent',array('id'=>$v['id']))}" ><i class="ion-md-check"></i> 设置代理</a>
+                        <a class="btn btn-outline-primary {$v.refer_agent>2?'disabled':''}" title="设置代理" href="{:url('member/set_agent',array('id'=>$v['id']))}" ><i class="ion-md-check"></i> </a>
                     </if>
 
                 </td> 
@@ -105,28 +97,16 @@
                     <span class="badge badge-info">{$types[$v['type']]}</span>
                     <span class="badge badge-info">{$levels[$v['level_id']]['level_name']}</span>
                 </td>
-                <td>
-                    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-                        <div class="btn-group btn-group-sm">
-                            <a class="btn btn-outline-dark" href="{:url('member/update',array('id'=>$v['id']))}"><i class="ion-md-create"></i> 编辑</a>
+                <td class="operations">
+                    <a class="btn btn-outline-primary" title="编辑" href="{:url('member/update',array('id'=>$v['id']))}"><i class="ion-md-create"></i> </a>
+                    <a class="btn btn-outline-warning btn-recharge" title="充值" href="javascript:" data-id="{$v.id}" ><i class="ion-md-card"></i> </a>
+                    <a class="btn btn-outline-primary" title="资金明细" href="{:url('member/money_log',array('id'=>$v['id']))}" ><i class="ion-md-paper"></i> </a>
 
-                            <if condition="$v.status eq 1">
-                                <a class="btn btn-outline-dark text-danger" href="{:url('member/delete',array('id'=>$v['id'],'type'=>0))}" onclick="javascript:return del(this,'禁用后用户将不能登陆!\n\n请确认!!!');"><i class="ion-md-close"></i> 禁用</a>
-                                <else/>
-                                <a class="btn btn-outline-dark text-success" href="{:url('member/delete',array('id'=>$v['id'],'type'=>1))}" style="color:#50AD1E;"><i class="ion-md-check"></i> 启用</a>
-                            </if>
-                        </div>
-                        <div class="btn-group btn-group-sm ml-2">
-                            <a class="btn btn-outline-dark btn-recharge" href="javascript:" data-id="{$v.id}" ><i class="ion-md-card"></i> 充值</a>
-                            <button type="button" class="btn btn-outline-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="caret"></span>
-                                <span class="sr-only">Toggle Dropdown</span>
-                            </button>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" href="{:url('member/money_log',array('id'=>$v['id']))}" ><i class="ion-md-list-box"></i> 明细</a>
-                            </div>
-                        </div>
-                    </div>
+                    <if condition="$v.status eq 1">
+                        <a class="btn btn-outline-danger link-confirm" title="禁用" data-confirm="禁用后用户将不能登陆!\n请确认!!!" href="{:url('member/delete',array('id'=>$v['id'],'type'=>0))}" ><i class="ion-md-close"></i> </a>
+                        <else/>
+                        <a class="btn btn-outline-success" title="启用" href="{:url('member/delete',array('id'=>$v['id'],'type'=>1))}" style="color:#50AD1E;"><i class="ion-md-check"></i> </a>
+                    </if>
                 </td>
             </tr>
         </foreach>

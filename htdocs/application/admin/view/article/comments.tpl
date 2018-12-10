@@ -51,7 +51,7 @@
                 <th>评论者</th>
                 <th>内容摘要</th>
                 <th>状态</th>
-                <th width="200">操作</th>
+                <th width="160">&nbsp;</th>
             </tr>
             </thead>
             <tbody>
@@ -70,9 +70,9 @@
                         </if>
                     </td>
 
-                    <td>
-                        <a class="btn btn-outline-dark btn-sm" href="{:url('article/commentview',array('id'=>$v['id']))}"><i class="ion-md-create"></i> 查看</a>
-                        <a class="btn btn-outline-dark btn-sm" href="{:url('article/commentdelete',array('id'=>$v['id']))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
+                    <td class="operations">
+                        <a class="btn btn-outline-primary" title="查看" href="{:url('article/commentview',array('id'=>$v['id']))}"><i class="ion-md-create"></i> </a>
+                        <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('article/commentdelete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
                     </td>
                 </tr>
             </foreach>
