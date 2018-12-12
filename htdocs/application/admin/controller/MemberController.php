@@ -287,6 +287,9 @@ class MemberController extends BaseController
             } else {
                 $data['salt']=random_str(8);
                 $data['password']=encode_password($data['password'],$data['salt']);
+                if(!isset($data['level_id'])){
+                    $data['level_id']=getDefaultLevel();
+                }
                 $member=MemberModel::create($data);
                 if ($member->id) {
                     user_log($this->mid,'adduser',1,'添加会员'.$member->id ,'manager');
