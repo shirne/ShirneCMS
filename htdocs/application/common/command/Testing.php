@@ -100,7 +100,7 @@ class Testing extends Command
             $this->createUser($output,$username,$password,$parent,$address,$product);
         }else{
             for($i=0;$i<$count;$i++){
-                $sufix=str_pad($i,strlen($count)-strlen($i),'0',STR_PAD_LEFT);
+                $sufix=str_pad($i,strlen($count),'0',STR_PAD_LEFT);
                 $address['recive_name']=$username.$sufix;
                 $this->createUser($output,$username.$sufix,$password,$parent,$address,$product);
             }
