@@ -37,9 +37,29 @@ class Testing extends Command
         if(method_exists($this,'action'.ucfirst($action))){
             call_user_func([$this,'action'.ucfirst($action)],$input,$output);
         }else{
-            $output->error('act error. excepted actions: adduser');
+            $output->error('act error. excepted actions: adduser, resetrcount');
         }
-        exit;
+        $output->writeln('exit.');
+    }
+
+    protected function actionResetrcount(Input $input, Output $output)
+    {
+        Db::name('member')->where('id','GT',0)->update(['recom_count'=>0,'team_count'=>0]);
+        $members=Db::name('member')->field('id,referer')
+            ->where('is_agent','GT',0)
+            ->where('referer','GT',0)
+            ->select();
+        $layer=getSetting('performance_layer');
+        foreach ($members as $member){
+            $parents=getMemberParents($member['id'],$layer);
+            if(!empty($parents)) {
+                Db::name('member')->where('id', $parents[0])->setInc('recom_count', 1);
+                Db::name('member')->whereIn('id', $parents)->setInc('team_count', 1);
+                $output->writeln('user '.$member['id'].'\'s parents recommend count updated');
+            }else{
+                $output->error('user '.$member['id'].'\'s parent '.$member['referer'].' not found');
+            }
+        }
     }
 
     protected function actionAdduser(Input $input, Output $output)

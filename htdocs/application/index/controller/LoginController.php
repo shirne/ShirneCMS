@@ -178,7 +178,7 @@ class LoginController extends BaseController{
                 $this->setLogin($member);
             }
         }catch(Exception $e){
-            Log::write($e->getMessage()."\n".$e->getFile().$e->getLine().$e->getCode(),'ERROR');
+            Log::record($e->getMessage()."\n".$e->getFile().$e->getLine().$e->getCode(),'error');
             $this->error('登录失败',url('index/login/index'));
         }
         return redirect()->restore(url('index/member/index'));

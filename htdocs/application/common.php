@@ -14,7 +14,7 @@ error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
 function writelog($message,$type=\think\Log::INFO){
     if(config('app_debug')==true){
-        \think\facade\Log::write($message,$type);
+        \think\facade\Log::record($message,$type);
     }
 }
 

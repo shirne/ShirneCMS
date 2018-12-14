@@ -17,7 +17,11 @@ class OrderModel extends BaseModel
         $maxid=$this->field('max(order_id) as maxid')->find();
         $maxid = $maxid['maxid'];
         if(empty($maxid))$maxid=0;
-        return date('YmdHis'.str_pad($maxid+1,8,'0',STR_PAD_LEFT));
+        return date('YmdHis').$this->pad_orderid($maxid+1,4);
+    }
+    private function pad_orderid($id,$len=4){
+        $strlen=strlen($id);
+        return $strlen<$len?str_pad($id,$len,'0',STR_PAD_LEFT):substr($id,$strlen-$len);
     }
 
     public static function init()

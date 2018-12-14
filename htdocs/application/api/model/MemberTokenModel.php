@@ -52,7 +52,7 @@ class MemberTokenModel extends BaseModel
             $data['member_id']=$member_id;
             $added=static::create($data);
             if(!$added['token_id']){
-                Log::write('Token insert error:'.$this->getError());
+                Log::record('Token insert error:'.$this->getError());
             }
         }else{
             static::update($data,['member_id'=>$member_id]);

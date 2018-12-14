@@ -20,7 +20,7 @@ class MemberLevelController extends BaseController
     {
         $model = Db::name('memberLevel');
 
-        $lists=$model->select();
+        $lists=$model->order('sort ASC,level_id ASC')->select();
         $this->assign('lists',$lists);
         return $this->fetch();
     }

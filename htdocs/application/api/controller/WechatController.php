@@ -58,12 +58,12 @@ class WechatController extends Controller{
         if(!empty($hash)){
             $account=Db::name('wechat')->where('hash',$hash)->find();
             if(empty($account)){
-                Log::write('公众号['.$hash.']不存在','Wechat');
+                Log::record('公众号['.$hash.']不存在','Wechat');
             }
         }else{
             $account=Db::name('wechat')->where('is_default',1)->where('type','wechat')->find();
             if(empty($account)){
-                Log::write('没有设置默认公众号','Wechat');
+                Log::record('没有设置默认公众号','Wechat');
             }
         }
         if(empty($account)){
@@ -297,7 +297,7 @@ class WechatController extends Controller{
 
         $response = $app->handlePaidNotify(function ($message, $fail) {
             // 记录日志
-            Log::write(var_export($message,TRUE),'pay');
+            Log::record(var_export($message,TRUE),'pay');
 
             $model=new OrderModel();
             $order = $model->where('order_no',$message['out_trade_no'])->find();
@@ -336,7 +336,7 @@ class WechatController extends Controller{
 
         $response = $app->handlePaidNotify(function ($message, $fail) {
             // 记录日志
-            Log::write(var_export($message,TRUE),'pay');
+            Log::record(var_export($message,TRUE),'pay');
 
             return true;
         });
