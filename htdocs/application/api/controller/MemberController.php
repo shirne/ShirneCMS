@@ -3,6 +3,7 @@
 namespace app\api\Controller;
 
 
+use app\common\model\MemberFavouriteModel;
 use app\common\validate\MemberAddressValidate;
 use app\common\validate\MemberValidate;
 use extcore\traits\Upload;
@@ -181,5 +182,32 @@ class MemberController extends AuthedController
             ->where('OrderProduct.order_id', $order['order_id'])
             ->select();
         return $this->response($order);
+    }
+
+    public function favourite($type){
+
+    }
+
+    public function add_favourite($type,$id){
+        $model=new MemberFavouriteModel();
+        if($model->addFavourite($this->user['id'],$type,$id)){
+            $this->success('已添加收藏');
+        }else{
+            $this->error($model->getError());
+
+        }
+    }
+
+    public function del_favourite($type,$ids){
+        $model=Db::name('memberFavourite')
+        ->where('member_id',$this->user['id']);
+        if(empty($type)){
+            $model->whereIn('id',idArr($ids));
+        }else{
+            $model->where('fav_type',$type)
+            ->whereIn('fav_id',idArr($ids));
+        }
+        $model->delete();
+        $this->success('已移除收藏');
     }
 }

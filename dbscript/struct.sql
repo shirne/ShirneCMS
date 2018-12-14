@@ -344,6 +344,20 @@ CREATE TABLE `sa_member_address` (
   PRIMARY KEY (`address_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `sa_member_favourite`;
+
+CREATE TABLE `sa_member_favourite` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NOT NULL DEFAULT 0,
+  `fav_type` varchar(30) DEFAULT NULL,
+  `fav_id` int(11) DEFAULT 0,
+  `create_time` int(11) DEFAULT 0,
+  `update_time` int(11) DEFAULT 0,
+  `fav_title` varchar(50) DEFAULT '',
+  `fav_image` varchar(150) DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 DROP TABLE IF EXISTS `sa_member_log`;
 

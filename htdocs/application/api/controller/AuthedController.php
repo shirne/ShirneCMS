@@ -13,7 +13,7 @@ class AuthedController extends BaseController
     public function initialize(){
         parent::initialize();
         if(!$this->isLogin){
-            $this->error('未登录',ERROR_TOKEN_INVAILD);
+            $this->error('未登录',ERROR_NEED_LOGIN);
         }
     }
 }
