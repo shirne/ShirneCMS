@@ -12,14 +12,14 @@ namespace app\api\facade;
 use think\Facade;
 
 /**
- * Class MemberTokenModel
+ * Class MemberTokenFacade
  * @package app\api\facade
  * @see \app\api\model\MemberTokenModel
  * @method array findToken($token) static
  * @method array createToken($member_id) static
  * @method array refreshToken($refresh) static
  */
-class MemberTokenModel extends Facade
+class MemberTokenFacade extends Facade
 {
     protected static function getFacadeClass(){
         return \app\api\model\MemberTokenModel::class;

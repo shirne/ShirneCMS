@@ -209,8 +209,8 @@ CREATE TABLE `sa_subscribe` (
 DROP TABLE IF EXISTS `sa_member`;
 CREATE TABLE `sa_member` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(20) NOT NULL,
-  `realname` varchar(20) NOT NULL DEFAULT '',
+  `username` varchar(50) NOT NULL,
+  `realname` varchar(50) NOT NULL DEFAULT '',
   `level_id` int(11) DEFAULT '0',
   `lang` varchar(10) DEFAULT NULL COMMENT '语言',
   `mobile` varchar(20) NOT NULL DEFAULT '',
@@ -487,7 +487,7 @@ CREATE TABLE `sa_member_oauth` (
   `language` varchar(20) DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `type`(`type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Table structure for table `sa_invite_code`

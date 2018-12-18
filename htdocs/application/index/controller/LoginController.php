@@ -149,14 +149,7 @@ class LoginController extends BaseController{
             if (empty($model['member_id'])) {
                 //根据设置自动生成账户
                 if($this->config['m_register']!='1') {
-                    $member = MemberModel::create([
-                        'username' => '',
-                        'nickname' => $model['nickname'],
-                        'password' => '',
-                        'gender'   => $model['gender'],
-                        'avatar'   => $model['avatar'],
-                        'referer'  => 0
-                    ]);
+                    $member = MemberModel::createFromOauth($model,session('agent'));
                     $model->save(['member_id' => $member['id']]);
                 }
             }

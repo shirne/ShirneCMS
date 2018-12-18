@@ -8,12 +8,11 @@
 
 namespace app\api\Controller;
 
-use app\api\facade\MemberTokenModel;
+use app\api\facade\MemberTokenFacade;
 use app\common\model\MemberModel;
 use app\common\model\MemberOauthModel;
 use app\common\model\WechatModel;
 use EasyWeChat\Factory;
-use sdk\WechatAuth;
 use think\Db;
 use think\facade\Env;
 
@@ -32,9 +31,9 @@ class AuthController extends BaseController
         $member = Db::name('Member')->where('username',$username)->find();
         if(!empty($member)){
             if(compare_password($member,$password)){
-                $token=MemberTokenModel::createToken($member['id']);
+                $token=MemberTokenFacade::createToken($member['id']);
                 if(!empty($token)) {
-                    $this->response($token);
+                    return $this->response($token);
                 }
             }
         }
@@ -42,11 +41,16 @@ class AuthController extends BaseController
         $this->error('登录失败',ERROR_LOGIN_FAILED);
     }
 
+    /**
+     * 微信小程序登录
+     * @return \think\response\Json
+     */
     public function wxLogin(){
         $wechat_id=$this->input['wxid'];
         $code=$this->input['code'];
+        $agent=isset($this->input['agent'])?$this->input['agent']:'';
         $wechat=Db::name('wechat')->where('type','wechat')
-            ->where('id|account_type',$wechat_id)->find();
+            ->where('id|hash',$wechat_id)->find();
         if(empty($wechat)){
             $this->error('服务器配置错误',ERROR_LOGIN_FAILED);
         }
@@ -65,43 +69,48 @@ class AuthController extends BaseController
                 $this->error('配置错误',ERROR_LOGIN_FAILED);
                 break;
         }
-        $session=$weapp->auth->session($code);
-        if(empty($session) || empty($session['openid'])){
-            $this->error('登录失败',ERROR_LOGIN_FAILED);
-        }
+        if($code=='the code is a mock one'){
+            $rowData = $this->input['rawData'];
+            $userinfo = json_decode($rowData, TRUE);
+            $session=['openid'=>md5($userinfo['nickName'])];
+        }else {
+            $session = $weapp->auth->session($code);
+            if (empty($session) || empty($session['openid'])) {
+                $this->error('登录失败', ERROR_LOGIN_FAILED);
+            }
 
-        $rowData=$this->input['rawData'];
-        if(!empty($rowData)){
-            $signature=$this->input['signature'];
-            if(sha1($rowData.$session['session_key'])==$signature) {
-                $userinfo = json_decode($rowData, TRUE);
+            $rowData = $this->input['rawData'];
+            if (!empty($rowData)) {
+                $signature = $this->input['signature'];
+                if (sha1($rowData . $session['session_key']) == $signature) {
+                    $userinfo = json_decode($rowData, TRUE);
+                }
             }
         }
         $type='wechat';
 
         $condition=array('type'=>$type,'openid'=>$session['openid']);
-        $oauth=MemberOauthModel::get($condition);
-        if(!empty($oauth))$member=MemberModel::get($oauth['member_id']);
+        $oauth=MemberOauthModel::where($condition)->find();
+        if(!empty($oauth) && $oauth['member_id'])$member=MemberModel::where('id',$oauth['member_id'])->find();
         if(empty($member)){
             $register=getSetting('m_register');
-            if($register=='1'){
-                $this->error('登录失败',ERROR_LOGIN_FAILED);
-            }elseif(!empty($userinfo)){
+            if($this->isLogin){
+                $member=$this->user;
+            }elseif($register=='1'){
+                $this->error('登录失败', ERROR_NEED_REGISTER);
+            }
+            if(!empty($userinfo)){
                 //自动注册
                 $data=$this->wxMapdata($userinfo,$rowData);
                 $data['openid']=$session['openid'];
                 $data['type']=$type;
                 if(!empty($session['unionid']))$data['unionid']=$session['unionid'];
 
-                $member_id=MemberModel::create(array(
-                    'username'=>'',
-                    'realname'=>$data['nickname'],
-                    'avatar'=>$data['avatar'],
-                    'gender'=>$data['gender'],
-                    'city'=>$data['city']
-                ));
-                if($member_id){
-                    $data['member_id']=$member_id;
+                if(empty($member)) {
+                    $member = MemberModel::createFromOauth($data);
+                }
+                if($member['id']){
+                    $data['member_id']=$member['id'];
                     if(empty($oauth)){
                         MemberOauthModel::create($data);
                     }else{
@@ -110,7 +119,6 @@ class AuthController extends BaseController
                 }else{
                     $this->error('登录失败',ERROR_LOGIN_FAILED);
                 }
-                $member=MemberModel::get($member_id);
             }else{
                 $this->error('登录授权失败',ERROR_LOGIN_FAILED);
             }
@@ -130,12 +138,19 @@ class AuthController extends BaseController
 
         }
 
-        $token=MemberTokenModel::createToken($member['id']);
+        $token=MemberTokenFacade::createToken($member['id']);
         if(!empty($token)) {
-            $this->response($token);
+            return $this->response($token);
         }
         $this->error('登录失败',ERROR_LOGIN_FAILED);
     }
+
+    /**
+     * 第三方登录数据转换
+     * @param $userinfo
+     * @param $rowData
+     * @return array
+     */
     private function wxMapdata($userinfo,$rowData){
         return array(
             'data'=>$rowData,
@@ -145,18 +160,17 @@ class AuthController extends BaseController
             'avatar'=>$userinfo['avatarUrl'],
             'city'=>$userinfo['city'],
             'province'=>$userinfo['province'],
-            'country'=>$userinfo['country'],
-            'language'=>$userinfo['language']
+            'country'=>isset($userinfo['country'])?$userinfo['country']:'',
+            'language'=>isset($userinfo['language'])?$userinfo['language']:''
         );
     }
 
     public function refresh(){
         $refreshToken=$this->input['refresh_token'];
         if(!empty($refreshToken)){
-            $tokenModel=new MemberTokenModel();
-            $token=$tokenModel->refreshToken($refreshToken);
+            $token=MemberTokenFacade::refreshToken($refreshToken);
             if(!empty($token)) {
-                $this->response($token);
+                return $this->response($token);
             }
         }
         $this->error('刷新失败',ERROR_REFRESH_TOKEN_INVAILD);

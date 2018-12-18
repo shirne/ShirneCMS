@@ -11,6 +11,7 @@ use think\facade\Log;
  */
 class MemberTokenModel extends BaseModel
 {
+    protected $pk='token_id';
     private $hash='sw4GomU4LXvYqcaLctXCLK43eRcob';
     private $expire=720;
 
@@ -20,6 +21,13 @@ class MemberTokenModel extends BaseModel
         if(empty($hash))$hash=$this->hash;
         return md5($hash.date('YmdHis').microtime().str_pad($memid,11));
     }
+
+    /**
+     * token数据转换
+     * @param $data
+     * @param bool $response 是否用于输出
+     * @return array
+     */
     protected function mapToken($data,$response=true){
         $token = array(
             'member_id'=>$data['member_id'],
@@ -57,7 +65,7 @@ class MemberTokenModel extends BaseModel
         }else{
             static::update($data,['member_id'=>$member_id]);
         }
-        return $this->mapToken($this->where('member_id',$member_id)->find());
+        return $this->mapToken($this->where('member_id',$member_id)->find(),true);
     }
     public function refreshToken($refresh){
         $token=$this->where('refresh_token',$refresh)->find();

@@ -97,14 +97,14 @@
                     <div class="col form-group">
                         <label for="token">Token</label>
                         <div class="input-group">
-                        <input type="text" name="token" readonly class="form-control" value="{$model.token}">
+                        <input type="text" name="token" class="form-control" value="{$model.token}">
                         <div class="input-group-append"><a href="javascript:" class="btn btn-outline-secondary gener-token">随机生成</a> </div>
                         </div>
                     </div>
                     <div class="col form-group">
                         <label for="encodingaeskey">AESKey</label>
                         <div class="input-group">
-                        <input type="text" name="encodingaeskey" readonly class="form-control" value="{$model.encodingaeskey}">
+                        <input type="text" name="encodingaeskey" class="form-control" value="{$model.encodingaeskey}">
                             <div class="input-group-append"><a href="javascript:" class="btn btn-outline-secondary gener-aeskey">随机生成</a> </div>
                         </div>
                     </div>

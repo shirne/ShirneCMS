@@ -23,7 +23,7 @@ class ArticleController extends BaseController
         if($pid != '0' && preg_match('/^[a-zA-Z]\w+$/',$pid)){
             $current=CategoryFacade::findCategory($pid);
             if(empty($current)){
-                $this->response([]);
+                return $this->response([]);
             }
             $pid=$current['id'];
         }
