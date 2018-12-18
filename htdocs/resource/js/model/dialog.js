@@ -172,7 +172,7 @@ var dialog={
             color=icon=='error'?'danger':icon;
             icon=iconMap[icon];
         }
-        var html='<div class="row" style="align-items: center;"><div class="col-4 text-right"><i class="ion-md-{@icon} text-{@color}" style="font-size:3em;"></i> </div><div class="col-8" >{@message}</div> </div>'.compile({
+        var html='<div class="row" style="align-items: center;"><div class="col-3 text-right"><i class="ion-md-{@icon} text-{@color}" style="font-size:3em;"></i> </div><div class="col-9" >{@message}</div> </div>'.compile({
             message:message,
             icon:icon,
             color:color
@@ -216,7 +216,7 @@ var dialog={
             color=icon=='error'?'danger':icon;
             icon=iconMap[icon];
         }
-        var html='<div class="row" style="align-items: center;"><div class="col-4 text-right"><i class="ion-md-{@icon} text-{@color}" style="font-size:3em;"></i> </div><div class="col-8" >{@message}</div> </div>'.compile({
+        var html='<div class="row" style="align-items: center;"><div class="col-3 text-right"><i class="ion-md-{@icon} text-{@color}" style="font-size:3em;"></i> </div><div class="col-9" >{@message}</div> </div>'.compile({
             message:message,
             icon:icon,
             color:color

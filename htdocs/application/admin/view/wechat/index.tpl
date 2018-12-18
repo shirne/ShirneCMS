@@ -49,7 +49,7 @@
                         </div>
                     </td>
                     <td class="operations">
-                        <a class="btn btn-outline-primary btn-config" title="配置" href="javascript:" data-payurl="{:url('index/order/wechatpay',[],false,true)}/order_id/" data-url="{:url('api/wechat/index',['hash'=>$v['hash']],false,true)}" data-token="{$v['token']}" data-aeskey="{$v['encodingaeskey']}" data-id="{$v.id}"><i class="ion-md-cog"></i> </a>
+                        <a class="btn btn-outline-primary btn-config" title="配置" href="javascript:" data-payurl="{:url('index/order/wechatpay',[],false,true)}/order_id/" data-url="{:url('api/wechat/index',['hash'=>$v['hash']],false,true)}" data-hash="{$v['hash']}" data-token="{$v['token']}" data-aeskey="{$v['encodingaeskey']}" data-id="{$v.id}"><i class="ion-md-cog"></i> </a>
                         <a class="btn btn-outline-primary" title="编辑" href="{:url('wechat/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> </a>
                         <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('wechat/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
                     </td>
@@ -65,7 +65,7 @@
         <div class="form-group">
             <label for="token">接口地址</label>
             <div class="input-group">
-                <input type="text" name="token" readonly class="form-control" value="{@url}">
+                <input type="text" name="token" readonly class="form-control" data-hash="{@hash}" value="{@url}">
                 <div class="input-group-append"><a href="javascript:" class="btn btn-outline-secondary gener-url">修改URL</a> </div>
             </div>
         </div>
@@ -118,28 +118,30 @@
 
                 body.find('.gener-url').click(function () {
                     if($(this).data('ajaxing'))return;
-                    var newtoken = randomString(Math.floor(Math.random() * 4 + 6));
-                    var input = $(this).parents('.input-group').find('input');
-                    if (newtoken !== input.val()) {
-                        $(this).data('ajaxing',1);
-                        var btn=$(this);
-                        $.ajax({
-                            url: "{:url('admin/wechat/updateField')}",
-                            type: 'POST',
-                            dataType: 'JSON',
-                            data: {
-                                'id': curid,
-                                'field': 'hash',
-                                'value': newtoken
-                            },
-                            success: function (json) {
-                                btn.data('ajaxing',0);
-                                input.val("{:url('api/wechat/index',['hash'=>'__HASH__'],false,true)}".replace('__HASH__',newtoken));
-                            }
-                        })
-                    } else {
-                        $(this).trigger('click');
-                    }
+                    var btn = $(this);
+                    dialog.confirm('是否确认重新生成url？<br />重新生成后原有绑定的设置将会无效，需要重新绑定',function () {
+                        var newtoken = randomString(Math.floor(Math.random() * 4 + 6));
+                        var input = btn.parents('.input-group').find('input');
+                        if (newtoken !== input.data('hash')) {
+                            $(this).data('ajaxing', 1);
+                            $.ajax({
+                                url: "{:url('admin/wechat/updateField')}",
+                                type: 'POST',
+                                dataType: 'JSON',
+                                data: {
+                                    'id': curid,
+                                    'field': 'hash',
+                                    'value': newtoken
+                                },
+                                success: function (json) {
+                                    btn.data('ajaxing', 0);
+                                    input.val("{:url('api/wechat/index',['hash'=>'__HASH__'],false,true)}".replace('__HASH__', newtoken));
+                                }
+                            })
+                        } else {
+                            $(this).trigger('click');
+                        }
+                    });
                 });
                 body.find('.gener-token').click(function () {
                     if($(this).data('ajaxing'))return;

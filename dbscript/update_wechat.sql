@@ -10,6 +10,7 @@ CREATE TABLE `sa_wechat` (
   `account_type` varchar(20) DEFAULT '',
   `hash` varchar(20) DEFAULT '',
   `is_default` tinyint(4) DEFAULT '0',
+  `is_debug` tinyint(4) DEFAULT '0',
   `title` varchar(100) DEFAULT '',
   `logo` varchar(150) DEFAULT '',
   `qrcode` varchar(150) DEFAULT '',

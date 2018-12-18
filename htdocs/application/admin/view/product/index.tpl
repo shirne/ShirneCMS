@@ -111,7 +111,7 @@
 	<script type="text/javascript">
 		(function(w){
 			w.actionPublish=function(ids){
-				dialog.confirm('确定将选中文章发布到前台？',function() {
+				dialog.confirm('确定将选中产品发布到前台？',function() {
 				    $.ajax({
 						url:'{:url('article/push',['id'=>'__id__','type'=>1])}'.replace('__id__',ids.join(',')),
 						type:'GET',
@@ -129,7 +129,7 @@
                 });
             };
             w.actionCancel=function(ids){
-                dialog.confirm('确定取消选中文章的发布状态？',function() {
+                dialog.confirm('确定取消选中产品的发布状态？',function() {
                     $.ajax({
                         url:'{:url('article/push',['id'=>'__id__','type'=>0])}'.replace('__id__',ids.join(',')),
                         type:'GET',
@@ -147,7 +147,7 @@
                 });
             };
             w.actionDelete=function(ids){
-                dialog.confirm('确定删除选中的文章？',function() {
+                dialog.confirm('确定删除选中的产品？',function() {
                     $.ajax({
                         url:'{:url('article/delete',['id'=>'__id__'])}'.replace('__id__',ids.join(',')),
                         type:'GET',

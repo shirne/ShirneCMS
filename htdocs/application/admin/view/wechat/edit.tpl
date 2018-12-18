@@ -21,24 +21,44 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-2 form-group">
+                        <label for="title">调试模式</label>
+                        <div>
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                            <label class="btn btn-outline-primary{$model['is_debug']=='1'?' active':''}">
+                                <input type="radio" name="is_debug" value="1" autocomplete="off" {$model['is_debug']=='1'?'checked':''}>是
+                            </label>
+                            <label class="btn btn-outline-secondary{$model['is_debug']!='1'?' active':''}">
+                                <input type="radio" name="is_debug" value="0" autocomplete="off" {$model['is_debug']!='1'?'checked':''}>否
+                            </label>
+                        </div>
+                        </div>
+                    </div>
                     <div class="col form-group">
                         <label for="type">平台类型</label>
                         <select name="type" class="form-control">
-                            <option value="wechat">微信公众号</option>
+                            <option value="wechat" {$model['type']=='wechat'?'selected':''}>微信公众号</option>
                         </select>
                     </div>
                     <div class="col form-group">
                         <label for="account_type">账号类型</label>
                         <select name="account_type" class="form-control">
-                            <option value="subscribe">订阅号</option>
-                            <option value="service">服务号</option>
-                            <option value="miniprogram">小程序</option>
-                            <option value="minigame">小游戏</option>
-                            <option value="enterprise">企业号</option>
+                            <option value="subscribe" {$model['account_type']=='subscribe'?'selected':''}>订阅号</option>
+                            <option value="service" {$model['account_type']=='service'?'selected':''}>服务号</option>
+                            <option value="miniprogram" {$model['account_type']=='miniprogram'?'selected':''}>小程序</option>
+                            <option value="minigame" {$model['account_type']=='minigame'?'selected':''}>小游戏</option>
+                            <option value="enterprise" {$model['account_type']=='enterprise'?'selected':''}>企业号</option>
                         </select>
                     </div>
                 </div>
-                <div class="text-muted">只有服务号才能设置默认为默认</div>
+                <div class="text-muted">只有服务号才能设置默认为默认，开启调试模式将允许开发工具使用mock数据登录</div>
+                <div class="form-group">
+                    <label for="token">接口地址</label>
+                    <div class="input-group">
+                        <input type="text" readonly class="form-control" value="{:url('api/wechat/index',['hash'=>$model['hash']],false,true)}">
+                        <div class="input-group-append"><a href="javascript:" class="btn btn-outline-secondary gener-url">修改URL</a> </div>
+                    </div>
+                </div>
                 <div class="form-row">
                     <div class="col form-group">
                         <label for="account">账号</label>
@@ -189,6 +209,37 @@
                 }else{
                     $(this).trigger('click');
                 }
+            });
+            var hash='{$model.hash}';
+            $('.gener-url').click(function () {
+                if($(this).data('ajaxing'))return;
+                var btn=$(this);
+                dialog.confirm('是否确认重新生成url？<br />重新生成后原有绑定的设置将会无效，需要重新绑定',function () {
+                    btn.data('ajaxing',1);
+                    var newtoken = randomString(Math.floor(Math.random() * 4 + 6));
+                    var input = btn.parents('.input-group').find('input');
+                    if (newtoken !== hash) {
+                        btn.data('ajaxing',1);
+                        $.ajax({
+                            url: "{:url('admin/wechat/updateField')}",
+                            type: 'POST',
+                            dataType: 'JSON',
+                            data: {
+                                'id': '{$model.id}',
+                                'field': 'hash',
+                                'value': newtoken
+                            },
+                            success: function (json) {
+                                btn.data('ajaxing',0);
+                                hash=newtoken;
+                                input.val("{:url('api/wechat/index',['hash'=>'__HASH__'],false,true)}".replace('__HASH__',newtoken));
+                            }
+                        })
+                    } else {
+                        $(this).trigger('click');
+                    }
+                });
+
             });
         })
     </script>

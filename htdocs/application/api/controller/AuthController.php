@@ -69,7 +69,8 @@ class AuthController extends BaseController
                 $this->error('配置错误',ERROR_LOGIN_FAILED);
                 break;
         }
-        if($code=='the code is a mock one'){
+        //调试模式允许mock登录
+        if($wechat['is_debug'] && $code=='the code is a mock one'){
             $rowData = $this->input['rawData'];
             $userinfo = json_decode($rowData, TRUE);
             $session=['openid'=>md5($userinfo['nickName'])];
