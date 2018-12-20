@@ -18,7 +18,7 @@ class BaseModel extends Model
         try{
             return parent::getRelationAttribute($name, $item);
         }catch (\InvalidArgumentException $e){
-            Log::record($e->getMessage(),Log::NOTICE);
+            Log::record($e->getMessage(),\think\Log::NOTICE);
             return null;
         }
     }

@@ -594,7 +594,6 @@ function money_log($uid, $money, $reson, $type='',$field='money')
 
 function getPaytypes($type = '')
 {
-    $where=array();
 
     $model=\think\Db::name('Paytype');
     if(!empty($type)){
@@ -606,14 +605,19 @@ function getPaytypes($type = '')
 
 function getMemberParents($userid,$level=5,$getid=true){
     $parents=[];
-    $user=\think\Db::name('Member')->where('id',$userid)->field('id,level_id,username,referer')->find();
+    $currentid=$userid;
+    $user=\think\Db::name('Member')->where('id',$currentid)->field('id,level_id,username,referer')->find();
     $layer=0;
     while(!empty($user)){
         $layer++;
-        $userid=$user['referer'];
-        if(!$userid)break;
-        $user=\think\Db::name('Member')->where('id',$userid)->field('id,level_id,username,referer')->find();
-        $parents[] = $getid?$userid:$user;
+        $currentid=$user['referer'];
+        if(!$currentid)break;
+        if($userid == $currentid){
+            \think\facade\Log::record('会员 '.$userid.' 在查找上级时在第 '.$layer.' 层出现递归',\think\Log::ERROR);
+            break;
+        }
+        $user=\think\Db::name('Member')->where('id',$currentid)->field('id,level_id,username,referer')->find();
+        $parents[] = $getid?$currentid:$user;
         if($level>0 && $layer>=$level)break;
     }
     return $parents;
@@ -626,6 +630,10 @@ function getMemberSons($userid,$level=1,$getid=true){
     while(!empty($users)){
         $layer++;
         $userids=array_column($users,'id');
+        if(in_array($userid ,$userids)){
+            \think\facade\Log::record('会员 '.$userid.' 在查找下级时在第 '.$layer.' 层出现递归',\think\Log::ERROR);
+            break;
+        }
         $sons = array_merge($sons, $getid?$userids:$users);
         if($level>0 && $layer>=$level)break;
         $users=\think\Db::name('Member')->whereIn('referer',$userids)->field('id,level_id,username,referer')->select();
