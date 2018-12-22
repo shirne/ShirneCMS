@@ -30,6 +30,7 @@ class Product extends BaseTabLib
 
         $parseStr.='$'.$var.'=\think\Db::view("Product","*")';
         $parseStr .= '->view("ProductCategory",["title"=>"category_title","name"=>"category_name","short"=>"category_short","icon"=>"category_icon","image"=>"category_image"],"Product.cate_id=ProductCategory.id","LEFT")';
+        $parseStr .= '->where("Product.status",1)';
         if(!empty($category)){
             if($recursive=='true'){
                 $parseStr .= '->where("Product.cate_id", "IN", \app\common\facade\ProductCategoryFacade::getSubCateIds(' . $category . '))';
@@ -65,6 +66,7 @@ class Product extends BaseTabLib
 
         $parseStr.='$'.$var.'=\think\Db::view("Product","*")';
         $parseStr .= '->view("ProductCategory",["title"=>"category_title","name"=>"category_name","short"=>"category_short","icon"=>"category_icon","image"=>"category_image"],"Product.cate_id=ProductCategory.id","LEFT")';
+        $parseStr .= '->where("Product.status",1)';
         $parseStr .= '->where("Product.id", "NEQ", ' . $id . ')';
         if(!empty($category)){
             $parseStr .= '->where("Product.cate_id", "IN", \app\common\facade\ProductCategoryFacade::getSubCateIds(' . $category . '))';

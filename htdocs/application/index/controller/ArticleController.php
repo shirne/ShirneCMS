@@ -38,7 +38,7 @@ class ArticleController extends BaseController{
             $this->seo(lang('News'));
         }
 
-        $lists=$model->paginate($this->pagesize);
+        $lists=$model->order('article.create_time DESC,article.id DESC')->paginate($this->pagesize);
         $lists->each(function($item){
             if(!empty($item['prop_data'])){
                 $item['prop_data']=json_decode($item['prop_data'],true);

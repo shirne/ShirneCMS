@@ -39,6 +39,7 @@ class Article extends BaseTabLib
 
         $parseStr.='$'.$var.'=\think\Db::view("Article","*")';
         $parseStr .= '->view("Category",["title"=>"category_title","name"=>"category_name","short"=>"category_short","icon"=>"category_icon","image"=>"category_image"],"Article.cate_id=Category.id","LEFT")';
+        $parseStr .= '->where("Article.status",1)';
         if(!empty($category)){
             if($recursive=='true'){
                 $parseStr .= '->where("Article.cate_id", "IN", \app\common\facade\CategoryFacade::getSubCateIds(' . $category . '))';
@@ -74,6 +75,7 @@ class Article extends BaseTabLib
 
         $parseStr.='$'.$var.'=\think\Db::view("Article","*")';
         $parseStr .= '->view("Category",["title"=>"category_title","name"=>"category_name","short"=>"category_short","icon"=>"category_icon","image"=>"category_image"],"Article.cate_id=Category.id","LEFT")';
+        $parseStr .= '->where("Article.status",1)';
         $parseStr .= '->where("Article.id", "NEQ", ' . $id . ')';
         if(!empty($category)){
             $parseStr .= '->where("Article.cate_id", "IN", \app\common\facade\CategoryFacade::getSubCateIds(' . $category . '))';
@@ -100,6 +102,7 @@ class Article extends BaseTabLib
 
         $parseStr.='$'.$var.'=\think\Db::view("Article","*")';
         $parseStr .= '->view("Category",["title"=>"category_title","name"=>"category_name","short"=>"category_short","icon"=>"category_icon","image"=>"category_image"],"Article.cate_id=Category.id","LEFT")';
+        $parseStr .= '->where("Article.status",1)';
         $parseStr .= '->where("Article.id", "LT", ' . $id . ')';
         if(!empty($category)){
             $parseStr .= '->where("Article.cate_id", "IN", \app\common\facade\CategoryFacade::getSubCateIds(' . $category . '))';
@@ -122,6 +125,7 @@ class Article extends BaseTabLib
 
         $parseStr.='$'.$var.'=\think\Db::view("Article","*")';
         $parseStr .= '->view("Category",["title"=>"category_title","name"=>"category_name","short"=>"category_short","icon"=>"category_icon","image"=>"category_image"],"Article.cate_id=Category.id","LEFT")';
+        $parseStr .= '->where("Article.status",1)';
         $parseStr .= '->where("Article.id", "GT", ' . $id . ')';
         if(!empty($category)){
             $parseStr .= '->where("Article.cate_id", "IN", \app\common\facade\CategoryFacade::getSubCateIds(' . $category . '))';
@@ -139,6 +143,7 @@ class Article extends BaseTabLib
         $parseStr='<?php ';
 
         $parseStr.='$'.$var.'=\think\Db::name("page")';
+        $parseStr .= '->where(\'status\',1)';
         if(!empty($group)){
             $parseStr .= '->where(\'group\','.$group.')';
         }
@@ -157,6 +162,7 @@ class Article extends BaseTabLib
         $parseStr='<?php ';
 
         $parseStr.='$'.$var.'=\think\Db::name("page")';
+        $parseStr .= '->where(\'status\',1)';
         if(!empty($group)){
             $parseStr .= '->where(\'name\','.$name.')';
         }

@@ -44,6 +44,7 @@ class ProductController extends BaseController
         }
 
         $lists=$model->where('product.status',1)
+            ->order('product.create_time DESC,product.id DESC')
             ->paginate($this->pagesize);
 
         $lists->each(function($item){

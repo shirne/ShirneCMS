@@ -147,7 +147,7 @@ class ProductController extends BaseController
                 }
             }
         }
-        $model=array('type'=>1,'cate_id'=>$cid,'is_discount'=>1,'is_commission'=>1);
+        $model=array('type'=>1,'status'=>1,'cate_id'=>$cid,'is_discount'=>1,'is_commission'=>1);
         $this->assign("category",ProductCategoryFacade::getCategories());
         $this->assign('product',$model);
         $this->assign('skus',[[]]);
