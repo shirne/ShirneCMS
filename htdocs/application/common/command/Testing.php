@@ -37,7 +37,7 @@ class Testing extends Command
         if(method_exists($this,'action'.ucfirst($action))){
             call_user_func([$this,'action'.ucfirst($action)],$input,$output);
         }else{
-            $output->error('act error. excepted actions: adduser, resetrcount');
+            $output->error('act error. excepted actions: adduser, resetrcount, order');
         }
         $output->writeln('exit.');
     }
@@ -126,6 +126,39 @@ class Testing extends Command
             }
         }
     }
+
+    protected function actionOrder(Input $input, Output $output)
+    {
+        $userid='';
+        $buyproduct=0;
+        if($input->hasOption('username')){
+            $userid=$input->getOption('username');
+        }
+        if($input->hasOption('buyproduct')){
+            $buyproduct=intval($input->getOption('buyproduct'));
+        }
+
+        if(!$userid){
+            $output->error('username option must be specified.');
+            return;
+        }
+        if(!$buyproduct){
+            $output->error('buyproduct option must be specified.');
+            return;
+        }
+
+        $product=Db::view('ProductSku','*')
+            ->view('Product',['title'=>'product_title','image'=>'product_image','levels','is_discount','is_commission','type'],'ProductSku.product_id=Product.id','LEFT')
+            ->where('Product.id',$buyproduct)
+            ->find();
+        $product['product_price']=$product['price'];
+        $product['count']=1;
+        if(!empty($product['image']))$product['product_image']=$product['image'];
+
+        $user=Db::name('Member')->where('id|username',$userid)->find();
+        $this->makeOrder($output,$user,$product);
+    }
+
     protected function createUser(Output $output,$username,$password,$parent,$address,$product)
     {
         $data['username']=$username;
@@ -140,23 +173,33 @@ class Testing extends Command
         }
         $output->writeln('成功添加用户 '.$username.'['.$model['id'].']');
         if(!empty($product)){
-            $ordertype=1;
-            if($product['type']==2){
-                $ordertype=2;
-            }
-
-            money_log($model['id'],$product['product_price']*100,'测试程序自动充值','system');
-
-            $address['member_id']=$model['id'];
-            Db::name('MemberAddress')->insert($address);
-            $address=Db::name('MemberAddress')->where('member_id',$model['id'])->find();
-            $result=OrderFacade::makeOrder($model,[$product],$address,$data['remark'],1,$ordertype);
-            if($result){
-                $output->writeln('用户 '.$username.'['.$model['id'].'] 下单成功');
-            }else{
-                $output->error('用户 '.$username.'['.$model['id'].'] 下单失败');
-            }
+            $this->makeOrder($output,$model,$product,$address);
         }
         return true;
+    }
+
+    protected function makeOrder(Output $output,$user,$product,$address=[]){
+        $ordertype=1;
+        if($product['type']==2){
+            $ordertype=2;
+        }
+
+        money_log($user['id'],$product['product_price']*100,'测试程序自动充值','system');
+
+        if(!empty($address)) {
+            $address['member_id'] = $user['id'];
+            $address['is_default']=1;
+            Db::name('MemberAddress')->insert($address);
+        }
+
+        $address=Db::name('MemberAddress')
+            ->where('member_id',$user['id'])
+            ->order('is_default DESC')->find();
+        $result=OrderFacade::makeOrder($user,[$product],$address,'测试程序自动下单',1,$ordertype);
+        if($result){
+            $output->writeln('用户 '.$user['username'].'['.$user['id'].'] 下单成功');
+        }else{
+            $output->error('用户 '.$user['username'].'['.$user['id'].'] 下单失败:'.OrderFacade::getError());
+        }
     }
 }

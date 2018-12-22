@@ -96,7 +96,7 @@ class OrderController extends AuthedController
                         }
                     }
                 }else{
-                    $this->error('下单失败');
+                    $this->error('下单失败:'.OrderFacade::getError());
                 }
             }
         }
