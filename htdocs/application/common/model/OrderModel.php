@@ -114,7 +114,7 @@ class OrderModel extends BaseModel
         $this->startTrans();
 
         if($balance_pay) {
-            $debit = money_log($member['id'], -$total_price, "下单支付", 'consume',is_string($balance_pay)?$balance_pay:'money');
+            $debit = money_log($member['id'], -$total_price, "下单支付", 'consume',0,is_string($balance_pay)?$balance_pay:'money');
             if ($debit) $status = 1;
             else{
                 $this->error="余额不足";
@@ -228,18 +228,19 @@ class OrderModel extends BaseModel
             if($curLevel['commission_layer']>$i && !empty($curLevel['commission_percent'][$i])) {
                 $curPercent = $curLevel['commission_percent'][$i];
                 $amount=$order['commission_amount']*$curPercent;
-                self::award_log($parents[$i]['id'],$order['member_id'],$amount,'消费分佣'.($i+1).'代','commission');
+                self::award_log($parents[$i]['id'],$amount,'消费分佣'.($i+1).'代','commission',$order);
             }
         }
         return true;
     }
-    public static function award_log($uid,$from_uid, $money, $reson, $type)
+    public static function award_log($uid, $money, $reson, $type,$order,$field='credit')
     {
         $amount=$money*100;
-        money_log([$uid,$from_uid], $amount, $reson, $type,'credit');
+        $results=AwardLogModel::record($uid, $amount, $type,$reson, $order,$field);
 
         //返奖同时可以处理其它
 
+        return $results;
     }
 
      /**

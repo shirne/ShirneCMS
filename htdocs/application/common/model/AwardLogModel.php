@@ -3,6 +3,7 @@
 namespace app\common\model;
 
 
+use think\Db;
 use think\Model;
 
 /**
@@ -13,46 +14,50 @@ class AwardLogModel extends Model
 {
     /**
      * 记录奖励
-     * @param $uid
+     * @param $uids int|array
      * @param $award
      * @param $type
      * @param $remark
-     * @param array $order
+     * @param array|int $order
      * @param string $field
      * @return int
      */
-    public static function record($uid,$award,$type,$remark,$order=[],$field='credit'){
+    public static function record($uids,$award,$type,$remark,$order=[],$field='credit'){
         $award=$award*100;
-        $data=[
-            'member_id'=>$uid,
-            'order_id'=>0,
-            'from_member_id'=>0,
-            'type'=>$type,
-            'amount'=>$award,
-            'real_amount'=>$award,
-            'remark'=>$remark,
-            'create_time'=>time()
-        ];
-
+        $datas=[ ];
+        $time=time();
+        $order_id=0;
+        $from_id=0;
         if(!empty($order)) {
             if (is_array($order) || is_object($order)) {
-                $data['order_id'] = $order['order_id'];
-                $data['from_member_id'] = $order['member_id'];
+                $order_id = $order['order_id'];
+                $from_id = $order['member_id'];
             } else {
-                $data['from_member_id'] = intval($order);
+                $from_id = intval($order);
             }
         }
+        if(!is_array($uids))$uids=idArr($uids);
+        $uid_groups=array_chunk($uids,500);
+        $count=0;
+        foreach ($uid_groups as $uidgroup) {
+            foreach ($uidgroup as $uid) {
+                $datas[] = [
+                    'member_id' => $uid,
+                    'order_id' => $order_id,
+                    'from_member_id' => $from_id,
+                    'type' => $type,
+                    'amount' => $award,
+                    'real_amount' => $award,
+                    'remark' => $remark,
+                    'create_time' => $time
+                ];
+            }
 
-        if($type=='commission') {
-            money_log([$data['member_id'], $data['from_member_id']], $award, $remark, $type, $field);
+            money_log($uidgroup, $award, $remark, $type, $from_id, $field);
 
-        }else{
-            money_log([$data['member_id'], $data['from_member_id']], $award, $remark, $type, $field);
+            $count += Db::name('AwardLog')->insertAll($datas);
         }
-
-        $model=self::create($data);
-        return $model['id'];
-
+        return $count;
     }
 
     public static function rand_award($total,$count,$total_count,$precision=0,$ratio=5,$disperse=100000)

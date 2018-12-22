@@ -300,6 +300,84 @@ class MemberController extends AuthedController
         return $this->fetch();
     }
 
+    public function transcredit(){
+        if($this->request->isPost()){
+            $secpassword=$this->request->post('secpassword');
+            if(empty($secpassword)){
+                $this->error('请填写安全密码');
+            }
+            if(!compare_secpassword($this->user,$secpassword)){
+                $this->error('安全密码错误');
+            }
+            $data=$this->request->only('action,field,member_id,amount','post');
+            $data['amount']=floatval($data['amount']);
+            if($data['action']=='transout'){
+                if(!in_array($data['field'],['money','credit','awards'])){
+                    $this->error('转赠积分类型错误');
+                }
+                $tomember=Db::name('member')->where('id|username|mobile',$data['member_id'])->find();
+                if(empty($tomember)){
+                    $this->error('会员信息错误');
+                }
+                if($data['amount']<=0){
+                    $this->error('转赠金额错误');
+                }
+                if($data['amount']*100>$this->user[$data['field']]){
+                    $this->error('您的余额不足');
+                }
+                money_log($this->userid,-$data['amount']*100,'转赠给会员'.$tomember['username'],'transout',$tomember['id'],$data['field']);
+                money_log($tomember['id'],$data['amount']*100,'会员'.$this->user['username'].'转入','transin',$this->userid,'money');
+                if($data['field']=='credit'){
+                    $this->unfreeze($data['amount']);
+                }
+                $this->success('转赠成功');
+            }elseif($data['action']=='transmoney'){
+                if(!in_array($data['field'],['credit','awards'])){
+                    $this->error('转入积分类型错误');
+                }
+                if($data['amount']<=0){
+                    $this->error('转入金额错误');
+                }
+                if($data['amount']*100>$this->user[$data['field']]){
+                    $this->error('您的积分不足');
+                }
+                money_log($this->userid,-$data['amount']*100,'转入消费积分','transout',$this->userid,$data['field']);
+                money_log($this->userid,$data['amount']*100,'从'.money_type($data['field'],false).'转入','transin',$this->userid,'money');
+                if($data['field']=='credit'){
+                    $this->unfreeze($data['amount']);
+                }
+                $this->success('转入成功');
+            }
+        }
+        $this->error('非法操作');
+    }
+
+    private function unfreeze($amount){
+        $amount=$amount*100;
+        $freezes=Db::name('memberFreeze')->where('member_id',$this->userid)
+            ->where('status',1)->order('freeze_time ASC,amount ASC,id ASC')->select();
+        $unfreezed=0;
+        foreach ($freezes as $freeze){
+            Db::name('memberFreeze')->where('id',$freeze['id'])->update(['status'=>0]);
+            $unfreezed += $freeze['amount'];
+            if($unfreezed>=$amount){
+                if($unfreezed>$amount){
+                    $toFreeze=$unfreezed-$amount;
+                    $newData=[
+                        'member_id'=>$this->userid,
+                        'award_log_id'=>$freeze['award_log_id'],
+                        'amount'=>$toFreeze,
+                        'create_time'=>$freeze['create_time'],
+                        'freeze_time'=>$freeze['freeze_time'],
+                        'status'=>1
+                    ];
+                    Db::name('memberFreeze')->insert($newData);
+                }
+                break;
+            }
+        }
+        return true;
+    }
 
     public function shares(){
         if(!$this->user['is_agent']){

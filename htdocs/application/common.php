@@ -545,48 +545,83 @@ function user_log($uid, $action, $result, $remark = '', $tbl = 'member')
 }
 
 /**
- * 金额变动
+ * 金额变动 支持批量处理
  * charge 充值/赠送 cash 提现/提现失败
  * @param $uid
  * @param $money
  * @param $reson
  * @param string $type
+ * @param int $from_id
  * @param string $field
  * @return bool|mixed
  */
-function money_log($uid, $money, $reson, $type='',$field='money')
+function money_log($uid, $money, $reson, $type='',$from_id=0,$field='money')
 {
     if($money==0)return true;
-    $from_id=0;
-    if(is_array($uid)){
-        $from_id=intval($uid[1]);
-        $uid=$uid[0];
+    $fields=getMoneyFields();
+    if(is_string($from_id) && isset($fields[$from_id])){
+        $field=$from_id;
+        $from_id=0;
+    }
+    if($field=='all' || !isset($fields[$field]))return false;
+
+    if(!is_array($uid)){
+        $uid=idArr($uid);
+    }
+    if(count($uid)>500){
+        $uid_groups=array_chunk($uid,500);
+        $returns=[];
+        foreach ($uid_groups as $uids){
+            $returns=array_merge($returns,money_log($uids, $money, $reson, $type,$from_id,$field));
+        }
+        return $returns;
     }
 
-    $member=\think\Db::name('member')->lock(true)->find($uid);
-
-    if(empty($member))return false;
-
+    $logs=[];
+    $members=\think\Db::name('member')->field('id,username,'.$field)
+        ->whereIn('id' , $uid)->select();
+    $time=time();
     if($money>0) {
-        $result=\think\Db::name('member')->where('id' , $uid)
+        $result=\think\Db::name('member')->whereIn('id' , $uid)
             ->setInc($field,$money);
+        foreach ($members as $member){
+            $logs[]=[
+                'create_time' => $time,
+                'member_id' => $member['id'],
+                'from_member_id'=>$from_id,
+                'type' => $type,
+                'before' => $member[$field],
+                'amount' => $money,
+                'after' => $member[$field] + $money,
+                'field'=>$field,
+                'reson' => $reson
+            ];
+        }
     }else{
-        if($member[$field]<abs($money))return false;
-        $result=\think\Db::name('member')->where('id' , $uid)
-            ->setDec($field,abs($money));
+        $decMoney=abs($money);
+        $result=\think\Db::name('member')->whereIn('id' , $uid)
+            ->where($field,'>=',$decMoney)
+            ->setDec($field,$decMoney);
+        foreach ($members as $member){
+            if($member[$field]>=$decMoney) {
+                $logs[] = [
+                    'create_time' => time(),
+                    'member_id' => $member['id'],
+                    'from_member_id' => $from_id,
+                    'type' => $type,
+                    'before' => $member[$field],
+                    'amount' => $money,
+                    'after' => $member[$field] + $money,
+                    'field' => $field,
+                    'reson' => $reson
+                ];
+            }
+        }
+
     }
     if($result) {
-        return \think\Db::name('memberMoneyLog')->insert(array(
-            'create_time' => time(),
-            'member_id' => $uid,
-            'from_member_id'=>$from_id,
-            'type' => $type,
-            'before' => $member[$field],
-            'amount' => $money,
-            'after' => $member[$field] + $money,
-            'field'=>$field,
-            'reson' => $reson
-        ));
+        \think\Db::name('memberMoneyLog')->insertAll($logs);
+        return array_column($logs,'member_id');
     }else{
         return false;
     }

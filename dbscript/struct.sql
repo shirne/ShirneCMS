@@ -254,6 +254,19 @@ CREATE TABLE `sa_member` (
   KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+DROP TABLE IF EXISTS `sa_member_freeze`;
+
+CREATE TABLE `sa_member_freeze` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NOT NULL,
+  `award_log_id` int(11) NOT NULL,
+  `amount` int(11) DEFAULT '0' COMMENT '金额 单位分',
+  `create_time` int(11) DEFAULT NULL,
+  `freeze_time` int(11) DEFAULT NULL,
+  `status` TINYINT NULL DEFAULT 0,
+  PRIMARY KEY (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS `sa_member_token`;
 
 CREATE TABLE `sa_member_token` (
