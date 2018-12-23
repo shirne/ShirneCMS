@@ -3,6 +3,7 @@
 namespace app\api\Controller;
 
 use app\common\facade\CategoryFacade;
+use app\common\facade\MemberFavouriteFacade;
 use app\common\model\ArticleCommentModel;
 use app\common\model\ArticleModel;
 use app\common\validate\ArticleCommentValidate;
@@ -68,15 +69,18 @@ class ArticleController extends BaseController
         $images=Db::name('ArticleImages')->where('article_id',$article['id'])->select();
 
         $digg=false;
+        $isFavourite=0;
         if($this->isLogin) {
             $digg = Db::name('articleDigg')->where('article_id', $id)
                 ->where('member_id', $this->user['id'])
                 ->find();
+            $isFavourite=MemberFavouriteFacade::isFavourite($this->user['id'],'article',$id);
         }
         return $this->response([
             'article'=>$article,
             'images'=>$images,
-            'digged'=>empty($digg)?0:1
+            'digged'=>$digg?0:1,
+            'is_favourite'=>$isFavourite?0:1
         ]);
     }
 

@@ -46,6 +46,12 @@ class MemberCartModel extends BaseModel
         }
         return $data;
     }
+    public function getCount($member_id)
+    {
+        return Db::name('MemberCart')
+            ->where('member_id',$member_id)
+            ->count('id');
+    }
     public function addCart($product,$sku,$count,$member_id)
     {
         $sort=$this->getSort($member_id);
@@ -66,12 +72,12 @@ class MemberCartModel extends BaseModel
             return Db::name('MemberCart')->insert($data);
         }
     }
-    public function updateCartData($product,$sku,$member_id)
+    public function updateCartData($product,$sku,$member_id,$id)
     {
         $data=$this->mapCart($product,$sku);
         return Db::name('MemberCart')->where([
             'member_id'=>$member_id,
-            'sku_id'=>$sku['sku_id'],
+            'id'=>$id,
         ])->update($data);
     }
     public function updateCart($sku_id,$count,$member_id)
@@ -97,12 +103,12 @@ class MemberCartModel extends BaseModel
         $lists = $model->order('MemberCart.sort DESC')->select();
         foreach ($lists as $k=>&$item){
             if(!empty($item['spec_data'])){
-                $item['spec_data']=json_decode($item['spec_data']);
+                $item['spec_data']=json_decode($item['spec_data'],true);
             }else{
                 $item['spec_data']=[];
             }
             if(!empty($item['specs'])){
-                $item['specs']=json_decode($item['specs']);
+                $item['specs']=json_decode($item['specs'],true);
             }else{
                 $item['specs']=[];
             }

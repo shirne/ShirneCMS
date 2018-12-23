@@ -2,6 +2,7 @@
 
 namespace app\api\Controller;
 
+use app\common\facade\MemberFavouriteFacade;
 use app\common\facade\ProductCategoryFacade;
 use app\common\model\ProductModel;
 use app\common\model\ProductSkuModel;
@@ -66,9 +67,11 @@ class ProductController extends BaseController
         $skus=$skuModel->where('product_id',$product['id'])->select();
         $images=Db::name('ProductImages')->where('product_id',$product['id'])->select();
 
+        $isFavourite=$this->isLogin?MemberFavouriteFacade::isFavourite($this->user['id'],'product',$id):0;
 
         return $this->response([
             'product'=>$product,
+            'is_favourite'=>$isFavourite,
             'skus'=>$skus,
             'images'=>$images
         ]);
