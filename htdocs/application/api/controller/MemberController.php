@@ -79,14 +79,14 @@ class MemberController extends AuthedController
 
     public function get_address($id){
         $id=intval($id);
-        $lists=Db::name('memberAddress')
+        $address=Db::name('memberAddress')
             ->where('member_id',$this->user['id'])
             ->where('address_id',$id)
             ->find();
-        return $this->response($lists);
+        return $this->response($address);
     }
     public function edit_address($id=0){
-        $data=$this->request->only('recive_name,mobile,province,city,area,address,code,is_default','post');
+        $data=$this->input['address'];
         $data['is_default']=empty($data['is_default'])?0:1;
         $validate=new MemberAddressValidate();
         if(!$validate->check($data)){
@@ -113,6 +113,34 @@ class MemberController extends AuthedController
             }
         }
 
+    }
+    public function del_address($id){
+        $id=intval($id);
+        $deleted=Db::name('memberAddress')
+            ->where('member_id',$this->user['id'])
+            ->where('address_id',$id)
+            ->delete();
+        if($deleted){
+            $this->success('删除成功');
+        }else{
+            $this->success('删除失败');
+        }
+    }
+    public function set_default_address($id){
+        $id=intval($id);
+        $updated=Db::name('memberAddress')
+            ->where('member_id',$this->user['id'])
+            ->where('address_id',$id)
+            ->update(['is_default'=>1]);
+        if($updated){
+            Db::name('memberAddress')
+                ->where('member_id',$this->user['id'])
+                ->where('address_id','NEQ',$id)
+                ->update(['is_default'=>0]);
+            $this->success('设置成功');
+        }else{
+            $this->success('设置失败');
+        }
     }
 
     public function change_password(){
