@@ -65,10 +65,10 @@ class Article extends BaseTabLib
     }
     public function tagRelation($tag){
         $var  = isset($tag['var']) ? $tag['var'] : 'relations';
-        $category=isset($tag['category']) ? $tag['category'] : '';
+        $category=isset($tag['category']) ? $this->parseArg($tag['category']) : 0;
         $id=isset($tag['id']) ? $tag['id'] : 0;
-        if(preg_match('/^[a-zA-Z]\w*$/',$category)){
-            $category="\\app\\common\\facade\\CategoryFacade::getCategoryId('".$category."')";
+        if(is_string($category) && strpos($category,"'")===0){
+            $category="\\app\\common\\facade\\CategoryFacade::getCategoryId(".$category.")";
         }
 
         $parseStr='<?php ';

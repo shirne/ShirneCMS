@@ -3,10 +3,12 @@ ShirneCMS
 
 基于[ThinkPHP5.1](https://github.com/top-think/think/tree/5.1)+[bootstrap4.x](https://v4.bootcss.com/docs/4.0/getting-started/introduction/)开发的后台管理系统,集成会员管理，文章管理，产品管理，微信接入，第三方登录等功能
 
-> 运行环境要求PHP7.1.3以上，Mysql5.5以上,PHP扩展：gd,mysql,pdo,cURL,OpenSSL,SimpleXML,fileinfo,cli。
+> 运行环境要求PHP7.1.3以上，Mysql5.5以上<br />
+> PHP扩展：gd,mysql,pdo,cURL,OpenSSL,SimpleXML,fileinfo,cli。
 
 ## 相关项目
 [小程序企业官网](https://gitee.com/shirnecn/website_mapp)
+[小程序商城](https://gitee.com/shirnecn/shop_mapp)
 
 ## 功能说明
 
@@ -42,9 +44,9 @@ ShirneCMS
 ### API部分功能完善
 - [x] 通用接口，批量接口
 - [x] 文章接口（含分类）
-- [x] 登录接口（账号密码登录，小程序授权登录）……待测试
+- [x] 登录接口（账号密码登录，小程序授权登录）
 - [x] 产品接口
-- [x] 购物车接口……待测试
+- [x] 购物车接口
 - [x] 订单及支付接口……待测试
 - [x] 会员相关功能接口……待测试
 
@@ -102,7 +104,7 @@ htdocs/public 网站根目录
 
 分离模板目录配置 template.independence
 
-标签库 [product](TAGLIB.md),[article](TAGLIB.md) 和 [extendtag](TAGLIB.md)
+标签库 [product](TAGLIB.md#product),[article](TAGLIB.md#article) 和 [extendtag](TAGLIB.md#extendtag)
 
 弹出框组件说明 [Dialog](DIALOG.md)
 
