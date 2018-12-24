@@ -103,6 +103,7 @@ class ProductCategoryController extends BaseController
                 }
                 unset($data['delete_icon']);
                 unset($data['delete_image']);
+                if(empty($data['specs']))$data['specs']=[];
 
                 ProductCategoryModel::update($data,['id'=>$id]);
 

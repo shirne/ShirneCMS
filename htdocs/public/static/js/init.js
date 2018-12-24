@@ -126,7 +126,7 @@ String.prototype.compile=function(data,list){
                 if (data[condition.replace('@','')]) return cont;
             }
             return '';
-        }).replace(/\{@([\w\d\.]+)(?:\|([\w\d]+)(?:\s*=\s*([\w\d,\s#]+))?)?\}/g,function(all,m1,func,args){
+        }).replace(/\{@([\w\d\.]+)(?:\|([\w\d]+)(?:\s*=\s*([^\}]+))?)?\}/g,function(all,m1,func,args){
 
             if(m1.indexOf('.')>0){
                 var keys=m1.split('.'),val=data;
@@ -173,6 +173,10 @@ function iif(v,m1,m2){
     if(v==='0')v=0;
     return v?m1:m2;
 }
+
+window['default']=function (v,d) {
+    return v?v:d;
+};
 
 var dialogTpl='<div class="modal fade" id="{@id}" tabindex="-1" role="dialog" aria-labelledby="{@id}Label" aria-hidden="true">\n' +
     '    <div class="modal-dialog">\n' +

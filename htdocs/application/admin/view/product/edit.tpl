@@ -229,36 +229,51 @@
         var skus=JSON.parse('{$skus|json_encode|raw}');
 
         function setSpecs(specids) {
-            $.ajax({
-                url: "{:url('get_specs')}",
-                dataType: 'JSON',
-                data: {
-                    ids: specids.join(',')
-                },
-                type: 'POST',
-                success: function (json) {
-                    $('.spec-groups').html('');
-                    if (json.code === 1 && json.data) {
-                        addSpec(json.data);
+            if(specids && specids.length) {
+                $.ajax({
+                    url: "{:url('get_specs')}",
+                    dataType: 'JSON',
+                    data: {
+                        ids: specids.join(',')
+                    },
+                    type: 'POST',
+                    success: function (json) {
+                        $('.spec-groups').html('');
+                        if (json.code === 1 && json.data) {
+                            addSpec(json.data);
+                        }
+                        resetSkus();
                     }
-                    resetSkus();
-                }
-            })
+                })
+            }else{
+                $('.spec-groups').html('');
+                resetSkus();
+            }
         }
         function changeCategory(select,force) {
             var option=$(select).find('option:selected');
             var curProps=[];
+            var props=$(option).data('props') || [];
             $('.prop-groups .input-group').each(function () {
                 var input=$(this).find('input');
-                curProps.push(input.val());
+                var prop=input.val().trim();
+                if(input.eq(1).val().trim()===''){
+                    if(props.indexOf(prop)<0){
+                        $(this).remove();
+                    }else{
+                        curProps.push(prop);
+                    }
+                }else {
+                    curProps.push(prop);
+                }
             });
-            var props=$(option).data('props');
             for(var i=0;i<props.length;i++){
                 if(curProps.indexOf(props[i])<0){
                     addProp(props[i]);
                 }
             }
             var newspecs = $(option).data('specs');
+            if(!newspecs)newspecs=[];
             if(force===true){
                 setSpecs(newspecs);
             }else {
@@ -336,7 +351,7 @@
                 '       <input type="hidden" class="field-sku_id" name="skus[{@i}][sku_id]" value="{@sku_id}"/>\n'+
                 '       <input type="text" class="form-control field-goods_no" name="skus[{@i}][goods_no]" value="{@goods_no}">\n' +
                 '   </td>\n' +
-                '   <td><input type="hidden" class="field-image" name="skus[{@i}][image]" value="{@image}"/></td>\n' +
+                '   <td><input type="hidden" class="field-image" name="skus[{@i}][image]" value="{@image}"/><img src="{@image|default=/static/images/noimage.png}" /></td>\n' +
                 '   <td><input type="text" class="form-control field-weight" name="skus[{@i}][weight]" value="{@weight}"> </td>\n' +
                 '   <td><input type="text" class="form-control field-price" name="skus[{@i}][price]" value="{@price}"> </td>\n' +
                 '   <td><input type="text" class="form-control field-market_price" name="skus[{@i}][market_price]" value="{@market_price}"> </td>\n' +
@@ -442,7 +457,11 @@
                     '   <div class="delete"><a href="javascript:" class="btn btn-outline-secondary"><i class="ion-md-trash"></i> </a> </div>\n' +
                     '</div>').compile(spec));
                 var lastrow = $('.spec-groups .spec-row').eq(-1);
-                lastrow.find('.taginput').tags('spec_data[' + spec.id + '][data][]');
+                var firstInit=update;
+                lastrow.find('.taginput').tags('spec_data[' + spec.id + '][data][]',function () {
+                    if(firstInit!==false)resetSkus();
+                    else firstInit=true;
+                });
 
                 if(update!==false)resetSkus();
             }
