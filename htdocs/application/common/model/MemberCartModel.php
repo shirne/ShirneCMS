@@ -98,7 +98,7 @@ class MemberCartModel extends BaseModel
             ->view('Product',['title'=>'product_title','image'=>'product_image','spec_data','levels','is_discount','is_commission','type'],'MemberCart.product_id=Product.id','LEFT')
             ->where('MemberCart.member_id',$member_id);
         if(!empty($sku_ids)){
-            $model->where('MemberCart.sku_id','in',idArr($sku_ids));
+            $model->whereIn('MemberCart.sku_id',idArr($sku_ids));
         }
         $lists = $model->order('MemberCart.sort DESC')->select();
         foreach ($lists as $k=>&$item){

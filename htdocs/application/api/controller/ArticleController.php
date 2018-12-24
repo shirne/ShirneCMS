@@ -134,7 +134,7 @@ class ArticleController extends BaseController
     }
 
     public function do_comment(){
-        $data=$this->request->only('article_id,email,is_anonymous,content,reply_id','POST');
+        $data=$this->request->only('article_id,email,is_anonymous,content,reply_id','put');
         $validate=new ArticleCommentValidate();
         if(!$validate->check($data)){
             $this->error($validate->getError(),0);

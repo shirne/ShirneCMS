@@ -874,6 +874,11 @@ function filter_specchar($str){
  * @return array
  */
 function idArr($id){
+    if(is_array($id)){
+        return array_map(function($i){
+            return intval($i);
+        },$id);
+    }
     if(strpos($id,',')>0){
         $ids=explode(',',$id);
         return array_map(function($i){

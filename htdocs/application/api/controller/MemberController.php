@@ -27,7 +27,7 @@ class MemberController extends AuthedController
     }
 
     public function update_profile(){
-        $data=$this->request->only(['realname','email','mobile','gender','birth','qq','wechat','alipay'],'post');
+        $data=$this->request->only(['realname','email','mobile','gender','birth','qq','wechat','alipay'],'put');
         if(!empty($data['birth']) && $data['birth']!='') {
             $data['birth'] = strtotime($data['birth']);
         }else{

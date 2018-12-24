@@ -20,15 +20,36 @@ use think\Db;
  */
 class OrderController extends AuthedController
 {
-    public function confirm($sku_ids,$count=1,$from='quick'){
+    public function prepare(){
+        $order_skus=$this->input['products'];
+        $skuids=array_column($order_skus,'sku_id');
+        $products=Db::view('ProductSku','*')
+            ->view('Product',['title'=>'product_title','image'=>'product_image','levels','is_discount'],'ProductSku.product_id=Product.id','LEFT')
+            ->whereIn('ProductSku.sku_id',idArr($skuids))
+            ->select();
+
+        return $this->response([
+            'products'=>$products,
+            'address'=>Db::name('MemberAddress')->where('member_id',$this->user['id'])->order('is_default DESC')->find(),
+            'express'=>[
+                'fee'=>0,
+                'title'=>'快递免邮'
+            ]
+        ]);
+
+    }
+    public function confirm($from='quick'){
+        $order_skus=$this->input['products'];
+        if(empty($order_skus))$this->error('未选择下单商品');
+        $sku_ids=array_column($order_skus,'sku_id');
         if($from=='cart'){
             $products=MemberCartFacade::getCart($this->user['id'],$sku_ids);
         }else{
             $products=Db::view('ProductSku','*')
-                ->view('Product',['title'=>'product_title','image'=>'product_image','levels','is_discount'],'ProductSku.product_id=Product.id','LEFT')
+                ->view('Product',['title'=>'product_title','image'=>'product_image','levels','is_discount','is_commission','type'],'ProductSku.product_id=Product.id','LEFT')
                 ->whereIn('ProductSku.sku_id',idArr($sku_ids))
                 ->select();
-            $counts=idArr($count);
+            $counts=array_index($order_skus,'count,sku_id');
             $userLevel=MemberLevelModel::get($this->user['level_id']);
             foreach ($products as $k=>&$item){
                 $item['product_price']=$item['price'];
@@ -37,10 +58,10 @@ class OrderController extends AuthedController
                     $item['product_price']=$item['product_price']*$userLevel['discount']*.01;
                 }
                 if(!empty($item['image']))$item['product_image']=$item['image'];
-                if(isset($counts[$k])){
-                    $item['count']=$counts[$k];
+                if(isset($counts[$item['sku_id']])){
+                    $item['count']=$counts[$item['sku_id']];
                 }else{
-                    $item['count']=$counts[0];
+                    $item['count']=1;
                 }
                 if(!empty($item['levels'])){
                     $levels=json_decode($item['levels'],true);
@@ -53,10 +74,21 @@ class OrderController extends AuthedController
         }
 
         $total_price=0;
+        $ordertype=1;
         foreach ($products as $item){
             $total_price += $item['product_price']*$item['count'];
+            if($item['type']==2){
+                $ordertype=2;
+            }
         }
-        $data=$this->request->only('address_id,pay_type,remark','input');
+        //todo 邮费模板
+
+        if($total_price != $this->input['total_price']){
+            $this->error('下单商品价格已变动');
+        }
+
+        $data=$this->request->only('address_id,pay_type,remark,form_id','put');
+
         $validate=new OrderValidate();
         if(!$validate->check($data)){
             $this->error($validate->getError());
@@ -64,19 +96,20 @@ class OrderController extends AuthedController
             $address=Db::name('MemberAddress')->where('member_id',$this->user['id'])
                 ->where('address_id',$data['address_id'])->find();
             $balancepay=$data['pay_type']=='balance'?1:0;
-            $result=OrderFacade::makeOrder($this->user,$products,$address,$data['remark'],$balancepay);
+
+            $result=OrderFacade::makeOrder($this->user,$products,$address,$data['remark'],$balancepay,$ordertype);
             if($result){
                 if($from=='cart'){
                     MemberCartFacade::delCart($sku_ids,$this->user['id']);
                 }
                 if($balancepay) {
-                    $this->success('下单成功');
+                    return $this->response(['order_id',$result],1,'下单成功');
                 }else{
                     $method=$data['pay_type'].'pay';
                     if(method_exists($this,$method)){
                         return $this->$method($result);
                     }else{
-                        $this->success('下单成功，请尽快支付');
+                        return $this->response(['order_id',$result],1,'下单成功，请尽快支付');
                     }
 
                 }
@@ -89,20 +122,20 @@ class OrderController extends AuthedController
     public function wechatpay($order_id){
         $order=OrderModel::get($order_id);
         if(empty($order) || $order['status']!=0){
-            $this->error('订单已支付或不存在!');
+            $this->error('订单已支付或不存在!',0,['order_id'=>$order_id]);
         }
         $wechat_id=$this->input['wechat_id'];
         $wechat=$wechat=Db::name('wechat')->where('type','wechat')
             ->where('id',$wechat_id)->find();
         if(empty($wechat)){
-            $this->error('服务器配置错误',ERROR_LOGIN_FAILED);
+            $this->error('服务器配置错误',ERROR_LOGIN_FAILED,['order_id'=>$order_id]);
         }
         $userauth=MemberOauthModel::where('member_id',$this->user['id'])
             ->where('type_id',$wechat_id)
             ->where('type','wechat')
             ->find();
         if(empty($userauth)){
-            $this->error('需要用户授权openid',ERROR_NEED_OPENID);
+            $this->error('需要用户授权openid',ERROR_NEED_OPENID,['order_id'=>$order_id]);
         }
         $config=WechatModel::to_pay_config($wechat);
 
@@ -118,7 +151,7 @@ class OrderController extends AuthedController
             'openid' => $userauth['openid'],
         ]);
         if(empty($result) || $result['return_code']!='SUCCESS'){
-            $this->error('支付发起失败');
+            $this->error('支付发起失败',0,['order_id'=>$order_id]);
         }
 
         $params=[
@@ -132,19 +165,19 @@ class OrderController extends AuthedController
         $string=$this->ToUrlParams($params)."&key=".$config['key'];
         $params['paySign']=strtoupper(md5($string));
 
-        return $this->response($params);
+        return $this->response(['payment'=>$params,'order_id'=>$order_id]);
     }
     public function balancepay($order_id){
         $order=OrderModel::get($order_id);
         if(empty($order)|| $order['status']!=0){
-            $this->error('订单已支付或不存在!');
+            $this->error('订单已支付或不存在!',0,['order_id'=>$order_id]);
         }
         $debit = money_log($order['member_id'], -$order['payamount']*100, "下单支付", 'consume',0,'money');
         if ($debit){
             $order->save(['status'=>1,'pay_time'=>time()]);
-            $this->success('支付成功!');
+            $this->success('支付成功!',1,['order_id'=>$order_id]);
         }
-        $this->error('支付失败!');
+        $this->error('支付失败!',0,['order_id'=>$order_id]);
     }
     protected function ToUrlParams($arr)
     {

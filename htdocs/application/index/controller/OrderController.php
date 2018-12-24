@@ -67,8 +67,12 @@ class OrderController extends AuthedController
         }
 
         $total_price=0;
+        $ordertype=1;
         foreach ($products as $item){
             $total_price += $item['product_price']*$item['count'];
+            if($item['type']==2){
+                $ordertype=2;
+            }
         }
 
         if($this->request->isPost()){
@@ -80,7 +84,7 @@ class OrderController extends AuthedController
                 $address=Db::name('MemberAddress')->where('member_id',$this->userid)
                     ->where('address_id',$data['address_id'])->find();
                 $balancepay=$data['pay_type']=='balance'?1:0;
-                $result=OrderFacade::makeOrder($this->user,$products,$address,$data['remark'],$balancepay);
+                $result=OrderFacade::makeOrder($this->user,$products,$address,$data['remark'],$balancepay,$ordertype);
                 if($result){
                     if($from=='cart'){
                         MemberCartFacade::delCart($sku_ids,$this->userid);
