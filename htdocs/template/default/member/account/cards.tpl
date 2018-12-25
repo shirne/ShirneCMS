@@ -4,7 +4,7 @@
         <div class="page-header">
             <div class="row">
                 <h1 class="col-4">我的银行卡</h1>
-                <div class="col-8 mt-3 mb-2 text-right"><a class="btn btn-outline-primary btn-confirm" href="{:url('index/member/cardEdit')}" >添加银行卡</a></div>
+                <div class="col-8 mt-3 mb-2 text-right"><a class="btn btn-outline-primary btn-confirm" href="{:aurl('index/member.account/cardEdit')}" >添加银行卡</a></div>
             </div>
         </div>
         <ul class="list-group">
@@ -15,7 +15,7 @@
                     <div class="help-block">开户名：{$v.cardname}</div>
                     <div class="help-block">卡号：{$v.cardno|showcardno}</div>
                     <div class="btn-group">
-                        <a href="{:url('index/member/cardedit',array('id'=>$v['id']))}">修改</a>
+                        <a href="{:aurl('index/member.account/cardEdit',array('id'=>$v['id']))}">修改</a>
                     </div>
                 </li>
             </foreach>

@@ -7,5 +7,5 @@
  */
 
 return [
-    'app_trace'       => true,
+    'app_trace'       => false,
 ];

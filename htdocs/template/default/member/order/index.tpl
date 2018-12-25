@@ -24,7 +24,7 @@
                     </div>
                 </div>
                 <div >
-                    <a href="{:url('index/member/order_detail',['id'=>$v['order_id']])}" class="d-block clearfix">
+                    <a href="{:aurl('index/member.order/detail',['id'=>$v['order_id']])}" class="d-block clearfix">
                     <volist name="v.products" id="prod">
                     <div class="media">
                         <div class="media-left">
@@ -66,7 +66,7 @@
                 var id=$(this).data('id');
                 if(confirm('是否确认订单已收货')){
                     $.ajax({
-                        url:"{:url('index/member/confirm')}?id="+id,
+                        url:"{:aurl('index/member/confirm')}?id="+id,
                         dataType:'JSON',
                         success:function(j){
                             if(j.code==1){
@@ -92,7 +92,7 @@
             $('.btn-cancel').click(function (e) {
                 var id=$(this).data('id');
                 dialog.confirm('确定取消订单？',function(){
-                    location.href="{:url('index/member/order_delete',['id'=>'__ID__'])}".replace('__ID__',id);
+                    location.href="{:aurl('index/member.order/delete',['id'=>'__ID__'])}".replace('__ID__',id);
                 });
             });
         })

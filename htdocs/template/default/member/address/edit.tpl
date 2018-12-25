@@ -4,7 +4,7 @@
         <div class="page-header">
             <h1>收货地址</h1>
         </div>
-        <form role="form" method="post" action="{:url('index/member/addressAdd',array('id'=>$address['address_id']))}">
+        <form role="form" method="post" action="">
             <div class="form-row form-group">
                 <label for="recive_name" class="col-2 control-label">收货人：</label>
                 <div class="col-10">

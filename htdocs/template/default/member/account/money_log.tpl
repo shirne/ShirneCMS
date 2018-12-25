@@ -11,7 +11,7 @@
                     </button>
                     <div class="dropdown-menu">
                         <foreach name="fields" item="t" key="k">
-                            <a class="dropdown-item"  href="{:url('index/member/moneylog',searchKey('field',$k))}">{$t}</a>
+                            <a class="dropdown-item"  href="{:aurl('index/member/moneylog',searchKey('field',$k))}">{$t}</a>
                         </foreach>
                     </div>
                 </div>
@@ -21,7 +21,7 @@
                     </button>
                     <div class="dropdown-menu">
                         <foreach name="types" item="t" key="k">
-                            <a class="dropdown-item" href="{:url('index/member/moneylog',array('type'=>$k))}">{$t}</a>
+                            <a class="dropdown-item" href="{:aurl('index/member/moneylog',array('type'=>$k))}">{$t}</a>
                         </foreach>
                     </div>
                 </div>

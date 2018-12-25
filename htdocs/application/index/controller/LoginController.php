@@ -28,7 +28,7 @@ class LoginController extends BaseController{
     public function index($type=0)
     {
         if($this->userid){
-            $this->success('您已登录',url('index/member/index'));
+            $this->success('您已登录',aurl('index/member/index'));
         }
         //方式1：本地账号登陆
         if(empty($type)){
@@ -51,7 +51,7 @@ class LoginController extends BaseController{
                         $this->setLogin($member);
                         $redirect=redirect()->restore();
                         if(empty($redirect->getData())){
-                            $url=url('index/member/index');
+                            $url=aurl('index/member/index');
                         }else{
                             $url=$redirect->getTargetUrl();
                         }
@@ -143,7 +143,7 @@ class LoginController extends BaseController{
                 $model->save($data);
             }
             if($this->isLogin){
-                $this->success('绑定成功',redirect()->restore(url('index/member/index'))->getTargetUrl());
+                $this->success('绑定成功',redirect()->restore(aurl('index/member/index'))->getTargetUrl());
             }
             
             if (empty($model['member_id'])) {
@@ -174,7 +174,7 @@ class LoginController extends BaseController{
             Log::record($e->getMessage()."\n".$e->getFile().$e->getLine().$e->getCode(),'error');
             $this->error('登录失败',url('index/login/index'));
         }
-        return redirect()->restore(url('index/member/index'));
+        return redirect()->restore(aurl('index/member/index'));
     }
 
     private function parseGender($gender){
@@ -371,7 +371,7 @@ class LoginController extends BaseController{
             $this->setLogin($model);
             $redirect=redirect()->restore();
             if(empty($redirect->getData())){
-                $url=url('index/member/index');
+                $url=aurl('index/member/index');
             }else{
                 $url=$redirect->getTargetUrl();
             }

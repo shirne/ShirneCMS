@@ -42,7 +42,7 @@
                 </div>
             </label>
             </volist>
-            <a href="{:url('index/member/address')}" class="weui-cell weui-cell_link">
+            <a href="{:aurl('index/member.address')}" class="weui-cell weui-cell_link">
                 <div class="weui-cell__bd">添加新地址</div>
             </a>
         </div>
@@ -74,7 +74,7 @@
     <script type="text/javascript">
         var uploadCount = 0;
         weui.uploader('#uploader', {
-            url: "{:url('index/member/uploadPicture')}",
+            url: "{:aurl('index/member/uploadPicture')}",
             auto: true,
             type: 'file',
             fileVal: 'imageFile',

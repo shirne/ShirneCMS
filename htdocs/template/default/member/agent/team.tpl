@@ -5,7 +5,7 @@
         <if condition="!empty($paths)">
             <ol class="breadcrumb">
                 <foreach name="paths" item="v">
-                    <li><a href="{:url('index/member/team',array('pid'=>$v['id']))}">{$v.username}</a></li>
+                    <li><a href="{:aurl('index/member/team',array('pid'=>$v['id']))}">{$v.username}</a></li>
                 </foreach>
             </ol>
         </if>
@@ -18,7 +18,7 @@
             </li>
             <foreach name="users" item="v">
             <li class="row list-group-item">
-                <a href="{:url('index/member/team',array('pid'=>$v['id']))}">
+                <a href="{:aurl('index/member/team',array('pid'=>$v['id']))}">
                     <div class="col-xs-5"><i class="fa fa-user"></i> {$v['username']}<br />{$levels[$v['level_id']]['level_name']}</div>
                     <div class="col-xs-2"><if condition="$soncounts[$v['id']]">{$soncounts[$v['id']]}<else/>0</if></div>
                 <div class="col-xs-3"><span style="color: #999;">{$v.create_at|showdate}</span> </div>

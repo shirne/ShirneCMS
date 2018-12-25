@@ -2,7 +2,7 @@
 <block name="body">
     <div class="container">
         <div class="page-header"><h1>修改密码</h1></div>
-    <form class="form-horizontal registerForm" role="form" method="post" onsubmit="return checkForm(this)" action="{:url('index/member/password')}">
+    <form class="form-horizontal registerForm" role="form" method="post" onsubmit="return checkForm(this)" action="{:aurl('index/member/password')}">
         <div class="form-group">
             <label for="recive_name" class="col-sm-2 control-label">登录账号：</label>
             <div class="col-sm-10">

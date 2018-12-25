@@ -53,26 +53,11 @@ Route::group('auth',[
 ])->method('GET|POST');
 
 Route::group('user',[
-    'index'=>'index/member/index',
-    'profile'=>'index/member/profile',
-    'avatar'=>'index/member/avatar',
-    'password'=>'index/member/password',
-    'security'=>'index/member/security',
-    'addressadd'=>'index/member/addressAdd',
-    'address'=>'index/member/address',
-    'cards'=>'index/member/cards',
-    'cardlist'=>'index/member/cardList',
-    'cashlist'=>'index/member/cashList',
-    'cash'=>'index/member/cash',
-    'actionlog'=>'index/member/actionLog',
-    'balance'=>'index/member/moneyLog',
-    'shares'=>'index/member/shares',
-    'team'=>'index/member/team',
-    'order'=>'index/member/order',
-    'confirm'=>'index/member/confirm',
-    'notice'=>'index/member/notice',
-    'feedback'=>'index/member/feedback',
-    'logout'=>'index/member/logout'
+    'order/[:action]'=>'index/member.order/:action',
+    'address/[:action]'=>'index/member.address/:action',
+    'account/[:action]'=>'index/member.account/:action',
+    'agent/[:action]'=>'index/member.agent/:action',
+    '[:action]'=>'index/member/:action'
 ])->method('GET|POST');
 
 

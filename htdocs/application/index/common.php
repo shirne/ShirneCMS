@@ -1,6 +1,7 @@
 <?php
 
 use think\Db;
+use think\facade\Route;
 
 
 function parseNavigator(&$config,$module){
@@ -121,4 +122,22 @@ function getAdImage($tag,$default=''){
     }
     return $default;
 }
+
+/**
+ * 将action转为参数式绑定，以匹配路由的动态action绑定
+ * @param string $url
+ * @param string $vars
+ * @param bool $suffix
+ * @param bool $domain
+ * @return string
+ */
+function aurl($url = '', $vars = '', $suffix = true, $domain = false){
+    $part=explode('/',$url);
+    if(count($part)<3)$part[2]='index';
+    if(!is_array($vars))$vars=[];
+    $vars['action']=$part[2];
+    $part[2]=':action';
+    return url(implode('/',$part),$vars,$suffix,$domain);
+}
+
 //end file

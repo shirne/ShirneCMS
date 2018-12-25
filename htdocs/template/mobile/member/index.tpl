@@ -8,27 +8,27 @@
     </div>
     <div class="weui-panel weui-panel_access orders">
         <div class="weui-panel__hd">
-            <a href="{:url('index/member/order')}" class="float-right">所有订单&gt;</a>
+            <a href="{:aurl('index/member.order/index')}" class="float-right">所有订单&gt;</a>
             我的订单
         </div>
         <div class="weui-panel__bd view_menu">
             <div class="weui-flex">
-                <a href="{:url('index/member/order',['status'=>1])}" class="weui-flex__item">
+                <a href="{:aurl('index/member.order/index',['status'=>1])}" class="weui-flex__item">
                     <div class="item-icon"><img src="__STATIC__/icons/order_1.png" /> </div>
                     <div class="item-text">待付款</div>
                     <if condition="$counts[0] GT 0"><span class="counter">{$counts[0]}</span></if>
                 </a>
-                <a href="{:url('index/member/order',['status'=>2])}" class="weui-flex__item">
+                <a href="{:aurl('index/member.order/index',['status'=>2])}" class="weui-flex__item">
                     <div class="item-icon"><img src="__STATIC__/icons/order_2.png" /> </div>
                     <div class="item-text">待发货</div>
                     <if condition="$counts[1] GT 0"><span class="counter">{$counts[1]}</span></if>
                 </a>
-                <a href="{:url('index/member/order',['status'=>3])}" class="weui-flex__item">
+                <a href="{:aurl('index/member.order/index',['status'=>3])}" class="weui-flex__item">
                     <div class="item-icon"><img src="__STATIC__/icons/order_3.png" /> </div>
                     <div class="item-text">待收货</div>
                     <if condition="$counts[2] GT 0"><span class="counter">{$counts[2]}</span></if>
                 </a>
-                <a href="{:url('index/member/order',['status'=>4])}" class="weui-flex__item">
+                <a href="{:aurl('index/member.order/index',['status'=>4])}" class="weui-flex__item">
                     <div class="item-icon"><img src="__STATIC__/icons/order_5.png" /> </div>
                     <div class="item-text">待评价</div>
                     <if condition="$counts[3] GT 0"><span class="counter">{$counts[3]}</span></if>
@@ -37,21 +37,21 @@
         </div>
     </div>
     <div class="weui-cells member-menus">
-        <a class="weui-cell weui-cell_access" href="{:url('index/member/install')}">
+        <a class="weui-cell weui-cell_access" href="{:aurl('index/member/install')}">
             <div class="weui-cell__hd"><img src="__STATIC__/icons/menu_time.png" ></div>
             <div class="weui-cell__bd weui-cell_primary">
                 <p>预约安装</p>
             </div>
             <span class="weui-cell__ft"></span>
         </a>
-        <a class="weui-cell weui-cell_access" href="{:url('index/member/repair')}">
+        <a class="weui-cell weui-cell_access" href="{:aurl('index/member/repair')}">
             <div class="weui-cell__hd"><img src="__STATIC__/icons/menu_repair.png" ></div>
             <div class="weui-cell__bd weui-cell_primary">
                 <p>维修服务</p>
             </div>
             <span class="weui-cell__ft"></span>
         </a>
-        <a class="weui-cell weui-cell_access" href="{:url('index/member/attention')}">
+        <a class="weui-cell weui-cell_access" href="{:aurl('index/member/attention')}">
             <div class="weui-cell__hd"><img src="__STATIC__/icons/menu_dingdan.png" ></div>
             <div class="weui-cell__bd weui-cell_primary">
                 <p>安装须知</p>
@@ -65,14 +65,14 @@
             </div>
             <span class="weui-cell__ft"></span>
         </a>
-        <a class="weui-cell weui-cell_access" href="{:url('index/member/password')}">
+        <a class="weui-cell weui-cell_access" href="{:aurl('index/member/password')}">
             <div class="weui-cell__hd"><img src="__STATIC__/icons/menu_secret.png" ></div>
             <div class="weui-cell__bd weui-cell_primary">
                 <p>修改密码</p>
             </div>
             <span class="weui-cell__ft"></span>
         </a>
-        <a class="weui-cell weui-cell_access" href="{:url('index/member/logout')}">
+        <a class="weui-cell weui-cell_access" href="{:aurl('index/member/logout')}">
             <div class="weui-cell__hd"><img src="__STATIC__/icons/menu_quit.png" ></div>
             <div class="weui-cell__bd weui-cell_primary">
                 <p>退出登录</p>

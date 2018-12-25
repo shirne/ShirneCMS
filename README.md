@@ -77,7 +77,9 @@ Javascript/CSS构建[Gulp](https://www.gulpjs.com.cn/)
 
 >cd htdocs/resource<br />
 cnpm install<br />
-生成并监视文件：gulp
+构建并监视文件：gulp<br />
+清理dest目录: gulp clean<br />
+只监视文件: gulp watch
 
 数据库
 

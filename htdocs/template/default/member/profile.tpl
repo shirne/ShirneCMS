@@ -6,7 +6,7 @@
             <h1>个人资料</h1>
         </div>
         <div class="page-content">
-            <form role="form" method="post" action="{:url('index/member/profile')}">
+            <form role="form" method="post" action="{:aurl('index/member/profile')}">
                 <div class="form-row">
                     <label for="realname" class="col-2 control-label">真实姓名：</label>
                     <div class="form-group col-10">

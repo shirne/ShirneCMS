@@ -46,7 +46,7 @@
                             <div class="weui-cell__bd">微信地址导入</div>
                         </a>
                     </if>
-                    <a href="{:url('index/member/address')}" class="weui-cell weui-cell_link">
+                    <a href="{:aurl('index/member.address')}" class="weui-cell weui-cell_link">
                         <div class="weui-cell__bd">添加新地址</div>
                     </a>
                 </div>

@@ -5,7 +5,7 @@
             <h1>收货地址</h1>
         </div>
         <div class="page__bd">
-            <form role="form" method="post" action="{:url('index/member/addressAdd',array('id'=>$address['address_id']))}">
+            <form role="form" method="post" action="">
             <div class="weui-cells weui-cells_form">
                 <div class="weui-cell">
                     <div class="weui-cell__hd"><label class="weui-label">收货人</label></div>

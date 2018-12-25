@@ -189,7 +189,7 @@ class BaseController extends Controller
                     if(!empty($member)) {
                         $this->setLogin($member);
 
-                        get_redirect(url('index/member/index'))->send();
+                        get_redirect(aurl('index/member/index'))->send();
                         exit;
                     }
                 }
@@ -223,7 +223,7 @@ class BaseController extends Controller
                     if(!empty($member)) {
                         $this->setLogin($member);
 
-                        get_redirect(url('index/member/index'))->send();
+                        get_redirect(aurl('index/member/index'))->send();
                         exit;
                     }
                 }

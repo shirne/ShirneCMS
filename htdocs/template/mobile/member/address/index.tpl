@@ -3,7 +3,7 @@
     <div class="page panel">
         <div class="page__hd">
             <div class="page__title">
-                <div class="float-right"><a class="weui-btn weui-btn_mini weui-btn_plain-primary" href="{:url('index/member/addressAdd')}" >添加地址</a></div>
+                <div class="float-right"><a class="weui-btn weui-btn_mini weui-btn_plain-primary" href="{:aurl('index/member.address/add')}" >添加地址</a></div>
                 收货地址
             </div>
         </div>
@@ -17,7 +17,7 @@
                             <p class="weui-media-box__desc">{$v.province}&nbsp;{$v.city}&nbsp;{$v.area}&nbsp;{$v.address}</p>
                             <div class="weui-media-box__info">
                                 <if condition="$v.is_default"><span class="weui-media-box__info__meta">默认</span></if>
-                                <a href="{:url('index/member/addressAdd',array('id'=>$v['address_id']))}" class="weui-media-box__info__meta weui-media-box__info__meta_extra">编辑</a>
+                                <a href="{:aurl('index/member.address/edit',array('id'=>$v['address_id']))}" class="weui-media-box__info__meta weui-media-box__info__meta_extra">编辑</a>
                             </div>
                         </div>
                     </div>

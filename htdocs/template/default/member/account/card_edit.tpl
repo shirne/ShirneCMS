@@ -4,7 +4,7 @@
         <div class="page-header">
             <h1>银行卡</h1>
         </div>
-        <form class="form-horizontal registerForm" role="form" method="post" action="{:url('index/member/cardedit',array('id'=>$card['id']))}">
+        <form class="form-horizontal registerForm" role="form" method="post" action="{:aurl('index/member.account/cardedit',array('id'=>$card['id']))}">
             <div class="form-group">
                 <label for="bank">银行名称</label>
                 <div class="input-group">

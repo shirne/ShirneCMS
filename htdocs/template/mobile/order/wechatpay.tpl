@@ -9,7 +9,7 @@
             <div class="pay_amount" style="padding:20px;text-align: center;color: #222;font-size:18px;">付款金额：{$payamount}</div>
             <div class="weui-btn-area" style="margin:50px;">
                 <a href="javascript:;" class="weui-btn weui-btn_primary" id="btngopay">发起支付</a>
-                <a href="{:url('index/member/order_detail',['id'=>$order_id])}" class="weui-btn weui-btn_default" >查看订单</a>
+                <a href="{:aurl('index/member.order/detail',['id'=>$order_id])}" class="weui-btn weui-btn_default" >查看订单</a>
             </div>
         </div>
     </div>
@@ -33,7 +33,7 @@
                         // 使用以上方式判断前端返回,微信团队郑重提示：
                         //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
                         weui.alert('支付成功',function () {
-                            location.href="{:url('index/member/order_detail',['id'=>$order_id])}";
+                            location.href="{:aurl('index/member.order/detail',['id'=>$order_id])}";
                         });
                     }
                 });

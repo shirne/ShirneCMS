@@ -34,20 +34,20 @@
                         <a href="javascript:" data-payamount="{$order['payamount']}" class="weui-flex__item danger-btn paybtn">
                             重新支付
                         </a>
-                        <a href="{:url('index/member/order_delete',['id'=>$order['order_id']])}" class="weui-flex__item danger-btn delete-btn">
+                        <a href="{:aurl('index/member.order/delete',['id'=>$order['order_id']])}" class="weui-flex__item danger-btn delete-btn">
                             <div class="weui-cell__bd">删除订单</div>
                         </a>
                         <elseif condition="$order['status'] GT 1" />
-                        <a href="{:url('index/member/order_detail',['id'=>$order['order_id']])}" class="weui-flex__item">
+                        <a href="{:aurl('index/member.order/detail',['id'=>$order['order_id']])}" class="weui-flex__item">
                             查看物流
                         </a>
 
                         <if condition="$order['status'] GT 2" >
-                            <a href="{:url('index/member/order_delete',['id'=>$order['order_id']])}" class="weui-flex__item danger-btn delete-btn">
+                            <a href="{:aurl('index/member.order/delete',['id'=>$order['order_id']])}" class="weui-flex__item danger-btn delete-btn">
                                 <div class="weui-cell__bd">删除订单</div>
                             </a>
                             <else/>
-                            <a href="{:url('index/member/order_confirm',['id'=>$order['order_id']])}" class="weui-flex__item primary confirm-btn">
+                            <a href="{:aurl('index/member.order/confirm',['id'=>$order['order_id']])}" class="weui-flex__item primary confirm-btn">
                                 <div class="weui-cell__bd">确认收货</div>
                             </a>
                         </if>
@@ -108,7 +108,7 @@
                             loading.hide();
                             if(json.code=='1'){
                                 weui.alert(json.msg,function () {
-                                    location.href="{:url('index/member/order')}";
+                                    location.href="{:aurl('index/member.order/index')}";
                                 });
                             }else{
                                 weui.alert(json.msg);
