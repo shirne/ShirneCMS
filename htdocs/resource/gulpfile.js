@@ -8,6 +8,7 @@ var watch = require('gulp-watch');
 var sourcemaps=require('gulp-sourcemaps');
 var del = require('del');
 
+var is_watching=false;
 
 gulp.task('sass', function () {
     return gulp.src('./scss/*.scss')
@@ -15,7 +16,7 @@ gulp.task('sass', function () {
         .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
         .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest('./dest/css')).on('end',function () {
-            copyDest();
+            if(is_watching)copyDest();
         });
 });
 
@@ -26,7 +27,7 @@ gulp.task('sassadmin', function () {
         .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
         .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest('./dest/admin/css')).on('end',function () {
-            copyDest();
+            if(is_watching)copyDest();
         });
 });
 
@@ -43,7 +44,7 @@ gulp.task('backend', function () {
         .pipe(rename({ extname: '.min.js' }))
         .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest('./dest/admin/js/')).on('end',function () {
-            copyDest();
+            if(is_watching)copyDest();
         });
 });
 
@@ -59,7 +60,7 @@ gulp.task('front', function () {
         .pipe(rename({ extname: '.min.js' }))
         .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest('./dest/js/')).on('end',function () {
-            copyDest();
+            if(is_watching)copyDest();
         });
 });
 
@@ -72,7 +73,7 @@ gulp.task('mobile', function () {
         .pipe(rename({ extname: '.min.js' }))
         .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest('./dest/js/')).on('end',function () {
-            copyDest();
+            if(is_watching)copyDest();
         });
 });
 
@@ -86,7 +87,7 @@ gulp.task('location', function () {
         .pipe(rename({ extname: '.min.js' }))
         .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest('./dest/js/')).on('end',function () {
-            copyDest();
+            if(is_watching)copyDest();
         });
 });
 
@@ -103,10 +104,12 @@ gulp.task('clean',function (cb) {
 });
 
 function copyDest() {
+    console.log('Copy dest to public...');
     return gulp.src(['dest/**/*','dest/**/*.min.js','dest/**/*.min.js.map'])
         .pipe(gulp.dest('../public/static'));
 }
 function watchAll() {
+    is_watching=true;
     console.log('Starting watch all files...');
     gulp.watch(['./scss/*.scss','./scss/model/*.scss'],['sass'],function () {
         console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
