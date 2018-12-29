@@ -61,7 +61,7 @@
 
         count++;
         stars[count] = this;
-    }
+    };
 
     Star.prototype.draw = function() {
         var x = Math.sin(this.timePassed) * this.orbitRadius + this.orbitX,
@@ -77,22 +77,22 @@
         ctx.globalAlpha = this.alpha;
         ctx.drawImage(canvas2, x - this.radius / 2, y - this.radius / 2, this.radius, this.radius);
         this.timePassed += this.speed;
-        }
+    };
 
-        for (var i = 0; i < maxStars; i++) {
+    for (var i = 0; i < maxStars; i++) {
         new Star();
-        }
+    }
 
-        function animation() {
+    function animation() {
         ctx.globalCompositeOperation = 'source-over';
         ctx.globalAlpha = 0.8;
         ctx.fillStyle = 'hsla(' + hue + ', 64%, 6%, 1)';
-        ctx.fillRect(0, 0, w, h)
+        ctx.fillRect(0, 0, w, h);
 
         ctx.globalCompositeOperation = 'lighter';
         for (var i = 1, l = stars.length; i < l; i++) {
             stars[i].draw();
-        };
+        }
 
         window.requestAnimationFrame(animation);    
     }

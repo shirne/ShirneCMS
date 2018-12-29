@@ -1,157 +1,158 @@
-var num = 200;
-var w = window.innerWidth;
-var h = window.innerHeight;
-var max = 100;
-var _x = 0;
-var _y = 0;
-var _z = 150;
-var dtr = function(d) {
-    return d * Math.PI / 180;
-};
+(function () {
+    "use strict";
+    var num = 200;
+    var w = window.innerWidth;
+    var h = window.innerHeight;
+    var max = 100;
+    var _x = 0;
+    var _y = 0;
+    var _z = 150;
+    var dtr = function (d) {
+        return d * Math.PI / 180;
+    };
 
-var rnd = function() {
-    return Math.sin(Math.floor(Math.random() * 360) * Math.PI / 180);
-};
-var dist = function(p1, p2, p3) {
-    return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2) + Math.pow(p2.z - p1.z, 2));
-};
+    var rnd = function () {
+        return Math.sin(Math.floor(Math.random() * 360) * Math.PI / 180);
+    };
+    var dist = function (p1, p2, p3) {
+        return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2) + Math.pow(p2.z - p1.z, 2));
+    };
 
-var cam = {
-    obj: {
-        x: _x,
-        y: _y,
-        z: _z
-    },
-    dest: {
-        x: 0,
-        y: 0,
-        z: 1
-    },
-    dist: {
-        x: 0,
-        y: 0,
-        z: 200
-    },
-    ang: {
-        cplane: 0,
-        splane: 0,
-        ctheta: 0,
-        stheta: 0
-    },
-    zoom: 1,
-    disp: {
-        x: w / 2,
-        y: h / 2,
-        z: 0
-    },
-    upd: function() {
-        cam.dist.x = cam.dest.x - cam.obj.x;
-        cam.dist.y = cam.dest.y - cam.obj.y;
-        cam.dist.z = cam.dest.z - cam.obj.z;
-        cam.ang.cplane = -cam.dist.z / Math.sqrt(cam.dist.x * cam.dist.x + cam.dist.z * cam.dist.z);
-        cam.ang.splane = cam.dist.x / Math.sqrt(cam.dist.x * cam.dist.x + cam.dist.z * cam.dist.z);
-        cam.ang.ctheta = Math.sqrt(cam.dist.x * cam.dist.x + cam.dist.z * cam.dist.z) / Math.sqrt(cam.dist.x * cam.dist.x + cam.dist.y * cam.dist.y + cam.dist.z * cam.dist.z);
-        cam.ang.stheta = -cam.dist.y / Math.sqrt(cam.dist.x * cam.dist.x + cam.dist.y * cam.dist.y + cam.dist.z * cam.dist.z);
-    }
-};
-
-var trans = {
-    parts: {
-        sz: function(p, sz) {
-            return {
-                x: p.x * sz.x,
-                y: p.y * sz.y,
-                z: p.z * sz.z
-            };
+    var cam = {
+        obj: {
+            x: _x,
+            y: _y,
+            z: _z
         },
-        rot: {
-            x: function(p, rot) {
+        dest: {
+            x: 0,
+            y: 0,
+            z: 1
+        },
+        dist: {
+            x: 0,
+            y: 0,
+            z: 200
+        },
+        ang: {
+            cplane: 0,
+            splane: 0,
+            ctheta: 0,
+            stheta: 0
+        },
+        zoom: 1,
+        disp: {
+            x: w / 2,
+            y: h / 2,
+            z: 0
+        },
+        upd: function () {
+            cam.dist.x = cam.dest.x - cam.obj.x;
+            cam.dist.y = cam.dest.y - cam.obj.y;
+            cam.dist.z = cam.dest.z - cam.obj.z;
+            cam.ang.cplane = -cam.dist.z / Math.sqrt(cam.dist.x * cam.dist.x + cam.dist.z * cam.dist.z);
+            cam.ang.splane = cam.dist.x / Math.sqrt(cam.dist.x * cam.dist.x + cam.dist.z * cam.dist.z);
+            cam.ang.ctheta = Math.sqrt(cam.dist.x * cam.dist.x + cam.dist.z * cam.dist.z) / Math.sqrt(cam.dist.x * cam.dist.x + cam.dist.y * cam.dist.y + cam.dist.z * cam.dist.z);
+            cam.ang.stheta = -cam.dist.y / Math.sqrt(cam.dist.x * cam.dist.x + cam.dist.y * cam.dist.y + cam.dist.z * cam.dist.z);
+        }
+    };
+
+    var trans = {
+        parts: {
+            sz: function (p, sz) {
                 return {
-                    x: p.x,
-                    y: p.y * Math.cos(dtr(rot.x)) - p.z * Math.sin(dtr(rot.x)),
-                    z: p.y * Math.sin(dtr(rot.x)) + p.z * Math.cos(dtr(rot.x))
+                    x: p.x * sz.x,
+                    y: p.y * sz.y,
+                    z: p.z * sz.z
                 };
             },
-            y: function(p, rot) {
-                return {
-                    x: p.x * Math.cos(dtr(rot.y)) + p.z * Math.sin(dtr(rot.y)),
-                    y: p.y,
-                    z: -p.x * Math.sin(dtr(rot.y)) + p.z * Math.cos(dtr(rot.y))
-                };
+            rot: {
+                x: function (p, rot) {
+                    return {
+                        x: p.x,
+                        y: p.y * Math.cos(dtr(rot.x)) - p.z * Math.sin(dtr(rot.x)),
+                        z: p.y * Math.sin(dtr(rot.x)) + p.z * Math.cos(dtr(rot.x))
+                    };
+                },
+                y: function (p, rot) {
+                    return {
+                        x: p.x * Math.cos(dtr(rot.y)) + p.z * Math.sin(dtr(rot.y)),
+                        y: p.y,
+                        z: -p.x * Math.sin(dtr(rot.y)) + p.z * Math.cos(dtr(rot.y))
+                    };
+                },
+                z: function (p, rot) {
+                    return {
+                        x: p.x * Math.cos(dtr(rot.z)) - p.y * Math.sin(dtr(rot.z)),
+                        y: p.x * Math.sin(dtr(rot.z)) + p.y * Math.cos(dtr(rot.z)),
+                        z: p.z
+                    };
+                }
             },
-            z: function(p, rot) {
+            pos: function (p, pos) {
                 return {
-                    x: p.x * Math.cos(dtr(rot.z)) - p.y * Math.sin(dtr(rot.z)),
-                    y: p.x * Math.sin(dtr(rot.z)) + p.y * Math.cos(dtr(rot.z)),
-                    z: p.z
+                    x: p.x + pos.x,
+                    y: p.y + pos.y,
+                    z: p.z + pos.z
                 };
             }
         },
-        pos: function(p, pos) {
+        pov: {
+            plane: function (p) {
+                return {
+                    x: p.x * cam.ang.cplane + p.z * cam.ang.splane,
+                    y: p.y,
+                    z: p.x * -cam.ang.splane + p.z * cam.ang.cplane
+                };
+            },
+            theta: function (p) {
+                return {
+                    x: p.x,
+                    y: p.y * cam.ang.ctheta - p.z * cam.ang.stheta,
+                    z: p.y * cam.ang.stheta + p.z * cam.ang.ctheta
+                };
+            },
+            set: function (p) {
+                return {
+                    x: p.x - cam.obj.x,
+                    y: p.y - cam.obj.y,
+                    z: p.z - cam.obj.z
+                };
+            }
+        },
+        persp: function (p) {
             return {
-                x: p.x + pos.x,
-                y: p.y + pos.y,
-                z: p.z + pos.z
-            };
-        }
-    },
-    pov: {
-        plane: function(p) {
-            return {
-                x: p.x * cam.ang.cplane + p.z * cam.ang.splane,
-                y: p.y,
-                z: p.x * -cam.ang.splane + p.z * cam.ang.cplane
+                x: p.x * cam.dist.z / p.z * cam.zoom,
+                y: p.y * cam.dist.z / p.z * cam.zoom,
+                z: p.z * cam.zoom,
+                p: cam.dist.z / p.z
             };
         },
-        theta: function(p) {
+        disp: function (p, disp) {
             return {
-                x: p.x,
-                y: p.y * cam.ang.ctheta - p.z * cam.ang.stheta,
-                z: p.y * cam.ang.stheta + p.z * cam.ang.ctheta
+                x: p.x + disp.x,
+                y: -p.y + disp.y,
+                z: p.z + disp.z,
+                p: p.p
             };
         },
-        set: function(p) {
-            return {
-                x: p.x - cam.obj.x,
-                y: p.y - cam.obj.y,
-                z: p.z - cam.obj.z
-            };
+        steps: function (_obj_, sz, rot, pos, disp) {
+            var _args = trans.parts.sz(_obj_, sz);
+            _args = trans.parts.rot.x(_args, rot);
+            _args = trans.parts.rot.y(_args, rot);
+            _args = trans.parts.rot.z(_args, rot);
+            _args = trans.parts.pos(_args, pos);
+            _args = trans.pov.plane(_args);
+            _args = trans.pov.theta(_args);
+            _args = trans.pov.set(_args);
+            _args = trans.persp(_args);
+            _args = trans.disp(_args, disp);
+            return _args;
         }
-    },
-    persp: function(p) {
-        return {
-            x: p.x * cam.dist.z / p.z * cam.zoom,
-            y: p.y * cam.dist.z / p.z * cam.zoom,
-            z: p.z * cam.zoom,
-            p: cam.dist.z / p.z
-        };
-    },
-    disp: function(p, disp) {
-        return {
-            x: p.x + disp.x,
-            y: -p.y + disp.y,
-            z: p.z + disp.z,
-            p: p.p
-        };
-    },
-    steps: function(_obj_, sz, rot, pos, disp) {
-        var _args = trans.parts.sz(_obj_, sz);
-        _args = trans.parts.rot.x(_args, rot);
-        _args = trans.parts.rot.y(_args, rot);
-        _args = trans.parts.rot.z(_args, rot);
-        _args = trans.parts.pos(_args, pos);
-        _args = trans.pov.plane(_args);
-        _args = trans.pov.theta(_args);
-        _args = trans.pov.set(_args);
-        _args = trans.persp(_args);
-        _args = trans.disp(_args, disp);
-        return _args;
-    }
-};
+    };
 
-(function() {
-    "use strict";
-    var threeD = function(param) {
+
+    var threeD = function (param) {
         this.transIn = {};
         this.transOut = {};
         this.transIn.vtx = (param.vtx);
@@ -160,9 +161,8 @@ var trans = {
         this.transIn.pos = (param.pos);
     };
 
-    threeD.prototype.vupd = function() {
+    threeD.prototype.vupd = function () {
         this.transOut = trans.steps(
-
             this.transIn.vtx,
             this.transIn.sz,
             this.transIn.rot,
@@ -171,7 +171,7 @@ var trans = {
         );
     };
 
-    var Build = function() {
+    var Build = function () {
         this.vel = 0.04;
         this.lim = 360;
         this.diff = 200;
@@ -181,7 +181,7 @@ var trans = {
         this.go();
     };
 
-    Build.prototype.go = function() {
+    Build.prototype.go = function () {
         this.canvas = document.getElementById("canvas");
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
@@ -207,7 +207,7 @@ var trans = {
         };
     };
 
-    Build.prototype.add = function() {
+    Build.prototype.add = function () {
         this.varr.push(new threeD({
             vtx: {
                 x: rnd(),
@@ -237,12 +237,12 @@ var trans = {
         });
     };
 
-    Build.prototype.upd = function() {
+    Build.prototype.upd = function () {
         cam.obj.x += (this.toX - cam.obj.x) * 0.05;
         cam.obj.y += (this.toY - cam.obj.y) * 0.05;
     };
 
-    Build.prototype.draw = function() {
+    Build.prototype.draw = function () {
         this.$.clearRect(0, 0, this.canvas.width, this.canvas.height);
         cam.upd();
         this.rotObj.x += 0.1;
@@ -278,14 +278,14 @@ var trans = {
             this.$.closePath();
         }
     };
-    Build.prototype.anim = function() {
-        window.requestAnimationFrame = (function() {
+    Build.prototype.anim = function () {
+        window.requestAnimationFrame = (function () {
             return window.requestAnimationFrame ||
-                function(callback, element) {
+                function (callback, element) {
                     window.setTimeout(callback, 1000 / 60);
                 };
         })();
-        var anim = function() {
+        var anim = function () {
             this.upd();
             this.draw();
             window.requestAnimationFrame(anim);
@@ -293,30 +293,30 @@ var trans = {
         window.requestAnimationFrame(anim);
     };
 
-    Build.prototype.run = function() {
+    Build.prototype.run = function () {
         this.anim();
 
-        window.addEventListener('mousemove', function(e) {
+        window.addEventListener('mousemove', function (e) {
             this.toX = (e.clientX - this.canvas.width / 2) * -0.8;
             this.toY = (e.clientY - this.canvas.height / 2) * 0.8;
         }.bind(this));
-        window.addEventListener('touchmove', function(e) {
+        window.addEventListener('touchmove', function (e) {
             e.preventDefault();
             this.toX = (e.touches[0].clientX - this.canvas.width / 2) * -0.8;
             this.toY = (e.touches[0].clientY - this.canvas.height / 2) * 0.8;
         }.bind(this));
-        window.addEventListener('mousedown', function(e) {
+        window.addEventListener('mousedown', function (e) {
             for (var i = 0; i < 100; i++) {
                 this.add();
             }
         }.bind(this));
-        window.addEventListener('touchstart', function(e) {
+        window.addEventListener('touchstart', function (e) {
             e.preventDefault();
             for (var i = 0; i < 100; i++) {
                 this.add();
             }
         }.bind(this));
-        window.addEventListener('resize', function() {
+        window.addEventListener('resize', function () {
             app.canvas.width = w = window.innerWidth;
             app.canvas.height = h = window.innerHeight;
         }, false);
