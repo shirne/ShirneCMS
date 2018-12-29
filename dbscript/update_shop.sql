@@ -156,6 +156,7 @@ CREATE TABLE `sa_order_product` (
   `order_id` INT(11) DEFAULT '0',
   `product_id` INT(11) DEFAULT '0',
   `sku_id` INT(11) DEFAULT '0',
+  `sku_specs` text,
   `product_title` varchar(100) DEFAULT NULL,
   `product_image` varchar(150) DEFAULT NULL,
   `product_orig_price` DECIMAL(10,2) DEFAULT NULL,

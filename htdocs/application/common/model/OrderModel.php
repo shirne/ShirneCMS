@@ -158,6 +158,7 @@ class OrderModel extends BaseModel
                     'order_id'=>$result,
                     'product_id'=>$product['product_id'],
                     'sku_id'=>$product['sku_id'],
+                    'sku_specs'=>ProductModel::transSpec($product['specs']),
                     'product_title'=>$product['product_title'],
                     'product_image'=>$product['product_image'],
                     'product_orig_price'=>$product['product_price'],
@@ -167,11 +168,11 @@ class OrderModel extends BaseModel
                 ]);
                 //扣库存,加销量
                 Db::name('ProductSku')->where('sku_id',$product['sku_id'])
-                    ->dec('storage',-$product['count'])
+                    ->dec('storage',$product['count'])
                     ->inc('sale',$product['count'])
                     ->update();
                 Db::name('Product')->where('id',$product['product_id'])
-                    ->dec('storage',-$product['count'])
+                    ->dec('storage',$product['count'])
                     ->inc('sale',$product['count'])
                     ->update();
             }

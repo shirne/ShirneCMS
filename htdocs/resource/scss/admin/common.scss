@@ -52,14 +52,20 @@ h6 {
   line-height: 1.5;
 }
 
-.media-left {
-  width: 100px;
-  height: 60px;
-  overflow: hidden;
+.media {
+  .media-left {
+    width    : 100px;
+    max-width: 30%;
+    margin-right:1rem;
+    overflow : hidden;
 
-  .media-object {
-    max-width: 100%;
-    max-height: 100%;
+    .media-object {
+      max-width  : 100%;
+      max-height : 100%;
+    }
+  }
+  +.media{
+    margin-top:.5rem;
   }
 }
 

@@ -27,14 +27,23 @@
                         <th colspan="4">订单商品</th>
                     </tr>
                     <tr>
-                        <td>
+                        <td colspan="4">
                             <volist name="products" id="p">
-                            <div class="media">
+                            <div class="media p-2 bg-light">
                                 <div class="media-left">
                                     <img class="media-object" src="{$p['product_image']}" alt="{$p['product_title']}">
                                 </div>
                                 <div class="media-body">
                                     <h4 class="media-heading">{$p['product_title']}</h4>
+                                    <div class="text-muted">
+                                        <if condition="!empty($p['sku_specs'])">
+                                            <foreach name="$p['sku_specs']" key="spec" item="value">
+                                                <span>{$spec}:{$value}&nbsp;</span>
+                                            </foreach>
+                                            <else/>
+                                            默认规格
+                                        </if>
+                                    </div>
                                     <div>￥{$p['product_price']} &times; {$p['count']}件</div>
                                 </div>
                             </div>
@@ -54,7 +63,7 @@
                     <tr>
                         <th >支付金额</th>
                         <td colspan="3">
-                            {$model.payamount}
+                            ￥{$model.payamount}
                         </td>
                     </tr>
                     </tbody>

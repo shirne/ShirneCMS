@@ -106,7 +106,7 @@ gulp.task('clean',function (cb) {
 
 function copyDest() {
     console.log('Copy dest to public...');
-    copy(['dest/**/*','dest/**/*.min.js','dest/**/*.min.js.map'],'../public/static/',function () {
+    copy(['dest/**/*.css','dest/**/*.min.js','dest/**/*.min.js.map'],'../public/static/',function () {
         
     });
 }
