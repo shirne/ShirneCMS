@@ -110,7 +110,7 @@
                         ' <figcaption class="figure-caption text-center">扫描二维码关注公众号</figcaption>\n' +
                         '</figure></div>','二维码');
                 }else{
-                    toastr.info('没有上传二维码');
+                    dialog.info('没有上传二维码');
                 }
             });
             var curid=0;

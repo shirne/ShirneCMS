@@ -98,7 +98,7 @@
                                     location.reload();
                                 });
                             }else{
-                                toastr.warning(json.msg);
+                                dialog.warning(json.msg);
                             }
                         }
                     });
@@ -116,7 +116,7 @@
                                     location.reload();
                                 });
                             }else{
-                                toastr.warning(json.msg);
+                                dialog.warning(json.msg);
                             }
                         }
                     });
@@ -134,7 +134,7 @@
                                     location.reload();
                                 });
                             }else{
-                                toastr.warning(json.msg);
+                                dialog.warning(json.msg);
                             }
                         }
                     });

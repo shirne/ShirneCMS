@@ -55,13 +55,13 @@ jQuery(function ($) {
         e.preventDefault();
         var action = $(this).data('action');
         if (!action) {
-            return toastr.error('未知操作');
+            return dialog.error('未知操作');
         }
         action = 'action' + action.replace(/^[a-z]/, function (letter) {
             return letter.toUpperCase();
         });
         if (!window[action] || typeof window[action] !== 'function') {
-            return toastr.error('未知操作');
+            return dialog.error('未知操作');
         }
         var needChecks = $(this).data('needChecks');
         if (needChecks === undefined) needChecks = true;
@@ -70,7 +70,7 @@ jQuery(function ($) {
             if (!target) target = 'id';
             var ids = $('[name=' + target + ']:checked');
             if (ids.length < 1) {
-                return toastr.warning('请选择需要操作的项目');
+                return dialog.warning('请选择需要操作的项目');
             } else {
                 var idchecks = [];
                 for (var i = 0; i < ids.length; i++) {
@@ -180,7 +180,7 @@ jQuery(function ($) {
                         }
                     });
                 } else {
-                    toastr.warning(json.msg);
+                    dialog.warning(json.msg);
                     $(btn).removeAttr('disabled');
                 }
             },
@@ -188,7 +188,7 @@ jQuery(function ($) {
                 window.stop_ajax=false;
                 isbtn?$(btn).text(origText):$(btn).val(origText);
                 $(btn).removeAttr('disabled');
-                toastr.error('服务器处理错误');
+                dialog.error('服务器处理错误');
             }
         };
         if (form.attr('enctype') === 'multipart/form-data') {

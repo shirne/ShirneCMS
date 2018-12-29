@@ -7,6 +7,7 @@ var sass = require('gulp-sass');
 var watch = require('gulp-watch');
 var sourcemaps=require('gulp-sourcemaps');
 var del = require('del');
+var copy = require('copy');
 
 var is_watching=false;
 
@@ -105,8 +106,9 @@ gulp.task('clean',function (cb) {
 
 function copyDest() {
     console.log('Copy dest to public...');
-    return gulp.src(['dest/**/*','dest/**/*.min.js','dest/**/*.min.js.map'])
-        .pipe(gulp.dest('../public/static'));
+    copy(['dest/**/*','dest/**/*.min.js','dest/**/*.min.js.map'],'../public/static/',function () {
+        
+    });
 }
 function watchAll() {
     is_watching=true;

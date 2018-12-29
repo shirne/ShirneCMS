@@ -473,11 +473,11 @@
                 'rowTemplate':'<a class="list-group-item list-group-item-action{@id|checkUsed} d-flex justify-content-between"  data-id="{@id}" ><span class="title">{@title}</span><div>{@data|joinTags}</div></a>'
             },function (spec) {
                 if(!spec){
-                    toastr.info('请选择规格');
+                    dialog.info('请选择规格');
                     return false;
                 }
                 if(checkUsed(spec.id)){
-                    toastr.info('该规格已使用');
+                    dialog.info('该规格已使用');
                     return false;
                 }
                 addSpec(spec);
@@ -505,7 +505,7 @@
             dialog.prompt('请输入要设置的数据',function(val) {
                 if(field==='goods_no'){
                     if(!val){
-                        toastr.warning('请填写货号');
+                        dialog.warning('请填写货号');
                         return false;
                     }
                     if(!goods_no){
@@ -520,7 +520,7 @@
                 }else {
                     val=parseFloat(val);
                     if(isNaN(val)){
-                        toastr.warning('请填写数值');
+                        dialog.warning('请填写数值');
                         return false;
                     }
                     $('.spec-table tbody .field-' + field).val(val);

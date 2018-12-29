@@ -57,7 +57,6 @@ ShirneCMS
 [eonasdan/bootstrap-datetimepicker](https://github.com/Eonasdan/bootstrap-datetimepicker/blob/master/docs/Options.md) 针对bootstrap4.x修改<br />
 [driftyco/ionicons](http://ionicons.com/)<br />
 [chartjs/Chart.js 2.7.2](https://chartjs.bootcss.com/docs/)<br />
-[codeseven/toastr](http://codeseven.github.io/toastr/)<br />
 [swiper](http://www.swiper.com.cn/)
 
 ## 后端库引用

@@ -211,8 +211,8 @@ class OrderModel extends BaseModel
     }
 
     public static function doRebate($order){
-        if($order['rebated'])return false;
-        $member=Db::name('Member')->find($order['member_id']);
+        if($order['rebated'] || !$order['member_id'])return false;
+        $member=Db::name('Member')->where('id',$order['member_id'])->find();
         if(empty($member))return true;
         $levels=getMemberLevels();
         $levelConfig=getLevelConfig($levels);

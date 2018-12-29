@@ -142,7 +142,7 @@
                                     location.reload();
                                 });
                             }else{
-                                toastr.warning(json.msg);
+                                dialog.warning(json.msg);
                             }
                         }
                     });
@@ -160,7 +160,7 @@
                                     location.reload();
                                 });
                             }else{
-                                toastr.warning(json.msg);
+                                dialog.warning(json.msg);
                             }
                         }
                     });
@@ -175,9 +175,18 @@
                     onshown:function(body){
                     },
                     onsure:function(body){
-                        var amount=body.find('[name=amount]').val();
-                        if(!amount)return alert('请填写金额')
-                        if(amount!=parseFloat(amount))return alert('请填写两位尾数以内的金额');
+                        var amountField=body.find('[name=amount]');
+                        var amount=amountField.val();
+                        if(!amount){
+                            dialog.warning('请填写金额');
+                            amountField.focus();
+                            return false;
+                        }
+                        if(amount!=parseFloat(amount)){
+                            dialog.warning('请填写两位尾数以内的金额');
+                            amountField.focus();
+                            return false;
+                        }
                         $.ajax({
                             url:'{:url("recharge")}',
                             type:'POST',
@@ -194,7 +203,7 @@
                                         location.reload();
                                     })
                                 }else{
-                                    toastr.warning(j.msg);
+                                    dialog.warning(j.msg);
                                 }
                             }
                         })

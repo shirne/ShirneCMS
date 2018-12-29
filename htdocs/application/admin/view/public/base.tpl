@@ -12,13 +12,11 @@
     <!-- Add custom CSS here -->
     <link href="__STATIC__/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
     <link rel="stylesheet" href="__STATIC__/ionicons/css/ionicons.min.css">
-    <link href="__STATIC__/toastr/toastr.min.css" rel="stylesheet">
     <link href="__STATIC__/admin/css/common.css" rel="stylesheet">
 
     <!-- JavaScript -->
     <script src="__STATIC__/jquery/jquery.min.js"></script>
     <script src="__STATIC__/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="__STATIC__/toastr/toastr.min.js"></script>
     <script type="text/javascript">
         window.get_cate_url=function (model) {
             return "{:url('admin/index/getCate',['model'=>'__MODEL__'])}".replace('__MODEL__',model);

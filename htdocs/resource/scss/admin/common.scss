@@ -94,6 +94,10 @@ h6 {
   }
 }
 
+.modal-content{
+  border: 0;
+  box-shadow: 1px 1px 5px rgba(0,0,0,.2);
+}
 .modal-title {
   font-size: 1.2rem;
 }
@@ -120,6 +124,26 @@ h6 {
     }
   }
 }
+.dialog-message{
+  font-size:18px;line-height:22px;
+  position: relative;
+  i{
+    font-size:22px;
+  }
+  .closebtn{
+    font-size:20px;
+    position: absolute;
+    right:0;
+    top:0;
+    color:#fff;
+    text-shadow: 0 1px 0 #fff;
+    transition: all .5s;
+    &:hover{
+      transform: rotate(180deg);
+    }
+  }
+}
+
 
 .list-loading {
   color: #999;

@@ -243,7 +243,7 @@
                                             }
                                         });
                                     }else{
-                                        toastr.warning(json.msg);
+                                        dialog.warning(json.msg);
                                         isposting=false;
                                     }
                                 }

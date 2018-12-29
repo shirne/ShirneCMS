@@ -251,7 +251,7 @@
                     menuData[idx].sub_button=[];
                 }
                 if(menuData[idx].sub_button.length>4){
-                    return toastr.warning('子菜单数量最多5个');
+                    return dialog.warning('子菜单数量最多5个');
                 }
                 menuData[idx].sub_button.push({
                     name:'新建菜单',
@@ -259,7 +259,7 @@
                 })
             }else{
                 if(menuData.length>2){
-                    return toastr.warning('主菜单数量最多3个');
+                    return dialog.warning('主菜单数量最多3个');
                 }
                 menuData.push({
                     name:'新建菜单',

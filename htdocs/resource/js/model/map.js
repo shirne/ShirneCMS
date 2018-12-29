@@ -36,7 +36,7 @@
                 mapObj = new GaodeMap();
                 break;
         }
-        if (!mapObj) return toastr.warning('不支持该地图类型');
+        if (!mapObj) return dialog.warning('不支持该地图类型');
         if(locate){
             if(typeof locate==='string'){
                 var loc=locate.split(',');
@@ -259,7 +259,7 @@
                     self.showLocationInfo(point, rs);
                 });
             } else {
-                toastr.warning("地址信息不正确，定位失败");
+                alert("地址信息不正确，定位失败");
             }
         }, '');
     };
@@ -376,7 +376,7 @@
                     self.showLocationInfo(point, rs);
                 });
             } else {
-                toastr.warning("地址信息不正确，定位失败");
+                alert("地址信息不正确，定位失败");
             }
         }, '');
     };
@@ -493,11 +493,11 @@
                     self.marker.setPosition(point);
                     self.showLocationInfo(point, result);
                 }else{
-                    toastr.warning("地址信息不正确，定位失败");
+                    alert("地址信息不正确，定位失败");
                 }
             },
             error:function(result){
-                toastr.warning("地址信息不正确，定位失败");
+                alert("地址信息不正确，定位失败");
             }
         });
         myGeo.getLocation(address);
@@ -624,7 +624,7 @@
                     self.showLocationInfo(point, rs);
                 });
             } else {
-                toastr.warning("地址信息不正确，定位失败");
+                alert("地址信息不正确，定位失败");
             }
         }, '');
     };

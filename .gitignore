@@ -7,6 +7,6 @@
 .env
 /htdocs/public/uploads/*
 !/htdocs/public/uploads/index.html
-/htdocs/resource/node_modules/
-/htdocs/resource/dest/
-/htdocs/public/aspnet_client/
+/htdocs/resource/node_modules
+/htdocs/resource/dest
+/htdocs/public/aspnet_client

@@ -90,11 +90,11 @@
                             data:body.find('form').serialize(),
                             success:function(json){
                                 if(json.code==1){
-                                    toastr.success(json.msg);
+                                    dialog.success(json.msg);
                                     setTimeout(function(){dlg.hide();location.reload();},500);
                                 }else{
                                     issending=false;
-                                    toastr.warning(json.msg);
+                                    dialog.warning(json.msg);
                                 }
                             }
                         });
