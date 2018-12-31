@@ -1,10 +1,12 @@
 
 (function(window,$) {
+
+
     var apis = {
-        'baidu': '//api.map.baidu.com/api?ak=rO9tOdEWFfvyGgDkiWqFjxK6&v=1.5&services=false&callback=',
-        'google': '//maps.google.com/maps/api/js?key=AIzaSyB8lorvl6EtqIWz67bjWBruOhm9NYS1e24&callback=',
-        'tencent': '//map.qq.com/api/js?v=2.exp&key=7I5BZ-QUE6R-JXLWV-WTVAA-CJMYF-7PBBI&callback=',
-        'gaode': '//webapi.amap.com/maps?v=1.3&key=3ec311b5db0d597e79422eeb9a6d4449&callback='
+        'baidu': '//api.map.baidu.com/api?ak=__KEY__&v=1.5&services=false&callback=',
+        'google': '//maps.google.com/maps/api/js?key=__KEY__&callback=',
+        'tencent': '//map.qq.com/api/js?v=2.exp&key=__KEY__&callback=',
+        'gaode': '//webapi.amap.com/maps?v=1.3&key=__KEY__&callback='
     };
 
     function loadScript(src) {
@@ -16,12 +18,12 @@
 
     var mapObj,mapBox,onPick;
 
-    function InitMap(mapkey,box,callback,locate) {
+    function InitMap(maptype,box,callback,locate) {
         if (mapObj) mapObj.hide();
         mapBox=$(box);
         onPick=callback;
 
-        switch (mapkey.toLowerCase()) {
+        switch (maptype.toLowerCase()) {
             case 'baidu':
                 mapObj = new BaiduMap();
                 break;
@@ -53,6 +55,13 @@
     }
 
     function BaseMap(type) {
+        var key='MAPKEY_'+type.toUpperCase();
+
+        if(!window[key]){
+            throw 'Pls define the '+key+' on window.';
+        }
+
+        this.mapkey = window[key];
         this.mapType = type;
         this.ishide = false;
         this.isshow = false;
@@ -95,7 +104,8 @@
                 self.setMap();
                 delete window[func];
             };
-            loadScript(apis[this.mapType] + func);
+            var apiurl=apis[this.mapType].replace('__KEY__',this.mapkey);
+            loadScript(apiurl + func);
             return false;
         } else {
             //console.log(this.mapType + ' maploaded');

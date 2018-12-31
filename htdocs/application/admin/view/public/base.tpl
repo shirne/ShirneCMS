@@ -20,10 +20,10 @@
     <script type="text/javascript">
         window.get_cate_url=function (model) {
             return "{:url('admin/index/getCate',['model'=>'__MODEL__'])}".replace('__MODEL__',model);
-        }
+        };
         window.get_search_url=function (model) {
             return "{:url('admin/--model--/search')}".replace('--model--',model);
-        }
+        };
         window.get_view_url=function (model,id) {
             var baseurl='';
             switch (model){
@@ -35,7 +35,12 @@
                     break;
             }
             return baseurl.replace('0',id);
-        }
+        };
+        //地图密钥
+        window['MAPKEY_BAIDU'] = '{:getSetting("mapkey_baidu")}';
+        window['MAPKEY_GOOGLE'] = '{:getSetting("mapkey_google")}';
+        window['MAPKEY_TENCENT'] = '{:getSetting("mapkey_tencent")}';
+        window['MAPKEY_GAODE'] = '{:getSetting("mapkey_gaode")}';
     </script>
 
     <block name="header"></block>
