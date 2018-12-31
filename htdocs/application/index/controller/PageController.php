@@ -26,7 +26,7 @@ class PageController extends BaseController{
         $groupset=null;
         if(!empty($group)){
             $model->where('group',$group);
-            $groupset=Db::name('PageGroup')->where('status',1)->where('group',$group)->find();
+            $groupset=Db::name('PageGroup')->where('group',$group)->find();
             $this->assign('navmodel','page-'.$group);
         }
         $lists=$model->field('id,name,group,icon,title,vice_title')->where('status',1)->order('sort ASC,id ASC')->select();

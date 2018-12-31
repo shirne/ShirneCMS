@@ -543,8 +543,6 @@ CREATE TABLE `sa_checkcode` (
 --
 
 DROP TABLE IF EXISTS `sa_checkcode_limit`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `sa_checkcode_limit` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` varchar(10) NOT NULL DEFAULT '' COMMENT '限制类型 ip,mobile',
@@ -553,7 +551,6 @@ CREATE TABLE `sa_checkcode_limit` (
   `count` int(11) DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Table structure for table `sa_page`
