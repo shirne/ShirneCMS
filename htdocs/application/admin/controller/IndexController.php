@@ -39,6 +39,12 @@ class IndexController extends BaseController{
         $a['total_charge']=Db::name('member_recharge')->where('status',1)->sum('amount');
         $a['total_cash']=Db::name('member_cashin')->where('status',1)->sum('amount');
         $a['total_money']=Db::name('member')->sum('money');
+
+        $a['total_credit']=Db::name('member')->sum('credit');
+        $a['system_charge']=Db::name('member_money_log')->where('type','system')
+            ->where('amount','GT',0)->sum('amount');
+        $a['total_award']=Db::name('award_log')->sum('amount');
+
         $this->assign('money',$a);
 
         $notices=[];
@@ -52,6 +58,35 @@ class IndexController extends BaseController{
         }
 
         $this->assign('notices',$notices);
+        return $this->fetch();
+    }
+
+    public function settle($start_date='',$end_date=''){
+        //波比
+        $inout=cache('settle_inout');
+        if(empty($inout)) {
+            $inout['in'] = Db::name('member_money_log')->where('type', 'consume')->sum('amount');
+            $inout['in'] = abs($inout['in']);
+            $inout['out'] = Db::name('award_log')->sum('amount');
+
+            $day_start = strtotime(date('Y-m-d'));
+            $inout['day_in'] = Db::name('member_money_log')->where('type', 'consume')
+                ->where('create_time', 'GT', $day_start)->sum('amount');
+            $inout['day_in'] = abs($inout['day_in']);
+            $inout['day_out'] = Db::name('award_log')
+                ->where('create_time', 'GT', $day_start)->sum('amount');
+
+            $month_start = strtotime(date('Y-m-01'));
+            $inout['month_in'] = Db::name('member_money_log')->where('type', 'consume')
+                ->where('create_time', 'GT', $month_start)->sum('amount');
+            $inout['month_in'] = abs($inout['month_in']);
+            $inout['month_out'] = Db::name('award_log')
+                ->where('create_time', 'GT', $month_start)->sum('amount');
+
+            cache('settle_inout',$inout,['expire'=>600]);
+        }
+
+        $this->assign('inout',$inout);
         return $this->fetch();
     }
 

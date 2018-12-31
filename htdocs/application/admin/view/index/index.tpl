@@ -124,20 +124,27 @@
         <div class="col-md-6">
             <div class="card border-default">
                 <div class="card-header">
+                    <a href="{:url('settle')}" class="float-right">账务统计</a>
                     <h5 class="panel-title">资金统计</h5>
                 </div>
                 <table class="table table-striped">
                     <tr>
-                        <th width="80">总充值</th>
+                        <th width="80">会员充值</th>
                         <td>{$money.total_charge|showmoney}</td>
+                        <th width="80">后台充值</th>
+                        <td>{$money.system_charge|showmoney}</td>
                     </tr>
                     <tr>
-                        <th width="80">总提现</th>
+                        <th width="80">总奖励</th>
+                        <td>{$money.total_award|showmoney}</td>
+                        <th width="80">已提现</th>
                         <td>{$money.total_cash|showmoney}</td>
                     </tr>
                     <tr>
-                        <th width="80">总余额</th>
+                        <th width="80">账户余额</th>
                         <td>{$money.total_money|showmoney}</td>
+                        <th width="80">奖励余额</th>
+                        <td>{$money.total_credit|showmoney}</td>
                     </tr>
                 </table>
             </div>
