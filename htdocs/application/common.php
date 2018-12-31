@@ -213,7 +213,7 @@ function payTypes($type = '')
  * @return float|int
  */
 function showmoney($amount){
-    return round($amount/100,2);
+    return number_format(round($amount/100,2),2);
 }
 
 /**
