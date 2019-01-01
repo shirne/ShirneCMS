@@ -154,8 +154,60 @@ jQuery(function ($) {
 
     //上传框
     $('.custom-file .custom-file-input').on('change', function () {
+        var self=$(this);
+        var inputgroup=$(this).parents('.input-group');
+        var parent=$(this).parents('.form-group');
         var label = $(this).parents('.custom-file').find('.custom-file-label');
+        if(!label.data('origtext')){
+            label.data('origtext',label.text());
+        }
         label.text($(this).val());
+
+        if(!window.URL && !window.URL.createObjectURL)return;
+        var file=self[0].files[0];
+        var is_img=file.type && file.type.match(/(\.|\/)(jpe?g|png|gif)$/);
+
+
+        var figure = parent.find('.figure');
+        if (!figure.length) {
+            parent.append('<figure class="figure">\n' +
+                '                            <img src="/static/images/blank.gif" class="figure-img img-fluid rounded" alt="image">\n' +
+                '                            <figcaption class="figure-caption text-center"></figcaption>\n' +
+                '                        </figure>');
+            figure = parent.find('.figure');
+        }
+        if(is_img) {
+            var img = figure.find('img');
+            var origurl = img.data('origurl');
+            if (!origurl) {
+                origurl = img.attr('src');
+                img.data('origurl', origurl);
+            }
+            var figcap = figure.find('figcaption');
+            if (figcap.data('origtext') === undefined) {
+                figcap.data('origtext', figcap.text());
+            }
+            img.attr('src', window.URL.createObjectURL(file));
+            figcap.text(self.val());
+        }
+
+        var cancel = inputgroup.find('a.cancel');
+        if (!cancel.length) {
+            inputgroup.append('<div class="input-group-append"><a href="javascript:" class="btn btn-outline-danger cancel">取消</a></div>');
+            cancel = inputgroup.find('a.cancel');
+            cancel.click(function (e) {
+                dialog.confirm('取消上传该文件?', function () {
+                    self.val('');
+                    label.text(label.data('origtext'));
+                    if(is_img) {
+                        img.attr('src', origurl);
+                        figcap.text(figcap.data('origtext'));
+                    }
+                    cancel.parent().remove();
+                })
+
+            })
+        }
     });
 
     //表单Ajax提交

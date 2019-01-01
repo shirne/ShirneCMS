@@ -183,7 +183,7 @@
                 </div>
                 <div class="form-group">
                     <input type="hidden" name="id" value="{$model.id}">
-                    <button type="submit" class="btn btn-primary">{$id>0?'保存':'添加'}</button>
+                    <button type="submit" class="btn btn-primary">{$model['id']>0?'保存':'添加'}</button>
                 </div>
             </form>
         </div>
