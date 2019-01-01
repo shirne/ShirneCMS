@@ -55,22 +55,24 @@
     }
 
     function BaseMap(type) {
-        var key='MAPKEY_'+type.toUpperCase();
+        if(type !== undefined) {
+            var key = 'MAPKEY_' + type.toUpperCase();
 
-        if(!window[key]){
-            throw 'Pls define the '+key+' on window.';
+            if (!window[key]) {
+                throw 'Pls define the ' + key + ' on window.';
+            }
+
+            this.mapkey = window[key];
+            this.mapType = type;
+            this.ishide = false;
+            this.isshow = false;
+            this.toshow = false;
+            this.marker = null;
+            this.infoWindow = null;
+            this.mapbox = null;
+            this.locate = {lng: 116.396795, lat: 39.933084};
+            this.map = null;
         }
-
-        this.mapkey = window[key];
-        this.mapType = type;
-        this.ishide = false;
-        this.isshow = false;
-        this.toshow = false;
-        this.marker = null;
-        this.infoWindow = null;
-        this.mapbox = null;
-        this.locate = {lng:116.396795,lat:39.933084};
-        this.map = null;
     }
 
     BaseMap.prototype.isAPIReady = function () {

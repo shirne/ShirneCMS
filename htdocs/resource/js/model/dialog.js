@@ -238,8 +238,23 @@
         alert:function(message,callback,icon){
             var called=false;
             var iscallback=typeof callback=='function';
-            if(callback && !iscallback){
+            var title='';
+            var size='sm';
+            var html='';
+            if(callback!==undefined && !iscallback){
                 icon=callback;
+            }
+            if($.isPlainObject(message)){
+                if(message['title']){
+                    title=message['title'];
+                }
+                if(message['size']!==undefined){
+                    size=message['size'];
+                }
+                if(message['content']===undefined){
+                    throw 'message.content can not be empty.';
+                }
+                message=message['content'];
             }
             var iconMap= {
                 'success':'checkmark-circle',
@@ -248,20 +263,24 @@
                 'error':'remove-circle'
             };
             var color='primary';
-            if(!icon)icon='information-circle';
+            if(icon===undefined)icon='information-circle';
             else if(iconMap[icon]){
                 color=icon=='error'?'danger':icon;
                 icon=iconMap[icon];
             }
-            var html='<div class="row" style="align-items: center;"><div class="col-3 text-right"><i class="ion-md-{@icon} text-{@color}" style="font-size:3em;"></i> </div><div class="col-9" >{@message}</div> </div>'.compile({
-                message:message,
-                icon:icon,
-                color:color
-            });
+            if(icon) {
+                html = '<div class="row" style="align-items: center;"><div class="col-3 text-right"><i class="ion-md-{@icon} text-{@color}" style="font-size:3em;"></i> </div><div class="col-9" >{@message}</div> </div>'.compile({
+                    message: message,
+                    icon: icon,
+                    color: color
+                });
+            }else{
+                html=message;
+            }
             return new Dialog({
                 btns:'确定',
-                size:'sm',
-                header:false,
+                size:size,
+                header:title?true:false,
                 onsure:function(){
                     if(iscallback){
                         called=true;
@@ -273,7 +292,7 @@
                         callback(false);
                     }
                 }
-            }).show(html,'');
+            }).show(html,title);
         },
         confirm:function(message,confirm,cancel,icon){
             var called=false;

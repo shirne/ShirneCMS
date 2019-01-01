@@ -142,7 +142,9 @@ jQuery(function ($) {
         e.stopPropagation();
         var url=$(this).attr('href');
         if(!url)url=$(this).data('img');
-        dialog.alert('<a href="'+url+'" class="d-block text-center" target="_blank"><img class="img-fluid" src="'+url+'" /></a><div class="text-muted text-center">点击图片在新页面放大查看</div>',null,'查看图片');
+        var dlg = new Dialog({
+            btns: ['确定']
+        }).show('<a href="'+url+'" class="d-block text-center" target="_blank"><img class="img-fluid" src="'+url+'" /></a><div class="text-muted text-center">点击图片在新页面放大查看</div>', '查看图片');
     });
 
     $('.nav-tabs a').click(function (e) {

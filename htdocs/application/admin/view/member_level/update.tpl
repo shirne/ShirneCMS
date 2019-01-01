@@ -115,7 +115,7 @@
                                 </div>
                                 <input type="text" name="commission_limit" class="form-control" value="{$model.commission_limit}">
                             </div>
-                            <div class="row"><div class="col form-text text-muted">代数修改需保存后才能再修改比例</div><div class="col form-text text-muted">本金上限即计算佣金时基数的最大值</div></div>
+                            <div class="row"><div class="col form-text text-muted">代数修改需保存后才能再修改比例</div><div class="col form-text text-muted">本金上限即计算佣金时基数的最大值，填写 0 为不限制</div></div>
                         </div>
                         <div class="form-group">
                             <label for="cc">比例</label>
