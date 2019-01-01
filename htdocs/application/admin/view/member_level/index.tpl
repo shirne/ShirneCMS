@@ -20,7 +20,9 @@
                 <th width="50">编号</th>
                 <th>名称</th>
                 <th>排序</th>
-                <th>购买价格</th>
+                <th>会员折扣</th>
+                <th>消费额度</th>
+                <th>消费佣金</th>
                 <th width="160">&nbsp;</th>
             </tr>
             </thead>
@@ -30,7 +32,9 @@
                     <td>{$v.level_id}</td>
                     <td>{$v.level_name}[{$v.short_name}]<if condition="$v['is_default']"><span class="badge badge-info">默认</span> </if></td>
                     <td>{$v.sort}</td>
+                    <td>{$v['discount']>=100?'无':(round($v['discount']/100,1).'折')}</td>
                     <td>{$v.level_price}</td>
+                    <td>{:implode('%, ',(array)@json_decode($v['commission_percent'],1))}{$v['commission_layer']?'%':''}</td>
                     <td class="operations">
                         <a class="btn btn-outline-primary" title="编辑" href="{:url('memberLevel/update',array('id'=>$v['level_id']))}"><i class="ion-md-create"></i> </a>
                         <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('memberLevel/delete',array('id'=>$v['level_id']))}" ><i class="ion-md-trash"></i> </a>

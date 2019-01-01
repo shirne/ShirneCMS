@@ -43,7 +43,7 @@
                     <div class="form-group col">
                         <div class="input-group">
                             <div class="input-group-prepend">
-                                <span class="input-group-text">购买价格</span>
+                                <span class="input-group-text">消费额度</span>
                             </div>
                             <input type="text" name="level_price" class="form-control" value="{$model.level_price}"
                                    placeholder="输入购买价格">
@@ -110,8 +110,12 @@
                                 <input type="text" name="commission_layer" class="form-control"
                                     value="{$model.commission_layer}"
                                     placeholder="佣金层数">
+                                <div class="input-group-middle">
+                                    <span class="input-group-text">本金上限</span>
+                                </div>
+                                <input type="text" name="commission_limit" class="form-control" value="{$model.commission_limit}">
                             </div>
-                            <span class="form-text text-muted">层数修改需保存后才能再修改比例</span>
+                            <div class="row"><div class="col form-text text-muted">代数修改需保存后才能再修改比例</div><div class="col form-text text-muted">本金上限即计算佣金时基数的最大值</div></div>
                         </div>
                         <div class="form-group">
                             <label for="cc">比例</label>
@@ -130,7 +134,7 @@
                                     </div>
                                 </for>
                             </div>
-
+                            <span class="form-text text-muted">佣金本金 = 本金上限 > 0 ? min(销售价-成本价,本金上限) : (销售价-成本价) &nbsp;|&nbsp; 佣金金额 = 佣金本金 * 消费会员相对本会员的层级的比例</span>
                         </div>
                     </div>
                 </div>

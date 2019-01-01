@@ -320,6 +320,7 @@ CREATE TABLE `sa_member_level` (
   `is_agent` TINYINT NULL DEFAULT 0 COMMENT '是否代理组',
   `sort` INT NULL DEFAULT 0,
   `commission_layer` INT NULL COMMENT '分佣层数',
+  `commission_limit` INT NULL DEFAULT 0 COMMENT '分佣本金限制',
   `commission_percent` VARCHAR(200) NULL COMMENT '分佣奖励',
   PRIMARY KEY (`level_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;

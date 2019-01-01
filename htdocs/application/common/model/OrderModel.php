@@ -4,6 +4,7 @@ namespace app\common\model;
 
 
 use think\Db;
+use third\KdExpress;
 
 /**
  * Class OrderModel
@@ -228,7 +229,11 @@ class OrderModel extends BaseModel
             $curLevel=$levels[$parents[$i]['level_id']];
             if($curLevel['commission_layer']>$i && !empty($curLevel['commission_percent'][$i])) {
                 $curPercent = $curLevel['commission_percent'][$i];
-                $amount=$order['commission_amount']*$curPercent;
+                $commission = $order['commission_amount'];
+                if($curLevel['commission_limit'] && $commission>$curLevel['commission_limit']){
+                    $commission = $curLevel['commission_limit'];
+                }
+                $amount = $commission * $curPercent * .01;
                 self::award_log($parents[$i]['id'],$amount,'消费分佣'.($i+1).'代','commission',$order);
             }
         }
