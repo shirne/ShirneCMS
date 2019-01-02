@@ -25,7 +25,7 @@
             <tr>
                 <th width="50">编号</th>
                 <th>标题</th>
-                <th>地址</th>
+                <th>链接</th>
                 <th>状态</th>
                 <th width="160">&nbsp;</th>
             </tr>

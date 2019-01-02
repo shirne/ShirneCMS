@@ -12,8 +12,9 @@
             <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="输入公告标题">
         </div>
         <div class="form-group">
-            <label for="bb">调用标志</label>
+            <label for="page">调用标志</label>
             <input type="text" name="page" class="form-control" value="{$model.page}" >
+            <div class="text-muted">此处内容由设计师设定，请勿改动！</div>
         </div>
         <div class="form-group">
             <label for="bb">链接地址</label>

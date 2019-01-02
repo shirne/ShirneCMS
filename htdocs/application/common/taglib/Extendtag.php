@@ -1,20 +1,18 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: shirne
- * Date: 2018/5/2
- * Time: 20:31
- */
 
 namespace app\common\taglib;
 
-
+/**
+ * Class Extendtag
+ * @package app\common\taglib
+ */
 class Extendtag extends BaseTabLib
 {
     protected $tags =[
         'links'=>['attr'=>'var,limit','close'=>0],
         'advs'=>['attr'=>'var,flag,limit','close'=>0],
         'notices'=>['attr'=>'var,limit','close'=>0],
+        'notice'=>['attr'=>'var,name','close'=>0],
         'feedback'=>['attr'=>'var,limit,page','close'=>0]
     ];
 
@@ -58,6 +56,23 @@ class Extendtag extends BaseTabLib
             $parseStr .= '->limit('.intval($tag['limit']).')';
         }
         $parseStr .= '->select();';
+
+        $parseStr .= ' ?>';
+        return $parseStr;
+    }
+
+    public function tagNotice($tag){
+        $var  = isset($tag['var']) ? $tag['var'] : 'notice_model';
+        $name=isset($tag['name']) ? $this->parseArg($tag['name']) : '';
+
+        $parseStr='<?php ';
+
+        $parseStr.='$'.$var.'=\think\Db::name("Notice")';
+        $parseStr .= '->where(\'status\',1)';
+        if(!empty($name)){
+            $parseStr .= '->where(\'page\','.$name.')';
+        }
+        $parseStr .= '->find();';
 
         $parseStr .= ' ?>';
         return $parseStr;
