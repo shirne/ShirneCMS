@@ -2,7 +2,7 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>管理员登陆</title>
+    <title>管理员登录</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,7 +30,7 @@
 <div class="container" id="loginContainer">
     <div class="row justify-content-center">
         <div class="col-10 col-md-7 col-lg-5" id="loginBox">
-            <h1>管理员登陆</h1>
+            <h1>管理员登录</h1>
 
             <form action="{:url('login/login')}" method="post">
                 <div class="form-group">
@@ -69,6 +69,30 @@
                     <span class="alert-content"></span>
                 </div>
             </form>
+            <div class="browser-check text-center hidden">
+                <h3 class="m-2 text-danger">您使用的浏览器功能不完整</h3>
+                <div class="mb-3"><b>双核</b>浏览器请切换到<b>极速模式</b>使用</div>
+                <h3 class="text-success mb-3">推荐使用</h3>
+                <div class="row">
+                    <a class="col" href="https://www.google.cn/chrome/" target="_blank">
+                        <div class="browser-icon" style="background-image:url(/static/admin/images/chrome-logo.svg)"></div>
+                        <div class="browser-text">谷哥</div>
+                    </a>
+                    <a class="col" href="https://www.mozilla.org/zh-CN/firefox/new/" target="_blank">
+                        <div class="browser-icon" style="background-image:url(/static/admin/images/firefox-logo.png)"></div>
+                        <div class="browser-text">火狐</div>
+                    </a>
+                    <a class="col" href="https://browser.360.cn/ee/" target="_blank">
+                        <div class="browser-icon" style="background-image:url(/static/admin/images/360-logo.png)"></div>
+                        <div class="browser-text">360极速</div>
+                    </a>
+                    <a class="col" href="https://www.opera.com/zh-cn" target="_blank">
+                        <div class="browser-icon" style="background-image:url(/static/admin/images/opera-logo.png)"></div>
+                        <div class="browser-text">Opera</div>
+                    </a>
+                </div>
+                <div class="mt-3"><a href="javascript:" class="text-muted force-login">我知道了，继续登录</a> </div>
+            </div>
         </div>
     </div>
     <div class="row justify-content-md-center">
@@ -80,6 +104,16 @@
 <script src="__STATIC__/jquery/jquery.min.js"></script>
 <script>
     jQuery(function ($) {
+        //浏览器功能检测
+        if(!(window.URL && window.URL.createObjectURL) || !File || !FormData){
+            $('form').hide();
+            $('.browser-check').show();
+        }
+        $('.force-login').click(function () {
+            $('.browser-check').hide();
+            $('form').show();
+        });
+
         var verify = $(".verify"), verifysrc = verify.attr('src');
         if (verifysrc.indexOf('?') > 0) {
             verifysrc += '&';

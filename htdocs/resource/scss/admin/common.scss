@@ -36,6 +36,10 @@ h6 {
   font-size: 1rem;
 }
 
+.hidden{
+  display: none;
+}
+
 .input-group-middle {
   display: -ms-flexbox;
   display: flex;
@@ -326,6 +330,18 @@ h6 {
       margin-top: 10px;
       margin-bottom: 0;
       display: none;
+    }
+  }
+  .browser-check{
+    .browser-icon{
+      padding-top:60%;
+      width:60%;
+      margin:10px auto;
+      background:url(../../images/blank.gif) center center no-repeat;
+      background-size:100%;
+    }
+    .browser-text{
+      color:#666666;
     }
   }
   .copy {

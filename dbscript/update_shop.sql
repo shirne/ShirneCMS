@@ -7,6 +7,8 @@ VALUES
   (63,6,'订单管理','Order/index','order_index','ion-md-list-box',0,0),
   (64,6,'订单统计','OrderStatics/index','order_statics_index','ion-md-stats',0,0);
 
+DROP TABLE IF EXISTS `sa_member_cart`;
+
 CREATE TABLE `sa_member_cart` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `member_id` INT(11) DEFAULT '0',
@@ -19,7 +21,9 @@ CREATE TABLE `sa_member_cart` (
   `sort` INT(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `member_id` (`member_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `sa_specifications`;
 
 CREATE TABLE `sa_specifications` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -27,6 +31,8 @@ CREATE TABLE `sa_specifications` (
   `data` text COMMENT '规格数据',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `sa_product_category`;
 
 CREATE TABLE `sa_product_category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -42,7 +48,9 @@ CREATE TABLE `sa_product_category` (
   `keywords` varchar(255) DEFAULT NULL COMMENT '分类关键词',
   `description` varchar(255) DEFAULT NULL COMMENT '分类描述',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `sa_product`;
 
 CREATE TABLE `sa_product` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -72,6 +80,8 @@ CREATE TABLE `sa_product` (
   KEY `cate_id` (`cate_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `sa_product_sku`;
+
 CREATE TABLE `sa_product_sku` (
   `sku_id` int(11) NOT NULL AUTO_INCREMENT,
   `product_id` int(11) DEFAULT NULL,
@@ -87,6 +97,8 @@ CREATE TABLE `sa_product_sku` (
   PRIMARY KEY (`sku_id`),
   KEY `product_id` (`product_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `sa_product_comment`;
 
 CREATE TABLE `sa_product_comment` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -106,7 +118,9 @@ CREATE TABLE `sa_product_comment` (
   PRIMARY KEY (`id`),
   KEY `member_id` (`member_id`),
   KEY `product_id` (`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `sa_product_images`;
 
 CREATE TABLE `sa_product_images` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -120,6 +134,7 @@ CREATE TABLE `sa_product_images` (
   KEY `product_id` (`product_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+DROP TABLE IF EXISTS `sa_order`;
 
 CREATE TABLE `sa_order` (
   `order_id` INT NOT NULL AUTO_INCREMENT,
@@ -151,6 +166,8 @@ CREATE TABLE `sa_order` (
   PRIMARY KEY (`order_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `sa_order_product`;
+
 CREATE TABLE `sa_order_product` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` INT(11) DEFAULT '0',
@@ -165,4 +182,4 @@ CREATE TABLE `sa_order_product` (
   `sort` INT(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `product_id` (`product_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
