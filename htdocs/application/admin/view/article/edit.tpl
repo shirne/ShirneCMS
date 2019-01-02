@@ -74,7 +74,7 @@
             </div>
         </div>
         <div class="form-group">
-            <label for="article-content">文章摘要</label>
+            <label for="description">文章摘要</label>
             <textarea name="description" class="form-control" >{$article.description}</textarea>
         </div>
         <div class="form-group">

@@ -55,3 +55,6 @@ CREATE TABLE `sa_o_auth` (
   `status` tinyint(4) DEFAULT 1,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+ALTER TABLE `sa_notice` ADD  `page` varchar(100) DEFAULT '',ADD  `summary` VARCHAR(500) DEFAULT '';

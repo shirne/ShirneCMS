@@ -12,6 +12,10 @@
             <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="输入公告标题">
         </div>
         <div class="form-group">
+            <label for="bb">调用标志</label>
+            <input type="text" name="page" class="form-control" value="{$model.page}" >
+        </div>
+        <div class="form-group">
             <label for="bb">链接地址</label>
             <input type="text" name="url" class="form-control" value="{$model.url}" placeholder="输入链接地址">
         </div>
@@ -23,6 +27,10 @@
             <label class="radio-inline">
                 <input type="radio" name="status" id="status0" value="0" <if condition="$model.status eq 0">checked="checked"</if>>隐藏
             </label>
+        </div>
+        <div class="form-group">
+            <label for="summary">公告摘要</label>
+            <textarea name="summary" class="form-control" >{$model.summary}</textarea>
         </div>
         <div class="form-group">
             <label for="post-content">公告内容</label>

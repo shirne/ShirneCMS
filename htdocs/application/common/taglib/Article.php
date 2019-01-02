@@ -172,6 +172,23 @@ class Article extends BaseTabLib
         return $parseStr;
     }
 
+    public function tagNotice($tag){
+        $var  = isset($tag['var']) ? $tag['var'] : 'notice_model';
+        $name=isset($tag['name']) ? $this->parseArg($tag['name']) : '';
+
+        $parseStr='<?php ';
+
+        $parseStr.='$'.$var.'=\think\Db::name("Notice")';
+        $parseStr .= '->where(\'status\',1)';
+        if(!empty($group)){
+            $parseStr .= '->where(\'page\','.$name.')';
+        }
+        $parseStr .= '->find();';
+
+        $parseStr .= ' ?>';
+        return $parseStr;
+    }
+
     public function tagCates($tag){
         $var  = isset($tag['var']) ? $tag['var'] : 'cates_list';
         $pid = isset($tag['pid']) ? $this->parseArg($tag['pid']) : -1;

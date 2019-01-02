@@ -46,14 +46,14 @@ class NoticeController extends BaseController
             } else {
                 $data['manager_id'] = session('adminId');
                 $model=NoticeModel::create($data);
-                if ($model->getLastInsID()) {
+                if ($model['id']) {
                     $this->success(lang('Add success!'), url('Notice/index'));
                 } else {
                     $this->error(lang('Add failed!'));
                 }
             }
         }
-        $model=array();
+        $model=array('status'=>1);
         $this->assign('model',$model);
         $this->assign('id',0);
         return $this->fetch('edit');

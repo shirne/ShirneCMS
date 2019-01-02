@@ -158,11 +158,13 @@ CREATE TABLE `sa_notice` (
   `lang` varchar(10) DEFAULT NULL COMMENT '语言',
   `main_id` int(11) DEFAULT NULL COMMENT '主id',
   `title` varchar(100) DEFAULT NULL,
+  `page` varchar(100) DEFAULT '',
   `url` varchar(150) DEFAULT NULL,
   `status` tinyint(4) DEFAULT NULL,
   `manager_id` int(11) DEFAULT '0',
   `create_time` int(11) DEFAULT '0',
   `update_time` int(11) DEFAULT '0',
+  `summary` VARCHAR(500) DEFAULT '',
   `content` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
