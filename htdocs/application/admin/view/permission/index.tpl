@@ -21,6 +21,7 @@
                 <th>菜单名</th>
                 <th>键值</th>
                 <th>链接</th>
+                <th>状态</th>
                 <th width="160">&nbsp;</th>
             </tr>
         </thead>
@@ -31,6 +32,13 @@
                 <td>{$v.name}</td>
                 <td>{$v.key}</td>
                 <td>{$v.url}</td>
+                <td data-disable="{$v.disable}">
+                    <if condition="$v['disable'] EQ 1">
+                        <span class="chgstatus off" data-id="{$v.id}" data-status="0" title="点击显示">隐藏</span>
+                        <else/>
+                        <span class="chgstatus" data-id="{$v.id}" data-status="1" title="点击隐藏">显示</span>
+                    </if>
+                </td>
                 <td class="operations">
                     <a class="btn btn-outline-primary" title="添加" href="{:url('permission/add',array('pid'=>$v['id']))}"><i class="ion-md-add"></i> </a>
                     <a class="btn btn-outline-primary" title="编辑" href="{:url('permission/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> </a>
@@ -44,6 +52,13 @@
                     <td><span class="tree-pre">{$soncount==$key+1?'└─':'├─'}</span> {$sv.name}</td>
                     <td>{$sv.key}</td>
                     <td>{$sv.url}</td>
+                    <td data-disable="{$sv.disable}">
+                        <if condition="$sv['disable'] EQ 1">
+                            <span class="chgstatus off" data-id="{$sv.id}" data-status="0" title="点击显示">隐藏</span>
+                            <else/>
+                            <span class="chgstatus" data-id="{$sv.id}" data-status="1" title="点击隐藏">显示</span>
+                        </if>
+                    </td>
                     <td class="operations">
                         <a class="btn btn-outline-primary" title="添加" href="{:url('permission/add',array('pid'=>$sv['id']))}"><i class="ion-md-add"></i> </a>
                         <a class="btn btn-outline-primary" title="编辑" href="{:url('permission/edit',array('id'=>$sv['id']))}"><i class="ion-md-create"></i> </a>
@@ -56,6 +71,13 @@
                         <td><span class="fa">&nbsp;</span><span class="fa">┣</span> {$mv.name}</td>
                         <td>{$mv.key}</td>
                         <td>{$mv.url}</td>
+                        <td data-disable="{$mv.disable}">
+                            <if condition="$mv['disable'] EQ 1">
+                                <span class="chgstatus off" data-id="{$mv.id}" data-status="0" title="点击显示">隐藏</span>
+                                <else/>
+                                <span class="chgstatus" data-id="{$mv.id}" data-status="1" title="点击隐藏">显示</span>
+                            </if>
+                        </td>
                         <td class="operations">
                             <a class="btn btn-outline-primary" title="编辑" href="{:url('permission/edit',array('id'=>$mv['id']))}"><i class="ion-md-create"></i> </a>
                             <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('permission/delete',array('id'=>$mv['id']))}" ><i class="ion-md-trash"></i> </a>
@@ -69,4 +91,37 @@
     {$page|raw}
 </div>
 
+</block>
+<block name="script">
+    <script type="text/javascript">
+        jQuery(function ($) {
+            $('.chgstatus').click(function (e) {
+                if($(this).data('ajaxing'))return;
+                $(this).data('ajaxing',1);
+                var self=$(this);
+                var id=$(this).data('id');
+                var status=$(this).data('status');
+                $.ajax({
+                    url:'{:url("permission/status")}',
+                    type:'POST',
+                    dataType:'JSON',
+                    data:{
+                        id:id,
+                        disable:status
+                    },
+                    success:function (json) {
+                        self.data('ajaxing',0);
+                        if(json.code==1){
+                            dialog.success(json.msg);
+                            setTimeout(function () {
+                                location.reload();
+                            },1000);
+                        }else{
+                            dialog.error(json.msg);
+                        }
+                    }
+                })
+            })
+        })
+    </script>
 </block>

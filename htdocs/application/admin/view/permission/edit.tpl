@@ -39,6 +39,19 @@
             <label for="p-content">排序</label>
             <input type="text" name="order_id" class="form-control" value="{$perm.order_id}" id="perm-order_id" placeholder="排序，从小到大">
         </div>
+        <div class="form-row">
+            <label class="col-md-1">状态</label>
+            <div class="form-group col-md-2">
+                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <label class="btn btn-outline-secondary{$perm['disable']==0?' active':''}">
+                        <input type="radio" name="disable" value="0" autocomplete="off" {$perm['disable']==0?' checked':''}> 显示
+                    </label>
+                    <label class="btn btn-outline-secondary{$perm['disable']==1?' active':''}">
+                        <input type="radio" name="disable" value="1" autocomplete="off"{$perm['disable']==1?' checked':''}> 隐藏
+                    </label>
+                </div>
+            </div>
+        </div>
         <div class="form-group">
         <input type="hidden" name="id" value="{$perm.id}">
         <button type="submit" class="btn btn-primary">提交</button>

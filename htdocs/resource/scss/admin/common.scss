@@ -40,6 +40,41 @@ h6 {
   display: none;
 }
 
+.chgstatus{
+  padding:4px 8px;
+  padding-left: 24px;
+  position: relative;
+  background:#17a2b8;
+  border-radius:30px;
+  font-size: 12px;
+  line-height: 1em;
+  color:#fff;
+  cursor: pointer;
+  transition: all .5s;
+  &:after{
+    content: "";
+    transition: all .5s;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    left: 2px;
+    top: 2px;
+    border-radius: 20px;
+    box-shadow: 1px 1px 5px rgba(0,0,0,.2);
+  }
+  &.off{
+    background: #ccc;
+    padding-left:8px;
+    padding-right:24px;
+    color:#999;
+    &:after{
+      left:auto;
+      right:2px;
+    }
+  }
+}
+
 .input-group-middle {
   display: -ms-flexbox;
   display: flex;

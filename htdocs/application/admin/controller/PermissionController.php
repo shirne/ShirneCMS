@@ -18,8 +18,12 @@ class PermissionController extends BaseController
      */
     public function index()
     {
-        $lists=getMenus();
-        $this->assign('model', $lists);
+        $list=Db::name('permission')->order('parent_id ASC,order_id ASC,id ASC')->select();
+        $menus=array();
+        foreach ($list as $item){
+            $menus[$item['parent_id']][]=$item;
+        }
+        $this->assign('model', $menus);
         return $this->fetch();
     }
 
@@ -88,6 +92,23 @@ class PermissionController extends BaseController
         }
         $this->assign('perm',$model);
         return $this->fetch();
+    }
+
+    /**
+     * @param $id
+     * @param int $disable
+     */
+    public function status($id,$disable=1)
+    {
+        $id = intval($id);
+        $model = Db::name('Permission');
+        $result = $model->where('id',$id)->update(['disable'=>$disable?1:0]);
+        if($result){
+            cache('menus',null);
+            $this->success(lang('Update success!'), url('permission/index'));
+        }else{
+            $this->error(lang('Update failed!'));
+        }
     }
 
     /**
