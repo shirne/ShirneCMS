@@ -94,7 +94,7 @@ class MemberLevelController extends BaseController
                 exit();
             } else {
                 $levelModel=MemberLevelModel::create($data);
-                $insertId=$levelModel->getLastInsID();
+                $insertId=$levelModel['id'];
                 if ($insertId!==false) {
                     cache('levels', null);
                     user_log($this->mid,'addlevel',1,'添加会员组'.$insertId ,'manager');
