@@ -52,17 +52,17 @@ class PaytypeController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
-                $delete_images=[];
+
                 $file = $this->upload('paytype', 'upload_qrcode');
                 if ($file) {
                     $data['qrcode'] = $file['url'];
-                    $delete_images[]=$data['delete_qrcode'];
+
                 }elseif($this->uploadErrorCode>102){
                     $this->error($this->uploadErrorCode.':'.$this->uploadError);
                 }
-                unset($data['delete_qrcode']);
+
                 if (Db::name('Paytype')->insert($data)) {
-                    delete_image($delete_images);
+
                     $this->success(lang('Add success!'), url('Paytype/index'));
                 } else {
                     delete_image($data['qrcode']);
@@ -92,14 +92,19 @@ class PaytypeController extends BaseController
                 $this->error($validate->getError());
                 exit();
             } else {
+                $delete_images=[];
                 $file=$this->upload('paytype','qrcodefile');
                 if($file){
                     $data['qrcode']=$file['url'];
+                    if(!empty($data['delete_qrcode']))$delete_images[]=$data['delete_qrcode'];
                 }elseif($this->uploadErrorCode>102){
                     $this->error($this->uploadErrorCode.':'.$this->uploadError);
                 }
+                unset($data['delete_qrcode']);
+
                 $data['id']=$id;
                 if (Db::name('Paytype')->update($data)) {
+                    delete_image($delete_images);
                     $this->success(lang('Update success!'), url('Paytype/index'));
                 } else {
                     delete_image($data['qrcode']);
