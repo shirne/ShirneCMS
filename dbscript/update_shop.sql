@@ -1,5 +1,5 @@
 
-INSERT INTO `sa_permission` (`id`, `parent_id`,`name`, `url`,`key`, `icon`, `order_id`, `disable`)
+INSERT INTO `sa_permission` (`id`, `parent_id`,`name`, `url`,`key`, `icon`, `sort_id`, `disable`)
 VALUES
   (6,0,'商城','','Shop','ion-md-cart',2,0),
   (61,6,'分类管理','ProductCategory/index','product_category_index','ion-md-medical',0,0),

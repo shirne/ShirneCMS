@@ -26,6 +26,10 @@ jQuery(function ($) {
         bread.html(html.join("\n"));
     }
 
+    $(window).on('scroll',function (e) {
+
+    }).trigger('scroll');
+
     //全选、反选按钮
     $('.checkall-btn').click(function (e) {
         var target = $(this).data('target');
@@ -114,7 +118,7 @@ jQuery(function ($) {
                 }
             }
         })
-    })
+    });
 
     //表格行操作提示
     $('.operations .btn').tooltip();
@@ -170,6 +174,7 @@ jQuery(function ($) {
         });
     });
 
+    //点击放大浏览图片效果
     $('.img-view').click(function (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -180,6 +185,7 @@ jQuery(function ($) {
         }).show('<a href="'+url+'" class="d-block text-center" target="_blank"><img class="img-fluid" src="'+url+'" /></a><div class="text-muted text-center">点击图片在新页面放大查看</div>', '查看图片');
     });
 
+    //tab切换效果
     $('.nav-tabs a').click(function (e) {
         e.preventDefault();
         $(this).tab('show');
@@ -307,6 +313,7 @@ jQuery(function ($) {
         $.ajax(options);
     });
 
+    //用户选择按钮绑定
     $('.pickuser').click(function (e) {
         var group = $(this).parents('.input-group');
         var idele = group.find('[name=member_id]');
@@ -316,6 +323,8 @@ jQuery(function ($) {
             infoele.val('[' + user.id + '] ' + user.username + (user.mobile ? (' / ' + user.mobile) : ''));
         }, $(this).data('filter'));
     });
+
+    //位置选择按钮绑定
     $('.pick-locate').click(function(e){
         var group=$(this).parents('.input-group');
         var idele=group.find('input[type=text]');

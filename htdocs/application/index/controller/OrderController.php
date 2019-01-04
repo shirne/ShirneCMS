@@ -156,6 +156,7 @@ class OrderController extends AuthedController
         $params['paySign']=strtoupper(md5($string));
 
         $this->assign('paydata',$params);
+        $this->assign('payamount',number_format($order['payamount']));
         return $this->fetch();
     }
     public function balancepay($order_id){

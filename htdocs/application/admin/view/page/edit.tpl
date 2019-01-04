@@ -6,7 +6,7 @@
     <div id="page-wrapper">
         <div class="page-header">{$id>0?'编辑':'添加'}页面</div>
         <div id="page-content">
-            <form method="post" action="" enctype="multipart/form-data">
+            <form method="post" class="page-form" action="" enctype="multipart/form-data">
                 <div class="form-row">
                     <div class="col form-group">
                         <label for="page-title">页面标题</label>
@@ -93,7 +93,7 @@
                     <label for="p-content">单页内容</label>
                     <script id="p-content" name="content" type="text/plain">{$page.content|raw}</script>
                 </div>
-                <div class="form-group">
+                <div class="form-group submit-btn">
                     <input type="hidden" name="id" value="{$page.id}">
                     <button type="submit" class="btn btn-primary">{$id>0?'保存':'添加'}</button>
                 </div>

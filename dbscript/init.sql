@@ -1,6 +1,6 @@
 TRUNCATE TABLE `sa_permission`;
 
-INSERT INTO `sa_permission` (`id`, `parent_id`,`name`, `url`,`key`, `icon`, `order_id`, `disable`)
+INSERT INTO `sa_permission` (`id`, `parent_id`,`name`, `url`,`key`, `icon`, `sort_id`, `disable`)
 VALUES
   (1,0,'主面板','Index/index','Board','ion-md-speedometer',0,0),
   (2,0,'内容','','Content','ion-md-apps',1,0),

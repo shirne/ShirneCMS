@@ -762,7 +762,7 @@ CREATE TABLE `sa_permission` (
   `url` VARCHAR(100) NULL,
   `key` VARCHAR(50) NULL,
   `icon` VARCHAR(30) NULL,
-  `order_id` INT NULL,
+  `sort_id` INT NULL,
   `disable` TINYINT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

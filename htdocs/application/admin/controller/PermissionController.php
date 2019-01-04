@@ -18,7 +18,7 @@ class PermissionController extends BaseController
      */
     public function index()
     {
-        $list=Db::name('permission')->order('parent_id ASC,order_id ASC,id ASC')->select();
+        $list=Db::name('permission')->order('parent_id ASC,sort_id ASC,id ASC')->select();
         $menus=array();
         foreach ($list as $item){
             $menus[$item['parent_id']][]=$item;
