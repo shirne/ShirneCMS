@@ -64,11 +64,11 @@
                 <td>{$v.name}<if condition="$v.use_template EQ 1">&nbsp;<span class="badge badge-warning">独立模板</span></if></td>
                 <td>{$v.title}</td>
                 <td>{$v.sort}</td>
-                <td>
-                    <if condition="$v.status eq 1">
-                        <span class="badge badge-success">显示</span>
+                <td data-id="{$v.id}" data-url="{:url('status')}">
+                    <if condition="$v['status'] EQ 1">
+                        <span class="chgstatus" data-status="0" title="点击隐藏">显示</span>
                         <else/>
-                        <span class="badge badge-secondary">隐藏</span>
+                        <span class="chgstatus off" data-status="1" title="点击显示">隐藏</span>
                     </if>
                 </td>
                 <td class="operations">
@@ -89,7 +89,7 @@
             w.actionShow=function(ids){
                 dialog.confirm('确定将选中页面显示？',function() {
                     $.ajax({
-                        url:'{:url('page/status',['id'=>'__id__','type'=>1])}'.replace('__id__',ids.join(',')),
+                        url:'{:url('page/status',['id'=>'__id__','status'=>1])}'.replace('__id__',ids.join(',')),
                         type:'GET',
                         dataType:'JSON',
                         success:function(json){
@@ -107,7 +107,7 @@
             w.actionHide=function(ids){
                 dialog.confirm('确定将选中页面隐藏？',function() {
                     $.ajax({
-                        url:'{:url('page/status',['id'=>'__id__','type'=>0])}'.replace('__id__',ids.join(',')),
+                        url:'{:url('page/status',['id'=>'__id__','status'=>0])}'.replace('__id__',ids.join(',')),
                         type:'GET',
                         dataType:'JSON',
                         success:function(json){

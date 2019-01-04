@@ -85,11 +85,11 @@
 					</td>
 					<td>{$v.create_time|showdate}</td>
 					<td>{$v.category_title}</td>
-					<td>
-						<if condition="$v.status eq 1">
-							<span class="badge badge-success">已发布</span>
+					<td data-url="{:url('push')}" data-id="{$v.id}">
+						<if condition="$v['status'] EQ 1">
+							<span class="chgstatus" data-status="0" title="点击下架">已上架</span>
 							<else/>
-							<span class="badge badge-secondary">未发布</span>
+							<span class="chgstatus off" data-status="1" title="点击上架">已下架</span>
 						</if>
 					</td>
 					<td class="operations">
@@ -113,7 +113,7 @@
 			w.actionPublish=function(ids){
 				dialog.confirm('确定将选中产品发布到前台？',function() {
 				    $.ajax({
-						url:'{:url('article/push',['id'=>'__id__','type'=>1])}'.replace('__id__',ids.join(',')),
+						url:'{:url('article/push',['id'=>'__id__','status'=>1])}'.replace('__id__',ids.join(',')),
 						type:'GET',
 						dataType:'JSON',
 						success:function(json){
@@ -131,7 +131,7 @@
             w.actionCancel=function(ids){
                 dialog.confirm('确定取消选中产品的发布状态？',function() {
                     $.ajax({
-                        url:'{:url('article/push',['id'=>'__id__','type'=>0])}'.replace('__id__',ids.join(',')),
+                        url:'{:url('article/push',['id'=>'__id__','status'=>0])}'.replace('__id__',ids.join(',')),
                         type:'GET',
                         dataType:'JSON',
                         success:function(json){

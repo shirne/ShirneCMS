@@ -122,11 +122,11 @@ class PageController extends BaseController
     /**
      * 状态设置
      * @param $id
-     * @param int $type
+     * @param int $status
      */
-    public function status($id,$type=0){
+    public function status($id,$status=0){
         $model = Db::name('page');
-        $result = $model->where('id','in',idArr($id))->update(['status'=>intval($type)]);
+        $result = $model->where('id','in',idArr($id))->update(['status'=>intval($status)]);
         if($result){
             $this->success("设置成功", url('page/index'));
         }else{

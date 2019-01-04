@@ -96,13 +96,13 @@ class PermissionController extends BaseController
 
     /**
      * @param $id
-     * @param int $disable
+     * @param int $status
      */
-    public function status($id,$disable=1)
+    public function status($id,$status=1)
     {
         $id = intval($id);
         $model = Db::name('Permission');
-        $result = $model->where('id',$id)->update(['disable'=>$disable?1:0]);
+        $result = $model->where('id',$id)->update(['disable'=>$status?1:0]);
         if($result){
             cache('menus',null);
             $this->success(lang('Update success!'), url('permission/index'));

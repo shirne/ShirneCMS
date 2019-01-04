@@ -91,6 +91,27 @@ class NoticeController extends BaseController
     }
 
     /**
+     * 发布
+     * @param $id
+     * @param int $status
+     */
+    public function status($id,$status=0)
+    {
+        $data['status'] = $status==1?1:0;
+
+        $result = Db::name('Notice')->whereIn("id",idArr($id))->update($data);
+        if ($result && $data['status'] === 1) {
+            user_log($this->mid,'pushnotice',1,'发布公告 '.$id ,'manager');
+            $this -> success("发布成功", url('Notice/index'));
+        } elseif ($result && $data['status'] === 0) {
+            user_log($this->mid,'cancelnotice',1,'撤销公告 '.$id ,'manager');
+            $this -> success("撤销成功", url('Notice/index'));
+        } else {
+            $this -> error("操作失败");
+        }
+    }
+
+    /**
      * 删除
      * @param $id
      */

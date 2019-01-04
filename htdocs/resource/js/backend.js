@@ -83,6 +83,39 @@ jQuery(function ($) {
         }
     });
 
+    //状态切换按钮
+    $('.chgstatus').click(function (e) {
+        if($(this).data('ajaxing'))return;
+        $(this).data('ajaxing',1);
+        var self=$(this);
+        var parent=self.parents('td');
+        var id=parent.data('id');
+        var status=self.data('status');
+        $.ajax({
+            url:parent.data('url'),
+            type:'POST',
+            dataType:'JSON',
+            data:{
+                id:id,
+                status:status
+            },
+            success:function (json) {
+                self.data('ajaxing',0);
+                if(json.code==1){
+                    dialog.success(json.msg);
+                    self.toggleClass('off');
+                    var totext=self.attr('title').replace('点击','');
+                    self.text(totext);
+                    setTimeout(function () {
+                        location.reload();
+                    },1000);
+                }else{
+                    dialog.error(json.msg);
+                }
+            }
+        })
+    })
+
     //表格行操作提示
     $('.operations .btn').tooltip();
 

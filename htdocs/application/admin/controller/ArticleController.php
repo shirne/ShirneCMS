@@ -194,11 +194,11 @@ class ArticleController extends BaseController
     /**
      * 发布
      * @param $id
-     * @param int $type
+     * @param int $status
      */
-	public function push($id,$type=0)
+	public function status($id,$status=0)
     {
-        $data['status'] = $type==1?1:0;
+        $data['status'] = $status==1?1:0;
 
         $result = Db::name('article')->whereIn("id",idArr($id))->update($data);
         if ($result && $data['status'] === 1) {

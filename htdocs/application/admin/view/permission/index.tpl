@@ -71,11 +71,11 @@
                         <td><span class="fa">&nbsp;</span><span class="fa">┣</span> {$mv.name}</td>
                         <td>{$mv.key}</td>
                         <td>{$mv.url}</td>
-                        <td data-disable="{$mv.disable}">
+                        <td data-url="{:url('status')}" data-id="{$mv.id}">
                             <if condition="$mv['disable'] EQ 1">
-                                <span class="chgstatus off" data-id="{$mv.id}" data-status="0" title="点击显示">隐藏</span>
+                                <span class="chgstatus off" data-status="0" title="点击显示">隐藏</span>
                                 <else/>
-                                <span class="chgstatus" data-id="{$mv.id}" data-status="1" title="点击隐藏">显示</span>
+                                <span class="chgstatus" data-status="1" title="点击隐藏">显示</span>
                             </if>
                         </td>
                         <td class="operations">
@@ -95,33 +95,7 @@
 <block name="script">
     <script type="text/javascript">
         jQuery(function ($) {
-            $('.chgstatus').click(function (e) {
-                if($(this).data('ajaxing'))return;
-                $(this).data('ajaxing',1);
-                var self=$(this);
-                var id=$(this).data('id');
-                var status=$(this).data('status');
-                $.ajax({
-                    url:'{:url("permission/status")}',
-                    type:'POST',
-                    dataType:'JSON',
-                    data:{
-                        id:id,
-                        disable:status
-                    },
-                    success:function (json) {
-                        self.data('ajaxing',0);
-                        if(json.code==1){
-                            dialog.success(json.msg);
-                            setTimeout(function () {
-                                location.reload();
-                            },1000);
-                        }else{
-                            dialog.error(json.msg);
-                        }
-                    }
-                })
-            })
+
         })
     </script>
 </block>

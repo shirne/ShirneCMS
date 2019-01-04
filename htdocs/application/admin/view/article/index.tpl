@@ -67,11 +67,11 @@
 					<td>{$v.create_time|showdate}</td>
 					<td>{$v.username}</td>
 					<td>{$v.category_title}</td>
-					<td>
-						<if condition="$v.status eq 1">
-							<span class="badge badge-success">已发布</span>
+					<td data-url="{:url('status')}" data-id="{$v.id}">
+						<if condition="$v['status'] EQ 1">
+							<span class="chgstatus" data-status="0" title="点击隐藏">已发布</span>
 							<else/>
-							<span class="badge badge-secondary">未发布</span>
+							<span class="chgstatus off" data-status="1" title="点击发布">未发布</span>
 						</if>
 					</td>
 					<td class="operations">
@@ -95,7 +95,7 @@
 			w.actionPublish=function(ids){
 				dialog.confirm('确定将选中文章发布到前台？',function() {
 				    $.ajax({
-						url:'{:url('article/push',['id'=>'__id__','type'=>1])}'.replace('__id__',ids.join(',')),
+						url:'{:url('article/status',['id'=>'__id__','status'=>1])}'.replace('__id__',ids.join(',')),
 						type:'GET',
 						dataType:'JSON',
 						success:function(json){
@@ -113,7 +113,7 @@
             w.actionCancel=function(ids){
                 dialog.confirm('确定取消选中文章的发布状态？',function() {
                     $.ajax({
-                        url:'{:url('article/push',['id'=>'__id__','type'=>0])}'.replace('__id__',ids.join(',')),
+                        url:'{:url('article/status',['id'=>'__id__','status'=>0])}'.replace('__id__',ids.join(',')),
                         type:'GET',
                         dataType:'JSON',
                         success:function(json){

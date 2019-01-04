@@ -36,7 +36,13 @@
                 <td>{$v.id}</td>
                 <td>{$v.title}</td>
                 <td>{$v.url}</td>
-                <td><if condition="$v['status']">显示<else/>隐藏</if></td>
+                <td data-id="{$v.id}" data-url="{:url('status')}">
+                    <if condition="$v['status'] EQ 1">
+                        <span class="chgstatus" data-status="0" title="点击隐藏">显示</span>
+                        <else/>
+                        <span class="chgstatus off" data-status="1" title="点击显示">隐藏</span>
+                    </if>
+                </td>
                 <td class="operations">
                     <a class="btn btn-outline-primary" title="编辑" href="{:url('Notice/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> </a>
                     <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('Notice/delete',array('id'=>$v['id']))}"><i class="ion-md-trash"></i> </a>
