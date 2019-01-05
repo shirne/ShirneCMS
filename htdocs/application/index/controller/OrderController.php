@@ -145,7 +145,10 @@ class OrderController extends AuthedController
             redirect(url('index/login/index',['type'=>'wechat']))->send();exit;
         }
 
-        $payorder = PayOrderModel::createOrder($ordertype,$order_id,$order['payamount']*100,$order['member_id']);
+        $payorder = PayOrderModel::createOrder(
+            PayOrderModel::PAY_TYPE_WECHAT,
+            $ordertype,$order_id,$order['payamount']*100,$order['member_id']
+        );
 
         $wechat=WechatModel::where('id',$this->wechatUser['type_id'])
         ->where('type','wechat')->find();

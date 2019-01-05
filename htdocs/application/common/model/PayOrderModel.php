@@ -7,6 +7,8 @@ use think\Db;
 
 class PayOrderModel extends BaseModel
 {
+    public static const PAY_TYPE_WECHAT='wechat';
+
     private static function create_no(){
         $maxid=static::field('max(id) as maxid')->find();
         $maxid = $maxid['maxid'];
@@ -18,9 +20,10 @@ class PayOrderModel extends BaseModel
         return $strlen<$len?str_pad($id,$len,'0',STR_PAD_LEFT):substr($id,$strlen-$len);
     }
 
-    public static function createOrder($type,$order_id,$amount,$member_id){
+    public static function createOrder($paytype,$type,$order_id,$amount,$member_id){
         return static::create([
             'member_id'=>$member_id,
+            'pay_type'=>$paytype,
             'order_no'=>static::create_no(),
             'order_type'=>$type,
             'order_id'=>$order_id,
