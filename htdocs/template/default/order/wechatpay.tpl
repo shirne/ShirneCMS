@@ -6,10 +6,14 @@
             <h3 class="text-center"><img src="__STATIC__/images/wechatpay.png" style="margin:20px 0;" /> </h3>
         </div>
         <div class="card-body" style="padding-bottom:80px;">
-            <div class="pay_amount" style="padding:20px;text-align: center;color: #222;font-size:18px;">付款金额：{$payamount}</div>
+            <div class="pay_amount" style="padding:20px;text-align: center;color: #222;font-size:18px;">付款金额：{$payorder['pay_amount']|showmoney}</div>
             <div class="weui-btn-area" style="margin:50px;">
                 <a href="javascript:;" class="btn btn-block btn-success" id="btngopay">发起支付</a>
-                <a href="{:aurl('index/member.order/detail',['id'=>$order_id])}" class="btn btn-block btn-secondary" >查看订单</a>
+                <if condition="$payorder['order_type'] EQ 'recharge'">
+                    <a href="{:url('index/member.account/rechargeList')}" class="btn btn-block btn-secondary orderlink" >查看订单</a>
+                    <else/>
+                    <a href="{:url('index/member.order/detail',['id'=>$payorder['order_id']])}" class="btn btn-block btn-secondary orderlink" >查看订单</a>
+                </if>
             </div>
         </div>
     </div>
@@ -33,7 +37,7 @@
                         // 使用以上方式判断前端返回,微信团队郑重提示：
                         //res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
                         weui.alert('支付成功',function () {
-                            location.href="{:aurl('index/member.order/detail',['order_id'=>$order_id])}";
+                            location.href=$('.orderlink').attr('href');
                         });
                     }else{
                         alert(res.err_desc||res.err_msg||res.errMsg);

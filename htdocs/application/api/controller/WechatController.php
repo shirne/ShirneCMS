@@ -5,6 +5,7 @@ namespace app\api\controller;
 use app\api\Processer\BaseProcesser;
 use app\common\model\MemberOauthModel;
 use app\common\model\OrderModel;
+use app\common\model\PayOrderModel;
 use app\common\model\WechatModel;
 use EasyWeChat\BasicService\Application;
 use EasyWeChat\Factory;
@@ -299,8 +300,8 @@ class WechatController extends Controller{
             // 记录日志
             Log::record(var_export($message,TRUE),'pay');
 
-            $model=new OrderModel();
-            $order = $model->where('order_no',$message['out_trade_no'])->find();
+            //$model=new OrderModel();
+            $order = PayOrderModel::where('order_no',$message['out_trade_no'])->find();
 
             if (empty($order) || $order['pay_time']>0) {
                 return true;
@@ -310,18 +311,24 @@ class WechatController extends Controller{
             if ($message['return_code'] === 'SUCCESS') {
                 // 用户是否支付成功
                 if ($message['result_code'] === 'SUCCESS') {
-                    $order['pay_time'] = time();
-                    $order['status']= 1;
+                    PayOrderModel::updateStatus([
+                        'status'=>1,
+                        'pay_time'=>time(),
+                        'pay_bill'=>$message['transaction_id'],
+                        'time_end'=>$message['time_end']
+                    ],['order_no'=>$message['out_trade_no']]);
+                    //$order['pay_time'] = time();
+                    //$order['status']= 1;
 
                     // 用户支付失败
                 } elseif ($message['result_code'] === 'FAIL') {
-                    $order['status'] = 0;
+                    //$order['status'] = 0;
                 }
             } else {
                 return $fail('通信失败，请稍后再通知我');
             }
 
-            $order->save();
+            //$order->save();
 
             return true;
         });

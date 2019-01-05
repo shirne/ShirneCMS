@@ -150,7 +150,7 @@ jQuery(function ($) {
         e.stopPropagation();
         var text=$(this).data('confirm');
         var url=$(this).attr('href');
-        text=text.replace(/(\\n|\n)+/g,"<br />");
+        if(text)text=text.replace(/(\\n|\n)+/g,"<br />");
         if(!text)text=lang('Confirm operation?');
 
         dialog.confirm(text,function () {

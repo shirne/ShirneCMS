@@ -2,7 +2,7 @@
 
 namespace app\common\model;
 
-
+use think\Db;
 use think\facade\Log;
 use think\Model;
 
@@ -20,6 +20,39 @@ class BaseModel extends Model
         }catch (\InvalidArgumentException $e){
             Log::record($e->getMessage(),\think\Log::NOTICE);
             return null;
+        }
+    }
+
+    protected static $instance=null;
+    public static function getInstance(){
+        if(!self::$instance){
+            self::$instance=new static();
+        }
+        return self::$instance;
+    }
+
+    protected function triggerStatus($item,$status)
+    {
+
+    }
+
+    /**
+     * @param $toStatus int|array
+     * @param $where string|array|int
+     */
+    public function updateStatus($toStatus,$where){
+        if(is_array($toStatus)){
+            $data=$toStatus;
+        }else{
+            $data['status']=$toStatus;
+        }
+
+        $lists=Db::name($this->name)->where($where)->select();
+        Db::name($this->name)->where($where)->update($data);
+        foreach ($lists as $item){
+            if($item['status']!=$data['status']){
+                $this->triggerStatus($item,$data['status']);
+            }
         }
     }
 }

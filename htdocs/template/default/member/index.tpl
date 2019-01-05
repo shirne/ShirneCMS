@@ -22,8 +22,10 @@
         <div class="list-group">
             <a class="list-group-item" href="{:aurl('index/member.order/index')}"><i class="ion-md-list"></i> 我的订单</a>
             <a class="list-group-item" href="{:aurl('index/member.account/moneylog')}"><i class="ion-md-paper"></i> 积分记录</a>
-            <a class="list-group-item" href="{:aurl('index/member.account/cashlist')}"><i class="ion-md-reorder"></i> 提现记录</a>
+            <a class="list-group-item" href="{:aurl('index/member.account/cashList')}"><i class="ion-md-reorder"></i> 提现记录</a>
             <a class="list-group-item" href="{:aurl('index/member.account/cash')}"><i class="ion-md-cash"></i> 我要提现</a>
+            <a class="list-group-item" href="{:aurl('index/member.account/rechargeList')}"><i class="ion-md-reorder"></i> 充值记录</a>
+            <a class="list-group-item" href="{:aurl('index/member.account/recharge')}"><i class="ion-md-cash"></i> 我要充值</a>
         </div>
         <if condition="$user['is_agent'] GT 0">
             <div class="list-group">

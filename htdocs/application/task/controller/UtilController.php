@@ -1,15 +1,10 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: shirne
- * Date: 2018/4/20
- * Time: 23:50
- */
 
 namespace app\task\controller;
 
 
 use app\common\command\Install;
+use app\common\model\MemberRechargeModel;
 use think\Console;
 use think\console\Input;
 use think\console\Output;
@@ -43,10 +38,22 @@ class UtilController extends Controller
     public function daily()
     {
         # code...
+        /*for($i=0;$i<10;$i++){
+            MemberRechargeModel::create([
+                'member_id'=>1,
+                'paytype_id'=>1,
+                'amount'=>rand(10,100),
+                'create_time'=>time(),
+                'status'=>0,
+                'remark'=>'asdw'
+            ]);
+        }*/
+        $result=MemberRechargeModel::getInstance()->updateStatus(['status'=>1,'audit_time'=>time()],['status'=>0]);
+        echo $result;
     }
 
-    public function install($sql='',$mode=''){
-
+    public function install($sql='',$mode='')
+    {
         $console=Console::init(false);
         $output=new Output('buffer');
         $args=['install'];

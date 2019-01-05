@@ -52,6 +52,90 @@ class AccountController extends BaseController
         $this->assign('banklist',banklist());
         return $this->fetch();
     }
+
+    /**
+     * 充值
+     * @return mixed
+     */
+    public function recharge(){
+        $hasRecharge=Db::name('memberRecharge')->where('status',0)
+            ->where('member_id',$this->userid)->find();
+        if($this->request->isPost()){
+            if($hasRecharge>0){
+                $this->error('您有充值申请正在处理中',url('index/member/rechargeList'));
+            }
+            $amount=$_POST['amount']*100;
+            $type=$_POST['type_id'];
+            $pay_bill='';
+            if($type=='wechat'){
+                $typeid = -1;
+            }else {
+
+                $typeid = intval($_POST['type_id']);
+                $paytype = Db::name('paytype')->where('status', 1)->where('id', $typeid)->find();
+                if (empty($paytype)) {
+                    $this->error('充值方式错误');
+                }
+
+                $uploaded = $this->upload('recharge', 'pay_bill');
+                if (!$uploaded) {
+                    $this->error($this->uploadError);
+                }
+                $pay_bill=$uploaded['url'];
+            }
+
+            $data=array(
+                'member_id'=>$this->userid,
+                'amount'=>$amount,
+                'paytype_id'=>$typeid,
+                'pay_bill'=>$pay_bill,
+                'create_time'=>time(),
+                'status'=>0,
+                'remark'=>$_POST['remark']
+            );
+            if(empty($data['amount']) || $data['amount']<$this->config['recharge_limit']){
+                $this->error('充值金额填写错误');
+            }
+            if($this->config['recharge_power']>0 && $data['amount']%$this->config['recharge_power']>0){
+                $this->error('充值金额必需是'.$this->config['recharge_power'].'的倍数');
+            }
+
+            $addid=Db::name('memberRecharge')->insert($data,false,true);
+            if($addid) {
+                if($type=='wechat'){
+                    $this->success('充值订单提交成功，即将跳转到支付页面', url('index/order/wechatpay',['order_id'=>'CZ_'.$addid]));
+                }else {
+                    $this->success('充值申请已提交', url('index/member/index'));
+                }
+            }else{
+                $this->error('提交失败');
+            }
+        }
+        $types=Db::name('paytype')->where('status',1)->order('id ASC')->select();
+        $this->assign('types',$types);
+        $this->assign('hasRecharge',empty($hasRecharge)?0:1);
+        return $this->fetch();
+    }
+
+    public function rechargeList(){
+        $model=Db::name('memberRecharge')->where('member_id',$this->userid);
+
+        $recharges = $model->order('id DESC')->paginate(15);
+
+        $this->assign('page',$recharges->render());
+        $this->assign('recharges',$recharges);
+        return $this->fetch();
+    }
+
+    public function recharge_cancel($order_id){
+        $result=Db::name('memberRecharge')->where('id',$order_id)->update(['status'=>2]);
+        if($result){
+            $this->success('取消成功');
+        }else{
+            $this->error('取消失败');
+        }
+    }
+
     public function cashList(){
         $model=Db::name('memberCashin')->where('member_id',$this->userid);
 

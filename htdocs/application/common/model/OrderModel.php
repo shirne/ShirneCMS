@@ -31,7 +31,7 @@ class OrderModel extends BaseModel
         self::afterWrite(function ( $model)
         {
             $where=$model->getWhere();if(empty($where))return;
-            $orders=$model->where($model->getWhere())->select();
+            $orders=$model->where($where)->select();
             if(!empty($orders)) {
                 foreach ($orders as $order) {
                     if ($order['status'] > 0 && $order['isaudit'] == 1) {

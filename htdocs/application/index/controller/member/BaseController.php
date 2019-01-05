@@ -1,16 +1,15 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: shirne
- * Date: 2018/12/25
- * Time: 10:23
- */
 
 namespace app\index\controller\member;
 
 
 use app\index\controller\AuthedController;
 
+/**
+ * 会员中心基类
+ * Class BaseController
+ * @package app\index\controller\member
+ */
 class BaseController extends AuthedController
 {
     public function initialize()

@@ -256,6 +256,25 @@ CREATE TABLE `sa_member` (
   KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+DROP TABLE IF EXISTS `sa_pay_order`;
+CREATE TABLE `sa_pay_order` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `member_id` INT NULL DEFAULT 0,
+  `order_no` VARCHAR(30) NULL,
+  `order_type` VARCHAR(20) NULL,
+  `pay_type` VARCHAR(20) NULL,
+  `order_id` INT NULL,
+  `create_time` INT NULL,
+  `pay_time` INT NULL,
+  `pay_amount` INT NULL,
+  `status` TINYINT NULL,
+  `pay_bill` VARCHAR(40) NULL,
+  `time_end` VARCHAR(20) NULL,
+  PRIMARY KEY (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 DROP TABLE IF EXISTS `sa_member_freeze`;
 
 CREATE TABLE `sa_member_freeze` (
@@ -414,6 +433,7 @@ CREATE TABLE `sa_member_recharge` (
   `paytype_id` int(11) NOT NULL,
   `amount` int(11) DEFAULT '0' COMMENT '金额 单位分',
   `create_time` int(11) DEFAULT NULL,
+  `pay_bill` varchar(150) DEFAULT '',
   `status` tinyint(4) DEFAULT '0',
   `remark` varchar(45) DEFAULT '',
   `audit_time` int(11) DEFAULT '0',

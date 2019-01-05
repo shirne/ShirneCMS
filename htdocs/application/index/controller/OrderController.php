@@ -12,6 +12,7 @@ namespace app\index\controller;
 use app\common\facade\MemberCartFacade;
 use app\common\facade\OrderFacade;
 use app\common\model\OrderModel;
+use app\common\model\PayOrderModel;
 use app\common\model\WechatModel;
 use app\common\validate\OrderValidate;
 use EasyWeChat\Factory;
@@ -118,13 +119,34 @@ class OrderController extends AuthedController
     }
 
     public function wechatpay($order_id){
-        $order=OrderModel::get($order_id);
+        if(!$this->isWechat){
+            $this->error('请在微信内使用此支付方式!');
+        }
+        $ordertype='';
+        if(strpos($order_id,'CZ_')===0){
+            $ordertype='recharge';
+            $order_id=intval(substr($order_id,3));
+            $order=Db::name('memberRecharge')->where('id',$order_id)
+                ->find();
+            if(!empty($order)) {
+                $order['payamount'] = $order['amount'] * .01;
+                $order['order_no'] = 'CZ_' . str_pad($order['id'], 6, '0', STR_PAD_LEFT);
+            }
+        }else {
+            $order = OrderModel::get($order_id);
+
+        }
+
         if(empty($order) || $order['status']!=0){
             $this->error('订单已支付或不存在!');
         }
         if(empty($this->wechatUser)){
-            $this->error('未能获取用户微信授权!');
+            redirect()->remember();
+            redirect(url('index/login/index',['type'=>'wechat']))->send();exit;
         }
+
+        $payorder = PayOrderModel::createOrder($ordertype,$order_id,$order['payamount']*100,$order['member_id']);
+
         $wechat=WechatModel::where('id',$this->wechatUser['type_id'])
         ->where('type','wechat')->find();
         $config=WechatModel::to_pay_config($wechat);
@@ -140,7 +162,7 @@ class OrderController extends AuthedController
             'trade_type' => 'JSAPI',
             'openid' => $this->wechatUser['openid'],
         ]);
-        if(empty($result) || $result['return_code']!='SUCCESS'){
+        if(empty($result) || $result['return_code']!='SUCCESS' || $result['result_code']!='SUCCESS'){
             $this->error('支付发起失败');
         }
 
@@ -156,7 +178,7 @@ class OrderController extends AuthedController
         $params['paySign']=strtoupper(md5($string));
 
         $this->assign('paydata',$params);
-        $this->assign('payamount',number_format($order['payamount']));
+        $this->assign('payorder',$payorder);
         return $this->fetch();
     }
     public function balancepay($order_id){

@@ -1,16 +1,14 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: shirne
- * Date: 2018/5/2
- * Time: 19:21
- */
 
 namespace app\common\model;
 
 
 use think\Db;
 
+/**
+ * Class AdvGroupModel
+ * @package app\common\model
+ */
 class AdvGroupModel extends BaseModel
 {
     public static function getAdList($flag,$limit=10)

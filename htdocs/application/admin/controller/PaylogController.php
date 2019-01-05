@@ -3,6 +3,7 @@
 namespace app\admin\controller;
 
 
+use app\common\model\MemberRechargeModel;
 use excel\Excel;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use think\Db;
@@ -74,12 +75,11 @@ class PaylogController extends BaseController
         if(empty($recharge))$this->error('充值单不存在');
         if($recharge['status']!=0)$this->error('充值单已处理过了');
 
-        $recharge=Db::name('member_recharge')->lock(true)->find($id);
-        if($recharge['status']!=0)$this->error('充值单已处理过了');
-        $data['status']=1;
-        Db::name('member_recharge')->where('id',$recharge['id'])->update($data);
 
-        money_log($recharge['member_id'],$recharge['amount'],'充值','charge');
+        $data['status']=1;
+        $data['audit_time']=time();
+
+        MemberRechargeModel::getInstance()->updateStatus($data,['id'=>$recharge['id']]);
 
         user_log($this->mid,'rechargeaudit',1,'审核充值单 '.$id ,'manager');
         $this->success('处理成功！');
