@@ -5,13 +5,17 @@ namespace app\common\model;
 
 use think\Db;
 
+/**
+ * Class PayOrderModel
+ * @package app\common\model
+ */
 class PayOrderModel extends BaseModel
 {
-    public static const PAY_TYPE_WECHAT='wechat';
+    public const PAY_TYPE_WECHAT='wechat';
+    public const PAY_TYPE_ALIPAY='alipay';
 
     private static function create_no(){
-        $maxid=static::field('max(id) as maxid')->find();
-        $maxid = $maxid['maxid'];
+        $maxid=Db::name('payOrder')->max('id');
         if(empty($maxid))$maxid=0;
         return date('YmdHis').self::pad_orderid($maxid+1,4);
     }
@@ -20,6 +24,15 @@ class PayOrderModel extends BaseModel
         return $strlen<$len?str_pad($id,$len,'0',STR_PAD_LEFT):substr($id,$strlen-$len);
     }
 
+    /**
+     * 创建支付单
+     * @param $paytype string 支付类型
+     * @param $type string 订单类型 order/recharge
+     * @param $order_id int 订单表的id
+     * @param $amount int 金额(分)
+     * @param $member_id int 会员id
+     * @return static
+     */
     public static function createOrder($paytype,$type,$order_id,$amount,$member_id){
         return static::create([
             'member_id'=>$member_id,

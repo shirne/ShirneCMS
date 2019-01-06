@@ -71,7 +71,11 @@ class PaylogController extends BaseController
     public function rechargeupdate($id=''){
         $id=intval($id);
         if($id==0)$this->error('参数错误 ');
-        $recharge=Db::name('member_recharge')->find($id);
+
+        /**
+         * @var $recharge MemberRechargeModel
+         */
+        $recharge=MemberRechargeModel::find($id);
         if(empty($recharge))$this->error('充值单不存在');
         if($recharge['status']!=0)$this->error('充值单已处理过了');
 
@@ -79,7 +83,7 @@ class PaylogController extends BaseController
         $data['status']=1;
         $data['audit_time']=time();
 
-        MemberRechargeModel::getInstance()->updateStatus($data,['id'=>$recharge['id']]);
+        $recharge->updateStatus($data);
 
         user_log($this->mid,'rechargeaudit',1,'审核充值单 '.$id ,'manager');
         $this->success('处理成功！');
