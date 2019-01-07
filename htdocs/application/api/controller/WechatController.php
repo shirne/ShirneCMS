@@ -43,16 +43,6 @@ class WechatController extends Controller{
     public function initialize(){
         parent::initialize();
         $this->config=getSettings();
-
-        //配置
-        $this->options = array(
-            'token'=>$this->config['token'],
-            'aes_key'=>$this->config['encodingaeskey'],
-            'app_id'=>$this->config['appid'],
-            'secret'=>$this->config['appsecret'],
-            'response_type' => 'array',
-            'log' => config('log.wechat'),
-        );
     }
 
     protected function getAccount($hash=''){
@@ -231,6 +221,8 @@ class WechatController extends Controller{
         if(empty($result)) {
             if ($type == 'resubscribe') {
                 return $this->getTypeReply('subscribe');
+            }else{
+                return "";
             }
         }
         return $this->getReply($result);
@@ -267,7 +259,7 @@ class WechatController extends Controller{
                 $processer=$config['processer'];
                 if($processer){
                     $processer=BaseProcesser::factory($processer,$this->app);
-                    $processer->process($config);
+                    return $processer->process($config);
                 }
                 return 'error';
             default:
@@ -353,9 +345,5 @@ class WechatController extends Controller{
         });
 
         $response->send();
-    }
-
-    private function checkClick($message)
-    {
     }
 }

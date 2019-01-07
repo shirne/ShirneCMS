@@ -1,5 +1,7 @@
 <?php
 namespace app\common\model;
+
+use app\common\facade\ProductCategoryFacade;
 use think\Db;
 
 
@@ -7,10 +9,16 @@ use think\Db;
  * Class ProductModel
  * @package app\common\model
  */
-class ProductModel extends BaseModel
+class ProductModel extends ContentModel
 {
     protected $autoWriteTimestamp = true;
     protected $type = ['levels'=>'array','spec_data'=>'array','prop_data'=>'array'];
+
+    function __construct($data = [])
+    {
+        parent::__construct($data);
+        $this->cateFacade=ProductCategoryFacade::class;
+    }
 
     private static $specifications;
     public static function getSpecList(){

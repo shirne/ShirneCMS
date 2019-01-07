@@ -4,8 +4,10 @@ namespace app\task\controller;
 
 
 use app\common\command\Install;
+use app\common\model\ArticleModel;
 use app\common\model\MemberRechargeModel;
 use app\common\model\PayOrderModel;
+use app\common\model\ProductModel;
 use think\Console;
 use think\console\Input;
 use think\console\Output;
@@ -39,6 +41,10 @@ class UtilController extends Controller
     public function daily()
     {
         # code...
+        $instance=ProductModel::getInstance();
+        echo $instance->getName();
+        $instance=ArticleModel::getInstance();
+        echo $instance->getName();
     }
 
     public function install($sql='',$mode='')

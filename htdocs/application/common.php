@@ -41,6 +41,19 @@ function file_download($data,$filename='',$isContent=true,$mime=''){
     return $response;
 }
 
+/**
+ * 完整输出附件的url
+ * @param $attach
+ * @return string
+ */
+function full_attach_url($attach){
+    if(strpos($attach,'/'===0)){
+        return url('/').$attach;
+    }else{
+        return $attach;
+    }
+}
+
 /** =====================================  固态数据类函数  ===================================== **/
 function getTextStyles(){
     return ['secondary','primary','info','success','warning','danger'];

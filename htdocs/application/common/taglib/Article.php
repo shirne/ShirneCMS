@@ -1,14 +1,11 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: shirne
- * Date: 2018/5/2
- * Time: 20:07
- */
 
 namespace app\common\taglib;
 
-
+/**
+ * Class Article
+ * @package app\common\taglib
+ */
 class Article extends BaseTabLib
 {
     protected $tags =[
@@ -25,113 +22,39 @@ class Article extends BaseTabLib
 
     public function tagList($tag){
         $var  = isset($tag['var']) ? $tag['var'] : 'article_list';
-        $recursive =isset($tag['recursive']) ? $tag['recursive'] : 'false';
-        $category=isset($tag['category']) ? $this->parseArg($tag['category']) : 0;
-        $order=isset($tag['order']) ? $tag['order'] : 'id DESC';
-        if(strpos($order,' ')<=0){
-            $order.=' ASC';
-        }
-        if(is_string($category) && strpos($category,"'")===0){
-            $category="\\app\\common\\facade\\CategoryFacade::getCategoryId(".$category.")";
-        }
 
-        $parseStr='<?php ';
+        $parseStr = '<?php ';
 
-        $parseStr.='$'.$var.'=\think\Db::view("Article","*")';
-        $parseStr .= '->view("Category",["title"=>"category_title","name"=>"category_name","short"=>"category_short","icon"=>"category_icon","image"=>"category_image"],"Article.cate_id=Category.id","LEFT")';
-        $parseStr .= '->where("Article.status",1)';
-        if(!empty($category)){
-            if($recursive=='true'){
-                $parseStr .= '->where("Article.cate_id", "IN", \app\common\facade\CategoryFacade::getSubCateIds(' . $category . '))';
-            }else {
-                $parseStr .= '->where("Article.cate_id",' . $category . ')';
-            }
-        }
-        if(!empty($tag['type'])){
-            $parseStr .= '->where("Article.type",'.intval($tag['type']).')';
-        }
-        if(!empty($tag['cover'])){
-            $parseStr .= '->where("Article.cover","<>","")';
-        }
-        if(empty($tag['limit'])){
-            $tag['limit']=10;
-        }
-        $parseStr .= '->limit('.intval($tag['limit']).')';
-        $parseStr .= '->order("Article.'.$order.'")';
-        $parseStr .= '->select();';
+        $parseStr .= '$'.$var.'=\app\common\model\ArticleModel::getInstance()->tagList('.$this->exportArg($tag).');';
 
         $parseStr .= ' ?>';
         return $parseStr;
     }
     public function tagRelation($tag){
         $var  = isset($tag['var']) ? $tag['var'] : 'relations';
-        $category=isset($tag['category']) ? $this->parseArg($tag['category']) : 0;
-        $id=isset($tag['id']) ? $tag['id'] : 0;
-        if(is_string($category) && strpos($category,"'")===0){
-            $category="\\app\\common\\facade\\CategoryFacade::getCategoryId(".$category.")";
-        }
 
-        $parseStr='<?php ';
+        $parseStr = '<?php ';
 
-        $parseStr.='$'.$var.'=\think\Db::view("Article","*")';
-        $parseStr .= '->view("Category",["title"=>"category_title","name"=>"category_name","short"=>"category_short","icon"=>"category_icon","image"=>"category_image"],"Article.cate_id=Category.id","LEFT")';
-        $parseStr .= '->where("Article.status",1)';
-        $parseStr .= '->where("Article.id", "NEQ", ' . $id . ')';
-        if(!empty($category)){
-            $parseStr .= '->where("Article.cate_id", "IN", \app\common\facade\CategoryFacade::getSubCateIds(' . $category . '))';
-        }
-        if(empty($tag['limit'])){
-            $tag['limit']=10;
-        }
-        $parseStr .= '->limit('.intval($tag['limit']).')';
-        $parseStr .= '->order("Article.views DESC,Article.id DESC")';
-        $parseStr .= '->select();';
+        $parseStr .= '$'.$var.'=\app\common\model\ArticleModel::getInstance()->tagRelation('.$this->exportArg($tag).');';
 
         $parseStr .= ' ?>';
         return $parseStr;
     }
     public function tagPrev($tag){
         $var  = isset($tag['var']) ? $tag['var'] : 'prev';
-        $category=isset($tag['category']) ? $this->parseArg($tag['category']) : '';
-        $id=isset($tag['id']) ? intval($tag['id']) : 0;
-        if(is_string($category) && strpos($category,"'")===0){
-            $category="\\app\\common\\facade\\CategoryFacade::getCategoryId(".$category.")";
-        }
 
-        $parseStr='<?php ';
+        $parseStr = '<?php ';
 
-        $parseStr.='$'.$var.'=\think\Db::view("Article","*")';
-        $parseStr .= '->view("Category",["title"=>"category_title","name"=>"category_name","short"=>"category_short","icon"=>"category_icon","image"=>"category_image"],"Article.cate_id=Category.id","LEFT")';
-        $parseStr .= '->where("Article.status",1)';
-        $parseStr .= '->where("Article.id", "LT", ' . $id . ')';
-        if(!empty($category)){
-            $parseStr .= '->where("Article.cate_id", "IN", \app\common\facade\CategoryFacade::getSubCateIds(' . $category . '))';
-        }
-        $parseStr .= '->order("Article.id DESC")';
-        $parseStr .= '->find();';
+        $parseStr .= '$'.$var.'=\app\common\model\ArticleModel::getInstance()->tagPrev('.$this->exportArg($tag).');';
 
         $parseStr .= ' ?>';
         return $parseStr;
     }
     public function tagNext($tag){
         $var  = isset($tag['var']) ? $tag['var'] : 'next';
-        $category=isset($tag['category']) ? $this->parseArg($tag['category']) : '';
-        $id=isset($tag['id']) ? intval($tag['id']) : 0;
-        if(is_string($category) && strpos($category,"'")===0){
-            $category="\\app\\common\\facade\\CategoryFacade::getCategoryId(".$category.")";
-        }
+        $parseStr = '<?php ';
 
-        $parseStr='<?php ';
-
-        $parseStr.='$'.$var.'=\think\Db::view("Article","*")';
-        $parseStr .= '->view("Category",["title"=>"category_title","name"=>"category_name","short"=>"category_short","icon"=>"category_icon","image"=>"category_image"],"Article.cate_id=Category.id","LEFT")';
-        $parseStr .= '->where("Article.status",1)';
-        $parseStr .= '->where("Article.id", "GT", ' . $id . ')';
-        if(!empty($category)){
-            $parseStr .= '->where("Article.cate_id", "IN", \app\common\facade\CategoryFacade::getSubCateIds(' . $category . '))';
-        }
-        $parseStr .= '->order("Article.id ASC")';
-        $parseStr .= '->find();';
+        $parseStr .= '$'.$var.'=\app\common\model\ArticleModel::getInstance()->tagNext('.$this->exportArg($tag).');';
 
         $parseStr .= ' ?>';
         return $parseStr;
