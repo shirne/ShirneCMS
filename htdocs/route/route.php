@@ -32,6 +32,14 @@ Route::group('product',[
     '[:name]'=>'index/product/index'
 ])->method('GET');
 
+Route::group('cart',[
+    'index'=>'index/cart/index',
+    'add'=>'index/cart/add',
+    'update'=>'index/cart/update',
+    'del'=>'index/cart/del',
+    'clear'=>'index/cart/clear'
+])->method('GET|POST');
+
 Route::group('order',[
     'confirm'=>'index/order/confirm',
     'wechatpay'=>'index/order/wechatpay'

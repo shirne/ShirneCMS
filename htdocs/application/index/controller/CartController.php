@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: shirne
- * Date: 2018/5/14
- * Time: 9:35
- */
 
 namespace app\index\controller;
 
@@ -12,6 +6,10 @@ namespace app\index\controller;
 use app\common\facade\MemberCartFacade;
 use think\Db;
 
+/**
+ * Class CartController
+ * @package app\index\controller
+ */
 class CartController extends AuthedController
 {
     public function initialize()

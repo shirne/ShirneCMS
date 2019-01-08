@@ -184,7 +184,7 @@
                             <input type="hidden" class="field-sku_id" name="skus[{$k}][sku_id]" value="{$sku.sku_id}"/>
                             <input type="text" class="form-control field-goods_no" name="skus[{$k}][goods_no]" value="{$sku.goods_no}">
                         </td>
-                        <td><input type="hidden" class="field-sku_id" name="skus[{$k}][image]" value="{$sku.image}"/><img src="{$sku.image|default='/static/images/noimage.png'}" /> </td>
+                        <td><input type="hidden" class="field-sku_id" name="skus[{$k}][image]" value="{$sku.image}"/><img class="imgupload" src="{$sku.image|default='/static/images/noimage.png'}" /> </td>
                         <td><input type="text" class="form-control field-weight" name="skus[{$k}][weight]" value="{$sku.weight}"> </td>
                         <td><input type="text" class="form-control field-price" name="skus[{$k}][price]" value="{$sku.price}"> </td>
                         <td><input type="text" class="form-control field-market_price" name="skus[{$k}][market_price]" value="{$sku.market_price}"> </td>
@@ -351,7 +351,7 @@
                 '       <input type="hidden" class="field-sku_id" name="skus[{@i}][sku_id]" value="{@sku_id}"/>\n'+
                 '       <input type="text" class="form-control field-goods_no" name="skus[{@i}][goods_no]" value="{@goods_no}">\n' +
                 '   </td>\n' +
-                '   <td><input type="hidden" class="field-image" name="skus[{@i}][image]" value="{@image}"/><img src="{@image|default=/static/images/noimage.png}" /></td>\n' +
+                '   <td><input type="hidden" class="field-image" name="skus[{@i}][image]" value="{@image}"/><img class="imgupload" src="{@image|default=/static/images/noimage.png}" /></td>\n' +
                 '   <td><input type="text" class="form-control field-weight" name="skus[{@i}][weight]" value="{@weight}"> </td>\n' +
                 '   <td><input type="text" class="form-control field-price" name="skus[{@i}][price]" value="{@price}"> </td>\n' +
                 '   <td><input type="text" class="form-control field-market_price" name="skus[{@i}][market_price]" value="{@market_price}"> </td>\n' +
@@ -532,6 +532,40 @@
         $('.spec-table').on('click','.delete-btn',function (e) {
             var row=$(this).parents('tr').eq(0);
             row.remove();
+        });
+
+        var currentUpload=null;
+        $(document.body).append('<div class="d-none uploadfield"><input type="file" /></div>').on('click','.imgupload',function (e) {
+            currentUpload=$(this);
+            $('.uploadfield input').trigger('click');
+        });
+        $('.uploadfield input').on('change',function (e) {
+            if(this.value){
+                var file=this.files[0];
+                currentUpload.attr('src',window.URL.createObjectURL(file));
+                (function (img) {
+                    var formData=new FormData();
+                    formData.append('file',file);
+                    $.ajax({
+                        url:"{:url('index/uploads',['folder'=>'productsku'])}",
+                        data:formData,
+                        cache:false,
+                        processData: false,
+                        contentType: false,
+                        dataType:'json',
+                        type:'POST',
+                        success:function (json) {
+                            if(json.code==1) {
+                                dialog.success(json.msg);
+                                img.attr('src',json.data.url);
+                                img.parent().find('input[type=hidden]').val(json.data.url)
+                            }else{
+                                dialog.error(json.msg);
+                            }
+                        }
+                    })
+                })(currentUpload)
+            }
         });
         isready=true;
     });

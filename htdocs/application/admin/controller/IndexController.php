@@ -216,4 +216,13 @@ class IndexController extends BaseController{
         $this->assign('model',$model);
         return $this->fetch();
     }
+
+    public function uploads($folder='alone'){
+        $url=$this->uploadFile($folder,'file');
+        if($url){
+            $this->success('上传成功','',$url);
+        }else{
+            $this->error($this->uploadError);
+        }
+    }
 }
