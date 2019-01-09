@@ -50,6 +50,12 @@
                                placeholder="密码">
                     </div>
                 </div>
+                <if condition="$config['captcha_mode'] EQ 1">
+                <div class="form-group">
+                    <p id="wait" class="text-muted">验证码加载中...</p>
+                    <div id="captchabox" class="m-auto" style="width:300px;"></div>
+                </div>
+                <else/>
                 <div class="form-group">
                     <div class="input-group">
                         <div class="input-group-prepend">
@@ -64,6 +70,7 @@
                         <figcaption class="figure-caption">看不清？点击图片刷新</figcaption>
                     </figure>
                 </div>
+                </if>
                 <button type="submit" class="btn btn-block btn-primary">登陆</button>
                 <div class="alert fade show" role="alert">
                     <span class="alert-content"></span>
@@ -102,6 +109,9 @@
     </div>
 </div>
 <script src="__STATIC__/jquery/jquery.min.js"></script>
+<if condition="$config['captcha_mode'] EQ 1">
+<script type="text/javascript" src="/static/js/gt.js"></script>
+</if>
 <script>
     jQuery(function ($) {
         //浏览器功能检测
@@ -114,16 +124,57 @@
             $('form').show();
         });
 
-        var verify = $(".verify"), verifysrc = verify.attr('src');
-        if (verifysrc.indexOf('?') > 0) {
-            verifysrc += '&';
-        } else {
-            verifysrc += '?';
-        }
-        verify.click(function () {
-            $(this).attr("src", verifysrc + "_t=" + new Date().getTime());
+        var verify_mode="{$config['captcha_mode']}";
+        var captchaObj=null;
 
-        });
+        if(verify_mode==1){
+            $.ajax({
+                url:"{:url('login/verify')}",
+                dataType:'JSON',
+                success:function (data) {
+                    //console.log(data);
+                    initGeetest({
+                        gt: data.gt,
+                        challenge: data.challenge,
+                        new_captcha: data.new_captcha,
+                        product: "embed", // 产品形式，包括：float，embed，popup。注意只对PC版验证码有效
+                        offline: !data.success
+                    }, function (newObj) {
+                        captchaObj=newObj;
+                        $("#captchabox").click(function (e) {
+                            var validate = captchaObj.getValidate();
+                            if (!validate) {
+                                showmsg('请先完成验证');
+                                e.preventDefault();
+                            }
+                        });
+                        captchaObj.appendTo("#captchabox");
+                        captchaObj.onReady(function () {
+                            $("#wait").hide();
+                        });
+                    });
+                }
+            })
+        }else {
+            var verify = $(".verify"), verifysrc = verify.attr('src');
+            if (verifysrc.indexOf('?') > 0) {
+                verifysrc += '&';
+            } else {
+                verifysrc += '?';
+            }
+            verify.click(function () {
+                $(this).attr("src", verifysrc + "_t=" + new Date().getTime());
+
+            });
+        }
+
+        function showmsg(message,type) {
+            if(!type)type='danger';
+            var icon='information-circle-outline';
+            if(type=='success')icon='checkmark-circle';
+            $('.alert-content').html('<i class="ion-md-'+icon+'"></i> '+message);
+            $('.alert').attr('class','alert fade show').addClass('alert-'+type).show();
+        }
 
         $('form').submit(function(e) {
             e.preventDefault();
@@ -134,13 +185,20 @@
             if(!this.password.value) {
                 errors.push('密码');
             }
-            if(!this.verify.value) {
-                errors.push('验证码');
+            if(verify_mode!=1) {
+                if (!this.verify.value) {
+                    errors.push('验证码');
+                }
             }
             if(errors.length>0){
-                $('.alert-content').html('<i class="ion-md-information-circle-outline"></i> 请填写'+errors.join('、'));
-                $('.alert').addClass('alert-danger').show();
+                showmsg('请填写'+errors.join('、'));
                 return false;
+            }
+            if(verify_mode==1) {
+                if (!captchaObj || !captchaObj.getValidate()) {
+                    showmsg('请完成验证');
+                    return false;
+                }
             }
             $('.btn-primary').attr('disabled',true);
             $.ajax({
@@ -150,21 +208,26 @@
                 data:$(this).serialize(),
                 success:function(json){
                     if(json.code==1){
-                        $('.alert-content').html('<i class="ion-md-checkmark-circle"></i> '+json.msg);
-                        $('.alert').removeClass('alert-danger').addClass('alert-success').show();
+                        showmsg(json.msg,'success');
                         location.href=json.url;
                     }else{
-                        $('.alert-content').html('<i class="ion-md-information-circle-outline"></i> '+json.msg);
-                        $('.alert').addClass('alert-danger').show();
+                        showmsg(json.msg);
                         $('.btn-primary').removeAttr('disabled');
-                        verify.trigger('click');
+                        if(verify_mode==1){
+                            captchaObj && captchaObj.reset();
+                        }else {
+                            verify.trigger('click');
+                        }
                     }
                 },
                 error:function () {
-                    $('.alert-content').html('<i class="ion-md-information-circle-outline"></i> 服务器错误');
-                    $('.alert').addClass('alert-danger').show();
+                    showmsg('服务器错误');
                     $('.btn-primary').removeAttr('disabled');
-                    verify.trigger('click');
+                    if(verify_mode==1){
+                        captchaObj && captchaObj.reset();
+                    }else {
+                        verify.trigger('click');
+                    }
                 }
             })
         })

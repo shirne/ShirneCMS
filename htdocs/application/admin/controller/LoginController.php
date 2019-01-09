@@ -1,6 +1,7 @@
 <?php
 namespace app\admin\controller;
 
+use extcore\traits\Verify;
 use think\Controller;
 use think\Db;
 
@@ -16,6 +17,7 @@ class LoginController extends Controller {
      * @return mixed
      */
     public function index(){
+        $this->assign('config',getSettings());
         return $this->fetch();
     }
 
@@ -27,14 +29,13 @@ class LoginController extends Controller {
         $member = Db::name('Manager');
         $username =$this->request->post('username','','trim');
         $password =$this->request->post('password');
-        $code = $this->request->post('verify','','strtolower');
 
         if(empty($username) || empty($password)){
             $this->error(lang('Please fill in the login field!'));
         }
 
         //验证验证码是否正确
-        if(!($this->check_verify($code))){
+        if(!($this->check_verify($this->request->post()))){
             $this->error(lang('Verify code error!'));
         }
 
@@ -90,22 +91,18 @@ class LoginController extends Controller {
         $this->success(lang('Login success!'),url('Index/index'));
     }
 
+    use Verify;
+
     /**
      * 验证码
      * @return \think\Response
      */
     public function verify(){
-        $verify = new \think\captcha\Captcha();
-        //$Verify->codeSet = '0123456789';
-        $verify->seKey=config('session.sec_key');
-        $verify->fontSize = 28;
-        $verify->length = 4;
-        return $verify->entry('backend');
+        return $this->verify_auto('backend',getSettings());
     }
-    protected function check_verify($code){
-        $verify = new \think\captcha\Captcha();
-        $verify->seKey=config('session.sec_key');
-        return $verify->check($code,'backend');
+
+    protected function check_verify($data){
+        return $this->check_verify_auto('backend',$data,getSettings());
     }
 
     /**
