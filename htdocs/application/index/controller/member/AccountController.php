@@ -174,12 +174,12 @@ class AccountController extends BaseController
             if($this->config['cash_power']>0 && $data['amount']%$this->config['cash_power']>0){
                 $this->error('提现金额必需是'.$this->config['cash_power'].'的倍数');
             }
-            if($data['amount']>$this->user['money']){
+            if($data['amount']>$this->user['reward']){
                 $this->error('可提现金额不足');
             }
             $addid=Db::name('memberCashin')->insert($data);
             if($addid) {
-                money_log($this->userid,-$data['amount'],'提现申请扣除','cash');
+                money_log($this->userid,-$data['amount'],'提现申请扣除','cash',0,'reward');
                 $this->success('提现申请已提交',aurl('index/member/index'));
             }else{
                 $this->error('申请失败');

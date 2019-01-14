@@ -22,7 +22,7 @@ class AwardLogModel extends Model
      * @param string $field
      * @return int
      */
-    public static function record($uids,$award,$type,$remark,$order=[],$field='credit'){
+    public static function record($uids,$award,$type,$remark,$order=[],$field='reward'){
         $award=$award*100;
         $datas=[ ];
         $time=time();

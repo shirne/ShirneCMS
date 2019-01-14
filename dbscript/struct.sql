@@ -240,6 +240,7 @@ CREATE TABLE `sa_member` (
   `type` tinyint(1) DEFAULT '1' COMMENT '1:普通会员 ',
   `credit` int(11) DEFAULT '0',
   `money` int(11) DEFAULT '0',
+  `reward` int(11) DEFAULT '0',
   `total_cashin` int(11) DEFAULT '0',
   `total_recharge` int(11) DEFAULT '0',
   `total_consume` int(11) DEFAULT '0',

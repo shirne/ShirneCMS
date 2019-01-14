@@ -62,7 +62,8 @@ function getMoneyFields($withall=true){
     $fields= [
         'all'=>lang('All'),
         'money'=>lang('Balance'),
-        'credit'=>lang('Credit')
+        'credit'=>lang('Credit'),
+        'reward'=>lang('Reward')
     ];
     if(!$withall)unset($fields['all']);
     return $fields;
@@ -635,6 +636,57 @@ function money_log($uid, $money, $reson, $type='',$from_id=0,$field='money')
     if($result) {
         \think\Db::name('memberMoneyLog')->insertAll($logs);
         return array_column($logs,'member_id');
+    }else{
+        return false;
+    }
+}
+
+function money_force_log($uid, $money, $reson, $type='',$from_id=0,$field='money')
+{
+    if($money==0)return true;
+    $fields=getMoneyFields();
+    if($field=='all' || !isset($fields[$field]))return false;
+
+    if(is_array($uid)){
+        throw new Exception('This method do not support batch uid');
+    }
+
+    $member=\think\Db::name('member')->field('id,username,'.$field)
+        ->where('id' , $uid)->find();
+    $time=time();
+    if($money>0) {
+        $result=\think\Db::name('member')->where('id' , $uid)
+            ->setInc($field,$money);
+        $log=[
+            'create_time' => $time,
+            'member_id' => $member['id'],
+            'from_member_id'=>$from_id,
+            'type' => $type,
+            'before' => $member[$field],
+            'amount' => $money,
+            'after' => $member[$field] + $money,
+            'field'=>$field,
+            'reson' => $reson
+        ];
+    }else{
+        $decMoney=abs($money);
+        $result=\think\Db::name('member')->where('id' , $uid)
+            ->setDec($field,$decMoney);
+        $log = [
+            'create_time' => time(),
+            'member_id' => $member['id'],
+            'from_member_id' => $from_id,
+            'type' => $type,
+            'before' => $member[$field],
+            'amount' => $money,
+            'after' => $member[$field] + $money,
+            'field' => $field,
+            'reson' => $reson
+        ];
+
+    }
+    if($result) {
+        return \think\Db::name('memberMoneyLog')->insert($log,false,true);
     }else{
         return false;
     }

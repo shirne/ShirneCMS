@@ -5,7 +5,7 @@
         <div class="container">
             <form action="" method="post" onsubmit="return checkMoney(this)" class="form-horizontal container-fluid">
                 <div class="form-group">
-                    可提现金额：￥{$user.money|showmoney}
+                    可提现金额：￥{$user.reword|showmoney}
                 </div>
                 <div class="form-group">
                     <div class="input-group">
@@ -80,7 +80,7 @@
     <script type="text/javascript">
         var cash_fee=parseInt('{$config.cash_fee}');
         var cash_limit=parseInt('{$config.cash_limit}');;
-        var balance=parseInt('{$user.money}|showmoney');
+        var balance=parseInt('{$user.reword}|showmoney');
         var pass=false;
         $('.amount').bind('input',function(e){
             pass=false;
