@@ -34,12 +34,30 @@
 
         <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data">
             <input type="hidden" name="group" value="{$group}" />
+
+            <php> function group_tab($group,$setting){ </php>
+            <switch name="group">
+                <case value="common">
+            <include file="setting/part/common"  />
+                </case>
+                <case value="member">
+                    <include file="setting/part/member"  />
+                </case>
+                <case value="third">
+                    <include file="setting/part/third"  />
+                </case>
+                <case value="advance">
+                    <include file="setting/part/advance"  />
+                </case>
+            </switch>
+            <php> return "";} </php>
             <!-- Tab panes -->
             <div class="tab-content">
                 <foreach name="groups" item="name">
                 <div role="tabpanel" class="tab-pane" id="panel-{$key}">
-
+                    {:group_tab($key,$settings[$key])}
                     <foreach name="settings[$key]" item="item">
+                        <if condition="$item['is_sys'] EQ 0">
                         <div class="form-row form-group">
                             <label for="v-{$key}" class="col-3 col-md-2 text-right align-middle">{$item.title}</label>
                             <div class="col-9 col-md-8 col-lg-6">
@@ -138,6 +156,7 @@
                                 </switch>
                             </div>
                         </div>
+                        </if>
                     </foreach>
                     <div class="form-row form-group">
                         <div class="col-10 offset-2">

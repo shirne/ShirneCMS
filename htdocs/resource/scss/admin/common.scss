@@ -75,7 +75,14 @@ h6 {
     }
   }
 }
-
+.form-group{
+  label{
+    align-self: center;
+    &[class^=col] {
+      margin-bottom : 0;
+    }
+  }
+}
 .input-group-middle {
   display: -ms-flexbox;
   display: flex;

@@ -194,8 +194,8 @@ jQuery(function ($) {
     //上传框
     $('.custom-file .custom-file-input').on('change', function () {
         var self=$(this);
-        var inputgroup=$(this).parents('.input-group');
-        var parent=$(this).parents('.form-group');
+        var inputgroup=$(this).parents('.input-group').eq(0);
+        var parent=inputgroup.parents('div').eq(0);
         var label = $(this).parents('.custom-file').find('.custom-file-label');
         if(!label.data('origtext')){
             label.data('origtext',label.text());

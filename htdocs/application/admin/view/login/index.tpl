@@ -53,7 +53,7 @@
                 <if condition="$config['captcha_mode'] EQ 1">
                 <div class="form-group">
                     <p id="wait" class="text-muted">验证码加载中...</p>
-                    <div id="captchabox" class="m-auto" style="width:300px;"></div>
+                    <div id="captchabox" class="m-auto"></div>
                 </div>
                 <else/>
                 <div class="form-group">
@@ -135,6 +135,7 @@
                     //console.log(data);
                     initGeetest({
                         gt: data.gt,
+                        width:'100%',
                         challenge: data.challenge,
                         new_captcha: data.new_captcha,
                         product: "embed", // 产品形式，包括：float，embed，popup。注意只对PC版验证码有效

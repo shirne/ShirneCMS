@@ -724,6 +724,7 @@ CREATE TABLE `sa_setting` (
   `type` varchar(10) NOT NULL DEFAULT '',
   `group` varchar(50) NOT NULL DEFAULT '',
   `sort` int(11) NOT NULL DEFAULT '0',
+  `is_sys` tinyint(4) NOT NULL DEFAULT '0',
   `value` text NOT NULL,
   `description` varchar(150) DEFAULT NULL,
   `data` text,
