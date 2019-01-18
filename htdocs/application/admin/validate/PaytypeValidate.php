@@ -1,16 +1,15 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: shirne
- * Date: 2018/4/30
- * Time: 11:24
- */
 
 namespace app\admin\validate;
 
 
 use think\Validate;
 
+/**
+ * 支付方式验证
+ * Class PaytypeValidate
+ * @package app\admin\validate
+ */
 class PaytypeValidate extends Validate
 {
 

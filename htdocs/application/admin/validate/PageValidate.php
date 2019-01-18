@@ -1,16 +1,15 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: shirne
- * Date: 2018/4/30
- * Time: 11:09
- */
 
 namespace app\admin\validate;
 
 
 use app\common\validate\BaseUniqueValidate;
 
+/**
+ * 单页数据验证
+ * Class PageValidate
+ * @package app\admin\validate
+ */
 class PageValidate extends BaseUniqueValidate
 {
 

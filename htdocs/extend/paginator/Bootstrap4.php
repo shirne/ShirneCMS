@@ -15,6 +15,7 @@ class Bootstrap4 extends Paginator
 {
     protected $extstyle='';
     protected $side=3;
+    protected $jump=0;
 
     public function __construct($items, $listRows, $currentPage = null, $total = null, $simple = false, array $options = [])
     {
@@ -44,6 +45,9 @@ class Bootstrap4 extends Paginator
         }
         if(isset($this->options['side'])){
             $this->side=intval($this->options['side']);
+        }
+        if(isset($this->options['jump'])){
+            $this->jump=intval($this->options['jump']);
         }
     }
 
@@ -185,7 +189,8 @@ class Bootstrap4 extends Paginator
                 );
             }elseif ($this->options['simple']) {
                 return sprintf(
-                    '<nav aria-label="Page navigation"><ul class="pagination'.$this->extstyle.'">%s %s %s %s %s</ul></nav>',
+                    '<nav aria-label="Page navigation">%s<ul class="pagination'.$this->extstyle.'">%s %s %s %s %s</ul></nav>',
+                    $this->jump?$this->getJumpComponent():'',
                     $this->getFirstButton(),
                     $this->getPreviousButton(),
                     $this->getActivePageWrapper($this->currentPage()),
@@ -194,7 +199,8 @@ class Bootstrap4 extends Paginator
                 );
             } else {
                 return sprintf(
-                    '<nav aria-label="Page navigation"><ul class="pagination'.$this->extstyle.'">%s %s %s</ul></nav>',
+                    '<nav aria-label="Page navigation">%s<ul class="pagination'.$this->extstyle.'">%s %s %s</ul></nav>',
+                    $this->jump?$this->getJumpComponent():'',
                     $this->getPreviousButton(),
                     $this->getLinks(),
                     $this->getNextButton()
@@ -278,5 +284,18 @@ class Bootstrap4 extends Paginator
         }
 
         return $this->getAvailablePageWrapper($url, $page);
+    }
+
+    /**
+     * 生成跳转链接
+     * @return string
+     */
+    protected function getJumpComponent($text='跳转到：'){
+        $html=['<div class="fr jumppage">'.$text.'<select onchange="location.href=this.value;" >'];
+        for($i=1; $i<=$this->lastPage; $i++){
+            $html[]='<option value="'.$this->url($i).'" '.($i==$this->currentPage?'selected':'').'>'.$i.'</option>';
+        }
+        $html[]='</select></div>';
+        return implode('',$html);
     }
 }

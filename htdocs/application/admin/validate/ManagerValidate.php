@@ -1,16 +1,15 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: shirne
- * Date: 2018/4/29
- * Time: 10:34
- */
 
 namespace app\admin\validate;
 
 
 use app\common\validate\BaseUniqueValidate;
 
+/**
+ * 管理员资料验证
+ * Class ManagerValidate
+ * @package app\admin\validate
+ */
 class ManagerValidate extends BaseUniqueValidate
 {
     protected $rule  = array(

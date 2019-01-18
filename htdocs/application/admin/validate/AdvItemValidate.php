@@ -1,16 +1,14 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: shirne
- * Date: 2018/4/30
- * Time: 12:04
- */
 
 namespace app\admin\validate;
 
 
 use think\Validate;
 
+/**
+ * Class AdvItemValidate
+ * @package app\admin\validate
+ */
 class AdvItemValidate extends Validate
 {
     protected $rule=array(

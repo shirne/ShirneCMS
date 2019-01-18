@@ -1,16 +1,15 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: shirne
- * Date: 2018/4/30
- * Time: 10:26
- */
 
 namespace app\admin\validate;
 
 
 use think\Validate;
 
+/**
+ * 链接数据验证
+ * Class LinksValidate
+ * @package app\admin\validate
+ */
 class LinksValidate extends Validate
 {
     protected $rule=array(

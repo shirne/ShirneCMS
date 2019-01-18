@@ -1,16 +1,15 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: shirne
- * Date: 2018/5/14
- * Time: 13:02
- */
 
 namespace app\admin\validate;
 
 
 use think\Validate;
 
+/**
+ * 第三方登录资料验证
+ * Class OauthValidate
+ * @package app\admin\validate
+ */
 class OauthValidate extends Validate
 {
     protected $rule=array(

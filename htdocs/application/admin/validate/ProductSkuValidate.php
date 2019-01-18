@@ -1,16 +1,15 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: shirne
- * Date: 2018/5/16
- * Time: 6:56
- */
 
 namespace app\admin\validate;
 
 
 use app\common\validate\BaseUniqueValidate;
 
+/**
+ * 商品规格数据验证
+ * Class ProductSkuValidate
+ * @package app\admin\validate
+ */
 class ProductSkuValidate extends BaseUniqueValidate
 {
     protected $rule=array(

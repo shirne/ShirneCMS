@@ -2,13 +2,12 @@
 
 namespace app\admin\validate;
 
+
 /**
  * 留言回复验证
- * User: shirne
- * Date: 2018/4/29
- * Time: 10:04
+ * Class FeedbackValidate
+ * @package app\admin\validate
  */
-
 class FeedbackValidate extends \think\Validate
 {
     protected $rule =   [
