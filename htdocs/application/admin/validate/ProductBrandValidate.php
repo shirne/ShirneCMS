@@ -2,12 +2,14 @@
 
 namespace app\admin\validate;
 
+use think\Validate;
+
 /**
  * 品牌数据验证
  * Class ProductBrandValidate
  * @package app\admin\validate
  */
-class ProductBrandValidate
+class ProductBrandValidate extends Validate
 {
     protected $rule=array(
         'title'=>'require',

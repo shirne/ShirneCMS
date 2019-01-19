@@ -13,6 +13,8 @@ use extcore\SimpleFacade;
  * @method array findCategory($idorname) static 查找分类
  * @method array getCategoryId($idorname) static 查找分类ID
  * @method array getCategoryTree($idorname) static 获取当前分类所在的层级树
+ * @method array getTopCategory($idorname) static 获取顶级分类
+ * @method array getBrands($cateid) static 获取分类绑定的品牌(按顶级类获取)
  * @method array getTreedCategory($force=false) static 获取排序后的分类
  * @method array getSubCategory($pid=0) static 获取指定id的下级分类列表
  * @method array getSubCateIds($pid, $recursive=false) static 获取下级分类id列表

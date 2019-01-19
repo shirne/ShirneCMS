@@ -1,4 +1,14 @@
 window.stop_ajax=false;
+
+function radio_tab(radios,lists,prefix) {
+    $(radios).on('change',function (e) {
+        if(!$(this).is(':checked'))return;
+        var curval=$(this).val();
+        $(lists).hide();
+        $('.'+prefix+curval).show();
+    }).filter(':checked').trigger('change');
+}
+
 jQuery(function ($) {
     //高亮当前选中的导航
     var bread = $(".breadcrumb");

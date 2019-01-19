@@ -1,6 +1,8 @@
 <?php
 
 namespace app\admin\controller;
+use app\admin\validate\ProductBrandValidate;
+use app\common\facade\ProductCategoryFacade;
 use think\Db;
 
 /**
@@ -10,6 +12,12 @@ use think\Db;
  */
 class ProductBrandController extends BaseController
 {
+    public function search($cateid)
+    {
+        $lists = ProductCategoryFacade::getBrands($cateid);
+        return json(['data'=>$lists,'code'=>1]);
+    }
+
     /**
      * 品牌列表
      * @param string $key

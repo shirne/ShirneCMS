@@ -20,7 +20,7 @@ use think\Db;
 class ProductController extends BaseController
 {
 
-    public function search($key,$cate=0,$type=0){
+    public function search($key,$cate=0,$brand=0,$type=0){
         $model=Db::name('product')
             ->where('status',1);
         if(!empty($key)){
@@ -28,6 +28,9 @@ class ProductController extends BaseController
         }
         if($cate>0){
             $model->whereIn('cate_id',ProductCategoryFacade::getSubCateIds($cate));
+        }
+        if($brand>0){
+            $model->where('brand_id',intval($brand));
         }
         if(!empty($type)){
             $model->where('type',$type);
@@ -80,6 +83,7 @@ class ProductController extends BaseController
         $this->assign('keyword',$key);
         $this->assign('cate_id',$cate_id);
         $this->assign("category",ProductCategoryFacade::getCategories());
+        $this->assign("brands",ProductCategoryFacade::getBrands(0));
 
         return $this->fetch();
     }
@@ -149,6 +153,7 @@ class ProductController extends BaseController
         }
         $model=array('type'=>1,'status'=>1,'cate_id'=>$cid,'is_discount'=>1,'is_commission'=>1);
         $this->assign("category",ProductCategoryFacade::getCategories());
+        $this->assign("brands",ProductCategoryFacade::getBrands(0));
         $this->assign('product',$model);
         $this->assign('skus',[[]]);
         $this->assign('levels',getMemberLevels());
@@ -236,6 +241,7 @@ class ProductController extends BaseController
         $skuModel=new ProductSkuModel();
         $skus=$skuModel->where('product_id',$id)->select();
         $this->assign("category",ProductCategoryFacade::getCategories());
+        $this->assign("brands",ProductCategoryFacade::getBrands(0));
         $this->assign('levels',getMemberLevels());
         $this->assign('product',$model);
         $this->assign('skus',$skus->isEmpty()?[[]]:$skus);

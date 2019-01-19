@@ -79,16 +79,15 @@ class AdvController extends BaseController
                     $this->error(lang('Update failed!'));
                 }
             }
-        }else{
-
-            $model = Db::name('AdvGroup')->where('id', $id)->find();
-            if(empty($model)){
-                $this->error('广告组不存在');
-            }
-            $this->assign('model',$model);
-            $this->assign('id',$id);
-            return $this->fetch();
         }
+
+        $model = Db::name('AdvGroup')->where('id', $id)->find();
+        if(empty($model)){
+            $this->error('广告组不存在');
+        }
+        $this->assign('model',$model);
+        $this->assign('id',$id);
+        return $this->fetch();
     }
 
     /**
@@ -103,6 +102,7 @@ class AdvController extends BaseController
         if($count<1 || $force!=0) {
             $result = $model->delete($id);
         }else{
+            $result=false;
             $this->error("广告位中还有广告项目");
         }
         if($result){
@@ -205,19 +205,19 @@ class AdvController extends BaseController
                     $this->error(lang('Update failed!'));
                 }
             }
-        }else{
-            $model = Db::name('AdvItem')->where('id', $id)->find();
-            if(empty($model)){
-                $this->error('广告项不存在');
-            }
-
-            $this->assign('model',$model);
-            $this->assign('id',$id);
-            return $this->fetch();
         }
+        $model = Db::name('AdvItem')->where('id', $id)->find();
+        if(empty($model)){
+            $this->error('广告项不存在');
+        }
+
+        $this->assign('model',$model);
+        $this->assign('id',$id);
+        return $this->fetch();
+
     }
     /**
-     * 删除广告位
+     * 删除广告
      */
     public function itemdelete($gid,$id)
     {

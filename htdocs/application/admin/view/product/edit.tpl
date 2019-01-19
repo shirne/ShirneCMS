@@ -31,7 +31,18 @@
                         <div class="input-group-prepend"><span class="input-group-text">商品分类</span> </div>
                         <select name="cate_id" id="product-cate" class="form-control">
                             <foreach name="category" item="v">
-                                <option value="{$v.id}" data-props="{$v['props']}" data-specs="{$v['specs']}" {$product['cate_id'] == $v['id']?'selected="selected"':""}>{$v.html} {$v.title}</option>
+                                <option value="{$v.id}" data-pid="{$v['pid']}" data-props="{$v['props']}" data-specs="{$v['specs']}" {$product['cate_id'] == $v['id']?'selected="selected"':""}>{$v.html} {$v.title}</option>
+                            </foreach>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-prepend"><span class="input-group-text">商品品牌</span> </div>
+                        <select name="brand_id" id="product-brand" class="form-control">
+                            <option value="0" >--无--</option>
+                            <foreach name="brands" item="v">
+                                <option value="{$v.id}" {$product['brand_id'] == $v['id']?'selected="selected"':""}>{$v.title}</option>
                             </foreach>
                         </select>
                     </div>
@@ -64,10 +75,10 @@
                             <div class="form-group col">
                                 <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
                                     <label class="btn btn-outline-secondary{$product['status']=='1'?' active':''}">
-                                        <input type="radio" name="status" value="1" autocomplete="off" {$product['type']=='1'?'checked':''}>是
+                                        <input type="radio" name="status" value="1" autocomplete="off" {$product['status']=='1'?'checked':''}>是
                                     </label>
                                     <label class="btn btn-outline-secondary{$product['status']=='0'?' active':''}">
-                                        <input type="radio" name="status" value="0" autocomplete="off" {$product['type']=='0'?'checked':''}>否
+                                        <input type="radio" name="status" value="0" autocomplete="off" {$product['status']=='0'?'checked':''}>否
                                     </label>
                                 </div>
                             </div>

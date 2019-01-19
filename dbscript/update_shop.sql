@@ -3,10 +3,11 @@ INSERT INTO `sa_permission` (`id`, `parent_id`,`name`, `url`,`key`, `icon`, `sor
 VALUES
   (6,0,'商城','','Shop','ion-md-cart',2,0),
   (61,6,'分类管理','ProductCategory/index','product_category_index','ion-md-medical',0,0),
-  (62,6,'商品管理','ProductBrand/index','product_brand_index','ion-md-pricetag',0,0),
+  (62,6,'品牌管理','ProductBrand/index','product_brand_index','ion-md-bookmark',0,0),
   (63,6,'商品管理','Product/index','product_index','ion-md-gift',0,0),
-  (64,6,'订单管理','Order/index','order_index','ion-md-list-box',0,0),
-  (65,6,'订单统计','OrderStatics/index','order_statics_index','ion-md-stats',0,0);
+  (64,6,'优惠券管理','ProductCoupon/index','product_coupon_index','ion-md-pricetags',0,0),
+  (65,6,'订单管理','Order/index','order_index','ion-md-list-box',0,0),
+  (66,6,'订单统计','OrderStatics/index','order_statics_index','ion-md-stats',0,0);
 
 DROP TABLE IF EXISTS `sa_member_cart`;
 
@@ -68,7 +69,7 @@ DROP TABLE IF EXISTS `sa_product_category_brand`;
 
 CREATE TABLE `sa_product_category_brand` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `category_id` int(11) DEFAULT 0,
+  `cate_id` int(11) DEFAULT 0,
   `brand_id` int(11) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -80,15 +81,22 @@ CREATE TABLE `sa_product_coupon` (
   `lang` varchar(10) DEFAULT NULL COMMENT '语言',
   `main_id` int(11) DEFAULT NULL COMMENT '主id',
   `title` varchar(100) DEFAULT NULL,
+  `bind_type` tinyint(11) DEFAULT 0 COMMENT '0-通用 1-类目 2-品牌 3-指定商品 4-指定sku',
   `cate_id` int(11) DEFAULT 0,
   `brand_id` int(11) DEFAULT 0,
   `product_id` int(11) DEFAULT 0,
   `sku_id` int(11) DEFAULT 0,
+  `type` tinyint(4) DEFAULT 0 COMMENT '0- 满减 1-折扣',
+  `limit` int(11) DEFAULT 0,
+  `amount` int(11) DEFAULT 0,
+  `discount` int(11) DEFAULT 0,
   `start_time` int(11) DEFAULT 0,
   `end_time` int(11) DEFAULT 0,
   `status` tinyint(11) DEFAULT 1,
-  `stock` int(11) DEFAULT 1000,
+  `stock` int(11) DEFAULT 1000 COMMENT '-1 无限库存',
   `receive` int(11) DEFAULT 0,
+  `expiry_type` tinyint(11) DEFAULT 0,
+  `expiry_time` int(11) DEFAULT 0,
   `expiry_day` int(11) DEFAULT 0,
   `cost_credit` int(11) DEFAULT 0,
   PRIMARY KEY (`id`)
@@ -118,6 +126,7 @@ CREATE TABLE `sa_product` (
   `lang` varchar(10) DEFAULT NULL COMMENT '语言',
   `main_id` int(11) DEFAULT NULL COMMENT '主id',
   `cate_id` int(11) DEFAULT NULL,
+  `brand_id` int(11) DEFAULT NULL,
   `title` varchar(150) DEFAULT NULL,
   `vice_title` varchar(200) DEFAULT NULL,
   `goods_no` varchar(50) DEFAULT NULL,

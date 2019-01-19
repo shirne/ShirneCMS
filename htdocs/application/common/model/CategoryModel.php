@@ -2,6 +2,7 @@
 namespace app\common\model;
 
 use think\Db;
+use think\facade\Log;
 
 /**
  * Class CategoryModel
@@ -56,12 +57,36 @@ class CategoryModel extends BaseModel
         $tree=array();
         while($idorname!='0'){
             $current=$this->findCategory($idorname);
-            if(empty($current))break;
+            if(empty($current)){
+                Log::record('Category error at '.$idorname.'\'s parent');
+                break;
+            }
             array_unshift($tree,$current);
             $idorname=$current['pid'];
+            if($idorname=='0')break;
         }
 
         return $tree;
+    }
+
+    public function getTopCategory($idorname)
+    {
+        $this->getCategories();
+        $current=[];
+        while($idorname!='0'){
+            $current=$this->findCategory($idorname);
+            if(empty($current)){
+                Log::record('Category error at '.$idorname.'\'s parent');
+                $current=[];
+                break;
+            }
+
+            $idorname=$current['pid'];
+
+            if($idorname=='0')break;
+        }
+
+        return $current;
     }
 
     public function getTreedCategory($force=false)

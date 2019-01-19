@@ -46,6 +46,13 @@ class ContentModel extends BaseModel
                 $model->where($this->model.".cate_id",$cate_id);
             }
         }
+        if(!empty($attrs['brand'])){
+            if(strpos($attrs['brand'],',')>0){
+                $model->whereIn($this->model . ".brand_id", idArr($attrs['brand']));
+            }else {
+                $model->where($this->model . ".brand_id", intval($attrs['brand']));
+            }
+        }
         if(!empty($attrs['type'])){
             $model->where($this->model.".type",$attrs['type']);
         }

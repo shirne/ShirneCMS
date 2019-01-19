@@ -8,7 +8,7 @@
     
     <div class="row list-header">
         <div class="col-6">
-            <a href="{:url('productBrand/add')}" class="btn btn-outline-primary btn-sm"><i class="ion-md-add"></i> 添加链接</a>
+            <a href="{:url('productBrand/add')}" class="btn btn-outline-primary btn-sm"><i class="ion-md-add"></i> 添加品牌</a>
         </div>
         <div class="col-6">
             <form action="{:url('productBrand/index')}" method="post">
@@ -26,7 +26,7 @@
             <tr>
                 <th width="50">编号</th>
                 <th>LOGO</th>
-                <th>标题</th>
+                <th>名称</th>
                 <th>官网</th>
                 <th>优先级</th>
                 <th width="160">&nbsp;</th>
