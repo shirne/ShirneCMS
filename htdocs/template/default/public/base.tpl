@@ -5,10 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>{$title}</title>
-
+    <if condition="!empty($keywords)">
     <meta name="keywords" content="{$keywords}" />
+    </if>
+    <if condition="!empty($description)">
     <meta name="description" content="{$description}" />
-
+    </if>
     <link href="__STATIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="__STATIC__/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
     <link href="__STATIC__/ionicons/css/ionicons.min.css" rel="stylesheet">
@@ -17,8 +19,8 @@
     <script src="__STATIC__/jquery/jquery.min.js"></script>
 
     <!--[if lt IE 9]>
-    <script src="http://cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-    <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
 </head>
@@ -39,7 +41,7 @@
 </body>
 
 <if condition="$isWechat">
-<script type="text/javascript" src="{$protocol}://res.wx.qq.com/open/js/jweixin-1.1.0.js"></script>
+<script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
 <script>
     var imageUrl='__STATIC__/images/logo.png';
     wx.config({$signPackage|raw});
