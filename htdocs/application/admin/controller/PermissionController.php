@@ -77,8 +77,7 @@ class PermissionController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
-                $data['id']=$id;
-                if (Db::name('Permission')->update()) {
+                if (Db::name('Permission')->where('id',$id)->update($data)) {
                     $this->success(lang('Update success!'), url('permission/index'));
                 } else {
                     $this->error(lang('Update failed!'));
@@ -86,7 +85,7 @@ class PermissionController extends BaseController
 
             }
         }
-            $model = Db::name('permission')->where('id' , $id)->find();
+        $model = Db::name('permission')->where('id' , $id)->find();
         if(empty($model)){
             $this->error('要编辑的项不存在');
         }
