@@ -32,7 +32,7 @@
                 <td>{$v.name}</td>
                 <td>{$v.key}</td>
                 <td>{$v.url}</td>
-                <td data-disable="{$v.disable}">
+                <td data-url="{:url('status')}" data-id="{$v.id}">
                     <if condition="$v['disable'] EQ 1">
                         <span class="chgstatus off" data-id="{$v.id}" data-status="0" title="点击显示">隐藏</span>
                         <else/>
@@ -52,7 +52,7 @@
                     <td><span class="tree-pre">{$soncount==$key+1?'└─':'├─'}</span> {$sv.name}</td>
                     <td>{$sv.key}</td>
                     <td>{$sv.url}</td>
-                    <td data-disable="{$sv.disable}">
+                    <td data-url="{:url('status')}" data-id="{$sv.id}">
                         <if condition="$sv['disable'] EQ 1">
                             <span class="chgstatus off" data-id="{$sv.id}" data-status="0" title="点击显示">隐藏</span>
                             <else/>
