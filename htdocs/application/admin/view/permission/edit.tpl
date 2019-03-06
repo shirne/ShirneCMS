@@ -37,7 +37,7 @@
         </div>
         <div class="form-group">
             <label for="p-content">排序</label>
-            <input type="text" name="order_id" class="form-control" value="{$perm.order_id}" id="perm-order_id" placeholder="排序，从小到大">
+            <input type="text" name="sort_id" class="form-control" value="{$perm.sort_id}" id="perm-sort_id" placeholder="排序，从小到大">
         </div>
         <div class="form-row">
             <label class="col-md-1">状态</label>
