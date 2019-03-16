@@ -248,6 +248,7 @@ CREATE TABLE `sa_order_product` (
   `product_image` varchar(150) DEFAULT NULL,
   `product_orig_price` DECIMAL(10,2) DEFAULT NULL,
   `product_price` DECIMAL(10,2) DEFAULT NULL,
+  `product_weight` INT(11) DEFAULT 0,
   `count` int(11) DEFAULT NULL,
   `sort` INT(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),

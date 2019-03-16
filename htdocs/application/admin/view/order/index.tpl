@@ -34,7 +34,8 @@
                                 <option value="">全部</option>
                                 <option value="1"{$status==='1'?' selected':''}>待发货</option>
                                 <option value="2"{$status==='2'?' selected':''}>待收货</option>
-                                <option value="3"{$status==='3'?' selected':''}>已完成</option>
+                                <option value="3"{$status==='3'?' selected':''}>待评价</option>
+                                <option value="3"{$status==='4'?' selected':''}>已完成</option>
                                 <option value="-1"{$status==='-1'?' selected':''}>已失效</option>
                             </select>
                         </div>
@@ -61,7 +62,7 @@
             </tr>
             </thead>
             <tbody>
-            <volist name="lists" id="v">
+            <volist name="lists" id="v" empty="$empty">
                 <tr>
                     <td>{$v.order_id}</td>
                     <td>
@@ -116,8 +117,9 @@
                 <div class="col-12 form-group"> 
                     <select class="form-control status-id">
                         <option value="0">待支付</option>
-                        <option value="1">已支付</option>
-                        <option value="2">已发货</option>
+                        <option value="1">已支付，待发货</option>
+                        <option value="2">已发货，待收货</option>
+                        <option value="3">已收货，待评价</option>
                         <option value="3">已完成</option>
                         <option value="-1">订单作废</option>
                     </select>

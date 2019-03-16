@@ -383,6 +383,8 @@ function money_type($type,$wrap=true){
             return $wrap?wrap_label(lang('Balance'),'success'):lang('Balance');
         case "credit":
             return $wrap?wrap_label(lang('Credit'),'info'):lang('Credit');
+        case "reward":
+            return $wrap?wrap_label(lang('Reward'),'warning'):lang('Reward');
 
     }
     return $wrap?wrap_label(lang('Unknown'),'default'):lang('Unknown');
@@ -419,6 +421,21 @@ function getWeek($d){
     $w=date('N',$time);
     static $weeks=array('','星期一','星期二','星期三','星期四','星期五','星期六','星期日');
     return $weeks[intval($w)];
+}
+
+/**
+ * 过滤emoji字符
+ * @param $str
+ * @return mixed
+ */
+function filter_emoji($str)
+{
+    $str = preg_replace_callback( '/./u',
+        function (array $match) {
+            return strlen($match[0]) >= 4 ? '' : $match[0];
+        },
+        $str);
+    return $str;
 }
 
 /**

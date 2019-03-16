@@ -35,13 +35,15 @@ class ProductModel extends ContentModel
 
     public static function transSpec($sku_specs){
         $transed=[];
-        $specs=self::getSpecList();
-        $unindex=0;
-        foreach ($sku_specs as $id=>$value){
-            if(isset($specs[$id])){
-                $transed[$specs[$id]]=$value;
-            }else{
-                $transed['unknown-'.$unindex++]=$value;
+        if(!empty($sku_specs)) {
+            $specs = self::getSpecList();
+            $unindex = 0;
+            foreach ($sku_specs as $id => $value) {
+                if (isset($specs[$id])) {
+                    $transed[$specs[$id]] = $value;
+                } else {
+                    $transed['unknown-' . $unindex++] = $value;
+                }
             }
         }
         return $transed;

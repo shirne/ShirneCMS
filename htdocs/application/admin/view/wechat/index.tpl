@@ -33,7 +33,7 @@
             </tr>
             </thead>
             <tbody>
-            <foreach name="lists" item="v">
+            <volist name="lists" id="v" empty="$empty">
                 <tr>
                     <td>{$v.id}</td>
                     <td>{$v.type}{$v.account_type}</td>
@@ -42,10 +42,10 @@
                     <td>
                         <div class="btn-group btn-group-sm">
                             <a class="btn btn-outline-dark qrcode-btn" href="javascript:" data-qrcode="{$v.qrcode}"><i class="ion-md-expand"></i> 二维码</a>
-                            <a class="btn btn-outline-dark" href="{:url('wechat/material',array('wid'=>$v['id']))}" ><i class="ion-md-appstore"></i> 素材</a>
-                            <a class="btn btn-outline-dark" href="{:url('wechat/fans',array('wid'=>$v['id']))}" ><i class="ion-md-contacts"></i> 粉丝</a>
-                            <a class="btn btn-outline-dark" href="{:url('wechat/reply',array('wid'=>$v['id']))}" ><i class="ion-md-chatboxes"></i> 回复</a>
-                            <a class="btn btn-outline-dark" href="{:url('wechat/menu',array('id'=>$v['id']))}"><i class="ion-md-reorder"></i> 菜单</a>
+                            <a class="btn btn-outline-dark" href="{:url('wechat.material/index',array('wid'=>$v['id']))}" ><i class="ion-md-appstore"></i> 素材</a>
+                            <a class="btn btn-outline-dark" href="{:url('wechat.fans/index',array('wid'=>$v['id']))}" ><i class="ion-md-contacts"></i> 粉丝</a>
+                            <a class="btn btn-outline-dark" href="{:url('wechat.reply/index',array('wid'=>$v['id']))}" ><i class="ion-md-chatboxes"></i> 回复</a>
+                            <a class="btn btn-outline-dark" href="{:url('wechat.menu/edit',array('wid'=>$v['id']))}"><i class="ion-md-reorder"></i> 菜单</a>
                         </div>
                     </td>
                     <td class="operations">
@@ -54,7 +54,7 @@
                         <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('wechat/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
                     </td>
                 </tr>
-            </foreach>
+            </volist>
             </tbody>
         </table>
         {$page|raw}

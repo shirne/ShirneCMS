@@ -43,7 +43,7 @@
         </tr>
         </thead>
         <tbody>
-        <foreach name="lists" item="v">
+        <volist name="lists" id="v" empty="$empty">
             <tr>
                 <td>{$v.id}</td>
                 <td>[{$v.member_id}]{$v.username}</td>
@@ -68,7 +68,7 @@
                     </if>
                 </td>
             </tr>
-        </foreach>
+        </volist>
         </tbody>
     </table>
     {$page|raw}

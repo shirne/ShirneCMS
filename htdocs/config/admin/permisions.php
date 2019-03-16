@@ -170,6 +170,24 @@ return array(
             'edit'=>'充值方式修改',
             'delete'=>'充值方式删除'
         )
+    ),
+    'wechat'=>array(
+        'title'=>'微信管理',
+        'items'=>array(
+            'index'=>'公众号查看',
+            'add'=>'公众号添加',
+            'edit'=>'公众号修改',
+            'delete'=>'公众号删除',
+            'uploadVerify'=>'上传验证文件',
+            'updateField'=>'公众号配置',
+            'menu'=>'菜单管理',
+            'fans'=>'粉丝管理',
+            'syncfans'=>'粉丝同步',
+            'material'=>'素材管理',
+            'materialsync'=>'素材同步',
+            'materialdelete'=>'素材删除',
+            'reply'=>'回复管理'
+        )
     )
 );
 //end

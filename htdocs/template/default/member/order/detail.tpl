@@ -4,7 +4,7 @@
         <div class="page-header"><h1>订单详情</h1></div>
         <div class="card">
             <div class="card-header" style="margin-bottom:10px;">{$order.order_no}
-                <div class="float-right">{$v.status|order_status|raw}</div>
+                <div class="float-right">{$order.status|order_status|raw}</div>
             </div>
             <div class="card-body">
                 <volist name="products" id="prod">

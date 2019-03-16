@@ -34,7 +34,7 @@
             </tr>
         </thead>
         <tbody>
-        <foreach name="lists" item="v">
+        <volist name="lists" id="v" empty="$empty">
             <tr>
                 <td>{$v.id}</td>
                 <td>{$v.username}</td>
@@ -47,7 +47,7 @@
                     <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('feedback/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
                 </td>
             </tr>
-        </foreach>
+        </volist>
         </tbody>
     </table>
     {$page|raw}

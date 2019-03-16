@@ -57,7 +57,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<foreach name="lists" item="v">
+			<volist name="lists" id="v" empty="$empty">
 				<tr>
 					<td><input type="checkbox" name="id" value="{$v.id}" /></td>
 					<td><a href="{:url('index/article/view',['id'=>$v['id']])}" target="_blank">{$v.title}</a> </td>
@@ -81,7 +81,7 @@
 					<a class="btn btn-outline-danger link-confirm" title="{:lang('Delete')}" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('article/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
 					</td>
 				</tr>
-			</foreach>
+			</volist>
 		</tbody>
 	</table>
 	<div class="clearfix"></div>

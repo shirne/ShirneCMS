@@ -25,7 +25,7 @@ class MemberController extends BaseController
      * @param int $type
      * @return \think\response\Json
      */
-    public function search($key,$type=0){
+    public function search($key='',$type=0){
         $model=Db::name('member')
             ->where('status',1);
         if(!empty($key)){

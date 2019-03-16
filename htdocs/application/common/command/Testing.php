@@ -252,6 +252,7 @@ class Testing extends Command
         $product = $model->find();
 
         $product['product_price']=$product['price'];
+        $product['product_weight']=$product['weight'];
         $product['count']=1;
         if(!empty($product['image']))$product['product_image']=$product['image'];
 

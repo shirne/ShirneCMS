@@ -57,7 +57,7 @@
             </tr>
         </thead>
         <tbody>
-        <foreach name="lists" item="v">
+        <volist name="lists" id="v" empty="$empty">
             <tr>
                 <td><input type="checkbox" name="id" value="{$v.id}" /></td>
                 <td>{$v.group}<if condition="$v.group_use_template EQ 1">&nbsp;<span class="badge badge-warning">独立模板</span></if></td>
@@ -76,7 +76,7 @@
                     <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('page/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
                 </td>
             </tr>
-        </foreach>
+        </volist>
         </tbody>
     </table>
     {$page|raw}

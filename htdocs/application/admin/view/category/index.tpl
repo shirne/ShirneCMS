@@ -32,7 +32,7 @@
             </tr>
         </thead>
         <tbody>
-        <foreach name="model" item="v">
+        <volist name="model" id="v" empty="$empty">
             <tr>
                 <td>{$v.id}</td>
                 <td>{$v.html|raw} {$v.title}&nbsp;<span class="badge badge-info">{$v.short}</span><if condition="$v.use_template EQ 1">&nbsp;<span class="badge badge-warning">{:lang('Independ Template')}</span></if></td>
@@ -45,7 +45,7 @@
                     <a class="btn btn-outline-danger link-confirm" title="{:lang('Delete')}" data-confirm="{:lang('Confirm to delete? The operation can not restore!')}" href="{:url('category/delete',array('id'=>$v['id']))}"  ><i class="ion-md-trash"></i> </a>
                 </td>
             </tr>
-        </foreach>
+        </volist>
         </tbody>
     </table>
 </div>

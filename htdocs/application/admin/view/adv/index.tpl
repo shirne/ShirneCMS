@@ -31,7 +31,7 @@
             </tr>
         </thead>
         <tbody>
-        <foreach name="lists" item="v">
+        <volist name="lists" id="v" empty="$empty">
             <tr>
                 <td>{$v.id}</td>
                 <td>{$v.title}</td>
@@ -45,7 +45,7 @@
 删除后将不能恢复!" title="删除" href="{:url('adv/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i></a>
                 </td>
             </tr>
-        </foreach>
+        </volist>
         </tbody>
     </table>
     {$page|raw}

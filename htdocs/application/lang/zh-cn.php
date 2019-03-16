@@ -11,6 +11,7 @@ return [
 
     'Balance'=>'余额',
     'Credit'=>'积分',
+    'Reward'=>'奖励',
 
     'System Opt.'=>'系统操作',
     'Consume'=>'消费',

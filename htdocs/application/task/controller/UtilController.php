@@ -12,6 +12,7 @@ use think\Console;
 use think\console\Input;
 use think\console\Output;
 use think\Controller;
+use think\Db;
 use think\Response;
 
 class UtilController extends Controller
@@ -41,6 +42,8 @@ class UtilController extends Controller
     public function daily()
     {
         # code...
+        $rows = Db::name('product')->whereLike('title',["%1%","%2%"],'AND')->select();
+        var_export($rows);
         $instance=ProductModel::getInstance();
         echo $instance->getName();
         $instance=ArticleModel::getInstance();

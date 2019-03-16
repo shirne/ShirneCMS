@@ -106,7 +106,7 @@
                             <else/>
                             -
                         </if></td>
-                    <td class="{$v['amount']>0?'text-success':'text-danger'}">{$v.amount|showmoney}</td>
+                    <td class="{$v['amount']>0?'text-success':'text-danger'}">{$v.field|money_type|raw}&nbsp;{$v.amount|showmoney}</td>
                     <td>
                         <if condition="$v['from_member_id']">
                             <a href="{:url('money_log',array('id'=>$id,'fromdate'=>$fromdate,'todate'=>$todate,'from_id'=>$v['from_member_id'],'type'=>$type))}" >[{$v['from_member_id']} {$levels[$v['from_level_id']]['level_name']}]{$v['from_username']}</a>

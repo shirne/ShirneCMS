@@ -57,7 +57,7 @@
             </tr>
         </thead>
         <tbody>
-        <foreach name="lists" item="v">
+        <volist name="lists" id="v" empty="$empty">
             <tr>
                 <td><input type="checkbox" name="id" value="{$v.id}" /></td>
                 <td>{$v.username}
@@ -109,7 +109,7 @@
                     </if>
                 </td>
             </tr>
-        </foreach>
+        </volist>
         </tbody>
     </table>
     {$page|raw}

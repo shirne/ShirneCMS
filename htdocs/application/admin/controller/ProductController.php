@@ -20,7 +20,7 @@ use think\Db;
 class ProductController extends BaseController
 {
 
-    public function search($key,$cate=0,$brand=0,$type=0){
+    public function search($key='',$cate=0,$brand=0,$type=0){
         $model=Db::name('product')
             ->where('status',1);
         if(!empty($key)){

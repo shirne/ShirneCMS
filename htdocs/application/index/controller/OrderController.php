@@ -47,6 +47,7 @@ class OrderController extends AuthedController
             $this->initLevel();
             foreach ($products as $k=>&$item){
                 $item['product_price']=$item['price'];
+                $item['product_weight']=$item['weight'];
 
                 if($item['is_discount'] && $this->userLevel['discount']){
                     $item['product_price']=$item['product_price']*$this->userLevel['discount']*.01;

@@ -16,7 +16,7 @@ use think\Response;
  */
 class ArticleController extends BaseController
 {
-    public function search($key,$cate=0,$type=0){
+    public function search($key='',$cate=0,$type=0){
         $model=Db::name('article')
             ->where('status',1);
         if(!empty($key)){

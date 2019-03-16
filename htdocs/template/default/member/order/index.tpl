@@ -10,14 +10,14 @@
                     <div class="float-right">
                         <if condition="$v['status'] EQ 0">
                             <span class="badge badge-warning">未支付</span>
-                            <elseif condition="$v['status'] EQ 1"/>
+                            <elseif condition="$v['status'] EQ 4"/>
+                            <span class="badge badge-success">已完成</span>
+                            <elseif condition="$v['status'] GT 0"/>
                             <if condition="$v['isaudit'] EQ 1">
                                 <a class="btn btn-default btn-confirm" href="javascript:" data-id="{$v.apply_id}">确认完成</a>
                                 <else/>
                                 <span class="badge badge-warning">待审核</span>
                             </if>
-                            <elseif condition="$v['status'] EQ 2"/>
-                            <span class="badge badge-success">已完成</span>
                             <else/>
                             <span class="badge badge-default">订单已作废</span>
                         </if>

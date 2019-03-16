@@ -164,6 +164,7 @@ class OrderModel extends BaseModel
                     'product_image'=>$product['product_image'],
                     'product_orig_price'=>$product['product_price'],
                     'product_price'=>$release_price,
+                    'product_weight'=>$product['product_weight'],
                     'count'=>$product['count'],
                     'sort'=>$i++
                 ]);
