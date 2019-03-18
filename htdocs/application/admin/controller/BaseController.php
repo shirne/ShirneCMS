@@ -58,7 +58,7 @@ class BaseController extends Controller {
         $this->assign('menus',getMenus());
 
         //空数据默认样式
-        $this->assign('empty','<tr><td colspan="5" class="text-center text-muted">暂时没有记录</td></tr>');
+        $this->assign('empty',list_empty());
     }
 
     /**

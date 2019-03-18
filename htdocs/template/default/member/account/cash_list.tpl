@@ -3,7 +3,7 @@
     <div class="container">
         <div class="page-header"><h1>提现记录</h1></div>
         <ul class="list-group">
-            <php>$empty='<span class="col-12 empty">暂时没有记录</span>';</php>
+            <php>$empty='<li class="list-group-item col-12 empty">暂时没有记录</li>';</php>
             <foreach name="cashes" empty="$empty" item="v">
                 <li class="list-group-item row">
                     <div class="col-3">{$v.amount|showmoney}<br />实收：{$v.real_amount|showmoney}</div>

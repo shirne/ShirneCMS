@@ -31,7 +31,8 @@
             </tr>
         </thead>
         <tbody>
-        <volist name="lists" id="v" empty="$empty">
+        <empty name="lists">{:list_empty(4)}</empty>
+        <volist name="lists" id="v" >
             <tr>
                 <td>{$v.id}</td>
                 <td>{$v.title}</td>

@@ -37,7 +37,7 @@
                 <div class="col-3">备注</div>
                 </div>
             </li>
-            <php>$empty='<span class="col-12 empty">暂时没有记录</span>';</php>
+            <php>$empty='<li class="list-group-item col-12 empty">暂时没有记录</li>';</php>
             <foreach name="logs" empty="$empty" item="v">
                 <li class="list-group-item">
                     <div class="row">

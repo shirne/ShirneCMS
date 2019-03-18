@@ -44,6 +44,7 @@ class AgentController extends BaseController
                 ->setValidateResult(false);
             $qrCode->writeFile('.' . $qrurl);
         }
+        $this->assign('qrtime',filemtime('.'.$qrurl));
         $this->assign('qrurl',$qrurl);
         $this->assign('shareurl',$shareurl);
 

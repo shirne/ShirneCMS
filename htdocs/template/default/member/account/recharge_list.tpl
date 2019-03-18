@@ -4,7 +4,7 @@
         <div class="page-header"><h1>充值记录</h1></div>
         <div class="page-content">
             <ul class="list-group">
-                <php>$empty='<span class="col-12 empty">暂时没有记录</span>';</php>
+                <php>$empty='<li class="list-group-item col-12 empty">暂时没有记录</li>';</php>
                 <foreach name="recharges" empty="$empty" item="v">
                     <li class="list-group-item">
                         <div class="row">

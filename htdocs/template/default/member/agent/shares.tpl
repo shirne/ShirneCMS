@@ -8,6 +8,12 @@
 <block name="body">
     <div class="container">
         <div class="page-header"><h1>注册链接</h1></div>
+        <div class="form-group text-center">
+            <figure class="figure">
+                <img src="{$qrurl}?v={$qrtime}" class="figure-img img-fluid rounded" alt="分享二维码">
+                <figcaption class="figure-caption text-center">扫描二维码</figcaption>
+            </figure>
+        </div>
         <div class="form-group">
             <div class="col-xs-12">
                 <textarea readonly class="form-control" id="shareurl">{$shareurl}</textarea>
