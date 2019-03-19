@@ -18,6 +18,15 @@ function writelog($message,$type=\think\Log::INFO){
     }
 }
 
+function media($src,$width='',$height='',$quality=70){
+    $root = config('template.oss_root');
+    if(empty($root)){
+        return $src;
+    }else {
+        return $root . $src;
+    }
+}
+
 /**
  * tp已支持下载输出
  * @param $data

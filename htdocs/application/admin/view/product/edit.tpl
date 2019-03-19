@@ -115,10 +115,32 @@
                                     <label class="btn btn-outline-secondary{$product['is_commission']==1?' active':''}">
                                         <input type="radio" name="is_commission" value="1" autocomplete="off" {$product['is_commission']==1?'checked':''}>支持
                                     </label>
+                                    <label class="btn btn-outline-secondary{$product['is_commission']==2?' active':''}">
+                                        <input type="radio" name="is_commission" value="2" autocomplete="off" {$product['is_commission']==2?'checked':''}>独立分佣
+                                    </label>
                                     <label class="btn btn-outline-secondary{$product['is_commission']==0?' active':''}">
                                         <input type="radio" name="is_commission" value="0" autocomplete="off" {$product['is_commission']==0?'checked':''}>不支持
                                     </label>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <label class="col-3">独立分佣比例</label>
+                            <div class="form-group col">
+                                <php>$layercounts = array_column($levels,'commission_layer');$layercount = max($layercounts);</php>
+                                <for start="0" end="$layercount">
+                                    <div class="input-group col">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">第 {$i+1} 代</span>
+                                        </div>
+                                        <input type="text" name="commission_percent[{$i}]"
+                                               value="{$product['commission_percent'][$i]}"
+                                               class="form-control"/>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">%</span>
+                                        </div>
+                                    </div>
+                                </for>
                             </div>
                         </div>
                         <div class="form-row">

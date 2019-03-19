@@ -85,6 +85,7 @@ class OrderModel extends BaseModel
         $status=0;
         $total_price=0;
         $commission_amount=0;
+        $comm_special = [];
         foreach ($products as $k=>$product){
             if($product['storage']<$product['count']){
                 $this->error='商品['.$product['product_title'].']库存不足';
@@ -101,10 +102,18 @@ class OrderModel extends BaseModel
             }
             $total_price += $price;
 
-            if($product['is_commission'] ){
+            if($product['is_commission'] == 1 ){
                 $cost_price=intval($product['cost_price']*100)* $product['count'];
                 if($price>$cost_price) {
                     $commission_amount += $price - $cost_price;
+                }
+            }elseif($product['is_commission'] == 2){
+                $cost_price=intval($product['cost_price']*100)* $product['count'];
+                if($price>$cost_price) {
+                    $comm_special[]=[
+                        'amount'=> $price - $cost_price,
+                        'percent'=>json_decode($product['commission_percent'])
+                    ];
                 }
             }
         }
@@ -129,6 +138,7 @@ class OrderModel extends BaseModel
             'level_id'=>0,
             'payamount'=>$total_price*.01,
             'commission_amount'=>$commission_amount*.01,
+            'commission_special'=>json_encode($comm_special),
             'status'=>0,
             'isaudit'=>getSetting('autoaudit')==1?1:0,
             'remark'=>$remark,
@@ -223,8 +233,11 @@ class OrderModel extends BaseModel
         if(empty($parents))return true;
 
         $pids=array_column($parents,'id');
-        Db::name('Member')->whereIn('id', $pids)->setInc('week_performance', $order['payamount'] * 100);
+        Db::name('Member')->where('id', $member['referer'])->setInc('recom_performance', $order['payamount'] * 100);
         Db::name('Member')->whereIn('id', $pids)->setInc('total_performance', $order['payamount'] * 100);
+
+        $specials = empty($order['commission_special'])?[]:
+            (is_array($order['commission_special'])?$order['commission_special']:json_decode($order['commission_special']));
 
         for ($i = 0; $i < count($parents); $i++) {
             $curLevel=$levels[$parents[$i]['level_id']];
@@ -236,6 +249,18 @@ class OrderModel extends BaseModel
                 }
                 $amount = $commission * $curPercent * .01;
                 self::award_log($parents[$i]['id'],$amount,'消费分佣'.($i+1).'代','commission',$order);
+            }
+
+            foreach ($specials as $special){
+                if($special['amount'] > 0 && !empty($special['percent'][$i])){
+                    $curPercent = floatVal($special['percent'][$i]);
+                    $commission = $special['amount'];
+                    if($curLevel['commission_limit'] && $commission>$curLevel['commission_limit']){
+                        $commission = $curLevel['commission_limit'];
+                    }
+                    $amount = $commission * $curPercent * .01;
+                    self::award_log($parents[$i]['id'], $amount, '消费分佣' . ($i + 1) . '代', 'commission', $order);
+                }
             }
         }
         return true;

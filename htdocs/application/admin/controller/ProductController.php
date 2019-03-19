@@ -130,6 +130,7 @@ class ProductController extends BaseController
                 $data['max_price']=array_max($skus,'price');
                 $data['min_price']=array_min($skus,'price');
                 $data['storage']=array_sum(array_column($skus,'storage'));
+                if(empty($data['levels']))$data['levels']=[];
                 if(!empty($data['prop_data'])){
                     $data['prop_data']=array_combine($data['prop_data']['keys'],$data['prop_data']['values']);
                 }else{

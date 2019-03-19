@@ -249,6 +249,8 @@ CREATE TABLE `sa_member` (
   `agentcode` varchar(10) DEFAULT '',
   `recom_total` int(11) DEFAULT '0',
   `recom_count` int(11) DEFAULT '0',
+  `recom_performance` BIGINT DEFAULT 0,
+  `total_performance` BIGINT DEFAULT 0,
   `team_count` int(11) DEFAULT '0',
   `logintime` int(11) DEFAULT '0',
   PRIMARY KEY (`id`),
@@ -358,6 +360,8 @@ CREATE TABLE `sa_member_agent` (
   `is_default` TINYINT NULL DEFAULT 0,
   `recom_count` INT NULL DEFAULT 0,
   `team_count` INT NULL DEFAULT 0,
+  `recom_performance` BIGINT DEFAULT 0,
+  `total_performance` BIGINT DEFAULT 0,
   `sale_award` INT NULL DEFAULT 0,
   `global_sale_award` INT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
