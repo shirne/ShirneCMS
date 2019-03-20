@@ -25,6 +25,11 @@ class SimpleFacade
         return self::class;
     }
 
+    public static function getFacadeInstance()
+    {
+        return static::createFacade();
+    }
+
     public static function __callStatic($method, $params)
     {
         return call_user_func_array([static::createFacade(), $method], $params);

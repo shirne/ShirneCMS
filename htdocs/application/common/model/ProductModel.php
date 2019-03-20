@@ -17,7 +17,7 @@ class ProductModel extends ContentModel
     function __construct($data = [])
     {
         parent::__construct($data);
-        $this->cateFacade=ProductCategoryFacade::class;
+        $this->cateFacade=ProductCategoryFacade::getFacadeInstance();
     }
 
     private static $specifications;

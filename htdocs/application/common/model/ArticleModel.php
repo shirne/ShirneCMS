@@ -15,6 +15,6 @@ class ArticleModel extends ContentModel
     function __construct($data = [])
     {
         parent::__construct($data);
-        $this->cateFacade=CategoryFacade::class;
+        $this->cateFacade=CategoryFacade::getFacadeInstance();
     }
 }

@@ -16,7 +16,7 @@ class ContentModel extends BaseModel
     protected $defaultOrder='id DESC';
 
     /**
-     * @var $cateFacade CategoryFacade
+     * @var $cateFacade CategoryModel
      */
     protected $cateFacade;
     protected function tagBase()
@@ -38,10 +38,10 @@ class ContentModel extends BaseModel
         if(!empty($attrs['category'])){
             $cate_id=$attrs['category'];
             if(!is_int($cate_id)){
-                $cate_id=$this->cateFacade::getCategoryId($cate_id);
+                $cate_id=$this->cateFacade->getCategoryId($cate_id);
             }
             if(isset($attrs['recursive']) && $attrs['recursive']){
-                $model->where($this->model.".cate_id", "IN", $this->cateFacade::getSubCateIds($cate_id));
+                $model->where($this->model.".cate_id", "IN", $this->cateFacade->getSubCateIds($cate_id));
             }else{
                 $model->where($this->model.".cate_id",$cate_id);
             }
@@ -84,14 +84,14 @@ class ContentModel extends BaseModel
         if(!empty($attrs['category'])){
             $cate_id=$attrs['category'];
             if(!is_int($cate_id)){
-                $cate_id=$this->cateFacade::getCategoryId($cate_id);
+                $cate_id=$this->cateFacade->getCategoryId($cate_id);
             }
 
             //默认递归分类
             if(isset($attrs['recursive']) && $attrs['recursive']===false){
                 $model->where($this->model.".cate_id",$cate_id);
             }else{
-                $model->where($this->model.".cate_id", "IN", $this->cateFacade::getSubCateIds($cate_id));
+                $model->where($this->model.".cate_id", "IN", $this->cateFacade->getSubCateIds($cate_id));
             }
         }
         if(!empty($attrs['id'])){
@@ -118,14 +118,14 @@ class ContentModel extends BaseModel
         if(!empty($attrs['category'])){
             $cate_id=$attrs['category'];
             if(!is_int($cate_id)){
-                $cate_id=$this->cateFacade::getCategoryId($cate_id);
+                $cate_id=$this->cateFacade->getCategoryId($cate_id);
             }
 
             //默认递归分类
             if(isset($attrs['recursive']) && $attrs['recursive']===false){
                 $model->where($this->model.".cate_id",$cate_id);
             }else{
-                $model->where($this->model.".cate_id", "IN", $this->cateFacade::getSubCateIds($cate_id));
+                $model->where($this->model.".cate_id", "IN", $this->cateFacade->getSubCateIds($cate_id));
             }
         }
         if(!empty($attrs['id'])){
@@ -143,14 +143,14 @@ class ContentModel extends BaseModel
         if(!empty($attrs['category'])){
             $cate_id=$attrs['category'];
             if(!is_int($cate_id)){
-                $cate_id=$this->cateFacade::getCategoryId($cate_id);
+                $cate_id=$this->cateFacade->getCategoryId($cate_id);
             }
 
             //默认递归分类
             if(isset($attrs['recursive']) && $attrs['recursive']===false){
                 $model->where($this->model.".cate_id",$cate_id);
             }else{
-                $model->where($this->model.".cate_id", "IN", $this->cateFacade::getSubCateIds($cate_id));
+                $model->where($this->model.".cate_id", "IN", $this->cateFacade->getSubCateIds($cate_id));
             }
         }
         if(!empty($attrs['id'])){
