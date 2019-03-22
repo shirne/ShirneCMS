@@ -24,6 +24,8 @@ class BaseController extends Controller {
     protected $manage;
     protected $permision;
 
+    protected $viewData=[];
+
     public function initialize(){
         parent::initialize();
 
@@ -55,10 +57,12 @@ class BaseController extends Controller {
             $this->checkPermision($controller.'_'.$action);
         }
 
-        $this->assign('menus',getMenus());
+        if(!$this->request->isAjax()) {
+            $this->assign('menus', getMenus());
 
-        //空数据默认样式
-        $this->assign('empty',list_empty());
+            //空数据默认样式
+            $this->assign('empty', list_empty());
+        }
     }
 
     /**
@@ -95,6 +99,43 @@ class BaseController extends Controller {
             if(in_array($permitem,$this->permision['global']))return true;
         }
         return false;
+    }
+
+    /**
+     * 兼容ajax的数据注册
+     * @param mixed $name
+     * @param string $value
+     * @return $this
+     */
+    protected function assign($name, $value = '')
+    {
+        if($this->request->isAjax()) {
+            if (is_array($name)) {
+                $this->viewData = array_merge($this->viewData, $name);
+            } else {
+                $this->viewData[$name] = $value;
+            }
+        }else{
+            $this->view->assign($name, $value);
+        }
+
+        return $this;
+    }
+
+    /**
+     * 兼容ajax的输出
+     * @param string $template
+     * @param array $vars
+     * @param array $config
+     * @return string
+     */
+    protected function fetch($template = '', $vars = [], $config = [])
+    {
+        if($this->request->isAjax()){
+            $this->result($this->viewData);
+        }
+
+        return $this->view->fetch($template, $vars, $config);
     }
 
 }

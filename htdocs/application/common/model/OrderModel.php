@@ -111,8 +111,8 @@ class OrderModel extends BaseModel
                 $cost_price=intval($product['cost_price']*100)* $product['count'];
                 if($price>$cost_price) {
                     $comm_special[]=[
-                        'amount'=> $price - $cost_price,
-                        'percent'=>json_decode($product['commission_percent'])
+                        'amount'=> ($price - $cost_price)*.01,
+                        'percent'=>force_json_decode($product['commission_percent'])
                     ];
                 }
             }
@@ -236,8 +236,7 @@ class OrderModel extends BaseModel
         Db::name('Member')->where('id', $member['referer'])->setInc('recom_performance', $order['payamount'] * 100);
         Db::name('Member')->whereIn('id', $pids)->setInc('total_performance', $order['payamount'] * 100);
 
-        $specials = empty($order['commission_special'])?[]:
-            (is_array($order['commission_special'])?$order['commission_special']:json_decode($order['commission_special']));
+        $specials = force_json_decode($order['commission_special']);
 
         for ($i = 0; $i < count($parents); $i++) {
             $curLevel=$levels[$parents[$i]['level_id']];
@@ -254,7 +253,7 @@ class OrderModel extends BaseModel
             foreach ($specials as $special){
                 if($special['amount'] > 0 && !empty($special['percent'][$i])){
                     $curPercent = floatVal($special['percent'][$i]);
-                    $commission = $special['amount'];
+                    $commission = $special['amount'] * 1;
                     if($curLevel['commission_limit'] && $commission>$curLevel['commission_limit']){
                         $commission = $curLevel['commission_limit'];
                     }

@@ -18,6 +18,14 @@ function writelog($message,$type=\think\Log::INFO){
     }
 }
 
+function force_json_decode($string){
+    if(is_array($string)){
+        return $string;
+    }
+    $json = @json_decode($string);
+    return empty($json)?[]:$json;
+}
+
 function media($src,$width='',$height='',$quality=70){
     $root = config('template.oss_root');
     if(empty($root)){

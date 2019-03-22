@@ -2,6 +2,7 @@
 namespace app\index\controller;
 
 use app\admin\model\MemberLevelModel;
+use app\common\model\MemberModel;
 use app\common\model\WechatModel;
 use EasyWeChat\Factory;
 use extcore\traits\Email;
@@ -10,6 +11,7 @@ use think\Controller;
 use think\Db;
 use think\facade\Env;
 use think\facade\Lang;
+use think\facade\Log;
 
 /**
  * 如果某个控制器必须用户登录才可以访问  
@@ -57,9 +59,31 @@ class BaseController extends Controller
         $this->assign('navigator',$navigation);
         $this->assign('navmodel','index');
 
+        $agent = $this->request->param('agent');
+        if(!empty($agent)){
+            $amem=Db::name('Member')->where('is_agent','GT',0)
+                ->where('agentcode',$agent)
+                ->where('status',1)->find();
+            if(!empty($amem)){
+                Log::record('With Agent code: '.$agent.','.$amem['id']);
+                session('agent',$amem['id']);
+            }
+        }
+
         $this->checkPlatform();
 
         $this->checkLogin();
+
+        if($this->isLogin && empty($this->user['referer'])){
+            $agent = session('agent');
+            if($agent && $agent != $this->userid){
+                $parents = getMemberParents($this->userid,0);
+                if(!in_array($agent,$parents)) {
+                    session('agent',null);
+                    MemberModel::update(['referer' => $agent], ['id' => $this->userid]);
+                }
+            }
+        }
 
         $this->assign('isLogin',$this->isLogin);
         $this->assign('protocol',$this->request->scheme());
