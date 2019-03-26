@@ -82,7 +82,7 @@ class LinksController extends BaseController
                 $this->error($validate->getError());
             } else {
                 $delete_images=[];
-                $uploaded=$this->upload('adv','upload_logo');
+                $uploaded=$this->upload('links','upload_logo');
                 if(!empty($uploaded)){
                     $data['logo']=$uploaded['url'];
                     $delete_images[]=$data['delete_logo'];

@@ -213,7 +213,8 @@ class ProductController extends BaseController
                 $data['min_price']=array_min($skus,'price');
                 $data['storage']=array_sum(array_column($skus,'storage'));
                 if ($model->allowField(true)->save($data)) {
-                    delete_image($delete_images);
+                    //不删除图片，可能会导致订单数据图片不显示
+                    //delete_image($delete_images);
                     $existsIds=[];
                     foreach ($skus as $sku){
                         if($sku['sku_id']) {
