@@ -89,6 +89,11 @@ class Testing extends Command
         $count=$input->getOption('count');
         while($count--){
             $product=$this->getProduct($pid);
+            if(empty($product)){
+                $output->writeln('没有合适的产品');
+                break;
+            }
+
             $member=Db::name('member')->where('is_agent','GT',0)->order(Db::raw('rand()'))->find();
 
             $output->writeln('用户 '.$member['username'].'['.$member['id'].'] 推荐了新会员:');
@@ -242,14 +247,16 @@ class Testing extends Command
      */
     private function getProduct($id=0)
     {
+        if(!$id){
+            $aprods = Db::name('product')->where('type',2)->where('status',1)->field('id,min_price')->select();
+            $aprod = weight_random($aprods,'min_price', false);
+            $id=$aprod['id'];
+        }
+
         $model=Db::view('ProductSku','*')
             ->view('Product',['title'=>'product_title','image'=>'product_image','levels','is_discount','is_commission','type'],'ProductSku.product_id=Product.id','LEFT')->where('Product.status',1);
-        if($id){
-            $model->where('Product.id',$id);
-        }else{
-            $model->where('Product.type',2)->order(Db::raw('rand()'));
-        }
-        $product = $model->find();
+
+        $product = $model->where('Product.id',$id)->find();
 
         $product['product_price']=$product['price'];
         $product['product_weight']=$product['weight'];

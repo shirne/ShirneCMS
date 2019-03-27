@@ -928,6 +928,40 @@ function current_domain(){
 }
 
 /**
+ * 带权重的数组随机
+ * @param $array
+ * @param string $wfield
+ * @param bool $order 正向权重
+ * @return array
+ */
+function weight_random($array, $wfield='weight',$order=true){
+
+    $row=[];
+    if(empty($array))return $row;
+    if(!$order){
+        $max = max(array_column($array,$wfield));
+        $pow = pow(10,ceil(log10($max)));
+        $ofield = $wfield;
+        $wfield='_new_'.$wfield;
+        foreach ($array as &$row){
+            $row[$wfield]=$row[$ofield]==0?$pow:($pow/$row[$ofield]);
+        }
+    }
+    $total = array_sum(array_column($array,$wfield));
+    $randmax = min($total * 1000, mt_getrandmax());
+    $rand = mt_rand(0,$randmax);
+    $rand = $rand * $total / $randmax;
+    $sum=0;
+    foreach ($array as $row){
+        $sum += $row[$wfield];
+        if($sum>=$rand){
+            return $row;
+        }
+    }
+    return $row;
+}
+
+/**
  * 替换数组中的一个或几个键名对应的值
  * @param $key
  * @param $val

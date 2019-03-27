@@ -10,6 +10,7 @@ use think\Db;
 class MemberModel extends BaseModel
 {
 
+    protected $insert = ['is_agent' => 0,'type'=>1,'status'=>1,'referer'=>0];
     protected $autoWriteTimestamp = true;
 
     public static function init()
