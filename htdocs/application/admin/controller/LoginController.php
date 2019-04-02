@@ -10,7 +10,13 @@ use think\Db;
  * Class LoginController
  * @package app\admin\controller
  */
-class LoginController extends Controller {
+class LoginController extends Controller
+{
+
+    public function initialize()
+    {
+        parent::initialize();
+    }
 
     /**
      * 登陆主页

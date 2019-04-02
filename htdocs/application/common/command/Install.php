@@ -37,7 +37,7 @@ class Install extends Command
      */
     protected function execute(Input $input, Output $output)
     {
-        $lockfile=app()->getRuntimePath().'.lock';
+        $lockfile=app()->getRuntimePath().'install.lock';
         if(file_exists($lockfile)){
             $output->error('The system has been installed. If you want to reinstall, please delete the file '.$lockfile.' and run this command again.');
             return;

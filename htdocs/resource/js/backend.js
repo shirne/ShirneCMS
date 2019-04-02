@@ -145,6 +145,9 @@ jQuery(function ($) {
             onshow: function (body) {
                 $.ajax({
                     url: self.attr('href'),
+                    beforeSend: function(request) {
+                        request.setRequestHeader("X-Requested-With","htmlhttp");
+                    },
                     success: function (text) {
                         body.html(text);
                     }
