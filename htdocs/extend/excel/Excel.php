@@ -1,5 +1,5 @@
 <?php
-namespace excel;
+namespace shirne\excel;
 
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -80,15 +80,23 @@ class Excel {
         return $data;
     }
 
-    function getExcel(){
+    public function getExcel(){
         return $this->excel;
     }
 
-    function getSheet(){
+    public function getSheet(){
         return $this->sheet;
     }
 
-    function setInfo($info){
+    public function getCell($cell){
+        return $this->sheet->getCell($cell);
+    }
+
+    public function getRownum(){
+        return $this->rownum;
+    }
+
+    public function setInfo($info){
         $prop=$this->excel->getProperties();
         if(isset($info['creator']))$prop->setCreator($info['creator']);
         if(isset($info['modified_by']))$prop->setLastModifiedBy($info['modified_by']);
@@ -103,30 +111,30 @@ class Excel {
      * @param $column int|string
      * @param $type string DataType
      */
-    function setColumnType($column,$type){
+    public function setColumnType($column,$type){
         if(is_numeric($column)){
             $column=$this->columnmap[$column];
         }
         $this->columntype[$column]=$type;
     }
 
-    function setTitle($title){
+    public function setTitle($title){
         $this->sheet->setTitle($title);
     }
 
-    function setPageHeader($header='&C&B&TITLE'){
+    public function setPageHeader($header='&C&B&TITLE'){
         $this->sheet->getHeaderFooter()->setOddHeader(str_replace('&TITLE',$this->excel->getProperties()->getTitle(),$header));
 
     }
 
-    function setPageFooter($footer='&L&TITLE &RPage &P of &N'){
+    public function setPageFooter($footer='&L&TITLE &RPage &P of &N'){
         $this->sheet->getHeaderFooter()->setOddFooter(str_replace('&TITLE',$this->excel->getProperties()->getTitle(),$footer));
     }
 
     /**
      * 设置表头,其实与设置行一样，以后会增加其它功能
      */
-    function setHeader($header=array()){
+    public function setHeader($header=array()){
         $i=0;
         foreach ($header as $key => $value) {
             $this->sheet->setCellValueExplicit($this->columnmap[$i].$this->rownum,$value,DataType::TYPE_STRING);
@@ -135,7 +143,7 @@ class Excel {
         $this->rownum++;
     }
 
-    function addRow($row){
+    public function addRow($row){
         $i=0;
         foreach ($row as $key => $value) {
             if(isset($this->columntype[$this->columnmap[$i]])){
@@ -148,10 +156,14 @@ class Excel {
         $this->rownum++;
     }
 
+    public function merge($cell1, $cell2){
+        $this->sheet->mergeCells($cell1.':'.$cell2);
+    }
+
     /**
      * 删除行,默认删除尾行
      */
-    function delRow($row=null, $num=1){
+    public function delRow($row=null, $num=1){
         if(is_null($row)){
             $row=$this->rownum;
         }
@@ -162,7 +174,7 @@ class Excel {
     /**
      * 清空,是否清空表头
      */
-    function clear($wh=false){
+    public function clear($wh=false){
         $this->sheet->removeRow($wh?1:2,$this->rownum);
         $this->rownum=$wh?1:2;
     }
@@ -172,16 +184,17 @@ class Excel {
      * @param $path string
      * @return TRUE/FALSE
      */
-    function saveTo($path){
+    public function saveTo($path){
         $objWriter = IOFactory::createWriter($this->excel, $this->format);
         $objWriter->save($path);
+        return true;
     }
 
     /**
      * 输出
      * @param $filename string 文件名
      */
-    function output($filename=''){
+    public function output($filename=''){
         $dir=app()->getRuntimePath().'/Data/excel';
         if(!is_dir($dir)){
             mkdir($dir,0777,TRUE);
