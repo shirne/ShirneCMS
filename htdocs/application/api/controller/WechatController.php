@@ -14,7 +14,6 @@ use EasyWeChat\Kernel\Messages\Media;
 use EasyWeChat\Kernel\Messages\Message;
 use EasyWeChat\Kernel\Messages\News;
 use EasyWeChat\Kernel\Messages\Raw;
-use sdk\Wechat;
 use think\Controller;
 use think\Db;
 use think\Exception;

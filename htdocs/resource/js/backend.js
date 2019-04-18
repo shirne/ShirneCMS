@@ -9,6 +9,23 @@ function radio_tab(radios,lists,prefix) {
     }).filter(':checked').trigger('change');
 }
 
+//绑定数据
+function bindData(body,data) {
+    for(var i in data){
+        body.find('[name='+i+']').val(data[i]);
+    }
+}
+
+//获取表单数据
+function getData(body) {
+    var data={};
+    var fields=body.find('[name]');
+    for(var i=0;i<fields.length;i++){
+        data[fields.eq(i).attr('name')]=fields.eq(i).val();
+    }
+    return data;
+}
+
 jQuery(function ($) {
     //高亮当前选中的导航
     var bread = $(".breadcrumb");
@@ -299,7 +316,7 @@ jQuery(function ($) {
         };
         if (form.attr('enctype') === 'multipart/form-data') {
             if (!FormData) {
-                window.stop_ajax=true;
+                window.stop_ajax=false;
                 return true;
             }
             options.data = new FormData(form[0]);

@@ -1,6 +1,6 @@
 <?php
 
-namespace third;
+namespace shirne\third;
 
 /**
  * 极验行为式验证安全平台，php 网站主后台包含的库文件

@@ -1,6 +1,6 @@
 <?php
 
-namespace third;
+namespace shirne\third;
 
 /**
  * 第三方接口基类

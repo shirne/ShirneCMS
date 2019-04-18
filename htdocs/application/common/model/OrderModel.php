@@ -4,7 +4,7 @@ namespace app\common\model;
 
 
 use think\Db;
-use third\KdExpress;
+use shirne\third\KdExpress;
 
 /**
  * Class OrderModel

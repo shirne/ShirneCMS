@@ -3,7 +3,7 @@
 namespace app\common\service;
 use extcore\traits\Email;
 use think\Db;
-use third\UmsHttp;
+use shirne\third\UmsHttp;
 
 /**
  * Class CheckcodeService

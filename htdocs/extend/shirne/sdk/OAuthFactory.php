@@ -1,6 +1,6 @@
 <?php
 
-namespace sdk;
+namespace shirne\sdk;
 
 use Overtrue\Socialite\SocialiteManager;
 use think\Exception;

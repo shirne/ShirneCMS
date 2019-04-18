@@ -584,7 +584,7 @@ function user_log($uid, $action, $result, $remark = '', $tbl = 'member')
         'ip' => app()->request->ip(),
         'action' => $action,
         'result' => intval($result),
-        'remark' => json_encode(is_array($remark)?$remark:[$remark])
+        'remark' => json_encode(is_array($remark)?$remark:[$remark],JSON_UNESCAPED_UNICODE)
     ];
     if($tbl==='member'){
         $data['model']=request()->module();

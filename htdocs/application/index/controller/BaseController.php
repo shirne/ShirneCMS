@@ -6,7 +6,7 @@ use app\common\model\MemberModel;
 use app\common\model\WechatModel;
 use EasyWeChat\Factory;
 use extcore\traits\Email;
-use sdk\OAuthFactory;
+use shirne\sdk\OAuthFactory;
 use think\Controller;
 use think\Db;
 use think\facade\Env;

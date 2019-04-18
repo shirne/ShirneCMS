@@ -6,7 +6,7 @@ use app\common\model\MemberModel;
 use app\common\model\MemberOauthModel;
 use app\common\service\CheckcodeService;
 use app\common\validate\MemberValidate;
-use sdk\OAuthFactory;
+use shirne\sdk\OAuthFactory;
 use think\captcha\Captcha;
 use think\Db;
 use think\Exception;

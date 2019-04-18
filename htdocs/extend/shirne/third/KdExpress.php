@@ -1,6 +1,6 @@
 <?php
 
-namespace third;
+namespace shirne\third;
 
 /**
  * 快递鸟接口

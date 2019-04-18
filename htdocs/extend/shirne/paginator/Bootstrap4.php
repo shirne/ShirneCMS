@@ -1,16 +1,15 @@
 <?php
-/**
- * 基于Bootstrap4的分页样式
- * User: shirne
- * Date: 2018/5/2
- * Time: 0:09
- */
 
-namespace paginator;
+namespace shirne\paginator;
 
 
 use think\Paginator;
 
+/**
+ * 基于Bootstrap4的分页样式
+ * Class Bootstrap4
+ * @package shirne\paginator
+ */
 class Bootstrap4 extends Paginator
 {
     protected $extstyle='';

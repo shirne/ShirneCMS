@@ -88,6 +88,13 @@ class Excel {
         return $this->sheet;
     }
 
+    public function getSheets(){
+        return $this->excel->getSheetNames();
+    }
+    public function setSheet($name){
+        return $this->sheet = $this->excel->setActiveSheetIndexByName($name);
+    }
+
     public function getCell($cell){
         return $this->sheet->getCell($cell);
     }

@@ -7,6 +7,6 @@
  */
 
 return [
-    'type'     => '\paginator\Bootstrap4',
+    'type'     => '\shirne\paginator\Bootstrap4',
     'justify'=>'center'  //center/right/默认left
 ];

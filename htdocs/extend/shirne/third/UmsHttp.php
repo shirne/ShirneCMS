@@ -1,12 +1,6 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: shirne
- * Date: 2018/9/30
- * Time: 17:10
- */
 
-namespace third;
+namespace shirne\third;
 
 
 class UmsHttp extends ThirdBase

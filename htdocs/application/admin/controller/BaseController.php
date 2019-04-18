@@ -47,14 +47,16 @@ class BaseController extends Controller {
         $controller=strtolower($this->request->controller());
         if($controller!='index'){
             $action=strtolower($this->request->action());
-            if($this->request->isPost() || $action=='add' || $action=='update'){
-                $this->checkPermision("edit");
-            }
-            if(strpos('del',$action)!==false || strpos('clear',$action)!==false){
-                $this->checkPermision("del");
-            }
+            if($action != 'search') {
+                if ($this->request->isPost() || $action == 'add' || $action == 'update') {
+                    $this->checkPermision("edit");
+                }
+                if (strpos('del', $action) !== false || strpos('clear', $action) !== false) {
+                    $this->checkPermision("del");
+                }
 
-            $this->checkPermision($controller.'_'.$action);
+                $this->checkPermision($controller . '_' . $action);
+            }
         }
 
         if(!$this->request->isAjax()) {

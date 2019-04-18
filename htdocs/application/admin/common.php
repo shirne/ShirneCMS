@@ -43,11 +43,11 @@ function getMenus(){
 function check_password($password){
     if(in_array($password,['123456','654321','admin','abc123','123abc','12345678','123456789'])){
         session('password_error',1);
-    }elseif(preg_match('/^[0-9]\\1*$/',$password)){
+    }elseif(preg_match('/^([0-9])\\1*$/',$password)){
         session('password_error',2);
     }elseif(preg_match('/^[0-9]*$/',$password)){
         session('password_error',3);
-    }elseif(preg_match('/^[a-zA-Z]\\1*$/',$password)){
+    }elseif(preg_match('/^([a-zA-Z])\\1*$/',$password)){
         session('password_error',4);
     }else{
         session('password_error',null);

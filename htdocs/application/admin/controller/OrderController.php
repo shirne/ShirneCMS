@@ -3,7 +3,7 @@
 namespace app\admin\controller;
 
 use app\common\model\OrderModel;
-use excel\Excel;
+use shirne\excel\Excel;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use think\Db;
 
