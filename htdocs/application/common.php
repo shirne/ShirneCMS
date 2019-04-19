@@ -259,6 +259,9 @@ function showcardno($cardno,$pos=6,$fulllen=false){
     return str_repeat('*',$fulllen?$l:3).substr($cardno,$l);
 }
 
+function fmtCardno($cardno){
+    return $cardno;
+}
 
 function showcashtype($type){
     switch ($type){
