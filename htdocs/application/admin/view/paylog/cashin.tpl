@@ -63,17 +63,18 @@
                 <td>{$v.real_amount|showmoney}</td>
                 <td>{$v.cashtype|showcashtype}</td>
                 <td>
-                    <if condition="$v.cashtype EQ 'unioncard'">
-                    {$v.bank_name}<br />{$v.cardno|fmtCardno}
+                    <if condition="$v.cashtype EQ 'wechat'">
+                        <elseif condition="$v.cashtype EQ 'alipay'"/>
                         <else/>
-                        {$v.cardno}
+                        {$v.bank}<span class="text-muted"> / </span>{$v.bank_name}<br />
+                        {$v.card_name}<span class="text-muted"> / </span>{$v.cardno|fmtCardno}
                     </if>
                 </td>
                 <td>{$v.create_time|showdate='Y-m-d H:i:s'}</td>
                 <td>{$v.status|audit_status|raw}</td>
                 <td class="operations">
                     <if condition="$v['status'] EQ 0">
-                    <a class="btn btn-outline-success link-confirm" title="确认" href="{:url('Paylog/cashupdate',array('id'=>$v['id']))}"><i class="ion-md-check"></i> </a>
+                    <a class="btn btn-outline-success link-confirm" title="确认" data-confirm="确认已完成转账?" href="{:url('Paylog/cashupdate',array('id'=>$v['id']))}"><i class="ion-md-checkmark-circle"></i> </a>
                     <a class="btn btn-outline-danger link-confirm" title="无效" data-confirm="您真的确定要作废吗？" href="{:url('Paylog/cashdelete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
                         <else/>
                         -

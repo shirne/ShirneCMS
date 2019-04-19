@@ -152,14 +152,31 @@ class AccountController extends BaseController
         }
         $cards=Db::name('MemberCard')->where('member_id',$this->userid)->select();
         if($this->request->isPost()){
-            $amount=$_POST['amount']*100;
-            $bank_id=intval($_POST['card_id']);
+            $amount=$this->request->post('amount')*100;
+            $bank_id=$this->request->post('card_id/d');
+            if(empty($bank_id)){
+                $carddata=$this->request->only('bank,bankname,cardname,cardno','post');
+                if(empty($carddata['bank'])){
+                    $this->error('请填写银行名称');
+                }
+                if(empty($carddata['bankname'])){
+                    $this->error('请填写开户行名称');
+                }
+                if(empty($carddata['cardname'])){
+                    $this->error('请填写开户名称');
+                }
+                if(empty($carddata['cardno'])){
+                    $this->error('请填写卡号');
+                }
+                $carddata['member_id']=$this->userid;
+                $bank_id=Db::name('MemberCard')->insert($carddata,false,true);
+            }
             $card=Db::name('MemberCard')->where(array('member_id'=>$this->userid,'id'=>$bank_id))->find();
             $data=array(
                 'member_id'=>$this->userid,
                 'amount'=>$amount,
                 'real_amount'=>$amount-$amount*$this->config['cash_fee']*.01,
-                'create_at'=>time(),
+                'create_time'=>time(),
                 'bank_id'=>$bank_id,
                 'bank'=>$card['bank'],
                 'bank_name'=>$card['bankname'],

@@ -79,7 +79,8 @@
 <block name="script">
     <script type="text/javascript">
         var cash_fee=parseInt('{$config.cash_fee}');
-        var cash_limit=parseInt('{$config.cash_limit}');;
+        var cash_limit=parseInt('{$config.cash_limit}');
+        var cash_power=parseInt('{$config.cash_power}');
         var balance=parseInt('{$user.reword}|showmoney');
         var pass=false;
         $('.amount').bind('input',function(e){

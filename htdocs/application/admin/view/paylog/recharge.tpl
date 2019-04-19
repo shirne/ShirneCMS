@@ -58,6 +58,7 @@
                 <td>{$v.create_time|showdate='Y-m-d H:i:s'}</td>
                 <td>{$v.status|audit_status|raw}</td>
                 <td class="operations">
+                    <a href="{:url('paylog/rechargeView',['id'=>$v['id']])}" class="btn btn-sm btn-outline-info" rel="ajax"><i class="ion-md-paper"></i> 查看</a>
                     <if condition="$v['status'] EQ 0">
                     <a class="btn btn-outline-success link-confirm" title="确认" data-confirm="确定该订单已到账？" href="{:url('Paylog/rechargeupdate',array('id'=>$v['id']))}"><i class="ion-md-checkmark-circle"></i> </a>
                     <a class="btn btn-outline-danger link-confirm" title="无效" data-confirm="您真的确定要作废吗？" href="{:url('Paylog/rechargedelete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>

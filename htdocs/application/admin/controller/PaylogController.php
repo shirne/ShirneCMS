@@ -64,6 +64,19 @@ class PaylogController extends BaseController
         return $this->fetch();
     }
 
+    public function rechargeView($id){
+        $id=intval($id);
+        $model=Db::name('MemberRecharge')->find($id);
+        $member=Db::name('member')->where('id',$model['member_id'])->find();
+
+        $paytype=Db::name('member')->where('id',$model['paytype_id'])->find();
+
+        $this->assign('model',$model);
+        $this->assign('member',$member);
+        $this->assign('paytype',$paytype);
+        return $this->fetch();
+    }
+
     /**
      * 充值成功
      * @param string $id
