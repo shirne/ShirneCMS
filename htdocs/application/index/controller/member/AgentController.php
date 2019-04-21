@@ -23,8 +23,7 @@ class AgentController extends BaseController
     }
 
     public function shares(){
-
-        $shareurl=url('index/login/register',array('agent'=>$this->user['agentcode']),true,true);
+        $shareurl=url('index/index/share',['agent'=>$this->user['agentcode']],true,true);
 
         $qrurl='/uploads/qrcode/'.($this->userid % 32).'/'.$this->user['agentcode'].'.png';
         if(!file_exists('.'.$qrurl)) {

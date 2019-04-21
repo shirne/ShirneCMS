@@ -37,20 +37,30 @@
 </body>
 
 <if condition="$isWechat">
-    <script type="text/javascript" src="{$protocol}://res.wx.qq.com/open/js/jweixin-1.1.0.js"></script>
+    <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.1.0.js"></script>
     <script>
-        var imageUrl='__STATIC__/images/logo.png';
+        var imageUrl= window.share_imgurl?window.share_imgurl: '__STATIC__/images/logo.png';
+        var share_url = window.location.href;
+        var agent_code='{$isLogin && $user['is_agent']?$user['agentcode']:''}';
+        if(agent_code){
+            if(share_url.indexOf('?')>0){
+                share_url += '&';
+            }else{
+                share_url += '?';
+            }
+            share_url += 'agent='+agent_code;
+        }
         wx.config({$signPackage|raw});
         wx.ready(function () {
             wx.onMenuShareTimeline({
                 title: '{$title}',
-                link:  window.location.href,
+                link:  share_url,
                 imgUrl: imageUrl
             });
             wx.onMenuShareAppMessage({
                 title: '{$title}',
                 desc: '{$description}',
-                link:  window.location.href,
+                link:  share_url,
                 imgUrl: imageUrl,
                 type: '',
                 dataUrl: ''
@@ -58,20 +68,20 @@
             wx.onMenuShareQQ({
                 title: '{$title}',
                 desc: '{$description}',
-                link:  window.location.href,
+                link:  share_url,
                 imgUrl: imageUrl
             });
             wx.onMenuShareWeibo({
                 title: '{$title}',
                 desc: '{$description}',
-                link:  window.location.href,
+                link:  share_url,
                 imgUrl: imageUrl
 
             });
             wx.onMenuShareQZone({
                 title: '{$title}',
                 desc: '{$description}',
-                link:  window.location.href,
+                link:  share_url,
                 imgUrl: imageUrl
             });
         });

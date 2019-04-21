@@ -20,6 +20,8 @@ Route::pattern([
 
 Route::get('index$', 'index/index/index');
 
+Route::get('share/:agent', 'index/index/share');
+
 Route::group('article',[
     ':id'=>'index/article/view',
     'comment/:id'=>'index/article/comment',
