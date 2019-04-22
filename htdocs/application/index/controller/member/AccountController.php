@@ -62,7 +62,7 @@ class AccountController extends BaseController
             ->where('member_id',$this->userid)->find();
         if($this->request->isPost()){
             if($hasRecharge>0){
-                $this->error('您有充值申请正在处理中',url('index/member/rechargeList'));
+                $this->error('您有充值申请正在处理中',url('index/member.account/rechargeList'));
             }
             $amount=$_POST['amount']*100;
             $type=$_POST['type_id'];
@@ -105,7 +105,7 @@ class AccountController extends BaseController
                 if($type=='wechat'){
                     $this->success('充值订单提交成功，即将跳转到支付页面', url('index/order/wechatpay',['order_id'=>'CZ_'.$addid]));
                 }else {
-                    $this->success('充值申请已提交', url('index/member/index'));
+                    $this->success('充值申请已提交', url('index/member.account/rechargeList'));
                 }
             }else{
                 $this->error('提交失败');
@@ -148,7 +148,7 @@ class AccountController extends BaseController
     public function cash(){
         $hascash=Db::name('memberCashin')->where(array('member_id'=>$this->userid,'status'=>0))->count();
         if($hascash>0){
-            $this->error('您有提现申请正在处理中',aurl('index/member/index'));
+            $this->error('您有提现申请正在处理中',aurl('index/member.account/cashList'));
         }
         $cards=Db::name('MemberCard')->where('member_id',$this->userid)->select();
         if($this->request->isPost()){
@@ -197,7 +197,7 @@ class AccountController extends BaseController
             $addid=Db::name('memberCashin')->insert($data);
             if($addid) {
                 money_log($this->userid,-$data['amount'],'提现申请扣除','cash',0,'reward');
-                $this->success('提现申请已提交',aurl('index/member/index'));
+                $this->success('提现申请已提交',aurl('index/member.account/cashList'));
             }else{
                 $this->error('申请失败');
             }

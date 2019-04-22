@@ -60,7 +60,7 @@ class OrderController extends BaseController
         $id=intval($id);
         $order=OrderModel::get($id);
         if(empty($order) || $order['delete_time']>0){
-            $this->error('订单不存在或已删除',aurl('index/member/order'));
+            $this->error('订单不存在或已删除',aurl('index/member.order/index'));
         }
         $this->assign('order',$order);
         $this->assign('products',Db::name('OrderProduct')->where('order_id',$id)->select());
@@ -79,7 +79,7 @@ class OrderController extends BaseController
         if($result){
             //Db::name('orderProduct')->whereIn("order_id",idArr($id))->delete();
             user_log($this->userid,'deleteorder',1,'删除订单 '.$id );
-            $this->success("删除成功", aurl('index/member/order'));
+            $this->success("删除成功", aurl('index/member.order/index'));
         }else{
             $this->error("删除失败");
         }

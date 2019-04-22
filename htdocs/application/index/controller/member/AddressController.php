@@ -42,7 +42,7 @@ class AddressController extends BaseController
                 $id = Db::name('MemberAddress')->insert($data, false, true);
                 if ($id) {
                     user_log($this->userid, 'addressadd', 1, '添加收货地址:' . $id);
-                    $this->success('添加成功', aurl('index/member.address'), Db::name('MemberAddress')->find($id));
+                    $this->success('添加成功', aurl('index/member.address/index'), Db::name('MemberAddress')->find($id));
                 } else {
                     $this->error('添加失败');
                 }
@@ -74,7 +74,7 @@ class AddressController extends BaseController
                     ->where('address_id',$id)->update($data);
                 if($result){
                     user_log($this->userid,'addressedit',1,'修改收货地址:'.$id);
-                    $this->success('修改成功',aurl('index/member.address'));
+                    $this->success('修改成功',aurl('index/member.address/index'));
                 }else{
                     $this->error('修改失败');
                 }
