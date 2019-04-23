@@ -35,6 +35,10 @@ function media($src,$width='',$height='',$quality=70){
     }
 }
 
+function local_media($src){
+    return url('/','',false,true).ltrim($src,'/');
+}
+
 /**
  * tp已支持下载输出
  * @param $data

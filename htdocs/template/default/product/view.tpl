@@ -22,3 +22,8 @@
         </div>
     </div>
 </block>
+<block name="script">
+    <script type="text/javascript">
+        window.share_imgurl = '{$product.image|local_media}';
+    </script>
+</block>

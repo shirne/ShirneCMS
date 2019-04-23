@@ -316,6 +316,8 @@ class BaseController extends Controller
             if(!empty($this->wechat['appid'])) {
                 $app = Factory::officialAccount(WechatModel::to_config($this->wechat));
                 $signPackage = $app->jssdk->buildConfig([
+                    'updateAppMessageShareData',
+                    'updateTimelineShareData',
                     'onMenuShareTimeline',
                     'onMenuShareAppMessage',
                     'onMenuShareQQ',

@@ -49,6 +49,7 @@
 <block name="script">
     <script type="text/javascript" src="__STATIC__/swiper/js/swiper.min.js"></script>
     <script type="text/javascript">
+        window.share_imgurl = '{$product.image|local_media}';
         var swiper = new Swiper('.swiper-container', {
             navigation: {
                 nextEl: '.swiper-button-next',
