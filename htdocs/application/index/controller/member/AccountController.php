@@ -197,6 +197,7 @@ class AccountController extends BaseController
             $addid=Db::name('memberCashin')->insert($data);
             if($addid) {
                 money_log($this->userid,-$data['amount'],'提现申请扣除','cash',0,'reward');
+                Db::name('member')->where('id',$this->userid)->setInc('froze_money',$data['amount']);
                 $this->success('提现申请已提交',aurl('index/member.account/cashList'));
             }else{
                 $this->error('申请失败');

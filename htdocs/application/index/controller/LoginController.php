@@ -36,7 +36,7 @@ class LoginController extends BaseController{
                 $code = $this->request->post('verify','','strtolower');
                 //验证验证码是否正确
                 if(!($this->check_verify($code))){
-                    $this->error('验证码错误');
+                    $this->error(lang('Verify code error!'));
                 }
 
                 $data['username'] = $this->request->post('username');
@@ -46,7 +46,7 @@ class LoginController extends BaseController{
 
                     if($member['status']==0){
                         user_log($member['id'], 'login', 0, '账号已禁用' );
-                        $this->error("您的账号已禁用");
+                        $this->error(lang('Account is disabled!'));
                     }else {
                         $this->setLogin($member);
                         $redirect=redirect()->restore();
@@ -61,11 +61,11 @@ class LoginController extends BaseController{
                                 ->update(['member_id'=>$member['id']]);
                         }
 
-                        $this->success("登陆成功",$url);
+                        $this->success(lang('Login success!'),$url);
                     }
                 }else{
                     user_log($member['id'],'login',0,'密码错误:'.$password);
-                    $this->error("账号或密码错误");
+                    $this->error(lang('Account or password incorrect!'));
                 }
             }
             return $this->fetch();

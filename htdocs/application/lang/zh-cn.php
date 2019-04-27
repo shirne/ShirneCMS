@@ -89,7 +89,7 @@ return [
     'Login success!'=>'登陆成功！',
     'Account is disabled!'=>'账号已禁用！',
     'Account is disabled, pls contact the super master!'=>'账号被禁用，请联系超级管理员 :(',
-    'Account or password increct!'=>'账号或密码错误 :(',
+    'Account or password incorrect!'=>'账号或密码错误 :(',
     'Incorrect password: %s'=>'密码错误: %s',
     'Verify code error!'=>'验证码错误！',
 

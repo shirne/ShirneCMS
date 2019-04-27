@@ -22,7 +22,7 @@ class Excel {
     private $columnmap;
 
     /**
-     * @param string $fmt Excel5,Excel2007
+     * @param string $fmt Xls,Xlsx
      */
     function __construct($fmt='Xls'){
         $this->format=$fmt;
@@ -153,10 +153,14 @@ class Excel {
     public function addRow($row){
         $i=0;
         foreach ($row as $key => $value) {
-            if(isset($this->columntype[$this->columnmap[$i]])){
-                $this->sheet->setCellValueExplicit($this->columnmap[$i].$this->rownum,$value,$this->columntype[$this->columnmap[$i]]);
-            }else{
-                $this->sheet->setCellValue($this->columnmap[$i].$this->rownum,$value);
+            if(is_array($value)){
+                $this->sheet->setCellValueExplicit($this->columnmap[$i] . $this->rownum, $value[0], $value[1]);
+            }else {
+                if (isset($this->columntype[$this->columnmap[$i]])) {
+                    $this->sheet->setCellValueExplicit($this->columnmap[$i] . $this->rownum, $value, $this->columntype[$this->columnmap[$i]]);
+                } else {
+                    $this->sheet->setCellValue($this->columnmap[$i] . $this->rownum, $value);
+                }
             }
             $i++;
         }
@@ -214,7 +218,7 @@ class Excel {
         Header("Content-type: application/vnd.ms-excel");
         Header("Accept-Ranges: bytes");
         Header("Accept-Length: ".$size);
-        Header("Content-Disposition: attachment; filename=" . $filename.'.'.($this->format=='Excel2007'?'xlsx':'xls'));
+        Header("Content-Disposition: attachment; filename=" . $filename.'.'.strtolower($this->format));
         // 输出文件内容
         echo fread($file,$size);
         fclose($file);

@@ -111,7 +111,7 @@
                         <div class="form-row">
                             <label class="col-3">支持分佣</label>
                             <div class="form-group col">
-                                <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
+                                <div class="btn-group btn-group-toggle btn-group-sm commision-groups" data-toggle="buttons">
                                     <label class="btn btn-outline-secondary{$product['is_commission']==1?' active':''}">
                                         <input type="radio" name="is_commission" value="1" autocomplete="off" {$product['is_commission']==1?'checked':''}>支持
                                     </label>
@@ -124,7 +124,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-row">
+                        <div class="form-row commission_box">
                             <label class="col-3">独立分佣比例</label>
                             <div class="form-group col">
                                 <php>$layercounts = array_column($levels,'commission_layer');$layercount = max($layercounts);</php>
@@ -600,6 +600,14 @@
                 })(currentUpload)
             }
         });
+        $('.commision-groups label').click(function () {
+            var val=$(this).find('input').val();
+            if(val==2){
+                $('.commission_box').show();
+            }else{
+                $('.commission_box').hide();
+            }
+        }).filter('.active').trigger('click');
         isready=true;
     });
 </script>

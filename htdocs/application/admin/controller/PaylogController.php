@@ -97,7 +97,7 @@ class PaylogController extends BaseController
         $data['audit_time']=time();
 
         $recharge->updateStatus($data);
-
+        Db::name('member')->where('id',$recharge['member_id'])->setInc('total_recharge',$recharge['amount']);
         user_log($this->mid,'rechargeaudit',1,'审核充值单 '.$id ,'manager');
         $this->success('处理成功！');
     }
@@ -122,7 +122,7 @@ class PaylogController extends BaseController
             $data['status']=0;
             $data['audit_time']=time();
             Db::name('member_recharge')->where('id',$recharge['id'])->update($data);
-
+            Db::name('member')->where('id',$recharge['member_id'])->setDec('total_recharge',$recharge['amount']);
             user_log($this->mid,'rechargecancel',1,'撤销充值单 '.$id ,'manager');
             $this->success('处理成功！');
         }else{
@@ -243,16 +243,19 @@ class PaylogController extends BaseController
     public function cashupdate($id=''){
         $id=intval($id);
         if($id==0)$this->error('参数错误 ');
-        $recharge=Db::name('member_cashin')->find($id);
-        if(empty($recharge))$this->error('提现单不存在');
-        if($recharge['status']!=0)$this->error('提现单已处理过了');
+        $cash=Db::name('member_cashin')->find($id);
+        if(empty($cash))$this->error('提现单不存在');
+        if($cash['status']!=0)$this->error('提现单已处理过了');
 
-        $recharge=Db::name('member_cashin')->lock(true)->find($id);
-        if($recharge['status']!=0)$this->error('提现单已处理过了');
+
+
         $data=array();
         $data['status']=1;
         $data['audit_time']=time();
-        Db::name('member_cashin')->where('id',$recharge['id'])->update($data);
+        Db::name('member_cashin')->where('id',$cash['id'])->update($data);
+
+        Db::name('member')->where('id',$cash['member_id'])->setDec('froze_money',$cash['amount']);
+        Db::name('member')->where('id',$cash['member_id'])->setInc('total_cashin',$cash['amount']);
         user_log($this->mid,'cashaudit',1,'处理提现单 '.$id ,'manager');
         $this->success('处理成功！');
     }
@@ -275,6 +278,7 @@ class PaylogController extends BaseController
 
         money_log($cash['member_id'],$cash['amount'],'提现驳回','cash');
 
+        Db::name('member')->where('id',$cash['member_id'])->setDec('froze_money',$cash['amount']);
         user_log($this->mid,'cashdelete',1,'驳回提现单 '.$id ,'manager');
         $this->success('处理成功！');
     }
