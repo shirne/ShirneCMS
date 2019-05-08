@@ -300,6 +300,10 @@ h6 {
   .row + .row {
     margin-top: 1rem;
   }
+  .page-content{
+    width: 100%;
+    overflow-x: scroll;
+  }
 }
 
 .breadcrumb {

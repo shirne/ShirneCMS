@@ -294,17 +294,25 @@
                 }
             }).show(html,title);
         },
-        confirm:function(message,confirm,cancel,icon){
+        confirm:function(message,confirm,cancel, icon, countdown){
             var called=false;
-            if(typeof confirm=='string'){
-                icon=confirm;
-                if(typeof cancel=='function'){
-                    confirm=cancel;
-                    cancel=null;
+            if(typeof confirm !== 'function'){
+                icon = confirm;
+                if(typeof cancel === 'function'){
+                    confirm = cancel;
+                    cancel = null;
+                }else{
+                    countdown = cancel;
                 }
-            }else if(typeof calcel=='string'){
-                icon=cancel;
+            }else if(typeof cancel !== 'function'){
+                countdown = icon;
+                icon = cancel;
             }
+            if(typeof icon ===  'number'){
+                countdown = icon;
+                icon = undefined;
+            }
+
             var iconMap= {
                 'success':'checkmark-circle',
                 'info': 'information-circle',
@@ -314,30 +322,51 @@
             var color='primary';
             if(!icon)icon='information-circle';
             else if(iconMap[icon]){
-                color=icon=='error'?'danger':icon;
-                icon=iconMap[icon];
+                color = icon==='error'?'danger':icon;
+                icon = iconMap[icon];
             }
             var html='<div class="row" style="align-items: center;"><div class="col-3 text-right"><i class="ion-md-{@icon} text-{@color}" style="font-size:3em;"></i> </div><div class="col-9" >{@message}</div> </div>'.compile({
                 message:message,
                 icon:icon,
                 color:color
             });
-            return new Dialog({
+
+            var inteval=0;
+
+            var dlg = new Dialog({
                 'header':false,
                 'size':'sm',
                 'backdrop':'static',
                 'onsure':function(){
-                    if(confirm && typeof confirm=='function'){
+                    if(confirm && typeof confirm==='function'){
                         called=true;
                         return confirm();
                     }
                 },
                 'onhide':function () {
-                    if(called==false && typeof cancel=='function'){
+                    clearInterval(inteval);
+                    if(called === false && typeof cancel === 'function'){
                         return cancel();
                     }
                 }
             }).show(html);
+
+            if(countdown && typeof countdown === 'number') {
+                var btn = dlg.box.find('.modal-footer .btn-outline-primary');
+                var btnText = dlg.options.btns[dlg.options.defaultBtn].text;
+                btn.addClass('disabled').text(btnText+'(' + countdown + ')');
+                inteval = setInterval(function () {
+                    countdown--;
+                    if (countdown > 0) {
+                        btn.text(btnText+'(' + countdown + ')');
+                    } else {
+                        btn.text(btnText);
+                        btn.removeClass('disabled');
+                        clearInterval(inteval);
+                    }
+                }, 1000);
+            }
+            return dlg;
         },
         prompt:function(message,callback,cancel){
             var called=false;
