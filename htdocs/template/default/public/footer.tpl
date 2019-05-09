@@ -19,7 +19,7 @@
                 <dl>
                     <dt>友情链接</dt>
                     <dd>
-                        <extend:links var="links" />
+                        <extendtag:links var="links" />
                         <volist name="links" id="link">
                             <a href="{$link.url}">{$link.title}</a>
                         </volist>

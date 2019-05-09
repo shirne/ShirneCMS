@@ -43,6 +43,7 @@ class BaseModel extends Model
 
     /**
      * 用于更新需要触发状态改变的表
+     * 框架model自带的触发器没有旧数据，无法进行比对
      * @param $toStatus int|array
      * @param $where string|array|int
      * @throws Exception
