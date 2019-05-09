@@ -38,7 +38,7 @@ class Extendtag extends BaseTabLib
 
         $parseStr='<?php ';
 
-        $parseStr.='$'.$var.'=\app\common\model\AdvGroupModel::getAdList("'.$tag['flag'].'"'.$limit.');';
+        $parseStr.='$'.$var.'=\app\common\model\AdvGroupModel::getAdList('.$this->parseArg($tag['flag']) . $limit.');';
 
         $parseStr .= ' ?>';
         return $parseStr;
