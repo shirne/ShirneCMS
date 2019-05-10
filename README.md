@@ -136,3 +136,10 @@ htdocs/public 网站根目录
 ![系统设置](screenshot/setting.jpg "系统设置")
 ![会员组](screenshot/user-level.jpg "会员组")
 ![微信菜单](screenshot/wechat-menu.jpg "微信菜单")
+
+## 联系我
+欢迎技术探讨，部署安装及定制开发收费
+* QQ 79099818
+* 微信 shirnewei
+
+备注 技术探讨/咨询 或 其它需求
