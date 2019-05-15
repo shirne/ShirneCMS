@@ -13,7 +13,7 @@
             <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="优惠券名称">
         </div>
         <div class="form-row">
-            <label for="title" class="col-3">类型</label>
+            <label for="title" class="col-3 col-md-2 col-lg-1">类型</label>
             <div class="form-group col">
                 <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
                     <label class="btn btn-outline-secondary{$model['bind_type']=='0'?' active':''}">
@@ -71,7 +71,7 @@
             </div>
         </div>
         <div class="form-row">
-            <label for="title" class="col-3">优惠类型</label>
+            <label for="type" class="col-3 col-md-2 col-lg-1">优惠类型</label>
             <div class="form-group col">
                 <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
                     <label class="btn btn-outline-secondary{$model['type']=='1'?' active':''}">
@@ -83,8 +83,8 @@
                 </div>
             </div>
         </div>
-        <div class="form-group cptype cptype_1">
-            <label for="title">优惠额度</label>
+        <div class="form-group cptype cptype_0">
+            <label for="limit">优惠额度</label>
             <div class="input-group">
                 <div class="input-group-prepend">
                     <div class="input-group-text">满</div>
@@ -96,8 +96,8 @@
                 <input type="text" class="form-control" name="amount" value="{$model.amount|showmoney}">
             </div>
         </div>
-        <div class="form-group cptype cptype_0">
-            <label for="title">优惠折扣</label>
+        <div class="form-group cptype cptype_1">
+            <label for="disount">优惠折扣</label>
             <div class="input-group">
                 <input type="text" class="form-control" name="disount" value="{$model.disount}">
                 <div class="input-group-append">
@@ -107,7 +107,7 @@
         </div>
 
         <div class="form-group">
-            <label for="image">有效期</label>
+            <label for="start_date">有效期</label>
             <div class="form-row date-range">
                 <div class="input-group col">
                     <div class="input-group-prepend">
@@ -122,21 +122,21 @@
                     <input type="text" name="end_date" class="form-control todate" value="{$model.end_date|showdate=''}" />
                 </div>
             </div>
-
         </div>
+
         <div class="form-row">
             <div class="col form-group">
-                <label for="url">数量</label>
+                <label for="stock">数量</label>
                 <input type="text" name="stock" class="form-control" value="{$model.stock}" />
             </div>
             <div class="col form-group">
-                <label for="image">排序</label>
+                <label for="sort">排序</label>
                 <input type="text" name="sort" class="form-control" value="{$model.sort}" />
             </div>
         </div>
 
         <div class="form-row">
-            <label for="title" class="col-3">失效方式</label>
+            <label for="expiry_type" class="col-3 col-md-2 col-lg-1">失效方式</label>
             <div class="form-group col">
                 <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
                     <label class="btn btn-outline-secondary{$model['expiry_type']=='1'?' active':''}">
@@ -149,18 +149,18 @@
             </div>
         </div>
         <div class="form-group exptype exptype_1">
-            <label for="title">有效期</label>
+            <label for="expiry_time">有效期</label>
             <div class="input-group">
-                <input type="text" class="form-control" name="expiry_time" value="{$model.expiry_time|showdate}">
+                <input type="text" class="form-control datepicker"  name="expiry_time" value="{$model.expiry_time|showdate}">
                 <div class="input-group-append">
                     <div class="input-group-text">前</div>
                 </div>
             </div>
         </div>
         <div class="form-group exptype exptype_0">
-            <label for="title">有效期</label>
+            <label for="expiry_day">有效期</label>
             <div class="input-group">
-                <input type="number" class="form-control" name="expiry_day" value="{$model.expiry_day}">
+                <input type="number" class="form-control " name="expiry_day" value="{$model.expiry_day}">
                 <div class="input-group-append">
                     <div class="input-group-text">天</div>
                 </div>

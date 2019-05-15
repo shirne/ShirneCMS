@@ -130,9 +130,14 @@ h6 {
   font-size: 60px;
 }
 
-.form-row label.col-2 {
-  margin-bottom: 0;
-  line-height: 2.4rem;
+.form-row{
+  >label{
+    white-space: nowrap;
+  }
+  label.col-2 {
+    margin-bottom: 0;
+    line-height: 2.4rem;
+  }
 }
 
 .card .announcement-bottom {
