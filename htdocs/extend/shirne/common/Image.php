@@ -34,8 +34,33 @@ class Image
      */
     private $height;
 
-    public function __construct()
+    public function __construct($init=array())
     {
+        if(!empty($init)) {
+            if(!is_array($init)){
+                if(is_numeric($init)){
+                    $init=[
+                        'width'=>$init,
+                        'height'=>$init,
+                    ];
+                }else{
+                    $init=['file'=>$init];
+                }
+            }
+            if (isset($init['file'])) {
+                if(isset($init['type'])){
+                    $this->loadFromFile($init['file'], $init['type']);
+                }else {
+                    $this->loadFromFile($init['file']);
+                }
+            } elseif (isset($init['width'])) {
+                if (isset($init['bg'])) {
+                    $this->create($init['width'], $init['height'], $init['bg']);
+                } else {
+                    $this->create($init['width'], $init['height']);
+                }
+            }
+        }
     }
 
     public function getResource()
@@ -50,7 +75,7 @@ class Image
      * @param $bg array
      * @return $this
      */
-    public function create($width, $height, $bg)
+    public function create($width, $height, $bg=[0,0,0,127])
     {
         $this->width = $width;
         $this->height = $height;
@@ -68,6 +93,11 @@ class Image
             }
         }
         return $this;
+    }
+
+    public function fill($color)
+    {
+
     }
 
     /**
@@ -120,19 +150,24 @@ class Image
      */
     public function scale($percent)
     {
+        //todo
+
         return $this;
     }
 
     /**
      * 裁剪图片
-     * @param $x1
-     * @param $y1
-     * @param $x2
-     * @param $y2
+     * @param $x
+     * @param $y
+     * @param $width
+     * @param $height
      * @return $this
      */
-    public function crop($x1, $y1, $x2, $y2)
+    public function crop($x, $y, $width, $height)
     {
+
+        imagecrop($this->image,compact('x','y','width','height'));
+
         return $this;
     }
 
@@ -145,6 +180,8 @@ class Image
      */
     public function resize($width, $height, $keepRatio = true)
     {
+        //todo
+
         return $this;
     }
 
@@ -157,23 +194,47 @@ class Image
      * @param $height
      * @return $this
      */
-    public function paste($src, $x, $y, $width, $height)
+    public function paste($src, $x, $y, $width = 0, $height = 0)
     {
+
+        list($pwidth, $pheight, $type, $attr) = getimagesize($src);
+        $image = new Image($src);
+        if(!$width){
+            $width = $pwidth;
+        }
+        if(!$height){
+            $height = $pheight;
+        }
+        imagecopyresized($this->image,$image->getResource(),$x,$y,0,0,$width,$height,$pwidth,$pheight);
+        $image=null;
+
         return $this;
     }
 
     /**
      * 图片上打印文本
      * @param $text
+     * @param $size
      * @param $x
      * @param $y
+     * @param $angle
      * @param $ttf
-     * @param $color array [r, g, b, a]
-     * @param $size
+     * @param $color array|int [r, g, b]
      * @return $this
      */
-    public function text($text, $x, $y, $ttf, $color, $size)
+    public function text($text, $size, $x, $y, $angle = 0, $ttf='', $color = 0)
     {
+        $font=app()->getRuntimePath().$ttf;
+        if(!is_file($font)){
+            exit('字体文件'.$font.'不存在');
+        }
+
+        if(is_array($color)){
+            $color=imagecolorallocate($this->image,$color[0],$color[1],$color[2]);
+        }
+
+        imagettftext($this->image,$size,$angle,$x,$y,$color,$font,$text);
+
         return $this;
     }
 

@@ -217,23 +217,33 @@ class MemberController extends BaseController
 
     /**
      * 会员日志
+     * @param string $key
      * @param string $type
      * @param int $member_id
      * @return mixed
      */
-    public function log($type='',$member_id=0){
-        $model=Db::view('MemberLog','*')
-            ->view('Member',['username'],'MemberLog.member_id=Member.id','LEFT');
-        $where=array();
-        if(!empty($type)){
-            $where['action']=$type;
-        }
-        if($member_id!=0){
-            $where['member_id']=$member_id;
+    public function log($key='',$type='',$member_id=0){
+        if($this->request->isPost()){
+            return redirect(url('',['key'=>base64_encode($key)]));
         }
 
-        $logs = $model->where($where)->order('MemberLog.id DESC')->paginate(15);
+        $model=Db::view('MemberLog','*')
+            ->view('Member',['username'],'MemberLog.member_id=Member.id','LEFT');
+
+        if(!empty($key)){
+            $key = base64_decode($key);
+            $model->whereLike('ManagerLog.remark',"%$key%");
+        }
+        if(!empty($type)){
+            $model->where('action',$type);
+        }
+        if($member_id!=0){
+            $model->where('member_id',$member_id);
+        }
+
+        $logs = $model->order('MemberLog.id DESC')->paginate(15);
         $this->assign('lists', $logs);
+        $this->assign('keyword', $key);
         $this->assign('page',$logs->render());
         return $this->fetch();
     }

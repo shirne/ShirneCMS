@@ -583,11 +583,28 @@ function getDefaultLevel(){
 
 
 
+/**
+ * 操作日志
+ * @param $uid
+ * @param $action string|array 操作名 或 [操作名,关联id]
+ * @param $result bool 操作结果
+ * @param string|array $remark
+ * @param string $tbl
+ * @return int|string
+ */
 function user_log($uid, $action, $result, $remark = '', $tbl = 'member')
 {
+    $other_id=0;
+    if(is_array($action)){
+        $other_id=$action[1];
+        $action=$action[0];
+    }
+    $datas=[];
+
     $data=[
         'create_time' => time(),
         $tbl . '_id' => $uid,
+        'other_id'=>$other_id,
         'ip' => app()->request->ip(),
         'action' => $action,
         'result' => intval($result),
@@ -596,7 +613,15 @@ function user_log($uid, $action, $result, $remark = '', $tbl = 'member')
     if($tbl==='member'){
         $data['model']=request()->module();
     }
-    return \think\Db::name($tbl . 'Log')->insert($data);
+    if(is_array($other_id)){
+        foreach ($other_id as $id){
+            $data['other_id']=$id;
+            $datas[] = $data;
+        }
+    }else {
+        $datas[] = $data;
+    }
+    return \think\Db::name($tbl . 'Log')->insertAll($datas);
 }
 
 /**

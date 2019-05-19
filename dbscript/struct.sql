@@ -64,6 +64,7 @@ DROP TABLE IF EXISTS `sa_manager_log`;
 CREATE TABLE `sa_manager_log` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `manager_id` int(11) DEFAULT '0',
+  `other_id` int(11) DEFAULT '0',
   `ip` varchar(50) DEFAULT '',
   `create_time` int(11) DEFAULT NULL,
   `action` varchar(45) DEFAULT NULL,
@@ -405,6 +406,7 @@ DROP TABLE IF EXISTS `sa_member_log`;
 CREATE TABLE `sa_member_log` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `member_id` INT NULL DEFAULT 0,
+  `other_id` int(11) DEFAULT '0',
   `model` VARCHAR(45) NULL,
   `ip` VARCHAR(50) DEFAULT '',
   `create_time` INT NULL,

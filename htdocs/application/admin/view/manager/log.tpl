@@ -7,12 +7,12 @@
 <div id="page-wrapper">
     <div class="row list-header">
         <div class="col-md-6">
-            <a href="{:url('member/logclear')}" class="btn btn-outline-secondary btn-sm"><i class="ion-md-trash"></i> 清理日志</a>
+            <a href="{:url('manager/logclear')}" class="btn btn-outline-secondary btn-sm"><i class="ion-md-trash"></i> 清理日志</a>
         </div>
         <div class="col-md-6">
-            <form action="{:url('member/index')}" method="post">
+            <form action="{:url('manager/log')}" method="post">
                 <div class="input-group input-group-sm">
-                    <input type="text" class="form-control" name="key" placeholder="输入用户名或者关键词搜索">
+                    <input type="text" class="form-control" name="key" value="{$keyword}" placeholder="输入用户名或者关键词搜索">
                     <div class="input-group-append">
                       <button class="btn btn-outline-secondary" type="submit"><i class="ion-md-search"></i></button>
                     </div>

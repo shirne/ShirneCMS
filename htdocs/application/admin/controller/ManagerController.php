@@ -40,18 +40,32 @@ class ManagerController extends BaseController
     /**
      * 管理员日志
      * @param string $key
+     * @param string $type
+     * @param int $member_id
      * @return mixed
      */
-    public function log($key=''){
-        $model=Db::view('ManagerLog','*')
-            ->view('Manager',['username'],'ManagerLog.manager_id=Manager.id','LEFT');
-        $where=array();
-        if(!empty($key)){
-            $where[]=['ManagerLog.remark','like',"%$key%"];
+    public function log($key='',$type='',$manager_id=0){
+        if($this->request->isPost()){
+            return redirect(url('',['key'=>base64_encode($key)]));
         }
 
-        $logs = $model->where($where)->order('ManagerLog.id DESC')->paginate(15);
+        $model=Db::view('ManagerLog','*')
+            ->view('Manager',['username'],'ManagerLog.manager_id=Manager.id','LEFT');
+
+        if(!empty($key)){
+            $key = base64_decode($key);
+            $model->whereLike('ManagerLog.remark',"%$key%");
+        }
+        if(!empty($type)){
+            $model->where('action',$type);
+        }
+        if($manager_id!=0){
+            $model->where('manager_id',$manager_id);
+        }
+
+        $logs = $model->order('ManagerLog.id DESC')->paginate(15);
         $this->assign('logs', $logs);
+        $this->assign('keyword', $key);
         $this->assign('page',$logs->render());
         return $this->fetch();
     }
