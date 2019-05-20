@@ -10,6 +10,7 @@ use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Color;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\Style;
+use think\Exception;
 
 define('OD_COLUMN_COUNT',26);
 
@@ -78,10 +79,14 @@ class Excel {
         if(strlen($highestColumn)>1){
             $this->extend_colum();
         }
+        if(strlen($highestColumn)>2){
+            $maxcolumnnum=$maxcolumn;
+        }else {
+            $maxcolumnnum = array_search($highestColumn, $this->columnmap);
+            if ($maxcolumnnum === false) throw new Exception('Excepted column: ' . $highestColumn);
 
-        $maxcolumnnum = array_index($this->columnmap,$highestColumn);
-
-        if($maxcolumnnum>$maxcolumn)$maxcolumnnum=$maxcolumn;
+            if ($maxcolumnnum > $maxcolumn) $maxcolumnnum = $maxcolumn;
+        }
         $this->rowcount=$highestRow;
 
         if($highestRow>$start+$limit)$highestRow=$start+$limit;
