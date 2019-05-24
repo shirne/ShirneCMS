@@ -97,7 +97,31 @@ class Image
 
     public function fill($color)
     {
+        if(is_string($color)){
+            $color=$this->hex2rgb($color);
+        }
+        if(is_array($color)) {
+            if (count($color) == 4) {
+                $color = imagecolorallocatealpha($this->image, $color[0], $color[1], $color[2], $color[3]);
+            } elseif (count($color) == 3) {
+                $color = imagecolorallocate($this->image, $color[0], $color[1], $color[2]);
+            }
+        }
+        if($color){
+            imagefill($this->image, 0, 0, $color);
+        }
+    }
 
+    private function hex2rgb($hex)
+    {
+        $hex = trim($hex,'# ');
+        $rgb[0]=hexdec(substr($hex,0,2));
+        $rgb[1]=hexdec(substr($hex,2,2));
+        $rgb[2]=hexdec(substr($hex,4,2));
+        if(strlen($hex)>7){
+            $rgb[3]=hexdec(substr($hex,6,2));
+        }
+        return $rgb;
     }
 
     /**
