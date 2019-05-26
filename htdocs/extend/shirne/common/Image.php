@@ -72,46 +72,69 @@ class Image
      * 创建空白图片
      * @param $width int
      * @param $height int
-     * @param $bg array
+     * @param $bgColor int|string|array
      * @return $this
      */
-    public function create($width, $height, $bg=[0,0,0,127])
+    public function create($width, $height, $bgColor=0)
     {
         $this->width = $width;
         $this->height = $height;
-        $this->image = imagecreate($width, $height);
+        $this->image = imagecreatetruecolor($width, $height);
         $this->type = 'png';
-        if(is_array($bg)){
-            $color=null;
-            if(count($bg)==4){
-                $color = imagecolorallocatealpha($this->image,$bg[0],$bg[1],$bg[2],$bg[3]);
-            }elseif(count($bg)==3){
-                $color = imagecolorallocate($this->image,$bg[0],$bg[1],$bg[2]);
-            }
-            if($color){
-                imagefill($this->image, 0, 0, $color);
-            }
-        }
+
+        if(!is_int($bgColor))$bgColor=$this->hex2color($bgColor);
+        imagefill($this->image, 0, 0, $bgColor);
+
         return $this;
     }
 
-    public function fill($color)
+    /**
+     * 填充图像指定区域，默认全图, 如果指定区域是一个坐标，则使用fill模式
+     * @param $color
+     * @param null $range
+     * @return $this
+     */
+    public function fill($color, $range = null)
     {
-        if(is_string($color)){
-            $color=$this->hex2rgb($color);
+        if(is_string($color) || is_array($color)) {
+            $color = $this->hex2color($color);
         }
-        if(is_array($color)) {
-            if (count($color) == 4) {
-                $color = imagecolorallocatealpha($this->image, $color[0], $color[1], $color[2], $color[3]);
-            } elseif (count($color) == 3) {
-                $color = imagecolorallocate($this->image, $color[0], $color[1], $color[2]);
-            }
+
+        if($range == null){
+            $range = [0, 0, $this->width, $this->height];
         }
-        if($color){
-            imagefill($this->image, 0, 0, $color);
+        if(count($range) == 2){
+            imagefill($this->image, $range[0], $range[1], $color);
+        }else {
+            imagefilledrectangle($this->image, $range[0], $range[1], $range[2], $range[3], $color);
         }
+
+        return $this;
     }
 
+    /**
+     * 由hex或rgb生成颜色
+     * @param $hex
+     * @param null $image
+     * @return int
+     */
+    private function hex2color($hex, $image=null){
+        if($image == null)$image = $this->image;
+
+        if(is_array($hex)){
+            $rgb = $hex;
+        }else {
+            $rgb = $this->hex2rgb($hex);
+        }
+        $color = 0;
+        if (count($rgb) == 4) {
+            $color = imagecolorallocatealpha($image, $rgb[0], $rgb[1], $rgb[2], $rgb[3]);
+        } elseif (count($rgb) == 3) {
+            $color = imagecolorallocate($image, $rgb[0], $rgb[1], $rgb[2]);
+        }
+
+        return $color;
+    }
     private function hex2rgb($hex)
     {
         $hex = trim($hex,'# ');
@@ -170,11 +193,29 @@ class Image
     /**
      * 按比例缩放图片
      * @param $percent
+     * @param $resampled bool 是否重新采样
      * @return $this
      */
-    public function scale($percent)
+    public function scale($percent, $resampled = true)
     {
-        //todo
+        if($percent != 100) {
+            $newWidth = round($this->width * $percent * .01);
+            $newHeight = round($this->height * $percent * .01);
+
+            $newImage = imagecreatetruecolor($newWidth, $newHeight);
+            if ($resampled) {
+                imagecopyresampled($newImage, $this->image, 0, 0, 0, 0,
+                    $newWidth, $newHeight, $this->width, $this->height);
+            } else {
+                imagecopyresized($newImage, $this->image, 0, 0, 0, 0,
+                    $newWidth, $newHeight, $this->width, $this->height);
+            }
+
+            imagedestroy($this->image);
+            $this->image = $newImage;
+            $this->width = $newWidth;
+            $this->height = $newHeight;
+        }
 
         return $this;
     }
@@ -195,16 +236,84 @@ class Image
         return $this;
     }
 
+    const SCALE_MODE_CONTAIN = 'contain';
+    const SCALE_MODE_COVER = 'cover';
+
     /**
      * 按宽高缩放图片
      * @param $width
      * @param $height
-     * @param $keepRatio bool 是否保持比例
+     * @param $mode string 裁剪模式, 如果原始比例与新比例不一致，会按照指定的模式进行裁剪
+     * @param $bgColor string 包含模式需要填充底色
      * @return $this
      */
-    public function resize($width, $height, $keepRatio = true)
+    public function resize($width, $height, $mode=self::SCALE_MODE_CONTAIN, $bgColor = '000000')
     {
-        //todo
+
+        if($width != $this->width || $height != $this->height) {
+            $newImage = imagecreatetruecolor($width, $height);
+
+            if($mode == self::SCALE_MODE_CONTAIN){
+                $bgColor = $this->hex2color($bgColor);
+                imagefill($newImage,0,0,$bgColor);
+
+                $scale = min($width/$this->width, $height/$this->height);
+                $newWidth = round($this->width * $scale);
+                $newHeight = round($this->height * $scale);
+
+                $left = round(($width - $newWidth) * .5);
+                $top = round(($height - $newHeight) * .5);
+                imagecopyresampled($newImage, $this->image, $left, $top, 0, 0,
+                    $this->width, $this->height, $newWidth, $newHeight);
+
+            }elseif($mode == self::SCALE_MODE_COVER){
+
+                $scale = min($this->width/$width, $this->height/$height);
+                $newWidth = round($width * $scale);
+                $newHeight = round($height * $scale);
+
+                $left = round(($this->width - $newWidth) * .5);
+                $top = round(($this->height - $newHeight) * .5);
+                imagecopyresampled($newImage, $this->image, 0, 0, $left, $top,
+                    $width, $height, $this->width - $left * 2, $this->height - $top * 2);
+            }else{
+                imagecopyresampled($newImage, $this->image, 0, 0, 0, 0,
+                    $width, $height, $this->width, $this->height);
+            }
+
+            imagedestroy($this->image);
+            $this->image = $newImage;
+            $this->width = $width;
+            $this->height = $height;
+        }
+
+        return $this;
+    }
+
+    /**
+     * 强制缩放
+     * @param $width
+     * @param $height
+     * @param bool $resampled
+     * @return $this
+     */
+    public function forceResize($width, $height, $resampled = true)
+    {
+        if($width != $this->width || $height != $this->height) {
+            $newImage = imagecreatetruecolor($width, $height);
+            if ($resampled) {
+                imagecopyresampled($newImage, $this->image, 0, 0, 0, 0,
+                    $width, $height, $this->width, $this->height);
+            } else {
+                imagecopyresized($newImage, $this->image, 0, 0, 0, 0,
+                    $width, $height, $this->width, $this->height);
+            }
+
+            imagedestroy($this->image);
+            $this->image = $newImage;
+            $this->width = $width;
+            $this->height = $height;
+        }
 
         return $this;
     }
