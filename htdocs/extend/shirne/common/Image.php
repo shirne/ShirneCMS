@@ -3,7 +3,7 @@
 namespace shirne\common;
 
 /**
- * 图像处理综合类
+ * 图像处理综合类, 暂不支持多侦gif格式
  * @package shirne\common
  * @require gd2
  */
@@ -63,9 +63,32 @@ class Image
         }
     }
 
+    /**
+     * 当前图像资源标识符
+     * @return resource
+     */
     public function getResource()
     {
         return $this->image;
+    }
+
+    public function __get($name)
+    {
+        if(property_exists($this,$name)){
+            return $this->$name;
+        }
+        return NULL;
+    }
+
+    /**
+     * 设定图像类型,用于输出
+     * @param $type
+     * @return $this
+     */
+    public function type($type)
+    {
+        $this->type=$type;
+        return $this;
     }
 
     /**
@@ -113,41 +136,6 @@ class Image
     }
 
     /**
-     * 由hex或rgb生成颜色
-     * @param $hex
-     * @param null $image
-     * @return int
-     */
-    private function hex2color($hex, $image=null){
-        if($image == null)$image = $this->image;
-
-        if(is_array($hex)){
-            $rgb = $hex;
-        }else {
-            $rgb = $this->hex2rgb($hex);
-        }
-        $color = 0;
-        if (count($rgb) == 4) {
-            $color = imagecolorallocatealpha($image, $rgb[0], $rgb[1], $rgb[2], $rgb[3]);
-        } elseif (count($rgb) == 3) {
-            $color = imagecolorallocate($image, $rgb[0], $rgb[1], $rgb[2]);
-        }
-
-        return $color;
-    }
-    private function hex2rgb($hex)
-    {
-        $hex = trim($hex,'# ');
-        $rgb[0]=hexdec(substr($hex,0,2));
-        $rgb[1]=hexdec(substr($hex,2,2));
-        $rgb[2]=hexdec(substr($hex,4,2));
-        if(strlen($hex)>7){
-            $rgb[3]=hexdec(substr($hex,6,2));
-        }
-        return $rgb;
-    }
-
-    /**
      * 从文件加载图片
      * @param $path
      * @param string $type 指定的类型，默认按扩展名自动识别
@@ -171,22 +159,6 @@ class Image
         $this->width = $this->imageInfo[0];
         $this->height = $this->imageInfo[1];
         $this->image = $func($path);
-        return $this;
-    }
-
-    public function getImage()
-    {
-        return $this->image;
-    }
-
-    /**
-     * 设定图像类型,用于输出
-     * @param $type
-     * @return $this
-     */
-    public function type($type)
-    {
-        $this->type=$type;
         return $this;
     }
 
@@ -231,7 +203,12 @@ class Image
     public function crop($x, $y, $width, $height)
     {
 
-        imagecrop($this->image,compact('x','y','width','height'));
+        $newImage = imagecrop($this->image,compact('x','y','width','height'));
+        if($newImage){
+            $this->image = $newImage;
+            $this->width = $width;
+            $this->height = $height;
+        }
 
         return $this;
     }
@@ -407,6 +384,43 @@ class Image
         $this->save(NULL,$quality);
 
         return $this;
+    }
+
+
+
+    /**
+     * 由hex或rgb生成颜色
+     * @param $hex
+     * @param null $image
+     * @return int
+     */
+    private function hex2color($hex, $image=null){
+        if($image == null)$image = $this->image;
+
+        if(is_array($hex)){
+            $rgb = $hex;
+        }else {
+            $rgb = $this->hex2rgb($hex);
+        }
+        $color = 0;
+        if (count($rgb) == 4) {
+            $color = imagecolorallocatealpha($image, $rgb[0], $rgb[1], $rgb[2], $rgb[3]);
+        } elseif (count($rgb) == 3) {
+            $color = imagecolorallocate($image, $rgb[0], $rgb[1], $rgb[2]);
+        }
+
+        return $color;
+    }
+    private function hex2rgb($hex)
+    {
+        $hex = trim($hex,'# ');
+        $rgb[0]=hexdec(substr($hex,0,2));
+        $rgb[1]=hexdec(substr($hex,2,2));
+        $rgb[2]=hexdec(substr($hex,4,2));
+        if(strlen($hex)>7){
+            $rgb[3]=hexdec(substr($hex,6,2));
+        }
+        return $rgb;
     }
 
     public function __destruct()
