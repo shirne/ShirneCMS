@@ -3,7 +3,7 @@
 namespace shirne\common;
 
 /**
- * Class Image todo 功能开发中
+ * 图像处理综合类
  * @package shirne\common
  * @require gd2
  */
@@ -238,6 +238,7 @@ class Image
 
     const SCALE_MODE_CONTAIN = 'contain';
     const SCALE_MODE_COVER = 'cover';
+    const SCALE_MODE_FILL = 'fill';
 
     /**
      * 按宽高缩放图片
@@ -352,7 +353,7 @@ class Image
      * @param $y
      * @param $angle
      * @param $ttf
-     * @param $color array|int [r, g, b]
+     * @param $color array|int|string [r, g, b]
      * @return $this
      */
     public function text($text, $size, $x, $y, $angle = 0, $ttf='', $color = 0)
@@ -362,8 +363,8 @@ class Image
             exit('字体文件'.$font.'不存在');
         }
 
-        if(is_array($color)){
-            $color=imagecolorallocate($this->image,$color[0],$color[1],$color[2]);
+        if(!is_int($color)){
+            $color=$this->hex2color($color);
         }
 
         imagettftext($this->image,$size,$angle,$x,$y,$color,$font,$text);
