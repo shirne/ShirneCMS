@@ -19,9 +19,9 @@ class ProductCategoryModel extends CategoryModel
         return Db::name('ProductCategory')->order('pid ASC,sort ASC,id ASC')->select();
     }
 
-    public function getBrands($cateid){
+    public function getBrands($cateid = 0, $key = ''){
         $model = Db::view('productBrand','*')
-            ->view('productCategoryBrand','cate_id','productCategoryBrand.brand_id=productBrand.id');
+            ->view('productCategoryBrand','cate_id','productCategoryBrand.brand_id=productBrand.id','LEFT');
         if($cateid!=0){
             $topCate = $this->getTopCategory($cateid);
             if(!empty($topCate)){
@@ -29,6 +29,9 @@ class ProductCategoryModel extends CategoryModel
             }else {
                 return [];
             }
+        }
+        if(!empty($key)){
+            $model->whereLike('productBrand.title',"%$key%");
         }
 
         return $model->order('productBrand.sort ASC,productBrand.id DESC')

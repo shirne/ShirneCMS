@@ -12,9 +12,9 @@ use think\Db;
  */
 class ProductBrandController extends BaseController
 {
-    public function search($cateid)
+    public function search($cateid=0, $key = '')
     {
-        $lists = ProductCategoryFacade::getBrands($cateid);
+        $lists = ProductCategoryFacade::getBrands($cateid, $key);
         return json(['data'=>$lists,'code'=>1]);
     }
 

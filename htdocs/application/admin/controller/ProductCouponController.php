@@ -2,6 +2,7 @@
 
 namespace app\admin\controller;
 use app\admin\validate\ProductCouponValidate;
+use app\common\facade\ProductCategoryFacade;
 use think\Db;
 
 /**
@@ -48,12 +49,15 @@ class ProductCouponController extends BaseController
         }
         $model=array('status'=>1,'type'=>1,'bind_type'=>0,'expiry_type'=>1);
         $this->assign('model',$model);
+        $this->assign("category",ProductCategoryFacade::getCategories());
         $this->assign('id',0);
         return $this->fetch('update');
     }
 
     /**
      * 修改
+     * @param $id
+     * @return string
      */
     public function update($id)
     {
@@ -82,6 +86,23 @@ class ProductCouponController extends BaseController
             $this->error('优惠券不存在');
         }
         $this->assign('model',$model);
+        $this->assign("category",ProductCategoryFacade::getCategories());
+
+        $brand=['id'=>0,'title'=>'请选择品牌'];
+        if($model['brand_id']>0){
+            $brand = Db::name('productBrand')->where('id',$model['brand_id'])->find();
+        }
+        $this->assign('brand',$brand);
+        $product=['id'=>0,'title'=>'请选择商品'];
+        if($model['product_id']>0){
+            $product = Db::name('product')->where('id',$model['product_id'])->find();
+        }
+        $this->assign('product',$product);
+        $sku=['id'=>0,'title'=>'请选择SKU'];
+        if($model['sku_id']>0){
+            $sku = Db::name('productSku')->where('id',$model['sku_id'])->find();
+        }
+        $this->assign('sku',$sku);
         $this->assign('id',$id);
         return $this->fetch();
 

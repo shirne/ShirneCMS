@@ -37,36 +37,40 @@
         <div class="form-group bindtype btype_1">
             <label for="title">类目</label>
             <div class="input-group">
-                <input type="text" class="form-control" name="cate_id" value="{$model.cate_id}">
-                <div class="input-group-append">
-                    <a href="" class="btn btn-outline-secondary">选择类目</a>
-                </div>
+                <select name="cate_id" class="form-control" >
+                    <foreach name="category" item="v">
+                        <option value="{$v.id}" data-pid="{$v['pid']}" {$model['cate_id'] == $v['id']?'selected="selected"':""}>{$v.html} {$v.title}</option>
+                    </foreach>
+                </select>
             </div>
         </div>
         <div class="form-group bindtype btype_2">
             <label for="title">品牌</label>
             <div class="input-group">
-                <input type="text" class="form-control" name="brand_id" value="{$model.brand_id}">
+                <span class="form-control">{$brand.title}</span>
+                <input type="hidden" name="brand_id" value="{$model.brand_id}">
                 <div class="input-group-append">
-                    <a href="" class="btn btn-outline-secondary">选择品牌</a>
+                    <a href="javascript:" class="btn btn-outline-secondary btn-pick-brand">选择品牌</a>
                 </div>
             </div>
         </div>
         <div class="form-group bindtype btype_3">
             <label for="title">商品</label>
             <div class="input-group">
-                <input type="text" class="form-control" name="product_id" value="{$model.product_id}">
+                <span class="form-control">{$product.title}</span>
+                <input type="hidden" name="product_id" value="{$model.product_id}">
                 <div class="input-group-append">
-                    <a href="" class="btn btn-outline-secondary">选择商品</a>
+                    <a href="javascript:" class="btn btn-outline-secondary btn-pick-product">选择商品</a>
                 </div>
             </div>
         </div>
         <div class="form-group bindtype btype_4">
             <label for="title">SKU</label>
             <div class="input-group">
-                <input type="text" class="form-control" name="sku_id" value="{$model.sku_id}">
+                <span class="form-control">{$product.title}[{$sku.goods_no}]</span>
+                <input type="hidden" name="sku_id" value="{$model.sku_id}">
                 <div class="input-group-append">
-                    <a href="" class="btn btn-outline-secondary">选择SKU</a>
+                    <a href="javascript:" class="btn btn-outline-secondary btn-pick-sku">选择SKU</a>
                 </div>
             </div>
         </div>
@@ -189,5 +193,18 @@
         radio_tab('[name=bind_type]','.bindtype','btype_');
         radio_tab('[name=type]','.cptype','cptype_');
         radio_tab('[name=expiry_type]','.exptype','exptype_');
+
+        $('.btn-pick-brand').click(function (e) {
+            var box = $(this).parents('.input-group');
+            var input = box.find('input[type=text]');
+            var title = box.find('span.form-control');
+            dialog.pickList({
+                url:"{:url('productBrand/search')}",
+                rowTemplate:'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action">[{@id}]&nbsp; {@title}</a>'
+            },function (brand) {
+                title.text(brand.title);
+                input.val(brand.id);
+            });
+        });
     </script>
 </block>
