@@ -2,7 +2,7 @@
 
 namespace app\admin\controller;
 
-use app\admin\model\SettingModel;
+use app\common\model\SettingModel;
 use app\admin\validate\SettingValidate;
 use think\Db;
 
@@ -90,50 +90,12 @@ class SettingController extends BaseController
         if(empty($data)){
             $this->error('配置内容解析失败');
         }
-        $model=Db::name('setting');
-        $settings=getSettings(false,false,true);
-        if($data['mode']=='full'){
-            foreach ($data['data'] as $k=>$v){
-                if(is_array($v['value']))$v['value']=serialize($v['value']);
-                if(isset($settings[$k])) {
-                    if($settings[$k]!=$v)$model->where('key' , $k)->update(array('value' => $v['value']));
-                }else{
-                    $model->setOption('data',[]);
-                    if(is_array($v['data']))$v['data']=serialize($v['data']);
-                    $model->insert(array(
-                        'key'=>$k,
-                        'title'=>$v['title'],
-                        'type'=>$v['type'],
-                        'group'=>$v['group'],
-                        'sort'=>$v['sort'],
-                        'value'=>$v['value'],
-                        'description'=>$v['description'],
-                        'data'=>serialize_data($v['data'])
-                    ));
-                }
-            }
+
+        if(SettingModel::import($data)) {
+            $this->success('导入成功');
         }else{
-            foreach ($data['data'] as $k=>$v){
-                if(is_array($v))$v=serialize($v);
-                if(isset($settings[$k])) {
-                    if($settings[$k]!=$v)$model->where('key' , $k)->update(array('value' => $v));
-                }else{
-                    $model->setOption('data',[]);
-                    $model->insert(array(
-                        'key'=>$k,
-                        'title'=>$k,
-                        'type'=>'text',
-                        'group'=>'advance',
-                        'sort'=>0,
-                        'value'=>$v,
-                        'description'=>'',
-                        'data'=>''
-                    ));
-                }
-            }
+            $this->error('导入失败');
         }
-        cache('setting',null);
-        $this->success('导入成功');
     }
 
     /**
@@ -142,17 +104,7 @@ class SettingController extends BaseController
      * @return \think\Response
      */
     public function export($mode='simple'){
-        $data=[];
-        if($mode=='full'){
-            $data['mode']='full';
-            $data['date']=date('Y-m-d H:i:s');
-            $data['data']=getSettings(true);
-        }else{
-            $data['mode']='simple';
-            $data['date']=date('Y-m-d H:i:s');
-            $data['data']=getSettings();
-        }
-        return file_download(json_encode($data,JSON_UNESCAPED_UNICODE),'setting.json');
+        return file_download(SettingModel::export($mode),'setting.json');
     }
 
     /**

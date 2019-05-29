@@ -19,6 +19,7 @@ class ContentModel extends BaseModel
      * @var $cateFacade CategoryModel
      */
     protected $cateFacade;
+
     protected function tagBase()
     {
         $this->model=ucfirst($this->name);

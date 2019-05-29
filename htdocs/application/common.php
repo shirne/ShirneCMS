@@ -770,41 +770,11 @@ function getPaytypes($type = '')
 }
 
 function getMemberParents($userid,$level=5,$getid=true){
-    $parents=[];
-    $currentid=$userid;
-    $user=\think\Db::name('Member')->where('id',$currentid)->field('id,level_id,username,referer')->find();
-    $layer=0;
-    while(!empty($user)){
-        $layer++;
-        $currentid=$user['referer'];
-        if(!$currentid)break;
-        if($userid == $currentid){
-            \think\facade\Log::record('会员 '.$userid.' 在查找上级时在第 '.$layer.' 层出现递归',\think\Log::ERROR);
-            break;
-        }
-        $user=\think\Db::name('Member')->where('id',$currentid)->field('id,level_id,username,referer')->find();
-        $parents[] = $getid?$currentid:$user;
-        if($level>0 && $layer>=$level)break;
-    }
-    return $parents;
+    return \app\common\model\MemberModel::getParents($userid,$level,$getid);
 }
 
 function getMemberSons($userid,$level=1,$getid=true){
-    $sons=[];
-    $users=\think\Db::name('Member')->where('referer',$userid)->field('id,level_id,username,referer')->select();
-    $layer=0;
-    while(!empty($users)){
-        $layer++;
-        $userids=array_column($users,'id');
-        if(in_array($userid ,$userids)){
-            \think\facade\Log::record('会员 '.$userid.' 在查找下级时在第 '.$layer.' 层出现递归',\think\Log::ERROR);
-            break;
-        }
-        $sons = array_merge($sons, $getid?$userids:$users);
-        if($level>0 && $layer>=$level)break;
-        $users=\think\Db::name('Member')->whereIn('referer',$userids)->field('id,level_id,username,referer')->select();
-    }
-    return $sons;
+    return \app\common\model\MemberModel::getSons($userid, $level, $getid);
 }
 
 function getPageGroups($force=false){
@@ -836,40 +806,7 @@ function getWechatAccount($type='wechat',$force=false){
  */
 function getSettings($all = false, $group = false, $parse=true)
 {
-    static $settings;
-    if (empty($settings)) {
-        $settings = cache('setting');
-        if (empty($settings)) {
-            $settings = \think\Db::name('setting')->order('sort ASC,id ASC')->select();
-            foreach ($settings as $k=>$v){
-                if($v['type']=='bool' && empty($v['data']))$v['data']="1:Yes\n0:No";
-                $settings[$k]['data']=parse_data($v['data']);
-            }
-            cache('setting', $settings);
-        }
-    }
-
-    $return = array();
-    if ($group) {
-        foreach ($settings as $set) {
-            if (empty($set['group'])) $set['group'] = 'common';
-            if (!isset($return[$set['group']])) $return[$set['group']] = array();
-            if($parse && $set['type']=='check') {
-                $set['value'] = @unserialize($set['value']);
-                if(empty($set['value']))$set['value']=array();
-            }
-            $return[$set['group']][$set['key']] = $all ? $set : $set['value'];
-        }
-    } else {
-        foreach ($settings as $set) {
-            if($parse && $set['type']=='check') {
-                $set['value'] = @unserialize($set['value']);
-                if(empty($set['value']))$set['value']=array();
-            }
-            $return[$set['key']] = $all ? $set : $set['value'];
-        }
-    }
-    return $return;
+    return \app\common\model\SettingModel::getSettings($all, $group, $parse);
 }
 
 function getSetting($key){
@@ -879,42 +816,10 @@ function getSetting($key){
 }
 function setSetting($key,$v){
     \think\Db::name('setting')->where('key',$key)->update(array('value'=>$v));
-    cache('setting', null);
+    \app\common\model\SettingModel::clearCache();
 }
 
-/**
- * 解析数据
- * @param $d
- * @return array
- */
-function parse_data($d)
-{
-    if(empty($d))return array();
-    $arr=array();
-    $darr=preg_split('/[\n\r]+/',$d);
-    foreach ($darr as $a){
-        $idx=stripos($a,':');
-        if($idx>0){
-            $arr[substr($a,0,$idx)]=substr($a,$idx+1);
-        }else{
-            $arr[$a]=$a;
-        }
-    }
-    return $arr;
-}
 
-function serialize_data($arr)
-{
-    $str=[];
-    foreach($arr as $k=>$v){
-        if($k==$v){
-            $str[]=$v;
-        }else{
-            $str[]=$k.':'.$v;
-        }
-    }
-    return implode("\n",$str);
-}
 
 /** =====================================  功能类函数  ===================================== **/
 

@@ -2,6 +2,7 @@
 namespace app\common\model;
 
 use think\Db;
+use think\facade\Log;
 
 /**
  * Class MemberModel
@@ -96,6 +97,60 @@ class MemberModel extends BaseModel
             Db::name('member')->whereIn('id',$parents)->setDec('team_count',1);
         }
         return $count;
+    }
+
+    /**
+     * 获取指定层数的会员上级
+     * @param $userid int 当前会员id
+     * @param int $level 获取的层数
+     * @param bool $getid 是否只取id
+     * @return array
+     */
+    public static function getParents($userid,$level=5,$getid=true)
+    {
+        $parents=[];
+        $currentid=$userid;
+        $user=Db::name('Member')->where('id',$currentid)->field('id,level_id,username,referer')->find();
+        $layer=0;
+        while(!empty($user)){
+            $layer++;
+            $currentid=$user['referer'];
+            if(!$currentid)break;
+            if($userid == $currentid){
+                Log::record('会员 '.$userid.' 在查找上级时在第 '.$layer.' 层出现递归',\think\Log::ERROR);
+                break;
+            }
+            $user=Db::name('Member')->where('id',$currentid)->field('id,level_id,username,referer')->find();
+            $parents[] = $getid?$currentid:$user;
+            if($level>0 && $layer>=$level)break;
+        }
+        return $parents;
+    }
+
+    /**
+     * 获取指定层数的所有下级
+     * @param $userid
+     * @param int $level
+     * @param bool $getid
+     * @return array
+     */
+    public static function getSons($userid,$level=1,$getid=true)
+    {
+        $sons=[];
+        $users=Db::name('Member')->where('referer',$userid)->field('id,level_id,username,referer')->select();
+        $layer=0;
+        while(!empty($users)){
+            $layer++;
+            $userids=array_column($users,'id');
+            if(in_array($userid ,$userids)){
+                Log::record('会员 '.$userid.' 在查找下级时在第 '.$layer.' 层出现递归',\think\Log::ERROR);
+                break;
+            }
+            $sons = array_merge($sons, $getid?$userids:$users);
+            if($level>0 && $layer>=$level)break;
+            $users=Db::name('Member')->whereIn('referer',$userids)->field('id,level_id,username,referer')->select();
+        }
+        return $sons;
     }
 
     /**
