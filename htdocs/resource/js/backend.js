@@ -133,6 +133,33 @@ function importExcel(title, url, callback) {
         }
     }).show(excelTpl,title);
 }
+function importResult(json,callback) {
+    if (json.code == 1) {
+        if (json.data.success == 1) {
+            if(callback){
+                callback(json.data)
+            }else{
+                var errors=json.data.errors;
+
+                if(errors && errors.length){
+                    if(errors.length>5){
+                        errors.splice(5);
+                        errors.push('...');
+                    }
+                    dialog.alert(json.msg+"<br />"+errors.join('<br />'),'warning');
+                }else {
+                    dialog.success(json.msg);
+                    setTimeout(function () {
+                        if(json.url)location.href=json.url;
+                        else location.reload();
+                    },800)
+                }
+            }
+        }
+    }else{
+        dialog.warning(json.msg);
+    }
+}
 
 jQuery(function ($) {
     //高亮当前选中的导航

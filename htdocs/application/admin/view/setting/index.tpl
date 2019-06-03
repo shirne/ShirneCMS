@@ -16,7 +16,7 @@
                     <span class="sr-only">Toggle Dropdown</span>
                 </button>
                 <div class="dropdown-menu" role="menu">
-                    <a href="{:url('export',array('mode'=>'full'))}" class="dropdown-item">完整导出</a>
+                    <a href="{:url('export',array('mode'=>'full'))}" target="_blank" class="dropdown-item">完整导出</a>
                 </div>
             </div>
             <div class="btn-group btn-group-sm" role="group" aria-label="Third group">

@@ -119,27 +119,29 @@
             if(!window.IS_TOP){
                 var curkey = $(window.frameElement).data('key');
 
-                $('a[data-tab]').click(function (e) {
+                $('a[href]').click(function (e) {
+                    var target=$(this).attr('target');
+                    if(target && target !== '_self')return;
+
                     e.preventDefault();
-                    var islist = window.IS_LIST;
+
+                    var url = $(this).attr('href');
+                    if($(this).attr('rel')==='ajax')return;
+                    if(url.indexOf('javascript')===0 || url.indexOf('#')===0)return;
                     var subkey = $(this).data('tab');
-                    var key = curkey + '_';
+                    if(!subkey)subkey = url.replace(/^(\/|http:)/g,'').replace(/[\/.]/g,'_').replace('.html','');
+
                     if(subkey === 'random') {
-                        key += Math.random().toString().substr(2);
+                        subkey = curkey + '_' + Math.random().toString().substr(2);
                     }else if(subkey === 'timestamp'){
-                        key += new Date().getTime();
-                    }else{
-                        key += subkey;
+                        subkey = curkey + '_' + new Date().getTime();
                     }
+
                     var title=$(this).text();
                     if(!title)title=$(this).attr('title');
-                    top.createPage(key, title, $(this).attr('href'), curkey);
+                    top.createPage(subkey, title, url, curkey);
                 });
-                $('a[data-nav]').click(function (e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    top.createNavPage($(this).data('nav'));
-                });
+
                 if(window.page_title){
                     top.updatePage(curkey, window.page_title);
                 }else {

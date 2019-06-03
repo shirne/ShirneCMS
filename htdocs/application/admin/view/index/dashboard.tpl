@@ -92,7 +92,7 @@
                 <div class="card-footer announcement-bottom">
                     <nav class="nav nav-fill">
                         <a class="nav-item nav-link" href="{:url('links/index')}"><i class="ion-md-navicon"></i> 管理链接 </a>
-                        <a class="nav-item nav-link" href="{:url('links/statics')}"><i class="ion-md-stats-bars"></i> 文章统计 </a>
+                        <a class="nav-item nav-link" href="{:url('adv/index')}"><i class="ion-md-stats-bars"></i> 管理广告 </a>
                     </nav>
                 </div>
             </div>

@@ -55,7 +55,8 @@
             </tr>
             </thead>
             <tbody>
-            <foreach name="lists" item="v">
+            <php>$empty=list_empty(7);</php>
+            <foreach name="lists" item="v" empty="$empty">
                 <tr>
                     <td><input type="checkbox" name="id" value="{$v.id}" /></td>
                     <td>[{$v.category_title}]{$v.title}</td>

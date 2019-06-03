@@ -33,7 +33,8 @@
             </tr>
         </thead>
         <tbody>
-        <foreach name="lists" item="v">
+        <php>$empty=list_empty(8);</php>
+        <foreach name="lists" item="v" empty="$empty">
             <tr>
                 <td>{$v.id}</td>
                 <td>{$v.username}</td>

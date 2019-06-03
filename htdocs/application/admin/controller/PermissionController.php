@@ -40,7 +40,7 @@ class PermissionController extends BaseController
      * @param $pid
      * @return mixed
      */
-    public function add($pid){
+    public function add($pid=0){
         if ($this->request->isPost()) {
             $data = $this->request->post();
             $validate = new PermissionValidate();

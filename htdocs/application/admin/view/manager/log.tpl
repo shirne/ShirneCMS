@@ -34,6 +34,7 @@
             </tr>
         </thead>
         <tbody>
+        <php>$empty=list_empty(8);</php>
         <foreach name="logs" item="v">
             <tr>
                 <td>{$v.id}</td>
