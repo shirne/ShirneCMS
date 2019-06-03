@@ -2,7 +2,7 @@ TRUNCATE TABLE `sa_permission`;
 
 INSERT INTO `sa_permission` (`id`, `parent_id`,`name`, `url`,`key`, `icon`, `sort_id`, `disable`)
 VALUES
-  (1,0,'主面板','Index/index','Board','ion-md-speedometer',0,0),
+  (1,0,'主面板','Index/dashboard','dashboard','ion-md-speedometer',0,0),
   (2,0,'内容','','Content','ion-md-apps',1,0),
   (7,0,'其它','','Other','ion-md-cube',7,0),
   (8,0,'会员','','Member','ion-md-person',8,0),

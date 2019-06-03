@@ -114,6 +114,9 @@
 </if>
 <script>
     jQuery(function ($) {
+        if(top.IS_TOP){
+            top.location.href=location.href;
+        }
         //浏览器功能检测
         if(!(window.URL && window.URL.createObjectURL) || !File || !FormData){
             $('form').hide();

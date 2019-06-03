@@ -25,6 +25,13 @@ function clearLogin($log=true){
     session('adminname',null);
     session('adminLTime',null);
 }
+function filterurl($url){
+    //只保留本站url
+    if(!preg_match('/^\/[a-zA-Z0-9\-_\.\/]+$/',$url)){
+        return '';
+    }
+    return $url;
+}
 
 function getMenus(){
     $menus=cache('menus');

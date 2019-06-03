@@ -312,6 +312,27 @@
                 countdown = icon;
                 icon = undefined;
             }
+            var title='';
+            var size='sm';
+            var btns=[
+                {'text':'取消','type':'secondary'},
+                {'text':'确定','isdefault':true,'type':'primary'}
+            ];
+            if($.isPlainObject(message)){
+                if(message['title']){
+                    title=message['title'];
+                }
+                if(message['size']!==undefined){
+                    size=message['size'];
+                }
+                if(message['btns']!==undefined){
+                    btns=message['btns'];
+                }
+                if(message['content']===undefined){
+                    throw 'message.content can not be empty.';
+                }
+                message=message['content'];
+            }
 
             var iconMap= {
                 'success':'checkmark-circle',
@@ -334,8 +355,9 @@
             var inteval=0;
 
             var dlg = new Dialog({
-                'header':false,
-                'size':'sm',
+                'header':title?true:false,
+                'btns':btns,
+                'size':size,
                 'backdrop':'static',
                 'onsure':function(){
                     if(confirm && typeof confirm==='function'){
@@ -349,7 +371,7 @@
                         return cancel();
                     }
                 }
-            }).show(html);
+            }).show(html, title);
 
             if(countdown && typeof countdown === 'number') {
                 var btn = dlg.box.find('.modal-footer .btn-outline-primary');

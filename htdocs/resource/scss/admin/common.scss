@@ -6,7 +6,6 @@ html {
 }
 
 body {
-  padding-top: 3.5rem;
   font-family: "Microsoft YaHei", sans-serif;
   background: $bg-light;
   font-size: 1rem;
@@ -38,6 +37,109 @@ h6 {
 
 .hidden{
   display: none;
+}
+
+
+.page-tabs{
+  height :100%;
+  display:flex;
+  flex-direction: column;
+  .tab-header{
+    height:40px;
+    display:flex;
+    flex-direction: row;
+    .arrow{
+      flex:0 0 30px;
+      width:30px;
+      text-align: center;
+      background:#F6F6F6;
+      cursor : pointer;
+      i{
+        font-size:30px;
+        line-height:40px;
+      }
+    }
+    .arrow-down{
+      border-left:1px #ddd solid;
+      position: relative;
+      .tab-menu{
+        position: absolute;
+        z-index : 999;
+        top:40px;
+        min-width:100px;
+        right:0;
+        background:#fff;
+        border:1px #ddd solid;
+        border-top:0;
+        box-shadow: 1px 2px 5px rgba(0,0,0,.2);
+        border-radius:2px;
+        padding:10px 0;
+        display: none;
+        &.show{
+          display: block;
+        }
+      }
+    }
+    .arrow-right{
+      border-left:1px #ddd solid;
+    }
+    .tabwrapper {
+      flex : 1;
+      overflow: hidden;
+      ul {
+        height:40px;
+        min-width :90%;
+        overflow: hidden;
+        margin:0;
+        transition: transform .3s linear;
+        li {
+          float      : left;
+          padding    : 0 5px 0 10px;
+          line-height:40px;
+          cursor : default;
+          border-left:1px #ddd solid;
+          background : #F6F6F6;
+          span{
+            white-space: nowrap;
+          }
+          a{
+            margin-left:10px;
+            height:20px;
+            line-height:20px;
+            width:20px;
+            text-align: center;
+            margin-top:10px;
+            border-radius:50%;
+            text-decoration: none;
+            i{
+              font-size:15px;
+              color:red;
+            }
+            &:hover{
+              background:#ddd;
+            }
+          }
+          &.noclose{
+            padding-right:10px;
+          }
+          &.active {
+            background : #e9e9e9;
+          }
+        }
+      }
+    }
+  }
+  .tab-content{
+    flex:1;
+    iframe{
+      width:100%;
+      height :100%;
+      display:none;
+      &.active{
+        display:block;
+      }
+    }
+  }
 }
 
 .chgstatus{
@@ -311,19 +413,30 @@ h6 {
   }
 }
 
-.breadcrumb {
-  background: #e9e9e9;
-  border-bottom: 1px solid #E9E9E9;
-  padding: 0.5rem 1rem;
-  box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.05);
+.breadcrumb-nav{
 
-  a {
-    color: #666;
+  position: relative;
+  .bread_refresh{
+    position: absolute;
+    right:10px;
+    top:2px;
+    font-size:22px;
+  }
+  .breadcrumb {
+    background: #e9e9e9;
+    border-bottom: 1px solid #E9E9E9;
+    padding: 0.5rem 1rem;
+    box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.05);
 
-    &:hover {
-      text-decoration: none;
+    a {
+      color: #666;
+
+      &:hover {
+        text-decoration: none;
+      }
     }
   }
+
 }
 
 .tab-container {

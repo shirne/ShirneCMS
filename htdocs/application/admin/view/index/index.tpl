@@ -1,156 +1,381 @@
 <extend name="public:base" />
-
+<block name="header">
+    <style type="text/css">
+        html,body{height:100%;overflow:hidden;}
+        body{
+            padding-top: 3.5rem;
+        }
+        #wrapper{
+            height :100%;
+        }
+    </style>
+    <script type="text/javascript">
+        window.IS_TOP = true;
+    </script>
+</block>
 <block name="body">
+    <!-- Sidebar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" role="navigation">
 
-<include file="public/bread" menu="Board" section="主面板" title=""/>
-<div id="page-wrapper">
-    <foreach name="notices" item="notice">
-        <div class="alert alert-{$notice.type|default='warning'} alert-dismissible fade show" role="alert">
-            {$notice.message|raw}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
+        <a class="navbar-brand" href="{:url('index/index')}">{:lang('Management')}</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-end navbar-ex1-collapse" id="navbarSupportedContent">
+
+            <include file="public/sidebar" />
+
+            <div class="nav navbar-nav navbar-user">
+
+                <li class="dropdown user-dropdown">
+                    <a href="javascript:" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="ion-md-person"></i> {:lang('Welcome %s',[session('adminname')])} <b class="caret"></b></a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="/" target="_blank"><i class="ion-md-home"></i> {:lang('Home ')}</a>
+                        <a class="dropdown-item" href="{:url('index/clearcache')}"><i class="ion-md-sync"></i> {:lang('Clear Cache')}</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" data-tab="setting_index" href="{:url('setting/index')}"><i class="ion-md-options"></i> {:lang('Settings')}</a>
+                        <a class="dropdown-item" data-tab="index_profile" href="{:url('index/profile')}"><i class="ion-md-person"></i> {:lang('Profile')}</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{:url('login/logout')}"><i class="ion-md-log-out"></i> {:lang('Sign out')}</a>
+                    </div>
+                </li>
+                </ul>
+            </div>
         </div>
-    </foreach>
-    <div class="row">
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card border-info">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-6">
-                            <i class="ion-md-chatbubbles ion-5x"></i>
-                        </div>
-                        <div class="col-6 text-right">
-                            <p class="announcement-heading">{$stat.feedback}</p>
-                            <p class="announcement-text">留言</p>
+    </nav>
+    <div id="wrapper">
+        <div class="page-tabs">
+            <div class="tab-header">
+                <div class="arrow arrow-left"><i class="ion-md-arrow-dropleft"></i> </div>
+                <div class="tabwrapper">
+                <ul class="list-unstyled">
+
+                </ul>
+                </div>
+                <div class="arrow arrow-down">
+                    <i class="ion-md-arrow-dropdown"></i>
+                    <div class="tab-menu">
+                        <div class="tab-menu-group">
+
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="javascript:" data-action="closeAll">关闭全部</a>
                         </div>
                     </div>
                 </div>
-                <div class="card-footer announcement-bottom">
-                    <nav class="nav nav-fill">
-                        <a class="nav-item nav-link" href="{:url('feedback/index')}"><i class="ion-md-navicon"></i> 查看留言 </a>
-                        <a class="nav-item nav-link" href="{:url('feedback/statics')}"><i class="ion-md-stats-bars"></i> 留言统计 </a>
-                    </nav>
-                </div>
+                <div class="arrow arrow-right"><i class="ion-md-arrow-dropright"></i> </div>
             </div>
-        </div>
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card border-info">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-6">
-                            <i class="ion-md-people ion-5x"></i>
-                        </div>
-                        <div class="col-6 text-right">
-                            <p class="announcement-heading">{$stat.member}</p>
-                            <p class="announcement-text">会员</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer announcement-bottom">
-                    <nav class="nav nav-fill">
-                        <a class="nav-item nav-link" href="{:url('member/index')}"><i class="ion-md-navicon"></i> 管理会员 </a>
-                        <a class="nav-item nav-link" href="{:url('member/statics')}"><i class="ion-md-stats-bars"></i> 会员统计 </a>
-                    </nav>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card border-info">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-6">
-                            <i class="ion-md-create ion-5x"></i>
-                        </div>
-                        <div class="col-6 text-right">
-                            <p class="announcement-heading">{$stat.article}</p>
-                            <p class="announcement-text">文章</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer announcement-bottom">
-                    <nav class="nav nav-fill">
-                        <a class="nav-item nav-link" href="{:url('article/index')}"><i class="ion-md-navicon"></i> 管理文章 </a>
-                        <a class="nav-item nav-link" href="{:url('article/add')}"><i class="ion-md-add"></i> 发布文章 </a>
-                    </nav>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card border-info">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-6">
-                            <i class="ion-md-link ion-5x"></i>
-                        </div>
-                        <div class="col-6 text-right">
-                            <p class="announcement-heading">{$stat.links}</p>
-                            <p class="announcement-text">链接</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer announcement-bottom">
-                    <nav class="nav nav-fill">
-                        <a class="nav-item nav-link" href="{:url('links/index')}"><i class="ion-md-navicon"></i> 管理链接 </a>
-                        <a class="nav-item nav-link" href="{:url('links/statics')}"><i class="ion-md-stats-bars"></i> 文章统计 </a>
-                    </nav>
-                </div>
-            </div>
+            <div class="tab-content"></div>
         </div>
     </div>
+</block>
 
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card border-default">
-                <div class="card-header">
-                    <h5 class="panel-title">会员统计</h5>
-                </div>
-                <table class="table table-striped">
-                    <tr>
-                        <th width="80">总会员</th>
-                        <td>{$mem.total}</td>
-                    </tr>
-                    <tr>
-                        <th width="80">正常会员</th>
-                        <td>{$mem.avail}</td>
-                    </tr>
-                    <tr>
-                        <th width="80">总代理数</th>
-                        <td>{$mem.agent}</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card border-default">
-                <div class="card-header">
-                    <a href="{:url('settle')}" class="float-right">账务统计</a>
-                    <h5 class="panel-title">资金统计</h5>
-                </div>
-                <table class="table table-striped">
-                    <tr>
-                        <th width="80">会员充值</th>
-                        <td>{$money.total_charge|showmoney}</td>
-                        <th width="80">后台充值</th>
-                        <td>{$money.system_charge|showmoney}</td>
-                    </tr>
-                    <tr>
-                        <th width="80">总奖励</th>
-                        <td>{$money.total_award|showmoney}</td>
-                        <th width="80">已提现</th>
-                        <td>{$money.total_cash|showmoney}</td>
-                    </tr>
-                    <tr>
-                        <th width="80">账户余额</th>
-                        <td>{$money.total_money|showmoney}</td>
-                        <th width="80">奖励余额</th>
-                        <td>{$money.total_credit|showmoney}</td>
-                    </tr>
-                </table>
-            </div>
-        </div>
-    </div>
+<block name="script">
+    <script type="text/javascript">
+        (function(){
+            var func=arguments.callee;
+            if(window.stop_ajax){
+                setTimeout(func, 2000);
+            }else {
+                return;
+            }
+        })();
+        if(window.frameElement){
+            top.location = location.href;
+        }
+        jQuery(function ($) {
 
-</div>
+            var pages = [];
+            var header_box=$('.tab-header ul');
+            var content_box=$('.tab-content');
+            var current_index=0;
 
+            header_box.on('click','a',function (e) {
+                e.stopPropagation();
+                removePage($(this).parents('li').data('key'));
+                //console.log(e);
+            });
+            header_box.on('click','li',function (e) {
+                activePageByKey($(this).data('key'));
+                //console.log(e);
+            });
+
+            function createPageByLink(link) {
+                if(link) {
+                    var key = $(link).data('key');
+                    var url = $(link).attr('href');
+
+                    createPage(key, $(link).text(), url);
+                }
+            }
+            
+            function createNavPage(key) {
+                createPageByLink($('.side-nav a[data-key='+key+']')[0]);
+            }
+
+            function createPage(key, title ,url, fromkey) {
+                var exist = existsPage(key);
+                var refresh=false;
+                if(exist === -1){
+                    pages.push({
+                        key:key,
+                        title:title,
+                        url:url,
+                        refresh:false,
+                        fromkey:fromkey
+                    });
+                    if(pages.length===1){
+                        header_box.append('<li class="noclose h-'+key+'" data-key="'+key+'"><span>'+title+'</span></li>');
+                    }else {
+                        header_box.append('<li class="h-' + key + '" data-key="' + key + '"><a class="float-right" href="javascript:" title="关闭此页"><i class="ion-md-close"></i> </a><span>' + title + '</span></li>');
+                    }
+
+                    content_box.append('<iframe class="c-'+key+'" data-key="' + key + '" src="'+url+'" frameborder="0"></iframe>');
+                    setTimeout(checkScroll,10);
+                    refresh=true;
+                }
+                setTimeout(function () {
+                    activePageByKey(key, refresh);
+                },10);
+            }
+
+            function activePageByKey(key, refresh) {
+                var exist = existsPage(key);
+                activePage(exist, refresh);
+            }
+            function activePage(idx, refresh) {
+                var curPage = pages[idx];
+                if(curPage) {
+                    var key = curPage.key;
+                    header_box.find('li').removeClass('active');
+                    header_box.find('li.h-' + key).addClass('active');
+                    content_box.find('iframe').removeClass('active');
+                    content_box.find('iframe.c-' + key).addClass('active');
+                    current_index = idx;
+                    checkOffset();
+                    if(refresh ){
+                        refreshPage(key, curPage.url);
+                    }else if(curPage.refresh){
+                        refreshPage(key);
+                    }
+                }
+
+            }
+            function refreshPage(key, url) {
+                var frame = $('.c-'+key)[0];
+                if(frame && frame.contentWindow){
+                    if(url){
+                        frame.contentWindow.location.href=url;
+                    }else {
+                        frame.contentWindow.location.reload();
+                    }
+                }
+            }
+            function refreshFromPage(key) {
+                var exist = existsPage(key);
+                if(exist>-1){
+                    if(pages[exist].fromkey){
+                        refreshPage(pages[exist].fromkey);
+                    }
+                }
+            }
+            function updatePage(key, title) {
+                var exist = existsPage(key);
+                if(exist>-1){
+                    var updatetitle=false;
+                    if(typeof title === 'object'){
+                        for(var i in title){
+                            pages[exist][i]=title[i];
+                            if(i==='title'){
+                                updatetitle=true;
+                            }else if(i === 'key'){
+                                var newKey = title[i];
+                                header_box.find('li.h-'+key)
+                                    .removeClass('h-'+key)
+                                    .addClass('h-'+newKey)
+                                    .data('key',newKey);
+                                content_box.find('.c-'+key)
+                                    .removeClass('c-'+key)
+                                    .addClass('c-'+newKey)
+                                    .data('key',newKey);
+
+                                key = newKey;
+                            }
+                        }
+                    }else{
+                        updatetitle=true;
+                        pages[exist].title = title;
+                    }
+                    if(updatetitle) {
+                        header_box.find('li.h-' + key + ' span').text(title);
+                        checkScroll();
+                    }
+                }
+            }
+
+            function existsPage(key){
+                for(var i=0;i<pages.length;i++){
+                    if(pages[i].key === key){
+                        return i;
+                    }
+                }
+                return -1;
+            }
+            function removePage(key) {
+                var exist = existsPage(key);
+                if(exist > 0){
+                    var item = pages.splice(exist,1);
+                    header_box.find('.h-'+key).remove();
+                    content_box.find('.c-'+key).remove();
+                    checkScroll();
+                    if(exist == current_index) {
+                        activePage(exist - 1);
+                    }else{
+                        checkOffset();
+                    }
+                }
+            }
+
+
+            var tabwrapper = $('.tabwrapper');
+            var offset=0;
+            var wrapperWidth=tabwrapper.width();
+            var listWidth=0;
+            function checkScroll(){
+                wrapperWidth=tabwrapper.width();
+                listWidth=0;
+                var lists = header_box.children();
+                for(var i=0;i<lists.length;i++){
+                    listWidth += lists.eq(i).outerWidth();
+                }
+                listWidth=Math.ceil(listWidth);
+                header_box.width(listWidth);
+                if(listWidth <= wrapperWidth){
+                    setOffset(0);
+                    $('.page-tabs .arrow-left,.page-tabs .arrow-right').addClass('d-none');
+                }else{
+                    $('.page-tabs .arrow-left,.page-tabs .arrow-right').removeClass('d-none');
+                }
+                wrapperWidth=tabwrapper.width();
+            }
+            
+            function checkOffset() {
+                var cur = pages[current_index];
+                if(cur && listWidth>wrapperWidth){
+                    var item=header_box.find('.h-'+cur.key);
+                    var left = 0;
+                    var siblings=$(item).prevAll();
+                    var width = $(item).outerWidth();
+                    for(var i=0;i<siblings.length;i++){
+                        left += siblings.eq(i).outerWidth();
+                    }
+                    left = Math.ceil(left);
+
+                    if(offset<-left){
+                        setOffset(-left);
+                    }else if(wrapperWidth-offset < left + width){
+                        setOffset(wrapperWidth-left-width);
+                    }
+                }
+            }
+
+            function setOffset(newOffset) {
+                if (newOffset < wrapperWidth - listWidth) newOffset = wrapperWidth - listWidth;
+                if(newOffset>0)newOffset=0;
+
+                offset=newOffset;
+                header_box.css('transform','translate('+offset+'px,0)');
+            }
+            function addOffset(step) {
+                setOffset(offset - step);
+            }
+            function decOffset(step) {
+                setOffset(offset + step);
+            }
+
+            window.createPage = createPage;
+            window.createNavPage=createNavPage;
+            window.refreshPage = refreshPage;
+            window.removePage = window.closePage = removePage;
+            window.updatePage = updatePage;
+            window.refreshFromPage = refreshFromPage;
+
+
+            var navlinks=$('.side-nav a');
+            navlinks.click(function (e) {
+                e.preventDefault();
+
+                var href=$(this).attr('href');
+                if(href && href.indexOf('#') !== 0){
+                    if(!$(this).is('.menu_top')){
+                        $('.side-nav a.active').removeClass('active');
+                        $(this).addClass("active");
+                    }
+                    createPageByLink(this);
+                }
+            }).eq(0).trigger('click');
+            $('.dropdown-item[data-tab]').click(function (e) {
+                e.preventDefault();
+                createPage($(this).data('tab'),$(this).text(),$(this).attr('href'));
+            });
+
+
+            var actions={
+                closeAll:function () {
+                    if(pages.length<2)return;
+                    dialog.confirm('是否关闭全部页面？<br />请确认修改过的数据已保存',function () {
+                        for(var i=pages.length-1;i>0;i--){
+                            removePage(pages[i].key);
+                        }
+                    });
+                }
+            };
+
+            var tabMenu=$('.tab-menu');
+            $('.arrow-down').click(function (e) {
+                e.preventDefault();
+                if(tabMenu.is('.show')){
+                    tabMenu.removeClass('show');
+                }else{
+                    tabMenu.addClass('show');
+                }
+            });
+            $('.arrow-down .dropdown-item').click(function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                tabMenu.removeClass('show');
+                var action=$(this).data('action');
+                if(actions[action]){
+                    actions[action]();
+                }else{
+                    dialog.error('操作不存在');
+                }
+
+            });
+            $('.arrow-left').click(function (e) {
+                decOffset(wrapperWidth*.5);
+            });
+            $('.arrow-right').click(function (e) {
+                addOffset(wrapperWidth*.5);
+            });
+
+            var initurl = '{$Request.get.url|filterurl}';
+            if(initurl){
+                var isnav=false;
+                for(var i=0;i<navlinks.length;i++){
+                    if(navlinks.eq(i).attr('href') === initurl){
+                        isnav = navlinks.eq(i);
+                        break;
+                    }
+                }
+
+                if(isnav){
+                    isnav.trigger('click');
+                    isnav.parents('.card').find('.card-header a').trigger('click');
+                }else{
+                    createPage(initurl.replace('/admin/','').replace('.html','').replace('/','_'),'...',initurl);
+                }
+            }
+        });
+    </script>
 </block>

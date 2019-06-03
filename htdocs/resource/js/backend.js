@@ -26,22 +26,128 @@ function getData(body) {
     return data;
 }
 
+function closeThisPage() {
+    if(window.frameElement && top.closePage){
+        var curkey = $(window.frameElement).data('key');
+        top.closePage(curkey);
+    }
+}
+function updateThisTitle(title){
+    if(window.frameElement && top.updatePage){
+        var curkey = $(window.frameElement).data('key');
+        top.updatePage(curkey,title);
+    }
+}
+function refreshFromPage(){
+    if(window.frameElement && top.refreshFromPage){
+        var curkey = $(window.frameElement).data('key');
+        top.refreshFromPage(curkey);
+    }
+}
+
+var excelTpl = '<form method="POST" enctype="multipart/form-data">' +
+    '<div class="form-group">' +
+    '<div class="custom-file">\n' +
+    '    <input type="file" class="custom-file-input" name="uploadFile" required>\n' +
+    '    <label class="custom-file-label" for="uploadFile">选择文件上传</label>\n' +
+    '    <div class="help-block text-center mt-3"><a href="/static/excel.xlsx" target="_blank">示例数据</a> </div>\n' +
+    '  </div>' +
+    '</div>' +
+    '</form>';
+function importExcel(title, url, callback) {
+    var file='',sheet='';
+    var dlg=new Dialog({
+        onshown:function (body) {
+            var options = {
+                url: url,
+                type: 'POST',
+                dataType: 'JSON',
+                success: function (json) {
+                    window.stop_ajax=false;
+                    //console.log(json)
+
+                    if (json.code == 1) {
+                        dlg.close();
+                        if(json.data.success==1){
+                            importResult(json,callback);
+                        }else{
+                            var sheets=json.data.sheets;
+                            var file = json.data.file;
+                            dialog.action(sheets,function (idx) {
+                                if(sheets[idx]){
+                                    $.ajax({
+                                        url:url,
+                                        data:{
+                                            file:file,
+                                            sheet:sheets[idx]
+                                        },
+                                        success:function (json) {
+                                            importResult(json,callback);
+                                        }
+                                    })
+                                }
+                            },'请选择要导入的表');
+                        }
+                    } else {
+                        dialog.warning(json.msg);
+                        //$(btn).removeAttr('disabled');
+                    }
+                },
+                error: function (xhr) {
+                    window.stop_ajax=false;
+                    //isbtn?$(btn).text(origText):$(btn).val(origText);
+                    //$(btn).removeAttr('disabled');
+                    dialog.error('服务器处理错误');
+                }
+            };
+            if (!FormData) {
+                window.stop_ajax=true;
+                dialog.alert('您的浏览器不支持该功能',function () {
+                    dlg.close();
+                });
+                return true;
+            }
+            options.cache = false;
+            options.processData = false;
+            options.contentType = false;
+            options.xhr= function() { //用以显示上传进度
+                var xhr = $.ajaxSettings.xhr();
+                if (xhr.upload) {
+                    xhr.upload.addEventListener('progress', function(event) {
+                        var percent = Math.floor(event.loaded / event.total * 100);
+                        //$(btn).text(origText+'  ('+percent+'%)');
+                    }, false);
+                }
+                return xhr;
+            };
+
+            body.find('[name=uploadFile]').change(function (e) {
+                body.find('.custom-file-label').text($(this).val());
+                options.data = new FormData(body.find('form')[0]);
+                $.ajax(options);
+            })
+        },
+        onsure:function (body) {
+
+            return false;
+        }
+    }).show(excelTpl,title);
+}
+
 jQuery(function ($) {
     //高亮当前选中的导航
     var bread = $(".breadcrumb");
     var menu = bread.data('menu');
     if (menu) {
-        var link = $('.side-nav a[data-key=' + menu + ']');
+        var link = top.$('.side-nav a[data-key=' + menu + ']');
 
         var html = [];
         if (link.length > 0) {
             if (link.is('.menu_top')) {
                 html.push('<li class="breadcrumb-item"><a href="javascript:"><i class="' + link.find('i').attr('class') + '"></i>&nbsp;' + link.text() + '</a></li>');
             } else {
-                var parent = link.parents('.collapse').eq(0);
-                parent.addClass('show');
-                link.addClass("active");
-                var topmenu = parent.siblings('.card-header').find('a.menu_top');
+
+                var topmenu = link.parents('.card').find('.card-header a.menu_top');
                 html.push('<li class="breadcrumb-item"><a href="javascript:"><i class="' + topmenu.find('i').attr('class') + '"></i>&nbsp;' + topmenu.text() + '</a></li>');
                 html.push('<li class="breadcrumb-item"><a href="javascript:">' + link.text() + '</a></li>');
             }
@@ -295,13 +401,23 @@ jQuery(function ($) {
                 window.stop_ajax=false;
                 isbtn?$(btn).text(origText):$(btn).val(origText);
                 if (json.code == 1) {
-                    dialog.alert(json.msg,function(){
+                    refreshFromPage();
+                    dialog.confirm({
+                        btns:[
+                            {'text':'关闭本页','type':'secondary'},
+                            {'text':'留在本页','isdefault':true,'type':'primary'}
+                        ],
+                        content:json.msg
+                    },function () {
                         if (json.url) {
                             location.href = json.url;
                         } else {
                             location.reload();
                         }
+                    },function () {
+                        closeThisPage()
                     });
+
                 } else {
                     dialog.warning(json.msg);
                     $(btn).removeAttr('disabled');
