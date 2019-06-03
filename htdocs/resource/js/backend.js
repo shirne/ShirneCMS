@@ -169,6 +169,7 @@ jQuery(function ($) {
         var link = top.$('.side-nav a[data-key=' + menu + ']');
 
         var html = [];
+        console.log(link)
         if (link.length > 0) {
             if (link.is('.menu_top')) {
                 html.push('<li class="breadcrumb-item"><a href="javascript:"><i class="' + link.find('i').attr('class') + '"></i>&nbsp;' + link.text() + '</a></li>');

@@ -2,7 +2,7 @@
 
 <block name="body">
 
-<include file="public/bread" menu="Board" section="主面板" title=""/>
+<include file="public/bread" menu="dashboard" section="主面板" title=""/>
 <div id="page-wrapper">
     <foreach name="notices" item="notice">
         <div class="alert alert-{$notice.type|default='warning'} alert-dismissible fade show" role="alert">
