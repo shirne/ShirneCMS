@@ -146,3 +146,6 @@ htdocs/public 网站根目录
 * 微信 shirnewei
 
 备注 技术探讨/咨询 或 其它需求
+
+## 开源协议
+ShirneCMS延续ThinkPHP开源协议Apache-2.0，提供个人及商业免费使用，但不对使用本系统引起的任何后果负责。
