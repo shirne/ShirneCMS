@@ -21,6 +21,10 @@ else{
 $class='text-danger';
 $title='<i class="ion-md-sad"></i>';
 }
+
+if(strpos($url,'javascript:history.back')===0){
+$url = 'javascript:doBack()';
+}
 ?>
 <div class="jumbotron w-75">
     <h2 class="display-4 <?php echo $class;?>"><?php echo $title;?></h2>
@@ -31,6 +35,14 @@ $title='<i class="ion-md-sad"></i>';
     </p>
 </div>
 <script type="text/javascript">
+    function doBack(){
+        if(window.frameElement){
+            top.closePage(window.frameElement.getAttribute('data-key'));
+        }
+        else{
+            history.back(-1);
+        }
+    }
     (function(){
         var wait = document.getElementById('wait'),
             href = document.getElementById('href').href;
