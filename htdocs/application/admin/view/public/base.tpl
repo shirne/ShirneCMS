@@ -129,7 +129,7 @@
                     if($(this).attr('rel')==='ajax')return;
                     if(url.indexOf('javascript')===0 || url.indexOf('#')===0)return;
                     var subkey = $(this).data('tab');
-                    if(!subkey)subkey = url.replace(/^(\/|http:)/g,'').replace(/[\/.]/g,'_').replace('.html','');
+                    if(!subkey)subkey = url.replace(/^(\/|http:|https:)/g,'').replace(/[\/.]/g,'_').replace('.html','');
 
                     if(subkey === 'random') {
                         subkey = curkey + '_' + Math.random().toString().substr(2);
