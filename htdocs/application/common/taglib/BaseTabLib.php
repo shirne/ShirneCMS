@@ -18,7 +18,7 @@ class BaseTabLib extends TagLib
         }
         if(strpos($arg,'$')===0){
             //检测长度，以防超长字符串导致正则crash
-            if(strlen($arg)<50 && preg_match('/^\\$[a-zA-Z_][a-zA-Z0-9_]*$/',$arg)) {
+            if(strlen($arg)<50 && preg_match('/^\\$[a-zA-Z_][a-zA-Z0-9_\[\]\']*$/',$arg)) {
                 return $arg;
             }
         }elseif(is_numeric($arg)){
