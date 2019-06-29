@@ -40,7 +40,13 @@ class NavigatorController extends BaseController
 
                     if(!empty($v['cate_name'])){
                         if($v['module']=='Page'){
-                            $v['url'][1]=['group'=>$v['cate_name']];
+                            if(strpos($v['cate_name'],'/')>0){
+                                $parts = explode('/',$v['cate_name']);
+                                $v['cate_name'] = $parts[0];
+                                $v['url'][1]=['group'=>$parts[0],'name'=>$parts[1]];
+                            }else{
+                                $v['url'][1]=['group'=>$v['cate_name']];
+                            }
                         }else{
                             $v['url'][1]=['name'=>$v['cate_name']];
                         }
@@ -113,7 +119,7 @@ class NavigatorController extends BaseController
                             'id'=>$page['id'],
                             'pid'=>-$group['id'],
                             'title'=>$page['title'],
-                            'name'=>$page['name'],
+                            'name'=>$group['group'].'/'.$page['name'],
                             'html'=>'|--'
                         ];
                     }

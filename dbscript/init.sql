@@ -78,7 +78,7 @@ VALUES
   ( 'cash_limit', '最低提现金额', 'text', 'member', '0',1, '10', '', ''),
   ( 'cash_max', '最高提现金额', 'text', 'member', '0',1, '100000', '', ''),
   ( 'cash_power', '提现倍数', 'text', 'member', '0',1, '100', '', ''),
-  ( 'share_product', '推广产品', 'text', 'member','0', '0', '', '');
+  ( 'share_product', '推广产品', 'text', 'member','0', '0', '', '','');
 
 
 TRUNCATE TABLE `sa_member_level`;
