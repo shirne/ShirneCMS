@@ -269,7 +269,12 @@
                         if (value[2] == 'Index') {
 
                         } else if (value[2] == 'Page') {
-                            cname = value[1] ? value[1]['group'] : '';
+                            if(value[1]){
+                                cname = value[1]['group'];
+                                if(value[1]['name']){
+                                    cname += '/'+value[1]['name'];
+                                }
+                            }
                         } else {
                             cname = value[1] ? value[1]['name']:'';
                         }
