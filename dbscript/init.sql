@@ -14,6 +14,7 @@ VALUES
   (71,7,'广告管理','Adv/index','adv_index','ion-md-aperture',0,0),
   (72,7,'链接管理','Links/index','links_index','ion-md-link',0,0),
   (73,7,'留言管理','Feedback/index','feedback_index','ion-md-chatbubbles',0,0),
+  (74,7,'订阅管理','Subscribe/index','subscribe_index','ion-md-mail',0,0),
   (80,8,'会员管理','Member/index','member_index','ion-md-person',0,0),
   (81,8,'邀请码','Invite/index','invite_index','ion-md-pricetags',0,0),
   (82,8,'会员组','MemberLevel/index','member_level_index','ion-md-people',0,0),
