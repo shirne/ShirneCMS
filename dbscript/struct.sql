@@ -96,6 +96,61 @@ CREATE TABLE `sa_category` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
+-- Table structure for table `sa_subscribe`
+--
+
+DROP TABLE IF EXISTS `sa_subscribe`;
+CREATE TABLE `sa_subscribe` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `lang` varchar(10) DEFAULT NULL COMMENT '语言',
+  `title` varchar(100) DEFAULT NULL,
+  `email` varchar(150) DEFAULT '',
+  `last_send_time` int(11) DEFAULT 0,
+  `cancel_code` varchar(100) DEFAULT '',
+  `is_subscribe` tinyint(4) DEFAULT 1,
+  `create_time` int(11) DEFAULT 0,
+  `update_time` int(11) DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `sa_subscribe_email`
+--
+
+DROP TABLE IF EXISTS `sa_subscribe_content`;
+CREATE TABLE `sa_subscribe_content` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `lang` varchar(10) DEFAULT NULL COMMENT '语言',
+  `main_id` int(11) DEFAULT NULL COMMENT '主id',
+  `title` varchar(100) DEFAULT NULL,
+  `content` text,
+  `status` tinyint(4) DEFAULT 0,
+  `create_time` int(11) DEFAULT 0,
+  `update_time` int(11) DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `sa_subscribe_email`
+--
+
+DROP TABLE IF EXISTS `sa_subscribe_email`;
+CREATE TABLE `sa_subscribe_email` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `email` varchar(100) DEFAULT NULL,
+  `account` varchar(100) DEFAULT NULL,
+  `type` varchar(10) DEFAULT 'smtp',
+  `password` varchar(100) DEFAULT NULL,
+  `smtp` varchar(100) DEFAULT NULL,
+  `port` varchar(10) DEFAULT NULL,
+  `ssl` tinyint(4) DEFAULT 1,
+  `status` tinyint(4) DEFAULT 0,
+  `create_time` int(11) DEFAULT 0,
+  `update_time` int(11) DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
 -- Table structure for table `sa_adv_group`
 --
 
