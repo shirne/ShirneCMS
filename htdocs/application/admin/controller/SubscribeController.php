@@ -1,4 +1,7 @@
 <?php
+namespace app\admin\controller;
+
+use think\Db;
 
 class SubscribeController extends BaseController
 {

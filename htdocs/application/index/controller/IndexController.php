@@ -18,7 +18,7 @@ class IndexController extends BaseController
         if($this->request->isPost()){
             $email = $this->request->post('email');
             $pattern = "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,})$/";
-            if(!preg_match($pattern, $mail, $matches)){
+            if(!preg_match($pattern, $email, $matches)){
                 $this->error('请填写正确的邮箱格式');
             }
             list($title, $domain) = explode('@',$email);
