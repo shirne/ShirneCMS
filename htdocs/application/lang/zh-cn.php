@@ -77,6 +77,8 @@ return [
     'Email'=>'邮 箱',
     'Password'=>'密 码',
     'Verify'=>'验证码',
+    
+    'Too frequent operation, Please try again later!'=>'操作过于频繁，请稍候再试！',
 
     'Please login first!'=>'请先登录！',
     'Invalid account!'=>'账号已失效！',

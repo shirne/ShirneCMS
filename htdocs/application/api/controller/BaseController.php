@@ -28,7 +28,13 @@ class BaseController extends Controller
     protected $user;
     protected $input=array();
     protected $config=array();
-
+    
+    /**
+     * API初始化
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function initialize(){
         parent::initialize();
         $this->config=getSettings();
@@ -52,7 +58,13 @@ class BaseController extends Controller
         $this->checkLogin();
 
     }
-
+    
+    /**
+     * 检查登录状态
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function checkLogin(){
         $this->token = $this->request->param('token');
         if(!empty($this->token)){

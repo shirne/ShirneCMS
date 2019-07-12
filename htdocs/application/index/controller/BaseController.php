@@ -9,13 +9,15 @@ use extcore\traits\Email;
 use shirne\sdk\OAuthFactory;
 use think\Controller;
 use think\Db;
+use think\Exception;
 use think\facade\Env;
 use think\facade\Lang;
 use think\facade\Log;
 
 /**
- * 如果某个控制器必须用户登录才可以访问  
- * 请继承该控制器
+ * 前端的控制器基类
+ * Class BaseController
+ * @package app\index\controller
  */
 class BaseController extends Controller
 {
@@ -35,7 +37,14 @@ class BaseController extends Controller
 
     protected $lang;
     protected $lang_switch;
-
+    
+    /**
+     * 前端初始化
+     * @throws Exception
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
     public function initialize(){
         parent::initialize();
 
@@ -53,6 +62,12 @@ class BaseController extends Controller
 
         $this->config=getSettings();
         $this->assign('config',$this->config);
+
+        // POST请求自动检查操作频率
+        if((config('app.auto_check_submit_rate') || $this->config['auto_check_submit_rate'])
+            && $this->request->isPost()){
+            $this->checkSubmitRate($this->config['submit_rate']?:2);
+        }
 
         $navigation=config('navigator.');
         $navigation=parseNavigator($navigation,$this->request->module());
@@ -90,6 +105,22 @@ class BaseController extends Controller
 
         $this->seo();
     }
+    
+    /**
+     * @param int $time
+     */
+    public function checkSubmitRate($time = 2){
+        
+        if (!$time) $time = 2;
+        $key = '__check_submit_rate__';
+        $lasttime = session($key);
+        if ($lasttime) {
+            if (time() - $lasttime <= $time) {
+                $this->error(lang('Too frequent operation, Please try again later!'));
+            }
+        }
+        session($key, time());
+    }
 
     /**
      * 设置seo信息
@@ -119,6 +150,7 @@ class BaseController extends Controller
     /**
      * 写入会员登录状态
      * @param $member
+     * @throws Exception
      */
     protected function setLogin($member){
         if($member['status']!='1'){
@@ -152,6 +184,7 @@ class BaseController extends Controller
 
     /**
      * 检测用户是否登录并初始化资料
+     * @throws Exception
      */
     public function checkLogin(){
         $this->userid = session('userid');
@@ -188,6 +221,7 @@ class BaseController extends Controller
     /**
      * 检测并自动登录微信
      * @return bool
+     * @throws Exception
      */
     protected function wechatLogin(){
         if(!$this->isWechat){

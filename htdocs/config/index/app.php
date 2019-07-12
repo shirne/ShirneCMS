@@ -8,4 +8,5 @@
 
 return [
     'app_trace'       => false,
+    'auto_check_submit_rate'=>true,
 ];
