@@ -6,6 +6,7 @@ namespace app\admin\controller;
 use app\admin\validate\AdvGroupValidate;
 use app\admin\validate\AdvItemValidate;
 use think\Db;
+use think\Exception;
 
 /**
  * 广告功能
@@ -18,6 +19,7 @@ class AdvController extends BaseController
      * 管理
      * @param $key
      * @return mixed
+     * @throws \Throwable
      */
     public function index($key=''){
         $model = Db::name('AdvGroup');
@@ -33,6 +35,7 @@ class AdvController extends BaseController
     /**
      * 添加
      * @return mixed
+     * @throws \Throwable
      */
     public function add(){
         if ($this->request->isPost()) {
@@ -57,6 +60,9 @@ class AdvController extends BaseController
 
     /**
      * 修改
+     * @param $id
+     * @return mixed
+     * @throws \Throwable
      */
     public function update($id)
     {
@@ -114,18 +120,25 @@ class AdvController extends BaseController
             $this->error(lang('Delete failed!'));
         }
     }
-
-    public function itemlist($gid){
+    
+    /**
+     * 广告列表
+     * @param $gid
+     * @param string $key
+     * @return string
+     * @throws \Throwable
+     */
+    public function itemlist($gid, $key=''){
         $model = Db::name('AdvItem');
         $group=Db::name('AdvGroup')->find($gid);
         if(empty($group)){
             $this->error('广告位不存在');
         }
-        $where=array('group_id'=>$gid);
+        $model->where('group_id',$gid);
         if(!empty($key)){
-            $where[] = array('title|url','like',"%$key%");
+            $model->whereLike('title|url',"%$key%");
         }
-        $lists=$model->where($where)->order('sort ASC,id DESC')->paginate(15);
+        $lists=$model->order('sort ASC,id DESC')->paginate(15);
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
         $this->assign('gid',$gid);
@@ -136,6 +149,7 @@ class AdvController extends BaseController
      * 添加
      * @param $gid
      * @return mixed
+     * @throws \Throwable
      */
     public function itemadd($gid){
         if ($this->request->isPost()) {
@@ -231,3 +245,5 @@ class AdvController extends BaseController
         }
     }
 }
+
+//end

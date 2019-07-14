@@ -7,6 +7,7 @@ use app\admin\validate\ImagesValidate;
 use app\common\facade\CategoryFacade;
 use app\common\model\ArticleCommentModel;
 use think\Db;
+use think\Exception;
 use think\Response;
 
 /**
@@ -94,7 +95,7 @@ class ArticleController extends BaseController
                 }else{
                     $data['prop_data']=[];
                 }
-                if(empty($data['description']))$data['description']=cutstr($data['content'],240);
+                if(!empty($data['description']))$data['description']=cutstr($data['content'],240);
                 if(!empty($data['create_time']))$data['create_time']=strtotime($data['create_time']);
                 if(empty($data['create_time']))unset($data['create_time']);
                 $model=ArticleModel::create($data);
@@ -145,7 +146,7 @@ class ArticleController extends BaseController
                 }else{
                     $data['prop_data']=[];
                 }
-                if(empty($data['description']))$data['description']=cutstr($data['content'],240);
+                if(!empty($data['description']))$data['description']=cutstr($data['content'],240);
                 if(!empty($data['create_time']))$data['create_time']=strtotime($data['create_time']);
                 if(empty($data['create_time']))unset($data['create_time']);
                 $model=ArticleModel::get($id);
@@ -215,9 +216,11 @@ class ArticleController extends BaseController
     /**
      * 图集
      * @param $aid
+     * @param $key
      * @return mixed
+     * @throws Exception
      */
-    public function imagelist($aid){
+    public function imagelist($aid, $key=''){
         $model = Db::name('ArticleImages');
         $article=Db::name('Article')->find($aid);
         if(empty($article)){

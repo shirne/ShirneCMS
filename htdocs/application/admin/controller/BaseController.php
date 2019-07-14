@@ -5,6 +5,7 @@ namespace app\admin\controller;
 use extcore\traits\Upload;
 use think\Controller;
 use think\Db;
+use think\Exception;
 
 /**
  * 后台基类
@@ -25,7 +26,11 @@ class BaseController extends Controller {
     protected $permision;
 
     protected $viewData=[];
-
+    
+    /**
+     * 后台控制器全局初始化
+     * @throws Exception
+     */
     public function initialize(){
         parent::initialize();
 
@@ -39,7 +44,7 @@ class BaseController extends Controller {
             clearLogin();
             $this->error(lang('Invalid account!'),url('admin/login/index'));
         }
-        if($this->manage['logintime']!=session('adminLTime')){
+        if($this->manage['logintime']!=session(SESSKEY_ADMIN_LAST_TIME)){
             clearLogin();
             $this->error(lang('The account has login in other places!'),url('admin/login/index'));
         }
@@ -70,9 +75,10 @@ class BaseController extends Controller {
     /**
      * 检查权限
      * @param $permitem
+     * @throws Exception
      */
     protected function checkPermision($permitem){
-        if($this->getPermision($permitem)==false){
+        if(!$this->getPermision($permitem)){
             $this->error(lang('You have no permission to do this operation!'));
         }
     }
@@ -81,6 +87,7 @@ class BaseController extends Controller {
      * 检查是否有权限
      * @param $permitem
      * @return bool
+     * @throws Exception
      */
     protected function getPermision($permitem)
     {
@@ -130,6 +137,7 @@ class BaseController extends Controller {
      * @param array $vars
      * @param array $config
      * @return string
+     * @throws \Throwable
      */
     protected function fetch($template = '', $vars = [], $config = [])
     {
