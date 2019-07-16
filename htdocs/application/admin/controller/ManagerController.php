@@ -3,6 +3,7 @@ namespace app\admin\controller;
 
 use app\admin\model\ManagerModel;
 use app\admin\validate\ManagerValidate;
+use app\common\command\Manager;
 use think\Db;
 
 
@@ -118,6 +119,10 @@ class ManagerController extends BaseController
                 $data['salt']=random_str(8);
                 $data['password']=encode_password($data['password'],$data['salt']);
                 $data['last_view_member']=time();
+                if($this->manage['type'] > $data['type']){
+                    $this->error('您没有权限添加该类型账号');
+                }
+                $data['pid']=$this->mid;
                 unset($data['repassword']);
                 $model=ManagerModel::create($data);
                 if ($model->id) {
@@ -142,8 +147,15 @@ class ManagerController extends BaseController
     {
         $id=intval($id);
         if($id==0)$this->error('参数错误');
-
+        $model=ManagerModel::get($id);
+        if($this->manage['type']>$model['type']){
+            $this->error('您没有权限查看该管理员');
+        }
+        
         if ($this->request->isPost()) {
+            if(!$model->hasPermission($this->mid)){
+                $this->error('您没有权限编辑该管理员资料');
+            }
             $data = $this->request->post();
             $validate=new ManagerValidate();
             $validate->setId($id);
@@ -156,11 +168,22 @@ class ManagerController extends BaseController
                 }else{
                     unset($data['password']);
                 }
+                if($this->manage['type']>$data['type']){
+                    $this->error('您不能将该管理员设置为更高级的管理员');
+                }
+                
                 //强制更改超级管理员用户类型
                 if(config('SUPER_ADMIN_ID') ==$id){
                     $data['type'] = 1;
+                }else{
+                    $parent = Db::name('manage')->where('id',$model['pid'])->find();
+                    if(!empty($parent)){
+                        if($data['type']<$parent['type']){
+                            $this->error('不能将管理员类型设置为比上级高的类型');
+                        }
+                    }
                 }
-                $model=ManagerModel::get($id);
+                
                 //更新
                 if ($model->allowField(true)->update($data)) {
                     user_log($this->mid,'addmanager',1,'修改管理员'.$model->id ,'manager');
@@ -170,7 +193,7 @@ class ManagerController extends BaseController
                 }        
             }
         }
-        $model = Db::name('Manager')->find($id);
+        
         $this->assign('model',$model);
         return $this->fetch();
     }
@@ -183,6 +206,13 @@ class ManagerController extends BaseController
     public function permision($id){
         $id=intval($id);
         if($id==0)$this->error('参数错误');
+        $manager=ManagerModel::get($id);
+        if(empty($manager)){
+            $this->error('管理员资料错误');
+        }
+        if(!$manager->hasPermission($this->mid)){
+            $this->error('您不能编辑该管理员的权限');
+        }
         $model = Db::name('ManagerPermision')->where('manager_id',$id)->find();
         if(empty($model)){
             $model=array();

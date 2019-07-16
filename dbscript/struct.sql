@@ -24,6 +24,7 @@ CREATE TABLE `sa_lang` (
 DROP TABLE IF EXISTS `sa_manager`;
 CREATE TABLE `sa_manager` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `pid` int(11) DEFAULT '0',
   `username` varchar(20) NOT NULL,
   `realname` varchar(20) NOT NULL DEFAULT '',
   `mobile` varchar(20) DEFAULT '',
@@ -35,7 +36,7 @@ CREATE TABLE `sa_manager` (
   `update_time` int(11) DEFAULT '0',
   `login_ip` varchar(50) DEFAULT '',
   `status` tinyint(1) DEFAULT '1' COMMENT '0:禁止登陆 1:正常',
-  `type` tinyint(1) DEFAULT '1' COMMENT '1:普通管理员 ',
+  `type` tinyint(1) DEFAULT '1' COMMENT '1:超级管理员 2:普通管理员',
   `logintime` INT(11) NULL DEFAULT 0,
   `last_view_member` INT(11) NULL DEFAULT 0,
   PRIMARY KEY (`id`),

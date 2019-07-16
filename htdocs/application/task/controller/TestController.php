@@ -3,6 +3,7 @@
 namespace app\task\controller;
 
 use shirne\common\Image;
+use think\Db;
 
 
 /**
@@ -18,6 +19,17 @@ class TestController
         $image = new Image($url);
         $image->crop(0,0,100,100);
         $image->output();
+        exit;
+    }
+    
+    public function model(){
+        $model=Db::name('manager');
+        $manage=$model->where('id',1)->find();
+        var_export($manage);
+        $manage=$model->removeOption()->whereIn('id',[2,3])->select();
+        var_export($manage);
+        $manage=$model->removeOption()->where('id',1)->find();
+        var_export($manage);
         exit;
     }
 }
