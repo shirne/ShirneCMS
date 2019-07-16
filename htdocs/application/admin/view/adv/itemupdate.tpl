@@ -36,6 +36,14 @@
             <label for="text_vice">附加文本</label>
             <input type="text" name="text_vice" class="form-control" value="{$model.text_vice}" placeholder="附加文本">
         </div>
+        <div class="form-row">
+            <foreach name="group['ext_set']['key']" item="key">
+                <div class="col-6 form-group">
+                    <label for="image">{$group['ext_set']['value'][$key]}</label>
+                    <input type="text" name="ext[{$key}]" class="form-control" value="{$model['ext'][$key]}" />
+                </div>
+            </foreach>
+        </div>
         <div class="form-group">
             <label for="image">有效期</label>
             <div class="form-row date-range">
@@ -64,6 +72,7 @@
                 <input type="text" name="sort" class="form-control" value="{$model.sort}" />
             </div>
         </div>
+
         <div class="form-group">
             <label for="cc">状态</label>
             <label class="radio-inline">

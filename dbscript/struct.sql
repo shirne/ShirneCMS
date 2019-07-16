@@ -159,6 +159,7 @@ CREATE TABLE `sa_adv_group` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(100) DEFAULT NULL,
   `flag` varchar(50) DEFAULT '',
+  `ext_set` varchar(500) DEFAULT '',
   `create_time` int(11) DEFAULT 0,
   `status` int(11) DEFAULT 0,
   PRIMARY KEY (`id`)
@@ -179,6 +180,7 @@ CREATE TABLE `sa_adv_item` (
   `url` varchar(150) DEFAULT '',
   `text` varchar(200) DEFAULT '',
   `text_vice` varchar(200) DEFAULT '',
+  `ext_data` TEXT,
   `start_date` int(11) DEFAULT 0,
   `end_date` int(11) DEFAULT 0,
   `create_time` int(11) DEFAULT 0,
