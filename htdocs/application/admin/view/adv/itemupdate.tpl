@@ -37,10 +37,10 @@
             <input type="text" name="text_vice" class="form-control" value="{$model.text_vice}" placeholder="附加文本">
         </div>
         <div class="form-row">
-            <foreach name="group['ext_set']['key']" item="key">
+            <foreach name="group['ext_set']['key']" item="ikey">
                 <div class="col-6 form-group">
                     <label for="image">{$group['ext_set']['value'][$key]}</label>
-                    <input type="text" name="ext[{$key}]" class="form-control" value="{$model['ext'][$key]}" />
+                    <input type="text" name="ext[{$ikey}]" class="form-control" value="{$model['ext'][$ikey]}" />
                 </div>
             </foreach>
         </div>
