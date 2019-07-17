@@ -137,7 +137,7 @@ class IndexController extends BaseController{
         $result=[];
         $count=0;
         while(array_sum($result)==0) {
-            $result['newMemberCount'] = Db::name('Member')->where('create_time', 'GT', $this->manage['last_view_member'])->count();
+            $result['newMemberCount'] = Db::name('Member')->where('create_time', 'GT', $this->manager['last_view_member'])->count();
             $result['newOrderCount'] = Db::name('Order')->where('status',0)->count();
             sleep(1);
             $count++;
@@ -191,6 +191,7 @@ class IndexController extends BaseController{
 
             $password=$this->request->post('newpassword');
             if(!empty($password)){
+                if(TEST_ACCOUNT == $this->manager['username'])$this->error('演示账号，不可修改密码');
                 $data['salt']=random_str(8);
                 $data['password'] = encode_password($password,$data['salt']);
             }

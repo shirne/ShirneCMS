@@ -113,11 +113,11 @@ htdocs/public 网站根目录
 > 手动安装数据库脚本 或者 通过命令行(php think install)或网页安装(/task/util/install)
 
 后台默认登录账号 [演示网站](http://cms.qisoweb.com/admin)
->admin<br />
+>test<br />
 密码：123456
 
 基于本系统开发的 [蔬菜库存管理系统](http://erp.qisoweb.com/)
->admin<br />
+>test<br />
 密码：123456
 
 ## 模板说明

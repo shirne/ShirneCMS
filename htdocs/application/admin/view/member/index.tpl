@@ -104,9 +104,9 @@
                     <a class="btn btn-outline-primary" title="资金明细" href="{:url('member/money_log',array('id'=>$v['id']))}" ><i class="ion-md-paper"></i> </a>
 
                     <if condition="$v.status eq 1">
-                        <a class="btn btn-outline-danger link-confirm" title="禁用" data-confirm="禁用后用户将不能登陆!\n请确认!!!" href="{:url('member/delete',array('id'=>$v['id'],'type'=>0))}" ><i class="ion-md-close"></i> </a>
+                        <a class="btn btn-outline-danger link-confirm" title="禁用" data-confirm="禁用后用户将不能登陆!\n请确认!!!" href="{:url('member/status',array('id'=>$v['id'],'type'=>0))}" ><i class="ion-md-close"></i> </a>
                         <else/>
-                        <a class="btn btn-outline-success" title="启用" href="{:url('member/delete',array('id'=>$v['id'],'type'=>1))}" style="color:#50AD1E;"><i class="ion-md-check"></i> </a>
+                        <a class="btn btn-outline-success" title="启用" href="{:url('member/status',array('id'=>$v['id'],'type'=>1))}" style="color:#50AD1E;"><i class="ion-md-check"></i> </a>
                     </if>
                 </td>
             </tr>

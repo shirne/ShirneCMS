@@ -22,7 +22,7 @@ class BaseController extends Controller {
     protected $model;
 
     protected $mid;
-    protected $manage;
+    protected $manager;
     protected $permision;
 
     protected $viewData=[];
@@ -33,18 +33,21 @@ class BaseController extends Controller {
      */
     public function initialize(){
         parent::initialize();
+        
+        if(!defined('SUPER_ADMIN_ID'))define('SUPER_ADMIN_ID',config('super_admin_id'));
+        if(!defined('TEST_ACCOUNT'))define('TEST_ACCOUNT',config('test_account'));
 
         $this->mid = session('adminId');
         //判断用户是否登陆
         if(empty($this->mid ) ) {
             $this->error(lang('Please login first!'),url('admin/login/index'));
         }
-        $this->manage=Db::name('Manager')->find($this->mid);
-        if(empty($this->manage)){
+        $this->manager=Db::name('Manager')->find($this->mid);
+        if(empty($this->manager)){
             clearLogin();
             $this->error(lang('Invalid account!'),url('admin/login/index'));
         }
-        if($this->manage['logintime']!=session(SESSKEY_ADMIN_LAST_TIME)){
+        if($this->manager['logintime']!=session(SESSKEY_ADMIN_LAST_TIME)){
             clearLogin();
             $this->error(lang('The account has login in other places!'),url('admin/login/index'));
         }
@@ -91,7 +94,7 @@ class BaseController extends Controller {
      */
     protected function getPermision($permitem)
     {
-        if($this->manage['type']==1){
+        if($this->manager['type']==1){
             return true;
         }
         if(empty($this->permision)){

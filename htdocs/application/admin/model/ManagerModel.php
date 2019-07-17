@@ -24,10 +24,10 @@ class ManagerModel extends BaseModel
             if(in_array($pid,$pids)){
                 //获取注册时间最早的，pid设为1
                 $oldest=$model->removeOption()->whereIn('id',$pids)->order('create_time ASC')->find();
-                if($oldest['id']==config('SUPER_ADMIN_ID')){
+                if($oldest['id']==SUPER_ADMIN_ID){
                     $model->where('id',$oldest['id'])->update(['pid'=>0]);
                 }else{
-                    $model->where('id',$oldest['id'])->update(['pid'=>config('SUPER_ADMIN_ID')]);
+                    $model->where('id',$oldest['id'])->update(['pid'=>SUPER_ADMIN_ID]);
                 }
                 //重新获取
                 return self::get_parents($id,$full);
@@ -46,7 +46,7 @@ class ManagerModel extends BaseModel
      * @throws Exception
      */
     public function hasPermission($id){
-        if($id == config('SUPER_ADMIN_ID') || $this->id == $id)return true;
+        if($id == SUPER_ADMIN_ID || $this->id == $id)return true;
         $toManager = Db::name('manager')->where('id',$id)->find();
         if(empty($toManager))return false;
         
@@ -61,7 +61,7 @@ class ManagerModel extends BaseModel
      * @return bool
      */
     public function isProgeny($pid){
-        if($pid == config('SUPER_ADMIN_ID') || $this->id == $pid)return true;
+        if($pid == SUPER_ADMIN_ID || $this->id == $pid)return true;
         $pids = self::get_parents($this->id);
         if(in_array($pid,$pids)){
             return true;
