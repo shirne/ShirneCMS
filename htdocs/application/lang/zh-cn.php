@@ -79,7 +79,8 @@ return [
     'Verify'=>'验证码',
     
     'Too frequent operation, Please try again later!'=>'操作过于频繁，请稍候再试！',
-
+    
+    'You\'r already logged in!'=>'您已登录',
     'Please login first!'=>'请先登录！',
     'Invalid account!'=>'账号已失效！',
     'The account has login in other places!'=>'该账号已在其它地方登录！',

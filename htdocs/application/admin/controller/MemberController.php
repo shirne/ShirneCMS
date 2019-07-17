@@ -395,11 +395,23 @@ class MemberController extends BaseController
     
     public function delete($id)
     {
-        $model = Db::name('member');
-        
-        if($model->where('id','in',idArr($id))->delete()){
-            //todo 删除相关表
-            //Db::query('');
+        $ids = idArr($id);
+        if(empty($id) || empty($ids)){
+            $this->error('参数错误');
+        }
+        $deleted=Db::name('member')->whereIn('id',$ids)->delete();
+        if($deleted){
+            //删除相关表
+            $tables=Db::query('show tables');
+            $field = 'Tables_in_'.config('database.database');
+    
+            foreach ($tables as $row){
+                $columns=Db::query('show columns in '.$row[$field]);
+                $fields=array_column($columns,'Field');
+                if(in_array('member_id',$fields)){
+                    Db::table($row[$field])->whereIn('member_id',$id)->delete();
+                }
+            }
             
             user_log($this->mid,'deleteuser',1,'删除会员:'.$id ,'manager');
             $this->success(lang('Delete success!'), url('member/index'));

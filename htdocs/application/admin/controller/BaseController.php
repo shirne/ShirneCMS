@@ -29,6 +29,7 @@ class BaseController extends Controller {
     
     /**
      * 后台控制器全局初始化
+     * @param $needLogin
      * @throws Exception
      */
     public function initialize(){
@@ -37,7 +38,13 @@ class BaseController extends Controller {
         if(!defined('SUPER_ADMIN_ID'))define('SUPER_ADMIN_ID',config('super_admin_id'));
         if(!defined('TEST_ACCOUNT'))define('TEST_ACCOUNT',config('test_account'));
 
-        $this->mid = session('adminId');
+        $this->mid = session(SESSKEY_ADMIN_ID);
+    
+        $controller=strtolower($this->request->controller());
+        if($controller === 'login'){
+            return;
+        }
+        
         //判断用户是否登陆
         if(empty($this->mid ) ) {
             $this->error(lang('Please login first!'),url('admin/login/index'));
@@ -52,7 +59,7 @@ class BaseController extends Controller {
             $this->error(lang('The account has login in other places!'),url('admin/login/index'));
         }
 
-        $controller=strtolower($this->request->controller());
+        //$controller=strtolower($this->request->controller());
         if($controller!='index'){
             $action=strtolower($this->request->action());
             if($action != 'search') {

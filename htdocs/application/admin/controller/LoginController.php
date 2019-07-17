@@ -2,25 +2,30 @@
 namespace app\admin\controller;
 
 use extcore\traits\Verify;
-use think\Controller;
 use think\Db;
+use think\Exception;
 
 /**
  * 后台登录
  * Class LoginController
  * @package app\admin\controller
  */
-class LoginController extends Controller
+class LoginController extends BaseController
 {
 
     public function initialize()
     {
         parent::initialize();
+        
+        if($this->mid){
+            $this->success(lang('You\'r already logged in!'),url('admin/index/index'));
+        }
     }
 
     /**
      * 登陆主页
      * @return mixed
+     * @throws \Throwable
      */
     public function index(){
         $this->assign('config',getSettings());

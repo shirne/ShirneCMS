@@ -53,7 +53,7 @@
                 <th>上次登陆</th>
                 <th>代理</th>
                 <th>类型/级别</th>
-                <th width="160">&nbsp;</th>
+                <th width="200">&nbsp;</th>
             </tr>
         </thead>
         <tbody>
@@ -104,10 +104,11 @@
                     <a class="btn btn-outline-primary" title="资金明细" href="{:url('member/money_log',array('id'=>$v['id']))}" ><i class="ion-md-paper"></i> </a>
 
                     <if condition="$v.status eq 1">
-                        <a class="btn btn-outline-danger link-confirm" title="禁用" data-confirm="禁用后用户将不能登陆!\n请确认!!!" href="{:url('member/status',array('id'=>$v['id'],'type'=>0))}" ><i class="ion-md-close"></i> </a>
+                        <a class="btn btn-outline-warning link-confirm" title="禁用" data-confirm="禁用后用户将不能登陆!\n请确认!!!" href="{:url('member/status',array('id'=>$v['id'],'type'=>0))}" ><i class="ion-md-remove-circle-outline"></i> </a>
                         <else/>
                         <a class="btn btn-outline-success" title="启用" href="{:url('member/status',array('id'=>$v['id'],'type'=>1))}" style="color:#50AD1E;"><i class="ion-md-check"></i> </a>
                     </if>
+                    <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="警告：删除会员将清除所有与会员相关的资料并且无法恢复!\n请确认!!!" href="{:url('member/delete',array('id'=>$v['id']))}" ><i class="ion-md-close"></i> </a>
                 </td>
             </tr>
         </volist>

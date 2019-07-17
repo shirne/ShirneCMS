@@ -106,8 +106,9 @@ DROP TABLE IF EXISTS `sa_member_coupon`;
 
 CREATE TABLE `sa_member_coupon` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `coupon_id` int(11) DEFAULT NULL COMMENT '主id',
-  `title` varchar(100) DEFAULT NULL,
+  `coupon_id` int(11) DEFAULT 0,
+  `member_id` int(11) DEFAULT 0,
+  `title` varchar(100) DEFAULT '',
   `cate_id` int(11) DEFAULT 0,
   `brand_id` int(11) DEFAULT 0,
   `product_id` int(11) DEFAULT 0,
@@ -243,6 +244,7 @@ DROP TABLE IF EXISTS `sa_order_product`;
 CREATE TABLE `sa_order_product` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` INT(11) DEFAULT '0',
+  `member_id` INT NULL,
   `product_id` INT(11) DEFAULT '0',
   `sku_id` INT(11) DEFAULT '0',
   `sku_specs` text,
