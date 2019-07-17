@@ -121,14 +121,18 @@ class BaseController extends Controller
         }
         session($key, time());
     }
-
+    
+    public function _empty(){
+        $this->error('页面不存在',url('index/index/index'));
+    }
+    
     /**
      * 设置seo信息
      * @param string $title
      * @param string $keys
      * @param string $desc
      */
-    public function seo($title='',$keys='',$desc=''){
+    protected function seo($title='',$keys='',$desc=''){
         $sitename=$this->config['site-webname'];
         if(empty($title)){
             $title .= $sitename;

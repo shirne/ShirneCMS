@@ -81,6 +81,11 @@ class BaseController extends Controller {
             $this->assign('empty', list_empty());
         }
     }
+    
+    public function _empty(){
+        
+        $this->error('页面不存在',url('admin/index/index'));
+    }
 
     /**
      * 检查权限
