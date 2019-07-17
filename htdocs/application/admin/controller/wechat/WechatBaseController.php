@@ -26,7 +26,7 @@ class WechatBaseController extends BaseController
     {
         parent::initialize();
 
-        $this->wechatApp = $this->get_app($this->request->get('wid'));
+        $this->wechatApp = $this->get_app($this->request->param('wid'));
     }
 
     /**

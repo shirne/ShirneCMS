@@ -120,6 +120,15 @@ htdocs/public 网站根目录
 >test<br />
 密码：123456
 
+## 常见问题
+
+接入微信公众号后，进入公众号管理页面出现 curl: (60) SSL certificate problem: unable to get local issuer certificate 错误，需要在php.ini中配置
+```$ini
+curl.cainfo = /path/to/downloaded/cacert.pem
+```
+并重启相关服务器 （cacert.pem在htdocs/cert目录下，该文件为从微信平台下载）
+
+
 ## 模板说明
 
 分离模板目录配置 template.independence
