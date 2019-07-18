@@ -127,7 +127,7 @@ function copyDest() {
 function watchAll() {
     is_watching=true;
     console.log('Starting watch all files...');
-    gulp.watch(['./scss/*.scss','./scss/model/*.scss'],['sass'], ()=> {
+    gulp.watch(['./scss/*.scss','./scss/model/*.scss'],['sass'], (event)=> {
         console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
     });
     gulp.watch(['./scss/admin/*.scss'],['sassadmin'],(event)=> {
