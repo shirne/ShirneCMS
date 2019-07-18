@@ -89,6 +89,10 @@
     <script src="__STATIC__/admin/js/app.min.js?v={:config('template.static_version')}"></script>
     <script type="text/javascript">
         (function(){
+            $('img').on('error',function() {
+                $(this).attr('src','/static/images/nopic.png');
+            });
+
             var func=arguments.callee;
             if(window.stop_ajax){
                 setTimeout(func, 2000);

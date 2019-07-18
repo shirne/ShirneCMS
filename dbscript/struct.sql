@@ -179,8 +179,6 @@ CREATE TABLE `sa_adv_item` (
   `title` varchar(100) DEFAULT NULL,
   `image` varchar(150) DEFAULT '',
   `url` varchar(150) DEFAULT '',
-  `text` varchar(200) DEFAULT '',
-  `text_vice` varchar(200) DEFAULT '',
   `ext_data` TEXT,
   `start_date` int(11) DEFAULT 0,
   `end_date` int(11) DEFAULT 0,

@@ -28,14 +28,6 @@
                 <input type="hidden" name="delete_image" value="{$model.image}"/>
             </if>
         </div>
-        <div class="form-group">
-            <label for="text">文本</label>
-            <input type="text" name="text" class="form-control" value="{$model.text}" placeholder="显示文本">
-        </div>
-        <div class="form-group">
-            <label for="text_vice">附加文本</label>
-            <input type="text" name="text_vice" class="form-control" value="{$model.text_vice}" placeholder="附加文本">
-        </div>
         <div class="form-row">
             <foreach name="group['ext_set']['key']" item="ikey">
                 <div class="col-6 form-group">
