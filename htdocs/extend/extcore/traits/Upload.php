@@ -155,6 +155,13 @@ trait Upload
             $file['extension'] = strtolower( $pathinfo['extension'] );
             $file['savepath'] = $savePath;
             $file['driver'] = $this->uploadConfig['driver'];
+            if(empty($file['extension'])){
+                $typesplit=explode('/',$file['type']);
+                if(!empty($typesplit[1])){
+                    $file['extension'] = $typesplit[1];
+                }
+            }
+            
             //检查文件类型大小和合法性
             if (!$this->checkFile($file,$isImg)) {
                 $this->uploadErrorCode= 108;
