@@ -86,6 +86,10 @@ class BaseController extends Controller
             }
         }
     }
+    
+    public function _empty(){
+        $this->error('接口不存在',url('index/index/index'));
+    }
 
     protected function get_param($key){
         if(isset($this->input[$key])){
