@@ -43,7 +43,7 @@ class SystemProcesser extends BaseProcesser
                 'title'=>$item['title'],
                 'description'=>$item['description'],
                 'url'=>url('index/article/view',['id'=>$item['id']], true, true),
-                'image'=>full_attach_url($item['cover'])
+                'image'=>local_media($item['cover'])
             ]);
         }
         return new News($items);
@@ -58,7 +58,7 @@ class SystemProcesser extends BaseProcesser
                 'title'=>$item['title'],
                 'description'=>$item['vice_title'],
                 'url'=>url('index/product/view',['id'=>$item['id']], true, true),
-                'image'=>full_attach_url($item['image'])
+                'image'=>local_media($item['image'])
             ]);
         }
         return new News($items);

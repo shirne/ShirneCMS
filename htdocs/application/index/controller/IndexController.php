@@ -53,8 +53,14 @@ class IndexController extends BaseController
                 return redirect(url('index/product/index'));
             }
         }
+        if($product_id){
+            return redirect(url('index/product/view',['id'=>$product_id]));
+        }else{
+            return redirect(url('index/product/index'));
+        }
+    }
 
-        return redirect(url('index/product/view',['id'=>$product_id]));
-
+    public function jssdk($url){
+        $this->success('','',$this->getShareData($url));
     }
 }

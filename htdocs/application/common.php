@@ -22,10 +22,18 @@ function force_json_decode($string){
     if(is_array($string)){
         return $string;
     }
-    $json = @json_decode($string);
+    $json = @json_decode($string,true);
     return empty($json)?[]:$json;
 }
 
+/**
+ * 根据配置输出本地图片路径或远程oss路径
+ * @param $src
+ * @param string $width
+ * @param string $height
+ * @param int $quality
+ * @return string
+ */
 function media($src,$width='',$height='',$quality=70){
     $root = config('template.oss_root');
     if(empty($root)){
@@ -35,8 +43,16 @@ function media($src,$width='',$height='',$quality=70){
     }
 }
 
+/**
+ * 完整输出附件的url
+ * @param $src
+ * @return string
+ */
 function local_media($src){
-    return url('/','',false,true).ltrim($src,'/');
+    if(strpos($src,'/'===0)){
+        return url('/','',false,true).$src;
+    }
+    return $src;
 }
 
 /**
@@ -62,20 +78,11 @@ function file_download($data,$filename='',$isContent=true,$mime=''){
     return $response;
 }
 
-/**
- * 完整输出附件的url
- * @param $attach
- * @return string
- */
-function full_attach_url($attach){
-    if(strpos($attach,'/'===0)){
-        return url('/').$attach;
-    }else{
-        return $attach;
-    }
-}
-
 /** =====================================  固态数据类函数  ===================================== **/
+/**
+ * 小标签的样式
+ * @return array
+ */
 function getTextStyles(){
     return ['secondary','primary','info','success','warning','danger'];
 }
@@ -89,6 +96,7 @@ function getMoneyFields($withall=true){
     if(!$withall)unset($fields['all']);
     return $fields;
 }
+
 function getLogTypes($withall=true){
     $fields = [
         'all'=>lang('All'),
@@ -105,6 +113,7 @@ function getMemberTypes(){
         2=>lang('Employee')
     ];
 }
+
 function getWechatTypes(){
     return [
         'subscribe'=>'关注回复消息',

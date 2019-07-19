@@ -190,7 +190,7 @@ class BaseController extends Controller
      * 检测用户是否登录并初始化资料
      * @throws Exception
      */
-    public function checkLogin(){
+    protected function checkLogin(){
         $this->userid = session('userid');
         if(!empty($this->userid)){
             $this->user = Db::name('Member')->find($this->userid);
@@ -299,7 +299,7 @@ class BaseController extends Controller
     /**
      * 初始化会员等级资料
      */
-    public function initLevel(){
+    protected function initLevel(){
         if($this->isLogin && empty($this->userLevel)){
             $this->userLevel=MemberLevelModel::get($this->user['level_id']);
         }
@@ -308,7 +308,7 @@ class BaseController extends Controller
     /**
      * 检测客户端平台，并注册对应平台的环境所需资源
      */
-    public function checkPlatform(){
+    protected function checkPlatform(){
         $detected=session('detected');
         if(empty($detected)) {
             $useragent = $this->request->server('HTTP_USER_AGENT');
@@ -349,26 +349,38 @@ class BaseController extends Controller
          * 详细用法参考：http://mp.weixin.qq.com/wiki/7/1c97470084b73f8e224fe6d9bab1625b.html
          */
         if($this->isWechat ) {
-            $this->wechat=getWechatAccount('wechat');
+            $signPackage = $this->getShareData();
 
-            if(!empty($this->wechat['appid'])) {
-                $app = Factory::officialAccount(WechatModel::to_config($this->wechat));
-                $signPackage = $app->jssdk->buildConfig([
-                    'updateAppMessageShareData',
-                    'updateTimelineShareData',
-                    'onMenuShareTimeline',
-                    'onMenuShareAppMessage',
-                    'onMenuShareQQ',
-                    'onMenuShareWeibo',
-                    'onMenuShareQZone',
-                    'checkJsApi',
-                    'openAddress'
-                ]);
+            if(!empty($signPackage)) {
                 $this->assign('signPackage', $signPackage);
             }
         }
     }
 
+
+    protected function getShareData($url = '')
+    {
+        $this->wechat=getWechatAccount('wechat');
+        if(!empty($this->wechat['appid'])) {
+            $app = Factory::officialAccount(WechatModel::to_config($this->wechat));
+            if($url)$app->jssdk->setUrl($url);
+            $signPackage = $app->jssdk->buildConfig([
+                'updateAppMessageShareData',
+                'updateTimelineShareData',
+                'onMenuShareTimeline',
+                'onMenuShareAppMessage',
+                'onMenuShareQQ',
+                'onMenuShareWeibo',
+                'onMenuShareQZone',
+                'checkJsApi',
+                'openAddress',
+                'openLocation',
+                'getLocation'
+            ]);
+            return $signPackage;
+        }
+        return [];
+    }
 
 
 }
