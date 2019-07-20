@@ -3,9 +3,9 @@
     "description": "基于ThinkPHP5.1和Bootstrap4.x的内容管理系统框架",
     "type": "project",
     "keywords": [
-        "framework",
         "cms",
-        "ORM"
+        "wechat",
+        "shop"
     ],
     "homepage": "http://www.shirne.cn/",
     "license": "Apache-2.0",
@@ -17,6 +17,11 @@
     ],
     "require": {
         "php": ">=5.6.0",
+        "ext-pdo":"^1.0",
+        "ext-json":"^1.0",
+        "ext-gd":"^1.0",
+        "ext-curl":"^1.0",
+        "ext-fileinfo":"^1.0",
         "topthink/framework": "5.1.*",
         "topthink/think-captcha": "^2.0",
         "topthink/think-image": "^1.0",

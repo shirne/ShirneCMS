@@ -64,7 +64,9 @@ function local_media($src){
  * @return \think\Response
  */
 function file_download($data,$filename='',$isContent=true,$mime=''){
-    //return \think\Response::create($data, '\\extcore\\FileDownload', 200, [], ['file_name'=>$filename]);
+    /**
+     * @var think\response\Download
+     */
     $response = \think\Response::create($data?:$filename, 'download', 200);
     if($mime){
         $response->mimeType($mime);

@@ -2,6 +2,8 @@
 
 namespace shirne\third;
 
+use think\facade\Log;
+
 /**
  * 第三方接口基类
  * Class ThirdBase
@@ -13,21 +15,50 @@ class ThirdBase
     protected $appsecret;
 
     protected $baseURL;
+    
+    
+    protected $userAgent;
 
     protected $debug;
-    public $errCode = 40001;
+    public $errCode = 0;
     protected $errCodeKey='errcode';
-    public $errMsg = "no access";
+    public $errMsg = "";
     protected $errMsgKey='errmsg';
     protected $logcallback;
 
     public function __construct($options)
     {
+        $this->userAgent = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36';
         $this->appid = isset($options['appid'])?$options['appid']:'';
         $this->appsecret = isset($options['appsecret'])?$options['appsecret']:'';
         $this->debug = isset($options['debug'])?$options['debug']:false;
         $this->logcallback = isset($options['logcallback'])?$options['logcallback']:false;
     }
+    
+    protected function set_error($errmsg, $errno = -1){
+        $this->errMsg = $errmsg;
+        $this->errCode = $errno;
+    }
+    protected function clear_error(){
+        $this->set_error('',0);
+    }
+    
+    public function get_error(){
+        if($this->errCode==0){
+            return [];
+        }
+        return [
+            'errno'=>$this->errCode,
+            'errmsg'=>$this->errMsg
+        ];
+    }
+    public function has_error(){
+        return $this->errCode != 0;
+    }
+    public function get_error_msg(){
+        return $this->errMsg;
+    }
+    
 
     /**
      * 日志记录，可被重载。
@@ -39,6 +70,7 @@ class ThirdBase
             if (is_array($log)) $log = print_r($log,true);
             return call_user_func($this->logcallback,$log);
         }
+        return false;
     }
 
     /**
@@ -56,13 +88,14 @@ class ThirdBase
             //curl_setopt($oCurl, CURLOPT_SSLVERSION, 1);
         }
         curl_setopt($oCurl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
-        curl_setopt($oCurl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36');
+        curl_setopt($oCurl, CURLOPT_USERAGENT, $this->userAgent);
         curl_setopt($oCurl, CURLOPT_CONNECTTIMEOUT, 60);
         curl_setopt($oCurl, CURLOPT_TIMEOUT, 60);
         curl_setopt($oCurl, CURLOPT_RETURNTRANSFER, 1 );
+        curl_setopt($oCurl, CURLOPT_FOLLOWLOCATION, 1);
         if(strtoupper($method)=='POST') {
             curl_setopt($oCurl, CURLOPT_URL, $url);
-            curl_setopt($oCurl, CURLOPT_POST, true);
+            curl_setopt($oCurl, CURLOPT_POST, 1);
             if(!empty($data))curl_setopt($oCurl, CURLOPT_POSTFIELDS, $data);
         }else{
             if(is_array($data)) {
@@ -80,6 +113,7 @@ class ThirdBase
         if(intval($aStatus["http_code"])==200){
             return $sContent;
         }else{
+            $this->set_error('HTTP请求错误',-2);
             return false;
         }
     }
