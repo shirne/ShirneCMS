@@ -5,7 +5,9 @@ namespace app\admin\controller;
 
 use app\admin\validate\AdvGroupValidate;
 use app\admin\validate\AdvItemValidate;
+use app\common\model\AdvGroupModel;
 use think\Db;
+use think\Exception;
 
 /**
  * 广告功能
@@ -18,6 +20,7 @@ class AdvController extends BaseController
      * 管理
      * @param $key
      * @return mixed
+     * @throws \Throwable
      */
     public function index($key=''){
         $model = Db::name('AdvGroup');
@@ -33,6 +36,7 @@ class AdvController extends BaseController
     /**
      * 添加
      * @return mixed
+     * @throws \Throwable
      */
     public function add(){
         if ($this->request->isPost()) {
@@ -42,7 +46,8 @@ class AdvController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             }else{
-                if (Db::name("AdvGroup")->insert($data)) {
+                $created=AdvGroupModel::create($data);
+                if ($created['id']) {
                     $this->success(lang('Add success!'), url('adv/index'));
                 } else {
                     $this->error(lang('Add failed!'));
@@ -57,10 +62,17 @@ class AdvController extends BaseController
 
     /**
      * 修改
+     * @param $id
+     * @return mixed
+     * @throws \Throwable
      */
     public function update($id)
     {
         $id = intval($id);
+        $model=AdvGroupModel::get($id);
+        if(empty($model) ){
+            $this->error('广告组不存在');
+        }
 
         if ($this->request->isPost()) {
             $data=$this->request->post();
@@ -70,10 +82,8 @@ class AdvController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             }else{
-                $model = Db::name("AdvGroup");
-
-                $data['id']=$id;
-                if ($model->update($data)) {
+                $updated=$model->allowField(true)->save($data);
+                if ($updated) {
                     $this->success(lang('Update success!'), url('adv/index'));
                 } else {
                     $this->error(lang('Update failed!'));
@@ -81,10 +91,6 @@ class AdvController extends BaseController
             }
         }
 
-        $model = Db::name('AdvGroup')->where('id', $id)->find();
-        if(empty($model)){
-            $this->error('广告组不存在');
-        }
         $this->assign('model',$model);
         $this->assign('id',$id);
         return $this->fetch();
@@ -114,18 +120,25 @@ class AdvController extends BaseController
             $this->error(lang('Delete failed!'));
         }
     }
-
-    public function itemlist($gid){
+    
+    /**
+     * 广告列表
+     * @param $gid
+     * @param string $key
+     * @return string
+     * @throws \Throwable
+     */
+    public function itemlist($gid, $key=''){
         $model = Db::name('AdvItem');
         $group=Db::name('AdvGroup')->find($gid);
         if(empty($group)){
             $this->error('广告位不存在');
         }
-        $where=array('group_id'=>$gid);
+        $model->where('group_id',$gid);
         if(!empty($key)){
-            $where[] = array('title|url','like',"%$key%");
+            $model->whereLike('title|url',"%$key%");
         }
-        $lists=$model->where($where)->order('sort ASC,id DESC')->paginate(15);
+        $lists=$model->order('sort ASC,id DESC')->paginate(15);
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
         $this->assign('gid',$gid);
@@ -136,8 +149,14 @@ class AdvController extends BaseController
      * 添加
      * @param $gid
      * @return mixed
+     * @throws \Throwable
      */
     public function itemadd($gid){
+        $group = AdvGroupModel::get($gid);
+        if(empty($group)){
+            $this->error('广告组不存在');
+        }
+        
         if ($this->request->isPost()) {
             $data=$this->request->post();
             $validate=new AdvItemValidate();
@@ -155,6 +174,10 @@ class AdvController extends BaseController
                 $url=url('adv/itemlist',array('gid'=>$gid));
                 $data['start_date']=empty($data['start_date'])?0:strtotime($data['start_date']);
                 $data['end_date']=empty($data['end_date'])?0:strtotime($data['end_date']);
+                if(isset($data['ext'])) {
+                    $data['ext_data'] = json_encode($data['ext'], JSON_UNESCAPED_UNICODE);
+                    unset($data['ext']);
+                }
                 if ($model->insert($data)) {
                     $this->success(lang('Add success!'),$url);
                 } else {
@@ -163,7 +186,8 @@ class AdvController extends BaseController
                 }
             }
         }
-        $model=array('status'=>1,'group_id'=>$gid);
+        $model=array('status'=>1,'group_id'=>$gid,'ext'=>[]);
+        $this->assign('group',$group);
         $this->assign('model',$model);
         $this->assign('id',0);
         return $this->fetch('itemupdate');
@@ -175,6 +199,15 @@ class AdvController extends BaseController
     public function itemupdate($id)
     {
         $id = intval($id);
+        $model = Db::name('AdvItem')->where('id', $id)->find();
+        if(empty($model)){
+            $this->error('广告项不存在');
+        }
+        $model = AdvGroupModel::fixAdItem($model);
+        $group = AdvGroupModel::get($model['group_id']);
+        if(empty($group)){
+            $this->error('广告组不存在');
+        }
 
         if ($this->request->isPost()) {
             $data=$this->request->post();
@@ -196,6 +229,10 @@ class AdvController extends BaseController
                 unset($data['delete_image']);
                 $data['start_date']=empty($data['start_date'])?0:strtotime($data['start_date']);
                 $data['end_date']=empty($data['end_date'])?0:strtotime($data['end_date']);
+                if(isset($data['ext'])) {
+                    $data['ext_data'] = json_encode($data['ext'], JSON_UNESCAPED_UNICODE);
+                    unset($data['ext']);
+                }
                 $data['id']=$id;
                 if ($model->update($data)) {
                     delete_image($delete_images);
@@ -206,11 +243,8 @@ class AdvController extends BaseController
                 }
             }
         }
-        $model = Db::name('AdvItem')->where('id', $id)->find();
-        if(empty($model)){
-            $this->error('广告项不存在');
-        }
-
+    
+        $this->assign('group',$group);
         $this->assign('model',$model);
         $this->assign('id',$id);
         return $this->fetch();
@@ -231,3 +265,5 @@ class AdvController extends BaseController
         }
     }
 }
+
+//end

@@ -63,7 +63,7 @@
 					<td><input type="checkbox" name="id" value="{$v.id}" /></td>
 					<td>
 						<figure class="figure img-view" data-img="{$v.image}" >
-							<img src="{$v.image}?w=100" class="figure-img img-fluid rounded" alt="image">
+							<img src="{$v.image|default='/static/images/nopic.png'}?w=100" class="figure-img img-fluid rounded" alt="image">
 						</figure>
 					</td>
 					<td>

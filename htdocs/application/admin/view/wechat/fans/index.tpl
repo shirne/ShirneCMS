@@ -38,6 +38,7 @@
             </tr>
             </thead>
             <tbody>
+            <php>$empty=list_empty(6);</php>
             <volist name="lists" id="v" empty="$empty">
                 <tr>
                     <td><input type="checkbox" name="id" value="{$v.id}" /></td>

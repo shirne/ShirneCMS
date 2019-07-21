@@ -140,7 +140,7 @@ class IndexController extends BaseController{
         $result=[];
         $count=0;
         while(array_sum($result)==0) {
-            $result['newMemberCount'] = Db::name('Member')->where('create_time', 'GT', $this->manage['last_view_member'])->count();
+            $result['newMemberCount'] = Db::name('Member')->where('create_time', 'GT', $this->manager['last_view_member'])->count();
             $result['newOrderCount'] = Db::name('Order')->where('status',0)->count();
             sleep(1);
             $count++;
@@ -194,6 +194,7 @@ class IndexController extends BaseController{
 
             $password=$this->request->post('newpassword');
             if(!empty($password)){
+                if(TEST_ACCOUNT == $this->manager['username'])$this->error('演示账号，不可修改密码');
                 $data['salt']=random_str(8);
                 $data['password'] = encode_password($password,$data['salt']);
             }
@@ -204,9 +205,6 @@ class IndexController extends BaseController{
 
             //更新
             if (Db::name('Manager')->where('id',$this->mid)->update($data)) {
-                if(!empty($data['realname'])){
-                    session('username',$data['realname']);
-                }
                 if(!empty($password)){
                     check_password($password);
                 }
@@ -219,13 +217,33 @@ class IndexController extends BaseController{
         $this->assign('model',$model);
         return $this->fetch();
     }
-
-    public function uploads($folder='alone'){
+    
+    /**
+     * 异步上传保存在指定文件夹内
+     * 已使用文件需转移到其它目录
+     * 定期对此目录清理
+     * todo 支持文件分段上传
+     */
+    public function uploads(){
+        $folder='alone';
         $url=$this->uploadFile($folder,'file');
         if($url){
             $this->success('上传成功','',$url);
         }else{
             $this->error($this->uploadError);
         }
+    }
+    
+    public function deluploads($path){
+        
+        if(strpos($path,'/alone/')!== false){
+            $truepath = DOC_ROOT.'/'.ltrim($path,'/');
+            if(file_exists($truepath)) {
+                unlink($path);
+                $this->success('删除成功');
+            }
+            $this->error('文件不存在');
+        }
+        $this->error('禁止删除');
     }
 }

@@ -24,6 +24,7 @@ CREATE TABLE `sa_lang` (
 DROP TABLE IF EXISTS `sa_manager`;
 CREATE TABLE `sa_manager` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `pid` int(11) DEFAULT '0',
   `username` varchar(20) NOT NULL,
   `realname` varchar(20) NOT NULL DEFAULT '',
   `mobile` varchar(20) DEFAULT '',
@@ -35,7 +36,7 @@ CREATE TABLE `sa_manager` (
   `update_time` int(11) DEFAULT '0',
   `login_ip` varchar(50) DEFAULT '',
   `status` tinyint(1) DEFAULT '1' COMMENT '0:禁止登陆 1:正常',
-  `type` tinyint(1) DEFAULT '1' COMMENT '1:普通管理员 ',
+  `type` tinyint(1) DEFAULT '1' COMMENT '1:超级管理员 2:普通管理员',
   `logintime` INT(11) NULL DEFAULT 0,
   `last_view_member` INT(11) NULL DEFAULT 0,
   PRIMARY KEY (`id`),
@@ -96,6 +97,61 @@ CREATE TABLE `sa_category` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
+-- Table structure for table `sa_subscribe`
+--
+
+DROP TABLE IF EXISTS `sa_subscribe`;
+CREATE TABLE `sa_subscribe` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `lang` varchar(10) DEFAULT NULL COMMENT '语言',
+  `title` varchar(100) DEFAULT NULL,
+  `email` varchar(150) DEFAULT '',
+  `last_send_time` int(11) DEFAULT 0,
+  `cancel_code` varchar(100) DEFAULT '',
+  `is_subscribe` tinyint(4) DEFAULT 1,
+  `create_time` int(11) DEFAULT 0,
+  `update_time` int(11) DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `sa_subscribe_email`
+--
+
+DROP TABLE IF EXISTS `sa_subscribe_content`;
+CREATE TABLE `sa_subscribe_content` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `lang` varchar(10) DEFAULT NULL COMMENT '语言',
+  `main_id` int(11) DEFAULT NULL COMMENT '主id',
+  `title` varchar(100) DEFAULT NULL,
+  `content` text,
+  `status` tinyint(4) DEFAULT 0,
+  `create_time` int(11) DEFAULT 0,
+  `update_time` int(11) DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `sa_subscribe_email`
+--
+
+DROP TABLE IF EXISTS `sa_subscribe_email`;
+CREATE TABLE `sa_subscribe_email` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `email` varchar(100) DEFAULT NULL,
+  `account` varchar(100) DEFAULT NULL,
+  `type` varchar(10) DEFAULT 'smtp',
+  `password` varchar(100) DEFAULT NULL,
+  `smtp` varchar(100) DEFAULT NULL,
+  `port` varchar(10) DEFAULT NULL,
+  `ssl` tinyint(4) DEFAULT 1,
+  `status` tinyint(4) DEFAULT 0,
+  `create_time` int(11) DEFAULT 0,
+  `update_time` int(11) DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
 -- Table structure for table `sa_adv_group`
 --
 
@@ -104,6 +160,7 @@ CREATE TABLE `sa_adv_group` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(100) DEFAULT NULL,
   `flag` varchar(50) DEFAULT '',
+  `ext_set` varchar(500) DEFAULT '',
   `create_time` int(11) DEFAULT 0,
   `status` int(11) DEFAULT 0,
   PRIMARY KEY (`id`)
@@ -122,8 +179,7 @@ CREATE TABLE `sa_adv_item` (
   `title` varchar(100) DEFAULT NULL,
   `image` varchar(150) DEFAULT '',
   `url` varchar(150) DEFAULT '',
-  `text` varchar(200) DEFAULT '',
-  `text_vice` varchar(200) DEFAULT '',
+  `ext_data` TEXT,
   `start_date` int(11) DEFAULT 0,
   `end_date` int(11) DEFAULT 0,
   `create_time` int(11) DEFAULT 0,

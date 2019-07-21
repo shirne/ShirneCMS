@@ -44,7 +44,7 @@ class NoticeController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
-                $data['manager_id'] = session('adminId');
+                $data['manager_id'] = $this->mid;
                 $model=NoticeModel::create($data);
                 if ($model['id']) {
                     $this->success(lang('Add success!'), url('Notice/index'));

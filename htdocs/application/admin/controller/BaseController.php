@@ -5,6 +5,7 @@ namespace app\admin\controller;
 use extcore\traits\Upload;
 use think\Controller;
 use think\Db;
+use think\Exception;
 
 /**
  * 后台基类
@@ -21,30 +22,44 @@ class BaseController extends Controller {
     protected $model;
 
     protected $mid;
-    protected $manage;
+    protected $manager;
     protected $permision;
 
     protected $viewData=[];
-
+    
+    /**
+     * 后台控制器全局初始化
+     * @param $needLogin
+     * @throws Exception
+     */
     public function initialize(){
         parent::initialize();
+        
+        if(!defined('SUPER_ADMIN_ID'))define('SUPER_ADMIN_ID',config('super_admin_id'));
+        if(!defined('TEST_ACCOUNT'))define('TEST_ACCOUNT',config('test_account'));
 
-        $this->mid = session('adminId');
+        $this->mid = session(SESSKEY_ADMIN_ID);
+    
+        $controller=strtolower($this->request->controller());
+        if($controller === 'login'){
+            return;
+        }
+        
         //判断用户是否登陆
         if(empty($this->mid ) ) {
             $this->error(lang('Please login first!'),url('admin/login/index'));
         }
-        $this->manage=Db::name('Manager')->find($this->mid);
-        if(empty($this->manage)){
+        $this->manager=Db::name('Manager')->find($this->mid);
+        if(empty($this->manager)){
             clearLogin();
             $this->error(lang('Invalid account!'),url('admin/login/index'));
         }
-        if($this->manage['logintime']!=session('adminLTime')){
+        if($this->manager['logintime']!=session(SESSKEY_ADMIN_LAST_TIME)){
             clearLogin();
             $this->error(lang('The account has login in other places!'),url('admin/login/index'));
         }
 
-        $controller=strtolower($this->request->controller());
+        //$controller=strtolower($this->request->controller());
         if($controller!='index'){
             $action=strtolower($this->request->action());
             if($action != 'search') {
@@ -66,13 +81,19 @@ class BaseController extends Controller {
             $this->assign('empty', list_empty());
         }
     }
+    
+    public function _empty(){
+        
+        $this->error('页面不存在',url('admin/index/index'));
+    }
 
     /**
      * 检查权限
      * @param $permitem
+     * @throws Exception
      */
     protected function checkPermision($permitem){
-        if($this->getPermision($permitem)==false){
+        if(!$this->getPermision($permitem)){
             $this->error(lang('You have no permission to do this operation!'));
         }
     }
@@ -81,10 +102,11 @@ class BaseController extends Controller {
      * 检查是否有权限
      * @param $permitem
      * @return bool
+     * @throws Exception
      */
     protected function getPermision($permitem)
     {
-        if($this->manage['type']==1){
+        if($this->manager['type']==1){
             return true;
         }
         if(empty($this->permision)){
@@ -130,6 +152,7 @@ class BaseController extends Controller {
      * @param array $vars
      * @param array $config
      * @return string
+     * @throws \Throwable
      */
     protected function fetch($template = '', $vars = [], $config = [])
     {

@@ -66,6 +66,10 @@
     <block name="script"></block>
     <script type="text/javascript">
         (function(){
+            $('img').on('error',function() {
+                $(this).attr('src','/static/images/nopic.png');
+            });
+
             var func=arguments.callee;
             if(window.stop_ajax){
                 setTimeout(func, 2000);

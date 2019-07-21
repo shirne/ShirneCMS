@@ -70,7 +70,7 @@
                         <volist name="v['products']" id="p">
                         <div class="media">
                             <div class="media-left">
-                                <img class="media-object" src="{$p['product_image']}" alt="{$p['product_title']}">
+                                <img class="media-object" src="{$p['product_image']|default='/static/images/nopic.png'}" alt="{$p['product_title']}">
                             </div>
                             <div class="media-body">
                                 <h4 class="media-heading">{$p['product_title']}</h4>

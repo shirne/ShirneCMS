@@ -14,6 +14,7 @@ VALUES
   (71,7,'广告管理','Adv/index','adv_index','ion-md-aperture',0,0),
   (72,7,'链接管理','Links/index','links_index','ion-md-link',0,0),
   (73,7,'留言管理','Feedback/index','feedback_index','ion-md-chatbubbles',0,0),
+  (74,7,'订阅管理','Subscribe/index','subscribe_index','ion-md-mail',0,0),
   (80,8,'会员管理','Member/index','member_index','ion-md-person',0,0),
   (81,8,'邀请码','Invite/index','invite_index','ion-md-pricetags',0,0),
   (82,8,'会员组','MemberLevel/index','member_level_index','ion-md-people',0,0),
@@ -32,9 +33,9 @@ VALUES
 
 TRUNCATE TABLE `sa_manager`;
 
-INSERT INTO `sa_manager` (`id`, `username`,`realname`, `email`, `password`, `salt`, `avatar`, `create_time`, `update_time`, `login_ip`, `status`, `type`)
+INSERT INTO `sa_manager` (`id`,`pid`, `username`,`realname`, `email`, `password`, `salt`, `avatar`, `create_time`, `update_time`, `login_ip`, `status`, `type`)
 VALUES
-  (1,'admin','','79099818@qq.com','60271966bbad6ead5faa991772a9277f', 'z5La7s0P',NULL,'1436679338','1436935104','0.0.0.0',1,1);
+  (1,0,'admin','','79099818@qq.com','60271966bbad6ead5faa991772a9277f', 'z5La7s0P',NULL,'1436679338','1436935104','0.0.0.0',1,1);
 
 
 TRUNCATE TABLE `sa_setting`;
@@ -47,6 +48,7 @@ VALUES
   ('site-weblogo','站点logo','image','common',0,1,'','站点logo',''),
   ('site-tongji','统计代码','textarea','common',0,1,'','统计代码',''),
   ('site-icp','ICP备案号','text','common',0,1,'123456','ICP备案号',''),
+  ('gongan-icp','公安备案号','text','common',0,1,'123456','公安备案号',''),
   ('site-url','站点网址','text','common',0,1,'http://www.shirne.cn','站点地址',''),
   ('site-name','公司名','text','common',0,1,'ShirneCMS','公司名',''),
   ('site-address','公司地址','text','common',0,1,'','公司地址',''),

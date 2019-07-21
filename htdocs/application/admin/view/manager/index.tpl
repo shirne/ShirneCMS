@@ -53,9 +53,9 @@
                     <a class="btn btn-outline-primary" title="权限" href="{:url('manager/permision',array('id'=>$v['id']))}"><i class="ion-md-key"></i> </a>
                 </if>
                 <if condition="$v.status eq 1">	
-                    <a class="btn btn-outline-danger link-confirm" title="禁用" data-confirm="禁用后用户将不能登陆后台!\n请确认!!!" href="{:url('manager/delete',array('id'=>$v['id']))}" ><i class="ion-md-close"></i> </a>
+                    <a class="btn btn-outline-danger link-confirm" title="禁用" data-confirm="禁用后用户将不能登陆后台!\n请确认!!!" href="{:url('manager/status',array('id'=>$v['id'],'status'=>0))}" ><i class="ion-md-close"></i> </a>
             	<else/>
-                    <a class="btn btn-outline-success" title="启用" href="{:url('manager/delete',array('id'=>$v['id']))}" ><i class="ion-md-checkmark-circle"></i> </a>
+                    <a class="btn btn-outline-success" title="启用" href="{:url('manager/status',array('id'=>$v['id'],'status'=>1))}" ><i class="ion-md-checkmark-circle"></i> </a>
             	</if>
                 </td>
             </tr>

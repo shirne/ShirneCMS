@@ -16,7 +16,7 @@ class MemberController extends BaseController
     {
         parent::initialize();
 
-        Db::name('Manager')->where('id',$this->manage['id'])->update(array('last_view_member'=>time()));
+        Db::name('Manager')->where('id',$this->manager['id'])->update(array('last_view_member'=>time()));
     }
 
     /**
@@ -379,9 +379,9 @@ class MemberController extends BaseController
     }
 
     /**
-     * 删除会员
+     * 会员状态
      */
-    public function delete($id,$type=0)
+    public function status($id,$type=0)
     {
         $model = Db::name('member');
         $data['status']=$type==1?1:0;
@@ -390,6 +390,33 @@ class MemberController extends BaseController
             $this->success(lang('Update success!'), url('member/index'));
         }else{
             $this->error(lang('Update failed!'));
+        }
+    }
+    
+    public function delete($id)
+    {
+        $ids = idArr($id);
+        if(empty($id) || empty($ids)){
+            $this->error('参数错误');
+        }
+        $deleted=Db::name('member')->whereIn('id',$ids)->delete();
+        if($deleted){
+            //删除相关表
+            $tables=Db::query('show tables');
+            $field = 'Tables_in_'.config('database.database');
+    
+            foreach ($tables as $row){
+                $columns=Db::query('show columns in '.$row[$field]);
+                $fields=array_column($columns,'Field');
+                if(in_array('member_id',$fields)){
+                    Db::table($row[$field])->whereIn('member_id',$id)->delete();
+                }
+            }
+            
+            user_log($this->mid,'deleteuser',1,'删除会员:'.$id ,'manager');
+            $this->success(lang('Delete success!'), url('member/index'));
+        }else{
+            $this->error(lang('Delete failed!'));
         }
     }
 

@@ -358,6 +358,7 @@ jQuery(function ($) {
     //上传框
     $('.custom-file .custom-file-input').on('change', function () {
         var self=$(this);
+        if(!this.files || !this.files[0])return;
         var inputgroup=$(this).parents('.input-group').eq(0);
         var parent=inputgroup.parents('div').eq(0);
         var label = $(this).parents('.custom-file').find('.custom-file-label');
@@ -368,7 +369,7 @@ jQuery(function ($) {
 
         if(!window.URL && !window.URL.createObjectURL)return;
         var file=self[0].files[0];
-        var is_img=file.type && file.type.match(/(\.|\/)(jpe?g|png|gif)$/);
+        var is_img=file.type && file.type.match(/(\.|\/)(jpe?g|png|gif|webp)$/);
 
 
         var figure = parent.find('.figure');

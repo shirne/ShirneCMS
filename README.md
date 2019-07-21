@@ -112,9 +112,22 @@ htdocs/public 网站根目录
 > 修改数据库配置文件 config/database.php<br />
 > 手动安装数据库脚本 或者 通过命令行(php think install)或网页安装(/task/util/install)
 
-后台默认登录账号 [演示网站](http://host3.shirne.net/admin)
->admin<br />
+后台默认登录账号 [演示网站](http://cms.qisoweb.com/admin)
+>test<br />
 密码：123456
+
+基于本系统开发的 [蔬菜库存管理系统](http://erp.qisoweb.com/)
+>test<br />
+密码：123456
+
+## 常见问题
+
+接入微信公众号后，进入公众号管理页面出现 curl: (60) SSL certificate problem: unable to get local issuer certificate 错误，需要在php.ini中配置
+```$ini
+curl.cainfo = /path/to/downloaded/cacert.pem
+```
+并重启相关服务器 （cacert.pem在htdocs/cert目录下，该文件为从微信平台下载）
+
 
 ## 模板说明
 

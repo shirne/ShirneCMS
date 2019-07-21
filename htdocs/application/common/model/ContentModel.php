@@ -42,7 +42,7 @@ class ContentModel extends BaseModel
                 $cate_id=$this->cateFacade->getCategoryId($cate_id);
             }
             if(isset($attrs['recursive']) && $attrs['recursive']){
-                $model->where($this->model.".cate_id", "IN", $this->cateFacade->getSubCateIds($cate_id));
+                $model->whereIn($this->model.".cate_id", $this->cateFacade->getSubCateIds($cate_id));
             }else{
                 $model->where($this->model.".cate_id",$cate_id);
             }
@@ -55,7 +55,12 @@ class ContentModel extends BaseModel
             }
         }
         if(!empty($attrs['type'])){
-            $model->where($this->model.".type",$attrs['type']);
+            if(strpos($attrs['type'],',')!==false){
+                $types=array_filter(array_map('trim',explode(',',$attrs['type'])));
+                if(!empty($types))$model->whereIn($this->model.".type",$types);
+            }else{
+                $model->where($this->model.".type",$attrs['type']);
+            }
         }
         if(!empty($attrs['cover'])){
             $model->where($this->model.".cover","<>","");
@@ -63,18 +68,20 @@ class ContentModel extends BaseModel
         if(!empty($attrs['image'])){
             $model->where($this->model.".image","<>","");
         }
+
+        if(empty($attrs['order'])){
+            $attrs['order']=$this->model.'.'.$this->defaultOrder;
+        }elseif( strpos($attrs['order'],'()')!==false){
+            $attrs['order'] = Db::raw($attrs['order']);
+        }elseif(strpos($attrs['order'],'.')===false){
+            $attrs['order'] = $this->model.'.'.$attrs['order'];
+        }
+        $model->order($attrs['order']);
+        
         if(empty($attrs['limit'])){
             $attrs['limit']=10;
         }
         $model->limit($attrs['limit']);
-
-        if(empty($attrs['order'])){
-            $attrs['order']=$this->defaultOrder;
-        }
-        if(strpos($attrs['order'],'.')===false){
-            $attrs['order'] = $this->model.'.'.$attrs['order'];
-        }
-        $model->order($attrs['order']);
 
         return $model->select();
     }
@@ -98,17 +105,19 @@ class ContentModel extends BaseModel
         if(!empty($attrs['id'])){
             $model->where($this->model.".id", "NEQ",  $attrs['id'] );
         }
+        if(empty($attrs['order'])){
+            $attrs['order']=$this->model.'.'.$this->defaultOrder;
+        }elseif( strpos($attrs['order'],'()')!==false){
+            $attrs['order'] = Db::raw($attrs['order']);
+        }elseif(strpos($attrs['order'],'.')===false){
+            $attrs['order'] = $this->model.'.'.$attrs['order'];
+        }
+        $model->order($attrs['order']);
+
         if(empty($attrs['limit'])){
             $attrs['limit']=10;
         }
         $model->limit($attrs['limit']);
-        if(empty($attrs['order'])){
-            $attrs['order']=$this->model.'.'.$this->defaultOrder;
-        }
-        if(strpos($attrs['order'],'.')===false){
-            $attrs['order'] = $this->model.'.'.$attrs['order'];
-        }
-        $model->order($attrs['order']);
 
         return $model->select();
     }

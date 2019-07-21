@@ -106,10 +106,13 @@
             $('.qrcode-btn').click(function() {
                 var qrcode=$(this).data('qrcode');
                 if(qrcode){
-                    dialog.alert('<div class="text-center"><figure class="figure">\n' +
+                    dialog.alert({
+                        content:'<div class="text-center"><figure class="figure">\n' +
                         ' <img src="'+qrcode+'" class="figure-img img-fluid rounded" alt="image">\n' +
                         ' <figcaption class="figure-caption text-center">扫描二维码关注公众号</figcaption>\n' +
-                        '</figure></div>','二维码');
+                        '</figure></div>',
+                        title:'二维码'
+                    },null);
                 }else{
                     dialog.info('没有上传二维码');
                 }

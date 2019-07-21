@@ -11,6 +11,7 @@ use app\admin\validate\ProductValidate;
 use app\admin\validate\ImagesValidate;
 use app\common\facade\ProductCategoryFacade;
 use think\Db;
+use think\Exception;
 
 /**
  * 商品管理
@@ -46,6 +47,7 @@ class ProductController extends BaseController
      * @param string $key
      * @param int $cate_id
      * @return mixed|\think\response\Redirect
+     * @throws Exception
      */
     public function index($key='',$cate_id=0){
         if($this->request->isPost()){
@@ -167,6 +169,7 @@ class ProductController extends BaseController
      * 修改
      * @param $id
      * @return mixed
+     * @throws Exception
      */
     public function edit($id)
     {
@@ -257,6 +260,7 @@ class ProductController extends BaseController
      * @param $key
      * @param $ids
      * @return \think\response\Json
+     * @throws Exception
      */
     public function get_specs($key='',$ids=''){
         $model = new SpecificationsModel();
@@ -276,6 +280,7 @@ class ProductController extends BaseController
     /**
      * 删除
      * @param $id
+     * @throws Exception
      */
     public function delete($id)
     {
@@ -296,6 +301,7 @@ class ProductController extends BaseController
      * 上下架
      * @param $id
      * @param int $status
+     * @throws Exception
      */
     public function push($id,$status=0)
     {
@@ -316,9 +322,11 @@ class ProductController extends BaseController
     /**
      * 图集
      * @param $aid
+     * @param $key
      * @return mixed
+     * @throws Exception
      */
-    public function imagelist($aid){
+    public function imagelist($aid, $key=''){
         $model = Db::name('ProductImages');
         $product=Db::name('Product')->find($aid);
         if(empty($product)){
@@ -326,7 +334,7 @@ class ProductController extends BaseController
         }
         $model->where('product_id',$aid);
         if(!empty($key)){
-            $model->where('title','like',"%$key%");
+            $model->whereLike('title',"%$key%");
         }
         $lists=$model->order('sort ASC,id DESC')->paginate(15);
         $this->assign('product',$product);

@@ -72,7 +72,11 @@ class OrderModel extends BaseModel
      */
 
     public function makeOrder($member,$products,$address,$remark,$balance_pay=1,$ordertype=1){
-
+        if(empty($member) || empty($member['id'])){
+            $this->error='指定的下单用户资料错误';
+            return false;
+        }
+        
         //折扣
         $levels=getMemberLevels();
         $level=$levels[$member['level_id']];
@@ -168,6 +172,7 @@ class OrderModel extends BaseModel
                 Db::name('orderProduct')->insert([
                     'order_id'=>$result,
                     'product_id'=>$product['product_id'],
+                    'member_id'=>$member['id'],
                     'sku_id'=>$product['sku_id'],
                     'sku_specs'=>ProductModel::transSpec($product['specs']),
                     'product_title'=>$product['product_title'],
