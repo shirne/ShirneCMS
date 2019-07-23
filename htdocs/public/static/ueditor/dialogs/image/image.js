@@ -1085,21 +1085,20 @@
                 }
             });
         },
-        baidtuUnComplie: function(k) {
-            c = ['_z2C\\$q', '_z&e3B', 'AzdH3F'];
-            d = {'w' : "a", 'k' : "b", 'v' : "c", '1' : "d", 'j' : "e", 'u' : "f", '2' : "g", 'i' : "h", 't' : "i", '3' : "j", 'h' : "k", 's' : "l", '4' : "m", 'g' : "n", "5" : "o", 'r' : "p", 'q' : "q", "6" : "r", 'f' : "s", 'p' : "t", "7" : "u", 'e' : "v", 'o' : "w", "8" : "1", 'd' : "2", 'n' : "3", "9" : "4", 'c' : "5", 'm' : "6", "0" : "7", 'b' : "8", 'l' : "9", 'a' : "0", '_z2C\\$q' : ":", '_z&e3B' : ".", 'AzdH3F' : "/"};
+        baidtuUnComplie: function( k ) {
+            var c = ['_z2C\\$q', '_z&e3B', 'AzdH3F'];
+            var d = {'w' : "a", 'k' : "b", 'v' : "c", '1' : "d", 'j' : "e", 'u' : "f", '2' : "g", 'i' : "h", 't' : "i", '3' : "j", 'h' : "k", 's' : "l", '4' : "m", 'g' : "n", "5" : "o", 'r' : "p", 'q' : "q", "6" : "r", 'f' : "s", 'p' : "t", "7" : "u", 'e' : "v", 'o' : "w", "8" : "1", 'd' : "2", 'n' : "3", "9" : "4", 'c' : "5", 'm' : "6", "0" : "7", 'b' : "8", 'l' : "9", 'a' : "0", '_z2C\\$q' : ":", '_z&e3B' : ".", 'AzdH3F' : "/"};
             if (!k || k.indexOf('http')===0) return k;
-            j = k;
+            var j = k;
             for(var i=0;i<c.length;i++ ) {
                 var value=c[i]
                 j = j.replace(new RegExp(value,'g'), d[value]);
             }
-            arr = j.split('');
-            for (var k in arr) {
-                var v=arr[k]
-                if (v.match(/^[a-w\d]+$/)) arr[k] = d[v];
-            }
-            return arr.join('');
+
+            return j.replace(/[a-z0-9]/g,function(w){
+                if(d[w])return d[w];
+                else return w;
+            });
         },
         /* 添加图片到列表界面上 */
         setList: function (list) {
@@ -1119,22 +1118,31 @@
                     };
                     img.width = 113;
                     img.setAttribute('src', list[i].src);
-                    img.onerror=function(){
-                        this.onerror=null;
-                        var action = editor.getActionUrl('proxy');
-                        var src=this.getAttribute('src');
-                        if(src.indexOf(action) == -1){
-                            var newsrc=editor.getActionUrl('proxy')+'&remote='+encodeURIComponent(this.getAttribute('src'))+'&referer='+encodeURIComponent(link.href);
-                            //this.setAttribute('src', newsrc);
-                            this.style.opacity=0;
-                            this.style.display='block';
-                            var p=this.parentNode;
-                            this.style.width=p.offsetWidth+'px';
-                            this.style.height=p.offsetHeight+'px';
-                            p.style.background='url('+newsrc+') center center no-repeat';
-                            p.style.backgroundSize='contain';
+                    img.setAttribute('rel', list[i].src);
+                    img.onerror=(function(i){
+                        return function () {
+                            var csrc = this.getAttribute('src');
+                            if (csrc.indexOf('http://') === 0) {
+                                this.setAttribute('src', csrc.replace('http://', 'https://'));
+                                return;
+                            }
+                            this.onerror = null;
+                            var src = this.getAttribute('rel');
+                            if (csrc != src) this.setAttribute('src', src);
+                            var action = editor.getActionUrl('proxy');
+                            if (src.indexOf(action) == -1) {
+                                var newsrc = editor.getActionUrl('proxy') + '&remote=' + encodeURIComponent(this.getAttribute('src')) + '&referer=' + encodeURIComponent(list[i].url);
+                                //this.setAttribute('src', newsrc);
+                                this.style.opacity = 0;
+                                this.style.display = 'block';
+                                var p=this.parentNode;
+                                this.style.width = p.offsetWidth + 'px';
+                                this.style.height = p.offsetHeight + 'px';
+                                p.style.background = 'url(' + newsrc + ') center center no-repeat';
+                                p.style.backgroundSize = 'contain';
+                            }
                         }
-                    };
+                    })(i);
 
                     link.href = list[i].url;
                     link.target = '_blank';

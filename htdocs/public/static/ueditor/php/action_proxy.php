@@ -34,27 +34,42 @@ if (isset($_POST['maxwidth'])) {
 $maxwidth = intval($maxwidth);
 
 
+$urls = parse_url(strtolower($source));
+$scheme = $urls['scheme ']?:'http';
 if(empty($refurl)){
-    $urls = parse_url(strtolower($source));
+    
     if($urls){
-        $refurl = $urls['scheme '].'://'.$urls['host '];
-        if($urls['scheme '] == 'http' && (!empty($urls['port']) && $urls['port']!='80')){
+        $refurl = $scheme.'://'.$urls['host '];
+        if($scheme == 'http' && (!empty($urls['port']) && $urls['port']!='80')){
             $refurl .= ':'.$urls['port'];
         }
-        if($urls['scheme '] == 'https' && (!empty($urls['port']) && $urls['port']!='443')){
+        if($scheme == 'https' && (!empty($urls['port']) && $urls['port']!='443')){
             $refurl .= ':'.$urls['port'];
         }
         $refurl .= '/';
     }
 }
 $context=stream_context_create([
-    'http'=>array(
+    $scheme=>array(
         'method'=>"GET",
         'header'=>"User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36\r\n".
             "Referer: $refurl\r\n"
     )
 ]);
+
+
 $data = file_get_contents($source,false, $context);
+if(strlen($data)< 50 && $scheme == 'http'){
+    $scheme = 'https';
+    $context=stream_context_create([
+        $scheme=>array(
+            'method'=>"GET",
+            'header'=>"User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36\r\n".
+                "Referer: $refurl\r\n"
+        )
+    ]);
+    $data = file_get_contents($source,false, $context);
+}
 
 if(strlen($data) > 100){
     header("Content-type: image/jpeg");
