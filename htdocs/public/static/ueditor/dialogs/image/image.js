@@ -1058,7 +1058,8 @@
                 key = $G('searchTxt').value,
                 type = $G('searchType').value,
                 keepOriginName = editor.options.keepOriginName ? "1" : "0",
-                url = "http://image.baidu.com/i?ct=201326592&cl=2&lm=-1&st=-1&tn=baiduimagejson&istype=2&rn=32&fm=index&pv=&word=" + _this.encodeToGb2312(key) + type + "&keeporiginname=" + keepOriginName + "&" + +new Date;
+                url = location.protocol+'//image.baidu.com/search/acjson?tn=resultjson_com&ipn=rj&ct=201326592&is=&fp=result&queryWord='+encodeURIComponent(key)+'&cl=2&lm=-1&ie=utf-8&oe=utf-8&adpicid=&st=-1&ic=0&hd=&latest=&copyright=&word='+encodeURIComponent(key)+type+'&se=&tab=&width=&height=&face=0&istype=2&qc=&nc=1&fr=&expermode=&force=&pn=90&rn=30&gsm=5a&'+ +new Date;
+                //url = "http://image.baidu.com/i?ct=201326592&cl=2&lm=-1&st=-1&tn=baiduimagejson&istype=2&rn=32&fm=index&pv=&word=" + _this.encodeToGb2312(key) + type + "&keeporiginname=" + keepOriginName + "&" + +new Date;
 
             $G('searchListUl').innerHTML = lang.searchLoading;
             ajax.request(url, {
@@ -1071,8 +1072,8 @@
                             if(json.data[i].objURL) {
                                 list.push({
                                     title: json.data[i].fromPageTitleEnc,
-                                    src: json.data[i].objURL,
-                                    url: json.data[i].fromURL
+                                    src: _this.baidtuUnComplie(json.data[i].objURL),
+                                    url: _this.baidtuUnComplie(json.data[i].fromURL)
                                 });
                             }
                         }
@@ -1083,6 +1084,22 @@
                     $G('searchListUl').innerHTML = lang.searchRetry;
                 }
             });
+        },
+        baidtuUnComplie: function(k) {
+            c = ['_z2C\\$q', '_z&e3B', 'AzdH3F'];
+            d = {'w' : "a", 'k' : "b", 'v' : "c", '1' : "d", 'j' : "e", 'u' : "f", '2' : "g", 'i' : "h", 't' : "i", '3' : "j", 'h' : "k", 's' : "l", '4' : "m", 'g' : "n", "5" : "o", 'r' : "p", 'q' : "q", "6" : "r", 'f' : "s", 'p' : "t", "7" : "u", 'e' : "v", 'o' : "w", "8" : "1", 'd' : "2", 'n' : "3", "9" : "4", 'c' : "5", 'm' : "6", "0" : "7", 'b' : "8", 'l' : "9", 'a' : "0", '_z2C\\$q' : ":", '_z&e3B' : ".", 'AzdH3F' : "/"};
+            if (!k || k.indexOf('http')===0) return k;
+            j = k;
+            for(var i=0;i<c.length;i++ ) {
+                var value=c[i]
+                j = j.replace(new RegExp(value,'g'), d[value]);
+            }
+            arr = j.split('');
+            for (var k in arr) {
+                var v=arr[k]
+                if (v.match(/^[a-w\d]+$/)) arr[k] = d[v];
+            }
+            return arr.join('');
         },
         /* 添加图片到列表界面上 */
         setList: function (list) {
@@ -1102,6 +1119,22 @@
                     };
                     img.width = 113;
                     img.setAttribute('src', list[i].src);
+                    img.onerror=function(){
+                        this.onerror=null;
+                        var action = editor.getActionUrl('proxy');
+                        var src=this.getAttribute('src');
+                        if(src.indexOf(action) == -1){
+                            var newsrc=editor.getActionUrl('proxy')+'&remote='+encodeURIComponent(this.getAttribute('src'))+'&referer='+encodeURIComponent(link.href);
+                            //this.setAttribute('src', newsrc);
+                            this.style.opacity=0;
+                            this.style.display='block';
+                            var p=this.parentNode;
+                            this.style.width=p.offsetWidth+'px';
+                            this.style.height=p.offsetHeight+'px';
+                            p.style.background='url('+newsrc+') center center no-repeat';
+                            p.style.backgroundSize='contain';
+                        }
+                    };
 
                     link.href = list[i].url;
                     link.target = '_blank';

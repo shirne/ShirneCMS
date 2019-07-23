@@ -5,6 +5,8 @@ date_default_timezone_set("Asia/chongqing");
 error_reporting(E_ERROR);
 header("Content-Type: text/html; charset=utf-8");
 
+define('IN_CONTROLLER',1);
+
 $CONFIG = json_decode(preg_replace("/\/\*[\s\S]+?\*\//", "", file_get_contents("config.json")), true);
 $action = $_GET['action'];
 
@@ -37,7 +39,9 @@ switch ($action) {
     case 'catchimage':
         $result = include("action_crawler.php");
         break;
-
+    case 'proxy':
+        $result = include("action_proxy.php");
+        break;
     default:
         $result = json_encode(array(
             'state'=> '请求地址出错'

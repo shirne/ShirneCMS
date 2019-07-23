@@ -5,6 +5,8 @@
  * Date: 14-04-14
  * Time: 下午19:18
  */
+!defined('IN_CONTROLLER') && exit;
+
 set_time_limit(0);
 include("Uploader.class.php");
 
