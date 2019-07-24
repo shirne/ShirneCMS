@@ -42,6 +42,7 @@ class JuheAPI extends ThirdBase
             return false;
         }
         $url = "http://{$type}.juhe.cn/{$name}";
+        $params['key']=$key;
         $content = $this->juhecurl($url,$params,$ispost);
     
         if($content){
