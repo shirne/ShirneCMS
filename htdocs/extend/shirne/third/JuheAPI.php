@@ -3,6 +3,8 @@
 
 namespace shirne\third;
 
+use shirne\common\ValidateHelper;
+
 /**
  * 聚合API接口
  * Class JuheAPI
@@ -128,15 +130,15 @@ class JuheAPI extends ThirdBase
         }
         
         //先进行格式验证
-        if(!$this->is_registration_no($regid)){
+        if(!ValidateHelper::isRegistrationNO($regid)){
             $this->set_error('注册号/统一社会信用代码格式错误');
             return false;
         }
-        if(!$this->is_truename($pername)){
+        if(!ValidateHelper::isRealname($pername)){
             $this->set_error('法人姓名必须为2-4个中文汉字');
             return false;
         }
-        if(!$this->is_idcard($regid)){
+        if(!ValidateHelper::isIdcard($regid)){
             $this->set_error('身份证号码格式错误');
             return false;
         }
@@ -187,11 +189,11 @@ class JuheAPI extends ThirdBase
         }
         
         //先进行格式验证
-        if(!$this->is_truename($realname)){
+        if(!ValidateHelper::isRealname($realname)){
             $this->set_error('姓名必须为2-4个中文汉字');
             return false;
         }
-        if(!$this->is_idcard($idcard)){
+        if(!ValidateHelper::isIdcard($idcard)){
             $this->set_error('身份证号码格式错误');
             return false;
         }
@@ -220,62 +222,6 @@ class JuheAPI extends ThirdBase
             $this->set_error('请求失败');
         }
         return false;
-    }
-    
-    
-    public function is_registration_no($regid){
-        $regx = '/(^(?:(?![IOZSV])[\dA-Z]){2}\d{6}(?:(?![IOZSV])[\dA-Z]){10}$)|(^\d{15}$)/';
-        if(!preg_match($regx, $regid))
-        {
-            return false;
-        }
-        return false;
-    }
-    
-    public function is_truename($name){
-        if (preg_match('/^([\xe4-\xe9][\x80-\xbf]{2}){2,4}$/', $name)) {
-            return true;
-        }
-        return false;
-    }
-    
-    public function is_idcard($idcard){
-        $regx = "/^\d{17}[0-9X]$/";
-        if(!preg_match($regx, $idcard))
-        {
-            return false;
-        }
-        $regx = "/^(\d{6})+(\d{4})+(\d{2})+(\d{2})+(\d{3})([0-9]|X)$/";
-        @preg_match($regx, $idcard, $arr_split);
-        $dtm_birth = $arr_split[2] . '/' . $arr_split[3]. '/' .$arr_split[4];
-        if(!strtotime($dtm_birth)) //检查生日日期是否正确
-        {
-            return false;
-        }
-        else
-        {
-            //检验18位身份证的校验码是否正确。
-            //校验位按照ISO 7064:1983.MOD 11-2的规定生成，X可以认为是数字10。
-            $arr_int = array(7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2);
-            $arr_ch = array('1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2');
-            $sign = 0;
-            for ( $i = 0; $i < 17; $i++ )
-            {
-                $b = (int) $idcard{$i};
-                $w = $arr_int[$i];
-                $sign += $b * $w;
-            }
-            $n = $sign % 11;
-            $val_num = $arr_ch[$n];
-            if ($val_num != substr($idcard,17, 1))
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
     }
     
     /**

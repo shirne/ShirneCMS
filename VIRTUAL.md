@@ -1,25 +1,28 @@
 # 虚拟主机不支持web目录之外上传文件的解决办法
 
 1. 将public目录同层的那些文件及目录，归纳到public下新建目录(如： system)
-    > 修改后的目录结构 <br />
-    ├── public                      // 网站根目录，对应虚拟主机的wwwroot或htdocs等<br />
-    │   ├── static      //网站静态文件<br />
-    │   ├── uploads                // 文件上传目录<br />
-    │   ├── system         // 系统核心文件目录<br />
-    │   │   ├──application  应用总目录<br />
-    │   │   ├──config  配置文件目录<br />
-    │   │   ├──extend  扩展类<br />
-    │   │   ├──route  路由配置目录<br />
-    │   │   ├──runtime  运行时目录缓存 ，日志等()<br />
-    │   │   ├──template  前端模板目录<br />
-    │   │   ├──thinkphp  框架目录<br />
-    │   │   ├──vender  第三方库目录<br />
-    │   ├── index.php                // 入口文件<br />
+```tree
+    // 修改后的目录结构 <br />
+    ├── public                      // 网站根目录，对应虚拟主机的wwwroot或htdocs等
+    │   ├── static                  //网站静态文件
+    │   ├── uploads                 // 文件上传目录
+    │   ├── system                  // 系统核心文件目录
+    │   │   ├──application          //应用根目录
+    │   │   ├──config               //配置文件目录
+    │   │   ├──extend               //扩展类
+    │   │   ├──route                //路由配置目录
+    │   │   ├──runtime              //运行时目录缓存 ，日志等
+    │   │   ├──template             //前端模板目录
+    │   │   ├──thinkphp             //框架目录
+    │   │   ├──vender               //第三方库目录
+    │   ├── index.php               // 入口文件
     │   ├── ...
+```
+    
 2. 修改配置文件，自动加载extend目录
     > config/app.php
     ```php
-    'root_namespace'         => [
+    'root_namespace' => [
             'extcore' => './system/extend/extcore',
             'shirne'=>'./system/extend/shirne',
         ],
