@@ -5,6 +5,7 @@
  * Date: 14-04-09
  * Time: 上午10:17
  */
+!defined('IN_CONTROLLER') && exit;
 include "Uploader.class.php";
 
 /* 上传配置 */

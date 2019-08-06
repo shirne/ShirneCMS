@@ -158,7 +158,7 @@ CREATE TABLE `sa_subscribe_email` (
 DROP TABLE IF EXISTS `sa_adv_group`;
 CREATE TABLE `sa_adv_group` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(100) DEFAULT NULL,
+  `title` varchar(100) DEFAULT '',
   `flag` varchar(50) DEFAULT '',
   `ext_set` varchar(500) DEFAULT '',
   `create_time` int(11) DEFAULT 0,
@@ -173,10 +173,10 @@ CREATE TABLE `sa_adv_group` (
 DROP TABLE IF EXISTS `sa_adv_item`;
 CREATE TABLE `sa_adv_item` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `lang` varchar(10) DEFAULT NULL COMMENT '语言',
-  `main_id` int(11) DEFAULT NULL COMMENT '主id',
-  `group_id` int(11) DEFAULT NULL COMMENT '分组ID',
-  `title` varchar(100) DEFAULT NULL,
+  `lang` varchar(10) DEFAULT '' COMMENT '语言',
+  `main_id` int(11) DEFAULT 0 COMMENT '主id',
+  `group_id` int(11) DEFAULT 0 COMMENT '分组ID',
+  `title` varchar(100) DEFAULT '',
   `image` varchar(150) DEFAULT '',
   `url` varchar(150) DEFAULT '',
   `ext_data` TEXT,
@@ -198,10 +198,10 @@ CREATE TABLE `sa_links` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `lang` varchar(10) DEFAULT NULL COMMENT '语言',
   `main_id` int(11) DEFAULT NULL COMMENT '主id',
-  `title` varchar(100) DEFAULT NULL,
+  `title` varchar(100) DEFAULT '',
   `logo` varchar(150) DEFAULT '',
-  `url` varchar(150) DEFAULT NULL,
-  `sort` int(11) DEFAULT NULL,
+  `url` varchar(150) DEFAULT '',
+  `sort` int(11) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -212,12 +212,12 @@ CREATE TABLE `sa_links` (
 DROP TABLE IF EXISTS `sa_notice`;
 CREATE TABLE `sa_notice` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `lang` varchar(10) DEFAULT NULL COMMENT '语言',
-  `main_id` int(11) DEFAULT NULL COMMENT '主id',
-  `title` varchar(100) DEFAULT NULL,
+  `lang` varchar(10) DEFAULT '' COMMENT '语言',
+  `main_id` int(11) DEFAULT 0 COMMENT '主id',
+  `title` varchar(100) DEFAULT '',
   `page` varchar(100) DEFAULT '',
-  `url` varchar(150) DEFAULT NULL,
-  `status` tinyint(4) DEFAULT NULL,
+  `url` varchar(150) DEFAULT '',
+  `status` tinyint(4) DEFAULT 0,
   `manager_id` int(11) DEFAULT '0',
   `create_time` int(11) DEFAULT '0',
   `update_time` int(11) DEFAULT '0',
@@ -233,9 +233,9 @@ CREATE TABLE `sa_notice` (
 DROP TABLE IF EXISTS `sa_o_auth`;
 CREATE TABLE `sa_o_auth` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(100) DEFAULT NULL,
-  `logo` varchar(150) DEFAULT NULL,
-  `type` varchar(20) DEFAULT NULL,
+  `title` varchar(100) DEFAULT '',
+  `logo` varchar(150) DEFAULT '',
+  `type` varchar(20) DEFAULT '',
   `appid` varchar(50) DEFAULT '',
   `appkey` varchar(50) DEFAULT '',
   `status` tinyint(4) DEFAULT 1,
@@ -249,7 +249,7 @@ CREATE TABLE `sa_o_auth` (
 DROP TABLE IF EXISTS `sa_subscribe`;
 CREATE TABLE `sa_subscribe` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `member_id` varchar(20) NOT NULL,
+  `member_id` int(10) NOT NULL DEFAULT 0,
   `type` varchar(20) NOT NULL DEFAULT 'email',
   `mobile` varchar(20) NOT NULL DEFAULT '',
   `email` varchar(100) DEFAULT '',
@@ -323,15 +323,15 @@ CREATE TABLE `sa_pay_order` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
   `member_id` INT NULL DEFAULT 0,
   `order_no` VARCHAR(30) NULL,
-  `order_type` VARCHAR(20) NULL,
-  `pay_type` VARCHAR(20) NULL,
-  `order_id` INT NULL,
-  `create_time` INT NULL,
-  `pay_time` INT NULL,
-  `pay_amount` INT NULL,
-  `status` TINYINT NULL,
-  `pay_bill` VARCHAR(40) NULL,
-  `time_end` VARCHAR(20) NULL,
+  `order_type` VARCHAR(20) '',
+  `pay_type` VARCHAR(20) NULL DEFAULT '',
+  `order_id` INT NULL DEFAULT 0,
+  `create_time` INT NULL DEFAULT 0,
+  `pay_time` INT NULL DEFAULT 0,
+  `pay_amount` INT NULL DEFAULT 0,
+  `status` TINYINT NULL DEFAULT 0,
+  `pay_bill` VARCHAR(40) NULL DEFAULT '',
+  `time_end` VARCHAR(20) NULL DEFAULT '',
   PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -340,11 +340,11 @@ DROP TABLE IF EXISTS `sa_member_freeze`;
 
 CREATE TABLE `sa_member_freeze` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `member_id` int(11) NOT NULL,
-  `award_log_id` int(11) NOT NULL,
-  `amount` int(11) DEFAULT '0' COMMENT '金额 单位分',
-  `create_time` int(11) DEFAULT NULL,
-  `freeze_time` int(11) DEFAULT NULL,
+  `member_id` int(11) NOT NULL DEFAULT 0,
+  `award_log_id` int(11) NOT NULL DEFAULT 0,
+  `amount` int(11) NOT NULL DEFAULT '0' COMMENT '金额 单位分',
+  `create_time` int(11) NOT NULL DEFAULT 0,
+  `freeze_time` int(11) NOT NULL DEFAULT 0,
   `status` TINYINT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
