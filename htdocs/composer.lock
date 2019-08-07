@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5fb4579ec171b8c8368b9650d2ccadb5",
+    "content-hash": "0c38e0e61e4944707fccbfc1cf4e03c1",
     "packages": [
         {
             "name": "aliyuncs/oss-sdk-php",
@@ -1888,16 +1888,16 @@
         },
         {
             "name": "topthink/framework",
-            "version": "v5.1.36",
+            "version": "v5.1.37.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/top-think/framework.git",
-                "reference": "135eee67ce9ee0b07da201f743d7dd88ec431abb"
+                "reference": "05eecd121d18d6705aaa10aa44fcdf7c14da4d0b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/top-think/framework/zipball/135eee67ce9ee0b07da201f743d7dd88ec431abb",
-                "reference": "135eee67ce9ee0b07da201f743d7dd88ec431abb",
+                "url": "https://api.github.com/repos/top-think/framework/zipball/05eecd121d18d6705aaa10aa44fcdf7c14da4d0b",
+                "reference": "05eecd121d18d6705aaa10aa44fcdf7c14da4d0b",
                 "shasum": ""
             },
             "require": {
@@ -1935,7 +1935,7 @@
                 "orm",
                 "thinkphp"
             ],
-            "time": "2019-04-28T08:56:58+00:00"
+            "time": "2019-05-28T06:57:29+00:00"
         },
         {
             "name": "topthink/think-captcha",
@@ -2101,7 +2101,12 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.6.0"
+        "php": ">=5.6.0",
+        "ext-pdo": "*",
+        "ext-json": "*",
+        "ext-gd": "*",
+        "ext-curl": "*",
+        "ext-fileinfo": "*"
     },
     "platform-dev": []
 }
