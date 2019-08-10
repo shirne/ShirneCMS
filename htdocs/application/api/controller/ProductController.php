@@ -19,7 +19,7 @@ class ProductController extends BaseController
         return $this->response(ProductCategoryFacade::getTreedCategory());
     }
 
-    public function get_cates($pid=0){
+    public function get_cates($pid=0, $goods_count=0){
         if($pid!=0 && preg_match('/^[a-zA-Z]\w+/',$pid)){
             $current=ProductCategoryFacade::findCategory($pid);
             if(empty($current)){
@@ -27,26 +27,37 @@ class ProductController extends BaseController
             }
             $pid=$current['id'];
         }
-        return $this->response(ProductCategoryFacade::getSubCategory($pid));
+        $cates = ProductCategoryFacade::getSubCategory($pid);
+        if($goods_count > 0){
+            $product = ProductModel::getInstance();
+            foreach($cates as &$cate){
+                $cate['products']=$product->tagList([
+                    'category'=>$cate['id'],
+                    'recursive'=>1,
+                    'limit'=>$goods_count
+                ]);
+            }
+            unset($cate);
+        }
+        return $this->response($cates);
     }
 
-    public function get_list($cate='',$page=1){
-        $model=Db::view('product','*')
-            ->view('productCategory',['name'=>'category_name','title'=>'category_title'],'product.cate_id=productCategory.id','LEFT');
-
-        $model->where('product.status',1);
+    public function get_list($cate='',$order='',$keyword='',$page=1, $pagesize=10){
+        $condition=[];
         if($cate){
-            $category=ProductCategoryFacade::findCategory($cate);
-            $model->whereIn('product.cate_id',ProductCategoryFacade::getSubCateIds($category['id']));
+            $condition['category']=$cate;
+            $condition['recursive']=1;
         }
-        $lists = $model->paginate(10);
-        $lists->each(function($item){
-            if(!empty($item['prop_data'])){
-                $item['prop_data']=json_decode($item['prop_data'],true);
-            }
-            $item['prop_data']=[];
-            return $item;
-        });
+        if(!empty($order)){
+            $condition['order']=$order;
+        }
+        if(!empty($keyword)){
+            $condition['keyword']=$keyword;
+        }
+        $condition['page']=$page;
+        $condition['pagesize']=$pagesize;
+        
+        $lists = ProductModel::getInstance()->tagList($condition, true);
 
         return $this->response([
             'lists'=>$lists->items(),

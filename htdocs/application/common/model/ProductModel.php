@@ -18,6 +18,7 @@ class ProductModel extends ContentModel
     {
         parent::__construct($data);
         $this->cateFacade=ProductCategoryFacade::getFacadeInstance();
+        $this->searchFields = 'title|vice_title|goods_no';
     }
 
     private static $specifications;

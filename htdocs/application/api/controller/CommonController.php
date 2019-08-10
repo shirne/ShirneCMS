@@ -76,10 +76,11 @@ class CommonController extends BaseController
                         }elseif($this->request->has($param->name,'get')){
                             $args[]=$this->request->get($param->name);
                         }else{
-                            break;
+                            $args[]=$param->getDefaultValue();
                         }
                     }
-                    $response = call_user_func_array([$controller, $m],$args);
+                    //call_user_func_array([$controller, $m],$args);
+                    $response = $reflect->invokeArgs($controller, $args);
                     $curData = $response->getData();
                     $data[$method] =$curData['data'];
                 }

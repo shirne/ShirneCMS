@@ -4,6 +4,7 @@ namespace app\common\model;
 
 use app\common\facade\CategoryFacade;
 use think\Db;
+use think\Paginator;
 
 /**
  * Class ContentModel
@@ -13,6 +14,9 @@ class ContentModel extends BaseModel
 {
     protected $model;
     protected $cateModel;
+    protected $searchFields='title';
+    protected $hiddenFields='content';
+    private $transedSearchFields='';
     protected $defaultOrder='id DESC';
 
     /**
@@ -20,11 +24,22 @@ class ContentModel extends BaseModel
      */
     protected $cateFacade;
 
-    protected function tagBase()
+    protected function tagBase($hidden=null)
     {
         $this->model=ucfirst($this->name);
         $this->cateModel=($this->model=='Article'?'':$this->model).'Category';
-        return Db::view($this->model,'*')
+        if(is_null($hidden )){
+            $hidden = $this->hiddenFields;
+        }
+        $fields = '*';
+        if(!empty($hidden)){
+            $fields = $this->getTableFields();
+            if(!empty($fields)){
+                $hiddens = explode(',',$hidden);
+                $fields = array_diff($fields,$hiddens);
+            }
+        }
+        return Db::view($this->model,$fields)
             ->view($this->cateModel,
                 ["title"=>"category_title","name"=>"category_name","short"=>"category_short","icon"=>"category_icon","image"=>"category_image"],
                 $this->model.".cate_id=".$this->cateModel.".id",
@@ -32,10 +47,60 @@ class ContentModel extends BaseModel
             )
             ->where($this->model.".status",1);
     }
-
-    public function tagList($attrs)
+    
+    protected function analysisType($list, $islist=true){
+        if($this->type){
+            if($islist) {
+                if($list instanceof Paginator){
+                    $list->each(function($item){
+                        return $this->analysisType($item, false);
+                    });
+                }else {
+                    foreach ($list as $k => $item) {
+                        $list[$k] = $this->analysisType($item, false);
+                    }
+                }
+            }else{
+                foreach ($this->type as $f => $type) {
+                    $list[$f] = $this->readTransform($list[$f],$type);
+                }
+            }
+        }
+        return $list;
+    }
+    
+    protected function filterOrder($order){
+        if(strpos($order,'(')!==false){
+            $order = str_replace(str_split('()+-/*@#%!`~'),'',$order);
+        }
+        if(strpos($order,'__RAND__')!==false){
+            $order = str_replace('__RAND__','rand()',$order);
+        }
+        return $order;
+    }
+    
+    protected function getSearchFields(){
+        if($this->transedSearchFields)return $this->transedSearchFields;
+        $fields = explode('|',$this->searchFields);
+        foreach ($fields as $k=>$field){
+            if(strpos($field,'.')===false){
+                $fields[$k] = $this->model.'.'.$field;
+            }
+        }
+        $this->transedSearchFields = implode('|',$fields);
+        return $this->transedSearchFields;
+    }
+    
+    /**
+     * @param $attrs
+     * @return array|Paginator
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function tagList($attrs, $filter=false)
     {
-        $model=$this->tagBase();
+        $model=$this->tagBase($attrs['hidden']);
         if(!empty($attrs['category'])){
             $cate_id=$attrs['category'];
             if(!is_int($cate_id)){
@@ -46,6 +111,9 @@ class ContentModel extends BaseModel
             }else{
                 $model->where($this->model.".cate_id",$cate_id);
             }
+        }
+        if(!empty($attrs['keyword'])){
+            $model->whereLike($this->getSearchFields(),"%{$attrs['keyword']}%");
         }
         if(!empty($attrs['brand'])){
             if(strpos($attrs['brand'],',')>0){
@@ -71,24 +139,38 @@ class ContentModel extends BaseModel
 
         if(empty($attrs['order'])){
             $attrs['order']=$this->model.'.'.$this->defaultOrder;
-        }elseif( strpos($attrs['order'],'()')!==false){
-            $attrs['order'] = Db::raw($attrs['order']);
-        }elseif(strpos($attrs['order'],'.')===false){
-            $attrs['order'] = $this->model.'.'.$attrs['order'];
+        }else {
+            if($filter){
+                $attrs['order']=$this->filterOrder($attrs['order']);
+            }
+            if (strpos($attrs['order'], '(') !== false) {
+                $attrs['order'] = Db::raw($attrs['order']);
+            } elseif (strpos($attrs['order'], '.') === false) {
+                $attrs['order'] = $this->model . '.' . $attrs['order'];
+            }
         }
         $model->order($attrs['order']);
         
-        if(empty($attrs['limit'])){
-            $attrs['limit']=10;
+        if($attrs['page']){
+            $page = max(1,intval($attrs['page']));
+            $pagesize = isset($attrs['pagesize'])?intval($attrs['pagesize']):10;
+            if($pagesize<1)$pagesize=1;
+            $list = $model->paginate($pagesize,false,['page'=>$page]);
+        }else {
+            if (empty($attrs['limit'])) {
+                $attrs['limit'] = 10;
+            }
+            $model->limit($attrs['limit']);
+    
+            $list = $model->select();
         }
-        $model->limit($attrs['limit']);
-
-        return $model->select();
+        
+        return $this->analysisType($list);
     }
 
-    public function tagRelation($attrs)
+    public function tagRelation($attrs, $filter=false)
     {
-        $model=$this->tagBase();
+        $model=$this->tagBase($attrs['hidden']);
         if(!empty($attrs['category'])){
             $cate_id=$attrs['category'];
             if(!is_int($cate_id)){
@@ -107,10 +189,15 @@ class ContentModel extends BaseModel
         }
         if(empty($attrs['order'])){
             $attrs['order']=$this->model.'.'.$this->defaultOrder;
-        }elseif( strpos($attrs['order'],'()')!==false){
-            $attrs['order'] = Db::raw($attrs['order']);
-        }elseif(strpos($attrs['order'],'.')===false){
-            $attrs['order'] = $this->model.'.'.$attrs['order'];
+        }else {
+            if($filter){
+                $attrs['order']=$this->filterOrder($attrs['order']);
+            }
+            if (strpos($attrs['order'], '(') !== false) {
+                $attrs['order'] = Db::raw($attrs['order']);
+            } elseif (strpos($attrs['order'], '.') === false) {
+                $attrs['order'] = $this->model . '.' . $attrs['order'];
+            }
         }
         $model->order($attrs['order']);
 
@@ -118,13 +205,15 @@ class ContentModel extends BaseModel
             $attrs['limit']=10;
         }
         $model->limit($attrs['limit']);
-
-        return $model->select();
+    
+        $list = $model->select();
+    
+        return $this->analysisType($list);
     }
 
     public function tagPrev($attrs)
     {
-        $model=$this->tagBase();
+        $model=$this->tagBase($attrs['hidden']);
         if(!empty($attrs['category'])){
             $cate_id=$attrs['category'];
             if(!is_int($cate_id)){
@@ -144,12 +233,12 @@ class ContentModel extends BaseModel
 
         $model->order($this->model.'.'.$this->getPk().' DESC');
 
-        return $model->find();
+        return $this->analysisType($model->find(),false);
     }
 
     public function tagNext($attrs)
     {
-        $model=$this->tagBase();
+        $model=$this->tagBase($attrs['hidden']);
         if(!empty($attrs['category'])){
             $cate_id=$attrs['category'];
             if(!is_int($cate_id)){
@@ -169,6 +258,6 @@ class ContentModel extends BaseModel
 
         $model->order($this->model.'.'.$this->getPk().' ASC');
 
-        return $model->find();
+        return $this->analysisType($model->find(),false);
     }
 }

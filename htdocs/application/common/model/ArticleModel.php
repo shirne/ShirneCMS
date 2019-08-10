@@ -16,5 +16,6 @@ class ArticleModel extends ContentModel
     {
         parent::__construct($data);
         $this->cateFacade=CategoryFacade::getFacadeInstance();
+        $this->searchFields = 'title|vice_title|description';
     }
 }

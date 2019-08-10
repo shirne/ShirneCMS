@@ -20,7 +20,7 @@ class ArticleController extends BaseController
         return $this->response(CategoryFacade::getTreedCategory());
     }
 
-    public function get_cates($pid=0){
+    public function get_cates($pid=0, $list_count=0){
         if($pid != '0' && preg_match('/^[a-zA-Z]\w+$/',$pid)){
             $current=CategoryFacade::findCategory($pid);
             if(empty($current)){
@@ -28,28 +28,40 @@ class ArticleController extends BaseController
             }
             $pid=$current['id'];
         }
-        return $this->response(CategoryFacade::getSubCategory($pid));
+        $cates = CategoryFacade::getSubCategory($pid);
+        if($list_count > 0){
+            $product = ArticleModel::getInstance();
+            foreach($cates as &$cate){
+                $cate['products']=$product->tagList([
+                    'category'=>$cate['id'],
+                    'recursive'=>1,
+                    'limit'=>$list_count
+                ]);
+            }
+            unset($cate);
+        }
+        return $this->response($cates);
     }
 
-    public function get_list($cate=''){
-        $model=Db::view('article','*')
-            ->view('category',['name'=>'category_name','title'=>'category_title'],'article.cate_id=category.id','LEFT')
-            ->view('manager',['username'],'manager.id=article.user_id','LEFT');
-
-        $model->where('article.status',1);
-        $category=null;
+    public function get_list($cate='',$order='',$keyword='',$page=1, $pagesize=10){
+    
+        $condition=[];
         if($cate){
-            $category=CategoryFacade::findCategory($cate);
-            $model->whereIn('cate_id',CategoryFacade::getSubCateIds($category['id']));
+            $condition['category']=$cate;
+            $condition['recursive']=1;
         }
-        $lists = $model->paginate(10);
-        $lists->each(function($item){
-            if(!empty($item['prop_data'])){
-                $item['prop_data']=json_decode($item['prop_data'],true);
-            }
-            $item['prop_data']=[];
-            return $item;
-        });
+        if(!empty($order)){
+            $condition['order']=$order;
+        }
+        if(!empty($keyword)){
+            $condition['keyword']=$keyword;
+        }
+        $condition['page']=$page;
+        $condition['pagesize']=$pagesize;
+    
+        $lists = ArticleModel::getInstance()->tagList($condition, true);
+        $category=CategoryFacade::findCategory($cate);
+        
         return $this->response([
             'lists'=>$lists->items(),
             'category'=>$category?:[],
