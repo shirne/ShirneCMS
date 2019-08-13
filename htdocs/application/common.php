@@ -49,7 +49,7 @@ function media($src,$width='',$height='',$quality=70){
  * @return string
  */
 function local_media($src){
-    if(strpos($src,'/'===0)){
+    if(strpos($src,'/')===0 || strpos($src,'://')===false){
         return url('/','',false,true).$src;
     }
     return $src;

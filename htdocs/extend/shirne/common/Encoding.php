@@ -13,37 +13,37 @@ class Encoding
     const UTF8_BOM = chr(0xEF) . chr(0xBB) . chr(0xBF);
     
 
-    public function detect($string)
+    public static function detect($string)
     {
         $encoding=mb_detect_encoding($string);
         if($encoding === false){
-            $encoding=$this->_detect_utf_encoding($string);
+            $encoding=self::_detect_utf_encoding($string);
         }
         return $encoding;
     }
-    private function _detect_utf_encoding($text) {
+    private static function _detect_utf_encoding($text) {
         $first2 = substr($text, 0, 2);
         $first3 = substr($text, 0, 3);
         $first4 = substr($text, 0, 3);
        
-        if ($first3 == UTF8_BOM)
+        if ($first3 == self::UTF8_BOM)
             return 'UTF-8';
-        elseif ($first4 == UTF32_BIG_ENDIAN_BOM)
+        elseif ($first4 == self::UTF32_BIG_ENDIAN_BOM)
             return 'UTF-32BE';
-        elseif ($first4 == UTF32_LITTLE_ENDIAN_BOM)
+        elseif ($first4 == self::UTF32_LITTLE_ENDIAN_BOM)
             return 'UTF-32LE';
-        elseif ($first2 == UTF16_BIG_ENDIAN_BOM)
+        elseif ($first2 == self::UTF16_BIG_ENDIAN_BOM)
             return 'UTF-16BE';
-        elseif ($first2 == UTF16_LITTLE_ENDIAN_BOM)
+        elseif ($first2 == self::UTF16_LITTLE_ENDIAN_BOM)
             return 'UTF-16LE';
 
         return false;
     }
 
-    public function convert2utf8($string)
+    public static function convert2utf8($string)
     {
         //检测并转换编码
-        $encode = $this->detect($string);
+        $encode = self::detect($string);
         if($encode === false){
             throw new Exception('detect encoding failed');
         }

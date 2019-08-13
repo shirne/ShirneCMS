@@ -324,7 +324,9 @@ CREATE TABLE `sa_pay_order` (
   `member_id` INT NULL DEFAULT 0,
   `order_no` VARCHAR(30) NULL,
   `order_type` VARCHAR(20) '',
+  `pay_data` TEXT,
   `pay_type` VARCHAR(20) NULL DEFAULT '',
+  `trade_type` VARCHAR(20) NULL DEFAULT '' COMMENT '交易类型',
   `order_id` INT NULL DEFAULT 0,
   `create_time` INT NULL DEFAULT 0,
   `pay_time` INT NULL DEFAULT 0,
@@ -332,9 +334,26 @@ CREATE TABLE `sa_pay_order` (
   `status` TINYINT NULL DEFAULT 0,
   `pay_bill` VARCHAR(40) NULL DEFAULT '',
   `time_end` VARCHAR(20) NULL DEFAULT '',
+  `is_refund` TINYINT NULL DEFAULT 0 COMMENT '是否退款',
+  `refund_fee` DECIMAL(10,2) NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `sa_pay_order_refund` (
+ `id` INT NOT NULL AUTO_INCREMENT,
+ `member_id` int(10) unsigned NOT NULL,
+ `order_id` int(10) unsigned NOT NULL,
+ `refund_no` VARCHAR(20) NOT NULL,
+ `refund_fee` DECIMAL(10,2) NULL DEFAULT 0,
+ `status` TINYINT NULL DEFAULT 0 COMMENT '状态 0-未退款 1- 退款中 2- 已退款',
+ `reason` VARCHAR(50) NOT NULL,
+ `refund_result` VARCHAR(50) NOT NULL,
+ `refund_time` INT NULL DEFAULT 0,
+ `create_time` INT NULL DEFAULT 0,
+ `update_time` INT NULL DEFAULT 0,
+ PRIMARY KEY (`id`),
+ UNIQUE KEY `refund_no`(`refund_no`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT = '订单退款记录';
 
 DROP TABLE IF EXISTS `sa_member_freeze`;
 

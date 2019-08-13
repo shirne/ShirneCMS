@@ -49,12 +49,12 @@
     });
     wx.ready(function () {
         var version= '1.3.2';
-        var logo_img='{:local_media('static/images/share_logo.jpg')}';
+        var logo_img="{:local_media($config['site-weblogo']?:'/static/images/share_logo.jpg')}";
         var share_imgUrl= window.share_imgurl?window.share_imgurl: logo_img;
         var share_title = '{$title}';
         var share_desc = '{$description}';
         var share_url = window.location.href;
-        var agent_code='{$isLogin && $user['is_agent']?$user['agentcode']:''}';
+        var agent_code="{$isLogin && $user['is_agent']?$user['agentcode']:''}";
         var shareimg=new Image();
         shareimg.src = share_imgUrl;
         if(agent_code){

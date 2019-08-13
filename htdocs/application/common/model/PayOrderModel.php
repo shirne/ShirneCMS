@@ -13,6 +13,7 @@ class PayOrderModel extends BaseModel
 {
     public const PAY_TYPE_WECHAT='wechat';
     public const PAY_TYPE_ALIPAY='alipay';
+    protected $type = ['pay_data'=>'array'];
 
     private static function create_no(){
         $maxid=Db::name('payOrder')->max('id');
@@ -33,7 +34,7 @@ class PayOrderModel extends BaseModel
      * @param $member_id int 会员id
      * @return static
      */
-    public static function createOrder($paytype,$type,$order_id,$amount,$member_id){
+    public static function createOrder($paytype,$type,$order_id,$amount,$member_id,$data=[]){
         return static::create([
             'member_id'=>$member_id,
             'pay_type'=>$paytype,
@@ -41,6 +42,7 @@ class PayOrderModel extends BaseModel
             'order_type'=>$type,
             'order_id'=>$order_id,
             'create_time'=>time(),
+            'pay_data'=>$data,
             'pay_amount'=>$amount*100
         ]);
     }
