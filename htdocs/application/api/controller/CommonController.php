@@ -54,7 +54,11 @@ class CommonController extends BaseController
         }else{
 
             foreach ($this->input as $method=>$arguments) {
-                $m = explode('.', $method);
+
+                if(isset($arguments['call']))$calls=$arguments['call'];
+                else $calls=$method;
+
+                $m = explode('.', $calls);
                 if (count($m) > 1) {
                     if(strtolower($m[0])=='common'){
                         $controller = $this;

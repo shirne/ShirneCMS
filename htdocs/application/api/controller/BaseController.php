@@ -39,24 +39,9 @@ class BaseController extends Controller
         parent::initialize();
         $this->config=getSettings();
 
-        /*$format=$this->request->get('format','json');
-        $data=file_get_contents('php://input');
-        if(!empty($data)) {
-            if ($format == 'xml') {
-                $data=simplexml_load_string($data, 'SimpleXMLElement', LIBXML_NOCDATA);
-                if($data)$data = json_encode($data);
-            }
-            if (!empty($data)) {
-                $this->input = json_decode($data, TRUE);
-            }
-            if(!is_array($this->input)){
-                $this->input=array();
-            }
-        }*/
         $this->input=$this->request->put();
 
         $this->checkLogin();
-
     }
     
     /**
