@@ -1,13 +1,13 @@
 
 INSERT INTO `sa_permission` (`id`, `parent_id`,`name`, `url`,`key`, `icon`, `sort_id`, `disable`)
 VALUES
-  (6,0,'商城','','Shop','ion-md-cart',2,0),
-  (61,6,'分类管理','ProductCategory/index','product_category_index','ion-md-medical',0,0),
-  (62,6,'品牌管理','ProductBrand/index','product_brand_index','ion-md-bookmark',0,0),
-  (63,6,'商品管理','Product/index','product_index','ion-md-gift',0,0),
-  (64,6,'优惠券管理','ProductCoupon/index','product_coupon_index','ion-md-pricetags',0,0),
-  (65,6,'订单管理','Order/index','order_index','ion-md-list-box',0,0),
-  (66,6,'订单统计','OrderStatics/index','order_statics_index','ion-md-stats',0,0);
+  (3,0,'商城','','Shop','ion-md-cart',2,0),
+  (31,3,'分类管理','ProductCategory/index','product_category_index','ion-md-medical',0,0),
+  (32,3,'品牌管理','ProductBrand/index','product_brand_index','ion-md-bookmark',0,0),
+  (33,3,'商品管理','Product/index','product_index','ion-md-gift',0,0),
+  (34,3,'优惠券管理','ProductCoupon/index','product_coupon_index','ion-md-pricetags',0,0),
+  (35,3,'订单管理','Order/index','order_index','ion-md-list-box',0,0),
+  (36,3,'订单统计','OrderStatics/index','order_statics_index','ion-md-stats',0,0);
 
 DROP TABLE IF EXISTS `sa_member_cart`;
 
