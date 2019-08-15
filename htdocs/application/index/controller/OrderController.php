@@ -133,9 +133,12 @@ class OrderController extends AuthedController
                 $order['payamount'] = $order['amount'] * .01;
                 $order['order_no'] = 'CZ_' . str_pad($order['id'], 6, '0', STR_PAD_LEFT);
             }
+        }elseif(strpos($order_id,'PO_')===0){
+            $ordertype = 'credit';
+            $order_id = intval(substr($order_id, 3));
+            $order = CreditOrderModel::get($order_id);
         }else {
             $order = OrderModel::get($order_id);
-
         }
 
         if(empty($order) || $order['status']!=0){

@@ -57,11 +57,10 @@ class CreditOrderModel extends BaseModel
      * @param $paycredit
      * @param $remark
      * @param $balance_pay
-     * @param $ordertype
      * @return mixed
      */
 
-    public function makeOrder($member,$goodss,$address,$paycredit,$remark,$balance_pay=1,$ordertype=1){
+    public function makeOrder($member,$goodss,$address,$paycredit,$remark,$balance_pay=1){
 
         //status 0-待付款 1-已付款
         $status=0;
@@ -101,6 +100,7 @@ class CreditOrderModel extends BaseModel
                 if ($debit) $status = 1;
                 else {
                     $this->error = "余额不足";
+                    $this->rollback();
                     return false;
                 }
             }

@@ -58,6 +58,12 @@ class PayOrderModel extends BaseModel
                         'audit_time'=>$item['pay_time']
                     ],['id'=>$item['order_id']]);
                     break;
+                case 'credit':
+                    CreditOrderModel::updateStatus([
+                        'status'=>1,
+                        'pay_time'=>$item['pay_time']
+                    ],['id'=>$item['order_id']]);
+                    break;
                 default:
                     OrderModel::update([
                         'status'=>1,
