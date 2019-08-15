@@ -131,6 +131,7 @@ class ProductController extends BaseController
                 $skus=$data['skus'];
                 $data['max_price']=array_max($skus,'price');
                 $data['min_price']=array_min($skus,'price');
+                $data['market_price']=array_max($skus,'market_price');
                 $data['storage']=array_sum(array_column($skus,'storage'));
                 if(empty($data['levels']))$data['levels']=[];
                 if(!empty($data['prop_data'])){
@@ -214,6 +215,7 @@ class ProductController extends BaseController
                 }
                 $data['max_price']=array_max($skus,'price');
                 $data['min_price']=array_min($skus,'price');
+                $data['market_price']=array_max($skus,'market_price');
                 $data['storage']=array_sum(array_column($skus,'storage'));
                 if ($model->allowField(true)->save($data)) {
                     //不删除图片，可能会导致订单数据图片不显示
@@ -310,12 +312,12 @@ class ProductController extends BaseController
         $result = Db::name('product')->where('id','in',idArr($id))->update($data);
         if ($result && $data['status'] === 1) {
             user_log($this->mid,'pushproduct',1,'上架商品 '.$id ,'manager');
-            $this -> success("上架成功", url('Product/index'));
+            $this->success("上架成功", url('Product/index'));
         } elseif ($result && $data['status'] === 0) {
             user_log($this->mid,'cancelproduct',1,'下架商品 '.$id ,'manager');
-            $this -> success("下架成功", url('Product/index'));
+            $this->success("下架成功", url('Product/index'));
         } else {
-            $this -> error("操作失败");
+            $this->error("操作失败");
         }
     }
 

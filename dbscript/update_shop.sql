@@ -136,6 +136,7 @@ CREATE TABLE `sa_product` (
   `prop_data` text,
   `max_price` DECIMAL(10,2) DEFAULT 0 COMMENT '最高价格',
   `min_price` DECIMAL(10,2) DEFAULT 0 COMMENT '最低价格',
+  `market_price` DECIMAL(10,2) DEFAULT 0 COMMENT '市场价格',
   `content` text,
   `create_time` int(11) DEFAULT '0',
   `update_time` int(11) DEFAULT '0',

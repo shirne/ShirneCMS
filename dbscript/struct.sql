@@ -269,6 +269,7 @@ DROP TABLE IF EXISTS `sa_member`;
 CREATE TABLE `sa_member` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(50) NOT NULL,
+  `nickname` varchar(50) NOT NULL DEFAULT '',
   `realname` varchar(50) NOT NULL DEFAULT '',
   `level_id` int(11) DEFAULT '0',
   `lang` varchar(10) DEFAULT NULL COMMENT '语言',
