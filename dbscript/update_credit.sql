@@ -4,7 +4,8 @@ VALUES
   (4,0,'积分商城','','CreditShop','ion-md-cart',2,0),
   (41,4,'分类管理','GoodsCategory/index','goods_category_index','ion-md-medical',0,0),
   (42,4,'商品管理','Goods/index','goods_index','ion-md-gift',0,0),
-  (43,4,'订单管理','CreditOrder/index','credit_order_index','ion-md-list-box',0,0);
+  (43,4,'积分策略','CreditPromotion/index','credit_promotion_index','ion-md-cog',0,0),
+  (44,4,'订单管理','CreditOrder/index','credit_order_index','ion-md-list-box',0,0);
 
 DROP TABLE IF EXISTS `sa_credit_promotion`;
 
