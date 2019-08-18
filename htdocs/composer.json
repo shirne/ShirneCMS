@@ -16,7 +16,7 @@
         }
     ],
     "require": {
-        "php": ">=5.6.0",
+        "php": ">=5.6.0 <7.2.0",
         "ext-pdo":"*",
         "ext-json":"*",
         "ext-gd":"*",
@@ -27,7 +27,7 @@
         "topthink/think-image": "^1.0",
         "topthink/think-helper": "^1.0",
         "endroid/qr-code": "^2.5",
-        "phpoffice/phpspreadsheet": "^1.2",
+        "phpoffice/phpspreadsheet": "^1.8",
         "phpmailer/phpmailer": "^6.0",
         "overtrue/wechat": "^4.0",
         "aliyuncs/oss-sdk-php": "^2.3"
