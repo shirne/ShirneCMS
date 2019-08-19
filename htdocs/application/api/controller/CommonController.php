@@ -2,6 +2,7 @@
 
 namespace app\api\Controller;
 use app\common\model\AdvGroupModel;
+use app\common\model\MemberSignModel;
 use think\Container;
 use think\Response;
 
@@ -113,5 +114,12 @@ class CommonController extends BaseController
             }
         }
         return $this->response($data);
+    }
+    
+    public function signrank($date=0){
+        if(!$date)$time = time();
+        else $time = strtotime($date);
+        $ranking=MemberSignModel::getInstance()->getSignRank($time);
+        return $this->response($ranking);
     }
 }
