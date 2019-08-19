@@ -7,7 +7,25 @@ use think\Db;
 
 class MemberFavouriteModel extends BaseModel
 {
+    const TYPE_PRODUCT='product';
+    const TYPE_ARTICLE='article';
+
     protected $autoWriteTimestamp = true;
+
+    public function getFavourites($type)
+    {
+        $model = Db::view('memberFavourite','*');
+        if($type == TYPE_PRODUCT){
+            $model->view('product','title,image,min_price,max_price')
+            ->where('memberFavourite.fav_type',$type);
+        }elseif($type == TYPE_ARTICLE){
+            $model->view('product','title,image,min_price,max_price')
+            ->where('memberFavourite.fav_type',$type);
+        }else{
+
+        }
+        return $model->paginate();
+    }
 
     public function isFavourite($member_id,$type,$id){
         return Db::name('memberFavourite')

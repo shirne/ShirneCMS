@@ -11,9 +11,7 @@ namespace app\index\controller;
 
 use app\common\facade\CreditOrderFacade;
 use app\common\model\CreditOrderModel;
-use app\common\model\OrderModel;
 use app\common\validate\OrderValidate;
-use EasyWeChat\Factory;
 use think\Db;
 
 class CreditOrderController extends AuthedController

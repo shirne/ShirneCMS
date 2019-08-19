@@ -213,7 +213,8 @@ class MemberController extends AuthedController
     }
 
     public function favourite($type){
-
+        $model=new MemberFavouriteModel();
+        $this->response($model->getFavourites($type));
     }
 
     public function add_favourite($type,$id){
@@ -222,7 +223,6 @@ class MemberController extends AuthedController
             $this->success('已添加收藏');
         }else{
             $this->error($model->getError());
-
         }
     }
 
