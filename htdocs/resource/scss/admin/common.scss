@@ -546,7 +546,7 @@ table {
 
       &.active {
         background-color: #000;
-
+        border-left:2px #007bff solid;
       }
       &.active:after{
         content:"";
@@ -835,6 +835,20 @@ table {
   #loginContainer {
     margin-top: 50px;
     padding-top: 120px;
+  }
+
+  .navbar.fixed-top{
+    padding:0 1rem;
+    line-height:2.5em;
+    .dropdown-menu{
+      line-height:1.5em;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      border-top:2px #007bff solid;
+    }
+    .side-nav{
+      line-height:1.5em;
+    }
   }
 
   .tab-container {

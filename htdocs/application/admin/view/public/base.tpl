@@ -54,7 +54,7 @@
     <!-- Sidebar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" role="navigation">
 
-        <a class="navbar-brand" href="{:url('index/index')}">{:lang('Management')}</a>
+        <a class="navbar-brand text-light" href="{:url('index/index')}"><i class="ion-md-speedometer"></i> {:lang('Management')}</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -64,7 +64,12 @@
             <include file="public/sidebar" />
 
             <div class="nav navbar-nav navbar-user">
-
+                <li class="dropdown user-dropdown">
+                    <a href="javascript:" class="nav-link" data-toggle="dropdown"><i class="ion-md-notifications"></i></a>
+                    <div class="dropdown-menu">
+                        <span class="dropdown-item">暂无提醒</span>
+                    </div>
+                </li>
                 <li class="dropdown user-dropdown">
                     <a href="javascript:" class="nav-link dropdown-toggle" data-toggle="dropdown"><i class="ion-md-person"></i> {:lang('Welcome %s',[session('adminname')])} <b class="caret"></b></a>
                     <div class="dropdown-menu">
