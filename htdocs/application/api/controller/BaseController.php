@@ -113,7 +113,7 @@ class BaseController extends Controller
      * @return \think\response\Json
      */
     protected function response($data,$code=1,$msg = ''){
-
+        
         return json([
             'code' => $code,
             'msg'  => $msg,

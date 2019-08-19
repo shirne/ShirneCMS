@@ -13,7 +13,9 @@ use think\Db;
 class CartController extends AuthedController
 {
     public function getall(){
-        return $this->response(MemberCartFacade::getCart($this->user['id']));
+        $list = MemberCartFacade::getCart($this->user['id']);
+        $list = empty2null($list,'spec_data,specs');
+        return $this->response($list);
     }
 
     public function getcount(){
