@@ -40,10 +40,14 @@ ShirneCMS
 - [x] 购物车
 - [x] SKU管理
 - [x] 订单管理……需优化流程
-- [x] 商品品牌p……测试中
+- [x] 商品品牌
 - [x] 优惠券……开发中
 - [ ] 邮费模板
 - [ ] 促销功能
+
+### 其它功能
+- [x] 积分商城……测试中
+- [x] 会员签到……测试中
 
 ### 多语言支持
 - [x] 前台多语言切换逻辑
@@ -100,7 +104,9 @@ cnpm install<br />
 >scripts/struct.sql 数据表结构<br />
 scripts/init.sql 初始数据<br />
 scripts/update_shop.sql 商城模块<br />
-scripts/update_wechat.sql 微信模块
+scripts/update_credit.sql 积分商城<br />
+scripts/update_wechat.sql 微信模块<br />
+scripts/update_sign.sql 会员签到
 
 项目目录
 
