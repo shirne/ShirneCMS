@@ -3,6 +3,7 @@
 namespace app\common\model;
 
 use app\common\facade\CategoryFacade;
+use PHPMailer\PHPMailer\Exception;
 use think\Db;
 use think\Paginator;
 
@@ -18,6 +19,18 @@ class ContentModel extends BaseModel
     protected $hiddenFields='content';
     private $transedSearchFields='';
     protected $defaultOrder='id DESC';
+
+    public function setTypeAttr($value)
+    {
+        if(is_array($value)){
+            $result=0;
+            foreach($value as $val){
+                $result = $result | $val;
+            }
+            return $result;
+        }
+        return intval($value);
+    }
 
     /**
      * @var $cateFacade CategoryModel
@@ -91,6 +104,18 @@ class ContentModel extends BaseModel
         return $this->transedSearchFields;
     }
     
+
+    public function isType($flag, $type = -1)
+    {
+        if($type < 0){
+            if($this->isEmpty()){
+                throw new Exception('Need argument $type');
+            }
+            $type = $this['type'];
+        }
+        return $type & $flag === $flag;
+    }
+
     /**
      * @param $attrs
      * @return array|Paginator
@@ -123,12 +148,12 @@ class ContentModel extends BaseModel
             }
         }
         if(!empty($attrs['type'])){
-            if(strpos($attrs['type'],',')!==false){
-                $types=array_filter(array_map('trim',explode(',',$attrs['type'])));
-                if(!empty($types))$model->whereIn($this->model.".type",$types);
-            }else{
-                $model->where($this->model.".type",$attrs['type']);
+            $typeint=0;
+            $types=array_filter(array_map('trim',explode(',',$attrs['type'])));
+            foreach($types as $type){
+                $typeint = $typeint|$type;
             }
+            $model->where(Db::raw($this->model.".`type` & ".$typeint.' = '.$typeint));
         }
         if(!empty($attrs['cover'])){
             $model->where($this->model.".cover","<>","");

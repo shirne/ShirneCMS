@@ -12,6 +12,13 @@
 // 应用公共文件
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
+define('ART_TYPE_NORMAL',1);
+define('ART_TYPE_TOP',2);
+define('ART_TYPE_HOT',4);
+define('ART_TYPE_RECOMMEND',8);
+
+define('PRO_TYPE_NORMAL',1);
+
 function writelog($message,$type=\think\Log::INFO){
     if(config('app_debug')==true){
         \think\facade\Log::record($message,$type);
@@ -143,10 +150,10 @@ function getWechatMaterialTypes(){
 }
 function getArticleTypes(){
     return [
-        1=>lang('Normal'),
-        2=>lang('Top'),
-        3=>lang('Hot'),
-        4=>lang('Recommend')
+        ART_TYPE_NORMAL=>lang('Normal'),
+        ART_TYPE_TOP=>lang('Top'),
+        ART_TYPE_HOT=>lang('Hot'),
+        ART_TYPE_RECOMMEND=>lang('Recommend')
     ];
 }
 function getProductTypes(){
