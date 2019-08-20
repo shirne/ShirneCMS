@@ -39,9 +39,21 @@ class MemberSignModel extends BaseModel
 
     public function getSigns($member_id, $time = NULL)
     {
-        $time = $this->format_time($time);
-        $month = date('Y-m',$time);
-        $list = Db::name('signLog')->where('member_id',$member_id)->whereRaw(' INSTR(signdate, \''.$month.'\')==1 ')->order('signdate ASC')->select();
+        $model = Db::name('signLog')->where('member_id',$member_id);
+        if(is_array($time)){
+            $start=$this->format_time($time[0]);
+            if(isset($time[1])){
+                $end=$this->format_time($time[1]);
+                $model->whereBetween('signdate',[date('Y-m-d',$start),date('Y-m-d',$end)]);
+            }else{
+                $model->where('signdate','>=', date('Y-m-d',$start));
+            }
+        }else{
+            $time = $this->format_time($time);
+            $month = date('Y-m',$time);
+            $model->whereRaw(' INSTR(signdate, \''.$month.'\') = 1 ');
+        }
+        $list = $model->order('signdate ASC')->select();
         return array_column($list, NULL, 'signdate');
     }
 
@@ -54,6 +66,11 @@ class MemberSignModel extends BaseModel
 
         $list = $model->order('ranking_day ASC')->limit($num)->select();
         return $list;
+    }
+
+    public function getLastSign($member_id)
+    {
+        return Db::name('signLog')->where('member_id',$member_id)->order('signdate DESC')->find();
     }
 
     public function sign($member_id, $mood='', $time=NULL, $is_sup=false)

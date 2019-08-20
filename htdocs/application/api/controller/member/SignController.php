@@ -37,9 +37,22 @@ class SignController extends AuthedController
             $this->error($this->model->getError());
         }
     }
+
+    public function getlastsign()
+    {
+        $sign = $this->model->getLastSign($this->user['id']);
+        return $this->response($sign);
+    }
     
-    public function getsigns(){
-        $list = $this->model->getSigns($this->user['id']);
+    public function getsigns($from_date=NULL, $to_date=NULL){
+        $dates=time();
+        if(!is_null($from_date)){
+            $dates=[$from_date];
+            if(!is_null($to_date)){
+                $dates[]=$to_date;
+            }
+        }
+        $list = $this->model->getSigns($this->user['id'],$dates);
         return $this->response($list);
     }
 }
