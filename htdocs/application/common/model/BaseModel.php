@@ -21,7 +21,14 @@ class BaseModel extends Model
         }catch (\InvalidArgumentException $e){
             Log::record($e->getMessage(),\think\Log::NOTICE);
             return null;
+        }catch (Exception $e){
+            Log::record($e->getMessage(),\think\Log::NOTICE);
+            return null;
         }
+    }
+    
+    protected function setError($error){
+        $this->error = $error;
     }
 
     protected static $instances=[];

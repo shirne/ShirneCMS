@@ -373,6 +373,8 @@ function status_type($status){
  */
 function get_order_status($status){
     switch ($status){
+        case "-3":
+            return lang('Refunding');
         case "-2":
             return lang('Cancelled');
         case "-1":

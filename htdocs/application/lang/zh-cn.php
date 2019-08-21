@@ -26,6 +26,7 @@ return [
     'Invalid'=>'已失效',
     'Shown'=>'已显示',
 
+    'Refunding'=>'退款中',
     'Cancelled'=>'已取消',
     'Unpaid'=>'待支付',
     'Unshipped'=>'待发货',

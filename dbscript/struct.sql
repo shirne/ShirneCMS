@@ -14,7 +14,7 @@ CREATE TABLE `sa_lang` (
   `key_id` int(11) DEFAULT '0',
   `value` TEXT,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `lang` (`lang`) USING BTREE
+  UNIQUE KEY `lang` (`lang`) USING BTREEsa
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -326,6 +326,7 @@ CREATE TABLE `sa_pay_order` (
   `order_no` VARCHAR(30) NULL,
   `order_type` VARCHAR(20) '',
   `pay_data` TEXT,
+  `pay_id` VARCHAR(20) NULL DEFAULT '',
   `pay_type` VARCHAR(20) NULL DEFAULT '',
   `trade_type` VARCHAR(20) NULL DEFAULT '' COMMENT '交易类型',
   `order_id` INT NULL DEFAULT 0,

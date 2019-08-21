@@ -222,6 +222,7 @@ CREATE TABLE `sa_order` (
   `pay_time` INT NULL DEFAULT 0,
   `confirm_time` INT NULL DEFAULT 0,
   `cancel_time` INT NULL DEFAULT 0,
+  `reason` VARCHAR(50) NULL COMMENT '取消/退款原因',
   `rebated` INT NULL DEFAULT 0,
   `rebate_time` INT NULL DEFAULT 0,
   `status` TINYINT NULL DEFAULT 0 COMMENT '订单状态',
@@ -240,6 +241,33 @@ CREATE TABLE `sa_order` (
   `type` TINYINT NULL DEFAULT 1,
   PRIMARY KEY (`order_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `sa_express_code`;
+
+CREATE TABLE `sa_express_code` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) DEFAULT '',
+  `express` varchar(50) DEFAULT '',
+  `status` tinyint(1) DEFAULT '1',
+  `use_times` int(11) DEFAULT '0',
+  `create_time` INT NULL DEFAULT 0,
+  `update_time` INT NULL DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `sa_express_cache`;
+
+CREATE TABLE `sa_express_cache` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `express_no` VARCHAR(100) NULL,
+  `express_code` VARCHAR(20) NULL,
+  `create_time` INT NULL DEFAULT 0,
+  `update_time` INT NULL DEFAULT 0,
+  `data` text,
+  PRIMARY KEY (`id`),
+  KEY `express_no` (`express_no`),
+  KEY `express_code` (`express_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `sa_order_product`;
 

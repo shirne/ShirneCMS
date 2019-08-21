@@ -285,25 +285,35 @@ class OrderModel extends BaseModel
      */
     public function fetchExpress($force=false)
     {
-        if($force || $this->express_time<time()-3600)
-        {
-            if(!$force && !empty($this->express_data)){
-                $express=json_decode($this->express_data);
-                if($express['Success']==true && $express['State']==3){
-                    return $express;
-                }
-            }
-            if(!empty($this->express_no) && !empty($this->express_code)) {
+    
+        $data=[];
+        if(!empty($this->express_no) && !empty($this->express_code)) {
+            $cacheData = Db::name('expressCache')->where('express_code',$this->express_code)
+                ->where('express_no',$this->express_no)->find();
+            if(empty($cacheData) || $force || $cacheData['update_time']<time()-3600) {
                 $express = new KdExpress([
-                    'appid'=>getSetting('kd_userid'),
-                    'appsecret'=>getSetting('kd_apikey')
+                    'appid' => getSetting('kd_userid'),
+                    'appsecret' => getSetting('kd_apikey')
                 ]);
                 $data = $express->QueryExpressTraces($this->express_code, $this->express_no);
-                $this->express_data=$data;
-                $this->express_time=time();
-                $this->save();
+                if(!empty($data)) {
+                    $newData = ['data' => json_encode($data, JSON_UNESCAPED_UNICODE)];
+                    if (empty($cacheData)) {
+                        $newData['express_code'] = $this->express_code;
+                        $newData['express_no'] = $this->express_no;
+                        $newData['create_time'] = $newData['update_time'] = time();
+                        Db::name('expressCache')->insert($newData);
+                    } else {
+                        $newData['update_time'] = time();
+                        Db::name('expressCache')->where('id', $cacheData['id'])->update($newData);
+                    }
+                }else{
+                    $data=[];
+                }
+            }elseif(!empty($cacheData['data'])){
+                $data = json_decode($cacheData['data'],true);
             }
         }
-        return empty($this->express_data)?[]:json_decode($this->express_data,TRUE);
+        return $data;
     }
 }

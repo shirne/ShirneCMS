@@ -11,8 +11,8 @@ use think\Db;
  */
 class PayOrderModel extends BaseModel
 {
-    public const PAY_TYPE_WECHAT='wechat';
-    public const PAY_TYPE_ALIPAY='alipay';
+    const PAY_TYPE_WECHAT='wechat';
+    const PAY_TYPE_ALIPAY='alipay';
     protected $type = ['pay_data'=>'array'];
 
     private static function create_no(){
@@ -24,20 +24,56 @@ class PayOrderModel extends BaseModel
         $strlen=strlen($id);
         return $strlen<$len?str_pad($id,$len,'0',STR_PAD_LEFT):substr($id,$strlen-$len);
     }
+    
+    public function createFromOrder($payid, $paytype, $orderno, $trade_type=''){
+        $ordertype='';
+        if(strpos($orderno,'CZ_')===0){
+            $ordertype='recharge';
+            $orderno=intval(substr($orderno,3));
+            $order=Db::name('memberRecharge')->where('id',$orderno)
+                ->find();
+            if(!empty($order)) {
+                $order['payamount'] = $order['amount'] * .01;
+                $order['order_no'] = 'CZ_' . str_pad($order['id'], 6, '0', STR_PAD_LEFT);
+            }
+        }elseif(strpos($orderno,'PO_')===0){
+            $ordertype = 'credit';
+            $orderno = intval(substr($orderno, 3));
+            $order = CreditOrderModel::get($orderno);
+        }else {
+            $order = OrderModel::get($orderno);
+        }
+    
+        if(empty($order) || $order['status']!=0){
+            $this->setError('订单已支付或不存在!');
+            return false;
+        }
+        
+        return self::createOrder(
+            $paytype,$payid,
+            $ordertype,$orderno,$order['payamount']*100,$order['member_id'],$trade_type
+        );
+    }
 
     /**
      * 创建支付单
      * @param $paytype string 支付类型
+     * @param $payid int 支付号
      * @param $type string 订单类型 order/recharge
      * @param $order_id int 订单表的id
      * @param $amount int 金额(分)
      * @param $member_id int 会员id
+     * @param $trade_type string 交易类型
+     * @param $data
      * @return static
      */
-    public static function createOrder($paytype,$type,$order_id,$amount,$member_id,$data=[]){
+    public static function createOrder($paytype,$payid,$type,$order_id,$amount,$member_id,$trade_type='',$data=[]){
+        
         return static::create([
             'member_id'=>$member_id,
             'pay_type'=>$paytype,
+            'pay_id'=>$payid,
+            'trade_type'=>$trade_type,
             'order_no'=>static::create_no(),
             'order_type'=>$type,
             'order_id'=>$order_id,
@@ -72,6 +108,34 @@ class PayOrderModel extends BaseModel
                     break;
             }
         }
+    }
+    
+    public function getSignedData($result, $key){
+        $params=[
+            'appId'=>$result['appid'],
+            'timeStamp'=>time(),
+            'nonceStr'=>$result['nonce_str'],
+            'package'=>'prepay_id='.$result['prepay_id'],
+            'signType'=>'MD5'
+        ];
+        ksort($params);
+        $string=$this->toUrlParams($params)."&key=".$key;
+        $params['paySign']=strtoupper(md5($string));
+        return $params;
+    }
+    
+    protected function toUrlParams($arr)
+    {
+        $buff = "";
+        foreach ($arr as $k => $v)
+        {
+            if($k != "sign" && $v != "" && !is_array($v)){
+                $buff .= $k . "=" . $v . "&";
+            }
+        }
+        
+        $buff = trim($buff, "&");
+        return $buff;
     }
 
 }
