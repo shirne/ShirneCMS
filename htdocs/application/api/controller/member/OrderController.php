@@ -9,13 +9,13 @@ use think\Db;
 
 class OrderController extends AuthedController
 {
-    public function index($status=''){
+    public function index($status='',$pagesize=10){
         $model=Db::name('Order')->where('member_id',$this->user['id'])
             ->where('delete_time',0);
-        if($status>0){
-            $model->where('status',$status-1);
+        if($status !== ''){
+            $model->where('status',intval($status));
         }
-        $orders =$model->order('status ASC,create_time DESC')->paginate();
+        $orders =$model->order('status ASC,create_time DESC')->paginate($pagesize);
         if(!empty($orders) && !$orders->isEmpty()) {
             $order_ids = array_column($orders->items(), 'order_id');
             $products = Db::view('OrderProduct', '*')
@@ -25,13 +25,14 @@ class OrderController extends AuthedController
                 ->select();
             $products=array_index($products,'order_id',true);
             $orders->each(function($item) use ($products){
+                $item['product_count']=isset($products[$item['order_id']])?array_sum(array_column($products[$item['order_id']],'count')):[];
                 $item['products']=isset($products[$item['order_id']])?$products[$item['order_id']]:[];
                 return $item;
             });
         }
 
         $countlist=Db::name('Order')->where('member_id',$this->user['id'])
-            ->group('status')->field('status,count(order_id) as order_count')->paginate(10);
+            ->group('status')->field('status,count(order_id) as order_count')->select();
         $counts=[0,0,0,0,0,0,0];
         foreach ($countlist as $row){
             $counts[$row['status']]=$row['order_count'];
@@ -43,6 +44,16 @@ class OrderController extends AuthedController
             'total_page'=>$orders->lastPage(),
             'counts'=>$counts
         ]);
+    }
+    
+    public function counts(){
+        $countlist=Db::name('Order')->where('member_id',$this->user['id'])
+            ->group('status')->field('status,count(order_id) as order_count')->select();
+        $counts=[0,0,0,0,0,0,0];
+        foreach ($countlist as $row){
+            $counts[$row['status']]=$row['order_count'];
+        }
+        return $this->response($counts);
     }
 
     public function view($id){
