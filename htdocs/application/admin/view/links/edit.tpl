@@ -16,6 +16,16 @@
             <label for="url">链接地址</label>
             <input type="text" name="url" class="form-control" value="{$model.url}" placeholder="输入链接标题">
         </div>
+        <div class="form-row">
+            <div class="form-group col">
+                <label for="sort">分组</label>
+                <input type="text" name="group" class="form-control" value="{$model.group}" placeholder="链接分组" >
+            </div>
+            <div class="form-group col">
+                <label for="sort">优先级</label>
+                <input type="text" name="sort" class="form-control" value="{$model.sort}" placeholder="越小越靠前" >
+            </div>
+        </div>
         <div class="form-group">
             <label for="image">LOGO</label>
             <div class="input-group">
@@ -31,10 +41,6 @@
                 </figure>
                 <input type="hidden" name="delete_logo" value="{$model.logo}"/>
             </if>
-        </div>
-        <div class="form-group">
-            <label for="sort">优先级</label>
-            <input type="text" name="sort" class="form-control" value="{$model.sort}" placeholder="越小越靠前" >
         </div>
         <div class="form-group">
             <input type="hidden" name="id" value="{$model.id}">

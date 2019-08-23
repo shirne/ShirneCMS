@@ -199,9 +199,13 @@ CREATE TABLE `sa_links` (
   `lang` varchar(10) DEFAULT NULL COMMENT '语言',
   `main_id` int(11) DEFAULT NULL COMMENT '主id',
   `title` varchar(100) DEFAULT '',
+  `group` varchar(50) DEFAULT '',
   `logo` varchar(150) DEFAULT '',
   `url` varchar(150) DEFAULT '',
   `sort` int(11) DEFAULT 0,
+  `status` int(11) DEFAULT 0,
+  `create_time` int(11) DEFAULT 0,
+  `update_time` int(11) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -847,12 +851,13 @@ CREATE TABLE `sa_feedback` (
   `email` varchar(150) NOT NULL DEFAULT '',
   `type` tinyint(4) DEFAULT '0',
   `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
   `ip` varchar(50) NOT NULL DEFAULT '',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `content` text,
   `reply` varchar(255) DEFAULT '',
   `manager_id` int(11) DEFAULT '0',
-  `reply_at` int(11) DEFAULT '0',
+  `reply_time` int(11) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `member_id` (`member_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
