@@ -104,8 +104,4 @@ class ProductController extends BaseController
             'total_page'=>$comments->lastPage(),
         ]);
     }
-
-    public function do_comment(){
-
-    }
 }

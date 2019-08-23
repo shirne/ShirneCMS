@@ -40,6 +40,8 @@ class OrderController extends AuthedController
 
     }
     public function confirm($from='quick'){
+        $this->check_submit_rate();
+        
         $order_skus=$this->input['products'];
         if(empty($order_skus))$this->error('未选择下单商品');
         $sku_ids=array_column($order_skus,'sku_id');

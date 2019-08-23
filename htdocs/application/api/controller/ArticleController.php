@@ -146,6 +146,8 @@ class ArticleController extends BaseController
     }
 
     public function do_comment(){
+        $this->check_submit_rate();
+        
         $data=$this->request->only('article_id,email,is_anonymous,content,reply_id','put');
         $validate=new ArticleCommentValidate();
         if(!$validate->check($data)){

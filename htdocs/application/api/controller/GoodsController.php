@@ -27,7 +27,7 @@ class GoodsController extends BaseController
         }
         $cates = GoodsCategoryFacade::getSubCategory($pid);
         if($goods_count > 0){
-            $goods = ProductModel::getInstance();
+            $goods = GoodsModel::getInstance();
             foreach($cates as &$cate){
                 $cate['goods']=$goods->tagList([
                     'category'=>$cate['id'],
@@ -55,7 +55,7 @@ class GoodsController extends BaseController
         $condition['page']=$page;
         $condition['pagesize']=$pagesize;
         
-        $lists = ProductModel::getInstance()->tagList($condition, true);
+        $lists = GoodsModel::getInstance()->tagList($condition, true);
 
         return $this->response([
             'lists'=>$lists->items(),

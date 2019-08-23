@@ -6,6 +6,7 @@ use app\common\model\AdvGroupModel;
 use app\common\model\LinksModel;
 use app\common\model\MemberSignModel;
 use app\common\model\NoticeModel;
+use think\Db;
 use think\Log;
 use think\Response;
 
@@ -132,6 +133,33 @@ class CommonController extends BaseController
         }
         
         return $this->response($model->order('sort ASC,create_time DESC')->limit($count)->select());
+    }
+    
+    //todo
+    public function feedback(){
+    
+    }
+    
+    public function feedbacks($pagesize=10){
+        $model = Db::view('feedback','*')
+            ->view("member",["username","nickname","avatar"],"Feedback.member_id=member.id","LEFT")
+            ->view("manager",["realname"=>"manager_name"],"Feedback.manager_id=manager.id","LEFT")
+            ->where("Feedback.status",1)
+            ->order("Feedback.create_time DESC");
+        
+        $list = $model->paginate($pagesize);
+        
+        return $this->response([
+            'list'=>$list,
+            'total'=>$list->total(),
+            'page'=>$list->currentPage()
+        ]);
+    }
+    
+    //todo
+    public function do_feedback(){
+        $this->check_submit_rate();
+        
     }
 
     public function siteinfo(){

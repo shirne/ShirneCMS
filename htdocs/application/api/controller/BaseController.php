@@ -3,6 +3,7 @@
 namespace app\api\controller;
 
 use app\api\facade\MemberTokenFacade;
+use function EasyWeChat\Kernel\Support\get_client_ip;
 use think\Controller;
 use think\Db;
 
@@ -42,6 +43,29 @@ class BaseController extends Controller
         $this->input=$this->request->put();
 
         $this->checkLogin();
+    }
+    
+    /**
+     * 操作频率限制，防止垃圾数据及重复提交
+     * @param int $seconds  限制频率时间（秒）
+     * @param string $key   应用单独的key 默认使用全局
+     * @param string $hashkey   未登录情况下，系统判断是否同一用户的依据
+     */
+    protected function check_submit_rate($seconds=2, $key='global', $hashkey=''){
+        $cache_key = 'submit_'.$key.'_';
+        if(empty($this->token)){
+            if(empty($hashkey))$hashkey = get_client_ip().$this->request->server('user_agent');
+            $cache_key .= md5($hashkey);
+        }else {
+            $cache_key .= $this->token;
+        }
+        $lasttime = cache($cache_key);
+        $curtime=time();
+        if(!$lasttime || $lasttime + $seconds < $curtime){
+            cache($cache_key, $curtime, ['expire'=>$seconds]);
+        }else{
+            $this->error('操作过于频繁');
+        }
     }
     
     /**
