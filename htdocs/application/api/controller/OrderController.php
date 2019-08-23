@@ -110,7 +110,7 @@ class OrderController extends AuthedController
                     if(method_exists($this,$method)){
                         return $this->$method($result);
                     }else{
-                        return $this->response(['order_id',$result],1,'下单成功，请尽快支付');
+                        return $this->response(['order_id'=>$result],1,'下单成功，请尽快支付');
                     }
 
                 }
@@ -178,18 +178,5 @@ class OrderController extends AuthedController
             $this->success('支付成功!',1,['order_id'=>$order_id]);
         }
         $this->error('支付失败!',0,['order_id'=>$order_id]);
-    }
-    protected function ToUrlParams($arr)
-    {
-        $buff = "";
-        foreach ($arr as $k => $v)
-        {
-            if($k != "sign" && $v != "" && !is_array($v)){
-                $buff .= $k . "=" . $v . "&";
-            }
-        }
-
-        $buff = trim($buff, "&");
-        return $buff;
     }
 }

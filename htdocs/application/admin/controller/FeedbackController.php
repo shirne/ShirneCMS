@@ -1,6 +1,7 @@
 <?php
 namespace app\admin\controller;
-use app\admin\model\FeedbackModel;
+
+use app\common\model\FeedbackModel;
 use app\admin\validate\FeedbackValidate;
 use think\Db;
 

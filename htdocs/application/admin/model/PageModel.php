@@ -10,6 +10,8 @@ use think\Db;
  */
 class PageModel extends BaseModel
 {
+    protected $autoWriteTimestamp = true;
+    
     public static function init(){
         self::event('after_write', function ($page) {
             if (!empty($page['group'])) {

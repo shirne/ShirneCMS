@@ -1,9 +1,7 @@
 <?php
 
-namespace app\admin\model;
+namespace app\common\model;
 
-
-use app\common\model\BaseModel;
 
 /**
  * Class FeedbackModel
@@ -11,5 +9,5 @@ use app\common\model\BaseModel;
  */
 class FeedbackModel extends BaseModel
 {
-
+    protected $autoWriteTimestamp = true;
 }
