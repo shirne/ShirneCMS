@@ -6,8 +6,9 @@ use app\common\model\AdvGroupModel;
 use app\common\model\LinksModel;
 use app\common\model\MemberSignModel;
 use app\common\model\NoticeModel;
+use function PHPSTORM_META\type;
 use think\Db;
-use think\Log;
+use think\facade\Log;
 use think\Response;
 
 /**
@@ -61,7 +62,15 @@ class CommonController extends BaseController
             if(strtolower($m[0])=='common'){
                 $controller = $this;
             }else {
-                $controller = \container()->make('\\app\\api\\controller\\' . ucfirst($m[0]) . 'Controller');
+                if(strpos($m[0],'/')>0 || strpos($m[0],'\\')>0){
+                    $m[0] = str_replace('\\','/',$m[0]);
+                    $layers = explode('/',$m[0]);
+                    $layers = array_map('ucfirst',$layers);
+                    $m[0] = implode('\\',$layers);
+                }else{
+                    $m[0] = ucfirst($m[0]);
+                }
+                $controller = \container()->make('\\app\\api\\controller\\' . $m[0] . 'Controller');
             }
             $m = $m[1];
         } else {
@@ -88,8 +97,13 @@ class CommonController extends BaseController
                     $curData = $response->getData();
     
                     return $curData['data'];
+                }else{
+                    echo var_dump($response);
+                    exit;
                 }
             }catch (\ReflectionException $e){
+                Log::record($e->getMessage(),'error');
+            }catch (\Exception $e){
                 Log::record($e->getMessage(),'error');
             }
         }

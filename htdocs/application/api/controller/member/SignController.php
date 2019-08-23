@@ -6,6 +6,7 @@ namespace app\api\controller\member;
 
 use app\api\Controller\AuthedController;
 use app\common\model\MemberSignModel;
+use think\Db;
 
 class SignController extends AuthedController
 {
@@ -55,10 +56,26 @@ class SignController extends AuthedController
         $list = $this->model->getSigns($this->user['id'],$dates);
         return $this->response($list);
     }
-
-    public function totalcredit()
+    
+    public function totaldays($fromdate='')
     {
-        $total = Db::name('memberMoneyLog')->where('type','sign')->sum('amount');
+        $model = Db::name('signLog')->where('member_id',$this->user['id']);
+        if(!empty($fromdate)){
+            $fromtime = strtotime($fromdate);
+            $model->where('signdate','>=', date('Y-m-d', $fromtime));
+        }
+        $total = $model->count();
+        return $this->response(intval($total));
+    }
+
+    public function totalcredit($fromdate='')
+    {
+        $model = Db::name('memberMoneyLog')->where('member_id',$this->user['id'])->where('type','sign');
+        if(!empty($fromdate)){
+            $fromtime = strtotime($fromdate);
+            $model->where('create_time','>=', $fromtime);
+        }
+        $total = $model->sum('amount');
         return $this->response(intval($total*.01));
     }
 }
