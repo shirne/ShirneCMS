@@ -38,7 +38,8 @@ class CommonController extends BaseController
         }else{
 
             foreach ($this->input as $method=>$arguments) {
-
+                if($method == 'token')continue;
+                
                 if(isset($arguments['call']))$calls=$arguments['call'];
                 else $calls=$method;
 
