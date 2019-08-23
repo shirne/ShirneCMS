@@ -55,4 +55,10 @@ class SignController extends AuthedController
         $list = $this->model->getSigns($this->user['id'],$dates);
         return $this->response($list);
     }
+
+    public function totalcredit()
+    {
+        $total = Db::name('memberMoneyLog')->where('type','sign')->sum('amount');
+        return $this->response(intval($total*.01));
+    }
 }

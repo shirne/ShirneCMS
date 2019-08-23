@@ -75,7 +75,10 @@ class BaseController extends Controller
      * @throws \think\exception\DbException
      */
     public function checkLogin(){
-        $this->token = $this->request->param('token');
+        $this->token = $this->request->header('token');
+        if(empty($this->token)){
+            $this->token = $this->request->param('token');
+        }
         if(!empty($this->token)){
             $token=MemberTokenFacade::findToken($this->token);
             $errorno=ERROR_TOKEN_INVAILD;
