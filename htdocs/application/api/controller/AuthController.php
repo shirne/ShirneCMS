@@ -1,10 +1,4 @@
 <?php
-/**
- * 授权相关操作.
- * User: shirne
- * Date: 2018/3/21
- * Time: 7:30
- */
 
 namespace app\api\Controller;
 
@@ -17,6 +11,11 @@ use think\Db;
 use think\facade\Env;
 use think\facade\Log;
 
+/**
+ * 授权相关操作
+ * Class AuthController
+ * @package app\api\Controller
+ */
 class AuthController extends BaseController
 {
     public function initialize(){

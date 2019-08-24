@@ -25,7 +25,7 @@ class OrderController extends AuthedController
                 ->select();
             $products=array_index($products,'order_id',true);
             $orders->each(function($item) use ($products){
-                $item['product_count']=isset($products[$item['order_id']])?array_sum(array_column($products[$item['order_id']],'count')):[];
+                $item['product_count']=isset($products[$item['order_id']])?array_sum(array_column($products[$item['order_id']],'count')):0;
                 $item['products']=isset($products[$item['order_id']])?$products[$item['order_id']]:[];
                 return $item;
             });
@@ -66,6 +66,7 @@ class OrderController extends AuthedController
             ->view('ProductSku', ['sku_id' => 'orig_sku_id', 'price' => 'orig_product_price'], 'ProductSku.sku_id=OrderProduct.sku_id', 'LEFT')
             ->where('OrderProduct.order_id', $order['order_id'])
             ->select();
+        $order['product_count']=empty($order['products'])?0:array_sum(array_column($order['products'],'count'));
         return $this->response($order);
     }
     
@@ -113,6 +114,28 @@ class OrderController extends AuthedController
         if($order['status']>1 && !empty($order['express_no'])){
             $express = $order->fetchExpress();
         }
+        $products=Db::name('OrderProduct')
+            ->where('OrderProduct.order_id', $order['order_id'])
+            ->select();
+        
+        if(!empty($products)) {
+            $product = current($products);
+            if (count($products) > 1) {
+                $totalcount = array_sum(array_column($products, 'count'));
+                $product = current($products);
+                $title = $product['product_title'] . ' 等 ' . $totalcount . ' 件商品';
+            } else {
+                $title = $product['product_title'] . ' ' . $product['count'] . ' 件';
+            }
+            $image = $product['product_image'];
+            
+            //$express['order']=$order;
+            $express['product']=[
+                'title'=>$title,
+                'image'=>$image
+            ];
+        }
+        
         return $this->response($express);
     }
     

@@ -21,6 +21,7 @@ class MemberController extends AuthedController
             ->hidden('password,salt,sec_password,sec_salt,delete_time')
             ->where('id',$this->user['id'])
             ->find();
+            
         return $this->response($profile);
     }
 

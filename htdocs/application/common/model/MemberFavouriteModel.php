@@ -72,7 +72,7 @@ class MemberFavouriteModel extends BaseModel
         if(empty($exist)){
             self::create($data);
         }else{
-            self::update($data);
+            self::update($data,['id'=>$exist['id']]);
         }
         return true;
     }
