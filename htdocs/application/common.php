@@ -185,6 +185,7 @@ function settingGroups($name = '')
         'common' => lang('Common Settings'),
         'member' => lang('Member Settings'),
         'third' => lang('Third Settings'),
+        'sign' => lang('Sign Settings'),
         'advance' => lang('Advance Settings'),
     );
     if (empty($name)) {

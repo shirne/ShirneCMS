@@ -46,6 +46,9 @@
                 <case value="third">
                     <include file="setting/part/third"  />
                 </case>
+                <case value="sign">
+                    <include file="setting/part/sign"  />
+                </case>
                 <case value="advance">
                     <include file="setting/part/advance"  />
                 </case>

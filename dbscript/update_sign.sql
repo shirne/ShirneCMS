@@ -3,7 +3,7 @@ VALUES
   ( 'sign_open', '开启签到', 'radio', 'sign', '0', 1 , '0', '', '0:关闭\r\n1:开启'),
   ( 'sup_sign_open', '开启补签', 'radio', 'sign', '0', 1 , '0', '', '0:关闭\r\n1:开启'),
   ( 'sup_sign_rule', '补签规则', 'text', 'sign', '0', 1 , '', '', ''),
-  ( 'sign_cycle', '签到周期', 'text', 'sign', '0', 1 , 'month', '', ''),
+  ( 'sign_cycle', '签到周期', 'text', 'sign', '0', 1 , 'month', '', 'long:不限\r\nmonth:按月'),
   ( 'sign_award', '签到奖励', 'text', 'sign', '0', 1 , '', '', ''),
   ( 'sign_keep_award', '连续签到奖励', 'text', 'sign', '0', 1 , '', '', ''),
   ( 'sign_description', '签到说明', 'text', 'sign', '0', 1 , '', '', '');

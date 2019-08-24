@@ -42,6 +42,7 @@ return [
     'Common Settings'=>'通用配置',
     'Member Settings'=>'会员配置',
     'Third Settings'=>'第三方配置',
+    'Sign Settings'=>'签到配置',
     'Advance Settings'=>'高级配置',
 
     'Text Field'=>'单行文本',
