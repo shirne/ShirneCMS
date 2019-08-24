@@ -2,7 +2,7 @@
 
 namespace app\api\controller;
 
-use app\api\Processer\BaseProcesser;
+use app\api\processer\BaseProcesser;
 use app\common\model\MemberOauthModel;
 use app\common\model\OrderModel;
 use app\common\model\PayOrderModel;

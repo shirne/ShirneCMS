@@ -3,7 +3,7 @@
 namespace app\api\controller\member;
 
 
-use app\api\Controller\AuthedController;
+use app\api\controller\AuthedController;
 use app\common\model\MemberFavouriteModel;
 use think\Db;
 

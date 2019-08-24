@@ -63,8 +63,9 @@ class CommonController extends BaseController
             }else {
                 if(strpos($m[0],'/')>0 || strpos($m[0],'\\')>0){
                     $m[0] = str_replace('\\','/',$m[0]);
-                    $layers = explode('/',$m[0]);
-                    $layers = array_map('ucfirst',$layers);
+                    $layers = explode('/',strtolower($m[0]));
+                    $last = count($layers)-1;
+                    $layers[$last] = ucfirst($layers[$last]);
                     $m[0] = implode('\\',$layers);
                 }else{
                     $m[0] = ucfirst($m[0]);
