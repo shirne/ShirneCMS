@@ -27,8 +27,13 @@ class BaseModel extends Model
         }
     }
     
-    protected function setError($error){
+    protected $errno;
+    protected function setError($error, $errno=-1){
         $this->error = $error;
+        $this->errno = $errno;
+    }
+    public function getErrNo(){
+        return $this->errno;
     }
 
     protected static $instances=[];

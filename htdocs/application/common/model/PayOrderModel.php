@@ -27,6 +27,7 @@ class PayOrderModel extends BaseModel
     
     public function createFromOrder($payid, $paytype, $orderno, $trade_type=''){
         $ordertype='';
+        $orderid=0;
         if(strpos($orderno,'CZ_')===0){
             $ordertype='recharge';
             $orderno=intval(substr($orderno,3));
@@ -35,23 +36,42 @@ class PayOrderModel extends BaseModel
             if(!empty($order)) {
                 $order['payamount'] = $order['amount'] * .01;
                 $order['order_no'] = 'CZ_' . str_pad($order['id'], 6, '0', STR_PAD_LEFT);
+                $orderid = $order['id'];
             }
         }elseif(strpos($orderno,'PO_')===0){
             $ordertype = 'credit';
             $orderno = intval(substr($orderno, 3));
             $order = CreditOrderModel::get($orderno);
+            if(!empty($order)) {
+                $orderid = $order['id'];
+            }
         }else {
             $order = OrderModel::get($orderno);
+            if(!empty($order)) {
+                $orderid = $order['order_id'];
+            }
         }
-    
-        if(empty($order) || $order['status']!=0){
-            $this->setError('订单已支付或不存在!');
+        
+        if(empty($order) || $order['status']<0){
+            $this->setError('订单已失效或不存在!');
+            return false;
+        }
+        
+        if($order['status']>0){
+            $this->setError('订单已支付!',8);
+            return false;
+        }
+        
+        if($order['payamount'] <= 0){
+            $this->triggerStatus(['order_type'=>$ordertype,'order_id'=>$orderid,'pay_time'=>time()],1);
+            $this->setError('订单支付成功!',9);
+        
             return false;
         }
         
         return self::createOrder(
             $paytype,$payid,
-            $ordertype,$orderno,$order['payamount']*100,$order['member_id'],$trade_type
+            $ordertype,$orderid,$order['payamount']*100,$order['member_id'],$trade_type
         );
     }
 

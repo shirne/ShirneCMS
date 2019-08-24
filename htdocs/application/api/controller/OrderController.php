@@ -135,6 +135,9 @@ class OrderController extends AuthedController
         $paymodel = PayOrderModel::getInstance();
         $payorder = $paymodel->createFromOrder($payid,PayOrderModel::PAY_TYPE_WECHAT,$order_id,$trade_type);
         if(empty($payorder)){
+            if(in_array($paymodel->getErrNo(),[8,9])){
+                $this->success($paymodel->getError());
+            }
             $this->error($paymodel->getError());
         }
     
