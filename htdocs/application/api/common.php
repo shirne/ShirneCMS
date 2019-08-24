@@ -1,5 +1,15 @@
 <?php
 
+define('ERROR_NEED_LOGIN',99);//需要登录
+define('ERROR_LOGIN_FAILED',101);//登录失败
+define('ERROR_NEED_REGISTER',109);//登录失败,需要绑定
+define('ERROR_REGISTER_FAILED',111);//注册失败
+define('ERROR_TOKEN_INVAILD',102);//token无效
+define('ERROR_TOKEN_EXPIRE',103);//token过期
+define('ERROR_REFRESH_TOKEN_INVAILD',105);//refresh_token失效
+
+define('ERROR_NEED_OPENID',111);
+
 function empty2null($arr, $keys, $islist = true)
 {
     if (is_array($arr) && !empty($arr)) {

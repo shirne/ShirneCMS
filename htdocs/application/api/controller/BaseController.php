@@ -7,15 +7,6 @@ use function EasyWeChat\Kernel\Support\get_client_ip;
 use think\Controller;
 use think\Db;
 
-define('ERROR_NEED_LOGIN',99);//需要登录
-define('ERROR_LOGIN_FAILED',101);//登录失败
-define('ERROR_NEED_REGISTER',109);//登录失败,需要绑定
-define('ERROR_REGISTER_FAILED',111);//注册失败
-define('ERROR_TOKEN_INVAILD',102);//token无效
-define('ERROR_TOKEN_EXPIRE',103);//token过期
-define('ERROR_REFRESH_TOKEN_INVAILD',105);//refresh_token失效
-
-define('ERROR_NEED_OPENID',111);
 
 /**
  * API基类.
@@ -75,27 +66,12 @@ class BaseController extends Controller
      * @throws \think\exception\DbException
      */
     public function checkLogin(){
-        $this->token = $this->request->header('token');
-        if(empty($this->token)){
-            $this->token = $this->request->param('token');
-        }
-        if(!empty($this->token)){
-            $token=MemberTokenFacade::findToken($this->token);
-            $errorno=ERROR_TOKEN_INVAILD;
-            if(!empty($token)) {
-                if($token['update_time']+$token['expire_in']>time()){
-                    $this->user = Db::name('Member')->find($token['member_id']);
-                }else{
-                    $errorno=ERROR_TOKEN_EXPIRE;
-                }
-            }
-
-            if(!empty($this->user)) {
-                $this->isLogin=true;
-            }else{
-                $this->token=null;
-                $this->error("登录失效",$errorno);
-            }
+        if($this->request->isLogin){
+            $this->token = $this->request->token;
+            $this->isLogin = $this->request->isLogin;
+            $this->user = $this->request->user;
+        }elseif($this->request->auth_error){
+            $this->error("登录失效",$this->request->auth_error);
         }
     }
     
