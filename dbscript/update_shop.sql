@@ -220,6 +220,7 @@ CREATE TABLE `sa_order` (
   `level_id` INT NULL,
   `create_time` INT NULL DEFAULT 0,
   `pay_time` INT NULL DEFAULT 0,
+  `deliver_time` INT NULL DEFAULT 0,
   `confirm_time` INT NULL DEFAULT 0,
   `cancel_time` INT NULL DEFAULT 0,
   `reason` VARCHAR(50) NULL COMMENT '取消/退款原因',

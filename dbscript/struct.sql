@@ -14,7 +14,7 @@ CREATE TABLE `sa_lang` (
   `key_id` int(11) DEFAULT '0',
   `value` TEXT,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `lang` (`lang`) USING BTREEsa
+  UNIQUE KEY `lang` (`lang`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -328,7 +328,7 @@ CREATE TABLE `sa_pay_order` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
   `member_id` INT NULL DEFAULT 0,
   `order_no` VARCHAR(30) NULL,
-  `order_type` VARCHAR(20) '',
+  `order_type` VARCHAR(20) DEFAULT '',
   `pay_data` TEXT,
   `pay_id` VARCHAR(20) NULL DEFAULT '',
   `pay_type` VARCHAR(20) NULL DEFAULT '',
@@ -741,7 +741,7 @@ CREATE TABLE `sa_article` (
   `digg` INT(11) DEFAULT '0',
   `comment` INT(11) DEFAULT '0',
   `views` INT(11) DEFAULT '0',
-  `type` UNSIGNED tinyint(1) DEFAULT '1' COMMENT '1:普通,2:置顶,4:热门,8:推荐',
+  `type` tinyint(1) UNSIGNED DEFAULT '1' COMMENT '1:普通,2:置顶,4:热门,8:推荐',
   `status` tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `cate_id` (`cate_id`),
