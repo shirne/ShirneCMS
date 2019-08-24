@@ -1,6 +1,6 @@
 <?php
 
-namespace app\api\Controller;
+namespace app\api\controller;
 
 use app\common\facade\MemberFavouriteFacade;
 use app\common\facade\ProductCategoryFacade;

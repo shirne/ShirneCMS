@@ -3,7 +3,6 @@
 namespace app\api\controller;
 
 use app\api\facade\MemberTokenFacade;
-use function EasyWeChat\Kernel\Support\get_client_ip;
 use think\Controller;
 use think\Db;
 
@@ -45,7 +44,7 @@ class BaseController extends Controller
     protected function check_submit_rate($seconds=2, $key='global', $hashkey=''){
         $cache_key = 'submit_'.$key.'_';
         if(empty($this->token)){
-            if(empty($hashkey))$hashkey = get_client_ip().$this->request->server('user_agent');
+            if(empty($hashkey))$hashkey = $this->request->ip().$this->request->server('user_agent');
             $cache_key .= md5($hashkey);
         }else {
             $cache_key .= $this->token;

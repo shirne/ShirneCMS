@@ -1,6 +1,6 @@
 <?php
 
-namespace app\api\Processer;
+namespace app\api\processer;
 
 use app\common\model\ArticleModel;
 use app\common\model\ProductModel;

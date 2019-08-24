@@ -1,6 +1,6 @@
 <?php
 
-namespace app\api\Processer;
+namespace app\api\processer;
 
 
 use EasyWeChat\Kernel\Messages\Message;

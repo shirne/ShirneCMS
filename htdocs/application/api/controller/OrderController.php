@@ -1,6 +1,6 @@
 <?php
 
-namespace app\api\Controller;
+namespace app\api\controller;
 
 use app\admin\model\MemberLevelModel;
 use app\common\facade\MemberCartFacade;

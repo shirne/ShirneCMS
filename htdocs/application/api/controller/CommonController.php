@@ -1,12 +1,11 @@
 <?php
 
-namespace app\api\Controller;
+namespace app\api\controller;
 
 use app\common\model\AdvGroupModel;
 use app\common\model\LinksModel;
 use app\common\model\MemberSignModel;
 use app\common\model\NoticeModel;
-use function PHPSTORM_META\type;
 use think\Db;
 use think\facade\Log;
 use think\Response;

@@ -1,6 +1,6 @@
 <?php
 
-namespace app\api\Controller;
+namespace app\api\controller;
 
 use app\common\validate\MemberValidate;
 use extcore\traits\Upload;

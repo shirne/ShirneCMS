@@ -1,6 +1,6 @@
 <?php
 
-namespace app\api\Controller;
+namespace app\api\controller;
 
 use app\api\facade\MemberTokenFacade;
 use app\common\model\MemberModel;
