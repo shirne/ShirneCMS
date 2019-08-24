@@ -109,7 +109,7 @@ class BaseController extends Controller
     /**
      * @param int $time
      */
-    public function checkSubmitRate($time = 2){
+    protected function checkSubmitRate($time = 2){
         
         if (!$time) $time = 2;
         $key = '__check_submit_rate__';

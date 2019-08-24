@@ -15,6 +15,7 @@ use app\common\model\WechatModel;
 use EasyWeChat\Factory;
 use think\Db;
 use think\facade\Env;
+use think\facade\Log;
 
 class AuthController extends BaseController
 {
@@ -88,45 +89,50 @@ class AuthController extends BaseController
                 }
             }
         }
-        $type='wechat';
+        if(empty($userinfo)){
+            $this->error('登录授权失败',ERROR_LOGIN_FAILED);
+        }
+        $type=$wechat['account_type'];
+        $typeid=$wechat['id'];
 
-        $condition=array('type'=>$type,'openid'=>$session['openid']);
+        $condition=array('openid'=>$session['openid']);
         $oauth=MemberOauthModel::where($condition)->find();
-        if(!empty($oauth) && $oauth['member_id'])$member=MemberModel::where('id',$oauth['member_id'])->find();
+        if(!empty($oauth) && $oauth['member_id']) {
+            $member = MemberModel::where('id', $oauth['member_id'])->find();
+        }elseif($this->isLogin){
+            $member=$this->user;
+        }elseif($session['unionid']){
+            $sameAuth=MemberOauthModel::where('unionid',$session['unionid'])->find();
+            if(!empty($sameAuth)){
+                $member=MemberModel::where('id',$sameAuth['member_id'])->find();
+            }
+        }
+    
+        $data=$this->wxMapdata($userinfo,$rowData);
+        $data['type']=$type;
+        $data['type_id']=$typeid;
+        if(!empty($session['unionid']))$data['unionid']=$session['unionid'];
+        
         if(empty($member)){
             $register=getSetting('m_register');
-            if($this->isLogin){
-                $member=$this->user;
-            }elseif($register=='1'){
+            if($register=='1'){
                 $this->error('登录失败', ERROR_NEED_REGISTER);
             }
-            if(!empty($userinfo)){
-                //自动注册
-                $data=$this->wxMapdata($userinfo,$rowData);
-                $data['openid']=$session['openid'];
-                $data['type']=$type;
-                if(!empty($session['unionid']))$data['unionid']=$session['unionid'];
-
-                if(empty($member)) {
-                    $member = MemberModel::createFromOauth($data);
-                }
-                if($member['id']){
-                    $data['member_id']=$member['id'];
-                    if(empty($oauth)){
-                        MemberOauthModel::create($data);
-                    }else{
-                        MemberOauthModel::update($data);
-                    }
-                }else{
-                    $this->error('登录失败',ERROR_LOGIN_FAILED);
-                }
+            //自动注册
+            $data['openid']=$session['openid'];
+            
+            $referid = $this->getAgentId($agent);
+            $member = MemberModel::createFromOauth($data, $referid);
+            
+            if($member['id']){
+                $data['member_id']=$member['id'];
+                
             }else{
-                $this->error('登录授权失败',ERROR_LOGIN_FAILED);
+                $this->error('登录失败',ERROR_LOGIN_FAILED);
             }
-        }elseif(!empty($userinfo)){
+            
+        }else{
             //更新资料
-            $data=$this->wxMapdata($userinfo,$rowData);
-            if(!empty($session['unionid']))$data['unionid']=$session['unionid'];
             MemberOauthModel::update($data,$condition);
             $updata=array();
             $updata['gender']=$data['gender'];
@@ -134,9 +140,16 @@ class AuthController extends BaseController
             if($member['realname']==$oauth['nickname'])$updata['realname']=$data['nickname'];
             if($member['avatar']==$oauth['avatar'])$updata['avatar']=$data['avatar'];
             if(!empty($updata)){
+                if(empty($member['referer']) && !empty($agent)){
+                    $updata['referer'] = $this->getAgentId($agent);
+                }
                 MemberModel::update($updata,array('id'=>$member['id']));
             }
-
+        }
+        if(empty($oauth)){
+            MemberOauthModel::create($data);
+        }else{
+            MemberOauthModel::update($data,['id'=>$oauth['id']]);
         }
 
         $token=MemberTokenFacade::createToken($member['id']);
@@ -144,6 +157,20 @@ class AuthController extends BaseController
             return $this->response($token);
         }
         $this->error('登录失败',ERROR_LOGIN_FAILED);
+    }
+    
+    private function getAgentId($agent){
+        $referid=0;
+        if(!empty($agent)){
+            $amem=Db::name('Member')->where('is_agent','GT',0)
+                ->where('agentcode',$agent)
+                ->where('status',1)->find();
+            if(!empty($amem)){
+                Log::record('With Agent code: '.$agent.','.$amem['id']);
+                $referid = $amem['id'];
+            }
+        }
+        return $referid;
     }
 
     /**
