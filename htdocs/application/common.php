@@ -212,6 +212,8 @@ function settingTypes($key = '')
     $types['textarea'] = lang('Textarea');
     $types['location'] = lang('Location Picker');
     $types['image'] = lang('Upload Image');
+    $types['json'] = lang('Json');
+    $types['array'] = lang('Array');
     $types['html'] = lang('Editor');
 
     if (empty($key)) {

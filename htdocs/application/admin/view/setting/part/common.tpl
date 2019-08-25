@@ -47,6 +47,12 @@
     </div>
 </div>
 <div class="form-row form-group">
+    <label for="v-gongan-icp" class="col-3 col-md-2 text-right align-middle">公安备案号</label>
+    <div class="col-9 col-md-8 col-lg-6">
+        <input type="text" class="form-control" name="v-gongan-icp" value="{$setting['gongan-icp']['value']}" placeholder="公安备案号">
+    </div>
+</div>
+<div class="form-row form-group">
     <label for="v-site-url" class="col-3 col-md-2 text-right align-middle">站点网址</label>
     <div class="col-9 col-md-8 col-lg-6">
         <input type="text" class="form-control" name="v-site-url" value="{$setting['site-url']['value']}" placeholder="站点地址">
