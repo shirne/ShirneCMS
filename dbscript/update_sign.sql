@@ -8,6 +8,7 @@ VALUES
   ( 'sign_keep_award', '连续签到奖励', 'text', 'sign', '0', 1 , '', '', ''),
   ( 'sign_description', '签到说明', 'text', 'sign', '0', 1 , '', '', '');
 
+DROP TABLE IF EXISTS `sa_sign_log`;
 CREATE TABLE `sa_sign_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `member_id` int(11) NOT NULL DEFAULT '0',

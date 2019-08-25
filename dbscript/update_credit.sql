@@ -19,6 +19,7 @@ CREATE TABLE `sa_credit_promotion` (
   PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `sa_goods_category`;
 CREATE TABLE `sa_goods_category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `pid` int(11) DEFAULT NULL COMMENT '父分类ID',
@@ -33,6 +34,7 @@ CREATE TABLE `sa_goods_category` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `sa_goods`;
 CREATE TABLE `sa_goods` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `cate_id` int(11) DEFAULT NULL,
@@ -55,7 +57,7 @@ CREATE TABLE `sa_goods` (
   KEY `cate_id` (`cate_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
+DROP TABLE IF EXISTS `sa_goods_images`;
 CREATE TABLE `sa_goods_images` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(100) DEFAULT NULL,
@@ -67,7 +69,7 @@ CREATE TABLE `sa_goods_images` (
   KEY `goods_id` (`goods_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
+DROP TABLE IF EXISTS `sa_credit_order`;
 CREATE TABLE `sa_credit_order` (
   `order_id` INT NOT NULL AUTO_INCREMENT,
   `order_no` VARCHAR(30) NULL,
@@ -95,6 +97,7 @@ CREATE TABLE `sa_credit_order` (
   PRIMARY KEY (`order_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `sa_credit_order_goods`;
 CREATE TABLE `sa_credit_order_goods` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` INT(11) DEFAULT '0',

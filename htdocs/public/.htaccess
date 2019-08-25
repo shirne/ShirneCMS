@@ -13,6 +13,8 @@
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteRule ^(.*)$ index.php/$1 [QSA,PT,L]
+# apache + php-fpm 的代理模式
+#  RewriteRule ^(.*)$ fcgi://127.0.0.1:9000/data/web/shirne/public/index.php/$1 [P,END]
 
   RewriteCond   %{REQUEST_FILENAME} -f
   RewriteCond   %{QUERY_STRING} ^(w|h)\=.+

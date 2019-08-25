@@ -70,11 +70,11 @@ CREATE TABLE `sa_wechat_material` (
  )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
  --
--- Table structure for table `sa_wechat_material`
+-- Table structure for table `sa_wechat_material_article`
 --
 
 DROP TABLE IF EXISTS `sa_wechat_material_article`;
-CREATE TABLE `sa_wechat_material` (
+CREATE TABLE `sa_wechat_material_article` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `wechat_id` INT NOT NULL,
   `material_id` INT(11) NULL,
