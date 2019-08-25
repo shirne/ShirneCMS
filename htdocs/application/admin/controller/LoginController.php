@@ -17,7 +17,8 @@ class LoginController extends BaseController
     {
         parent::initialize();
         
-        if($this->mid){
+        $action=strtolower($this->request->action());
+        if($this->mid && $action != 'logout'){
             $this->success(lang('You\'r already logged in!'),url('admin/index/index'));
         }
     }
