@@ -138,10 +138,14 @@ class AuthController extends BaseController
             $updata['city']=$data['city'];
             if($member['realname']==$oauth['nickname'])$updata['realname']=$data['nickname'];
             if($member['avatar']==$oauth['avatar'])$updata['avatar']=$data['avatar'];
-            if(!empty($updata)){
-                if(empty($member['referer']) && !empty($agent)){
-                    $updata['referer'] = $this->getAgentId($agent);
+            if(empty($member['referer']) && !empty($agent) && $member['agentcode']!=$agent){
+                $refererid=$this->getAgentId($agent);
+                if($refererid != $member['id']){
+                    $updata['referer'] = $refererid;
                 }
+            }
+            if(!empty($updata)){
+                
                 MemberModel::update($updata,array('id'=>$member['id']));
             }
         }
@@ -153,6 +157,10 @@ class AuthController extends BaseController
 
         $token=MemberTokenFacade::createToken($member['id']);
         if(!empty($token)) {
+            MemberModel::update([
+                'login_ip'=>request()->ip(),
+                'logintime'=>time()
+            ],['id'=>$member['id']]);
             return $this->response($token);
         }
         $this->error('登录失败',ERROR_LOGIN_FAILED);

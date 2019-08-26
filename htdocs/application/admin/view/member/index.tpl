@@ -49,8 +49,6 @@
                 <th>手机/邮箱</th>
                 <th>余额</th>
                 <th>推荐人</th>
-                <th>注册时间</th>
-                <th>上次登陆</th>
                 <th>代理</th>
                 <th>类型/级别</th>
                 <th width="200">&nbsp;</th>
@@ -61,8 +59,29 @@
         <volist name="lists" id="v" empty="$empty">
             <tr>
                 <td><input type="checkbox" name="id" value="{$v.id}" /></td>
-                <td>{$v.username}
-                    <if condition="$v.status eq 1"><else/><span class="badge badge-danger" >禁用</span></if><br/>{$v.realname}</td>
+                <td>
+                    <div class="media">
+                        <if condition="!empty($v['avatar'])">
+                            <img src="{$v.avatar}" class="mr-2 rounded" width="60"/>
+                        </if>
+                        <div class="media-body">
+                            <h5 class="text-nowrap mt-0 mb-1">
+                                [{$v.id}]
+                                <if condition="!empty($v['nickname'])">
+                                    {$v.nickname}
+                                    <else/>
+                                    {$v.username}
+                                </if>
+                                <if condition="$v.status eq 1"><else/><span class="badge badge-danger" >禁用</span></if>
+                            </h5>
+                            <div style="font-size:12px;">
+                            <if condition="!empty($v['realname'])">真实姓名：{$v.realname}</if>
+                            注册时间：{$v.create_time|showdate}<br/>
+                                上次登陆：{$v.logintime|showdate} <if condition="!empty($v['login_ip'])">[{$v.login_ip}]</if>
+                            </div>
+                        </div>
+                    </div>
+                </td>
                 <td>{$v.mobile}<br />{$v.email}</td>
                 <td>
                     <foreach name="moneyTypes" item="mt" key="k">
@@ -78,12 +97,23 @@
                     <empty name="v.refer_name">
                         -
                         <else/>
-                        {$v.refer_name}[{$v.referer}]<br />
-                        {$v.refer_realname}
+                        <div class="media">
+                            <if condition="!empty($v['refer_avatar'])">
+                                <img src="{$v.refer_avatar}" class="mr-2 rounded" width="30"/>
+                            </if>
+                            <div class="media-body">
+                                <h5 class="mt-0 mb-1">
+                                    [{$v.referer}]
+                                    <if condition="!empty($v['nickname'])">
+                                        {$v.refer_nickname}
+                                        <else/>
+                                        {$v.refer_name}
+                                    </if>
+                                </h5>
+                            </div>
+                        </div>
                     </empty>
                 </td>
-                <td>{$v.create_time|showdate}</td>
-                <td>{$v.login_ip}<br />{$v.logintime|showdate}</td>
                 <td class="operations">
 
                     <if condition="$v.is_agent neq 0">

@@ -54,7 +54,7 @@ class MemberController extends BaseController
         }
         $keyword=empty($keyword)?"":base64_decode($keyword);
         $model = Db::view('__MEMBER__ m','*')
-            ->view('__MEMBER__ rm',['username'=> 'refer_name','realname'=> 'refer_realname','is_agent'=> 'refer_agent'],'m.referer=rm.id','LEFT');
+            ->view('__MEMBER__ rm',['username'=> 'refer_name','nickname'=> 'refer_nickname','realname'=> 'refer_realname','avatar'=> 'refer_avatar','is_agent'=> 'refer_agent'],'m.referer=rm.id','LEFT');
         if(!empty($keyword)){
             $model->whereLike('m.username|m.email|m.realname',"%$keyword%");
         }
