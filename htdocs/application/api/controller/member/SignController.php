@@ -22,7 +22,7 @@ class SignController extends AuthedController
     
     public function dosign($mood=''){
         
-        $result = $this->model->sign($this->user['id'],$mood,time(),true);
+        $result = $this->model->sign($this->user['id'],$mood,time());
         if($result){
             $this->success('签到成功');
         }else{

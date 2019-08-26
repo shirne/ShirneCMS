@@ -3,7 +3,6 @@
 
 namespace app\common\model;
 
-
 use think\Db;
 
 class MemberSignModel extends BaseModel
@@ -22,6 +21,12 @@ class MemberSignModel extends BaseModel
                 $key = $k;
                 if(strpos($k,'sign_')===0)$key = substr($k,5);
                 $this->settings[$key]=$v;
+            }
+            if(!empty($this->settings['keep_award'])){
+                usort($this->settings['keep_award'],function ($prev, $next){
+                    if($prev['day'] == $next['day'])return 0;
+                    return $prev['day'] > $next['day']?1:-1;
+                });
             }
         }
     }
@@ -80,7 +85,21 @@ class MemberSignModel extends BaseModel
             return false;
         }
         $time = $this->format_time($time);
+        if($time>=strtotime('today +1 day')){
+            $this->error='还没到签到时间哦~';
+            return false;
+        }
+        if($time<strtotime('today')){
+            $is_sup=true;
+        }
         $date = date('Y-m-d',$time);
+        if($is_sup){
+            $today = Db::name('signLog')->where('member_id',$member_id)->where('signdate',date('Y-m-d'))->find();
+            if(empty($today)){
+                $this->error='今天还没签到哦~';
+                return false;
+            }
+        }
 
         $exists=Db::name('signLog')->where('member_id',$member_id)->where('signdate',$date)->find();
         if(!empty($exists)){
@@ -90,6 +109,23 @@ class MemberSignModel extends BaseModel
                 $this->error=$date.' 已经签过到了';
             }
             return false;
+        }
+        if($is_sup){
+            if(!$this->settings['sup_sign_open']){
+                $this->error='系统未开启补签';
+                return false;
+            }
+            if(empty($this->settings['sup_sign_rule']['times'])){
+                $this->error='本月补签次数已用完';
+                return false;
+            }
+            $supcount = Db::name('signLog')->where('member_id',$member_id)
+                ->where('is_sup',1)
+                ->where('signdate','>=',date('Y-m-01'))->count();
+            if($supcount>=$this->settings['sup_sign_rule']['times']){
+                $this->error='本月补签次数已用完';
+                return false;
+            }
         }
         $count = Db::name('signLog')->where('signdate',$date)->count();
 
@@ -112,7 +148,65 @@ class MemberSignModel extends BaseModel
             'remark' =>'',
         ],false,true);
         if($insertid){
-
+            $awarded=false;
+            if($is_sup){
+                $credit = empty($this->settings['sup_sign_rule']['credit'])?0 :intval($this->settings['sup_sign_rule']['credit']);
+                money_log($member_id,-$credit,'补签扣除积分','sign',0,'credit');
+                
+                $today=strtotime('today');
+                $nextday = strtotime($date.' +1 day');
+                while($nextday<=$today){
+                    $signed = Db::name('signLog')->where('member_id',$member_id)->where('signdate',date('Y-m-d',$nextday))->find();
+                    if(empty($signed)){
+                        break;
+                    }
+                    $nextday = strtotime(date('Y-m-d',$nextday).' +1 day');
+                }
+                Db::name('signLog')->where('member_id',$member_id)->where('signdate','>',$date)
+                    ->where('signdate','<',date('Y-m-d',$nextday))->update(['keep_days'=>['INC',1]]);
+            }elseif(!empty($this->settings['keep_award'])) {
+                //是否有连接签到奖励
+                $days = array_column($this->settings['keep_award'],'day');
+                $maxday = max($days);
+                $cdays=$keep_days%$maxday;
+                $rkey=-1;
+                foreach ($days as $key=>$day){
+                    if($cdays < $day)break;
+                    $rkey = $key;
+                }
+                if($rkey > -1){
+                    $credit = floatval($this->settings['keep_award'][$rkey]['value']);
+                    if($credit>0) {
+                        $awarded=true;
+                        money_log($member_id, $credit, '连续签到' . $days[$rkey] . '天奖励', 'sign', 0, 'credit');
+                    }
+                }
+            }
+            
+            if(!$awarded){
+                $credit = empty($this->settings['award']['first'])?0:floatval($this->settings['award']['first']);
+                if(!empty($credit)){
+                    $isfirst = 0;
+                    if($keep_days==1){
+                        if( $this->settings['cycle']=='month'){
+                            $isfirst = Db::name('signLog')->where('member_id',$member_id)
+                                ->where('signdate','>=',date('Y-m-01',time()))->count();
+                        }else{
+                            $isfirst = Db::name('signLog')->where('member_id',$member_id)->count();
+                        }
+                    }
+                    if($isfirst<2){
+                        $awarded=true;
+                        money_log($member_id, $credit, '首次签到奖励', 'sign', 0, 'credit');
+                    }
+                }
+    
+                $credit = empty($this->settings['award']['normal'])?0:floatval($this->settings['award']['normal']);
+                if(!$awarded && !empty($credit)){
+                    money_log($member_id, $credit, '日常签到奖励', 'sign', 0, 'credit');
+                }
+            }
+            
         }
         return $insertid;
     }
