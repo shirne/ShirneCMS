@@ -57,7 +57,8 @@
 			</tr>
 		</thead>
 		<tbody>
-			<volist name="lists" id="v" empty="$empty">
+		<empty name="lists">{:list_empty(8)}</empty>
+			<volist name="lists" id="v" >
 				<tr>
 					<td><input type="checkbox" name="id" value="{$v.id}" /></td>
 					<td>
