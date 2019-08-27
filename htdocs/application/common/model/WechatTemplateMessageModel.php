@@ -52,15 +52,17 @@ class WechatTemplateMessageModel extends BaseModel
     public static function sendTplMessage($wechat,$tplset, $msgdata, $openid){
         if(empty($openid))return false;
         if(empty($tplset) || empty($tplset['template_id']))return false;
+        Log::record(var_export(func_get_args(),TRUE));
         
         $app = WechatModel::createApp($wechat);
         if(empty($app))return false;
         
         $data = [];
         $keywords = self::transkey($tplset['keywords']);
+        
         foreach ($keywords as $index=>$keyword){
             $data['keyword'.($index+1)]=[
-                'DATA'=>$msgdata[$keyword]?:'-'
+                'value'=>$msgdata[$keyword]?:'-'
             ];
         }
         $tplargs=[
@@ -75,7 +77,11 @@ class WechatTemplateMessageModel extends BaseModel
             $tplargs['form_id']=$msgdata['form_id'];
         }
         try {
-            return $app->template_message->send($tplargs);
+            $result = $app->template_message->send($tplargs);
+            if($result['errcode']==0) {
+                return true;
+            }
+            Log::record(var_export($result,true));
         }catch(\Exception $e){
             Log::record($e->getMessage());
         }

@@ -330,7 +330,7 @@ CREATE TABLE `sa_pay_order` (
   `order_no` VARCHAR(30) NULL,
   `order_type` VARCHAR(20) DEFAULT '',
   `pay_data` TEXT,
-  `pay_id` VARCHAR(20) NULL DEFAULT '',
+  `pay_id` INT NULL DEFAULT '0',
   `pay_type` VARCHAR(20) NULL DEFAULT '',
   `prepay_id` VARCHAR(50) NULL DEFAULT '',
   `trade_type` VARCHAR(20) NULL DEFAULT '' COMMENT '交易类型',
@@ -380,6 +380,7 @@ DROP TABLE IF EXISTS `sa_member_token`;
 CREATE TABLE `sa_member_token` (
   `token_id` BIGINT NOT NULL AUTO_INCREMENT,
   `member_id` INT UNSIGNED NULL DEFAULT 0,
+  `platform` VARCHAR(20) NULL,
   `token` VARCHAR(50) NULL,
   `create_time` INT NULL DEFAULT 0,
   `update_time` INT NULL DEFAULT 0,

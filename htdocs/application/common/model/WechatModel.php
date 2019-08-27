@@ -42,6 +42,9 @@ class WechatModel extends BaseModel
             case 'minigame':
                 return Factory::miniProgram($options);
                 break;
+            case 'platform':
+                return Factory::openPlatform($options);
+                break;
             default:
                 
                 break;

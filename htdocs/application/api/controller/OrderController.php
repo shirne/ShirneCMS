@@ -94,6 +94,7 @@ class OrderController extends AuthedController
 
             $remark=[
                 'remark'=>$data['remark'],
+                'platform'=>'miniprogram',
                 'form_id'=>$data['form_id'],
                 'total_price'=>$data['total_price']
             ];
@@ -143,7 +144,7 @@ class OrderController extends AuthedController
         }
     
         $paymodel = PayOrderModel::getInstance();
-        $payorder = $paymodel->createFromOrder($payid,PayOrderModel::PAY_TYPE_WECHAT,$order_id,$trade_type);
+        $payorder = $paymodel->createFromOrder($wechat['id'],PayOrderModel::PAY_TYPE_WECHAT,$order_id,$trade_type);
         if(empty($payorder)){
             if(in_array($paymodel->getErrNo(),[8,9])){
                 $this->success($paymodel->getError());

@@ -133,18 +133,23 @@ class OrderController extends AuthedController
                 //redirect(url('index/order/wechatpay',['type'=>$payid]))->send();exit;
                 if(empty($this->wechatUser))$this->error('支付方式错误');
             }
-            if($payid == 0)$payid = $this->wechatUser['type_id'];
+            
         }
-
+        if($payid == 0 && !empty($this->wechatUser))$payid = $this->wechatUser['type_id'];
+        $wechat=WechatModel::where('id',$payid)
+            ->where('type','wechat')->find();
+        if(empty($wechat)){
+            $this->error('支付方式错误');
+        }
+        $config=WechatModel::to_pay_config($wechat);
+        
         $paymodel = PayOrderModel::getInstance();
-        $payorder = $paymodel->createFromOrder($payid,PayOrderModel::PAY_TYPE_WECHAT,$order_id,$trade_type);
+        $payorder = $paymodel->createFromOrder($wechat['id'],PayOrderModel::PAY_TYPE_WECHAT,$order_id,$trade_type);
         if(empty($payorder)){
             $this->error($paymodel->getError());
         }
 
-        $wechat=WechatModel::where('id',$payid)
-        ->where('type','wechat')->find();
-        $config=WechatModel::to_pay_config($wechat);
+        
 
         $app = Factory::payment($config);
 

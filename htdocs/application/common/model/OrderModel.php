@@ -6,6 +6,7 @@ namespace app\common\model;
 use think\Db;
 use shirne\third\KdExpress;
 use think\Exception;
+use think\facade\Log;
 
 /**
  * Class OrderModel
@@ -66,6 +67,36 @@ class OrderModel extends BaseModel
         if($rebated){
             Db::name('Order')->where('order_id',$item['order_id'])
                 ->update(['rebated'=>1,'rebate_time'=>time()]);
+        }
+    }
+    
+    protected function beforeStatus($data)
+    {
+        $data = parent::beforeStatus($data);
+        if($data['status']==1){
+            if(!isset($data['pay_time'])){
+                $data['pay_time']=time();
+            }
+        }elseif($data['status']==2){
+            if(!isset($data['deliver_time'])){
+                $data['deliver_time']=time();
+            }
+        }elseif($data['status']==3){
+            if(!isset($data['confirm_time'])){
+                $data['confirm_time']=time();
+            }
+        }elseif($data['status']==4){
+            if(!isset($data['comment_time'])){
+                $data['comment_time']=time();
+            }
+        }elseif($data['status']<-2){
+            if(!isset($data['refund_time'])){
+                $data['refund_time']=time();
+            }
+        }elseif($data['status']<0){
+            if(!isset($data['cancel_time'])){
+                $data['cancel_time']=time();
+            }
         }
     }
     
@@ -304,7 +335,7 @@ class OrderModel extends BaseModel
             $this->rollback();
         }
         if($status>0 ){
-            self::update(['status'=>$status,'pay_time'=>time()],['order_id'=>$result]);
+            self::getInstance()->updateStatus(['status'=>$status,'pay_time'=>time()],['order_id'=>$result]);
         }
         return $result;
     }
@@ -345,9 +376,9 @@ class OrderModel extends BaseModel
                 $msgdata['create_date'] = date('Y-m-d H:i:s',$order['create_time']);
                 $msgdata['pay_date'] = date('Y-m-d H:i:s',$order['pay_time']);
                 $msgdata['confirm_date'] = date('Y-m-d H:i:s',$order['confirm_time']);
+                
                 if($order['status']<1){
                     $msgdata['pay_notice'] = '请在'.date('Y-m-d H:i:s',$order['create_time']+30*60).'前付款';
-                    $msgdata['form_id']=$order['form_id'];
                 }
                 if($order['deliver_time']>0) {
                     $msgdata['deliver_date'] = date('Y-m-d H:i:s', $order['deliver_time']);
@@ -360,15 +391,34 @@ class OrderModel extends BaseModel
                         $msgdata['express'] = $express['name'];
                     }
                 }
+                $msgdata['page']='/pages/member/order-detail?id='.$order['order_id'];
             }
             
-            //todo 小程序下如果未获得form_id，需要从支付信息中获取 prepay_id
+            //小程序下如果未获得form_id，需要从支付信息中获取 prepay_id
+            if($wechat['account_type'] == 'miniprogram' || $wechat['account_type'] == 'minigame'){
+                $msgdata['form_id']=$order['form_id'];
+                if(empty($msgdata['form_id'])){
+                    $payorder = Db::name('payOrder')->where('member_id',$fan['member_id'])
+                        ->where('order_type','order')->where('order_id',$order['order_id'])
+                        ->where('status','>',0)
+                        ->where('pay_id',$wechat['id'])->find();
+                    if(!empty($payorder) && !empty($payorder['prepay_id'])){
+                        $msgdata['form_id'] = $payorder['prepay_id'];
+                    }else{
+                        Log::record('支付信息未查询到');
+                        continue;
+                    }
+                }
+            }
     
             
-            WechatTemplateMessageModel::sendTplMessage($wechat,$tplset, $msgdata, $fan['openid']);
+            $return = WechatTemplateMessageModel::sendTplMessage($wechat,$tplset, $msgdata, $fan['openid']);
+            if($return){
+                return $return;
+            }
             
         }
-        
+        return false;
     }
     
     /**

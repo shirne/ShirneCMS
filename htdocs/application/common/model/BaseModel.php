@@ -52,6 +52,15 @@ class BaseModel extends Model
 
     protected function triggerStatus($item,$status, $newData=[])
     {}
+    protected function beforeStatus($status)
+    {
+        if(is_array($status)){
+            $data=$status;
+        }else{
+            $data['status']=$status;
+        }
+        return $data;
+    }
 
     /**
      * 用于更新需要触发状态改变的表
@@ -61,11 +70,7 @@ class BaseModel extends Model
      * @throws Exception
      */
     public function updateStatus($toStatus,$where=null){
-        if(is_array($toStatus)){
-            $data=$toStatus;
-        }else{
-            $data['status']=$toStatus;
-        }
+        $data = $this->beforeStatus($toStatus);
         if(empty($where)) {
             if($this->isExists()){
                 $odata=$this->getOrigin();

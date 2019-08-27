@@ -2,6 +2,7 @@
 
 namespace app\task\controller;
 
+use app\common\model\OrderModel;
 use shirne\common\Image;
 use think\Db;
 
@@ -27,7 +28,10 @@ class TestController
             //"alter table sa_order add `form_id` VARCHAR(45) NULL after `delete_time`",
             //"alter table sa_pay_order add `prepay_id` VARCHAR(45) NULL after `pay_type`",
             //"alter table sa_order add `platform` VARCHAR(45) NULL after `order_id`",
-            "alter table sa_order add `noticed` TINYINT NULL DEFAULT 0 after `status`"
+            //"alter table sa_order add `noticed` TINYINT NULL DEFAULT 0 after `status`",
+            //"alter table sa_order add `comment_time` TINYINT NULL DEFAULT 0 after `confirm_time`",
+            //"alter table sa_order add `refund_time` TINYINT NULL DEFAULT 0 after `cancel_time`",
+            //"alter table `sa_member_token` ADD `platform` VARCHAR(20) NULL AFTER `member_id`"
         ];
         foreach ($dbs as $sql){
             Db::execute($sql);
@@ -36,13 +40,8 @@ class TestController
     }
     
     public function model(){
-        $model=Db::name('manager');
-        $manage=$model->where('id',1)->find();
-        var_export($manage);
-        $manage=$model->removeOption()->whereIn('id',[2,3])->select();
-        var_export($manage);
-        $manage=$model->removeOption()->where('id',1)->find();
-        var_export($manage);
+        
+        OrderModel::sendOrderMessage(5,'order_deliver');
         exit;
     }
 }

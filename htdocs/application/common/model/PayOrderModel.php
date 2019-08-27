@@ -46,6 +46,7 @@ class PayOrderModel extends BaseModel
                 $orderid = $order['id'];
             }
         }else {
+            $ordertype = 'order';
             $order = OrderModel::get($orderno);
             if(!empty($order)) {
                 $orderid = $order['order_id'];
