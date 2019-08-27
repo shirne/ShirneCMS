@@ -3,8 +3,10 @@
 namespace app\task\controller;
 
 use app\common\model\OrderModel;
+use app\common\model\PayOrderModel;
 use shirne\common\Image;
 use think\Db;
+use think\facade\Log;
 
 
 /**
@@ -40,6 +42,21 @@ class TestController
     }
     
     public function model(){
+        exit;
+        $paymodel = PayOrderModel::get(10);
+        $paymodel->save(['status'=>0]);
+        $data = [
+            'status'=>1,
+            'pay_time'=>time(),
+            'pay_bill'=>'4200000396201908281858444566',
+            'time_end'=>'20190828004001'
+        ];
+        try {
+            $paymodel->updateStatus($data);
+        }catch(\Exception $e){
+            Log::record($e->getMessage());
+            Log::record($e->getTraceAsString());
+        }
         
         OrderModel::sendOrderMessage(5,'order_deliver');
         exit;

@@ -52,6 +52,11 @@ class BaseModel extends Model
 
     protected function triggerStatus($item,$status, $newData=[])
     {}
+    
+    /**
+     * @param $status
+     * @return array
+     */
     protected function beforeStatus($status)
     {
         if(is_array($status)){

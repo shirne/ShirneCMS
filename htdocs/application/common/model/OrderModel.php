@@ -98,6 +98,7 @@ class OrderModel extends BaseModel
                 $data['cancel_time']=time();
             }
         }
+        return $data;
     }
     
     protected function triggerStatus($item, $status, $newData=[])

@@ -323,7 +323,12 @@ class WechatController extends Controller{
             }
 
             if(!empty($data)){
-                $order->updateStatus($data);
+                try {
+                    $order->updateStatus($data);
+                }catch(\Exception $e){
+                    Log::record($e->getMessage());
+                    Log::record($e->getTraceAsString());
+                }
             }
 
             return true;
