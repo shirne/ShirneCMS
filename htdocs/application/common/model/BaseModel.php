@@ -50,7 +50,7 @@ class BaseModel extends Model
         return static::$instances[$class];
     }
 
-    protected function triggerStatus($item,$status)
+    protected function triggerStatus($item,$status, $newData=[])
     {}
 
     /**
@@ -71,7 +71,7 @@ class BaseModel extends Model
                 $odata=$this->getOrigin();
                 Db::name($this->name)->where($this->getWhere())->update($data);
                 if ($odata['status'] != $data['status']) {
-                    $this->triggerStatus($odata, $data['status']);
+                    $this->triggerStatus($odata, $data['status'], $data);
                 }
             }else{
                 throw new Exception('Update status with No data exists');
@@ -81,7 +81,7 @@ class BaseModel extends Model
             Db::name($this->name)->where($where)->update($data);
             foreach ($lists as $item) {
                 if ($item['status'] != $data['status']) {
-                    $this->triggerStatus($item, $data['status']);
+                    $this->triggerStatus($item, $data['status'], $data);
                 }
             }
         }

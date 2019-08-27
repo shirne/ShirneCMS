@@ -49,19 +49,17 @@ class OrderController extends AuthedController
         $sku_ids=array_column($order_skus,'sku_id');
         if($from=='cart'){
             $products=MemberCartFacade::getCart($this->user['id'],$sku_ids);
+            
         }else{
             $products=Db::view('ProductSku','*')
                 ->view('Product',['title'=>'product_title','spec_data','image'=>'product_image','levels','is_discount','is_commission','type'],'ProductSku.product_id=Product.id','LEFT')
                 ->whereIn('ProductSku.sku_id',idArr($sku_ids))
                 ->select();
             $counts=array_index($order_skus,'count,sku_id');
-            $userLevel=MemberLevelModel::get($this->user['level_id']);
+            
             foreach ($products as $k=>&$item){
                 $item['product_price']=$item['price'];
 
-                if($item['is_discount'] && $userLevel['discount']){
-                    $item['product_price']=$item['product_price']*$userLevel['discount']*.01;
-                }
                 if(!empty($item['image']))$item['product_image']=$item['image'];
                 if(isset($counts[$item['sku_id']])){
                     $item['count']=$counts[$item['sku_id']];
@@ -69,30 +67,22 @@ class OrderController extends AuthedController
                     $item['count']=1;
                 }
                 if(!empty($item['levels'])){
-                    $levels=json_decode($item['levels'],true);
-                    if(!in_array($this->user['level_id'],$levels)){
-                        $this->error('您当前会员组不允许购买商品['.$item['product_title'].']');
-                    }
+                    $item['levels']=json_decode($item['levels'],true);
                 }
             }
             unset($item);
         }
 
-        $total_price=0;
         $ordertype=1;
         foreach ($products as $item){
-            $total_price += $item['product_price']*$item['count'];
             if($item['type']==2){
                 $ordertype=2;
             }
         }
         //todo 邮费模板
 
-        if($total_price != $this->input['total_price']){
-            $this->error('下单商品价格已变动');
-        }
 
-        $data=$this->request->only('address_id,pay_type,remark,form_id','put');
+        $data=$this->request->only('address_id,pay_type,remark,form_id,total_price','put');
 
         $validate=new OrderValidate();
         if(!$validate->check($data)){
@@ -104,7 +94,8 @@ class OrderController extends AuthedController
 
             $remark=[
                 'remark'=>$data['remark'],
-                'form_id'=>$data['form_id']
+                'form_id'=>$data['form_id'],
+                'total_price'=>$data['total_price']
             ];
             $result=OrderFacade::makeOrder($this->user,$products,$address,$remark,$balancepay,$ordertype);
             if($result){

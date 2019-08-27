@@ -78,7 +78,7 @@ class OrderController extends AuthedController
         if($order['status'] != 0){
             $this->error('订单状态错误',0);
         }
-        $success = $order->save(['status'=>-2,'reason'=>$reason]);
+        $success = $order->updateStatus(['status'=>-2,'reason'=>$reason]);
         if($success){
             $this->success('订单已取消');
         }else{
@@ -96,7 +96,7 @@ class OrderController extends AuthedController
         }
         
         //退款
-        $success = $order->save(['status'=>-3,'reason'=>$reason]);
+        $success = $order->updateStatus(['status'=>-3,'reason'=>$reason]);
         if($success){
             
             $this->success('订单已申请退款');
@@ -147,7 +147,7 @@ class OrderController extends AuthedController
         if($order['status'] < 1){
             $this->error('订单状态错误',0);
         }
-        $success = $order->save(['status'=>4]);
+        $success = $order->updateStatus(['status'=>4,'confirm_time'=>time()]);
         if($success){
             $this->success('确认成功');
         }else{

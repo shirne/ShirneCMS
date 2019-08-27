@@ -4,6 +4,9 @@
 namespace app\common\model;
 
 
+use think\Exception;
+use think\facade\Log;
+
 class WechatTemplateMessageModel extends BaseModel
 {
     protected $autoWriteTimestamp = true;
@@ -71,7 +74,11 @@ class WechatTemplateMessageModel extends BaseModel
         if(isset($msgdata['form_id'])){
             $tplargs['form_id']=$msgdata['form_id'];
         }
-        
-        return $app->template_message->send($tplargs);
+        try {
+            return $app->template_message->send($tplargs);
+        }catch(\Exception $e){
+            Log::record($e->getMessage());
+        }
+        return false;
     }
 }

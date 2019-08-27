@@ -51,9 +51,6 @@ class OrderController extends AuthedController
                 $item['product_price']=$item['price'];
                 $item['product_weight']=$item['weight'];
 
-                if($item['is_discount'] && $this->userLevel['discount']){
-                    $item['product_price']=$item['product_price']*$this->userLevel['discount']*.01;
-                }
                 if(!empty($item['image']))$item['product_image']=$item['image'];
                 if(isset($counts[$k])){
                     $item['count']=$counts[$k];
@@ -61,10 +58,7 @@ class OrderController extends AuthedController
                     $item['count']=$counts[0];
                 }
                 if(!empty($item['levels'])){
-                    $levels=json_decode($item['levels'],true);
-                    if (!empty($levels) && !in_array($this->user['level_id'], $levels)) {
-                        $this->error('您当前会员组不允许购买商品[' . $item['product_title'] . ']');
-                    }
+                    $item['levels']=json_decode($item['levels'],true);
                 }
             }
             unset($item);
@@ -80,7 +74,7 @@ class OrderController extends AuthedController
         }
 
         if($this->request->isPost()){
-            $data=$this->request->only('address_id,remark,pay_type','post');
+            $data=$this->request->only('address_id,remark,pay_type,total_price','post');
             $validate=new OrderValidate();
             if(!$validate->check($data)){
                 $this->error($validate->getError());
@@ -88,7 +82,12 @@ class OrderController extends AuthedController
                 $address=Db::name('MemberAddress')->where('member_id',$this->userid)
                     ->where('address_id',$data['address_id'])->find();
                 $balancepay=$data['pay_type']=='balance'?1:0;
-                $result=OrderFacade::makeOrder($this->user,$products,$address,$data['remark'],$balancepay,$ordertype);
+                $remark=[
+                    'remark'=>$data['remark'],
+                    'platform'=>'web',
+                    'total_price'=>$data['total_price']
+                ];
+                $result=OrderFacade::makeOrder($this->user,$products,$address,$remark,$balancepay,$ordertype);
                 if($result){
                     if($from=='cart'){
                         MemberCartFacade::delCart($sku_ids,$this->userid);

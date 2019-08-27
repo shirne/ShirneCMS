@@ -6,6 +6,7 @@ namespace app\task\controller;
 use app\common\command\Install;
 use app\common\model\ArticleModel;
 use app\common\model\MemberRechargeModel;
+use app\common\model\OrderModel;
 use app\common\model\PayOrderModel;
 use app\common\model\ProductModel;
 use think\Console;
@@ -41,13 +42,32 @@ class UtilController extends Controller
 
     public function daily()
     {
-        # code...
-        $rows = Db::name('product')->whereLike('title',["%1%","%2%"],'AND')->select();
-        var_export($rows);
-        $instance=ProductModel::getInstance();
-        echo $instance->getName();
-        $instance=ArticleModel::getInstance();
-        echo $instance->getName();
+        $time = time();
+        $isbreaked=false;
+        $orders = Db::name('Order')->where('status',0)
+            ->where('noticed',0)
+            ->where('create_time','<',time()-10*60)->select();
+        $ids = [];
+        foreach ($orders as $order){
+            $ids[]=$order['order_id'];
+            OrderModel::sendOrderMessage($order,'order_need_pay');
+            if(time()-$time>25){
+                $isbreaked=true;
+                break;
+            }
+        }
+        Db::name('Order')->whereIn('order_id',$ids)->update(['noticed'=>1]);
+        if($isbreaked)exit;
+    
+        $orders = Db::name('Order')->where('status',0)
+            ->where('create_time','<',time()-30*60)->select();
+        foreach ($orders as $order){
+            OrderModel::getInstance()->updateStatus(['status'=>-1,'cancel_time'=>time(),'reason'=>'订单长时间未支付自动取消'],['order_id'=>$order['order_id']]);
+            if(time()-$time>25){
+                break;
+            }
+        }
+        exit;
     }
 
     public function install($sql='',$mode='')

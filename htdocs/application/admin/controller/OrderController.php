@@ -153,7 +153,7 @@ class OrderController extends BaseController
             $data['express_no']=$express_no;
             $data['express_code']=$express_code;
         }
-        $order->save($data);
+        $order->updateStatus($data);
         user_log($this->mid,'auditorder',1,'更新订单 '.$id .' '.$audit,'manager');
         $this->success('操作成功');
     }
@@ -168,7 +168,8 @@ class OrderController extends BaseController
             $this->error('订单不存在');
         }
         $audit=$this->request->post('status/d');
-        $order->save(['isaudit'=>$audit]);
+        
+        $order->audit();
         user_log($this->mid,'auditorder',1,'审核订单 '.$id .' '.$audit,'manager');
         $this->success('操作成功');
     }

@@ -5,6 +5,7 @@ namespace app\common\model;
 
 use think\Db;
 use shirne\third\KdExpress;
+use think\Exception;
 
 /**
  * Class OrderModel
@@ -41,39 +42,116 @@ class OrderModel extends BaseModel
                             Db::name('Order')->where('order_id',$order['order_id'])
                                 ->update(['rebated'=>1,'rebate_time'=>time()]);
                         }
-                    }elseif($order['status']<0 && $order['cancel_time']==0){
-                        $products=Db::name('orderProduct')->where('order_id',$order['order_id'])->select();
-                        foreach ($products as $product) {
-                            Db::name('ProductSku')->where('sku_id', $product['sku_id'])
-                                ->dec('storage', -$product['count'])
-                                ->inc('sale', $product['count'])
-                                ->update();
-                            Db::name('Product')->where('id', $product['product_id'])
-                                ->dec('storage', -$product['count'])
-                                ->inc('sale', $product['count'])
-                                ->update();
-                        }
-                        Db::name('Order')->where('order_id',$order['order_id'])
-                            ->update(['cancel_time'=>time()]);
-                        
-                        self::sendOrderMessage($order,'order_cancel',$products);
                     }
                 }
             }
         });
+    }
+    
+    public function audit(){
+        if($this->isExists()){
+            Db::name('Order')->where('order_id',$this['order_id'])
+                ->update(['isaudit'=>1]);
+            if($this['status']>0){
+                $this->afterAudit($this->getOrigin());
+            }
+        }else{
+            throw new Exception('订单不存在');
+        }
+    }
+    
+    protected function afterAudit($item){
+        self::setLevel($item);
+        $rebated=self::doRebate($item);
+        if($rebated){
+            Db::name('Order')->where('order_id',$item['order_id'])
+                ->update(['rebated'=>1,'rebate_time'=>time()]);
+        }
+    }
+    
+    protected function triggerStatus($item, $status, $newData=[])
+    {
+        parent::triggerStatus($item, $status, $newData);
+        if($status < -2){
+        
+        }elseif($status < 0){
+            //if($item['cancel_time']==0){
+                $products=Db::name('orderProduct')->where('order_id',$item['order_id'])->select();
+                foreach ($products as $product) {
+                    Db::name('ProductSku')->where('sku_id', $product['sku_id'])
+                        ->dec('storage', -$product['count'])
+                        ->inc('sale', $product['count'])
+                        ->update();
+                    Db::name('Product')->where('id', $product['product_id'])
+                        ->dec('storage', -$product['count'])
+                        ->inc('sale', $product['count'])
+                        ->update();
+                }
+                Db::name('Order')->where('order_id',$item['order_id'])
+                    ->update(['cancel_time'=>time()]);
+    
+                //只传id过去，需要取新数据
+                self::sendOrderMessage($item['order_id'],'order_cancel',$products);
+            //}
+        }else{
+            if($status < $item['status'])return;
+            if($item['isaudit'] == 1 || !empty($newData['isaudit'])){
+                $this->afterAudit($item);
+            }
+            if($item['status'] < $status){
+                switch ($status){
+                    case 1:
+                        $this->afterPay($item);
+                        break;
+                    case 2:
+                        $this->afterDeliver($item);
+                        break;
+                    case 3:
+                        $this->afterReceive($item);
+                        break;
+                    case 4:
+                        $this->afterComplete($item);
+                        break;
+                }
+            }
+        }
+    }
+    protected function afterPay($item=null){
+        if(empty($item) && $this->isExists()){
+            $item = $this->getOrigin();
+        }
+        self::sendOrderMessage($item['order_id'],'order_payed');
+    }
+    protected function afterDeliver($item=null){
+        if(empty($item) && $this->isExists()){
+            $item = $this->getOrigin();
+        }
+        self::sendOrderMessage($item['order_id'],'order_deliver');
+    }
+    protected function afterReceive($item=null){
+        if(empty($item) && $this->isExists()){
+            $item = $this->getOrigin();
+        }
+        self::sendOrderMessage($item['order_id'],'order_receive');
+    }
+    protected function afterComplete($item=null){
+        if(empty($item) && $this->isExists()){
+            $item = $this->getOrigin();
+        }
+        self::sendOrderMessage($item['order_id'],'order_complete');
     }
 
     /**
      * @param $member
      * @param $products
      * @param $address
-     * @param $remark
+     * @param $extdata
      * @param $balance_pay
      * @param $ordertype
      * @return mixed
      */
 
-    public function makeOrder($member,$products,$address,$remark,$balance_pay=1,$ordertype=1){
+    public function makeOrder($member,$products,$address,$extdata,$balance_pay=1,$ordertype=1){
         if(empty($member) || empty($member['id'])){
             $this->error='指定的下单用户资料错误';
             return false;
@@ -101,11 +179,19 @@ class OrderModel extends BaseModel
                 $this->error='商品['.$product['product_title'].']数量错误';
                 return false;
             }
+    
+            if(!empty($product['levels'])){
+                if (!in_array($member['level_id'], $product['levels'])) {
+                    $this->error='您当前会员组不允许购买商品[' . $product['product_title'] . ']';
+                    return false;
+                }
+            }
 
             $price=intval($product['product_price']*100) * $product['count'];
             if($product['is_discount']){
-                $price*=$discount;
+                $price=round($price*$discount);
             }
+            
             $total_price += $price;
 
             if($product['is_commission'] == 1 ){
@@ -125,7 +211,15 @@ class OrderModel extends BaseModel
         }
 
         //todo  优惠券
-
+        
+        //比较客户端传来的价格
+        if(is_array($extdata) && isset($extdata['total_price'])) {
+            if ($total_price != $extdata['total_price']*100) {
+                $this->error = '下单商品价格已变动';
+        
+                return false;
+            }
+        }
         
         $this->startTrans();
 
@@ -161,14 +255,14 @@ class OrderModel extends BaseModel
             'express_code'=>'',
             'type'=>$ordertype,
         );
-        if(is_array($remark)){
-            foreach ($remark as $k=>$val){
-                if(!isset($orderdata) && !in_array($k,['status','rebated'])){
+        if(is_array($extdata)){
+            foreach ($extdata as $k=>$val){
+                if(!isset($orderdata) && !in_array($k,['status','rebated','total_price'])){
                     $orderdata[$k]=$val;
                 }
             }
         }else{
-            $orderdata['remark']=$remark;
+            $orderdata['remark']=$extdata;
         }
         $result= $this->insert($orderdata,false,true);
 
@@ -270,6 +364,7 @@ class OrderModel extends BaseModel
             
             //todo 小程序下如果未获得form_id，需要从支付信息中获取 prepay_id
     
+            
             WechatTemplateMessageModel::sendTplMessage($wechat,$tplset, $msgdata, $fan['openid']);
             
         }

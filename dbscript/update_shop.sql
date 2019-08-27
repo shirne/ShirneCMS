@@ -228,6 +228,7 @@ CREATE TABLE `sa_order` (
   `rebated` INT NULL DEFAULT 0,
   `rebate_time` INT NULL DEFAULT 0,
   `status` TINYINT NULL DEFAULT 0 COMMENT '订单状态',
+  `noticed` TINYINT NULL DEFAULT 0 COMMENT '通知状态',
   `isaudit` TINYINT NULL DEFAULT 0 COMMENT '审核状态',
   `delete_time` INT NULL DEFAULT 0 COMMENT '删除状态',
   `form_id` VARCHAR(45) NULL,

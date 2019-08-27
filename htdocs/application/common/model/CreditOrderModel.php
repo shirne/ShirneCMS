@@ -25,31 +25,55 @@ class CreditOrderModel extends BaseModel
     public static function init()
     {
         parent::init();
-        self::afterWrite(function ( $model)
-        {
-            $where=$model->getWhere();if(empty($where))return;
-            $orders=$model->where($model->getWhere())->select();
-            if(!empty($orders)) {
-                foreach ($orders as $order) {
-                    if ($order['status'] > 0 && $order['isaudit'] == 1) {
-                        
-                        
-                    }elseif($order['status']<0 && $order['cancel_time']==0){
-                        $goodss=Db::name('creditOrderGoods')->where('order_id',$order['order_id'])->select();
-                        foreach ($goodss as $goods) {
-                            Db::name('Goods')->where('id', $goods['goods_id'])
-                                ->inc('storage', $goods['count'])
-                                ->dec('sale', $goods['count'])
-                                ->update();
-                        }
-                        Db::name('Order')->where('order_id',$order['order_id'])
-                            ->update(['cancel_time'=>time()]);
-                    }
-                }
-            }
-        });
     }
-
+    
+    protected function triggerStatus($item, $status, $newData=[])
+    {
+        parent::triggerStatus($item, $status, $newData);
+        if($status < 0){
+            if($item['cancel_time']==0){
+                $goodss=Db::name('creditOrderGoods')->where('order_id',$item['order_id'])->select();
+                foreach ($goodss as $goods) {
+                    Db::name('Goods')->where('id', $goods['goods_id'])
+                        ->inc('storage', $goods['count'])
+                        ->dec('sale', $goods['count'])
+                        ->update();
+                }
+                Db::name('creditOrder')->where('order_id',$item['order_id'])
+                    ->update(['cancel_time'=>time()]);
+            }
+        }else{
+            if($status < $item['status'])return;
+            switch ($status){
+                case 1:
+                    $this->afterPay($item);
+                    break;
+                case 2:
+                    $this->afterDeliver($item);
+                    break;
+                case 3:
+                    $this->afterReceive($item);
+                    break;
+                case 4:
+                    $this->afterComplete($item);
+                    break;
+            }
+        }
+    }
+    
+    protected function afterPay($item=null){
+    
+    }
+    protected function afterDeliver($item=null){
+    
+    }
+    protected function afterReceive($item=null){
+    
+    }
+    protected function afterComplete($item=null){
+    
+    }
+    
     /**
      * @param $member
      * @param $goodss
@@ -128,9 +152,9 @@ class CreditOrderModel extends BaseModel
             'express_no' =>'',
             'express_code'=>''
         );
-        $servModel=new MemberServiceModel();
-        $services = $servModel->getServices($address);
-        $orderdata = array_merge($orderdata,$services);
+        //$servModel=new MemberServiceModel();
+        //$services = $servModel->getServices($address);
+        //$orderdata = array_merge($orderdata,$services);
         /*if($status>0){
             $orderdata['pay_time']=time();
         }*/
