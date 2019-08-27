@@ -152,7 +152,7 @@ class OrderController extends AuthedController
         $result = $app->order->unify([
             'body' => '订单-'.$order_id,
             'out_trade_no' => $payorder['order_no'],
-            'total_fee' => $payorder['amount'],
+            'total_fee' => $payorder['pay_amount'],
             //'spbill_create_ip' => '', // 可选，如不传该参数，SDK 将会自动获取相应 IP 地址
             'notify_url' => url('api/wechat/payresult','',true,true),
             'trade_type' => $trade_type,
