@@ -33,6 +33,7 @@ class TestController
             //"alter table sa_order add `noticed` TINYINT NULL DEFAULT 0 after `status`",
             //"alter table sa_order add `comment_time` TINYINT NULL DEFAULT 0 after `confirm_time`",
             //"alter table sa_order add `refund_time` TINYINT NULL DEFAULT 0 after `cancel_time`",
+            //"alter table sa_order add `rebate_total` DECIMAL(10,2) NULL DEFAULT 0 after `rebate_time`",
             //"alter table `sa_member_token` ADD `platform` VARCHAR(20) NULL AFTER `member_id`"
         ];
         foreach ($dbs as $sql){

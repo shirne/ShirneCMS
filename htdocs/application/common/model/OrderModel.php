@@ -63,11 +63,7 @@ class OrderModel extends BaseModel
     
     protected function afterAudit($item){
         self::setLevel($item);
-        $rebated=self::doRebate($item);
-        if($rebated){
-            Db::name('Order')->where('order_id',$item['order_id'])
-                ->update(['rebated'=>1,'rebate_time'=>time()]);
-        }
+        self::doRebate($item);
     }
     
     protected function beforeStatus($data)
@@ -235,10 +231,21 @@ class OrderModel extends BaseModel
                 $cost_price=intval($product['cost_price']*100)* $product['count'];
                 if($price>$cost_price) {
                     $comm_special[]=[
+                        'type'=>2,
                         'amount'=> ($price - $cost_price)*.01,
                         'percent'=>force_json_decode($product['commission_percent'])
                     ];
                 }
+            }elseif($product['is_commission'] == 3){
+                $comm_special[]=[
+                    'type'=>3,
+                    'amounts'=>force_json_decode($product['commission_percent'])
+                ];
+            }elseif($product['is_commission'] == 4){
+                $comm_special[]=[
+                    'type'=>4,
+                    'level_amounts'=>force_json_decode($product['commission_percent'])
+                ];
             }
         }
 
@@ -449,42 +456,61 @@ class OrderModel extends BaseModel
     public static function doRebate($order){
         if($order['rebated'] || !$order['member_id'])return false;
         $member=Db::name('Member')->where('id',$order['member_id'])->find();
-        if(empty($member))return true;
-        $levels=getMemberLevels();
-        $levelConfig=getLevelConfig($levels);
-        $parents=getMemberParents($member['id'],$levelConfig['commission_layer'],false);
-        if(empty($parents))return true;
-
-        $pids=array_column($parents,'id');
-        Db::name('Member')->where('id', $member['referer'])->setInc('recom_performance', $order['payamount'] * 100);
-        Db::name('Member')->whereIn('id', $pids)->setInc('total_performance', $order['payamount'] * 100);
-
-        $specials = force_json_decode($order['commission_special']);
-
-        for ($i = 0; $i < count($parents); $i++) {
-            $curLevel=$levels[$parents[$i]['level_id']];
-            if($curLevel['commission_layer']>$i && !empty($curLevel['commission_percent'][$i])) {
-                $curPercent = $curLevel['commission_percent'][$i];
-                $commission = $order['commission_amount'];
-                if($curLevel['commission_limit'] && $commission>$curLevel['commission_limit']){
-                    $commission = $curLevel['commission_limit'];
-                }
-                $amount = $commission * $curPercent * .01;
-                self::award_log($parents[$i]['id'],$amount,'消费分佣'.($i+1).'代','commission',$order);
-            }
-
-            foreach ($specials as $special){
-                if($special['amount'] > 0 && !empty($special['percent'][$i])){
-                    $curPercent = floatVal($special['percent'][$i]);
-                    $commission = $special['amount'] * 1;
-                    if($curLevel['commission_limit'] && $commission>$curLevel['commission_limit']){
-                        $commission = $curLevel['commission_limit'];
+    
+        $total_rebate=0;
+        if(!empty($member)) {
+            $levels = getMemberLevels();
+            $levelConfig = getLevelConfig($levels);
+            $parents = getMemberParents($member['id'], $levelConfig['commission_layer'], false);
+            if (!empty($parents)) {
+                $pids = array_column($parents, 'id');
+                Db::name('Member')->where('id', $member['referer'])->setInc('recom_performance', $order['payamount'] * 100);
+                Db::name('Member')->whereIn('id', $pids)->setInc('total_performance', $order['payamount'] * 100);
+    
+                $specials = force_json_decode($order['commission_special']);
+    
+                for ($i = 0; $i < count($parents); $i++) {
+                    $curLevel = $levels[$parents[$i]['level_id']];
+                    if ($curLevel['commission_layer'] > $i && !empty($curLevel['commission_percent'][$i])) {
+                        $curPercent = $curLevel['commission_percent'][$i];
+                        $commission = $order['commission_amount'];
+                        if ($curLevel['commission_limit'] && $commission > $curLevel['commission_limit']) {
+                            $commission = $curLevel['commission_limit'];
+                        }
+                        $amount = $commission * $curPercent * .01;
+                        $total_rebate += $amount;
+                        self::award_log($parents[$i]['id'], $amount, '消费分佣' . ($i + 1) . '代', 'commission', $order);
                     }
-                    $amount = $commission * $curPercent * .01;
-                    self::award_log($parents[$i]['id'], $amount, '消费分佣' . ($i + 1) . '代', 'commission', $order);
+        
+                    foreach ($specials as $special) {
+                        if ($special['type'] == 3) {
+                            $amount = $special['amouts'][$i] ?: 0;
+                            if ($amount > 0) {
+                                self::award_log($parents[$i]['id'], $amount, '消费分佣' . ($i + 1) . '代', 'commission', $order);
+                            }
+                        } elseif ($special['type'] == 4) {
+                            $amount = $special['amouts'][$parents[$i]['level_id']][$i] ?: 0;
+                            if ($amount > 0) {
+                                self::award_log($parents[$i]['id'], $amount, '消费分佣' . ($i + 1) . '代', 'commission', $order);
+                            }
+                        } else {
+                            if ($special['amount'] > 0 && !empty($special['percent'][$i])) {
+                                $curPercent = floatVal($special['percent'][$i]);
+                                $commission = $special['amount'] * 1;
+                                if ($curLevel['commission_limit'] && $commission > $curLevel['commission_limit']) {
+                                    $commission = $curLevel['commission_limit'];
+                                }
+                                $amount = $commission * $curPercent * .01;
+                                self::award_log($parents[$i]['id'], $amount, '消费分佣' . ($i + 1) . '代', 'commission', $order);
+                            }
+                        }
+                        $total_rebate += $amount;
+                    }
                 }
             }
         }
+        Db::name('Order')->where('order_id',$order['order_id'])
+            ->update(['rebated'=>1,'rebate_time'=>time(),'rebate_total'=>$total_rebate]);
         return true;
     }
     public static function award_log($uid, $money, $reson, $type,$order,$field='credit')

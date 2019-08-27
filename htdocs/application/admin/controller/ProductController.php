@@ -90,6 +90,31 @@ class ProductController extends BaseController
         return $this->fetch();
     }
 
+    private function processData($data){
+        $skus=$data['skus'];
+        if(empty($data['levels']))$data['levels']=[];
+        $data['max_price']=array_max($skus,'price');
+        $data['min_price']=array_min($skus,'price');
+        $data['market_price']=array_max($skus,'market_price');
+        $data['storage']=array_sum(array_column($skus,'storage'));
+        if(!empty($data['prop_data'])){
+            $data['prop_data']=array_combine($data['prop_data']['keys'],$data['prop_data']['values']);
+        }else{
+            $data['prop_data']=[];
+        }
+        if($data['is_commission'] == 3){
+            $data['commission_percent']=$data['commission_amount'];
+        }elseif($data['is_commission']==4){
+            $data['commission_percent']=$data['commission_levels'];
+        }
+        unset($data['commission_amount']);
+        unset($data['commission_levels']);
+        if($data['is_commission'] < 2){
+            unset($data['commission_percent']);
+        }
+        return $data;
+    }
+    
     /**
      * 添加
      * @param int $cid
@@ -128,17 +153,8 @@ class ProductController extends BaseController
                 }
                 unset($data['delete_image']);
                 $data['user_id'] = $this->mid;
+                $data = $this->processData($data);
                 $skus=$data['skus'];
-                $data['max_price']=array_max($skus,'price');
-                $data['min_price']=array_min($skus,'price');
-                $data['market_price']=array_max($skus,'market_price');
-                $data['storage']=array_sum(array_column($skus,'storage'));
-                if(empty($data['levels']))$data['levels']=[];
-                if(!empty($data['prop_data'])){
-                    $data['prop_data']=array_combine($data['prop_data']['keys'],$data['prop_data']['values']);
-                }else{
-                    $data['prop_data']=[];
-                }
                 unset($data['skus']);
                 $model=ProductModel::create($data);
                 if ($model['id']) {
@@ -208,15 +224,9 @@ class ProductController extends BaseController
                 }
                 $model=ProductModel::get($id);
                 $skus=$data['skus'];
-                if(!empty($data['prop_data'])){
-                    $data['prop_data']=array_combine($data['prop_data']['keys'],$data['prop_data']['values']);
-                }else{
-                    $data['prop_data']=[];
-                }
-                $data['max_price']=array_max($skus,'price');
-                $data['min_price']=array_min($skus,'price');
-                $data['market_price']=array_max($skus,'market_price');
-                $data['storage']=array_sum(array_column($skus,'storage'));
+    
+                $data = $this->processData($data);
+                
                 if ($model->allowField(true)->save($data)) {
                     //不删除图片，可能会导致订单数据图片不显示
                     //delete_image($delete_images);

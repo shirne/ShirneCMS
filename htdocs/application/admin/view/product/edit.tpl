@@ -66,7 +66,7 @@
                     </if>
                 </div>
             </div>
-            <div class="col-4">
+            <div class="col-5">
                 <div class="card form-group">
                     <div class="card-header">商品属性</div>
                     <div class="card-body">
@@ -116,7 +116,13 @@
                                         <input type="radio" name="is_commission" value="1" autocomplete="off" {$product['is_commission']==1?'checked':''}>支持
                                     </label>
                                     <label class="btn btn-outline-secondary{$product['is_commission']==2?' active':''}">
-                                        <input type="radio" name="is_commission" value="2" autocomplete="off" {$product['is_commission']==2?'checked':''}>独立分佣
+                                        <input type="radio" name="is_commission" value="2" autocomplete="off" {$product['is_commission']==2?'checked':''}>设置比例
+                                    </label>
+                                    <label class="btn btn-outline-secondary{$product['is_commission']==3?' active':''}">
+                                        <input type="radio" name="is_commission" value="3" autocomplete="off" {$product['is_commission']==3?'checked':''}>设置金额
+                                    </label>
+                                    <label class="btn btn-outline-secondary{$product['is_commission']==4?' active':''}">
+                                        <input type="radio" name="is_commission" value="4" autocomplete="off" {$product['is_commission']==4?'checked':''}>详细设置
                                     </label>
                                     <label class="btn btn-outline-secondary{$product['is_commission']==0?' active':''}">
                                         <input type="radio" name="is_commission" value="0" autocomplete="off" {$product['is_commission']==0?'checked':''}>不支持
@@ -124,12 +130,12 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-row commission_box">
-                            <label class="col-3">独立分佣比例</label>
+
+                        <php>$layercounts = array_column($levels,'commission_layer');$layercount = max($layercounts);</php>
+                        <div class="form-row commission_box cbox2">
                             <div class="form-group col">
-                                <php>$layercounts = array_column($levels,'commission_layer');$layercount = max($layercounts);</php>
                                 <for start="0" end="$layercount">
-                                    <div class="input-group col">
+                                    <div class="input-group mb-2 col">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">第 {$i+1} 代</span>
                                         </div>
@@ -143,6 +149,40 @@
                                 </for>
                             </div>
                         </div>
+                        <div class="form-row commission_box cbox3">
+                            <div class="form-group col">
+                                <for start="0" end="$layercount">
+                                    <div class="input-group mb-2 col">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">第 {$i+1} 代</span>
+                                        </div>
+                                        <input type="text" name="commission_amount[{$i}]"
+                                               value="{$product['commission_percent'][$i]}"
+                                               class="form-control"/>
+                                    </div>
+                                </for>
+                            </div>
+                        </div>
+                        <div class="form-row commission_box cbox4">
+                            <div class="form-group col">
+                                <volist name="levels" id="lv" key="k">
+                                <div class="input-group mb-2 col">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">{$lv.level_name}</span>
+                                    </div>
+                                    <for start="0" end="$layercount">
+                                            <input type="text" name="commission_levels[$k][{$i}]"
+                                                   value="{$product['commission_percent'][$k][$i]?:''}"
+                                                   class="form-control"/>
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">/</span>
+                                            </div>
+                                    </for>
+                                </div>
+                                </volist>
+                            </div>
+                        </div>
+                        <div class="commission_desc mb-2 text-muted">此处佣金层级按会员组设置的最大层级，不需要分佣的层级填写0即可，如需增加分级，先在会员组中设置一个最大值</div>
                         <div class="form-row">
                             <label class="col-3">限制购买</label>
                             <div class="form-group col">
@@ -602,10 +642,9 @@
         });
         $('.commision-groups label').click(function () {
             var val=$(this).find('input').val();
-            if(val==2){
-                $('.commission_box').show();
-            }else{
-                $('.commission_box').hide();
+            $('.commission_desc,.commission_box').hide();
+            if(val>1){
+                $('.commission_desc,.commission_box.cbox'+val).show();
             }
         }).filter('.active').trigger('click');
         isready=true;
