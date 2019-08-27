@@ -147,7 +147,7 @@ CREATE TABLE `sa_product` (
   `sale` int(11) DEFAULT '0' COMMENT '总销量',
   `type` tinyint(4) DEFAULT '1',
   `is_commission` tinyint(4) DEFAULT '1',
-  `commission_percent`  VARCHAR(200) DEFAULT '',
+  `commission_percent`  text,
   `is_discount` tinyint(4) DEFAULT '1',
   `status` tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),

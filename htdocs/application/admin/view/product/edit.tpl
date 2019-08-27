@@ -140,7 +140,7 @@
                                             <span class="input-group-text">第 {$i+1} 代</span>
                                         </div>
                                         <input type="text" name="commission_percent[{$i}]"
-                                               value="{$product['commission_percent'][$i]}"
+                                               value="{$product['commission_percent'][$i]|ignore_array}"
                                                class="form-control"/>
                                         <div class="input-group-append">
                                             <span class="input-group-text">%</span>
@@ -157,7 +157,7 @@
                                             <span class="input-group-text">第 {$i+1} 代</span>
                                         </div>
                                         <input type="text" name="commission_amount[{$i}]"
-                                               value="{$product['commission_percent'][$i]}"
+                                               value="{$product['commission_percent'][$i]|ignore_array}"
                                                class="form-control"/>
                                     </div>
                                 </for>
@@ -171,7 +171,7 @@
                                         <span class="input-group-text">{$lv.level_name}</span>
                                     </div>
                                     <for start="0" end="$layercount">
-                                            <input type="text" name="commission_levels[$k][{$i}]"
+                                            <input type="text" name="commission_levels[{$k}][{$i}]"
                                                    value="{$product['commission_percent'][$k][$i]?:''}"
                                                    class="form-control"/>
                                             <div class="input-group-append">

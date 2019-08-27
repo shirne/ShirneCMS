@@ -12,7 +12,7 @@ use think\Db;
 class ProductModel extends ContentModel
 {
     protected $autoWriteTimestamp = true;
-    protected $type = ['levels'=>'array','spec_data'=>'array','prop_data'=>'array'];
+    protected $type = ['levels'=>'array','spec_data'=>'array','prop_data'=>'array','commission_percent'=>'array'];
 
     function __construct($data = [])
     {
