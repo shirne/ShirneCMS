@@ -102,7 +102,11 @@ class OrderController extends AuthedController
                 ->where('address_id',$data['address_id'])->find();
             $balancepay=$data['pay_type']=='balance'?1:0;
 
-            $result=OrderFacade::makeOrder($this->user,$products,$address,$data['remark'],$balancepay,$ordertype);
+            $remark=[
+                'remark'=>$data['remark'],
+                'form_id'=>$data['form_id']
+            ];
+            $result=OrderFacade::makeOrder($this->user,$products,$address,$remark,$balancepay,$ordertype);
             if($result){
                 if($from=='cart'){
                     MemberCartFacade::delCart($sku_ids,$this->user['id']);
@@ -183,6 +187,9 @@ class OrderController extends AuthedController
         }
         if($trade_type == 'JSAPI'){
             $data['payment']=$payorder->getSignedData($result,$config['key']);
+        }
+        if(!empty($result['prepay_id'])){
+            PayOrderModel::where('id',$payorder['id'])->update(['prepay_id'=>$result['prepay_id']]);
         }
     
         return $this->response($data);

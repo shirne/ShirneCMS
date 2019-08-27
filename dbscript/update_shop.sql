@@ -212,6 +212,7 @@ DROP TABLE IF EXISTS `sa_order`;
 
 CREATE TABLE `sa_order` (
   `order_id` INT NOT NULL AUTO_INCREMENT,
+  `platform` VARCHAR(30) NULL,
   `order_no` VARCHAR(30) NULL,
   `member_id` INT NULL,
   `payamount` DECIMAL(10,2) NULL DEFAULT 0,
@@ -229,6 +230,7 @@ CREATE TABLE `sa_order` (
   `status` TINYINT NULL DEFAULT 0 COMMENT '订单状态',
   `isaudit` TINYINT NULL DEFAULT 0 COMMENT '审核状态',
   `delete_time` INT NULL DEFAULT 0 COMMENT '删除状态',
+  `form_id` VARCHAR(45) NULL,
   `remark` VARCHAR(250) NULL,
   `address_id` INT NULL,
   `recive_name` VARCHAR(45) NULL,

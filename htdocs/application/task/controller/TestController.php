@@ -23,7 +23,11 @@ class TestController
     }
     
     public function updatedb(){
-        $dbs=[];
+        $dbs=[
+            //"alter table sa_order add `form_id` VARCHAR(45) NULL after `delete_time`",
+            //"alter table sa_pay_order add `prepay_id` VARCHAR(45) NULL after `pay_type`",
+            //"alter table sa_order add `platform` VARCHAR(45) NULL after `order_id`"
+        ];
         foreach ($dbs as $sql){
             Db::execute($sql);
         }

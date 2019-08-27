@@ -55,6 +55,8 @@ class OrderModel extends BaseModel
                         }
                         Db::name('Order')->where('order_id',$order['order_id'])
                             ->update(['cancel_time'=>time()]);
+                        
+                        self::sendOrderMessage($order,'order_cancel',$products);
                     }
                 }
             }
@@ -145,7 +147,7 @@ class OrderModel extends BaseModel
             'commission_special'=>json_encode($comm_special),
             'status'=>0,
             'isaudit'=>getSetting('autoaudit')==1?1:0,
-            'remark'=>$remark,
+            //'remark'=>$remark,
             'address_id'=>$address['address_id'],
             'recive_name'=>$address['recive_name'],
             'mobile'=>$address['mobile'],
@@ -159,6 +161,15 @@ class OrderModel extends BaseModel
             'express_code'=>'',
             'type'=>$ordertype,
         );
+        if(is_array($remark)){
+            foreach ($remark as $k=>$val){
+                if(!isset($orderdata) && !in_array($k,['status','rebated'])){
+                    $orderdata[$k]=$val;
+                }
+            }
+        }else{
+            $orderdata['remark']=$remark;
+        }
         $result= $this->insert($orderdata,false,true);
 
         if($result){
@@ -204,6 +215,67 @@ class OrderModel extends BaseModel
         return $result;
     }
 
+    public static function sendOrderMessage($order, $type, $products=null)
+    {
+        if(is_string($order) || is_numeric($order)){
+            $order = Db::name('order')->where('order_id|order_no',$order)->find();
+        }
+        if(empty($order)){
+            return false;
+        }
+        $fans = MemberOauthModel::where('member_id',$order['member_id'])->select();
+        $msgdata=[];
+        foreach ($fans as $fan){
+            $wechat = WechatModel::where('id',$fan['type_id'])->find();
+            if(empty($wechat['appid']) || empty($wechat['appsecret']))continue;
+            $tplset = WechatTemplateMessageModel::getTpls($fan['type_id'],$type);
+            if(empty($tplset) || empty($tplset['template_id']))continue;
+            
+            if(empty($products)){
+                $products=Db::name('orderProduct')->where('order_id',$order['order_id'])->select();
+            }
+            if(empty($msgdata)){
+                $msgdata['order_no']=$order['order_no'];
+                $msgdata['amount']=$order['payamount'];
+                $goods=[];
+                foreach ($products as $idx=>$product){
+                    $goods[]=$product['product_title'];
+                    if($idx>=1){
+                        $goods[]='等'.array_sum(array_column($products,'count')).'件商品';
+                        break;
+                    }
+                }
+                
+                $msgdata['goods']=implode('，',$goods);
+                $msgdata['reason']=$order['reason'];
+                $msgdata['create_date'] = date('Y-m-d H:i:s',$order['create_time']);
+                $msgdata['pay_date'] = date('Y-m-d H:i:s',$order['pay_time']);
+                $msgdata['confirm_date'] = date('Y-m-d H:i:s',$order['confirm_time']);
+                if($order['status']<1){
+                    $msgdata['pay_notice'] = '请在'.date('Y-m-d H:i:s',$order['create_time']+30*60).'前付款';
+                    $msgdata['form_id']=$order['form_id'];
+                }
+                if($order['deliver_time']>0) {
+                    $msgdata['deliver_date'] = date('Y-m-d H:i:s', $order['deliver_time']);
+                    if(!empty($order['express_code'])){
+                        $express=Db::name('expressCode')->where('express',$order['express_code'])->find();
+                    }
+                    if(empty($express)){
+                        $msgdata['express'] = '无';
+                    }else {
+                        $msgdata['express'] = $express['name'];
+                    }
+                }
+            }
+            
+            //todo 小程序下如果未获得form_id，需要从支付信息中获取 prepay_id
+    
+            WechatTemplateMessageModel::sendTplMessage($wechat,$tplset, $msgdata, $fan['openid']);
+            
+        }
+        
+    }
+    
     /**
      * 根据设置或升级原则进行升级
      */
