@@ -24,7 +24,8 @@ class SignController extends AuthedController
         
         $result = $this->model->sign($this->user['id'],$mood,time());
         if($result){
-            $this->success('签到成功');
+            $msg = $this->model->getError();
+            $this->success($msg?:'签到成功');
         }else{
             $this->error($this->model->getError());
         }

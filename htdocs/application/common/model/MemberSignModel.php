@@ -148,10 +148,11 @@ class MemberSignModel extends BaseModel
             'remark' =>'',
         ],false,true);
         if($insertid){
+            $returnmsg='签到成功';
             $awarded=false;
             if($is_sup){
                 $credit = empty($this->settings['sup_sign_rule']['credit'])?0 :intval($this->settings['sup_sign_rule']['credit']);
-                money_log($member_id,-$credit,'补签扣除积分','sign',0,'credit');
+                money_log($member_id,-$credit*100,'补签扣除积分','sign',0,'credit');
                 
                 $today=strtotime('today');
                 $nextday = strtotime($date.' +1 day');
@@ -178,7 +179,8 @@ class MemberSignModel extends BaseModel
                     $credit = floatval($this->settings['keep_award'][$rkey]['value']);
                     if($credit>0) {
                         $awarded=true;
-                        money_log($member_id, $credit, '连续签到' . $days[$rkey] . '天奖励', 'sign', 0, 'credit');
+                        $returnmsg = '连续签到' . $days[$rkey] . '天奖励'.$credit.'积分';
+                        money_log($member_id, $credit*100, '连续签到' . $days[$rkey] . '天奖励', 'sign', 0, 'credit');
                     }
                 }
             }
@@ -197,16 +199,19 @@ class MemberSignModel extends BaseModel
                     }
                     if($isfirst<2){
                         $awarded=true;
-                        money_log($member_id, $credit, '首次签到奖励', 'sign', 0, 'credit');
+                        $returnmsg = '首次签到奖励'.$credit.'积分';
+                        money_log($member_id, $credit*100, '首次签到奖励', 'sign', 0, 'credit');
                     }
                 }
     
                 $credit = empty($this->settings['award']['normal'])?0:floatval($this->settings['award']['normal']);
                 if(!$awarded && !empty($credit)){
-                    money_log($member_id, $credit, '日常签到奖励', 'sign', 0, 'credit');
+                    $returnmsg = '签到成功,奖励'.$credit.'积分';
+                    money_log($member_id, $credit*100, '日常签到奖励', 'sign', 0, 'credit');
                 }
             }
             
+            $this->setError($returnmsg,0);
         }
         return $insertid;
     }
