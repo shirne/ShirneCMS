@@ -22,6 +22,14 @@ class TestController
         exit;
     }
     
+    public function updatedb(){
+        $dbs=[];
+        foreach ($dbs as $sql){
+            Db::execute($sql);
+        }
+        exit;
+    }
+    
     public function model(){
         $model=Db::name('manager');
         $manage=$model->where('id',1)->find();
