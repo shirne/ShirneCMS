@@ -85,13 +85,13 @@ class ArticleController extends BaseController
         if($this->isLogin) {
             $digg = Db::name('articleDigg')->where('article_id', $id)
                 ->where('member_id', $this->user['id'])
-                ->find();
+                ->count();
             $isFavourite=MemberFavouriteFacade::isFavourite($this->user['id'],'article',$id);
         }
         return $this->response([
             'article'=>$article,
             'images'=>$images,
-            'digged'=>$digg?0:1,
+            'digged'=>$digg?1:0,
             'is_favourite'=>$isFavourite?0:1
         ]);
     }

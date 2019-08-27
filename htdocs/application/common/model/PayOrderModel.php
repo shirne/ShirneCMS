@@ -71,7 +71,7 @@ class PayOrderModel extends BaseModel
         
         return self::createOrder(
             $paytype,$payid,
-            $ordertype,$orderid,$order['payamount']*100,$order['member_id'],$trade_type
+            $ordertype,$orderid,$order['payamount'],$order['member_id'],$trade_type
         );
     }
 
@@ -99,7 +99,7 @@ class PayOrderModel extends BaseModel
             'order_id'=>$order_id,
             'create_time'=>time(),
             'pay_data'=>$data,
-            'pay_amount'=>$amount*100
+            'pay_amount'=>intval($amount*100)
         ]);
     }
 

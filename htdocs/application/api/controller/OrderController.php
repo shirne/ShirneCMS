@@ -11,8 +11,10 @@ use app\common\model\PayOrderModel;
 use app\common\model\WechatModel;
 use app\common\validate\OrderValidate;
 use EasyWeChat\Factory;
+use think\Facade\Log;
 use think\Db;
 
+use function GuzzleHttp\json_encode;
 
 /**
  * 订单操作
@@ -124,12 +126,25 @@ class OrderController extends AuthedController
 
     public function wechatpay($order_id, $trade_type='JSAPI', $payid=0){
         $trade_type = strtoupper($trade_type);
+        if($payid)$wechat=WechatModel::where('id|hash',$payid)->where('type','wechat')->find();
         if($trade_type == 'JSAPI' ) {
-        
-            if(empty($this->wechatUser) ||($payid!=0 && $payid!=$this->wechatUser['type_id'])){
+            if(empty($this->wechatUser) && !empty($wechat)){
+                $this->wechatUser = Db::name('memberOauth')->where('member_id',$this->user['id'])
+                ->where('type_id',$wechat['id'])->find();
+            }
+            if(!empty($this->wechatUser) && !$payid){
+                $payid = $this->wechatUser['type_id'];
+            }
+            if(empty($this->wechatUser)){
                 $this->error('未获取用户信息');
             }
-            if($payid == 0)$payid = $this->wechatUser['type_id'];
+        }
+        if(empty($wechat) && $payid){
+            $wechat=WechatModel::where('id|hash',$payid)
+                ->where('type','wechat')->find();
+        }
+        if(empty($wechat)){
+            $this->error('参数错误');
         }
     
         $paymodel = PayOrderModel::getInstance();
@@ -141,8 +156,7 @@ class OrderController extends AuthedController
             $this->error($paymodel->getError());
         }
     
-        $wechat=WechatModel::where('id',$payid)
-            ->where('type','wechat')->find();
+        
         $config=WechatModel::to_pay_config($wechat);
     
         $app = Factory::payment($config);
@@ -150,13 +164,14 @@ class OrderController extends AuthedController
         $result = $app->order->unify([
             'body' => '订单-'.$order_id,
             'out_trade_no' => $payorder['order_no'],
-            'total_fee' => $payorder['amount'],
+            'total_fee' => $payorder['pay_amount'],
             //'spbill_create_ip' => '', // 可选，如不传该参数，SDK 将会自动获取相应 IP 地址
             'notify_url' => url('api/wechat/payresult','',true,true),
             'trade_type' => $trade_type,
             'openid' => empty($this->wechatUser)?'':$this->wechatUser['openid'],
         ]);
         if(empty($result) || $result['return_code']!='SUCCESS' || $result['result_code']!='SUCCESS'){
+            Log::record(json_encode($result,JSON_UNESCAPED_UNICODE));
             $this->error('支付发起失败');
         }
         $data=['payorder'=>$payorder];
