@@ -424,7 +424,8 @@ CREATE TABLE `sa_member_level` (
   `short_name` VARCHAR(10) NULL,
   `style` VARCHAR(10) default 'secondary',
   `is_default` TINYINT NULL DEFAULT 0,
-  `level_price` DECIMAL(10,2) NULL COMMENT '购买价格',
+  `upgrade_type` TINYINT NULL DEFAULT 0 COMMENT '1: 累计消费升级, 2: 购买升级',
+  `level_price` DECIMAL(10,2) NULL COMMENT '购买价格/累计金额',
   `discount` TINYINT NULL DEFAULT 100 COMMENT '会员折扣',
   `is_agent` TINYINT NULL DEFAULT 0 COMMENT '是否代理组',
   `sort` INT NULL DEFAULT 0,
@@ -434,6 +435,17 @@ CREATE TABLE `sa_member_level` (
   PRIMARY KEY (`level_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `sa_member_level_log`;
+CREATE TABLE `sa_member_level_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NOT NULL,
+  `level_id` int(11) NOT NULL,
+  `amount` int(11) DEFAULT '0' COMMENT '金额 单位分',
+  `create_time` int(11) DEFAULT NULL,
+  `status` tinyint(4) DEFAULT '0',
+  `remark` varchar(45) DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `sa_member_agent`;
 

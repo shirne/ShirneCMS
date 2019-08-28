@@ -26,16 +26,8 @@ class TestController
     }
     
     public function updatedb(){
-        $dbs=[
-            //"alter table sa_order add `form_id` VARCHAR(45) NULL after `delete_time`",
-            //"alter table sa_pay_order add `prepay_id` VARCHAR(45) NULL after `pay_type`",
-            //"alter table sa_order add `platform` VARCHAR(45) NULL after `order_id`",
-            //"alter table sa_order add `noticed` TINYINT NULL DEFAULT 0 after `status`",
-            //"alter table sa_order add `comment_time` TINYINT NULL DEFAULT 0 after `confirm_time`",
-            //"alter table sa_order add `refund_time` TINYINT NULL DEFAULT 0 after `cancel_time`",
-            //"alter table sa_order add `rebate_total` DECIMAL(10,2) NULL DEFAULT 0 after `rebate_time`",
-            //"alter table `sa_member_token` ADD `platform` VARCHAR(20) NULL AFTER `member_id`"
-        ];
+        $dbs=[];
+    
         foreach ($dbs as $sql){
             Db::execute($sql);
         }
