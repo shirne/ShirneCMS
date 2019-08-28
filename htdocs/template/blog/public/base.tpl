@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="__STATIC__/css/blog.css?v={:config('template.static_version')}">
 
     <script src="__STATIC__/jquery/jquery.min.js"></script>
-
+    <block name="header" ></block>
     <!--[if lt IE 9]>
     <script src="http://cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>

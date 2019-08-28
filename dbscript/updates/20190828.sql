@@ -1,3 +1,7 @@
+
+ALTER TABLE `sa_article_comment`
+ADD `nickname` varchar(50) NOT NULL DEFAULT '' AFTER `article_id`;
+
 CREATE TABLE `sa_member_level_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `member_id` int(11) NOT NULL,

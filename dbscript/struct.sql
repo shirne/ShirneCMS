@@ -803,6 +803,7 @@ CREATE TABLE `sa_article_comment` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `member_id` int(11) NOT NULL DEFAULT '0',
   `article_id` int(11) NOT NULL DEFAULT '0',
+  `nickname` varchar(50) NOT NULL DEFAULT '',
   `email` varchar(150) NOT NULL DEFAULT '',
   `create_time` int(11) NOT NULL DEFAULT '0',
   `device` varchar(50) NOT NULL DEFAULT '',

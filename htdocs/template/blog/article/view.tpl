@@ -1,5 +1,7 @@
 <extend name="public:base"/>
-
+<block name="header" >
+        <link href="__STATIC__/ueditor/third-party/SyntaxHighlighter/shCoreDefault.css" rel="stylesheet">
+</block>
 <block name="body">
     <div class="main">
         <div class="container view-body">
@@ -23,4 +25,10 @@
             </div>
         </div>
     </div>
+</block>
+<block name="script">
+    <script type="text/javascript" src="__STATIC__/ueditor/third-party/SyntaxHighlighter/shCore.js"></script>
+    <script type="text/javascript">
+        SyntaxHighlighter.highlight();
+    </script>
 </block>

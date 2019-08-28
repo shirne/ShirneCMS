@@ -46,7 +46,7 @@ a{
   .navbar-nav {
     .nav-link {
       color         : $color-text;
-      padding : 1rem;
+      padding : 1rem 1.5rem;
     }
     >.nav-item>.nav-link{
       position: relative;
@@ -130,12 +130,12 @@ a{
     border-radius:0;
     margin-bottom:20px;
     padding:0;
-    display:-ms-flexbox;
     display:flex;
+    
     .list-img{
       width:20%;
       padding-top:15%;
-      flex-grow:0;
+      flex:0 0 auto;
       height: 0;
       background:url(../images/blank.gif) center center no-repeat;
       background-size:cover;
@@ -159,6 +159,7 @@ a{
       }
       .text-muted{
         line-height:1.2em;
+        font-size:12px;
       }
     }
     &:hover{
