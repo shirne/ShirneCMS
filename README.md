@@ -10,7 +10,7 @@ ShirneCMS
 [小程序企业官网](https://gitee.com/shirnecn/website_mapp)
 [小程序商城](https://gitee.com/shirnecn/shop_mapp)
 
-## 功能说明
+## 功能特点
 
 本项目侧重于二次开发使用，后台功能在逐步完善。前台功能仅用于功能演示。目前个人及团队的一些订制项目均基于此后台开发。
 * 后台管理员登录验证，基于方法名的全局权限验证系统
@@ -47,7 +47,7 @@ ShirneCMS
 
 ### 其它功能
 - [x] 积分商城……测试中
-- [x] 会员签到……测试中
+- [x] 会员签到
 
 ### 多语言支持
 - [x] 前台多语言切换逻辑
@@ -57,6 +57,7 @@ ShirneCMS
 - [x] 粉丝管理 
 - [x] 自动回复……待测试
 - [x] 素材管理……待测试
+- [x] 模板消息……开发中
 - [ ] 二维码管理
 - [ ] 客服管理
 
@@ -66,8 +67,8 @@ ShirneCMS
 - [x] 登录接口（账号密码登录，小程序授权登录）
 - [x] 产品接口
 - [x] 购物车接口
-- [x] 订单及支付接口……待测试
-- [x] 会员相关功能接口……待测试
+- [x] 订单及支付接口
+- [x] 会员相关功能接口
 
 ## 前端库引用
 
@@ -164,18 +165,19 @@ xxx.test.com 为本地测试目录，配置方法：
 导航配置 navigator.php
 
 ## 后台功能截图
-![登录](screenshot/login.jpg "登录")
-![主面板](screenshot/dashboard.jpg "主面板")
-![分类管理](screenshot/category.jpg "分类管理")
-![添加分类](screenshot/category-add.jpg "添加分类")
-![发布文章](screenshot/article-add.jpg "发布文章")
-![发布商品](screenshot/product-add.jpg "发布商品")
-![发布商品](screenshot/product-add2.jpg "发布商品")
-![订单统计](screenshot/order-static.jpg "订单统计")
-![广告管理](screenshot/ad.jpg "广告管理")
-![系统设置](screenshot/setting.jpg "系统设置")
-![会员组](screenshot/user-level.jpg "会员组")
-![微信菜单](screenshot/wechat-menu.jpg "微信菜单")
+|登录|主面板|
+|:---:|:---:|
+|![登录](screenshot/login.jpg "登录")|![主面板](screenshot/dashboard.jpg "主面板")|
+|分类管理|添加分类|
+|![分类管理](screenshot/category.jpg "分类管理")|![添加分类](screenshot/category-add.jpg "添加分类")|
+|发布文章|发布商品|
+|![发布文章](screenshot/article-add.jpg "发布文章")|![发布商品](screenshot/product-add.jpg "发布商品")|
+|发布商品|订单统计|
+|![发布商品](screenshot/product-add2.jpg "发布商品")|![订单统计](screenshot/order-static.jpg "订单统计")|
+|广告管理|系统设置|
+|![广告管理](screenshot/ad.jpg "广告管理")|![系统设置](screenshot/setting.jpg "系统设置")|
+|会员组|微信菜单|
+|![会员组](screenshot/user-level.jpg "会员组")|![微信菜单](screenshot/wechat-menu.jpg "微信菜单")|
 
 ## 联系我
 欢迎技术探讨，部署安装及定制开发收费
