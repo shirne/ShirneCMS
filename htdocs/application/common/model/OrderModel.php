@@ -51,9 +51,9 @@ class OrderModel extends BaseModel
     
     public function audit(){
         if($this->isExists()){
-            Db::name('Order')->where('order_id',$this['order_id'])
+            $updated=Db::name('Order')->where('order_id',$this['order_id'])
                 ->update(['isaudit'=>1]);
-            if($this['status']>0){
+            if($updated && $this['status']>0){
                 $this->afterAudit($this->getOrigin());
             }
         }else{
@@ -62,8 +62,10 @@ class OrderModel extends BaseModel
     }
     
     protected function afterAudit($item){
-        self::setLevel($item);
-        self::doRebate($item);
+        if(!$item['rebated']) {
+            self::setLevel($item);
+            self::doRebate($item);
+        }
     }
     
     protected function beforeStatus($data)
@@ -452,23 +454,31 @@ class OrderModel extends BaseModel
     /**
      * 根据设置或升级原则进行升级
      */
-    public static function setLevel($order){
-        if($order['type']==2){
-            $member=Db::name('Member')->find($order['member_id']);
-            $levels=getMemberLevels();
-            if(!empty($member)){
-                if($member['level_id']==0)$member['level_id']=getDefaultLevel();
-                $level=$levels[$member['level_id']];
-                if($level['is_default']){
-                    foreach ($levels as $lv){
-                        if($lv['level_price'] > $order['payamount']){
+    public static function setLevel($order)
+    {
+        $member = Db::name('Member')->find($order['member_id']);
+        if (!empty($member)) {
+            $level_id=0;
+            if ($order['type'] == 2) {
+                $levels = getMemberLevels();
+            
+                if ($member['level_id'] == 0) $member['level_id'] = getDefaultLevel();
+                $level = $levels[$member['level_id']];
+                if ($level['is_default']) {
+                    foreach ($levels as $lv) {
+                        if ($lv['level_price'] > $order['payamount']) {
                             break;
                         }
-                        $level=$lv;
+                        $level = $lv;
                     }
-                    if($level['is_default'])return;
-                    MemberModel::update(['level_id'=>$level['level_id']],['id'=>$order['member_id']]);
+                    if ($level['is_default']) return;
+                    $level_id=$level['level_id'];
                 }
+            } elseif ($order['type'] == 3) {
+                $level_id=$order['level_id'];
+            }
+            if($level_id && $level_id!=$member['level_id']) {
+                MemberModel::update(['level_id' => $level_id], ['id' => $order['member_id']]);
             }
         }
     }
