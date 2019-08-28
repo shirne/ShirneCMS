@@ -55,7 +55,7 @@
             <div class="card">
                 <div class="card-header">支持一下</div>
                 <div class="card-body text-center">
-                    <img src="__STATIC__/images/qrcode.png"/>
+                    <img style="max-width: 100%" src="__STATIC__/images/qrcode.png"/>
                 </div>
             </div>
             <div class="card">

@@ -32,6 +32,7 @@ a{
 .nav-box{
   padding-top:0;
   padding-bottom:0;
+  z-index:9;
 
   .navbar-brand{
     color:$color-eye;
@@ -131,6 +132,7 @@ a{
     margin-bottom:20px;
     padding:0;
     display:flex;
+    transition: all .3s linear;
     
     .list-img{
       width:20%;
@@ -155,6 +157,7 @@ a{
         flex:auto;
         font-size:12px;
         line-height:20px;
+        margin-bottom:.5em;
         color:$color-text-dark;
       }
       .text-muted{
@@ -163,10 +166,13 @@ a{
       }
     }
     &:hover{
-      background-color : #fafafa;
+      box-shadow: 1px 1px 5px rgba(0,0,0,.15);
+      transform: scale(1.03);
     }
     &.empty-box:hover{
       background-color : $color-white;
+      box-shadow: none;
+      transform: none;
     }
   }
 }
@@ -179,6 +185,37 @@ a{
     font-size:24px;
     font-weight:bold;
   }
+  .article-info{
+    width: 60%;
+    margin: 0 auto;
+    margin-top: 1em;
+    padding-bottom: .5em;
+    border-bottom: 1px #eee solid;
+  }
+  
+  .article-content{
+    margin-top:2em;
+    min-height: 500px;
+    line-height: 1.6;
+  }
+  .article-slides{
+    height:450px;
+    .carousel,.carousel-inner,.carousel-item {
+      height:100%;
+      overflow: hidden;
+    }
+    .carousel-item{
+      background:center center no-repeat;
+      background-size:contain;
+      img{
+        display: none;
+      }
+    }
+
+    &+.article-content{
+      min-height: 200px;
+    }
+  }
 }
 
 .loginbox{
@@ -187,6 +224,22 @@ a{
 
 .register{
   padding-top:30px;
+}
+.sidecolumn{
+  .card-header{
+    font-weight: bold;
+  }
+  .list-side{
+    a{
+      display:block;
+      margin:8px 0;
+      line-height:1.2em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
+    }
+  }
 }
 
 @media (max-width: 991px) {

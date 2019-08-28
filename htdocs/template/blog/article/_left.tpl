@@ -9,7 +9,7 @@
         <div class="card-body">
             <div class="list-group">
                 <Volist name="catelist" id="c">
-                    <a class="list-group-item {$c['id']==$category['id']?'active':''}" href="{:url('index/article/index',['name'=>$c['name']])}">{$c.title}</a>
+                    <a class="list-group-item {$c['id']==$category['id']?'active':''}" title="{$c.title}" href="{:url('index/article/index',['name'=>$c['name']])}">{$c.title}</a>
                 </Volist>
             </div>
         </div>
