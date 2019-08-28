@@ -144,7 +144,7 @@
                         <th width="80">账户余额</th>
                         <td>{$money.total_money|showmoney}</td>
                         <th width="80">奖励余额</th>
-                        <td>{$money.total_credit|showmoney}</td>
+                        <td>{$money.total_reward|showmoney}</td>
                     </tr>
                 </table>
             </div>

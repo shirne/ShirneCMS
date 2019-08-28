@@ -79,9 +79,25 @@
                         </volist>
                     </td>
                     <td>
-                        [{$v.member_id}]{$v['username']}
+                        <div class="media">
+                            <if condition="!empty($v['avatar'])">
+                                <img src="{$v.avatar}" class="mr-2 rounded" width="30"/>
+                            </if>
+                            <div class="media-body">
+                                <h5 class="mt-0 mb-1" style="font-size:13px;">
+                                    <if condition="!empty($v['nickname'])">
+                                        {$v.nickname}
+                                        <else/>
+                                        {$v.username}
+                                    </if>
+                                </h5>
+                                <div style="font-size:12px;">
+                                    [{$v.member_id} {$levels[$v['level_id']]['level_name']}]
+                                </div>
+                            </div>
+                        </div>
                     </td>
-                    <td>{$v.payamount}<br />{$v.commission_amount}</td>
+                    <td>{$v.payamount}<br />{$v.rebate_total}</td>
                     <td>{$v.create_time|showdate}</td>
                     <td>
                         {$v.status|order_status|raw}

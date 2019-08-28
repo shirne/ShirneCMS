@@ -104,7 +104,7 @@
                             <div class="media-body">
                                 <h5 class="mt-0 mb-1">
                                     [{$v.referer}]
-                                    <if condition="!empty($v['nickname'])">
+                                    <if condition="!empty($v['refer_nickname'])">
                                         {$v.refer_nickname}
                                         <else/>
                                         {$v.refer_name}

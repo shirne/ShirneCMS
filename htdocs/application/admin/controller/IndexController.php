@@ -40,7 +40,7 @@ class IndexController extends BaseController{
         $a['total_cash']=Db::name('member_cashin')->where('status',1)->sum('amount');
         $a['total_money']=Db::name('member')->sum('money');
 
-        $a['total_credit']=Db::name('member')->sum('credit');
+        $a['total_reward']=Db::name('member')->sum('reward');
         $a['system_charge']=Db::name('member_money_log')->where('type','system')
             ->where('amount','GT',0)->sum('amount');
         $a['total_award']=Db::name('award_log')->sum('amount');

@@ -86,10 +86,21 @@
                         <div class="form-row">
                             <label class="col-3">商品类型</label>
                             <div class="form-group col">
-                                <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
-                                    <volist name="types" id="type" key="k">
+                                <div class="btn-group btn-group-toggle btn-group-sm type-groups" data-toggle="buttons">
+                                    <foreach name="types" id="type" key="k">
                                         <label class="btn btn-outline-secondary{$k==$product['type']?' active':''}">
                                             <input type="radio" name="type" value="{$k}" autocomplete="off" {$k==$product['type']?'checked':''}>{$type}
+                                        </label>
+                                    </foreach>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row type_level">
+                            <div class="form-group col">
+                                <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
+                                    <volist name="levels" id="lv" key="k">
+                                        <label class="btn btn-outline-secondary{$k==$product['level_id']?' active':''}">
+                                            <input type="radio" name="level_id" value="{$k}" autocomplete="off" {$k==$product['level_id']?'checked':''}>{$lv.level_name}
                                         </label>
                                     </volist>
                                 </div>
@@ -645,6 +656,15 @@
             $('.commission_desc,.commission_box').hide();
             if(val>1){
                 $('.commission_desc,.commission_box.cbox'+val).show();
+            }
+        }).filter('.active').trigger('click');
+
+        $('.type-groups label').click(function () {
+            var val=$(this).find('input').val();
+            if(val>2){
+                $('.type_level').show();
+            }else{
+                $('.type_level').hide();
             }
         }).filter('.active').trigger('click');
         isready=true;

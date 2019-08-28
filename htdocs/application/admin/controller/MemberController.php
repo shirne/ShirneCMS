@@ -141,8 +141,8 @@ class MemberController extends BaseController
      */
     public function money_log($id=0,$from_id=0,$fromdate='',$todate='',$field='all',$type='all'){
         $model=Db::view('MemberMoneyLog mlog','*')
-            ->view('Member m',['username','level_id','mobile'],'m.id=mlog.member_id','LEFT')
-            ->view('Member fm',['username'=>'from_username','level_id'=>'from_level_id','mobile'=>'from_mobile'],'fm.id=mlog.member_id','LEFT');
+            ->view('Member m',['username','nickname','avatar','level_id','mobile'],'m.id=mlog.member_id','LEFT')
+            ->view('Member fm',['username'=>'from_username','nickname'=>'from_nickname','avatar'=>'from_avatar','level_id'=>'from_level_id','mobile'=>'from_mobile'],'fm.id=mlog.from_member_id','LEFT');
 
         $levels=getMemberLevels();
 
@@ -228,7 +228,7 @@ class MemberController extends BaseController
         }
 
         $model=Db::view('MemberLog','*')
-            ->view('Member',['username'],'MemberLog.member_id=Member.id','LEFT');
+            ->view('Member',['username','nickname','avatar'],'MemberLog.member_id=Member.id','LEFT');
 
         if(!empty($key)){
             $key = base64_decode($key);

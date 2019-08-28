@@ -27,7 +27,7 @@ class OrderController extends BaseController
         }
         $key=empty($key)?"":base64_decode($key);
         $model=Db::view('order','*')
-            ->view('member',['username','realname','avatar','level_id'],'member.id=order.member_id','LEFT')
+            ->view('member',['username','realname','nickname','avatar','level_id'],'member.id=order.member_id','LEFT')
             ->where('order.delete_time',0);
 
         if(!empty($key)){
@@ -61,6 +61,7 @@ class OrderController extends BaseController
         $this->assign('audit',$audit);
         $this->assign('expresscodes',config('express.'));
         $this->assign('lists',$lists);
+        $this->assign('levels',getMemberLevels());
         $this->assign('page',$lists->render());
         return $this->fetch();
     }
