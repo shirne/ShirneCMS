@@ -42,7 +42,7 @@ class ProductController extends BaseController
         return $this->response($cates);
     }
 
-    public function get_list($cate='',$order='',$keyword='',$page=1, $pagesize=10){
+    public function get_list($cate='',$type='',$order='',$keyword='',$withsku=0,$page=1, $pagesize=10){
         $condition=[];
         if($cate){
             $condition['category']=$cate;
@@ -54,10 +54,34 @@ class ProductController extends BaseController
         if(!empty($keyword)){
             $condition['keyword']=$keyword;
         }
+        if(!empty($type)){
+            $condition['type']=$type;
+        }
         $condition['page']=$page;
         $condition['pagesize']=$pagesize;
         
         $lists = ProductModel::getInstance()->tagList($condition, true);
+        
+        if(!empty($lists) && !$lists->isEmpty()) {
+            $skus = [];
+            if ($withsku) {
+                $pids = array_column($lists->items(), 'id');
+                $skus = Db::name('productSku')->whereIn('product_id',$pids)->select();
+                $skus = array_index($skus, 'product_id',true);
+            }
+            $levels = getMemberLevels();
+    
+            $lists->each(function ($item) use ($levels, $skus) {
+                if ($item['level_id']) {
+                    $item['level_name'] = $levels[$item['level_id']]['level_name'] ?: '';
+                }
+                if(isset($skus[$item['id']])){
+                    $item['skus']=$skus[$item['id']];
+                }
+        
+                return $item;
+            });
+        }
 
         return $this->response([
             'lists'=>$lists->items(),

@@ -198,6 +198,7 @@ class OrderModel extends BaseModel
         $total_price=0;
         $commission_amount=0;
         $comm_special = [];
+        $levelids=[];
         foreach ($products as $k=>$product){
             if($product['storage']<$product['count']){
                 $this->error='商品['.$product['product_title'].']库存不足';
@@ -247,7 +248,26 @@ class OrderModel extends BaseModel
                     'level_amounts'=>force_json_decode($product['commission_percent'])
                 ];
             }
+            
+            if($product['type']>$ordertype){
+                $ordertype = $product['type'];
+            }
+            if($ordertype & PRO_TYPE_BIND == PRO_TYPE_BIND && $product['level_id']){
+                $levelids[]=$product['level_id'];
+            }
         }
+    
+    
+        $level_id = 0;
+        $levelids = array_unique($levelids);
+        if(count($levelids)>1) {
+            foreach ($levelids as $lid) {
+                if (!$level_id || $levels[$level_id]['sort']<$levels[$lid]['sort']){
+                    $level_id = $lid;
+                }
+            }
+        }
+        
 
         //todo  优惠券
         
@@ -274,7 +294,7 @@ class OrderModel extends BaseModel
         $orderdata=array(
             'order_no'=>$this->create_no(),
             'member_id'=>$member['id'],
-            'level_id'=>0,
+            'level_id'=>$level_id,
             'payamount'=>$total_price*.01,
             'commission_amount'=>$commission_amount*.01,
             'commission_special'=>json_encode($comm_special),

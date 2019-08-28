@@ -18,6 +18,8 @@ define('ART_TYPE_HOT',4);
 define('ART_TYPE_RECOMMEND',8);
 
 define('PRO_TYPE_NORMAL',1);
+define('PRO_TYPE_UPGRADE',2);
+define('PRO_TYPE_BIND',4);
 
 function writelog($message,$type=\think\Log::INFO){
     if(config('app_debug')==true){
@@ -158,7 +160,9 @@ function getArticleTypes(){
 }
 function getProductTypes(){
     return [
-        1=>lang('Normal')
+        PRO_TYPE_NORMAL=>lang('Normal'),
+        PRO_TYPE_UPGRADE=>lang('Price Upgrade'),
+        PRO_TYPE_BIND=>lang('Bind Upgrade')
     ];
 }
 function getOauthTypes(){

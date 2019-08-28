@@ -72,13 +72,7 @@ class OrderController extends AuthedController
             }
             unset($item);
         }
-
-        $ordertype=1;
-        foreach ($products as $item){
-            if($item['type']==2){
-                $ordertype=2;
-            }
-        }
+        
         //todo 邮费模板
 
 
@@ -98,7 +92,7 @@ class OrderController extends AuthedController
                 'form_id'=>$data['form_id'],
                 'total_price'=>$data['total_price']
             ];
-            $result=OrderFacade::makeOrder($this->user,$products,$address,$remark,$balancepay,$ordertype);
+            $result=OrderFacade::makeOrder($this->user,$products,$address,$remark,$balancepay);
             if($result){
                 if($from=='cart'){
                     MemberCartFacade::delCart($sku_ids,$this->user['id']);

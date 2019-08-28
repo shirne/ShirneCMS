@@ -273,10 +273,6 @@ class Testing extends Command
      * @param $product
      */
     private function makeOrder(Output $output,$user,$product){
-        $ordertype=1;
-        if($product['type']==2){
-            $ordertype=2;
-        }
 
         money_log($user['id'],$product['product_price']*100,'测试程序自动充值','system');
 
@@ -289,7 +285,7 @@ class Testing extends Command
                 ->where('member_id',$user['id'])
                 ->order('is_default DESC')->find();
         }
-        $result=OrderFacade::makeOrder($user,[$product],$address,'测试程序自动下单',1,$ordertype);
+        $result=OrderFacade::makeOrder($user,[$product],$address,'测试程序自动下单',1);
         if($result){
             $output->writeln('用户 '.$user['username'].'['.$user['id'].'] 下单成功');
         }else{

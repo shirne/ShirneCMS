@@ -38,6 +38,9 @@ return [
     'Top'=>'置顶',
     'Hot'=>'热门',
     'Recommend'=>'推荐',
+    
+    'Price Upgrade'=>'按价格升级',
+    'Bind Upgrade'=>'绑定升级',
 
     'Common Settings'=>'通用配置',
     'Member Settings'=>'会员配置',

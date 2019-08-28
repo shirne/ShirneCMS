@@ -125,7 +125,7 @@ class ContentModel extends BaseModel
      */
     public function tagList($attrs, $filter=false)
     {
-        $model=$this->tagBase($attrs['hidden']);
+        $model=$this->tagBase($attrs['hidden']?:null);
         if(!empty($attrs['category'])){
             $cate_id=$attrs['category'];
             if(!is_int($cate_id)){
