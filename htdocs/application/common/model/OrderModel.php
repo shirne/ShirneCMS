@@ -201,6 +201,7 @@ class OrderModel extends BaseModel
         $commission_amount=0;
         $comm_special = [];
         $levelids=[];
+        $ordertype=0;
         foreach ($products as $k=>$product){
             if($product['storage']<$product['count']){
                 $this->error='商品['.$product['product_title'].']库存不足';
@@ -250,11 +251,10 @@ class OrderModel extends BaseModel
                     'level_amounts'=>force_json_decode($product['commission_percent'])
                 ];
             }
-            
-            if($product['type']>$ordertype){
-                $ordertype = $product['type'];
-            }
-            if($ordertype & PRO_TYPE_BIND == PRO_TYPE_BIND && $product['level_id']){
+    
+            $producttype=intval($product['type']);
+            $ordertype = $ordertype | $producttype;
+            if(($producttype & PRO_TYPE_BIND) == PRO_TYPE_BIND && !empty($product['level_id'])){
                 $levelids[]=$product['level_id'];
             }
         }
@@ -262,9 +262,9 @@ class OrderModel extends BaseModel
     
         $level_id = 0;
         $levelids = array_unique($levelids);
-        if(count($levelids)>1) {
-            foreach ($levelids as $lid) {
-                if (!$level_id || $levels[$level_id]['sort']<$levels[$lid]['sort']){
+        if(count($levelids)>0) {
+            foreach ($levels as $lid=>$level){
+                if(in_array($lid,$levelids)){
                     $level_id = $lid;
                 }
             }
@@ -459,8 +459,11 @@ class OrderModel extends BaseModel
         $member = Db::name('Member')->find($order['member_id']);
         if (!empty($member)) {
             $level_id=0;
-            if ($order['type'] == 2) {
-                $levels = getMemberLevels();
+            $ordertype = intval($order['type']);
+            $levels = getMemberLevels();
+            if(($ordertype & PRO_TYPE_BIND) == PRO_TYPE_BIND){
+                $level_id=$order['level_id'];
+            }elseif(($ordertype & PRO_TYPE_UPGRADE) == PRO_TYPE_UPGRADE){
             
                 if ($member['level_id'] == 0) $member['level_id'] = getDefaultLevel();
                 $level = $levels[$member['level_id']];
@@ -474,11 +477,16 @@ class OrderModel extends BaseModel
                     if ($level['is_default']) return;
                     $level_id=$level['level_id'];
                 }
-            } elseif ($order['type'] == 3) {
-                $level_id=$order['level_id'];
             }
-            if($level_id && $level_id!=$member['level_id']) {
-                MemberModel::update(['level_id' => $level_id], ['id' => $order['member_id']]);
+            if($level_id) {
+                if ($level_id != $member['level_id']) {
+                    MemberModel::update(['level_id' => $level_id], ['id' => $order['member_id']]);
+                } else {
+                    //会员等级不变，但等级设置变了
+                    if( $levels[$level_id]['is_agent']) {
+                        MemberModel::checkAgent($member);
+                    }
+                }
             }
         }
     }

@@ -52,7 +52,7 @@ class OrderController extends AuthedController
             
         }else{
             $products=Db::view('ProductSku','*')
-                ->view('Product',['title'=>'product_title','spec_data','image'=>'product_image','levels','is_discount','is_commission','type'],'ProductSku.product_id=Product.id','LEFT')
+                ->view('Product',['title'=>'product_title','spec_data','image'=>'product_image','levels','is_discount','is_commission','type','level_id'],'ProductSku.product_id=Product.id','LEFT')
                 ->whereIn('ProductSku.sku_id',idArr($sku_ids))
                 ->select();
             $counts=array_index($order_skus,'count,sku_id');

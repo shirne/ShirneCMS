@@ -113,7 +113,7 @@ class ContentModel extends BaseModel
             }
             $type = $this['type'];
         }
-        return $type & $flag === $flag;
+        return ($type & $flag) === $flag;
     }
 
     /**

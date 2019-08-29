@@ -254,7 +254,7 @@ class Testing extends Command
         }
 
         $model=Db::view('ProductSku','*')
-            ->view('Product',['title'=>'product_title','image'=>'product_image','levels','is_discount','is_commission','type'],'ProductSku.product_id=Product.id','LEFT')->where('Product.status',1);
+            ->view('Product',['title'=>'product_title','image'=>'product_image','levels','is_discount','is_commission','type','level_id'],'ProductSku.product_id=Product.id','LEFT')->where('Product.status',1);
 
         $product = $model->where('Product.id',$id)->find();
 

@@ -26,9 +26,7 @@ class MemberModel extends BaseModel
                     //代理会员组
                     if (!$user['is_agent'] && $user['level_id'] > 0) {
                         if (!empty($levels[$user['level_id']]) && $levels[$user['level_id']]['is_agent']) {
-                            if(self::setAgent($model->id)){
-                                self::updateRecommend($model['referer']);
-                            }
+                            self::checkAgent($user);
                         }
                     }
                 }
@@ -42,13 +40,18 @@ class MemberModel extends BaseModel
                 $levels = getMemberLevels();
                 if (!$model['is_agent'] ) {
                     if (!empty($levels[$model['level_id']]) && $levels[$model['level_id']]['is_agent']) {
-                        if(self::setAgent($model->id)){
-                            self::updateRecommend($model['referer']);
-                        }
+                        self::checkAgent($model);
                     }
                 }
             }
         });
+    }
+    
+    public static function checkAgent($member){
+        if($member['is_agent'])return;
+        if(self::setAgent($member['id'])){
+            self::updateRecommend($member['referer']);
+        }
     }
 
     /**

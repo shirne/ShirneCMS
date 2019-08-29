@@ -42,7 +42,7 @@ class OrderController extends AuthedController
             $products=MemberCartFacade::getCart($this->userid,$sku_ids);
         }else{
             $products=Db::view('ProductSku','*')
-                ->view('Product',['title'=>'product_title','image'=>'product_image','levels','is_discount'],'ProductSku.product_id=Product.id','LEFT')
+                ->view('Product',['title'=>'product_title','image'=>'product_image','levels','is_discount','is_commission','type','level_id'],'ProductSku.product_id=Product.id','LEFT')
                 ->whereIn('ProductSku.sku_id',idArr($sku_ids))
                 ->select();
             $counts=idArr($count);

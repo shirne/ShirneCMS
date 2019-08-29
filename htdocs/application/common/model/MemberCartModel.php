@@ -96,7 +96,7 @@ class MemberCartModel extends BaseModel
     {
         $model=Db::view('MemberCart',['id','member_id','product_id','sku_id','product_title'=>'cart_product_title','product_image'=>'cart_product_image','product_price'=>'cart_product_price','count','sort'])
             ->view('ProductSku',['storage','sale','goods_no'=>'sku_goods_no','weight','specs','price'=>'product_price','market_price','cost_price','image'=>'sku_image'],'ProductSku.sku_id=MemberCart.sku_id','LEFT')
-            ->view('Product',['title'=>'product_title','image'=>'product_image','spec_data','levels','is_discount','is_commission','type'],'MemberCart.product_id=Product.id','LEFT')
+            ->view('Product',['title'=>'product_title','image'=>'product_image','spec_data','levels','is_discount','is_commission','type','level_id'],'MemberCart.product_id=Product.id','LEFT')
             ->where('MemberCart.member_id',$member_id);
         if(!empty($sku_ids)){
             $model->whereIn('MemberCart.sku_id',idArr($sku_ids));

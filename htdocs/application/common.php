@@ -578,8 +578,8 @@ function getMemberLevels()
         $levels = cache('levels');
         if (empty($levels)) {
             $model=new \app\admin\model\MemberLevelModel();
-            $data =  $model->order('sort ASC,level_id ASC')->select();
-            $levels=array_index($data,'level_id');
+            $data =  $model->order('sort ASC,level_price ASC,level_id ASC')->select();
+            $levels=array_index($data->toArray(),'level_id');
             cache('levels', $levels);
         }
     }
