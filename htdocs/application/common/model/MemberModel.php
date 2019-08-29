@@ -169,9 +169,13 @@ class MemberModel extends BaseModel
             'level_id'=>getDefaultLevel(),
             'gender'   => $data['gender'],
             'avatar'   => $data['avatar'],
-            'referer'  => $referer,
+            'referer'  => 0,
             'is_agent'=>0
         ];
-        return self::create($data);
+        $member = self::create($data);
+        if($member && !empty($member['id'])){
+            MemberModel::update(['referer'=>$referer],array('id'=>$member['id']));
+        }
+        return $member;
     }
 }
