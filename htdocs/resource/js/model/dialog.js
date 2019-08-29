@@ -452,7 +452,7 @@
                 'idkey':'id',
                 'onRow':null,
                 'extend':null,
-                'rowTemplate':'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action">[{@id}]&nbsp;<i class="ion-md-person"></i> {@username}&nbsp;&nbsp;&nbsp;<small><i class="ion-md-phone-portrait"></i> {@mobile}</small></a>'
+                'rowTemplate':'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action" style="line-height:30px;">{if @avatar}<img src="{@avatar}" style="width:30px;height:30px;border-radius: 100%;margin-right:10px;" />{else}<i class="ion-md-person"></i>{/if} [{@id}]&nbsp;{if @nickname}{@nickname}{else}{@username}{/if}&nbsp;&nbsp;&nbsp;{if @mobile}<small><i class="ion-md-phone-portrait"></i> {@mobile}</small>{/if}</a>'
             },config||{});
             var current=null;
             var exthtml='';

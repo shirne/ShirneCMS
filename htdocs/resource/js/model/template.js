@@ -26,8 +26,9 @@ String.prototype.compile=function(data,list){
         }
         return temps.join("\n");
     }else{
-        return this.replace(/\{if\s+([^\}]+)\}([\W\w]*){\/if}/g,function(all, condition, cont){
+        return this.replace(/\{if\s+([^\}]+)\}([\W\w]*?){\/if}/g,function(all, condition, cont){
             var operation;
+            var conts=cont.split('{else}');
             if(operation=condition.match(/\s+(=+|<|>)\s+/)){
                 operation=operation[0];
                 var part=condition.split(operation);
@@ -55,9 +56,12 @@ String.prototype.compile=function(data,list){
                 }
                 if(result){
                     return cont;
+                }else if(conts[1]){
+                    return conts[1];
                 }
             }else {
-                if (data[condition.replace('@','')]) return cont;
+                if (data[condition.replace('@','')]) return conts[0];
+                else if(conts[1]) return conts[1];
             }
             return '';
         }).replace(/\{@([\w\d\.]+)(?:\|([\w\d]+)(?:\s*=\s*([^\}]+))?)?\}/g,function(all,m1,func,args){
