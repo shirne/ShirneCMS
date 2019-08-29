@@ -30,7 +30,7 @@
     <div class="row">
         <div class="col-lg-9">
             <ul class="list-group article-list">
-                <article:list var="articles" />
+                <article:list var="articles" order="create_time DESC" />
                 <volist name="articles" id="art">
                 <li class="list-group-item">
                     <if condition="!empty($art['cover'])">

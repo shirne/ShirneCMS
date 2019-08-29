@@ -64,7 +64,7 @@ class ProductController extends BaseController
     public function view($id){
         $product = ProductModel::get($id);
         if(empty($product)){
-            $this->error('商品不存在');
+            return $this->_empty('商品不存在');
         }
         $this->seo($product['title']);
         $this->category($product['cate_id']);

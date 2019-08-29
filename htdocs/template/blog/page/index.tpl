@@ -2,9 +2,12 @@
 
 <block name="body">
 	<div class="main">
-		<div class="subbanner">
-			<div class="inner" style="background-image:url({:getAdImage($page['group'])})"></div>
-		</div>
+		<php>$adimg=getAdImage($page['group']);</php>
+		<if condition="!empty($adimg)">
+			<div class="subbanner">
+				<div class="inner" style="background-image:url({$adimg})"></div>
+			</div>
+		</if>
 
 		<div class="container view-body">
 			<div class="row">
