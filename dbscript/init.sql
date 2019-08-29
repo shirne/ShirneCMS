@@ -51,6 +51,7 @@ VALUES
   ('gongan-icp','公安备案号','text','common',0,1,'','公安备案号',''),
   ('site-url','站点网址','text','common',0,1,'http://www.shirne.cn','站点地址',''),
   ('site-name','公司名','text','common',0,1,'ShirneCMS','公司名',''),
+  ('site-telephone','公司电话','text','common',0,1,'','公司电话',''),
   ('site-address','公司地址','text','common',0,1,'','公司地址',''),
   ('site-location','公司位置','location','common',0,1,'','location',''),
   ( 'wechat_autologin', '微信自动登录', 'radio', 'third', '0',1, '0', '必须在配置了服务号的情况下能有效', '1:开启\r\n2:关闭'),

@@ -51,7 +51,9 @@ class BaseModel extends Model
     }
 
     protected function triggerStatus($item,$status, $newData=[])
-    {}
+    {
+        return true;
+    }
     
     /**
      * @param $status
@@ -79,8 +81,8 @@ class BaseModel extends Model
         if(empty($where)) {
             if($this->isExists()){
                 $odata=$this->getOrigin();
-                Db::name($this->name)->where($this->getWhere())->update($data);
-                if ($odata['status'] != $data['status']) {
+                $updated=Db::name($this->name)->where($this->getWhere())->update($data);
+                if ($updated && $odata['status'] != $data['status']) {
                     $this->triggerStatus($odata, $data['status'], $data);
                 }
             }else{
@@ -88,12 +90,15 @@ class BaseModel extends Model
             }
         }else {
             $lists = Db::name($this->name)->where($where)->select();
-            Db::name($this->name)->where($where)->update($data);
-            foreach ($lists as $item) {
-                if ($item['status'] != $data['status']) {
-                    $this->triggerStatus($item, $data['status'], $data);
+            $updated=Db::name($this->name)->where($where)->update($data);
+            if($updated) {
+                foreach ($lists as $item) {
+                    if ($item['status'] != $data['status']) {
+                        $this->triggerStatus($item, $data['status'], $data);
+                    }
                 }
             }
         }
+        return $updated;
     }
 }
