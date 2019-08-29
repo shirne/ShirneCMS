@@ -155,6 +155,22 @@ class OrderController extends AuthedController
         }
     }
     
+    public function delete($id){
+        $order=OrderModel::get(intval($id));
+        if(empty($order) || $order['delete_time']>0){
+            $this->error('订单不存在或已删除',0);
+        }
+        if($order['status'] >-1 || $order['status']<-2){
+            $this->error('订单当前不可删除',0);
+        }
+        $success = $order::where('order_id',intval($id))->useSoftDelete('delete_time',time())->delete();
+        if($success){
+            $this->success('订单已删除');
+        }else{
+            $this->error('删除失败');
+        }
+    }
+    
     //todo 订单评论
     public function comment(){
     
