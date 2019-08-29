@@ -173,7 +173,7 @@ class MemberSignModel extends BaseModel
                 $rkey=-1;
                 foreach ($days as $key=>$day){
                     if($cdays < $day)break;
-                    $rkey = $key;
+                    if($cdays == $day)$rkey = $key;
                 }
                 if($rkey > -1){
                     $credit = floatval($this->settings['keep_award'][$rkey]['value']);
