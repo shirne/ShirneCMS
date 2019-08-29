@@ -277,6 +277,11 @@ a{
       display: none;
     }
   }
+  .article-body{
+    .article-info{
+      width: 95%;
+    }
+  }
 }
 @media (max-width: 480px) {
   .carousel{
