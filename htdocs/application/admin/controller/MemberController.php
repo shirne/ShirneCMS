@@ -25,7 +25,7 @@ class MemberController extends BaseController
      * @param int $type
      * @return \think\response\Json
      */
-    public function search($key='',$type=0){
+    public function search($key='',$type=0, $is_agent=-1){
         $model=Db::name('member')
             ->where('status',1);
         if(!empty($key)){
@@ -34,8 +34,11 @@ class MemberController extends BaseController
         if(!empty($type)){
             $model->where('type',$type);
         }
+        if($is_agent>-1){
+            $model->where('is_agent',$is_agent);
+        }
 
-        $lists=$model->field('id,username,realname,mobile,avatar,level_id,is_agent,gender,email,create_time')
+        $lists=$model->field('id,username,nickname,realname,mobile,avatar,level_id,is_agent,gender,email,create_time')
             ->order('id ASC')->limit(10)->select();
         return json(['data'=>$lists,'code'=>1]);
     }
@@ -85,6 +88,25 @@ class MemberController extends BaseController
         $this->assign('referer',$referer);
         $this->assign('keyword',$keyword);
         return $this->fetch();
+    }
+    
+    public function set_referer($id=0, $referer=0){
+        if(empty($id) || empty($referer))$this->error('参数错误');
+        $id=intval($id);
+        $referer=intval($referer);
+        
+        $member=Db::name('member')->find($id);
+        if(empty($member))$this->error('会员不存在');
+        $rmember=Db::name('member')->find($referer);
+        if(empty($rmember) || !$rmember['is_agent'])$this->error('设置的推荐人不是代理');
+        
+        $result=MemberModel::update(['referer'=>$referer],['id'=>$id]);
+        if($result){
+            user_log($this->mid,'setreferer',1,'设置推荐人 '.$id.'/'.$referer ,'manager');
+            $this->success('设置成功');
+        }else{
+            $this->error('设置失败');
+        }
     }
 
     /**

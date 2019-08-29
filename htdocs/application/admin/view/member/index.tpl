@@ -95,7 +95,7 @@
                 </td>
                 <td>
                     <empty name="v.refer_name">
-                        -
+                        <a href="javascript:" data-id="{$v.id}" class="bindreferer">设置</a>
                         <else/>
                         <div class="media">
                             <if condition="!empty($v['refer_avatar'])">
@@ -110,6 +110,7 @@
                                         {$v.refer_name}
                                     </if>
                                 </h5>
+                                <div><a href="javascript:" data-id="{$v.id}" class="bindreferer">更换</a></div>
                             </div>
                         </div>
                     </empty>
@@ -242,6 +243,28 @@
                     }
                 }).show(tpl,'会员充值');
             });
+            $('.bindreferer').click(function (e) {
+                var id=$(this).data('id')
+                dialog.pickUser(function (user) {
+                    $.ajax({
+                        url:"{:url('set_referer')}",
+                        dataType:'json',
+                        data:{
+                            id:id,
+                            referer:user.id
+                        },
+                        success:function (json) {
+                            dialog.alert(json.msg,function () {
+                                if(json.code==1){
+                                    location.reload()
+                                }
+                            })
+
+                        }
+                    })
+                    return false;
+                },{is_agent:1})
+            })
         });
     </script>
 </block>
