@@ -32,6 +32,13 @@
 <script type="text/javascript">
     jQuery(function ($) {
         setNav('{$navmodel}');
+        $('.list-group-item').click(function(e){
+            var target=$(e.target);
+            if(target.is('a'))return;
+            if(target.parents('a').length>0)return;
+            var link=$(this).find('a')[0]
+            link && link.click();
+        });
     })
 </script>
 <block name="script" ></block>
