@@ -5,6 +5,7 @@ namespace app\common\command;
 
 use app\common\facade\OrderFacade;
 use app\common\model\MemberModel;
+use app\common\model\ProductModel;
 use think\console\Command;
 use think\console\Input;
 use think\console\input\Argument;
@@ -252,18 +253,11 @@ class Testing extends Command
             $aprod = weight_random($aprods,'min_price', false);
             $id=$aprod['id'];
         }
+        $sku = Db::name('productSku')->where('product_id',$id)->find();
 
-        $model=Db::view('ProductSku','*')
-            ->view('Product',['title'=>'product_title','image'=>'product_image','levels','is_discount','is_commission','type','level_id'],'ProductSku.product_id=Product.id','LEFT')->where('Product.status',1);
+        $products=ProductModel::getForOrder([$sku['sku_id']=>1]);
 
-        $product = $model->where('Product.id',$id)->find();
-
-        $product['product_price']=$product['price'];
-        $product['product_weight']=$product['weight'];
-        $product['count']=1;
-        if(!empty($product['image']))$product['product_image']=$product['image'];
-
-        return $product;
+        return $products[0];
     }
 
     /**

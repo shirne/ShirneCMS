@@ -15,6 +15,7 @@ use app\common\model\CreditOrderModel;
 use app\common\model\MemberOauthModel;
 use app\common\model\OrderModel;
 use app\common\model\PayOrderModel;
+use app\common\model\ProductModel;
 use app\common\model\WechatModel;
 use app\common\validate\OrderValidate;
 use EasyWeChat\Factory;
@@ -37,31 +38,11 @@ class OrderController extends AuthedController
      */
     public function confirm($sku_ids,$count=1,$from='quick')
     {
-
         if($from=='cart'){
             $products=MemberCartFacade::getCart($this->userid,$sku_ids);
         }else{
-            $products=Db::view('ProductSku','*')
-                ->view('Product',['title'=>'product_title','image'=>'product_image','levels','is_discount','is_commission','type','level_id'],'ProductSku.product_id=Product.id','LEFT')
-                ->whereIn('ProductSku.sku_id',idArr($sku_ids))
-                ->select();
-            $counts=idArr($count);
-            $this->initLevel();
-            foreach ($products as $k=>&$item){
-                $item['product_price']=$item['price'];
-                $item['product_weight']=$item['weight'];
-
-                if(!empty($item['image']))$item['product_image']=$item['image'];
-                if(isset($counts[$k])){
-                    $item['count']=$counts[$k];
-                }else{
-                    $item['count']=$counts[0];
-                }
-                if(!empty($item['levels'])){
-                    $item['levels']=json_decode($item['levels'],true);
-                }
-            }
-            unset($item);
+            $skucounts = array_combine_cmp(idArr($sku_ids),idArr($count),COMBINE_PAD_VALUE,1);
+            $products = ProductModel::getForOrder($skucounts);
         }
 
         $total_price=0;

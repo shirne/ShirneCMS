@@ -1048,17 +1048,22 @@ function array_index($arr,$index,$ismulti=false){
     return $return;
 }
 
+define('COMBINE_PAD_NONE',0);
+define('COMBINE_PAD_VALUE',1);
+define('COMBINE_PAD_KEY',2);
 /**
  * 兼容的array_combine
- * @param $keys
- * @param $vals
- * @param bool $pad
+ * @param array $keys
+ * @param array $vals
+ * @param int $pad_mode
+ * @param int|string|mixed $value_default
+ * @param string $key_prefix
  * @return array
  */
-function array_combine_cmp($keys,$vals,$pad=FALSE){
+function array_combine_cmp($keys,$vals,$pad_mode=0, $value_default="",$key_prefix='extra_field_'){
     $kcount = count($keys);
     $vcount = count($vals);
-    if (!$pad) {
+    if (!$pad_mode) {
         if($kcount > $vcount) {
             $keys = array_slice($keys, 0, $vcount);
         }elseif($kcount < $vcount){
@@ -1066,20 +1071,20 @@ function array_combine_cmp($keys,$vals,$pad=FALSE){
         }
     } else {
         // more headers than row fields
-        if ($kcount > $vcount) {
+        if ($kcount > $vcount && ($pad_mode & COMBINE_PAD_VALUE)==COMBINE_PAD_VALUE) {
             // how many fields are we missing at the end of the second array?
             // Add empty strings to ensure arrays $a and $b have same number of elements
             $more = $kcount - $vcount;
             for($i = 0; $i < $more; $i++) {
-                $b[] = "";
+                $vals[] = $value_default;
             }
             // more fields than headers
-        } else if ($kcount < $vcount) {
+        } else if ($kcount < $vcount && ($pad_mode & COMBINE_PAD_KEY)==COMBINE_PAD_KEY) {
             $more = $vcount - $kcount;
             // fewer elements in the first array, add extra keys
             for($i = 0; $i < $more; $i++) {
-                $key = 'extra_field_0' . $i;
-                $a[] = $key;
+                $key = $key_prefix . $i;
+                $keys[] = $key;
             }
 
         }

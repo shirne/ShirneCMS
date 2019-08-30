@@ -34,6 +34,41 @@ class ProductModel extends ContentModel
         return self::$specifications;
     }
 
+    public static function getForOrder($skucounts){
+        if(empty($skucounts))return [];
+        $sku_ids = array_keys($skucounts);
+        $products=Db::view('ProductSku','*')
+            ->view('Product',['title'=>'product_title','spec_data','image'=>'product_image','levels','is_discount','is_commission','commission_percent','type','level_id'],'ProductSku.product_id=Product.id','LEFT')
+            ->whereIn('ProductSku.sku_id',idArr($sku_ids))
+            ->select();
+    
+        foreach ($products as $k=>&$item){
+            $item['product_price']=$item['price'];
+        
+            if(!empty($item['image']))$item['product_image']=$item['image'];
+            if(isset($counts[$item['sku_id']])){
+                $item['count']=$skucounts[$item['sku_id']];
+            }else{
+                $item['count']=1;
+            }
+            if (!empty($item['spec_data'])) {
+                $item['spec_data'] = json_decode($item['spec_data'], true);
+            } else {
+                $item['spec_data'] = [];
+            }
+            if (!empty($item['specs'])) {
+                $item['specs'] = json_decode($item['specs'], true);
+            } else {
+                $item['specs'] = [];
+            }
+            if(!empty($item['levels'])){
+                $item['levels']=json_decode($item['levels'],true);
+            }
+        }
+        unset($item);
+        return $products;
+    }
+    
     public static function transSpec($sku_specs){
         $transed=[];
         if(!empty($sku_specs)) {

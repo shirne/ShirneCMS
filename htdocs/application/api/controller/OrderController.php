@@ -8,6 +8,7 @@ use app\common\facade\OrderFacade;
 use app\common\model\MemberOauthModel;
 use app\common\model\OrderModel;
 use app\common\model\PayOrderModel;
+use app\common\model\ProductModel;
 use app\common\model\WechatModel;
 use app\common\validate\OrderValidate;
 use EasyWeChat\Factory;
@@ -51,26 +52,8 @@ class OrderController extends AuthedController
             $products=MemberCartFacade::getCart($this->user['id'],$sku_ids);
             
         }else{
-            $products=Db::view('ProductSku','*')
-                ->view('Product',['title'=>'product_title','spec_data','image'=>'product_image','levels','is_discount','is_commission','type','level_id'],'ProductSku.product_id=Product.id','LEFT')
-                ->whereIn('ProductSku.sku_id',idArr($sku_ids))
-                ->select();
-            $counts=array_index($order_skus,'count,sku_id');
-            
-            foreach ($products as $k=>&$item){
-                $item['product_price']=$item['price'];
-
-                if(!empty($item['image']))$item['product_image']=$item['image'];
-                if(isset($counts[$item['sku_id']])){
-                    $item['count']=$counts[$item['sku_id']];
-                }else{
-                    $item['count']=1;
-                }
-                if(!empty($item['levels'])){
-                    $item['levels']=json_decode($item['levels'],true);
-                }
-            }
-            unset($item);
+            $skucounts = array_column($order_skus,'count','sku_id');
+            $products=ProductModel::getForOrder($skucounts);
         }
         
         //todo 邮费模板
