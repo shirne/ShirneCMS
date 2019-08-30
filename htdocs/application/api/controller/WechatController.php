@@ -344,7 +344,7 @@ class WechatController extends Controller{
 
         $response = $app->handlePaidNotify(function ($message, $fail) {
             // 记录日志
-            Log::record(var_export($message,TRUE),'pay');
+            Log::record(var_export($message,TRUE),'scanpay');
 
             return true;
         });

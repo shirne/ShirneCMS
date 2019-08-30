@@ -14,15 +14,18 @@ use think\console\Input;
 use think\console\Output;
 use think\Controller;
 use think\Db;
+use think\facade\Log;
 use think\Response;
 
 class UtilController extends Controller
 {
     public function cropimage($img){
+        Log::close();
         return crop_image($img,$_GET);
     }
 
     public function cacheimage($img){
+        Log::close();
         $paths=explode('.',$img);
         if(count($paths)==3) {
             preg_match_all('/(w|h|q|m)(\d+)(?:_|$)/', $paths[1], $matches);

@@ -52,7 +52,7 @@ class WechatTemplateMessageModel extends BaseModel
     public static function sendTplMessage($wechat,$tplset, $msgdata, $openid){
         if(empty($openid))return false;
         if(empty($tplset) || empty($tplset['template_id']))return false;
-        Log::record(var_export(func_get_args(),TRUE));
+        //Log::record(var_export(func_get_args(),TRUE));
         
         $app = WechatModel::createApp($wechat);
         if(empty($app))return false;

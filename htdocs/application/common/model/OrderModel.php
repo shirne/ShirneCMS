@@ -509,7 +509,8 @@ class OrderModel extends BaseModel
     
                 for ($i = 0; $i < count($parents); $i++) {
                     $curLevel = $levels[$parents[$i]['level_id']];
-                    if ($curLevel['commission_layer'] > $i && !empty($curLevel['commission_percent'][$i])) {
+                    
+                    if ($order['commission_amount'] > 0 && $curLevel['commission_layer'] > $i && !empty($curLevel['commission_percent'][$i])) {
                         $curPercent = $curLevel['commission_percent'][$i];
                         $commission = $order['commission_amount'];
                         if ($curLevel['commission_limit'] && $commission > $curLevel['commission_limit']) {
@@ -521,16 +522,11 @@ class OrderModel extends BaseModel
                     }
         
                     foreach ($specials as $special) {
+                        $amount = 0;
                         if ($special['type'] == 3) {
                             $amount = $special['amouts'][$i] ?: 0;
-                            if ($amount > 0) {
-                                self::award_log($parents[$i]['id'], $amount, '消费分佣' . ($i + 1) . '代', 'commission', $order);
-                            }
                         } elseif ($special['type'] == 4) {
-                            $amount = $special['amouts'][$parents[$i]['level_id']][$i] ?: 0;
-                            if ($amount > 0) {
-                                self::award_log($parents[$i]['id'], $amount, '消费分佣' . ($i + 1) . '代', 'commission', $order);
-                            }
+                            $amount = $special['level_amouts'][$parents[$i]['level_id']][$i] ?: 0;
                         } else {
                             if ($special['amount'] > 0 && !empty($special['percent'][$i])) {
                                 $curPercent = floatVal($special['percent'][$i]);
@@ -539,10 +535,12 @@ class OrderModel extends BaseModel
                                     $commission = $curLevel['commission_limit'];
                                 }
                                 $amount = $commission * $curPercent * .01;
-                                self::award_log($parents[$i]['id'], $amount, '消费分佣' . ($i + 1) . '代', 'commission', $order);
                             }
                         }
-                        $total_rebate += $amount;
+                        if ($amount > 0) {
+                            self::award_log($parents[$i]['id'], $amount, '特殊商品消费分佣' . ($i + 1) . '代', 'commission', $order);
+                            $total_rebate += $amount;
+                        }
                     }
                 }
             }
