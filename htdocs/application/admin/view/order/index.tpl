@@ -62,6 +62,7 @@
             </tr>
             </thead>
             <tbody>
+            <php>$empty=list_empty(7);</php>
             <volist name="lists" id="v" empty="$empty">
                 <tr>
                     <td>{$v.order_id}</td>

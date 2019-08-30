@@ -12,7 +12,7 @@
     <!-- Add custom CSS here -->
     <link href="__STATIC__/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
     <link rel="stylesheet" href="__STATIC__/ionicons/css/ionicons.min.css">
-    <link href="__STATIC__/admin/css/common.css" rel="stylesheet">
+    <link href="__STATIC__/admin/css/common.css?v={:config('template.static_version')}" rel="stylesheet">
 
     <!-- JavaScript -->
     <script src="__STATIC__/jquery/jquery.min.js"></script>

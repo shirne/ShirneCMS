@@ -48,6 +48,11 @@ class IndexController extends BaseController{
         $this->assign('money',$a);
 
         $notices=[];
+        if($this->manager['username']==config('app.test_account')){
+            $notices[]=[
+                'message'=>'本系统仅用于功能演示，请不要在系统内添加任何隐私数据及违法数据!'
+            ];
+        }
         $password_error=session('password_error');
         if($password_error){
             $notices[]=[
