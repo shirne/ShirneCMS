@@ -49,6 +49,7 @@ class OrderController extends AuthedController
     
     public function counts(){
         $countlist=Db::name('Order')->where('member_id',$this->user['id'])
+            ->where('delete_time',0)
             ->group('status')->field('status,count(order_id) as order_count')->select();
         $counts=[0,0,0,0,0,0,0];
         foreach ($countlist as $row){
