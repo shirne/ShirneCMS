@@ -492,7 +492,7 @@ class OrderModel extends BaseModel
     }
 
     public static function doRebate($order){
-        if( !$order['member_id'])return false;
+        if($order['rebated'] || !$order['member_id'])return false;
         $member=Db::name('Member')->where('id',$order['member_id'])->find();
     
         $total_rebate=0;
