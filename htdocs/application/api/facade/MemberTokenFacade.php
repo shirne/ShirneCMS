@@ -16,7 +16,7 @@ use think\Facade;
  * @package app\api\facade
  * @see \app\api\model\MemberTokenModel
  * @method array findToken($token) static
- * @method array createToken($member_id) static
+ * @method array createToken($member_id, $platform='app', $appid='') static
  * @method array refreshToken($refresh) static
  */
 class MemberTokenFacade extends Facade

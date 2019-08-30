@@ -380,7 +380,8 @@ DROP TABLE IF EXISTS `sa_member_token`;
 CREATE TABLE `sa_member_token` (
   `token_id` BIGINT NOT NULL AUTO_INCREMENT,
   `member_id` INT UNSIGNED NULL DEFAULT 0,
-  `platform` VARCHAR(20) NULL,
+  `platform` VARCHAR(30) NULL,
+  `appid` VARCHAR(30) NULL,
   `token` VARCHAR(50) NULL,
   `create_time` INT NULL DEFAULT 0,
   `update_time` INT NULL DEFAULT 0,
@@ -391,6 +392,18 @@ CREATE TABLE `sa_member_token` (
   KEY `token` (`token`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `sa_oauth_app`;
+
+CREATE TABLE `sa_oauth_app` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `platform` VARCHAR(20) NULL,
+  `appid` VARCHAR(30) NULL,
+  `appsecret` VARCHAR(50) NULL,
+  `create_time` INT NULL DEFAULT 0,
+  `update_time` INT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  KEY `appid` (`appid`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `sa_member_message`;
 

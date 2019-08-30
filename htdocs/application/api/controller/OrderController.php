@@ -69,9 +69,10 @@ class OrderController extends AuthedController
                 ->where('address_id',$data['address_id'])->find();
             $balancepay=$data['pay_type']=='balance'?1:0;
 
+            $platform=$this->request->tokenData['platform']?:'';
             $remark=[
                 'remark'=>$data['remark'],
-                'platform'=>'miniprogram',
+                'platform'=>$platform,
                 'form_id'=>$data['form_id'],
                 'total_price'=>$data['total_price']
             ];

@@ -5,6 +5,7 @@ namespace app\api\controller;
 use app\api\facade\MemberTokenFacade;
 use app\common\model\MemberModel;
 use app\common\model\MemberOauthModel;
+use app\common\model\OauthAppModel;
 use app\common\model\WechatModel;
 use EasyWeChat\Factory;
 use think\Db;
@@ -22,19 +23,41 @@ class AuthController extends BaseController
         parent::initialize();
     }
 
-    public function login(){
-        $username=$this->input['username'];
-        $password=$this->input['password'];
+    public function login($appid, $username, $password, $sign){
+        $this->check_submit_rate(2,'global',md5($username));
+        $data = $this->request->put();
+        if(empty($appid) || empty($sign)){
+            $this->error('未授权APP',ERROR_LOGIN_FAILED);
+        }
+        $app=false;
+        try {
+            $app = OauthAppModel::checkSign($data);
+        }catch(\Exception $e){
+            Log::record($e->getMessage());
+            Log::record($e->getTraceAsString());
+        }
+        if($app == false){
+            $this->error('APP授权验签失败',ERROR_LOGIN_FAILED);
+        }
+        
         if(empty($username) || empty($password)){
             $this->error('请填写登录账号及密码',ERROR_LOGIN_FAILED);
         }
         $member = Db::name('Member')->where('username',$username)->find();
-        if(!empty($member)){
-            if(compare_password($member,$password)){
-                $token=MemberTokenFacade::createToken($member['id']);
-                if(!empty($token)) {
-                    return $this->response($token);
+        if(!empty($member) ){
+            if($member['status']==1) {
+                if (compare_password($member, $password)) {
+                    $token = MemberTokenFacade::createToken($member['id'], $app['platform'], $app['appid']);
+                    if (!empty($token)) {
+                        user_log($member['id'], 'login', 1, '登录成功');
+            
+                        return $this->response($token);
+                    }
+                } else {
+                    user_log($member['id'], 'login', 0, '登录失败');
                 }
+            }else{
+                $this->error('账户已被禁用',ERROR_MEMBER_DISABLED);
             }
         }
 
@@ -45,12 +68,11 @@ class AuthController extends BaseController
      * 微信小程序登录
      * @return \think\response\Json
      */
-    public function wxLogin(){
-        $wechat_id=$this->input['wxid'];
-        $code=$this->input['code'];
+    public function wxLogin($wxid, $code){
+        
         $agent=isset($this->input['agent'])?$this->input['agent']:'';
         $wechat=Db::name('wechat')->where('type','wechat')
-            ->where('id|hash',$wechat_id)->find();
+            ->where('id|hash',$wxid)->find();
         if(empty($wechat)){
             $this->error('服务器配置错误',ERROR_LOGIN_FAILED);
         }
@@ -154,13 +176,18 @@ class AuthController extends BaseController
         }else{
             MemberOauthModel::update($data,['id'=>$oauth['id']]);
         }
+        
+        if($member['status'] != 1){
+            $this->error('账户已被禁用',ERROR_MEMBER_DISABLED);
+        }
 
-        $token=MemberTokenFacade::createToken($member['id']);
+        $token=MemberTokenFacade::createToken($member['id'],$wechat['type'].'-'.$wechat['account_type'], $wechat['appid']);
         if(!empty($token)) {
             MemberModel::update([
                 'login_ip'=>request()->ip(),
                 'logintime'=>time()
             ],['id'=>$member['id']]);
+            user_log($member['id'],'login',1,'登录'.$wechat['title']);
             return $this->response($token);
         }
         $this->error('登录失败',ERROR_LOGIN_FAILED);
@@ -200,10 +227,10 @@ class AuthController extends BaseController
         );
     }
 
-    public function refresh(){
-        $refreshToken=$this->input['refresh_token'];
-        if(!empty($refreshToken)){
-            $token=MemberTokenFacade::refreshToken($refreshToken);
+    public function refresh($refresh_token){
+        
+        if(!empty($refresh_token)){
+            $token=MemberTokenFacade::refreshToken($refresh_token);
             if(!empty($token)) {
                 return $this->response($token);
             }

@@ -29,8 +29,13 @@ class AuthMiddleware
             $errorno=ERROR_TOKEN_INVAILD;
             if(!empty($token)) {
                 if($token['update_time']+$token['expire_in']>time()){
-                    $request->tokenData=$token;
-                    $request->user = Db::name('Member')->find($token['member_id']);
+                    $user = Db::name('Member')->find($token['member_id']);
+                    if($user['status']==1) {
+                        $request->tokenData = $token;
+                        $request->user = Db::name('Member')->find($token['member_id']);
+                    }else{
+                        $errorno=ERROR_MEMBER_DISABLED;
+                    }
                 }else{
                     $errorno=ERROR_TOKEN_EXPIRE;
                 }

@@ -42,30 +42,35 @@ class MemberTokenModel extends BaseModel
         }
         return $token;
     }
-    public function findToken($token){
+    public function findToken($token, $response=false){
         $token=$this->where('token',$token)->find();
         if(empty($token)){
             return false;
         }
-        return $this->mapToken($token,false);
+        return $this->mapToken($token,$response);
     }
-    public function createToken($member_id){
-        $token=$this->where('member_id',$member_id)->find();
+    public function createToken($member_id,$platform='app', $appid=''){
+        $token=$this->where('member_id',$member_id)
+            ->where('platform',$platform)
+            ->where('appid',$appid)
+            ->find();
         $data=array(
             'token'=>$this->getToken($member_id),
             'expire_in'=>$this->expire
         );
         $data['refresh_token']=$this->getToken($member_id,str_shuffle($data['token']));
         if(empty($token)){
+            $data['platform']=$platform;
+            $data['appid']=$appid;
             $data['member_id']=$member_id;
             $added=static::create($data);
             if(!$added['token_id']){
                 Log::record('Token insert error:'.$this->getError());
             }
         }else{
-            static::update($data,['member_id'=>$member_id]);
+            static::update($data,['member_id'=>$member_id,'platform'=>$platform,'appid'=>$appid]);
         }
-        return $this->mapToken($this->where('member_id',$member_id)->find(),true);
+        return $this->findToken($data['token'],true);
     }
     public function refreshToken($refresh){
         $token=$this->where('refresh_token',$refresh)->find();
@@ -81,6 +86,6 @@ class MemberTokenModel extends BaseModel
 
         static::update($data,['member_id'=>$token['member_id']]);
 
-        return $this->mapToken($this->where('member_id',$token['member_id'])->find());
+        return $this->findToken($data['token'],true);
     }
 }
