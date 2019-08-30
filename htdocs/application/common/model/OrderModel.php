@@ -492,7 +492,7 @@ class OrderModel extends BaseModel
     }
 
     public static function doRebate($order){
-        if($order['rebated'] || !$order['member_id'])return false;
+        if( !$order['member_id'])return false;
         $member=Db::name('Member')->where('id',$order['member_id'])->find();
     
         $total_rebate=0;
@@ -500,6 +500,7 @@ class OrderModel extends BaseModel
             $levels = getMemberLevels();
             $levelConfig = getLevelConfig($levels);
             $parents = getMemberParents($member['id'], $levelConfig['commission_layer'], false);
+            
             if (!empty($parents)) {
                 $pids = array_column($parents, 'id');
                 Db::name('Member')->where('id', $member['referer'])->setInc('recom_performance', $order['payamount'] * 100);
@@ -520,13 +521,13 @@ class OrderModel extends BaseModel
                         $total_rebate += $amount;
                         self::award_log($parents[$i]['id'], $amount, '消费分佣' . ($i + 1) . '代', 'commission', $order);
                     }
-        
+                    
                     foreach ($specials as $special) {
                         $amount = 0;
                         if ($special['type'] == 3) {
                             $amount = $special['amouts'][$i] ?: 0;
                         } elseif ($special['type'] == 4) {
-                            $amount = $special['level_amouts'][$parents[$i]['level_id']][$i] ?: 0;
+                            $amount = $special['level_amounts'][$parents[$i]['level_id']][$i] ?: 0;
                         } else {
                             if ($special['amount'] > 0 && !empty($special['percent'][$i])) {
                                 $curPercent = floatVal($special['percent'][$i]);
@@ -549,10 +550,9 @@ class OrderModel extends BaseModel
             ->update(['rebated'=>1,'rebate_time'=>time(),'rebate_total'=>$total_rebate]);
         return true;
     }
-    public static function award_log($uid, $money, $reson, $type,$order,$field='credit')
+    public static function award_log($uid, $money, $reson, $type,$order,$field='reward')
     {
-        $amount=$money*100;
-        $results=AwardLogModel::record($uid, $amount, $type,$reson, $order,$field);
+        $results=AwardLogModel::record($uid, $money, $type,$reson, $order,$field);
 
         //返奖同时可以处理其它
 
