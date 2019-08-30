@@ -187,7 +187,7 @@ class MemberSignModel extends BaseModel
             
             if(!$awarded){
                 $credit = empty($this->settings['award']['first'])?0:floatval($this->settings['award']['first']);
-                if(!empty($credit)){
+                if(!empty($credit) && !$is_sup){
                     $isfirst = 0;
                     if($keep_days==1){
                         if( $this->settings['cycle']=='month'){
@@ -197,7 +197,7 @@ class MemberSignModel extends BaseModel
                             $isfirst = Db::name('signLog')->where('member_id',$member_id)->count();
                         }
                     }
-                    if($isfirst<2){
+                    if($isfirst==1){
                         $awarded=true;
                         $returnmsg = '首次签到奖励'.$credit.'积分';
                         money_log($member_id, $credit*100, '首次签到奖励', 'sign', 0, 'credit');
