@@ -4,6 +4,7 @@ namespace app\admin\controller;
 use app\common\model\MemberModel;
 use app\common\validate\MemberValidate;
 use think\Db;
+use think\Exception;
 
 /**
  * 会员管理
@@ -88,6 +89,10 @@ class MemberController extends BaseController
         $this->assign('referer',$referer);
         $this->assign('keyword',$keyword);
         return $this->fetch();
+    }
+    
+    public function set_increment($incre){
+        $this->setAutoIncrement('member',$incre);
     }
     
     public function set_referer($id=0, $referer=0){

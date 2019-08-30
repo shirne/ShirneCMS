@@ -16,7 +16,8 @@
 					<a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="cancel">撤销</a>
 					<a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="delete">删除</a>
 				</div>
-				<a href="{:url('product/add')}" class="btn btn-outline-primary btn-sm"><i class="ion-md-add"></i> 添加商品</a>
+				<a href="{:url('product/add')}" class="btn btn-outline-primary btn-sm mr-2"><i class="ion-md-add"></i> 添加商品</a>
+				<a href="javascript:" class="btn btn-outline-warning btn-sm action-btn" data-need-checks="false" data-action="setIncrement"><i class="ion-md-add"></i> 设置起始ID</a>
 			</div>
 		</div>
 		<div class="col-md-6">
@@ -114,7 +115,7 @@
 			w.actionPublish=function(ids){
 				dialog.confirm('确定将选中产品发布到前台？',function() {
 				    $.ajax({
-						url:'{:url('article/push',['id'=>'__id__','status'=>1])}'.replace('__id__',ids.join(',')),
+						url:'{:url('product/push',['id'=>'__id__','status'=>1])}'.replace('__id__',ids.join(',')),
 						type:'GET',
 						dataType:'JSON',
 						success:function(json){
@@ -132,7 +133,7 @@
             w.actionCancel=function(ids){
                 dialog.confirm('确定取消选中产品的发布状态？',function() {
                     $.ajax({
-                        url:'{:url('article/push',['id'=>'__id__','status'=>0])}'.replace('__id__',ids.join(',')),
+                        url:'{:url('product/push',['id'=>'__id__','status'=>0])}'.replace('__id__',ids.join(',')),
                         type:'GET',
                         dataType:'JSON',
                         success:function(json){
@@ -150,7 +151,7 @@
             w.actionDelete=function(ids){
                 dialog.confirm('确定删除选中的产品？',function() {
                     $.ajax({
-                        url:'{:url('article/delete',['id'=>'__id__'])}'.replace('__id__',ids.join(',')),
+                        url:'{:url('product/delete',['id'=>'__id__'])}'.replace('__id__',ids.join(',')),
                         type:'GET',
                         dataType:'JSON',
                         success:function(json){
@@ -165,6 +166,24 @@
                     });
                 });
             };
+			w.actionSetIncrement=function () {
+				dialog.prompt('请输入新的起始ID',function (input) {
+					$.ajax({
+						url:"{:url('product/set_increment',['incre'=>'__INCRE__'])}".replace('__INCRE__',input),
+						type:'GET',
+						dataType:'JSON',
+						success:function(json){
+							if(json.code==1){
+								dialog.alert(json.msg,function() {
+									location.reload();
+								});
+							}else{
+								dialog.warning(json.msg);
+							}
+						}
+					});
+				})
+			}
         })(window)
 	</script>
 </block>

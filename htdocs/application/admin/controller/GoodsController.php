@@ -45,6 +45,10 @@ class GoodsController extends BaseController
 
         return $this->fetch();
     }
+    
+    public function set_increment($incre){
+        $this->setAutoIncrement('goods',$incre);
+    }
 
     public function add($cid=0){
         if ($this->request->isPost()) {

@@ -16,7 +16,8 @@
                     <a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="disable">禁用</a>
                 </div>
                 <a href="{:url('member/statics')}" class="btn btn-outline-info btn-sm mr-2"><i class="ion-md-stats"></i> 会员统计</a>
-                <a href="{:url('member/add')}" class="btn btn-outline-primary btn-sm"><i class="ion-md-add"></i> 添加会员</a>
+                <a href="{:url('member/add')}" class="btn btn-outline-primary btn-sm mr-2"><i class="ion-md-add"></i> 添加会员</a>
+                <a href="javascript:" class="btn btn-outline-warning btn-sm action-btn" data-need-checks="false" data-action="setIncrement"><i class="ion-md-add"></i> 设置起始ID</a>
             </div>
         </div>
         <div class="col col-6">
@@ -199,6 +200,24 @@
                     });
                 });
             };
+            w.actionSetIncrement=function () {
+                dialog.prompt('请输入新的起始ID',function (input) {
+                    $.ajax({
+                        url:"{:url('member/set_increment',['incre'=>'__INCRE__'])}".replace('__INCRE__',input),
+                        type:'GET',
+                        dataType:'JSON',
+                        success:function(json){
+                            if(json.code==1){
+                                dialog.alert(json.msg,function() {
+                                    location.reload();
+                                });
+                            }else{
+                                dialog.warning(json.msg);
+                            }
+                        }
+                    });
+                })
+            }
         })(window);
         jQuery(function(){
             var tpl=$('#rechargeTpl').text();

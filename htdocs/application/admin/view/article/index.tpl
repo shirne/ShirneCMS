@@ -16,7 +16,8 @@
 					<a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="cancel">撤销</a>
 					<a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="delete">{:lang('Delete')}</a>
 				</div>
-				<a href="{:url('article/add')}" class="btn btn-outline-primary btn-sm"><i class="ion-md-add"></i> 添加文章</a>
+				<a href="{:url('article/add')}" class="btn btn-outline-primary btn-sm mr-2"><i class="ion-md-add"></i> 添加文章</a>
+				<a href="javascript:" class="btn btn-outline-warning btn-sm action-btn" data-need-checks="false" data-action="setIncrement"><i class="ion-md-add"></i> 设置起始ID</a>
 			</div>
 		</div>
 		<div class="col-md-6">
@@ -147,6 +148,24 @@
                     });
                 });
             };
+			w.actionSetIncrement=function () {
+				dialog.prompt('请输入新的起始ID',function (input) {
+					$.ajax({
+						url:"{:url('article/set_increment',['incre'=>'__INCRE__'])}".replace('__INCRE__',input),
+						type:'GET',
+						dataType:'JSON',
+						success:function(json){
+							if(json.code==1){
+								dialog.alert(json.msg,function() {
+									location.reload();
+								});
+							}else{
+								dialog.warning(json.msg);
+							}
+						}
+					});
+				})
+			}
         })(window)
 	</script>
 </block>

@@ -66,6 +66,10 @@ class ArticleController extends BaseController
 
         return $this->fetch();
     }
+    
+    public function set_increment($incre){
+        $this->setAutoIncrement('article',$incre);
+    }
 
     /**
      * 添加
