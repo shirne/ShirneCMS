@@ -49,6 +49,19 @@ class OrderModel extends BaseModel
         });
     }
     
+    public static function getCounts($member_id=0){
+        $model=Db::name('Order')->where('delete_time',0);
+        if($member_id>0){
+            $model->where('member_id',$member_id);
+        }
+        $countlist=Db::name('Order')->group('status')->field('status,count(order_id) as order_count')->select();
+        $counts=[0,0,0,0,0,0,0];
+        foreach ($countlist as $row){
+            $counts[$row['status']]=$row['order_count'];
+        }
+        return $counts;
+    }
+    
     public function audit(){
         if($this->isExists()){
             $updated=Db::name('Order')->where('order_id',$this['order_id'])
