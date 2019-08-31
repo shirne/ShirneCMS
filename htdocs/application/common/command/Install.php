@@ -113,14 +113,14 @@ class Install extends Command
         if($input->hasOption('admin')){
             $admin=$input->getOption('admin');
         }
+        $password='123456';
         if($input->hasOption('password')){
             $password=$input->getOption('password');
-
-            $data['username']=$admin;
-            $data['salt']=random_str(8);
-            $data['password'] = encode_password($password,$data['salt']);
-            Db::name('Manager')->where('id',1)->update($data);
         }
+        $data['username']=$admin;
+        $data['salt']=random_str(8);
+        $data['password'] = encode_password($password,$data['salt']);
+        Db::name('Manager')->where('id',1)->update($data);
 
         file_put_contents($lockfile,time());
 

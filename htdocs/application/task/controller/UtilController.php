@@ -2,18 +2,13 @@
 
 namespace app\task\controller;
 
-
-use app\common\command\Install;
-use app\common\model\ArticleModel;
-use app\common\model\MemberRechargeModel;
 use app\common\model\OrderModel;
-use app\common\model\PayOrderModel;
-use app\common\model\ProductModel;
 use think\Console;
 use think\console\Input;
 use think\console\Output;
 use think\Controller;
 use think\Db;
+use think\facade\Env;
 use think\facade\Log;
 use think\Response;
 
@@ -71,33 +66,6 @@ class UtilController extends Controller
             }
         }
         exit;
-    }
-
-    public function install($sql='',$mode='')
-    {
-        $console=Console::init(false);
-        $output=new Output('buffer');
-        $args=['install'];
-        if(!empty($sql)){
-            $args[]='--sql';
-            $args[]=$sql;
-        }
-        if(!empty($mode)){
-            $args[]='--mode';
-            $args[]=$mode;
-        }
-        if($this->request->has('admin','post')){
-            $args[]='--admin';
-            $args[]=$this->request->post('admin');
-        }
-        if($this->request->has('password','post')){
-            $args[]='--password';
-            $args[]=$this->request->post('password');
-        }
-        $input=new Input($args);
-
-        $console->doRun($input, $output);
-        return $output->fetch();
     }
 
 }
