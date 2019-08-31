@@ -30,6 +30,13 @@ VALUES
   (96,9,'付款方式','Paytype/index','paytype_index','ion-md-card',0,0),
   (97,9,'公众号管理','Wechat/index','wechat_index','ion-md-chatboxes',0,0);
 
+TRUNCATE TABLE `sa_manager_role`;
+
+INSERT INTO `sa_manager_role` (`id`,`type`, `role_name`,`global`, `detail`, `create_time`, `update_time`)
+VALUES
+  (1,1,'系统管理员','','','1436679338','1436935104'),
+  (1,5,'网站管理员','','','1436679338','1436935104'),
+  (1,9,'网站编辑','','','1436679338','1436935104');
 
 TRUNCATE TABLE `sa_manager`;
 

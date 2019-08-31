@@ -6,6 +6,7 @@
 <div id="page-wrapper">
     <div class="row list-header">
         <div class="col-md-6">
+            <a href="{:url('manager_role/index')}" class="btn btn-outline-secondary btn-sm"><i class="ion-md-contact"></i> 角色管理</a>
             <a href="{:url('manager/add')}" class="btn btn-outline-primary btn-sm"><i class="ion-md-add"></i> 添加管理员</a>
         </div>
         <div class="col-md-6">
@@ -38,11 +39,14 @@
                 <td>{$v.id}</td>
                 <td>{$v.username}</td>
                 <td>{$v.email}</td>
-                <td>{$v.create_time|showdate}<br />{$v.update_time|showdate}</td>
-                <td>{$v.login_ip}<br />{$v.logintime|showdate}</td>
+                <td style="font-size: 12px">{$v.create_time|showdate}<br />{$v.update_time|showdate}</td>
+                <td style="font-size: 12px">{$v.login_ip}<br />{$v.logintime|showdate}</td>
                 <td>
-                    <if condition="$v.type eq 1"> <span class="label label-success">超级管理员</span>
-                    <elseif condition="$v.type eq 2"/><span class="label label-danger">管理员</span>
+
+                    <if condition="isset($roles[$v['type']])">
+                        <span class="badge badge-{$roles[$v['type']]['label_type']}">{$roles[$v['type']]['role_name']}</span>
+                    <else/>
+                        <span class="badge badge-secondary"> - </span>
                     </if>
                 </td> 
                 <td><if condition="$v.status eq 1">正常<else/><span style="color:red">禁用</span></if></td>

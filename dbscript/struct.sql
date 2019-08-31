@@ -36,11 +36,27 @@ CREATE TABLE `sa_manager` (
   `update_time` int(11) DEFAULT '0',
   `login_ip` varchar(50) DEFAULT '',
   `status` tinyint(1) DEFAULT '1' COMMENT '0:禁止登陆 1:正常',
-  `type` tinyint(1) DEFAULT '1' COMMENT '1:超级管理员 2:普通管理员',
+  `type` tinyint(1) DEFAULT '1' COMMENT 'role.type',
   `logintime` INT(11) NULL DEFAULT 0,
   `last_view_member` INT(11) NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `sa_manager_role`
+--
+DROP TABLE IF EXISTS `sa_manager_role`;
+CREATE TABLE `sa_manager_role` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `type` TINYINT NOT NULL DEFAULT 0,
+  `role_name` VARCHAR(50) NOT NULL DEFAULT '',
+  `global` VARCHAR(200) NULL DEFAULT '',
+  `detail` TEXT NULL,
+  `create_time` int(11) DEFAULT '0',
+  `update_time` int(11) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `type_UNIQUE` (`type` ASC)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --

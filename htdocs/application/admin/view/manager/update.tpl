@@ -41,16 +41,17 @@
                     </div>
                 </if>
                 <div class="form-row">
-                    <label class="col-2 col-md-1">用户类型</label>
-                    <div class="form-group col-md-2">
+                    <label class="col-2 col-md-1">用户角色</label>
+                    <div class="form-group col">
                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                            <label class="btn btn-outline-secondary{$model['type']==1?' active':''}">
-                                <input type="radio" name="type" value="1" autocomplete="off" {$model['type']==1?' checked':''}> 超级管理员
-                            </label>
-                            <label class="btn btn-outline-secondary{$model['type']==2?' active':''}">
-                                <input type="radio" name="type" value="2" autocomplete="off"{$model['type']==2?' checked':''}> 管理员
-                            </label>
+                            <foreach name="roles" id="role">
+                                <label class="btn btn-outline-secondary{$model['type']==$role['type']?' active':''}">
+                                    <input type="radio" name="type" value="{$role['type']}" autocomplete="off" {$model['type']==$role['type']?' checked':''}> {$role['role_name']}
+                                </label>
+                            </foreach>
                         </div>
+
+                        <div class="text-muted">更改角色后将重置管理员的权限为对应角色的权限</div>
                     </div>
                 </div>
                 <div class="form-row">

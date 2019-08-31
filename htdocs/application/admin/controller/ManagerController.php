@@ -2,6 +2,7 @@
 namespace app\admin\controller;
 
 use app\admin\model\ManagerModel;
+use app\admin\model\ManagerRoleModel;
 use app\admin\validate\ManagerValidate;
 use app\common\command\Manager;
 use think\Db;
@@ -27,13 +28,13 @@ class ManagerController extends BaseController
         }
         $key=empty($key)?"":base64_decode($key);
         $model=Db::name('Manager');
-        $where=array();
         if(!empty($key )){
-            $where[] = array('username|email','like',"%$key%");
+            $model->whereLike('username|email',"%$key%");
         }
-
-        $lists=$model->where($where)->order('ID ASC')->paginate(15);
+        
+        $lists=$model->order('ID ASC')->paginate(15);
         $this->assign('lists',$lists);
+        $this->assign('roles',ManagerRoleModel::getRoles());
         $this->assign('page',$lists->render());
         return $this->fetch();
     }
@@ -126,6 +127,9 @@ class ManagerController extends BaseController
                 unset($data['repassword']);
                 $model=ManagerModel::create($data);
                 if ($model->id) {
+                    //添加默认权限
+                    if($data['type']>1)$this->updatePermission($model->id,$data['type']);
+                    
                     user_log($this->mid,'addmanager',1,'添加管理员'.$model->id ,'manager');
                     $this->success(lang('Add success!'), url('manager/index'));
                 } else {
@@ -133,8 +137,9 @@ class ManagerController extends BaseController
                 }
             }
         }
-        $model=array('type'=>2,'status'=>1);
+        $model=array('type'=>ManagerRoleModel::max('type'),'status'=>1);
         $this->assign('model',$model);
+        $this->assign('roles',ManagerRoleModel::getRoles());
         return $this->fetch('update');
     }
 
@@ -182,16 +187,18 @@ class ManagerController extends BaseController
                 if(SUPER_ADMIN_ID ==$id){
                     $data['type'] = 1;
                 }else{
-                    $parent = Db::name('manage')->where('id',$model['pid'])->find();
+                    $parent = Db::name('manager')->where('id',$model['pid'])->find();
                     if(!empty($parent)){
                         if($data['type']<$parent['type']){
                             $this->error('不能将管理员类型设置为比上级高的类型');
                         }
                     }
                 }
-                
+                $updatePermission=false;
+                if($data['type']!=$model['type'])$updatePermission=true;
                 //更新
                 if ($model->allowField(true)->update($data)) {
+                    if($updatePermission)$this->updatePermission($id,$data['type']);
                     user_log($this->mid,'addmanager',1,'修改管理员'.$model->id ,'manager');
                     $this->success(lang('Update success!'), url('manager/index'));
                 } else {
@@ -201,7 +208,23 @@ class ManagerController extends BaseController
         }
         
         $this->assign('model',$model);
+        $this->assign('roles',ManagerRoleModel::getRoles());
         return $this->fetch();
+    }
+    
+    private function updatePermission($managerId,$global,$detail=null){
+        if(is_null($detail)){
+            $roles=ManagerRoleModel::getRoles();
+            $role=$roles[$global];
+            if(empty($role))return false;
+            $global = $role['global'];
+            $detail = $role['detail'];
+        }
+        $model['manager_id']=$managerId;
+        $model['global']=is_array($global)?implode(',',$global):$global;
+        $model['detail']=is_array($detail)?implode(',',$detail):$detail;
+        Db::name('managerPermision')->insert($model,true);
+        return true;
     }
 
     /**
@@ -216,24 +239,24 @@ class ManagerController extends BaseController
         if(empty($manager)){
             $this->error('管理员资料错误');
         }
+        $role = ManagerRoleModel::where('type',$manager['type'])->find();
+        if(empty($role)){
+            $this->error('请先设置管理员角色');
+        }
+        
         if(!$manager->hasPermission($this->mid)){
             $this->error('您不能编辑该管理员的权限');
         }
         $model = Db::name('ManagerPermision')->where('manager_id',$id)->find();
         if(empty($model)){
-            $model=array();
-            $model['manager_id']=$id;
-            $model['global']='';
-            $model['detail']='';
-            $model['id']=Db::name('manager_permision')->insert($model,false,true);
+            $this->updatePermission($id,$role['global'],$role['detail']);
+            $model = Db::name('ManagerPermision')->where('manager_id',$id)->find();
         }
         if($this->request->isPost()){
-            $model['global']=$_POST['global'];
-            if(!is_array($model['global']))$model['global']=array();
-            $model['global']=implode(',',$model['global']);
-            $model['detail']=$_POST['detail'];
-            if(!is_array($model['detail']))$model['detail']=array();
-            $model['detail']=implode(',',$model['detail']);
+            
+            list($global,$detail)=$role->filterPermissions($this->request->post('global'),$this->request->post('detail'));
+            $model['global']=$global;
+            $model['detail']=$detail;
             if(Db::name('ManagerPermision')->update($model)){
                 $this->success(lang('Update success!'), url('manager/index'));
             }else {
@@ -244,14 +267,15 @@ class ManagerController extends BaseController
         $model['detail']=explode(',',$model['detail']);
         $this->assign('model',$model);
         $this->assign('perms',config('permisions.'));
+        $this->assign('role',$role);
         return $this->fetch();
     }
     
     public function status($id, $status=0)
     {
         $id = intval($id);
-        if(1 == $id) {
-            $this->error("超级管理员不可禁用!");
+        if(SUPER_ADMIN_ID == $id) {
+            $this->error("创始人不可禁用!");
         }
         
         $manager = ManagerModel::get($id);
@@ -276,18 +300,21 @@ class ManagerController extends BaseController
     public function delete($id)
     {
     	$id = intval($id);
-    	if(1 == $id) {
-            $this->error("超级管理员不可禁用!");
+    	if(SUPER_ADMIN_ID == $id) {
+            $this->error("创始人不可删除!");
         }
         
     	$manager = ManagerModel::get($id);
         if (!$manager->hasPermission($this->mid)) {
-            $this->error('您不能设置该管理员的状态');
+            $this->error('您不能删除该管理员');
         }
-        
+        $pid = $manager['pid'];
         $deleted=Db::name('manager')->where('id',$id)->delete();
         if($deleted){
             Db::name('managerPermision')->where('manager_id',$id)->delete();
+            
+            Db::name('manager')->where('pid',$id)->update(['pid'=>$pid]);
+            
             $this->success(lang('Delete success!'), url('manager/index'));
         }else{
             $this->error(lang('Delete failed!'));
