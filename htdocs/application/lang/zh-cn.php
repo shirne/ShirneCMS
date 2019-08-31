@@ -12,6 +12,10 @@ return [
     'Balance'=>'余额',
     'Credit'=>'积分',
     'Reward'=>'奖励',
+    
+    'Gived'=>'已发放',
+    'Canceled'=>'已撤销',
+    'Waiting'=>'待发放',
 
     'System Opt.'=>'系统操作',
     'Consume'=>'消费',

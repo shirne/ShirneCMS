@@ -118,24 +118,24 @@ class OrderModel extends BaseModel
         if($status < -2){
         
         }elseif($status < 0){
-            //if($item['cancel_time']==0){
-                $products=Db::name('orderProduct')->where('order_id',$item['order_id'])->select();
-                foreach ($products as $product) {
-                    Db::name('ProductSku')->where('sku_id', $product['sku_id'])
-                        ->dec('storage', -$product['count'])
-                        ->inc('sale', $product['count'])
-                        ->update();
-                    Db::name('Product')->where('id', $product['product_id'])
-                        ->dec('storage', -$product['count'])
-                        ->inc('sale', $product['count'])
-                        ->update();
-                }
-                Db::name('Order')->where('order_id',$item['order_id'])
-                    ->update(['cancel_time'=>time()]);
+            $products=Db::name('orderProduct')->where('order_id',$item['order_id'])->select();
+            foreach ($products as $product) {
+                Db::name('ProductSku')->where('sku_id', $product['sku_id'])
+                    ->dec('storage', -$product['count'])
+                    ->inc('sale', $product['count'])
+                    ->update();
+                Db::name('Product')->where('id', $product['product_id'])
+                    ->dec('storage', -$product['count'])
+                    ->inc('sale', $product['count'])
+                    ->update();
+            }
+            Db::name('Order')->where('order_id',$item['order_id'])
+                ->update(['cancel_time'=>time()]);
+
+            //只传id过去，需要取新数据
+            self::sendOrderMessage($item['order_id'],'order_cancel',$products);
     
-                //只传id过去，需要取新数据
-                self::sendOrderMessage($item['order_id'],'order_cancel',$products);
-            //}
+            AwardLogModel::cancel($item['order_id']);
         }else{
             if($status < $item['status'])return;
             if($item['isaudit'] == 1 || !empty($newData['isaudit'])){
@@ -182,6 +182,7 @@ class OrderModel extends BaseModel
             $item = $this->getOrigin();
         }
         self::sendOrderMessage($item['order_id'],'order_complete');
+        AwardLogModel::giveout($item['order_id']);
     }
 
     /**

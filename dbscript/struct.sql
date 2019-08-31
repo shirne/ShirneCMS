@@ -627,6 +627,9 @@ CREATE TABLE `sa_award_log`(
   `from_member_id` int(11) NOT NULL,
   `amount` int(11) DEFAULT '0' COMMENT '金额 单位分',
   `real_amount` int(11) DEFAULT '0',
+  `status` tinyint(4) DEFAULT 0,
+  `give_time` int(11) DEFAULT 0,
+  `cancel_time` int(11) DEFAULT 0,
   `create_time` int(11) DEFAULT NULL,
   `remark` varchar(50) DEFAULT '',
   PRIMARY KEY (`id`)

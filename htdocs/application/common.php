@@ -440,6 +440,18 @@ function money_type($type,$wrap=true){
     }
     return $wrap?wrap_label(lang('Unknown'),'default'):lang('Unknown');
 }
+function award_status($status,$wrap=true){
+    switch ($status){
+        case "1":
+            return $wrap?wrap_label(lang('Gived'),'success'):lang('Gived');
+        case "-1":
+            return $wrap?wrap_label(lang('Canceled'),'secondary'):lang('Canceled');
+        case "0":
+            return $wrap?wrap_label(lang('Waiting'),'warning'):lang('Waiting');
+        
+    }
+    return $wrap?wrap_label(lang('Unknown'),'default'):lang('Unknown');
+}
 function wrap_label($text,$type='secondary'){
     return "<span class=\"badge badge-$type\">$text</span>";
 }

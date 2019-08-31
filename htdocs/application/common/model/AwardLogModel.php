@@ -49,15 +49,37 @@ class AwardLogModel extends Model
                     'amount' => $award,
                     'real_amount' => $award,
                     'remark' => $remark,
+                    'status'=>$order_id>0?0:1,
                     'create_time' => $time
                 ];
             }
 
-            money_log($uidgroup, $award, $remark, $type, $from_id, $field);
+            if(empty($order_id))money_log($uidgroup, $award, $remark, $type, $from_id, $field);
 
             $count += Db::name('AwardLog')->insertAll($datas);
         }
         return $count;
+    }
+    
+    public static function giveout($orderid,$field='reward'){
+        $logs = Db::name('AwardLog')->where('order_id',$orderid)
+            ->where('status',0)->select();
+        $logids=[];
+        foreach ($logs as $log){
+            $loged=money_log($log['member_id'], $log['amount'], $log['remark'], $log['type'], $log['from_member_id'], $field);
+            if(!empty($loged))$logids[]=$log['id'];
+        }
+        if(!empty($logids)) {
+            Db::name('AwardLog')->whereIn('id', $logids)->update(['status'=>1,'give_time'=>time()]);
+        }
+        return true;
+    }
+    
+    public static function cancel($orderid){
+        Db::name('AwardLog')->where('order_id',$orderid)
+            ->where('status',0)->update(['status'=>-1,'cancel_time'=>time()]);
+        
+        return true;
     }
 
     public static function rand_award($total,$count,$total_count,$precision=0,$ratio=5,$disperse=100000)

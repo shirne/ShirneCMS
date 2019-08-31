@@ -155,6 +155,90 @@ class MemberController extends BaseController
             $this->error('取消失败');
         }
     }
+    
+    /**
+     * 佣金记录
+     * @param int $id
+     * @param int $from_id
+     * @param string $fromdate
+     * @param string $todate
+     * @param string $status
+     * @param string $type
+     * @return mixed
+     */
+    public function award_log($id=0,$from_id=0,$fromdate='',$todate='',$status='',$type='all'){
+        $model=Db::view('AwardLog mlog','*')
+            ->view('Member m',['username','nickname','avatar','level_id','mobile'],'m.id=mlog.member_id','LEFT')
+            ->view('Member fm',['username'=>'from_username','nickname'=>'from_nickname','avatar'=>'from_avatar','level_id'=>'from_level_id','mobile'=>'from_mobile'],'fm.id=mlog.from_member_id','LEFT');
+        
+        $levels=getMemberLevels();
+        
+        if($id>0){
+            $model->where('mlog.member_id',$id);
+            $this->assign('member',Db::name('member')->find($id));
+        }
+        if($from_id>0){
+            $model->where('mlog.from_member_id',$from_id);
+            $this->assign('from_member',Db::name('member')->find($from_id));
+        }
+        if(!empty($type) && $type!='all'){
+            $model->where('mlog.type',$type);
+        }else{
+            $type='all';
+        }
+        if($status !== ''){
+            $model->where('mlog.status',$status);
+        }
+        
+        if(!empty($todate)){
+            $totime=strtotime($todate.' 23:59:59');
+            if($totime===false)$todate='';
+        }
+        if(!empty($fromdate)) {
+            $fromtime = strtotime($fromdate);
+            if ($fromtime === false) $fromdate = '';
+        }
+        if(!empty($fromtime)){
+            if(!empty($totime)){
+                $model->whereBetween('mlog.create_time',array($fromtime,$totime));
+            }else{
+                $model->where('mlog.create_time','EGT',$fromtime);
+            }
+        }else{
+            if(!empty($totime)){
+                $model->where('mlog.create_time','ELT',$totime);
+            }
+        }
+        
+        $logs = $model->order('ID DESC')->paginate(15);
+        
+        $types=getLogTypes();
+        $allstatus=['-1'=>'已取消','0'=>'待发放','1'=>'已发放'];
+        
+        $stacrows=$model->group('mlog.status,mlog.type')->field('mlog.status,mlog.type,sum(mlog.amount) as total_amount')->select();
+        $statics=[];
+        foreach ($stacrows as $row){
+            $statics[$row['status']][$row['type']]=$row['total_amount'];
+        }
+        foreach ($statics as $k=>$list){
+            $statics[$k]['sum']=array_sum($statics[$k]);
+        }
+        
+        $this->assign('id',$id);
+        $this->assign('from_id',$from_id);
+        $this->assign('fromdate',$fromdate);
+        $this->assign('todate',$todate);
+        $this->assign('type',$type);
+        $this->assign('status',$status);
+        
+        $this->assign('types',$types);
+        $this->assign('allstatus',$allstatus);
+        $this->assign('levels',$levels);
+        $this->assign('statics', $statics);
+        $this->assign('logs', $logs);
+        $this->assign('page',$logs->render());
+        return $this->fetch();
+    }
 
     /**
      * 余额记录

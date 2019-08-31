@@ -18,3 +18,12 @@ VALUES
   (3,9,'info','网站编辑','','','1436679338','1436935104');
 
 UPDATE `sa_manager` SET `type`=5 WHERE `type`=2 and id>0;
+
+ALTER TABLE `sa_award_log`
+  ADD `status` tinyint(4) DEFAULT 1 AFTER `real_amount`,
+  ADD `give_time` int(11) DEFAULT 0 AFTER `status`,
+  ADD `cancel_time` int(11) DEFAULT 0 AFTER `give_time`;
+
+INSERT INTO `sa_permission` ( `parent_id`,`name`, `url`,`key`, `icon`, `sort_id`, `disable`)
+VALUES
+  (8,'佣金明细','Member/award_log','member_award_log','ion-md-paper',0,0);
