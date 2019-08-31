@@ -550,6 +550,7 @@ class OrderModel extends BaseModel
                             }
                         }
                     }
+                    $amount = round($amount,2);
                     if ($amount > 0) {
                         self::award_log($parents[$i]['id'], $amount, '消费分佣' . ($i + 1) . '代', 'commission', $order);
                         $total_rebate += $amount;
