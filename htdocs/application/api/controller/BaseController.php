@@ -35,6 +35,20 @@ class BaseController extends Controller
         $this->checkLogin();
     }
     
+    
+    /**
+     * @return array
+     */
+    protected function userLevel(){
+        if($this->isLogin) {
+            $levels = getMemberLevels();
+            if (isset($levels[$this->user['id']])) {
+                return $levels[$this->user['id']];
+            }
+        }
+        return [];
+    }
+    
     /**
      * 操作频率限制，防止垃圾数据及重复提交
      * @param int $seconds  限制频率时间（秒）

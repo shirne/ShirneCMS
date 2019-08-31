@@ -195,10 +195,37 @@ class CommonController extends BaseController
         return $this->response($data);
     }
     
+    /**
+     * 签到排名
+     * @param int $date
+     * @return \think\response\Json
+     */
     public function signrank($date=0){
         if(!$date)$time = time();
         else $time = strtotime($date);
         $ranking=MemberSignModel::getInstance()->getSignRank($time);
         return $this->response($ranking);
+    }
+    
+    /**
+     * 公共数据
+     */
+    public function data($keys){
+        $datas=[];
+        $keyarr=explode(',',$keys);
+        if(in_array('banklist',$keyarr)){
+            $datas['banklist']=banklist();
+        }
+        if(in_array('log_types',$keyarr)){
+            $datas['log_types']=getLogTypes();
+        }
+        if(in_array('money_fields',$keyarr)){
+            $datas['money_fields']=getMoneyFields();
+        }
+        if(in_array('levels',$keyarr)){
+            $datas['levels']=getMemberLevels();
+        }
+        
+        return $this->response($datas);
     }
 }

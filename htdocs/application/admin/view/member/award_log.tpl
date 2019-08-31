@@ -149,7 +149,7 @@
                         </if>
                     </td>
                     <td>{$v.create_time|showdate}</td>
-                    <td>{$v.reson}</td>
+                    <td>{$v.remark}</td>
                     <td>
 
                     </td>

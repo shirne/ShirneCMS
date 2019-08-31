@@ -21,7 +21,9 @@ class MemberController extends AuthedController
             ->hidden('password,salt,sec_password,sec_salt,delete_time')
             ->where('id',$this->user['id'])
             ->find();
-            
+        
+        $levels = getMemberLevels();
+        $profile['level']=$levels[$profile['level_id']]?:[];
         return $this->response($profile);
     }
 
