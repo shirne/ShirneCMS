@@ -54,7 +54,7 @@ class OrderModel extends BaseModel
         if($member_id>0){
             $model->where('member_id',$member_id);
         }
-        $countlist=Db::name('Order')->group('status')->field('status,count(order_id) as order_count')->select();
+        $countlist=$model->group('status')->field('status,count(order_id) as order_count')->select();
         $counts=[0,0,0,0,0,0,0];
         foreach ($countlist as $row){
             $counts[$row['status']]=$row['order_count'];
