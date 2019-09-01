@@ -581,6 +581,7 @@ DROP TABLE IF EXISTS `sa_member_cashin`;
 CREATE TABLE `sa_member_cashin` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `member_id` int(11) NOT NULL,
+  `form_id` varchar(50) DEFAULT '',
   `amount` int(11) DEFAULT '0' COMMENT '金额 单位分',
   `real_amount` int(11) DEFAULT '0',
   `create_time` int(11) DEFAULT NULL,

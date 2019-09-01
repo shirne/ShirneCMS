@@ -104,8 +104,10 @@ CREATE TABLE `sa_wechat_template_message` (
   `wechat_id` INT NOT NULL,
   `type` VARCHAR(30) NULL,
   `title` VARCHAR(50) NULL,
+  `title_id` VARCHAR(30) NULL,
   `template_id` VARCHAR(60) NULL,
   `keywords` VARCHAR(200) NULL,
+  `content` TEXT,
   `create_time` INT NULL,
   `update_time` INT NULL,
   PRIMARY KEY (`id`)

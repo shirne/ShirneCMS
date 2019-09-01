@@ -9,20 +9,12 @@ use app\common\model\WechatTemplateMessageModel;
 class TplmsgController extends WechatBaseController
 {
     public function index(){
-        
-        $msgs = [
-            'order_need_pay'=>['title'=>'待付款提醒','keywords'=>'订单号、待付金额、商品详情、支付提醒'],
-            'order_payed'=>['title'=>'订单支付成功通知','keywords'=>'订单号码、订单金额、下单时间、物品名称'],
-            'order_deliver'=>['title'=>'订单发货提醒','keywords'=>'快递公司、发货时间、购买时间、物品名称'],
-            'order_complete'=>['title'=>'订单完成通知','keywords'=>'订单号码、订单金额、商品名称、确认时间'],
-            'order_cancel'=>['title'=>'订单取消通知','keywords'=>'订单编号、订单金额、物品详情、取消原因']
-        ];
-        
         $tpls = WechatTemplateMessageModel::getTpls($this->wid);
+        $reserveTpls = $this->reserveTpls();
         
         if($this->request->isPost()){
             $datas = $this->request->post('tpls');
-            foreach ($msgs as $key=>$msg){
+            foreach ($reserveTpls as $key=>$msg){
                 if(isset($tpls[$key])){
                     WechatTemplateMessageModel::update($datas[$key],['wechat_id'=>$this->wid,'type'=>$key]);
                 }elseif(!empty($datas[$key]['template_id'])){
@@ -33,8 +25,230 @@ class TplmsgController extends WechatBaseController
             }
             $this->success('保存成功');
         }
-        $this->assign('msgs',$msgs);
+        
         $this->assign('tpls',$tpls);
+        $this->assign('msgs',$reserveTpls);
         return $this->fetch();
+    }
+    
+    private function reserveTpls(){
+        if($this->currentWechat['account_type'] == 'miniprogram'){
+            $reserveTpls = WechatTemplateMessageModel::miniprogramTpls();
+        }elseif($this->currentWechat['account_type'] == 'service'){
+            $reserveTpls = WechatTemplateMessageModel::serviceTpls();
+        }else{
+            $this->error('暂不支持该类型账号');
+        }
+        return $reserveTpls;
+    }
+    
+    public function sync(){
+        if($this->currentWechat['account_type'] == 'miniprogram'){
+            $result = $this->miniprogramSync();
+        }elseif($this->currentWechat['account_type'] == 'service'){
+            $result = $this->serviceSync();
+        }else{
+            $this->error('暂不支持该类型账号');
+        }
+        
+        $this->error($result['errmsg']?:'同步失败');
+    }
+    
+    private function miniprogramSync(){
+        $offset=(int)$this->request->param('offset');
+        try {
+            $result = $this->wechatApp->template_message->getTemplates($offset,20);
+        }catch(\Exception $e){
+            $this->error($e->getMessage());
+        }
+        if(!empty($result) && empty($result['errcode'])){
+            if(empty($result['list'])){
+                $this->success('未添加过消息模板');
+            }else {
+                $tpls = $result['list'];
+                $tplsbyworkds=array_column($tpls,NULL,'title');
+                $existstpls= WechatTemplateMessageModel::getTpls($this->wid);
+                $reserveTpls = WechatTemplateMessageModel::miniprogramTpls();
+                $count=0;
+                $countfail=0;
+                foreach ($reserveTpls as $key=>$tpl){
+                    if(isset($tplsbyworkds[$tpl['title']])){
+                        $tpl['wechat_id']=$this->wid;
+                        $tpl['type']=$key;
+                        $tpl['template_id']=$tplsbyworkds[$tpl['title']]['template_id'];
+                        $keywords=preg_replace('/\{\{[\w\d\.]+\}\}/','',$tplsbyworkds[$tpl['title']]['content']);
+                        $keywords=preg_split('/\s+/',trim($keywords));
+                        $keywords=implode("、",$keywords);
+                        $tpl['keywords']=$keywords;
+                        if(isset($existstpls[$key])){
+                            WechatTemplateMessageModel::update($tpl,['type'=>$key,'wechat_id'=>$this->wid]);
+                        }else {
+                            WechatTemplateMessageModel::create($tpl);
+                        }
+                        $count++;
+                    }else{
+                        $countfail++;
+                    }
+                }
+    
+                if(count($tpls)>=20){
+                    $this->success('正在同步，匹配到模板:' . $count . ($countfail > 0 ? (' 未使用模板:' . $countfail) : ''), url('sync',['offset'=>$offset+20]),['next'=>true]);
+                }else {
+                    $this->success('同步完成，匹配到模板:' . $count . ($countfail > 0 ? (' 未使用模板:' . $countfail) : ''), '');
+                }
+            }
+        }
+        return empty($result)?['errmsg'=>'同步失败']:$result;
+    }
+    
+    private function serviceSync(){
+        try {
+            $result = $this->wechatApp->template_message->getPrivateTemplates();
+        }catch(\Exception $e){
+            $this->error($e->getMessage());
+        }
+        if(!empty($result) && empty($result['errcode'])){
+            if(empty($result['template_list'])){
+                $this->success('未添加过消息模板');
+            }else {
+                $tpls = $result['template_list'];
+                $tplsbyworkds=array_column($tpls,NULL,'title');
+                $existstpls= WechatTemplateMessageModel::getTpls($this->wid);
+                $reserveTpls = WechatTemplateMessageModel::serviceTpls();
+                $count=0;
+                $countfail=0;
+                foreach ($reserveTpls as $key=>$tpl){
+                    if(isset($tplsbyworkds[$tpl['title']])){
+                        $tpl['wechat_id']=$this->wid;
+                        $tpl['type']=$key;
+                        $tpl['template_id']=$tplsbyworkds[$tpl['title']]['template_id'];
+                        $keywords=preg_replace('/\{\{[\w\d\.]+\}\}/','',$tplsbyworkds[$tpl['title']]['content']);
+                        $keywords=preg_split('/\s+/',trim($keywords));
+                        $keywords=implode("、",$keywords);
+                        $tpl['keywords']=$keywords;
+                        $tpl['content']=$tplsbyworkds[$tpl['title']]['content'];
+                        if(isset($existstpls[$key])){
+                            WechatTemplateMessageModel::update($tpl,['type'=>$key,'wechat_id'=>$this->wid]);
+                        }else {
+                            WechatTemplateMessageModel::create($tpl);
+                        }
+                        $count++;
+                    }else{
+                        $countfail++;
+                    }
+                }
+                $this->success('同步完成，匹配到模板:'.$count.($countfail>0?(' 未使用模板:'.$countfail):''),'',$tpls);
+            }
+        }
+        return empty($result)?['errmsg'=>'同步失败']:$result;
+    }
+    
+    public function add($id){
+        $reserveTpls = $this->reserveTpls();
+        $key='';
+        foreach ($reserveTpls as $k=>$row){
+            if($row['title_id'] == $id){
+                $key=$k;
+                break;
+            }
+        }
+        if(empty($key)){
+            $this->error('非预设模板不能添加');
+        }
+        $tpl = $reserveTpls[$key];
+        if($this->currentWechat['account_type'] == 'miniprogram'){
+            $result=$this->miniprogramAdd($key,$tpl);
+        }elseif($this->currentWechat['account_type'] == 'service'){
+            $result=$this->serviceAdd($key,$tpl);
+        }else{
+            $this->error('暂不支持该类型账号');
+        }
+        
+        $this->success($result['errmsg'],'',$result);
+    }
+    
+    private function miniprogramAdd($key,$tpl){
+        try{
+            $tpllib = $this->wechatApp->template_message->get($tpl['title_id']);
+            if(!empty($tpllib) && empty($tpllib['errcode'])){
+                $keywords=explode('、',$tpl['keywords']);
+                $ids = [];
+                $keymap=array_column($tpllib['keyword_list'] ,'keyword_id','name');
+                foreach ($keywords as $k) {
+                    if(isset($keymap[$k])) {
+                        $ids[] = $keymap[$k];
+                    }
+                }
+                $result=$this->wechatApp->template_message->add($tpl['title_id'],$ids);
+            }
+        }catch(\Exception $e){
+            $this->error($e->getMessage());
+        }
+        if(!empty($result) && empty($result['errcode'])){
+            $exists=WechatTemplateMessageModel::where('type',$key)->where('wechat_id',$this->wid)->find();
+            if(empty($exists)){
+                $tpl['wechat_id']=$this->wid;
+                $tpl['type']=$key;
+                $tpl['template_id']=$result['template_id'];
+                WechatTemplateMessageModel::create($tpl);
+            }else{
+                $tpl['template_id']=$result['template_id'];
+                WechatTemplateMessageModel::update($tpl,['type'=>$key,'wechat_id'=>$this->wid]);
+            }
+        }
+        return empty($result)?['errmsg'=>'添加失败']:$result;
+    }
+    
+    private function serviceAdd($key,$tpl){
+        try{
+            $result=$this->wechatApp->template_message->addTemplate($tpl['title_id']);
+        }catch(\Exception $e){
+            $this->error($e->getMessage());
+        }
+        if(!empty($result) && empty($result['errcode'])){
+            $exists=WechatTemplateMessageModel::where('type',$key)->where('wechat_id',$this->wid)->find();
+            if(empty($exists)){
+                $tpl['wechat_id']=$this->wid;
+                $tpl['type']=$key;
+                $tpl['template_id']=$result['template_id'];
+                WechatTemplateMessageModel::create($tpl);
+            }else{
+                $tpl['template_id']=$result['template_id'];
+                WechatTemplateMessageModel::update($tpl,['type'=>$key,'wechat_id'=>$this->wid]);
+            }
+        }
+        return empty($result)?['errmsg'=>'添加失败']:$result;
+    }
+    
+    /**
+     * 删除模板消息
+     * @param $id
+     */
+    public function del($id){
+        $exists=WechatTemplateMessageModel::where('id|type',$id)->where('wechat_id',$this->wid)->find();
+        if(empty($exists)){
+            $this->error('模板消息未添加');
+        }
+        if(empty($exists['template_id'])){
+            WechatTemplateMessageModel::where('id',$exists['id'])->where('wechat_id',$this->wid)->delete();
+            $this->error('模板消息未添加');
+        }
+        try{
+            if($this->currentWechat['account_type'] == 'miniprogram'){
+                $result=$this->wechatApp->template_message->delete($exists['template_id']);
+            }elseif($this->currentWechat['account_type'] == 'service'){
+                $result=$this->wechatApp->template_message->deletePrivateTemplate($exists['template_id']);
+            }else{
+                $this->error('暂不支持该类型账号');
+            }
+            
+        }catch(\Exception $e){
+            $this->error($e->getMessage());
+        }
+        if(!empty($result) && empty($result['errcode'])){
+            WechatTemplateMessageModel::where('id',$exists['id'])->where('wechat_id',$this->wid)->delete();
+            $this->success('删除成功');
+        }
+        $this->success($result['errmsg']?:'删除失败','',$result);
     }
 }
