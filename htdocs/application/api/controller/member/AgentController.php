@@ -38,6 +38,28 @@ class AgentController extends AuthedController
         return $this->response(['poster_url'=>'']);
     }
     
+    
+    
+    public function award_log($type='',$status=''){
+        $model=Db::view('awardLog mlog','*')
+            ->view('Member m',['username','level_id','nickname','avatar'],'m.id=mlog.from_member_id','LEFT')
+            ->where('mlog.member_id',$this->user['id']);
+        if(!empty($type) && $type!='all'){
+            $model->where('mlog.type',$type);
+        }
+        if($status!==''){
+            $model->where('mlog.status',$status);
+        }
+        
+        $logs = $model->order('mlog.id DESC')->paginate(10);
+        
+        return $this->response([
+            'logs'=>$logs->items(),
+            'total'=>$logs->total(),
+            'page'=>$logs->currentPage()
+        ]);
+    }
+    
     public function orders($status='',$pagesize=10){
         $level = $this->userLevel();
         $sonids=getMemberSons($this->user['id'],$level['commission_layer']);

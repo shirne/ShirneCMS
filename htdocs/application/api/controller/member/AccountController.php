@@ -148,9 +148,11 @@ class AccountController extends AuthedController
         }
     }
     
-    public function cash_list(){
+    public function cash_list($status=''){
         $model=Db::name('memberCashin')->where('member_id',$this->user['id']);
-        
+        if($status !== ''){
+            $model->where('status',$status);
+        }
         $cashes = $model->paginate(15);
         
         
