@@ -197,6 +197,9 @@
         info:function (message,time) {
             return this.message(message,'info',time);
         },
+        loading:function (message,time) {
+            return this.message(message,'loading',time);
+        },
         message:function (message,type,time) {
             var cssClass='bg-info text-white';
             var icon='information-circle';
@@ -210,6 +213,11 @@
                     case 'warning':
                         icon='warning';
                         cssClass='bg-warning text-white';
+                        break;
+                    case 'loading':
+                        icon='refresh d-inline-block ani-loading';
+                        cssClass='bg-info text-white';
+                        if(!time)time=10;
                         break;
                     case 'success':
                         icon='checkmark-circle';
