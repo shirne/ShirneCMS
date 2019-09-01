@@ -100,13 +100,24 @@ class OrderController extends AuthedController
         if(empty($order) || $order['delete_time']>0){
             $this->error('订单不存在或已删除',0);
         }
-        $express=[];
+        
         if($order['status']>1 && !empty($order['express_no'])){
             $express = $order->fetchExpress();
         }
-        $products=Db::name('OrderProduct')
-            ->where('OrderProduct.order_id', $order['order_id'])
-            ->select();
+        if(empty($express)){
+            $express=[];
+        }
+        $returnData=[
+            'traces'=>$express['Traces']?:null,
+            'express_code'=>$order->express_code,
+            'express_no'=>$order->express_no
+        ];
+        if(!empty($returnData['express_code'])){
+            $companies=config('express.');
+            $returnData['express']=$companies[$returnData['express_code']]?:'其它';
+        }
+        
+        $products=Db::name('OrderProduct')->where('order_id', $order['order_id'])->select();
         
         if(!empty($products)) {
             $product = current($products);
@@ -120,13 +131,13 @@ class OrderController extends AuthedController
             $image = $product['product_image'];
             
             //$express['order']=$order;
-            $express['product']=[
+            $returnData['product']=[
                 'title'=>$title,
                 'image'=>$image
             ];
         }
         
-        return $this->response($express);
+        return $this->response($returnData);
     }
     
     public function confirm($id){

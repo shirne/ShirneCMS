@@ -11,7 +11,7 @@ class KdExpress extends ThirdBase
 {
     public function __construct($options=[]){
         parent::__construct($options);
-        $this->baseURL='http://api.kdniao.cc/Ebusiness/EbusinessOrderHandle.aspx';
+        $this->baseURL='http://api.kdniao.com/Ebusiness/EbusinessOrderHandle.aspx';
     }
     private function encrypt($data, $appkey) {
         return urlencode(base64_encode(md5($data.$appkey)));
@@ -33,6 +33,7 @@ class KdExpress extends ThirdBase
             'DataType' => '2',
         );
         $datas['DataSign'] = $this->encrypt($requestData, $this->appsecret);
-        return $this->http_post($this->baseURL, $datas);
+        $result = $this->http_post($this->baseURL, $datas);
+        return json_decode($result,true);
     }
 }

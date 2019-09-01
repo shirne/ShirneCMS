@@ -605,6 +605,9 @@ class OrderModel extends BaseModel
                 }
             }elseif(!empty($cacheData['data'])){
                 $data = json_decode($cacheData['data'],true);
+                if(is_string($data)){
+                    $data = json_decode($data,true);
+                }
             }
         }
         return $data;
