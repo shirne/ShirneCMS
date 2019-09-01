@@ -66,7 +66,7 @@ class ArticleController extends BaseController
             'lists'=>$lists->items(),
             'category'=>$category?:[],
             'page'=>$lists->currentPage(),
-            'count'=>$lists->total(),
+            'total'=>$lists->total(),
             'total_page'=>$lists->lastPage(),
         ]);
     }
@@ -140,7 +140,7 @@ class ArticleController extends BaseController
         return $this->response([
             'lists'=>$comments->items(),
             'page'=>$comments->currentPage(),
-            'count'=>$comments->total(),
+            'total'=>$comments->total(),
             'total_page'=>$comments->lastPage(),
         ]);
     }
