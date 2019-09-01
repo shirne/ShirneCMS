@@ -70,9 +70,28 @@
                 </table>
             </div>
         </div>
+        <if condition="$model['status'] GT 1">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">发货信息</h3>
+            </div>
+            <div class="panel-body">
+                <table class="table">
+                    <tbody>
+                    <tr>
+                        <td>快递公司</td>
+                        <td><if condition="!empty($model['express_code'])">[{$model.express_code}]<php>$expresses=config('express.');</php>{$expresses[$model['express_code']]}<else/>无需物流</if></td>
+                        <td>快递单号</td>
+                        <td>{$model.express_no}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        </if>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">收货信息</h3>
             </div>
             <div class="panel-body">
                 <table class="table">
