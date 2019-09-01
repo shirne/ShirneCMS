@@ -128,7 +128,7 @@
                 </td> 
                 <td>
                     <span class="badge badge-info">{$types[$v['type']]}</span>
-                    <span class="badge badge-info">{$levels[$v['level_id']]['level_name']}</span>
+                    <span class="badge badge-{$levels[$v['level_id']]['style']}">{$levels[$v['level_id']]['level_name']}</span>
                 </td>
                 <td class="operations">
                     <a class="btn btn-outline-primary" title="编辑" href="{:url('member/update',array('id'=>$v['id']))}"><i class="ion-md-create"></i> </a>
