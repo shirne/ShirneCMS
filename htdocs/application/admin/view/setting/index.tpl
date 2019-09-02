@@ -224,6 +224,26 @@
             $('[name=group]').val($(this).data('group'));
         });
 
+        jQuery(function ($) {
+            $('.mopengroup label').click(function () {
+                var val=$(this).find('input').val();
+                var parent=$(this).parents('.form-group').eq(0)
+                if(val>0){
+                    parent.nextAll().show();
+                }else{
+                    parent.nextAll().hide();
+                }
+            }).filter('.active').trigger('click');
+            $('.mregopengroup label').click(function () {
+                var val=$(this).find('input').val();
+                if(val>0){
+                    $('.regsetrow').show();
+                }else{
+                    $('.regsetrow').hide();
+                }
+            }).filter('.active').trigger('click');
+        })
+
         var importTpl=$('#importTpl').html();
         $('.import-btn').click(function(e) {
             var isposting=false;

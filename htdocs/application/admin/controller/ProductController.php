@@ -204,11 +204,16 @@ class ProductController extends BaseController
             }
         }
         $model=array('type'=>1,'status'=>1,'cate_id'=>$cid,'is_discount'=>1,'is_commission'=>1);
+        
+        $levels=getMemberLevels();
         $this->assign("category",ProductCategoryFacade::getCategories());
         $this->assign("brands",ProductCategoryFacade::getBrands(0));
         $this->assign('product',$model);
         $this->assign('skus',[[]]);
-        $this->assign('levels',getMemberLevels());
+        $this->assign('levels',$levels);
+        $this->assign('price_levels',array_filter($levels,function($item){
+            return $item['diy_price']==1;
+        }));
         $this->assign('types',getProductTypes());
         $this->assign('id',0);
         return $this->fetch('edit');
@@ -289,9 +294,13 @@ class ProductController extends BaseController
         }
         $skuModel=new ProductSkuModel();
         $skus=$skuModel->where('product_id',$id)->select();
+        $levels = getMemberLevels();
         $this->assign("category",ProductCategoryFacade::getCategories());
         $this->assign("brands",ProductCategoryFacade::getBrands(0));
-        $this->assign('levels',getMemberLevels());
+        $this->assign('levels',$levels);
+        $this->assign('price_levels',array_filter($levels,function($item){
+            return $item['diy_price']==1;
+        }));
         $this->assign('product',$model);
         $this->assign('skus',$skus->isEmpty()?[[]]:$skus);
         $this->assign('types',getProductTypes());

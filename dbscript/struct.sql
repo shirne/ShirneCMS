@@ -454,6 +454,7 @@ CREATE TABLE `sa_member_level` (
   `style` VARCHAR(10) default 'secondary',
   `is_default` TINYINT NULL DEFAULT 0,
   `upgrade_type` TINYINT NULL DEFAULT 0 COMMENT '1: 累计消费升级, 2: 购买升级',
+  `diy_price` tinyint NULL DEFAULT 0 COMMENT '自定义价格',
   `level_price` DECIMAL(10,2) NULL COMMENT '购买价格/累计金额',
   `discount` TINYINT NULL DEFAULT 100 COMMENT '会员折扣',
   `is_agent` TINYINT NULL DEFAULT 0 COMMENT '是否代理组',

@@ -252,6 +252,7 @@
                     <th scope="col">规格图片</th>
                     <th scope="col">重量(克)&nbsp;<a class="batch-set" title="批量设置" href="javascript:" data-field="weight"><i class="ion-md-create"></i> </a> </th>
                     <th scope="col">销售价&nbsp;<a class="batch-set" title="批量设置" href="javascript:" data-field="price"><i class="ion-md-create"></i> </a></th>
+                    <th scope="col">独立价&nbsp;<a class="batch-set" title="批量设置" href="javascript:" data-field="ext_price"><i class="ion-md-create"></i> </a></th>
                     <th scope="col">市场价&nbsp;<a class="batch-set" title="批量设置" href="javascript:" data-field="market_price"><i class="ion-md-create"></i> </a></th>
                     <th scope="col">成本价&nbsp;<a class="batch-set" title="批量设置" href="javascript:" data-field="cost_price"><i class="ion-md-create"></i> </a></th>
                     <th scope="col">库存&nbsp;<a class="batch-set" title="批量设置" href="javascript:" data-field="storage"><i class="ion-md-create"></i> </a></th>
@@ -268,9 +269,18 @@
                             <input type="hidden" class="field-sku_id" name="skus[{$k}][sku_id]" value="{$sku.sku_id}"/>
                             <input type="text" class="form-control field-goods_no" name="skus[{$k}][goods_no]" value="{$sku.goods_no}">
                         </td>
-                        <td><input type="hidden" class="field-sku_id" name="skus[{$k}][image]" value="{$sku.image}"/><img class="imgupload" src="{$sku.image|default='/static/images/noimage.png'}" /> </td>
+                        <td><input type="hidden" class="field-sku_id" name="skus[{$k}][image]" value="{$sku.image}"/><img class="imgupload rounded" src="{$sku.image|default='/static/images/noimage.png'}" /> </td>
                         <td><input type="text" class="form-control field-weight" name="skus[{$k}][weight]" value="{$sku.weight}"> </td>
                         <td><input type="text" class="form-control field-price" name="skus[{$k}][price]" value="{$sku.price}"> </td>
+                        <td>
+                            <if condition="!empty($price_levels)">
+                                <foreach name="price_levels" id="plv">
+                                    <div class="input-group input-group-sm"><span class="input-group-prepend"><span class="input-group-text">{$plv.level_name}</span></span><input type="text" class="form-control field-ext_price" data-level_id="{$plv.level_id}" name="skus[{$k}][ext_price][{$plv.level_id}]" value="{$sku['ext_price'][$plv['level_id']]?:''}"></div>
+                                </foreach>
+                                <else/>
+                                -
+                            </if>
+                        </td>
                         <td><input type="text" class="form-control field-market_price" name="skus[{$k}][market_price]" value="{$sku.market_price}"> </td>
                         <td><input type="text" class="form-control field-cost_price" name="skus[{$k}][cost_price]" value="{$sku.cost_price}"> </td>
                         <td><input type="text" class="form-control field-storage" name="skus[{$k}][storage]" value="{$sku.storage}"> </td>
@@ -310,6 +320,7 @@
         var rows=null;
         var isready=false;
         var goods_no=$('[name=goods_no]').val();
+        var diy_levels=JSON.parse('{$price_levels|array_values|json_encode|raw}');
         var skus=JSON.parse('{$skus|json_encode|raw}');
 
         function setSpecs(specids) {
@@ -397,12 +408,21 @@
                     goods_no: '',
                     weight: '',
                     price: '',
+                    ext_price: {},
                     market_price: '',
                     cost_price: '',
                     storage: ''
                 };
                 for(var i in sku){
-                    sku[i]=$(this).find('.field-'+i).val();
+                    if(i=='ext_price'){
+                        var ext_prices=$(this).find('.field-' + i);
+                        ext_prices.each(function () {
+                            var lid=$(this).data('level_id')
+                            sku[i][lid]=$(this).val()
+                        })
+                    }else {
+                        sku[i] = $(this).find('.field-' + i).val();
+                    }
                 }
                 sku.specs={};
                 var speccells=$(this).find('.spec-val');
@@ -412,6 +432,8 @@
                 skus.push(sku);
             });
         }
+
+        var diytpl='';
         function resetSkus(){
             if(!isready)return;
             var nrows=[],specrows=$('.spec-groups .spec-row');
@@ -428,6 +450,17 @@
                 }
                 spec_datas.push(datas);
             }
+            if(!diytpl){
+                if(diy_levels && diy_levels.length>0) {
+                    var diyarr = [];
+                    for (i = 0; i < diy_levels.length; i++) {
+                        diyarr.push('<div class="input-group input-group-sm"><span class="input-group-prepend"><span class="input-group-text">'+diy_levels[i].level_name+'</span></span><input type="text" class="form-control field-ext_price" data-level_id="'+diy_levels[i].level_id+'" name="skus[{@i}][ext_price]['+diy_levels[i].level_id+']" value="{@ext_price.'+diy_levels[i].level_id+'}"></div>');
+                    }
+                    diytpl = diyarr.join("\n");
+                }else{
+                    diytpl = ' - ';
+                }
+            }
 
             var rowhtml='<tr data-idx="{@i}">\n' +
                 '   {@specs}\n' +
@@ -435,9 +468,10 @@
                 '       <input type="hidden" class="field-sku_id" name="skus[{@i}][sku_id]" value="{@sku_id}"/>\n'+
                 '       <input type="text" class="form-control field-goods_no" name="skus[{@i}][goods_no]" value="{@goods_no}">\n' +
                 '   </td>\n' +
-                '   <td><input type="hidden" class="field-image" name="skus[{@i}][image]" value="{@image}"/><img class="imgupload" src="{@image|default=/static/images/noimage.png}" /></td>\n' +
+                '   <td><input type="hidden" class="field-image" name="skus[{@i}][image]" value="{@image}"/><img class="imgupload rounded" src="{@image|default=/static/images/noimage.png}" /></td>\n' +
                 '   <td><input type="text" class="form-control field-weight" name="skus[{@i}][weight]" value="{@weight}"> </td>\n' +
                 '   <td><input type="text" class="form-control field-price" name="skus[{@i}][price]" value="{@price}"> </td>\n' +
+                '   <td>' + diytpl + '</td>\n' +
                 '   <td><input type="text" class="form-control field-market_price" name="skus[{@i}][market_price]" value="{@market_price}"> </td>\n' +
                 '   <td><input type="text" class="form-control field-cost_price" name="skus[{@i}][cost_price]" value="{@cost_price}"> </td>\n' +
                 '   <td><input type="text" class="form-control field-storage" name="skus[{@i}][storage]" value="{@storage}"> </td>\n' +
@@ -477,6 +511,7 @@
                         image: skus[i].image,
                         weight: skus[i].weight,
                         price: skus[i].price,
+                        ext_price: skus[i].ext_price,
                         market_price: skus[i].market_price,
                         cost_price: skus[i].cost_price,
                         storage: skus[i].storage
@@ -489,6 +524,7 @@
                 goods_no: '',
                 weight: '',
                 price: '',
+                ext_price: {},
                 market_price: '',
                 cost_price: '',
                 storage: ''
@@ -586,20 +622,43 @@
         });
         $('.batch-set').click(function (e) {
             var field=$(this).data('field');
-            dialog.prompt('请输入要设置的数据',function(val) {
-                if(field==='goods_no'){
-                    if(!val){
+            var message='请输入要设置的数据';
+            if(field === 'ext_price'){
+                message={
+                    title:message,
+                    multi:{}
+                }
+                for(var i=0;i<diy_levels.length;i++){
+                    message.multi[diy_levels[i].level_id]=diy_levels[i].level_name;
+                }
+            }
+            dialog.prompt(message,function(val) {
+                if(field==='goods_no') {
+                    if (!val) {
                         dialog.warning('请填写货号');
                         return false;
                     }
-                    if(!goods_no){
-                        goods_no=val;
+                    if (!goods_no) {
+                        goods_no = val;
                         $('[name=goods_no]').val(val);
                     }
                     $('.spec-table tbody .field-' + field).each(function () {
                         //console.log(this)
-                        var row=$(this).parents('tr');
-                        $(this).val(val+'_'+row.data('idx'));
+                        var row = $(this).parents('tr');
+                        $(this).val(val + '_' + row.data('idx'));
+                    })
+                }else if(field==='ext_price'){
+                    for(var k in val){
+                        val[k]=parseFloat(val[k]);
+                        if(isNaN(val[k])){
+                            dialog.warning('请填写数值');
+                            return false;
+                        }
+                    }
+                    var extputs=$('.spec-table tbody .field-' + field);
+                    extputs.each(function () {
+                        var key=$(this).data('level_id')
+                        $(this).val(val[key])
                     })
                 }else {
                     val=parseFloat(val);

@@ -165,6 +165,7 @@ CREATE TABLE `sa_product_sku` (
   `image` varchar(150) DEFAULT NULL,
   `goods_no` varchar(50) DEFAULT NULL,
   `price` DECIMAL(10,2) DEFAULT 0 COMMENT '购买价格',
+  `ext_price` varchar(300) DEFAULT '' COMMENT '独立价格',
   `market_price` DECIMAL(10,2) DEFAULT 0 COMMENT '市场价格',
   `cost_price` DECIMAL(10,2) DEFAULT 0 COMMENT '成本价格',
   `weight` int(11) DEFAULT '0',
