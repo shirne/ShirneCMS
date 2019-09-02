@@ -64,6 +64,9 @@ class ProductModel extends ContentModel
             if(!empty($item['levels'])){
                 $item['levels']=json_decode($item['levels'],true);
             }
+            if(!empty($item['ext_price'])){
+                $item['ext_price']=json_decode($item['ext_price'],true);
+            }
         }
         unset($item);
         return $products;

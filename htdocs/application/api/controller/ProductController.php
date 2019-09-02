@@ -66,7 +66,7 @@ class ProductController extends BaseController
             $skus = [];
             if ($withsku) {
                 $pids = array_column($lists->items(), 'id');
-                $skus = Db::name('productSku')->whereIn('product_id',$pids)->select();
+                $skus = ProductSkuModel::whereIn('product_id',$pids)->select();
                 $skus = array_index($skus, 'product_id',true);
             }
             $levels = getMemberLevels();
@@ -97,9 +97,7 @@ class ProductController extends BaseController
             $this->error('商品不存在');
         }
 
-        $skuModel=new ProductSkuModel();
-
-        $skus=$skuModel->where('product_id',$product['id'])->select();
+        $skus=ProductSkuModel::where('product_id',$product['id'])->select();
         $images=Db::name('ProductImages')->where('product_id',$product['id'])->select();
 
         $isFavourite=$this->isLogin?MemberFavouriteFacade::isFavourite($this->user['id'],'product',$id):0;

@@ -87,7 +87,7 @@ VALUES
   ( 'm_invite', '邀请注册', 'radio', 'member', '0',1, '1', '', '0:关闭\r\n1:启用\r\n2:强制'),
   ( 'm_checkcode', '验证码', 'radio', 'member', '0',1, '1', '', '0:关闭\r\n1:启用'),
   ( 'autoaudit', '订单自动审核', 'radio', 'member', '0',1, '1', '', '0:关闭\r\n1:启用'),
-  ( 'commission_type', '佣金本金计算', 'radio', 'member', '0',1, '0', '', '0:购买价-成本价\r\n1:销售价-成本价\r\n2:销售价'),
+  ( 'commission_type', '佣金本金计算', 'radio', 'member', '0',1, '0', '', '0:购买价-成本价\r\n1:销售价-成本价\r\n2:购买价\r\n3:销售价'),
   ( 'commission_delay', '佣金到账时机', 'radio', 'member', '0',1, '0', '', '0:订单完成\r\n1:订单支付\r\n2:订单完成后'),
   ( 'commission_delay_days', '佣金到账延迟', 'text', 'member', '0',1, '0', '', ''),
   ( 'cash_fee', '提现手续费', 'text', 'member', '0',1, '10', '', ''),

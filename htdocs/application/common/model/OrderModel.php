@@ -211,7 +211,10 @@ class OrderModel extends BaseModel
 
         //status 0-待付款 1-已付款
         $status=0;
+        //总价 单位分
         $total_price=0;
+        $commission_type= getSetting('commission_type');
+        //分佣本金 单位分
         $commission_amount=0;
         $comm_special = [];
         $levelids=[];
@@ -232,18 +235,35 @@ class OrderModel extends BaseModel
                     return false;
                 }
             }
-
-            $price=intval($product['product_price']*100) * $product['count'];
-            if($product['is_discount']){
-                $price=round($price*$discount);
+            
+            $release_price=$product['product_price'];
+            if($level['diy_price']==1 && isset($product['ext_price'][$level['level_id']])){
+                $release_price = round($product['ext_price'][$level['level_id']]);
+            }else {
+                if ($product['is_discount']) {
+                    $release_price = round($release_price * $discount,2);
+                }
             }
+            $products[$k]['release_price']=$release_price;
+            $price = round($release_price * 100 * $product['count']);
             
             $total_price += $price;
 
             if($product['is_commission'] == 1 ){
-                $cost_price=intval($product['cost_price']*100)* $product['count'];
-                if($price>$cost_price) {
-                    $commission_amount += $price - $cost_price;
+                $orig_price = intval($product['product_price'] * 100) * $product['count'];
+                $cost_price = intval($product['cost_price'] * 100) * $product['count'];
+                if($commission_type==3){
+                    $commission_amount += $orig_price;
+                }elseif($commission_type==2){
+                    $commission_amount += $price;
+                }elseif($commission_type==1){
+                    if ($orig_price > $cost_price) {
+                        $commission_amount += $orig_price - $cost_price;
+                    }
+                }else {
+                    if ($price > $cost_price) {
+                        $commission_amount += $price - $cost_price;
+                    }
                 }
             }elseif($product['is_commission'] == 2){
                 $cost_price=intval($product['cost_price']*100)* $product['count'];
@@ -272,7 +292,8 @@ class OrderModel extends BaseModel
                 $levelids[]=$product['level_id'];
             }
         }
-    
+        
+        //todo  优惠券
     
         $level_id = 0;
         $levelids = array_unique($levelids);
@@ -283,9 +304,6 @@ class OrderModel extends BaseModel
                 }
             }
         }
-        
-
-        //todo  优惠券
         
         //比较客户端传来的价格
         if(is_array($extdata) && isset($extdata['total_price'])) {
@@ -345,10 +363,6 @@ class OrderModel extends BaseModel
             $i=0;
             foreach ($products as $product){
                 $product['order_id']=$result;
-                $release_price=$product['product_price'];
-                if($product['is_discount']){
-                    $release_price *= $discount;
-                }
                 Db::name('orderProduct')->insert([
                     'order_id'=>$result,
                     'product_id'=>$product['product_id'],
@@ -358,7 +372,7 @@ class OrderModel extends BaseModel
                     'product_title'=>$product['product_title'],
                     'product_image'=>$product['product_image'],
                     'product_orig_price'=>$product['product_price'],
-                    'product_price'=>$release_price,
+                    'product_price'=>$product['release_price'],
                     'product_weight'=>$product['product_weight'],
                     'count'=>$product['count'],
                     'sort'=>$i++
