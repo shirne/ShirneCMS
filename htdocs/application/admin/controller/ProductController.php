@@ -21,7 +21,35 @@ use think\Exception;
 class ProductController extends BaseController
 {
 
-    public function search($key='',$cate=0,$brand=0,$type=0){
+    public function search($key='',$cate=0,$brand=0,$type=0, $searchtype=''){
+        if($searchtype == 'sku'){
+            return $this->searchSku($key,$cate,$brand,$type);
+        }
+        return $this->searchProduct($key,$cate,$brand,$type);
+    }
+    
+    private function searchSku($key='',$cate=0,$brand=0,$type=0){
+        $model=Db::view('productSku','sku_id,goods_no as sku_goods_no,price')
+            ->view('product','id,title,image,min_price,max_price,goods_no,create_time','product.id=productSku.sku_id')
+            ->where('product.status',1);
+        if(!empty($key)){
+            $model->where('product.id|product.title|product.vice_title|product.goods_no|productSku.goods_no','like',"%$key%");
+        }
+        if($cate>0){
+            $model->whereIn('product.cate_id',ProductCategoryFacade::getSubCateIds($cate));
+        }
+        if($brand>0){
+            $model->where('product.brand_id',intval($brand));
+        }
+        if(!empty($type)){
+            $model->where('product.type',$type);
+        }
+        
+        $lists=$model->order('product.id ASC,productSku.sku_id ASC')->limit(10)->select();
+        return json(['data'=>$lists,'code'=>1]);
+    }
+    
+    private function searchProduct($key='',$cate=0,$brand=0,$type=0){
         $model=Db::name('product')
             ->where('status',1);
         if(!empty($key)){
@@ -36,7 +64,7 @@ class ProductController extends BaseController
         if(!empty($type)){
             $model->where('type',$type);
         }
-
+    
         $lists=$model->field('id,title,image,min_price,max_price,goods_no,create_time')
             ->order('id ASC')->limit(10)->select();
         return json(['data'=>$lists,'code'=>1]);

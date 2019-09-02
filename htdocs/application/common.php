@@ -1207,6 +1207,11 @@ function format_date($date_str, $format){
     return '';
 }
 
+function number_empty($val){
+    $tval = floatval($val);
+    return empty($tval)?'':$val;
+}
+
 /**
  * 请求接口返回内容
  * @param $url string  [请求的URL地址]

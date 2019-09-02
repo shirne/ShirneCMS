@@ -564,9 +564,12 @@
             },callback,filter);
         },
         pickProduct:function(callback,filter){
+            var issku = filter && filter['searchtype'];
+            var titletpl='<div class="text-block">[{@id}]&nbsp;{@title}&nbsp;<br />{@min_price}{if @max_price>@min_price}~{@max_price}{/if}</div>';
+            if(issku)titletpl='<div class="text-block">[{@id}]&nbsp;{@title}&nbsp;<br />[{@sku_goods_no}]&nbsp;{@price}</div>';
             return this.pickList({
                 'url':window.get_search_url('product'),
-                rowTemplate:'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action">{if @image}<div style="background-image:url({@image})" class="imgview" ></div>{/if}<div class="text-block">[{@id}]&nbsp;{@title}&nbsp;<br />{@min_price}~{@max_price}</div></a>',
+                rowTemplate:'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action">{if @image}<div style="background-image:url({@image})" class="imgview" ></div>{/if}'+titletpl+'</a>',
                 name:'产品',
                 idkey:'id',
                 extend:{

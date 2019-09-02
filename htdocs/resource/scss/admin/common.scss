@@ -371,7 +371,11 @@ h6 {
     }
   }
 }
-
+@media (max-width: 991px) {
+  .page-form .submit-btn{
+    padding-left:1.5rem;
+  }
+}
 
 
 #loginContainer {
@@ -744,11 +748,12 @@ table {
     -webkit-flex-direction: row;
     flex-direction: row;
     .imgview {
-      width:20%;
-      min-width: 20%;
-      margin-right:20px;
+      width:12%;
+      min-width: 12%;
+      margin-right:10px;
       flex:0 ;
-      padding-top:20%;
+      padding-top:12%;
+      border-radius:5px;
       background-size:cover;
       background-position: center center;
       background-repeat: no-repeat;
