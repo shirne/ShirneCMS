@@ -5,6 +5,7 @@ namespace app\common\model;
 use app\common\facade\CategoryFacade;
 use PHPMailer\PHPMailer\Exception;
 use think\Db;
+use think\Model;
 use think\Paginator;
 
 /**
@@ -115,6 +116,26 @@ class ContentModel extends BaseModel
         }
         return ($type & $flag) === $flag;
     }
+    
+    /**
+     * 重写,标签列表之后的数据处理
+     * @param $item array|Paginator
+     * @param $attrs array
+     * @return mixed
+     */
+    protected function afterTagList($lists,$attrs){
+        return $lists;
+    }
+    
+    /**
+     * 重写，标签单项之后的数据处理
+     * @param $item array|Model
+     * @param $attrs array
+     * @return mixed
+     */
+    protected function afterTagItem($item,$attrs){
+        return $item;
+    }
 
     /**
      * @param $attrs
@@ -190,7 +211,7 @@ class ContentModel extends BaseModel
             $list = $model->select();
         }
         
-        return $this->analysisType($list);
+        return $this->afterTagList($this->analysisType($list),$attrs);
     }
 
     public function tagRelation($attrs, $filter=false)
@@ -233,7 +254,7 @@ class ContentModel extends BaseModel
     
         $list = $model->select();
     
-        return $this->analysisType($list);
+        return $this->afterTagList($this->analysisType($list),$attrs);
     }
 
     public function tagPrev($attrs)
@@ -258,7 +279,7 @@ class ContentModel extends BaseModel
 
         $model->order($this->model.'.'.$this->getPk().' DESC');
 
-        return $this->analysisType($model->find(),false);
+        return $this->afterTagItem($this->analysisType($model->find(),false),$attrs);
     }
 
     public function tagNext($attrs)
@@ -283,6 +304,6 @@ class ContentModel extends BaseModel
 
         $model->order($this->model.'.'.$this->getPk().' ASC');
 
-        return $this->analysisType($model->find(),false);
+        return $this->afterTagItem($this->analysisType($model->find(),false),$attrs);
     }
 }

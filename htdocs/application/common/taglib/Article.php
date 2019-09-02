@@ -9,8 +9,8 @@ namespace app\common\taglib;
 class Article extends BaseTabLib
 {
     protected $tags =[
-        'list'=>['attr'=>'var,category,type,order,limit,cover,recursive','close'=>0],
-        'relation'=>['attr'=>'var,category,id,limit','close'=>0],
+        'list'=>['attr'=>'var,category,type,order,limit,cover,withimgs,recursive','close'=>0],
+        'relation'=>['attr'=>'var,category,id,limit,withimgs','close'=>0],
         'prev'=>['attr'=>'var,category,id','close'=>0],
         'next'=>['attr'=>'var,category,id','close'=>0],
         'pages'=>['attr'=>'var,group,limit','close'=>0],

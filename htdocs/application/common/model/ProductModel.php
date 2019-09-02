@@ -3,6 +3,7 @@ namespace app\common\model;
 
 use app\common\facade\ProductCategoryFacade;
 use think\Db;
+use think\Paginator;
 
 
 /**
@@ -33,6 +34,70 @@ class ProductModel extends ContentModel
         }
         return self::$specifications;
     }
+    
+    /**
+     * @param array|Paginator $lists
+     * @param array $attrs
+     * @return mixed
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    protected function afterTagList($lists,$attrs){
+        if(!empty($lists)){
+            $pids = array_column(is_array($lists)?$lists:$lists->items(),'id');
+            if(!empty($attrs['withsku'])){
+                $skus=ProductSkuModel::whereIn('product_id',$pids)->select();
+                $skus = array_index($skus,'product_id',true);
+                if($lists instanceof Paginator){
+                    $lists->each(function ($item)use($skus){
+                        if(isset($skus[$item['id']])){
+                            $item['skus']=$skus[$item['id']];
+                        }else{
+                            $item['skus']=[];
+                        }
+                        return $item;
+                    });
+                }else{
+                    foreach ($lists as &$item){
+                        if(isset($skus[$item['id']])){
+                            $item['skus']=$skus[$item['id']];
+                        }else{
+                            $item['skus']=[];
+                        }
+                    }
+                    unset($item);
+                }
+            }
+            if(!empty($attrs['withimgs'])){
+                $imgs=Db::name('productImages')->whereIn('product_id',$pids)->select();
+                $imgs = array_index($imgs,'product_id',true);
+                if($lists instanceof Paginator){
+                    $lists->each(function ($item)use($imgs){
+                        if(isset($imgs[$item['id']])){
+                            $item['imgs']=$imgs[$item['id']];
+                        }else{
+                            $item['imgs']=[];
+                        }
+                        return $item;
+                    });
+                }else{
+                    foreach ($lists as &$item){
+                        if(isset($imgs[$item['id']])){
+                            $item['imgs']=$imgs[$item['id']];
+                        }else{
+                            $item['imgs']=[];
+                        }
+                    }
+                    unset($item);
+                }
+            }
+        }
+        return $lists;
+    }
+    protected function afterTagItem($item,$attrs){
+        return $item;
+    }
 
     public static function getForOrder($skucounts){
         if(empty($skucounts))return [];
@@ -51,22 +116,12 @@ class ProductModel extends ContentModel
             }else{
                 $item['count']=1;
             }
-            if (!empty($item['spec_data'])) {
-                $item['spec_data'] = json_decode($item['spec_data'], true);
-            } else {
-                $item['spec_data'] = [];
-            }
-            if (!empty($item['specs'])) {
-                $item['specs'] = json_decode($item['specs'], true);
-            } else {
-                $item['specs'] = [];
-            }
-            if(!empty($item['levels'])){
-                $item['levels']=json_decode($item['levels'],true);
-            }
-            if(!empty($item['ext_price'])){
-                $item['ext_price']=json_decode($item['ext_price'],true);
-            }
+            $item['commission_percent']=force_json_decode($item['commission_percent']);
+            $item['spec_data'] = force_json_decode($item['spec_data']);
+            $item['specs'] = force_json_decode($item['specs']);
+            $item['levels']=force_json_decode($item['levels']);
+            $item['ext_price']=force_json_decode($item['ext_price']);
+            
         }
         unset($item);
         return $products;
