@@ -3,14 +3,14 @@
 namespace app\common\model;
 
 
+use app\common\core\BaseModel;
 use think\Db;
-use think\Model;
 
 /**
  * Class AwardLogModel
  * @package app\common\model
  */
-class AwardLogModel extends Model
+class AwardLogModel extends BaseModel
 {
     /**
      * 记录奖励

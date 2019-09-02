@@ -583,21 +583,14 @@ function get_translate($table,$key,$field='',$lang=''){
 }
 
 
-function getMemberLevels()
+function getMemberLevels($force=false)
 {
-    static $levels;
-    if (empty($levels)) {
-        $levels = cache('levels');
-        if (empty($levels)) {
-            $model=new \app\admin\model\MemberLevelModel();
-            $data =  $model->order('sort ASC,level_price ASC,level_id ASC')->select();
-            $levels=array_index($data->toArray(),'level_id');
-            cache('levels', $levels);
-        }
-    }
-    return $levels;
+    return \app\common\model\MemberLevelModel::getCacheData($force);
 }
-
+function getMemberLevel($level_id){
+    $levels=getMemberLevels();
+    return $levels[$level_id]?:[];
+}
 function getLevelConfig($levels){
     $configs=array(
         'commission_layer'=>0

@@ -2,6 +2,8 @@
 
 namespace app\common\taglib;
 
+use app\common\core\BaseTabLib;
+
 /**
  * Class Extendtag
  * @package app\common\taglib

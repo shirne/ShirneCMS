@@ -3,7 +3,7 @@
 namespace app\admin\validate;
 
 
-use app\common\validate\BaseUniqueValidate;
+use app\common\core\BaseUniqueValidate;
 
 /**
  * 管理员资料验证

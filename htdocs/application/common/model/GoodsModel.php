@@ -2,6 +2,8 @@
 namespace app\common\model;
 
 
+use app\common\core\ContentModel;
+
 /**
  * Class ProductModel
  * @package app\common\model

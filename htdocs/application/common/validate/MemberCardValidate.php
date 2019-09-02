@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: shirne
- * Date: 2018/5/16
- * Time: 22:59
- */
 
 namespace app\common\validate;
 

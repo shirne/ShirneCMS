@@ -2,6 +2,8 @@
 
 namespace app\common\taglib;
 
+use app\common\core\BaseTabLib;
+
 /**
  * Class Article
  * @package app\common\taglib

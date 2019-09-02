@@ -3,6 +3,8 @@
 namespace app\common\model;
 
 
+use app\common\core\BaseModel;
+
 /**
  * Class ProductSkuModel
  * @package app\common\model

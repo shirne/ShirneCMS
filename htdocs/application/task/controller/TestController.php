@@ -4,6 +4,7 @@ namespace app\task\controller;
 
 use app\common\model\OrderModel;
 use app\common\model\PayOrderModel;
+use app\common\model\PostageModel;
 use shirne\common\Image;
 use think\Db;
 use think\facade\Log;
@@ -35,6 +36,7 @@ class TestController
     }
     
     public function model(){
+        
         exit;
         $paymodel = PayOrderModel::get(10);
         $paymodel->save(['status'=>0]);

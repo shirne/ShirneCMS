@@ -1,12 +1,13 @@
 <?php
+
 /**
  * 唯一验证基类
- * User: shirne
- * Date: 2018/4/30
- * Time: 11:33
+ * @author : shirne
+ * @date: 2018/4/30
+ * @time: 11:33
  */
 
-namespace app\common\validate;
+namespace app\common\core;
 
 use think\Validate;
 

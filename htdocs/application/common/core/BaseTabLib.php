@@ -1,6 +1,6 @@
 <?php
 
-namespace app\common\taglib;
+namespace app\common\core;
 
 
 use think\template\TagLib;

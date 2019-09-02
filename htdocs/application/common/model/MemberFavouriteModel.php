@@ -3,6 +3,7 @@
 namespace app\common\model;
 
 
+use app\common\core\BaseModel;
 use think\Db;
 
 class MemberFavouriteModel extends BaseModel
@@ -15,14 +16,14 @@ class MemberFavouriteModel extends BaseModel
     public function getFavourites($type)
     {
         $model = Db::view('memberFavourite','*');
-        if($type == TYPE_PRODUCT){
+        if($type == static::TYPE_PRODUCT){
             $model->view('product','title,image,min_price,max_price')
             ->where('memberFavourite.fav_type',$type);
-        }elseif($type == TYPE_ARTICLE){
+        }elseif($type == static::TYPE_ARTICLE){
             $model->view('product','title,image,min_price,max_price')
             ->where('memberFavourite.fav_type',$type);
         }else{
-
+            throw new \Exception('Unsupported favourite type '.$type);
         }
         return $model->paginate();
     }

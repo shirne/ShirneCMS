@@ -8,6 +8,8 @@
 
 namespace app\common\validate;
 
+use app\common\core\BaseUniqueValidate;
+
 class MemberValidate extends BaseUniqueValidate
 {
     protected $rule  = array(

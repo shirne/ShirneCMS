@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: shirne
- * Date: 2018/5/12
- * Time: 23:11
- */
 
 namespace app\api\facade;
 

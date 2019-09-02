@@ -1,9 +1,7 @@
 <?php
 
-namespace app\common\model;
+namespace app\common\core;
 
-use app\common\facade\CategoryFacade;
-use PHPMailer\PHPMailer\Exception;
 use think\Db;
 use think\Model;
 use think\Paginator;
@@ -34,7 +32,7 @@ class ContentModel extends BaseModel
     }
 
     /**
-     * @var $cateFacade CategoryModel
+     * @var $cateFacade \app\common\model\CategoryModel
      */
     protected $cateFacade;
 
@@ -110,7 +108,7 @@ class ContentModel extends BaseModel
     {
         if($type < 0){
             if($this->isEmpty()){
-                throw new Exception('Need argument $type');
+                throw new \Exception('Need argument $type');
             }
             $type = $this['type'];
         }

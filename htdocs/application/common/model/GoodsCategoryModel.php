@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: shirne
- * Date: 2018/5/11
- * Time: 22:23
- */
 
 namespace app\common\model;
 

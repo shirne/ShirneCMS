@@ -1,6 +1,6 @@
 <?php
 
-namespace app\common\model;
+namespace app\common\core;
 
 use think\Db;
 use think\Exception;

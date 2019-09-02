@@ -1,8 +1,8 @@
 <?php
 
-namespace app\admin\model;
+namespace app\common\model;
 
-use app\common\model\BaseModel;
+use app\common\core\CacheableModel;
 use think\Db;
 
 /**
@@ -10,7 +10,7 @@ use think\Db;
  * Class MemberLevelModel
  * @package app\admin\model
  */
-class MemberLevelModel extends BaseModel
+class MemberLevelModel extends CacheableModel
 {
     protected $pk="level_id";
 
@@ -25,6 +25,12 @@ class MemberLevelModel extends BaseModel
                     ->update(array('is_default' => 0));
             }
         });
+    }
+    
+    protected function get_cache_data()
+    {
+        $levels=static::order('sort ASC,level_price ASC,level_id ASC')->select()->toArray();
+        return array_column($levels,null,'level_id');
     }
 
 }

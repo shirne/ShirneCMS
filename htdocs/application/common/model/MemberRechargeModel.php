@@ -3,6 +3,8 @@
 namespace app\common\model;
 
 
+use app\common\core\BaseModel;
+
 class MemberRechargeModel extends BaseModel
 {
 

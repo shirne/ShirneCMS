@@ -3,9 +3,10 @@
 namespace app\common\model;
 
 
+use app\common\core\CacheableModel;
 use think\Db;
 
-class CreditPromotionModel extends BaseModel
+class CreditPromotionModel extends CacheableModel
 {
     public static function init()
     {
@@ -18,29 +19,13 @@ class CreditPromotionModel extends BaseModel
                     Db::name('creditPromotion')->where('id', 'NEQ', $current['id'])->update(['is_default' => 0]);
                 }
             }
-            self::clearCache();
+            self::clearCacheData();
         });
     }
-
-    private static $promotions;
-    private static $cache_key;
-    public static function getPromotions($force=false)
+    
+    protected function get_cache_data()
     {
-        if($force)self::clearCache();
-
-        if (empty(self::$promotions)) {
-            self::$promotions = cache(self::$cache_key);
-            if (empty(self::$promotions)) {
-                $data =  Db::name('creditPromotion')->order('sort ASC,id ASC')->select();
-                self::$promotions=array_index($data,'id');
-                cache(self::$cache_key, self::$promotions);
-            }
-        }
-        return self::$promotions;
-    }
-
-    public static function clearCache(){
-        self::$promotions=null;
-        cache(self::$cache_key, NULL);
+        $lists = static::order('sort ASC,id ASC')->select()->toArray();
+        return array_column($lists,NULL,'id');
     }
 }

@@ -1,7 +1,7 @@
 <?php
 namespace app\admin\model;
 
-use app\common\model\BaseModel;
+use app\common\core\BaseModel;
 use think\Db;
 use think\Exception;
 

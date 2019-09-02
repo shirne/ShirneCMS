@@ -2,7 +2,7 @@
 
 namespace app\admin\controller;
 
-use app\admin\model\MemberLevelModel;
+use app\common\model\MemberLevelModel;
 use app\admin\validate\MemberLevelValidate;
 use think\Db;
 

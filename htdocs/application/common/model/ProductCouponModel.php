@@ -3,6 +3,8 @@
 namespace app\common\model;
 
 
+use app\common\core\BaseModel;
+
 class ProductCouponModel extends BaseModel
 {
     protected $type = ['levels_limit'=>'array'];

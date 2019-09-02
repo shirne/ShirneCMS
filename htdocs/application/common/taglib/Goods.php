@@ -3,6 +3,8 @@
 namespace app\common\taglib;
 
 
+use app\common\core\BaseTabLib;
+
 class Goods extends BaseTabLib
 {
     protected $tags =[

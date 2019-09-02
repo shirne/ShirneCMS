@@ -1,6 +1,6 @@
 <?php
 
-namespace extcore;
+namespace app\common\core;
 
 use think\Container;
 

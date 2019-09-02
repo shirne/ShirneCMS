@@ -1,6 +1,7 @@
 <?php
 namespace app\common\model;
 
+use app\common\core\ContentModel;
 use app\common\facade\CategoryFacade;
 use think\Db;
 use think\Paginator;

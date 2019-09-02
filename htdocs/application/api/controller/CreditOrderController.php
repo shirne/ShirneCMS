@@ -2,13 +2,9 @@
 
 namespace app\api\controller;
 
-use app\admin\model\MemberLevelModel;
+
 use app\common\facade\CreditOrderFacade;
-use app\common\model\MemberOauthModel;
-use app\common\model\CreditOrderModel;
-use app\common\model\WechatModel;
 use app\common\validate\OrderValidate;
-use EasyWeChat\Factory;
 use think\Db;
 
 
@@ -45,11 +41,7 @@ class CreditOrderController extends AuthedController
             ->whereIn('Goods.id',idArr($goods_ids))
             ->select();
         $counts=array_index($input_goods,'id,count');
-        $userLevel=MemberLevelModel::get($this->user['level_id']);
         foreach ($goods as $k=>&$item){
-            $item['price']=$item['price'];
-
-            if(!empty($item['image']))$item['image']=$item['image'];
             if(isset($counts[$item['id']])){
                 $item['count']=$counts[$item['id']];
             }else{

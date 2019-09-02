@@ -2,7 +2,7 @@
 
 namespace app\api\model;
 
-use app\common\model\BaseModel;
+use app\common\core\BaseModel;
 use think\facade\Log;
 
 /**

@@ -1,7 +1,7 @@
 <?php
 namespace app\index\controller;
 
-use app\admin\model\MemberLevelModel;
+use app\common\model\MemberLevelModel;
 use app\common\model\MemberModel;
 use app\common\model\WechatModel;
 use EasyWeChat\Factory;
@@ -306,7 +306,7 @@ class BaseController extends Controller
      */
     protected function initLevel(){
         if($this->isLogin && empty($this->userLevel)){
-            $this->userLevel=MemberLevelModel::get($this->user['level_id']);
+            $this->userLevel=getMemberLevel($this->user['level_id']);
         }
     }
 

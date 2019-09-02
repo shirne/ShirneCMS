@@ -3,6 +3,7 @@
 namespace app\common\model;
 
 
+use app\common\core\BaseModel;
 use think\Db;
 use shirne\third\KdExpress;
 use think\Exception;
