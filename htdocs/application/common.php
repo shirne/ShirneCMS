@@ -818,17 +818,6 @@ function getPageGroups($force=false){
     return $groups;
 }
 
-function getWechatAccount($type='wechat',$force=false){
-    $wechat=cache('default_'.$type);
-    if(empty($wechat) || $force==true){
-        $wechat=\think\Db::name('Wechat')->where('type',$type)
-            ->where('account_type','service')
-            ->order('is_default DESC')->find();
-        cache('default_'.$type,$wechat);
-    }
-    return $wechat;
-}
-
 /**
  * 获取全部配置
  * @param $all bool 是否全部数据

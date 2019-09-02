@@ -16,3 +16,36 @@ VALUES
   ( 'commission_type', '佣金本金计算', 'radio', 'member', '0',1, '0', '', '0:销售价-成本价\r\n1:销售价'),
   ( 'commission_delay', '佣金到账时机', 'radio', 'member', '0',1, '0', '', '0:订单完成\r\n1:订单支付\r\n2:订单完成后'),
   ( 'commission_delay_days', '佣金到账延迟', 'text', 'member', '0',1, '0', '', '');
+
+INSERT INTO `sa_permission` (`id`, `parent_id`,`name`, `url`,`key`, `icon`, `sort_id`, `disable`)
+VALUES
+  (37,3,'运费模板','ProductPostage/index','product_postage_index','ion-md-train',0,0);
+
+ALTER TABLE `sa_product`
+  ADD `postage_id` int(11) DEFAULT '0' AFTER `storage`,
+  ADD `postage` DECIMAL(10,2) DEFAULT '0' AFTER `postage_id`;
+
+CREATE TABLE `sa_postage` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(50) NULL,
+  `is_default` TINYINT NULL DEFAULT 0,
+  `calc_type` TINYINT NULL DEFAULT 0 COMMENT '0-按重  1-按件 2-按体积',
+  `area_type` TINYINT NULL DEFAULT 0,
+  `specials` TEXT,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `sa_postage_area` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `postage_id` INT NOT NULL,
+  `sort` INT NULL DEFAULT 0,
+  `first` INT NULL DEFAULT 0 COMMENT '0-按重  1-按件 2-按体积',
+  `first_fee` DECIMAL(10,2) NULL DEFAULT 0,
+  `extend` INT NULL DEFAULT 0,
+  `extend_fee` DECIMAL(10,2) NULL DEFAULT 0,
+  `ceiling` DECIMAL(10,2) NULL DEFAULT 0,
+  `free_limit` DECIMAL(10,2) NULL DEFAULT 0,
+  `expresses` VARCHAR(200) NULL DEFAULT '',
+  `areas` TEXT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

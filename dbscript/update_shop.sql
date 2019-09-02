@@ -7,7 +7,8 @@ VALUES
   (33,3,'商品管理','Product/index','product_index','ion-md-gift',0,0),
   (34,3,'优惠券管理','ProductCoupon/index','product_coupon_index','ion-md-pricetags',0,0),
   (35,3,'订单管理','Order/index','order_index','ion-md-list-box',0,0),
-  (36,3,'订单统计','OrderStatics/index','order_statics_index','ion-md-stats',0,0);
+  (36,3,'订单统计','OrderStatics/index','order_statics_index','ion-md-stats',0,0),
+  (37,3,'运费模板','ProductCoupon/index','product_coupon_index','ion-md-train',0,0);
 
 DROP TABLE IF EXISTS `sa_member_cart`;
 
@@ -141,17 +142,19 @@ CREATE TABLE `sa_product` (
   `min_price` DECIMAL(10,2) DEFAULT 0 COMMENT '最低价格',
   `market_price` DECIMAL(10,2) DEFAULT 0 COMMENT '市场价格',
   `content` text,
-  `create_time` int(11) DEFAULT '0',
-  `update_time` int(11) DEFAULT '0',
   `level_id` int(11) DEFAULT 0,
   `levels` varchar(100) DEFAULT '',
   `storage` int(11) DEFAULT '0',
+  `postage_id` int(11) DEFAULT '0',
+  `postage` DECIMAL(10,2) DEFAULT '0',
   `sale` int(11) DEFAULT '0' COMMENT '总销量',
   `type` tinyint(4) DEFAULT '1',
   `is_commission` tinyint(4) DEFAULT '1',
   `commission_percent`  text,
   `is_discount` tinyint(4) DEFAULT '1',
   `status` tinyint(4) NOT NULL DEFAULT '1',
+  `create_time` int(11) DEFAULT '0',
+  `update_time` int(11) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `cate_id` (`cate_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -246,6 +249,8 @@ CREATE TABLE `sa_order` (
   `city` VARCHAR(45) NULL,
   `area` VARCHAR(45) NULL,
   `address` VARCHAR(150) NULL,
+  `postage_area_id` int(11) DEFAULT '0',
+  `postage` DECIMAL(10,2) DEFAULT '0',
   `express_no` VARCHAR(100) NULL,
   `express_code` VARCHAR(20) NULL,
   `type` TINYINT NULL DEFAULT 1,
@@ -298,3 +303,31 @@ CREATE TABLE `sa_order_product` (
   PRIMARY KEY (`id`),
   KEY `product_id` (`product_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `sa_postage`;
+CREATE TABLE `sa_postage` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(50) NULL,
+  `is_default` TINYINT NULL DEFAULT 0,
+  `calc_type` TINYINT NULL DEFAULT 0 COMMENT '0-按重  1-按件 2-按体积',
+  `area_type` TINYINT NULL DEFAULT 0,
+  `specials` TEXT,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `sa_postage_area`;
+CREATE TABLE `sa_postage_area` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `postage_id` INT NOT NULL,
+  `sort` INT NULL DEFAULT 0,
+  `first` INT NULL DEFAULT 0 COMMENT '0-按重  1-按件 2-按体积',
+  `first_fee` DECIMAL(10,2) NULL DEFAULT 0,
+  `extend` INT NULL DEFAULT 0,
+  `extend_fee` DECIMAL(10,2) NULL DEFAULT 0,
+  `ceiling` DECIMAL(10,2) NULL DEFAULT 0,
+  `free_limit` DECIMAL(10,2) NULL DEFAULT 0,
+  `expresses` VARCHAR(200) NULL DEFAULT '',
+  `areas` TEXT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+

@@ -362,10 +362,24 @@ class BaseController extends Controller
         }
     }
 
+    private $currentWechats=[];
+    protected function getWechatAccount($type,$force=false){
+        if(!isset($this->currentWechats[$type]) || $force) {
+            $this->currentWechats[$type] = cache('default_' . $type);
+            if (empty($wechat) || $force == true) {
+                $wechat = \think\Db::name('Wechat')->where('type', $type)
+                    ->where('account_type', 'service')
+                    ->order('is_default DESC')->find();
+                cache('default_' . $type, $wechat,['expire'=>60*60*12]);
+                $this->currentWechats[$type] = $wechat;
+            }
+        }
+        return $this->currentWechats[$type];
+    }
 
     protected function getShareData($url = '')
     {
-        $this->wechat=getWechatAccount('wechat');
+        $this->wechat=$this->getWechatAccount('wechat');
         if(!empty($this->wechat['appid'])) {
             $app = Factory::officialAccount(WechatModel::to_config($this->wechat));
             if($url)$app->jssdk->setUrl($url);

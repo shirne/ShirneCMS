@@ -71,7 +71,7 @@
                     <div class="card-header">商品属性</div>
                     <div class="card-body">
                         <div class="form-row">
-                            <label class="col-3">是否发布</label>
+                            <label style="width: 80px;">是否发布</label>
                             <div class="form-group col">
                                 <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
                                     <label class="btn btn-outline-secondary{$product['status']=='1'?' active':''}">
@@ -84,7 +84,7 @@
                             </div>
                         </div>
                         <div class="form-row">
-                            <label class="col-3">商品类型</label>
+                            <label style="width: 80px;">商品类型</label>
                             <div class="form-group col">
                                 <div class="btn-group btn-group-toggle btn-group-sm type-groups" data-toggle="buttons">
                                     <foreach name="types" id="type" key="k">
@@ -96,6 +96,7 @@
                             </div>
                         </div>
                         <div class="form-row type_level">
+                            <label style="width: 80px;">&nbsp;</label>
                             <div class="form-group col">
                                 <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
                                     <volist name="levels" id="lv" key="k">
@@ -107,7 +108,7 @@
                             </div>
                         </div>
                         <div class="form-row">
-                            <label class="col-3">支持折扣</label>
+                            <label style="width: 80px;">支持折扣</label>
                             <div class="form-group col">
                                 <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
                                     <label class="btn btn-outline-secondary{$product['is_discount']==1?' active':''}">
@@ -120,7 +121,7 @@
                             </div>
                         </div>
                         <div class="form-row">
-                            <label class="col-3">支持分佣</label>
+                            <label style="width: 80px;">支持分佣</label>
                             <div class="form-group col">
                                 <div class="btn-group btn-group-toggle btn-group-sm commision-groups" data-toggle="buttons">
                                     <label class="btn btn-outline-secondary{$product['is_commission']==1?' active':''}">
@@ -195,7 +196,7 @@
                         </div>
                         <div class="commission_desc mb-2 text-muted">此处佣金层级按会员组设置的最大层级，不需要分佣的层级填写0即可，如需增加分级，先在会员组中设置一个最大值</div>
                         <div class="form-row">
-                            <label class="col-3">限制购买</label>
+                            <label style="width: 80px;">限制购买</label>
                             <div class="form-group col">
                                 <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
                                     <volist name="levels" id="lv" key="k">
