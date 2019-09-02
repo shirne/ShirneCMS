@@ -380,12 +380,25 @@
             var called=false;
             var contentHtml='<div class="form-group">{@input}</div>';
             var title='请输入信息';
+            var is_multi=false;
+            var multiset={};
             if(typeof message=='string'){
                 title=message;
             }else{
                 title=message.title;
                 if(message.content) {
                     contentHtml = message.content.indexOf('{@input}') > -1 ? message.content : message.content + contentHtml;
+                }
+                if(message.multi){
+                    is_multi=true;
+                    multiset=message.multi;
+                }
+            }
+            var inputHtml='<input type="text" name="confirm_input" class="form-control" />';
+            if(is_multi){
+                inputHtml='';
+                for(var i in multiset){
+                    inputHtml+= '<div class="input-group mt-1"><div class="input-group-prepend"><span class="input-group-text">'+multiset[i]+'</span></div><input type="text" data-key="'+i+'" name="confirm_input" class="form-control" /></div>';
                 }
             }
             return new Dialog({
@@ -402,7 +415,14 @@
                     }
                 },
                 'onsure':function(body){
-                    var val=body.find('[name=confirm_input]').val();
+                    var inputs=body.find('[name=confirm_input]'),val=inputs.val();
+                    if(is_multi){
+                        val={};
+                        inputs.each(function () {
+                            var key=$(this).data('key')
+                            val[key]=$(this).val()
+                        })
+                    }
                     if(typeof callback=='function'){
                         var result = callback(val);
                         if(result===true){
@@ -416,7 +436,7 @@
                         return cancel();
                     }
                 }
-            }).show(contentHtml.compile({input:'<input type="text" name="confirm_input" class="form-control" />'}),title);
+            }).show(contentHtml.compile({input:inputHtml}),title);
         },
         action:function (list,callback,title) {
             var html='<div class="list-group"><a href="javascript:" class="list-group-item list-group-item-action">'+list.join('</a><a href="javascript:" class="list-group-item list-group-item-action">')+'</a></div>';
