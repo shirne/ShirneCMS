@@ -6,6 +6,7 @@ use app\common\model\OrderModel;
 use shirne\excel\Excel;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use think\Db;
+use think\Exception;
 
 /**
  * 订单管理
@@ -156,6 +157,34 @@ class OrderController extends BaseController
         }
         $order->updateStatus($data);
         user_log($this->mid,'auditorder',1,'更新订单 '.$id .' '.$audit,'manager');
+        $this->success('操作成功');
+    }
+    
+    
+    
+    /**
+     * 改价
+     * @param $id
+     * @param $price
+     * @throws Exception
+     */
+    public function reprice($id,$price)
+    {
+        $order = OrderModel::get($id);
+        if(empty($id) || empty($order)){
+            $this->error('订单不存在');
+        }
+        if($order['status']!=0){
+            $this->error('订单当前状态不可改价');
+        }
+        $price=$this->request->post('price');
+        
+        $data=array(
+            'payamount'=>round(floatval($price),2)
+        );
+        
+        $order->save($data);
+        user_log($this->mid,'repriceorder',1,'订单改价 '.$id .' '.$price,'manager');
         $this->success('操作成功');
     }
 

@@ -97,7 +97,10 @@
                             </div>
                         </div>
                     </td>
-                    <td>{$v.payamount}<br />{$v.rebate_total}</td>
+                    <td>
+                        {$v.payamount} <if condition="$v['status'] EQ 0"><a href="javascript:" class="reprice" data-id="{$v.order_id}" data-price="{$v['payamount']}" title="改价"><i class="ion-md-create"></i> </a> </if><br />
+                        {$v.rebate_total}
+                    </td>
                     <td>
                         {$v.status|order_status|raw}
                         <if condition="$v['isaudit'] EQ 0">
@@ -113,7 +116,11 @@
                         <a class="btn btn-outline-primary" title="详情" href="{:url('order/detail',array('id'=>$v['order_id']))}"><i class="ion-md-document"></i> </a>
                         <a class="btn btn-outline-primary btn-status" title="状态" href="javascript:" data-id="{$v.order_id}"  data-status="{$v['status']+1}" data-express="{$v.express_code}/{$v.express_no}"><i class="ion-md-checkbox-outline"></i> </a>
                         <if condition="$v['rebated'] NEQ 1">
-                            <a class="btn btn-outline-success btn-audit" title="审核" href="javascript:" data-id="{$v.order_id}"  data-status="1"><i class="ion-md-checkmark-circle"></i> </a>
+                            <if condition="$v['isaudit'] EQ 1">
+                                <a class="btn btn-outline-warning btn-audit" title="取消审核" href="javascript:" data-id="{$v.order_id}"  data-status="0"><i class="ion-md-remove-circle"></i> </a>
+                                <else/>
+                                <a class="btn btn-outline-success btn-audit" title="审核" href="javascript:" data-id="{$v.order_id}"  data-status="1"><i class="ion-md-checkmark-circle"></i> </a>
+                            </if>
                         </if>
                         <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('order/delete',array('id'=>$v['order_id']))}"><i class="ion-md-trash"></i> </a>
                     </td>
@@ -237,6 +244,31 @@
                     }
                 }).show(tpl2,'订单审核');
             });
+
+            $('.reprice').click(function (e) {
+                var id=$(this).data('id');
+                var orig_price=$(this).data('price')
+                var dlg=dialog.prompt('当前价格：'+orig_price,function (input) {
+                    $.ajax({
+                        url:'{:url("reprice")}',
+                        type:'POST',
+                        data:{
+                            id:id,
+                            price:input,
+                        },
+                        dataType:'JSON',
+                        success:function(json){
+                            if(json.code==1) {
+                                dlg.hide();
+                                location.reload();
+                            }else{
+                                dialog.error(json.msg)
+                            }
+                        }
+                    })
+                    return false;
+                })
+            })
         });
     </script>
 
