@@ -61,6 +61,12 @@
                     </tr>
                     </if>
                     <tr>
+                        <th>商品金额</th>
+                        <td>{$model.product_amount}</td>
+                        <th>邮费</th>
+                        <td>{$model.postage}</td>
+                    </tr>
+                    <tr>
                         <th >支付金额</th>
                         <td colspan="3">
                             ￥{$model.payamount}
