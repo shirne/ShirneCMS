@@ -18,35 +18,31 @@
         '    </div>\n' +
         '</div>';
     var dialogIdx=0;
+    function format_btn(btn){
+        if(typeof(btn) === typeof 'a'){
+            return {'text':btn};
+        }
+        if(btn.isdefault){
+            if(!btn.type){
+                btn.type='primary'
+            }
+        }
+        return btn;
+    }
     function Dialog(opts){
         if(!opts)opts={};
         //处理按钮
         if(opts.btns) {
             if (typeof(opts.btns) == 'string') {
-                opts.btns = [{'text':opts.btns}];
+                opts.btns = [format_btn(opts.btns)];
             }
             else if(opts.btns instanceof Array) {
                 for (var i = 0; i < opts.btns.length; i++) {
-                    if (typeof(opts.btns[i]) == 'string') {
-                        opts.btns[i] = {'text': opts.btns[i]};
-                    }
-                    if (opts.btns[i].isdefault) {
-                        opts.defaultBtn = i;
-                    }
+                    opts.btns[i] = format_btn(opts.btns[i])
                 }
             }else{
                 console.error('Dialog::construct argument btns error.');
                 opts.btns=[];
-            }
-            if(opts.btns.length>0) {
-                if (opts.defaultBtn === undefined) {
-                    opts.defaultBtn = opts.btns.length - 1;
-                    opts.btns[opts.defaultBtn].isdefault = true;
-                }
-
-                if (opts.btns[opts.defaultBtn] && !opts.btns[opts.defaultBtn]['type']) {
-                    opts.btns[opts.defaultBtn]['type'] = 'primary';
-                }
             }
         }
 
@@ -60,7 +56,6 @@
                 {'text':'取消','type':'secondary'},
                 {'text':'确定','isdefault':true,'type':'primary'}
             ],
-            'defaultBtn':1,
             'contentClass':'',
             'onsure':null,
             'onshow':null,
@@ -68,7 +63,32 @@
             'onhide':null,
             'onhidden':null
         },opts);
-        if(!this.options.btns || this.options.btns.length<1){
+        if(!this.options.btns)this.options.btns=[];
+        var btncount=this.options.btns.length;
+        if(opts.addbtn){
+            if(!this.options.btns)this.options.btns=[];
+            opts.addbtn = format_btn(opts.addbtn)
+            if(btncount<1) {
+                this.options.btns.unshift(opts.addbtn)
+            }else{
+                this.options.btns.splice(btncount-1,0,opts.addbtn)
+            }
+            btncount=1
+        }
+        if(opts.addbtns){
+            if(!this.options.btns)this.options.btns=[];
+            if(btncount<1){
+                this.options.btns=opts.addbtns
+            }else{
+                var args=[btncount-1,0]
+                for(var i=0;i<opts.addbtns.length;i++){
+                    args.push(format_btn(opts.addbtns[i]))
+                }
+                this.options.btns.splice.apply(this.options.btns,args)
+            }
+            btncount=1
+        }
+        if(btncount<1){
             this.options.footer=false;
         }
 
@@ -77,8 +97,16 @@
     }
     Dialog.prototype.generBtn=function(opt,idx){
         if(opt['type'])opt['class']='btn-outline-'+opt['type'];
-        return '<a href="javascript:" class="nav-item btn '+(opt['class']?opt['class']:'btn-outline-secondary')+'" data-index="'+idx+'">'+opt.text+'</a>';
+        return '<a href="javascript:" class="nav-item btn '+(opt['class']?opt['class']:'btn-outline-secondary')+'" '+(opt.isdefault?'default':'')+' data-index="'+idx+'">'+opt.text+'</a>';
     };
+    Dialog.prototype.getDefaultBtn=function(){
+        var btn=null
+        for(var i=0;i<this.options.btns.length;i++){
+            btn=this.options.btns[i]
+            if(btn.isdefault)break;
+        }
+        return btn
+    }
     Dialog.prototype.show=function(html,title){
         this.box=$('#'+this.options.id);
         if(!title)title='系统提示';
@@ -161,10 +189,11 @@
                 var result = true, idx = $(this).data('index');
                 if (self.options.btns[idx].click) {
                     result = self.options.btns[idx].click.apply(this, [body, self.box]);
-                }
-                if (idx == self.options.defaultBtn) {
-                    if (self.options.onsure) {
-                        result = self.options.onsure.apply(this, [body, self.box]);
+                }else {
+                    if (self.options.btns[idx].isdefault) {
+                        if (self.options.onsure) {
+                            result = self.options.onsure.apply(this, [body, self.box]);
+                        }
                     }
                 }
                 if (result !== false) {
@@ -361,7 +390,7 @@
 
             if(countdown && typeof countdown === 'number') {
                 var btn = dlg.box.find('.modal-footer .btn-outline-primary');
-                var btnText = dlg.options.btns[dlg.options.defaultBtn].text;
+                var btnText = dlg.getDefaultBtn().text;
                 btn.addClass('disabled').text(btnText+'(' + countdown + ')');
                 inteval = setInterval(function () {
                     countdown--;
@@ -647,7 +676,7 @@
         if(!Dialog.instance)return;
         var dlg=Dialog.instance;
         if (e.keyCode == 13) {
-            dlg.box.find('.modal-footer .btn').eq(dlg.options.defaultBtn).trigger('click');
+            dlg.box.find('.modal-footer .btn[default]').trigger('click');
         }
         //默认已监听关闭
         /*if (e.keyCode == 27) {
