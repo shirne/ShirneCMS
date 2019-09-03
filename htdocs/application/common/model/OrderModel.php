@@ -220,6 +220,16 @@ class OrderModel extends BaseModel
         $comm_special = [];
         $levelids=[];
         $ordertype=0;
+    
+        //优惠价格
+        $discount_amount=0;
+    
+        //运费模板
+        $postage_area_ids = array_column($products,'postage_area_id');
+        $postage_area_ids = array_unique(array_filter($postage_area_ids));
+        if(!empty($postage_area_ids)){
+            $postageareas=PostageModel::getAreaList($postage_area_ids);
+        }
         foreach ($products as $k=>$product){
             if($product['storage']<$product['count']){
                 $this->error='商品['.$product['product_title'].']库存不足';
@@ -249,6 +259,28 @@ class OrderModel extends BaseModel
             $price = round($release_price * 100 * $product['count']);
             
             $total_price += $price;
+            
+            //运费
+            if($product['postage_id']>0){
+                $parea_id=$product['postage_area_id']?:0;
+                if(!isset($postageareas[$parea_id])){
+                    $this->error='参数错误';
+                    return false;
+                }
+                
+                if(!isset($postageareas[$parea_id]['total'])){
+                    $postageareas[$parea_id]['total']=0;
+                    $postageareas[$parea_id]['amount']=0;
+                }
+                if($postageareas[$parea_id]['calc_type']==2){
+                    $postageareas[$parea_id]['total']+=static::calc_size($product['size']);
+                }elseif($postageareas[$parea_id]['calc_type']==1){
+                    $postageareas[$parea_id]['total']+=$product['count'];
+                }else{
+                    $postageareas[$parea_id]['total']+=$product['weight']*$product['count'];
+                }
+                $postageareas[$parea_id]['amount']+=$price;
+            }
 
             if($product['is_commission'] == 1 ){
                 $orig_price = intval($product['product_price'] * 100) * $product['count'];
@@ -294,6 +326,30 @@ class OrderModel extends BaseModel
             }
         }
         
+        //邮费计算
+        $postage_fee=0;
+        if(!empty($postageareas)) {
+            foreach ($postageareas as $aid => $area) {
+                
+                if ($area['free_limit'] <= 0 || $area['amount'] < $area['free_limit']) {
+                    $curfee=$area['first_fee'];
+                    if($area['total']>$area['first'] && $area['extend']>0 && $area['extend_fee']>0){
+                        $atotal = $area['total']-$area['first'];
+                        while($atotal>0){
+                            $curfee += $area['extend_fee'];
+                            $atotal-=$area['extend'];
+                            if($area['ceiling']>0 && $atotal>$area['ceiling']){
+                                $atotal=$area['ceiling'];
+                                break;
+                            }
+                        }
+                    }
+                    $postage_fee+=$curfee;
+                }
+            }
+            $postage_fee = round($postage_fee,2);
+        }
+        
         //todo  优惠券
     
         $level_id = 0;
@@ -307,11 +363,24 @@ class OrderModel extends BaseModel
         }
         
         //比较客户端传来的价格
-        if(is_array($extdata) && isset($extdata['total_price'])) {
-            if ($total_price != $extdata['total_price']*100) {
-                $this->error = '下单商品价格已变动';
-        
-                return false;
+        if(is_array($extdata) ){
+            if(isset($extdata['total_price'])) {
+                if ($total_price != $extdata['total_price']*100) {
+                    $this->error = '下单商品价格已变动';
+            
+                    return false;
+                }
+            }
+            
+            //邮费价格误差控制在0.5以内
+            if( isset($extdata['total_postage'])) {
+                if (abs($postage_fee - $extdata['total_postage'])>.5) {
+                    $this->error = '邮费价格已变动';
+                
+                    return false;
+                }else{
+                    $postage_fee = round($extdata['total_postage'],2);
+                }
             }
         }
         
@@ -330,7 +399,10 @@ class OrderModel extends BaseModel
             'order_no'=>$this->create_no(),
             'member_id'=>$member['id'],
             'level_id'=>$level_id,
-            'payamount'=>$total_price*.01,
+            'payamount'=>$total_price*.01 + $postage_fee,
+            'postage'=>$postage_fee,
+            'product_amount'=>$total_price*.01,
+            'discount_amount'=>$discount_amount*.01,
             'commission_amount'=>$commission_amount*.01,
             'commission_special'=>json_encode($comm_special),
             'status'=>0,
@@ -397,6 +469,16 @@ class OrderModel extends BaseModel
             self::getInstance()->updateStatus(['status'=>$status,'pay_time'=>time()],['order_id'=>$result]);
         }
         return $result;
+    }
+    
+    public static function calc_size($size){
+        if(!is_array($size)){
+            $size=explode(',',$size);
+        }
+        if(count($size) < 3){
+            return 0;
+        }
+        return $size[0]*$size[1]*$size[2];
     }
 
     public static function sendOrderMessage($order, $type, $products=null)

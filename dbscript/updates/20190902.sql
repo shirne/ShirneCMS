@@ -7,7 +7,8 @@ ALTER TABLE `sa_member_level`
     ADD `diy_price` tinyint NULL DEFAULT 0 COMMENT '自定义价格' AFTER `upgrade_type`;
 
 ALTER TABLE `sa_product_sku`
-    ADD `ext_price` varchar(300) DEFAULT '' COMMENT '独立价格' AFTER `price`;
+    ADD `ext_price` varchar(300) DEFAULT '' COMMENT '独立价格' AFTER `price`,
+    ADD `size` varchar(50) DEFAULT '0' AFTER `weight`;
 
 INSERT INTO `sa_setting` ( `key`,`title`,`type`,`group`,`sort`,`is_sys`, `value`, `description`,`data`)
 VALUES
@@ -24,6 +25,12 @@ VALUES
 ALTER TABLE `sa_product`
   ADD `postage_id` int(11) DEFAULT '0' AFTER `storage`,
   ADD `postage` DECIMAL(10,2) DEFAULT '0' AFTER `postage_id`;
+
+ALTER TABLE `sa_order`
+  ADD `postage` DECIMAL(10,2) NULL DEFAULT 0 AFTER `address`,
+  ADD `postage_area_id` int(11) DEFAULT '0' AFTER `postage`,
+  ADD `product_amount` DECIMAL(10,2) NULL DEFAULT 0 AFTER `payamount`,
+  ADD `discount_amount` DECIMAL(10,2) NULL DEFAULT 0 AFTER `product_amount`;
 
 CREATE TABLE `sa_postage` (
   `id` INT NOT NULL AUTO_INCREMENT,

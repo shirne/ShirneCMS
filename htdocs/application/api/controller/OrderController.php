@@ -7,6 +7,7 @@ use app\common\facade\MemberCartFacade;
 use app\common\facade\OrderFacade;
 use app\common\model\OrderModel;
 use app\common\model\PayOrderModel;
+use app\common\model\PostageModel;
 use app\common\model\ProductModel;
 use app\common\model\WechatModel;
 use app\common\validate\OrderValidate;
@@ -25,20 +26,20 @@ class OrderController extends AuthedController
 {
     public function prepare(){
         $order_skus=$this->input['products'];
+        $address=$this->input['address'];
         $skuids=array_column($order_skus,'sku_id');
         $products=Db::view('ProductSku','*')
-            ->view('Product',['title'=>'product_title','image'=>'product_image','levels','is_discount'],'ProductSku.product_id=Product.id','LEFT')
+            ->view('Product',['title'=>'product_title','image'=>'product_image','levels','is_discount','postage_id'],'ProductSku.product_id=Product.id','LEFT')
             ->whereIn('ProductSku.sku_id',idArr($skuids))
             ->select();
-
-        return $this->response([
-            'products'=>$products,
-            'address'=>Db::name('MemberAddress')->where('member_id',$this->user['id'])->order('is_default DESC')->find(),
-            'express'=>[
-                'fee'=>0,
-                'title'=>'快递免邮'
-            ]
-        ]);
+        
+        $result=['products'=>$products];
+        if(empty($address)){
+            $address = Db::name('MemberAddress')->where('member_id',$this->user['id'])->order('is_default DESC')->find();
+            $result['address']=$address;
+        }
+        $result['express'] = PostageModel::calcolate($products,$address);
+        return $this->response($result);
 
     }
     public function confirm($from='quick'){
@@ -49,16 +50,23 @@ class OrderController extends AuthedController
         $sku_ids=array_column($order_skus,'sku_id');
         if($from=='cart'){
             $products=MemberCartFacade::getCart($this->user['id'],$sku_ids);
-            
         }else{
             $skucounts = array_column($order_skus,'count','sku_id');
             $products=ProductModel::getForOrder($skucounts);
+        }
+        $products = array_column($products,NULL,'sku_id');
+        foreach ($order_skus as $k=>$item){
+            if(!isset($products[$item['sku_id']])){
+                $this->error('部分商品已下架');
+            }
+            $products[$item['sku_id']]['postage_area_id']=$item['postage_area_id'];
+            $order_skus[$k]= $products[$item['sku_id']];
         }
         
         //todo 邮费模板
 
 
-        $data=$this->request->only('address_id,pay_type,remark,form_id,total_price','put');
+        $data=$this->request->only('address_id,pay_type,remark,form_id,total_price,total_postage','put');
 
         $validate=new OrderValidate();
         if(!$validate->check($data)){
@@ -73,9 +81,10 @@ class OrderController extends AuthedController
                 'remark'=>$data['remark'],
                 'platform'=>$platform,
                 'form_id'=>$data['form_id'],
-                'total_price'=>$data['total_price']
+                'total_price'=>$data['total_price'],
+                'total_postage'=>$data['total_postage'],
             ];
-            $result=OrderFacade::makeOrder($this->user,$products,$address,$remark,$balancepay);
+            $result=OrderFacade::makeOrder($this->user,$order_skus,$address,$remark,$balancepay);
             if($result){
                 if($from=='cart'){
                     MemberCartFacade::delCart($sku_ids,$this->user['id']);
