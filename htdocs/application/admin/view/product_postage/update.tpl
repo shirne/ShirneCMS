@@ -297,7 +297,7 @@
                         for(var k in provinces){
                             var cities=locobj.find('0,'+k)
                             if(cities) {
-                                areahtml += '<div class="row border-bottom pt-1 pb-1"> <div class="text-center" style="width:80px"><span class="badge badge-info " style="font-size:14px;">'+provinces[k]+'</span><br /><a href="javascript:" class="btn btn-sm pickrow">选择全部</a></div><div class="col">';
+                                areahtml += '<div class="row border-bottom pt-1 pb-1"> <div class="text-center" style="width:100px"><span class="badge badge-info " style="font-size:14px;">'+provinces[k]+'</span><br /><a href="javascript:" class="btn btn-sm pt-0 pb-0 pickrow">选择全部</a><br /><a href="javascript:" class="btn btn-sm pt-0 pb-0 cancelrow">取消选择</a></div><div class="col">';
                                 for(var c in cities) {
                                     areahtml += '<div class="float-left mr-2 mb-2"> <div class="btn-group-toggle btn-group-sm" data-toggle="buttons">\n' +
                                         '  <label class="btn btn-outline-secondary">\n' +
@@ -312,6 +312,19 @@
                     }
                     var dlg=new Dialog({
                         size:'lg',
+                        addbtn:{
+                            text:'清空',
+                            click:function (body) {
+                                var ckboxes=$(body).find('[name=areaitem]')
+                                for(var i=0;i<ckboxes.length;i++){
+                                    if(ckboxes.eq(i).prop('checked')){
+                                        ckboxes.eq(i).parent('label').trigger('click')
+                                    }
+                                }
+                                return false;
+                            },
+                            type:'warning'
+                        },
                         onshown:function (body) {
                             if(picked && picked.length>0){
                                 var ckboxes=$(body).find('[name=areaitem]')
@@ -326,6 +339,15 @@
                                 var ckboxes=prow.find('[name=areaitem]')
                                 for(var i=0;i<ckboxes.length;i++){
                                     if(!ckboxes.eq(i).prop('checked')){
+                                        ckboxes.eq(i).parent('label').trigger('click')
+                                    }
+                                }
+                            })
+                            $(body).find('a.cancelrow').click(function (e) {
+                                var prow=$(this).parents('.row')
+                                var ckboxes=prow.find('[name=areaitem]')
+                                for(var i=0;i<ckboxes.length;i++){
+                                    if(ckboxes.eq(i).prop('checked')){
                                         ckboxes.eq(i).parent('label').trigger('click')
                                     }
                                 }

@@ -35,7 +35,9 @@ class PostageModel extends CacheableModel
         foreach ($newareas as $area_id=>$area){
             $area['sort']=$sort;
             if(!empty($area['expresses']))$area['expresses']=json_encode($area['expresses'],JSON_UNESCAPED_UNICODE);
+            else $area['expresses']='';
             if(!empty($area['areas']))$area['areas']=json_encode($area['areas'],JSON_UNESCAPED_UNICODE);
+            else $area['areas']='';
             unset($area['id']);
             if(is_numeric($area_id) && isset($exists[$area_id])){
                 Db::name('postageArea')->where('id',$area_id)->update($area);

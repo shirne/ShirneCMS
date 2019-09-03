@@ -36,6 +36,7 @@ class ProductPostageController extends BaseController
             } else {
                 $areas = $data['areas'];
                 unset($data['areas']);
+                if(empty($data['specials']))$data['specials']=[];
                 $levelModel=PostageModel::create($data);
                 $insertId=$levelModel['id'];
                 if ($insertId!==false) {
@@ -78,6 +79,7 @@ class ProductPostageController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             }else{
+                if(empty($data['specials']))$data['specials']=[];
                 if ($model->allowField(true)->save($data)) {
                     PostageModel::updateAreas($data['areas'],$id);
                     cache('postage', null);
