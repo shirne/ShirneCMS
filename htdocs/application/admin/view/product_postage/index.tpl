@@ -17,8 +17,8 @@
             <thead>
             <tr>
                 <th width="50">编号</th>
-                <th>名称</th>
-                <th>计费类型</th>
+                <th width="200">名称</th>
+                <th width="80">计费类型</th>
                 <th>配送限制</th>
                 <th width="160">&nbsp;</th>
             </tr>
@@ -39,11 +39,11 @@
                     </td>
                     <td>
                         {$area_type==1?'仅':'不'}配送地区:
-                        {implode(', ',$v['specials'])}
+                        {:implode(', ',$v['specials'])}
                     </td>
                     <td class="operations">
-                        <a class="btn btn-outline-primary" title="编辑" href="{:url('ProductPostage/update',array('id'=>$v['level_id']))}"><i class="ion-md-create"></i> </a>
-                        <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('ProductPostage/delete',array('id'=>$v['level_id']))}" ><i class="ion-md-trash"></i> </a>
+                        <a class="btn btn-outline-primary" title="编辑" href="{:url('ProductPostage/update',array('id'=>$v['id']))}"><i class="ion-md-create"></i> </a>
+                        <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('ProductPostage/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
                     </td>
                 </tr>
             </foreach>

@@ -15,15 +15,14 @@ class ProductPostageController extends BaseController
      */
     public function index()
     {
-        $model = Db::name('postage');
         
-        $lists=$model->order('id ASC')->select();
+        $lists=PostageModel::order('id ASC')->select();
         $this->assign('lists',$lists);
         return $this->fetch();
     }
     
     /**
-     * 添加会员组
+     * 添加邮费模板
      */
     public function add()
     {
@@ -33,13 +32,14 @@ class ProductPostageController extends BaseController
             $validate=new PostageValidate();
             
             if (!$validate->check($data)) {
-                
                 $this->error($validate->getError());
-                exit();
             } else {
+                $areas = $data['areas'];
+                unset($data['areas']);
                 $levelModel=PostageModel::create($data);
                 $insertId=$levelModel['id'];
                 if ($insertId!==false) {
+                    PostageModel::updateAreas($areas,$insertId);
                     cache('postage', null);
                     user_log($this->mid,'addpostage',1,'添加运费模板'.$insertId ,'manager');
                     $this->success(lang('Add success!'), url('productPostage/index'));
@@ -48,7 +48,16 @@ class ProductPostageController extends BaseController
                 }
             }
         }
-        $this->assign('model',[]);
+        $counts = Db::name('postage')->where('is_default',1)->count();
+        $this->assign('model',[
+            'is_default'=>$counts<1?1:0,
+            'area_type'=>0,
+            'calc_type'=>0
+        ]);
+        $this->assign('areas',[
+            ['id'=>0,'sort'=>0]
+        ]);
+        $this->assign('express',config('express.'));
         return $this->fetch('update');
     }
     
@@ -58,6 +67,10 @@ class ProductPostageController extends BaseController
     public function update($id)
     {
         $id = intval($id);
+        $model = PostageModel::get($id);
+        if(empty($model)){
+            $this->error('运费模板不存在');
+        }
         if ($this->request->isPost()) {
             $data=$this->request->post();
             $validate=new PostageValidate();
@@ -65,8 +78,8 @@ class ProductPostageController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             }else{
-                $model=PostageModel::get($id);
                 if ($model->allowField(true)->save($data)) {
+                    PostageModel::updateAreas($data['areas'],$id);
                     cache('postage', null);
                     user_log($this->mid,'updatepostage',1,'修改运费模板'.$id ,'manager');
                     $this->success(lang('Update success!'), url('productPostage/index'));
@@ -75,9 +88,9 @@ class ProductPostageController extends BaseController
                 }
             }
         }
-        $model = PostageModel::get($id);
         $this->assign('model',$model);
-        $this->assign('styles',getTextStyles());
+        $this->assign('areas',$model->getAreas());
+        $this->assign('express',config('express.'));
         return $this->fetch();
     }
     
@@ -92,9 +105,9 @@ class ProductPostageController extends BaseController
         if($count>0){
             $this->error("该模板尚有产品使用,不能删除");
         }
-        $model = Db::name('postage');
-        $result = $model->delete($id);
+        $result = Db::name('postage')->where('id',$id)->delete();
         if($result){
+            Db::name('postageArea')->where('postage_id',$id)->delete();
             cache('postage', null);
             $this->success(lang('Delete success!'), url('productPostage/index'));
         }else{

@@ -180,7 +180,7 @@ class BaseController extends Controller {
     protected function fetch($template = '', $vars = [], $config = [])
     {
         if($this->request->isAjax()){
-            $this->result($this->viewData);
+            $this->result($this->viewData,1);
         }
 
         return $this->view->fetch($template, $vars, $config);
