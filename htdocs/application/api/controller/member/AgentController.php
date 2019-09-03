@@ -5,6 +5,8 @@ namespace app\api\controller\member;
 use app\api\controller\AuthedController;
 use app\common\model\AwardLogModel;
 use app\common\model\OrderModel;
+use app\common\model\WechatModel;
+use shirne\common\Poster;
 use think\Db;
 
 class AgentController extends AuthedController
@@ -32,11 +34,67 @@ class AgentController extends AuthedController
     }
     
     public function poster($page = 'pages/index/index'){
+    
         $platform=$this->request->tokenData['platform'];
+        
+        
+        return $this->response(['poster_url'=>$this->get_share_img($platform,$page)]);
+    }
+    private function get_share_img($platform,$page){
+    
+        $sharepath = './uploads/share/'.($this->user['id']%100).'/'.$this->user['agentcode'].'-'.$platform.'.jpg';
+        $bgpath = './uploads/share/bg.png';
+        if(!file_exists($bgpath)){
+            $this->error('分享图生成失败(bg)');
+        }
+        if(file_exists($sharepath)){
+            $fileatime=filemtime($sharepath);
+            if($this->user['update_time']<$fileatime &&
+                filemtime($bgpath)<$fileatime
+            ){
+                return media(ltrim($sharepath,'.'));
+            }
+        }
+        $this->create_share_img($bgpath,$sharepath,$page);
+        return media(ltrim($sharepath,'.'));
+    }
+    private function create_share_img($bgpath,$sharepath,$page){
         $appid=$this->request->tokenData['appid'];
-        
-        
-        return $this->response(['poster_url'=>'']);
+        $wechat=WechatModel::where('appid',$appid)->find();
+        if(empty($wechat)){
+            $this->error('分享图生成失败(wechat)');
+        }
+    
+        $qrpath=dirname($sharepath);
+        $qrfile = $this->user['agentcode'].'-appcode.png';
+        $filename=$qrpath.'/'.$qrfile;
+        if(!file_exists($filename)) {
+            $app = WechatModel::createApp($wechat);
+            if (empty($app)) {
+                $this->error('分享图生成失败(app)');
+            }
+    
+            $response = $app->app_code->getUnlimit('agent=' . $this->user['agentcode'], [
+                'page' => $page,
+                'width' => 520
+            ]);
+            if ($response instanceof \EasyWeChat\Kernel\Http\StreamResponse) {
+                $genername = $response->saveAs($qrpath, $this->user['agentcode'] . '-appcode.png');
+            }
+            if(empty($genername)){
+                $this->error('小程序码生成失败');
+            }
+        }
+        $config=config('poster.');
+        $config['background']=$bgpath;
+        $poster = new Poster($config);
+        $poster->generate([
+            'appcode'=>$filename,
+            'avatar'=>$this->user['avatar'],
+            'bg'=>1,
+            'nickname'=>$this->user['nickname']
+        ]);
+        $poster->save($sharepath);
     }
     
     public function rank($mode='month'){

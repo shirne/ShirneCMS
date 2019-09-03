@@ -44,6 +44,8 @@ class MemberTokenModel extends BaseModel
         );
         if(!$response){
             $token['member_id']=$data['member_id'];
+            $token['platform']=$data['platform'];
+            $token['appid']=$data['appid'];
             $token['create_time']=$data['create_time'];
             $token['update_time']=$data['update_time'];
         }

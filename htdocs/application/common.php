@@ -45,6 +45,7 @@ function force_json_decode($string){
  */
 function media($src,$width='',$height='',$quality=70){
     $root = config('template.oss_root');
+    $src = ltrim($src,'.');
     if(empty($root)){
         return $src;
     }else {
@@ -58,6 +59,7 @@ function media($src,$width='',$height='',$quality=70){
  * @return string
  */
 function local_media($src){
+    $src = ltrim($src,'.');
     if(strpos($src,'/')===0 || strpos($src,'://')===false){
         return url('/','',false,true).$src;
     }
