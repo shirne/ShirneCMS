@@ -2,6 +2,7 @@
 
 namespace app\index\controller;
 
+use app\common\model\PostageModel;
 use app\common\model\ProductModel;
 use app\common\facade\ProductCategoryFacade;
 use app\common\model\ProductCommentModel;
@@ -69,6 +70,7 @@ class ProductController extends BaseController
         $this->category($product['cate_id']);
 
         $this->assign('product', $product);
+        $this->assign('postage',PostageModel::getDesc($product['postage_id']));
         $this->assign('skus', ProductSkuModel::where('product_id',$product['id'])->select());
         $this->assign('images',Db::name('ProductImages')->where('product_id',$product['id'])->select());
         return $this->fetch();

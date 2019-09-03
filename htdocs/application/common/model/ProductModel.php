@@ -104,7 +104,7 @@ class ProductModel extends ContentModel
         if(empty($skucounts))return [];
         $sku_ids = array_keys($skucounts);
         $products=Db::view('ProductSku','*')
-            ->view('Product',['title'=>'product_title','spec_data','image'=>'product_image','levels','is_discount','is_commission','commission_percent','type','level_id'],'ProductSku.product_id=Product.id','LEFT')
+            ->view('Product',['title'=>'product_title','spec_data','image'=>'product_image','levels','is_discount','postage_id','is_commission','commission_percent','type','level_id'],'ProductSku.product_id=Product.id','LEFT')
             ->whereIn('ProductSku.sku_id',idArr($sku_ids))
             ->select();
     

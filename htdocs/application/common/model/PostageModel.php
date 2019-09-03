@@ -57,4 +57,22 @@ class PostageModel extends CacheableModel
         }
         return $lists;
     }
+    
+    public static function getDesc($id){
+        if($id>0){
+            $postage=static::get($id);
+            if(!empty($postage)){
+                $areas = $postage->getAreas();
+                if(!empty($areas)){
+                    if($areas[0]['first']>0){
+                        if($areas[0]['free_limit']>0){
+                            return '满'.floatval($areas[0]['free_limit']).'包邮';
+                        }
+                        return $areas[0]['first'].'元';
+                    }
+                }
+            }
+        }
+        return '免运费';
+    }
 }

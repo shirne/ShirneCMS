@@ -207,6 +207,23 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="form-row">
+                            <label style="width: 80px;">运费设置</label>
+                            <div class="form-group col">
+                                <select class="form-control form-control-sm" name="postage_id" >
+                                    <option value="0">免运费</option>
+                                    <volist name="postages" id="pos" key="k">
+                                        <php>
+                                            $selected='';
+                                            if(($product['id']==0 && $pos['is_default']) || $product['postage_id']==$pos['id']){
+                                                $selected='selected';
+                                            }
+                                        </php>
+                                        <option value="{$pos.id}" {$selected}>{$pos.title}{$pos['is_default']?'(默认)':''}</option>
+                                    </volist>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

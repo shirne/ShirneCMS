@@ -4,6 +4,7 @@ namespace app\api\controller;
 
 use app\common\facade\MemberFavouriteFacade;
 use app\common\facade\ProductCategoryFacade;
+use app\common\model\PostageModel;
 use app\common\model\ProductModel;
 use app\common\model\ProductSkuModel;
 use think\Db;
@@ -105,6 +106,7 @@ class ProductController extends BaseController
         return $this->response([
             'product'=>$product,
             'is_favourite'=>$isFavourite,
+            'postage'=>PostageModel::getDesc($product['postage_id']),
             'skus'=>$skus,
             'images'=>$images
         ]);

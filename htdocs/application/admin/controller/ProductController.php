@@ -4,6 +4,7 @@ namespace app\admin\controller;
 
 
 use app\admin\model\SpecificationsModel;
+use app\common\model\PostageModel;
 use app\common\model\ProductModel;
 use app\common\model\ProductSkuModel;
 use app\admin\validate\ProductSkuValidate;
@@ -215,6 +216,7 @@ class ProductController extends BaseController
             return $item['diy_price']==1;
         }));
         $this->assign('types',getProductTypes());
+        $this->assign('postages',PostageModel::getCacheData());
         $this->assign('id',0);
         return $this->fetch('edit');
     }
@@ -304,6 +306,7 @@ class ProductController extends BaseController
         $this->assign('product',$model);
         $this->assign('skus',$skus->isEmpty()?[[]]:$skus);
         $this->assign('types',getProductTypes());
+        $this->assign('postages',PostageModel::getCacheData());
         $this->assign('id',$id);
         return $this->fetch();
     }
