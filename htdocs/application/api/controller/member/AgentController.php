@@ -3,6 +3,7 @@
 namespace app\api\controller\member;
 
 use app\api\controller\AuthedController;
+use app\common\model\AwardLogModel;
 use app\common\model\OrderModel;
 use think\Db;
 
@@ -36,6 +37,13 @@ class AgentController extends AuthedController
         
         
         return $this->response(['poster_url'=>'']);
+    }
+    
+    public function rank($mode='month'){
+        
+        $list=AwardLogModel::ranks($mode);
+        
+        return $this->response(['ranks'=>$list]);
     }
     
     

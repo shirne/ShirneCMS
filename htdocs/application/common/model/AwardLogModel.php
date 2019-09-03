@@ -81,6 +81,32 @@ class AwardLogModel extends BaseModel
         
         return true;
     }
+    
+    public static function ranks($mode='month'){
+        $model = Db::name('awardLog')->where('status','gt',-1);
+        if($mode=='month'){
+            $model->where('create_time','gt',strtotime(date('Y-m-01')));
+        }elseif($mode=='year'){
+            $model->where('create_time','gt',strtotime(date('Y-01-01')));
+        }
+        $list = $model->field('member_id, sum(amount) as total_amount')->group('member_id')
+            ->order('total_amount DESC')
+            ->limit(10)->select();
+        if(!empty($list)){
+            $list = array_filter($list,function($item){
+                return $item['total_amount']>0;
+            });
+            if(!empty($list)){
+                $user_ids =array_column($list,'member_id');
+                $users=Db::name('member')->whereIn('id',$user_ids)->field('id,nickname,username,avatar')->select();
+                $users = array_column($users,NULL,'id');
+                foreach ($list as &$item){
+                    $item['user']=$users[$item['member_id']];
+                }
+            }
+        }
+        return $list;
+    }
 
     public static function rand_award($total,$count,$total_count,$precision=0,$ratio=5,$disperse=100000)
     {
