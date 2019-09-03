@@ -13,10 +13,17 @@ class MemberTokenModel extends BaseModel
 {
     protected $pk='token_id';
     private $hash='sw4GomU4LXvYqcaLctXCLK43eRcob';
-    private $expire=720;
+    private $expire=1800;
 
     protected $autoWriteTimestamp = true;
-
+    
+    public function __construct($data = [])
+    {
+        parent::__construct($data);
+        $config_expire = config('app.token_expire');
+        if($config_expire)$this->expire = $config_expire;
+    }
+    
     protected function getToken($memid,$hash=''){
         if(empty($hash))$hash=$this->hash;
         return md5($hash.date('YmdHis').microtime().str_pad($memid,11));
