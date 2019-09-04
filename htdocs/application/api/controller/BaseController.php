@@ -89,7 +89,7 @@ class BaseController extends Controller
     }
     
     public function _empty(){
-        $this->error('接口不存在',url('index/index/index'));
+        $this->error('接口不存在');
     }
 
     protected function get_param($key){

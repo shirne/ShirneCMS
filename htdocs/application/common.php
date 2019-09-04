@@ -470,7 +470,8 @@ function print_remark($data){
 
 function maskphone($phone){
     $l=strlen($phone);
-    return substr($phone,0,3).str_repeat('*',$l-7).substr($phone,$l-4);
+    $masklen=min($l-7,4);
+    return substr($phone,0,3).str_repeat('*',$masklen).substr($phone,$l-4);
 }
 
 function maskemail($email){

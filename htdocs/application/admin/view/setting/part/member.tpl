@@ -164,7 +164,24 @@
         </div>
     </div>
 </div>
-
+<div class="form-row form-group">
+    <label for="v-cash_types" class="col-3 col-md-2 text-right align-middle">{$setting['cash_types']['title']}</label>
+    <div class="col-9 col-md-8 col-lg-6">
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <foreach name="setting.cash_types.data" item="value" key="k">
+                <if condition="in_array($k,$setting['cash_types']['value'])">
+                    <label class="btn btn-outline-secondary active">
+                        <input type="checkbox" name="v-cash_types[]" value="{$k}" autocomplete="off" checked> {$value}
+                    </label>
+                    <else />
+                    <label class="btn btn-outline-secondary">
+                        <input type="checkbox" name="v-cash_types[]" value="{$k}" autocomplete="off"> {$value}
+                    </label>
+                </if>
+            </foreach>
+        </div>
+    </div>
+</div>
 <div class="form-row form-group">
     <label for="v-cash_fee" class="col-3 col-md-2 text-right align-middle">提现限制</label>
     <div class="col-9 col-md-8 col-lg-6">
@@ -193,13 +210,13 @@
             </div>
             <input type="text" class="form-control" name="v-cash_fee" value="{$setting['cash_fee']['value']}" placeholder="">
             <div class="input-group-middle">
-                <span class="input-group-text">最低</span>
+                <span class="input-group-text">%  最低</span>
             </div>
-            <input type="text" class="form-control" name="v-cash_power_min" value="{$setting['cash_power_min']['value']}" placeholder="">
+            <input type="text" class="form-control" name="v-cash_fee_min" value="{$setting['cash_fee_min']['value']}" placeholder="">
             <div class="input-group-middle">
                 <span class="input-group-text">封顶</span>
             </div>
-            <input type="text" class="form-control" name="v-cash_power_max" value="{$setting['cash_power_max']['value']}" placeholder="">
+            <input type="text" class="form-control" name="v-cash_fee_max" value="{$setting['cash_fee_max']['value']}" placeholder="">
         </div>
     </div>
 </div>

@@ -90,6 +90,7 @@ VALUES
   ( 'commission_type', '佣金本金计算', 'radio', 'member', '0',1, '0', '', '0:购买价-成本价\r\n1:销售价-成本价\r\n2:购买价\r\n3:销售价'),
   ( 'commission_delay', '佣金到账时机', 'radio', 'member', '0',1, '0', '', '0:订单完成\r\n1:订单支付\r\n2:订单完成后'),
   ( 'commission_delay_days', '佣金到账延迟', 'text', 'member', '0',1, '0', '', ''),
+  ( 'cash_types', '提现方式', 'array', 'member', '0',1, '', '', 'unioncard:银行卡\r\nwechat:微信企业付款\r\nwechatpack:微信红包\r\nwechatminipack:小程序红包\r\nalipay:支付宝转账'),
   ( 'cash_fee', '提现手续费', 'text', 'member', '0',1, '10', '', ''),
   ( 'cash_fee_min', '最低手续费', 'array', 'member', '0',1, '1', '', ''),
   ( 'cash_fee_max', '封顶手续费', 'array', 'member', '0',1, '50', '', ''),

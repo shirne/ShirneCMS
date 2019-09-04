@@ -77,9 +77,11 @@ class OrderController extends AuthedController
             $balancepay=$data['pay_type']=='balance'?1:0;
 
             $platform=$this->request->tokenData['platform']?:'';
+            $appid=$this->request->tokenData['appid']?:'';
             $remark=[
                 'remark'=>$data['remark'],
                 'platform'=>$platform,
+                'appid'=>$appid,
                 'form_id'=>$data['form_id'],
                 'total_price'=>$data['total_price'],
                 'total_postage'=>$data['total_postage'],

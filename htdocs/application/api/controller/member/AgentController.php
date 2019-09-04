@@ -37,8 +37,13 @@ class AgentController extends AuthedController
     
         $platform=$this->request->tokenData['platform'];
         
+        try{
+            $url = $this->get_share_img($platform,$page);
+        }catch(\Exception $e){
+            $this->error($e->getMessage());
+        }
         
-        return $this->response(['poster_url'=>$this->get_share_img($platform,$page)]);
+        return $this->response(['poster_url'=>$url]);
     }
     private function get_share_img($platform,$page){
     

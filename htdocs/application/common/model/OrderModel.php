@@ -496,6 +496,8 @@ class OrderModel extends BaseModel
             if(empty($wechat['appid']) || empty($wechat['appsecret']))continue;
             $tplset = WechatTemplateMessageModel::getTpls($fan['type_id'],$type);
             if(empty($tplset) || empty($tplset['template_id']))continue;
+    
+            $tplset['keywords']=static::transkey($tplset['keywords']);
             
             if(empty($products)){
                 $products=Db::name('orderProduct')->where('order_id',$order['order_id'])->select();
@@ -533,6 +535,7 @@ class OrderModel extends BaseModel
                     }
                 }
                 $msgdata['page']='/pages/member/order-detail?id='.$order['order_id'];
+                
             }
             
             //小程序下如果未获得form_id，需要从支付信息中获取 prepay_id
@@ -560,6 +563,32 @@ class OrderModel extends BaseModel
             
         }
         return false;
+    }
+    
+    protected static function transkey($keywords){
+        $maps=[
+            'order_no'=>['单号','订单号','订单编号','订单号码'],
+            'amount'=>['待付金额','订单金额'],
+            'goods'=>['商品详情','物品名称','商品名称','物品详情'],
+            'pay_notice'=>['支付提醒'],
+            'create_date'=>['下单时间','购买时间'],
+            'express'=>['快递公司'],
+            'deliver_date'=>['发货时间'],
+            'confirm_date'=>['确认时间'],
+            'reason'=>['取消原因']
+        ];
+        if(!is_array($keywords)){
+            $keywords = explode('、',$keywords);
+        }
+        foreach ($keywords as $idx=>$keyword){
+            foreach ($maps as $key=>$words){
+                if(in_array($keyword,$words)){
+                    $keywords[$idx]=$key;
+                    break;
+                }
+            }
+        }
+        return $keywords;
     }
     
     /**

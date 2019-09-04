@@ -5,16 +5,21 @@ namespace app\api\controller\member;
 
 
 use app\api\controller\AuthedController;
+use app\common\model\MemberCashinModel;
 use app\common\validate\MemberCardValidate;
+use extcore\traits\Upload;
 use think\Db;
 
 class AccountController extends AuthedController
 {
+    use Upload;
+    
     public function cards(){
         $cards=Db::name('MemberCard')->where('member_id',$this->user['id'])->limit(20)->select();
         
         return $this->response([
-            'cards'=>$cards
+            'cards'=>$cards,
+            'banklist'=>banklist()
         ]);
     }
     public function card_view($id){
@@ -25,7 +30,8 @@ class AccountController extends AuthedController
         }
         
         return $this->response([
-            'card'=>$card
+            'card'=>$card,
+            'banklist'=>banklist()
         ]);
     }
     
@@ -78,16 +84,17 @@ class AccountController extends AuthedController
             ->where('member_id',$this->user['id'])->find();
         
         if($hasRecharge>0){
-            $this->error('您有充值申请正在处理中',url('index/member.account/rechargeList'));
+            $this->error('您有充值申请正在处理中');
         }
-        $amount=$_POST['amount']*100;
-        $type=$_POST['type_id'];
+        $data = $this->request->only('amount,type_id');
+        $amount=$data['amount']*100;
+        $type=$data['type_id'];
         $pay_bill='';
         if($type=='wechat'){
             $typeid = -1;
         }else {
             
-            $typeid = intval($_POST['type_id']);
+            $typeid = intval($data['type_id']);
             $paytype = Db::name('paytype')->where('status', 1)->where('id', $typeid)->find();
             if (empty($paytype)) {
                 $this->error('充值方式错误');
@@ -99,9 +106,10 @@ class AccountController extends AuthedController
             }
             $pay_bill=$uploaded['url'];
         }
-        
+        $platform=$this->request->tokenData['platform']?:'';
         $data=array(
             'member_id'=>$this->user['id'],
+            'platform'=>$platform,
             'amount'=>$amount,
             'paytype_id'=>$typeid,
             'pay_bill'=>$pay_bill,
@@ -119,9 +127,9 @@ class AccountController extends AuthedController
         $addid=Db::name('memberRecharge')->insert($data,false,true);
         if($addid) {
             if($type=='wechat'){
-                $this->success('充值订单提交成功，即将跳转到支付页面', url('index/order/wechatpay',['order_id'=>'CZ_'.$addid]));
+                $this->success(['order_id'=>'CZ_'.$addid],1,'订单已生成，请支付');
             }else {
-                $this->success('充值申请已提交', url('index/member.account/rechargeList'));
+                $this->success('充值申请已提交');
             }
         }
         $this->error('提交失败');
@@ -148,6 +156,18 @@ class AccountController extends AuthedController
         }
     }
     
+    public function cash_config(){
+        return $this->response([
+            'types'=>$this->config['cash_types'],
+            'limit'=>$this->config['cash_limit'],
+            'max'=>$this->config['cash_max'],
+            'power'=>$this->config['cash_power'],
+            'fee'=>$this->config['cash_fee'],
+            'fee_min'=>$this->config['cash_fee_min'],
+            'fee_max'=>$this->config['cash_fee_max'],
+        ]);
+    }
+    
     public function cash_list($status=''){
         $model=Db::name('memberCashin')->where('member_id',$this->user['id']);
         if($status !== ''){
@@ -163,58 +183,79 @@ class AccountController extends AuthedController
         ]);
     }
     public function cash(){
-        $hascash=Db::name('memberCashin')->where(array('member_id'=>$this->user['id'],'status'=>0))->count();
+        $hascash=Db::name('memberCashin')->where('member_id',$this->user['id'])
+        ->where('status',0)->count();
         if($hascash>0){
             $this->error('您有提现申请正在处理中');
         }
         
-        $amount=$this->request->param('amount')*100;
-        $bank_id=$this->request->param('card_id/d');
-        $remark = $this->request->param('remark');
-        if(empty($bank_id)){
-            $carddata=$this->request->only('bank,bankname,cardname,cardno');
-            if(empty($carddata['bank'])){
-                $this->error('请填写银行名称');
-            }
-            if(empty($carddata['bankname'])){
-                $this->error('请填写开户行名称');
-            }
-            if(empty($carddata['cardname'])){
-                $this->error('请填写开户名称');
-            }
-            if(empty($carddata['cardno'])){
-                $this->error('请填写卡号');
-            }
-            $carddata['member_id']=$this->user['id'];
-            $bank_id=Db::name('MemberCard')->insert($carddata,false,true);
+        $rdata=$this->request->only('amount,card_id,remark,cashtype,form_id');
+        $amount=$rdata['amount']*100;
+        $remark = $rdata['remark'];
+        
+        if(empty($amount) || $amount<$this->config['cash_limit']){
+            $this->error('提现金额填写错误');
         }
-        $card=Db::name('MemberCard')->where(array('member_id'=>$this->user['id'],'id'=>$bank_id))->find();
+        if($this->config['cash_power']>0 && $amount%$this->config['cash_power']>0){
+            $this->error('提现金额必需是'.$this->config['cash_power'].'的倍数');
+        }
+        if($amount>$this->user['reward']){
+            $this->error('可提现金额不足');
+        }
+        
+        $platform=$this->request->tokenData['platform']?:'';
+        $appid=$this->request->tokenData['appid']?:'';
+        $cash_fee=round($amount*$this->config['cash_fee']*.01);
         $data=array(
             'member_id'=>$this->user['id'],
+            'platform'=>$platform,
+            'appid'=>$appid,
+            'form_id'=>$rdata['form_id'],
+            'cashtype'=>$rdata['cashtype'],
             'amount'=>$amount,
-            'real_amount'=>$amount-$amount*$this->config['cash_fee']*.01,
+            'cash_fee'=>$cash_fee,
+            'real_amount'=>$amount-$cash_fee,
             'create_time'=>time(),
-            'bank_id'=>$bank_id,
-            'bank'=>$card['bank'],
-            'bank_name'=>$card['bankname'],
-            'card_name'=>$card['cardname'],
-            'cardno'=>$card['cardno'],
+            'bank_id'=>0,
             'status'=>0,
             'remark'=>$remark
         );
-        if(empty($data['amount']) || $data['amount']<$this->config['cash_limit']){
-            $this->error('提现金额填写错误');
+        if($rdata['cashtype']=='wechat') {
+        }elseif($rdata['cashtype']=='alipay'){
+            $data['cardno']=$this->request->param('cardno');
+        }else {
+    
+            $bank_id=intval($rdata['card_id']);
+            
+            if (empty($bank_id)) {
+                $carddata = $this->request->only('bank,bankname,cardname,cardno');
+                if (empty($carddata['bank'])) {
+                    $this->error('请填写银行名称');
+                }
+                if (empty($carddata['bankname'])) {
+                    $this->error('请填写开户行名称');
+                }
+                if (empty($carddata['cardname'])) {
+                    $this->error('请填写开户名称');
+                }
+                if (empty($carddata['cardno'])) {
+                    $this->error('请填写卡号');
+                }
+                $carddata['member_id'] = $this->user['id'];
+                $bank_id = Db::name('MemberCard')->insert($carddata, false, true);
+            }
+            $card = Db::name('MemberCard')->where(array('member_id' => $this->user['id'], 'id' => $bank_id))->find();
+            $data['bank_id']=$bank_id;
+            $data['bank']=$card['bank'];
+            $data['bank_name']=$card['bankname'];
+            $data['card_name']=$card['cardname'];
+            $data['cardno']=$card['cardno'];
         }
-        if($this->config['cash_power']>0 && $data['amount']%$this->config['cash_power']>0){
-            $this->error('提现金额必需是'.$this->config['cash_power'].'的倍数');
-        }
-        if($data['amount']>$this->user['reward']){
-            $this->error('可提现金额不足');
-        }
-        $addid=Db::name('memberCashin')->insert($data);
-        if($addid) {
-            money_log($this->user['id'],-$data['amount'],'提现申请扣除','cash',0,'reward');
-            Db::name('member')->where('id',$this->user['id'])->setInc('froze_money',$data['amount']);
+        
+        $addid= MemberCashinModel::create($data);
+        if($addid['id']) {
+            //money_log($this->user['id'],-$data['amount'],'提现申请扣除','cash',0,'reward');
+            //Db::name('member')->where('id',$this->user['id'])->setInc('froze_money',$data['amount']);
             $this->success('提现申请已提交');
         }else{
             $this->error('申请失败');

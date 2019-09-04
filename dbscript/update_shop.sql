@@ -220,6 +220,7 @@ DROP TABLE IF EXISTS `sa_order`;
 CREATE TABLE `sa_order` (
   `order_id` INT NOT NULL AUTO_INCREMENT,
   `platform` VARCHAR(30) NULL,
+  `appid` varchar(30) DEFAULT '',
   `order_no` VARCHAR(30) NULL,
   `member_id` INT NULL,
   `payamount` DECIMAL(10,2) NULL DEFAULT 0,
