@@ -175,7 +175,6 @@ class AccountController extends AuthedController
         }
         $cashes = $model->paginate(15);
         
-        
         return $this->response([
             'total'=>$cashes->total(),
             'cashes'=>$cashes->items(),
