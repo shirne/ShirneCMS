@@ -17,11 +17,11 @@
             <div class="card border-info">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col flex-grow-0">
                             <i class="ion-md-chatbubbles ion-5x"></i>
                         </div>
-                        <div class="col-6 text-right">
-                            <p class="announcement-heading">{$stat.feedback}</p>
+                        <div class="col text-right">
+                            <p class="announcement-heading text-nowrap">{$stat.feedback}</p>
                             <p class="announcement-text">留言</p>
                         </div>
                     </div>
@@ -38,11 +38,11 @@
             <div class="card border-info">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col flex-grow-0">
                             <i class="ion-md-people ion-5x"></i>
                         </div>
-                        <div class="col-6 text-right">
-                            <p class="announcement-heading">{$stat.member}</p>
+                        <div class="col text-right">
+                            <p class="announcement-heading text-nowrap">{$stat.member}</p>
                             <p class="announcement-text">会员</p>
                         </div>
                     </div>
@@ -59,11 +59,11 @@
             <div class="card border-info">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col flex-grow-0">
                             <i class="ion-md-create ion-5x"></i>
                         </div>
-                        <div class="col-6 text-right">
-                            <p class="announcement-heading">{$stat.article}</p>
+                        <div class="col text-right">
+                            <p class="announcement-heading text-nowrap">{$stat.article}</p>
                             <p class="announcement-text">文章</p>
                         </div>
                     </div>
@@ -80,11 +80,11 @@
             <div class="card border-info">
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col flex-grow-0">
                             <i class="ion-md-link ion-5x"></i>
                         </div>
-                        <div class="col-6 text-right">
-                            <p class="announcement-heading">{$stat.links}</p>
+                        <div class="col text-right">
+                            <p class="announcement-heading text-nowrap">{$stat.links}</p>
                             <p class="announcement-text">链接</p>
                         </div>
                     </div>

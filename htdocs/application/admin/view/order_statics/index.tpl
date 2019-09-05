@@ -38,10 +38,10 @@
             </form>
         </div>
         <div class="row">
-        <div class="chart-box col">
+        <div class="chart-box col col-lg-8">
         <canvas id="myChart" width="800" height="400"></canvas>
         </div>
-        <div class="table-box col-4">
+        <div class="table-box col col-lg-4">
             <table class="table table-hover table-striped">
                 <thead>
                 <tr>

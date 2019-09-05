@@ -176,14 +176,22 @@ xxx.test.com 为本地测试目录，配置方法：
 |![登录](screenshot/login.jpg "登录")|![主面板](screenshot/dashboard.jpg "主面板")|
 |分类管理|添加分类|
 |![分类管理](screenshot/category.jpg "分类管理")|![添加分类](screenshot/category-add.jpg "添加分类")|
-|发布文章|发布商品|
-|![发布文章](screenshot/article-add.jpg "发布文章")|![发布商品](screenshot/product-add.jpg "发布商品")|
-|发布商品|订单统计|
-|![发布商品](screenshot/product-add2.jpg "发布商品")|![订单统计](screenshot/order-static.jpg "订单统计")|
-|广告管理|系统设置|
-|![广告管理](screenshot/ad.jpg "广告管理")|![系统设置](screenshot/setting.jpg "系统设置")|
-|会员组|微信菜单|
-|![会员组](screenshot/user-level.jpg "会员组")|![微信菜单](screenshot/wechat-menu.jpg "微信菜单")|
+|发布文章|发布单页|
+|![发布文章](screenshot/article-add.jpg "发布文章")|![单页](screenshot/single.jpg "发布单页")|
+|发布商品|发布商品|
+|![发布商品](screenshot/product-add.jpg "发布商品")|![发布商品](screenshot/product-add2.jpg "发布商品")|
+|运费模板|订单统计|
+|![运费模板](screenshot/postage.jpg "运费模板")|![订单统计](screenshot/order-static.jpg "订单统计")|
+|系统设置|优惠券|
+|![系统设置](screenshot/setting.jpg "系统设置")|![优惠券](screenshot/coupon.jpg "优惠券")|
+|会员设置|签到设置|
+|![会员设置](screenshot/setting-member.jpg "会员设置")|![签到设置](screenshot/setting-sign.jpg "签到设置")|
+|会员组|会员管理|
+|![会员组](screenshot/user-level.jpg "会员组")|![会员管理](screenshot/user.jpg "会员管理")|
+|微信设置|微信菜单|
+|![微信设置](screenshot/wechat-setting.jpg "微信设置")|![微信菜单](screenshot/wechat-menu.jpg "微信菜单")|
+|广告位|发布广告|
+|![广告位](screenshot/ad-group.jpg "广告位")|![发布广告](screenshot/ad-detail.jpg "发布广告")|
 
 ## 联系我
 欢迎技术探讨，部署安装及定制开发收费

@@ -4,7 +4,7 @@
     <include file="public/bread" menu="member_level_index" title="会员组配置"/>
 
     <div id="page-wrapper">
-        <div class="page-header">添加等级</div>
+        <div class="page-header">{$model['level_id']>0?'编辑':'添加'}等级</div>
         <div class="page-content">
             <form method="post">
                 <div class="row">
