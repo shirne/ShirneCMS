@@ -36,6 +36,10 @@ class ProductModel extends ContentModel
         return self::$specifications;
     }
     
+    protected function tagBaseView($model){
+        return $model->view('productBrand',['title'=>'brand_title','logo'=>'brand_logo'],$this->model.'.brand_id=productBrand.id','LEFT');
+    }
+    
     /**
      * @param array|Paginator $lists
      * @param array $attrs

@@ -51,13 +51,17 @@ class ContentModel extends BaseModel
                 $fields = array_diff($fields,$hiddens);
             }
         }
-        return Db::view($this->model,$fields)
+        $model = Db::view($this->model,$fields)
             ->view($this->cateModel,
                 ["title"=>"category_title","name"=>"category_name","short"=>"category_short","icon"=>"category_icon","image"=>"category_image"],
                 $this->model.".cate_id=".$this->cateModel.".id",
                 "LEFT"
-            )
-            ->where($this->model.".status",1);
+            );
+        
+        return $this->tagBaseView($model)->where($this->model.".status",1);
+    }
+    protected function tagBaseView($model){
+        return $model;
     }
     
     protected function analysisType($list, $islist=true){

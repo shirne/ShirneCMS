@@ -20,7 +20,7 @@ class ProductController extends BaseController
         return $this->response(ProductCategoryFacade::getTreedCategory());
     }
 
-    public function get_cates($pid=0, $goods_count=0){
+    public function get_cates($pid=0, $goods_count=0, $withsku=0){
         if($pid!=0 && preg_match('/^[a-zA-Z]\w+/',$pid)){
             $current=ProductCategoryFacade::findCategory($pid);
             if(empty($current)){
@@ -35,7 +35,8 @@ class ProductController extends BaseController
                 $cate['products']=$product->tagList([
                     'category'=>$cate['id'],
                     'recursive'=>1,
-                    'limit'=>$goods_count
+                    'limit'=>$goods_count,
+                    'withsku'=>$withsku
                 ]);
             }
             unset($cate);
@@ -58,26 +59,20 @@ class ProductController extends BaseController
         if(!empty($type)){
             $condition['type']=$type;
         }
+        if(!empty($withsku)){
+            $condition['withsku']=$withsku;
+        }
         $condition['page']=$page;
         $condition['pagesize']=$pagesize;
         
         $lists = ProductModel::getInstance()->tagList($condition, true);
         
         if(!empty($lists) && !$lists->isEmpty()) {
-            $skus = [];
-            if ($withsku) {
-                $pids = array_column($lists->items(), 'id');
-                $skus = ProductSkuModel::whereIn('product_id',$pids)->select();
-                $skus = array_index($skus, 'product_id',true);
-            }
             $levels = getMemberLevels();
     
-            $lists->each(function ($item) use ($levels, $skus) {
+            $lists->each(function ($item) use ($levels) {
                 if ($item['level_id']) {
                     $item['level_name'] = $levels[$item['level_id']]['level_name'] ?: '';
-                }
-                if(isset($skus[$item['id']])){
-                    $item['skus']=$skus[$item['id']];
                 }
         
                 return $item;
