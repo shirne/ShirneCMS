@@ -257,7 +257,7 @@
                 }
             }
             if(type != 'loading')icon= '<i class="ion-md-'+icon+'"></i>';
-            var html='<div class="dialog-message" >'+icon+'&nbsp;&nbsp;'+message+'<a href="javascript:" class="ion-md-close closebtn"></a></div>';
+            var html='<div class="dialog-message" >'+icon+'&nbsp;&nbsp;'+message+(type=='loading'?'':'<a href="javascript:" class="ion-md-close closebtn"></a>')+'</div>';
 
             var dlg= new Dialog({
                 footer:false,
