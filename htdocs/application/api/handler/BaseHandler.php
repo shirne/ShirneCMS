@@ -10,8 +10,10 @@ use EasyWeChat\Kernel\Messages\Image;
 use EasyWeChat\Kernel\Messages\Media;
 use EasyWeChat\Kernel\Messages\Message;
 use EasyWeChat\Kernel\Messages\News;
+use EasyWeChat\Kernel\Messages\NewsItem;
 use EasyWeChat\Kernel\ServiceContainer;
 use think\Db;
+use think\facade\Log;
 
 class BaseHandler
 {
@@ -107,7 +109,14 @@ class BaseHandler
                 return $reply['content'];
                 break;
             case 'news':
-                return new News(json_decode($reply['content'],TRUE));
+                $news = json_decode($reply['content'],TRUE);
+                $items=[];
+                foreach ($news as $k=>$new){
+                    $new['image'] = local_media($new['image']);
+                    $items[]=new NewsItem($new);
+                    break; // 只能对回复一条
+                }
+                return new News($items);
                 break;
             case "image":
                 $content=json_decode($reply['content'],TRUE);
@@ -126,7 +135,7 @@ class BaseHandler
                             'content'=>json_encode($content)
                         ]);
                 }
-                return new Image(new Media($media_id));
+                return new Image($media_id);
             case "custom":
                 $config=json_decode($reply['content'],TRUE);
                 $processer=$config['processer'];

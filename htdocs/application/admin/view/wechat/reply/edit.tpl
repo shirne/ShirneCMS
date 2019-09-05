@@ -46,7 +46,7 @@
                 <div class="form-group rtype-row rtype-text">
                     <label for="text">回复内容</label>
                     <div>
-                        <script id="reply-content" name="content" type="text/plain">{$reply.content|raw}</script>
+                        <textarea class="form-control" name="content">{$model.content|raw}</textarea>
                     </div>
                 </div>
                 <div class="form-group rtype-row rtype-news">
@@ -143,8 +143,6 @@
             {/if}
         </a>
     </script>
-    <script type="text/javascript" src="__STATIC__/ueditor/ueditor.config.js"></script>
-    <script type="text/javascript" src="__STATIC__/ueditor/ueditor.all.min.js"></script>
     <script type="text/javascript">
         jQuery(function ($) {
             var tips={
@@ -153,11 +151,6 @@
                 'default':'用户关注或发送消息后没有匹配到对应的回复信息时回复的消息',
                 'click':'关联在自定义菜单中的回复'
             };
-            var ue = UE.getEditor('reply-content',{
-                toolbars: Toolbars.simple,
-                initialFrameHeight:500,
-                zIndex:100
-            });
             $('[name=type]').change(function (e) {
                 var curtype=this.value;
                 if(curtype=='keyword'){

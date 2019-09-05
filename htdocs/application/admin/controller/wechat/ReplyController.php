@@ -58,7 +58,7 @@ class ReplyController extends WechatBaseController
                         break;
                     case 'news':
                         $data['news']=empty($data['news'])?[]:array_values($data['news']);
-                        $data['content']=json_encode($data['news']);
+                        $data['content']=json_encode($data['news'],JSON_UNESCAPED_UNICODE);
                         break;
                     case 'image':
                         $uploaded = $this->upload('wechat', 'upload_image');
@@ -69,7 +69,7 @@ class ReplyController extends WechatBaseController
                         }
                         break;
                     case 'custom':
-                        $data['content']=json_encode($data['custom']);
+                        $data['content']=json_encode($data['custom'],JSON_UNESCAPED_UNICODE);
                         break;
                     default:
                         $this->error('回复类型错误');
@@ -127,7 +127,7 @@ class ReplyController extends WechatBaseController
                         break;
                     case 'news':
                         $data['news']=empty($data['news'])?[]:array_values($data['news']);
-                        $data['content']=json_encode($data['news']);
+                        $data['content']=json_encode($data['news'],JSON_UNESCAPED_UNICODE);
                         break;
                     case 'image':
                         $uploaded = $this->upload('wechat', 'upload_image');
@@ -141,7 +141,7 @@ class ReplyController extends WechatBaseController
                         }
                         break;
                     case 'custom':
-                        $data['content']=json_encode($data['custom']);
+                        $data['content']=json_encode($data['custom'],JSON_UNESCAPED_UNICODE);
                         break;
                     default:
                         $this->error('回复类型错误');

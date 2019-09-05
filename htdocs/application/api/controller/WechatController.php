@@ -51,6 +51,7 @@ class WechatController extends Controller{
 
     //微信入口文件
     public function index($hash=''){
+        Log::record('收到消息'.$hash);
         $account=$this->getAccount($hash);
         
         $app = WechatModel::createApp($account);
