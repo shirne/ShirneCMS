@@ -1,7 +1,7 @@
 <?php
 namespace app\admin\model;
 
-use app\common\model\BaseModel;
+use app\common\core\BaseModel;
 use think\Db;
 use think\Exception;
 
@@ -62,6 +62,7 @@ class ManagerModel extends BaseModel
      */
     public function isProgeny($pid){
         if($pid == SUPER_ADMIN_ID || $this->id == $pid)return true;
+        if($this->pid == 0 && $this->id != SUPER_ADMIN_ID)return true;
         $pids = self::get_parents($this->id);
         if(in_array($pid,$pids)){
             return true;

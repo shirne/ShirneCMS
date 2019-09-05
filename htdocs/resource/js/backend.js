@@ -228,7 +228,7 @@ jQuery(function ($) {
         if (!window[action] || typeof window[action] !== 'function') {
             return dialog.error('未知操作');
         }
-        var needChecks = $(this).data('needChecks');
+        var needChecks = $(this).data('need-checks');
         if (needChecks === undefined) needChecks = true;
         if (needChecks) {
             var target = $(this).data('target');

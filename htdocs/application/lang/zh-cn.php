@@ -12,6 +12,10 @@ return [
     'Balance'=>'余额',
     'Credit'=>'积分',
     'Reward'=>'奖励',
+    
+    'Gived'=>'已发放',
+    'Canceled'=>'已撤销',
+    'Waiting'=>'待发放',
 
     'System Opt.'=>'系统操作',
     'Consume'=>'消费',
@@ -26,6 +30,7 @@ return [
     'Invalid'=>'已失效',
     'Shown'=>'已显示',
 
+    'Refunding'=>'退款中',
     'Cancelled'=>'已取消',
     'Unpaid'=>'待支付',
     'Unshipped'=>'待发货',
@@ -37,10 +42,14 @@ return [
     'Top'=>'置顶',
     'Hot'=>'热门',
     'Recommend'=>'推荐',
+    
+    'Price Upgrade'=>'按价格升级',
+    'Bind Upgrade'=>'绑定升级',
 
     'Common Settings'=>'通用配置',
     'Member Settings'=>'会员配置',
     'Third Settings'=>'第三方配置',
+    'Sign Settings'=>'签到配置',
     'Advance Settings'=>'高级配置',
 
     'Text Field'=>'单行文本',

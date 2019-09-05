@@ -2,10 +2,12 @@
 
 <block name="body">
     <div class="main">
-        <div class="subbanner">
-            <div class="inner" style="background-image:url({:getAdImage($topCategory['name'])})"></div>
-        </div>
-
+        <php>$adimg=getAdImage($topCategory['name']);</php>
+        <if condition="!empty($adimg)">
+            <div class="subbanner">
+                <div class="inner" style="background-image:url({$adimg})"></div>
+            </div>
+        </if>
         <div class="container list-body">
             <div class="row">
             <div class="col-lg-9">
@@ -21,7 +23,7 @@
                             <div class="art-view">
                                 <h3><a href="{:url('index/article/view',['id'=>$art['id']])}">{$art.title}</a></h3>
                                 <div class="desc">
-                                    {$art.description}
+                                    {$art.description|raw}
                                 </div>
                                 <div class="text-muted">
                                     <span><i class="ion-md-time"></i> {$art.create_time|showdate}</span>

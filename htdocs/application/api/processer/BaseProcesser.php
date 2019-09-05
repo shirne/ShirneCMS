@@ -1,6 +1,6 @@
 <?php
 
-namespace app\api\Processer;
+namespace app\api\processer;
 
 
 use EasyWeChat\Kernel\Messages\Message;
@@ -53,7 +53,7 @@ abstract class BaseProcesser
      * 获取该处理器的方法及参数
      * @return array
      */
-    public abstract static function getActions();
+    public abstract function getActions();
 
     /**
      * @param $args

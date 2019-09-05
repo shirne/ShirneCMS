@@ -2,7 +2,7 @@
 
 namespace app\admin\validate;
 
-use app\common\validate\BaseUniqueValidate;
+use app\common\core\BaseUniqueValidate;
 
 /**
  * Class WechatValidate

@@ -37,8 +37,32 @@
                 </div>
             </form>
         </div>
-        <div class="chart-box">
+        <div class="row">
+        <div class="chart-box col">
         <canvas id="myChart" width="800" height="400"></canvas>
+        </div>
+        <div class="table-box col-4">
+            <table class="table table-hover table-striped">
+                <thead>
+                <tr>
+                    <th width="50">日期</th>
+                    <th>单量</th>
+                    <th>金额</th>
+                    <th>返奖额</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <foreach name="statics" id="item">
+                        <tr>
+                            <th>{$item['awdate']}</th>
+                            <td>{$item['order_count']}</td>
+                            <td>{$item['order_amount']}</td>
+                            <td>{$item['order_rebate']}</td>
+                        </tr>
+                    </foreach>
+                </tbody>
+            </table>
+        </div>
         </div>
     </div>
 
@@ -47,6 +71,22 @@
     <script type="text/javascript" src="__STATIC__/chart/Chart.bundle.min.js"></script>
     <script type="text/javascript">
         var ctx = document.getElementById("myChart");
+        var bgColors=[
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)'
+        ];
+        var bdColors=[
+            'rgba(255,99,132,1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)'
+        ];
         var myChart = new Chart(ctx, {
             type: 'line',
             data: {
@@ -54,22 +94,20 @@
                 datasets: [{
                     label: '会员下单量',
                     data: JSON.parse('{:json_encode(array_column($statics,"order_count"))}'),
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255,99,132,1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
+                    backgroundColor: bgColors[0],
+                    borderColor: bdColors[0],
+                    borderWidth: 1
+                },{
+                    label: '订单总金额',
+                    data: JSON.parse('{:json_encode(array_column($statics,"order_amount"))}'),
+                    backgroundColor: bgColors[1],
+                    borderColor: bdColors[1],
+                    borderWidth: 1
+                },{
+                    label: '订单总返佣',
+                    data: JSON.parse('{:json_encode(array_column($statics,"order_rebate"))}'),
+                    backgroundColor: bgColors[2],
+                    borderColor: bdColors[2],
                     borderWidth: 1
                 }]
             },

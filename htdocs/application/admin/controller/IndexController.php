@@ -43,7 +43,7 @@ class IndexController extends BaseController{
         $a['total_cash']=Db::name('member_cashin')->where('status',1)->sum('amount');
         $a['total_money']=Db::name('member')->sum('money');
 
-        $a['total_credit']=Db::name('member')->sum('credit');
+        $a['total_reward']=Db::name('member')->sum('reward');
         $a['system_charge']=Db::name('member_money_log')->where('type','system')
             ->where('amount','GT',0)->sum('amount');
         $a['total_award']=Db::name('award_log')->sum('amount');
@@ -51,6 +51,11 @@ class IndexController extends BaseController{
         $this->assign('money',$a);
 
         $notices=[];
+        if($this->manager['username']==config('app.test_account')){
+            $notices[]=[
+                'message'=>'本系统仅用于功能演示，请不要在系统内添加任何隐私数据及违法数据!'
+            ];
+        }
         $password_error=session('password_error');
         if($password_error){
             $notices[]=[

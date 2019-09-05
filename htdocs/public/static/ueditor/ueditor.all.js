@@ -6744,6 +6744,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');
         me.shortcutkeys = {};
         me.inputRules = [];
         me.outputRules = [];
+
         //设置默认的常用属性
         me.setOpt(Editor.defaultOptions(me));
 
@@ -29129,8 +29130,8 @@ UE.ui = baidu.editor.ui = {};
         _updateFullScreen:function () {
             if (this._fullscreen) {
                 var vpRect = uiUtils.getViewportRect();
-                this.getDom().style.cssText = 'border:0;position:absolute;left:0;top:' + (this.editor.options.topOffset || 0) + 'px;width:' + vpRect.width + 'px;height:' + vpRect.height + 'px;z-index:' + (this.getDom().style.zIndex * 1 + 100);
-                uiUtils.setViewportOffset(this.getDom(), { left:0, top:this.editor.options.topOffset || 0 });
+                this.getDom().style.cssText = 'border:0;position:absolute;left:0;top:0;width:' + (vpRect.width  - (this.editor.options.leftOffset || 0))+ 'px;height:' + vpRect.height + 'px;z-index:' + (this.getDom().style.zIndex * 1 + 100);
+                uiUtils.setViewportOffset(this.getDom(), { left: this.editor.options.leftOffset || 0, top:this.editor.options.topOffset || 0 });
                 this.editor.setHeight(vpRect.height - this.getDom('toolbarbox').offsetHeight - this.getDom('bottombar').offsetHeight - (this.editor.options.topOffset || 0),true);
                 //不手动调一下，会导致全屏失效
                 if(browser.gecko){

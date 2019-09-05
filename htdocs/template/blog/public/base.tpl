@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="__STATIC__/css/blog.css?v={:config('template.static_version')}">
 
     <script src="__STATIC__/jquery/jquery.min.js"></script>
-
+    <block name="header" ></block>
     <!--[if lt IE 9]>
     <script src="http://cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
@@ -32,6 +32,13 @@
 <script type="text/javascript">
     jQuery(function ($) {
         setNav('{$navmodel}');
+        $('.list-group-item').click(function(e){
+            var target=$(e.target);
+            if(target.is('a'))return;
+            if(target.parents('a').length>0)return;
+            var link=$(this).find('a')[0]
+            link && link.click();
+        });
     })
 </script>
 <block name="script" ></block>

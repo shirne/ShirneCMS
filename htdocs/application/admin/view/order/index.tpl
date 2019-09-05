@@ -54,9 +54,9 @@
             <tr>
                 <th width="50">编号</th>
                 <th>商品</th>
+                <th>订单编号/购买时间</th>
                 <th>会员</th>
                 <th>价格/返奖额</th>
-                <th>时间</th>
                 <th width="160">状态</th>
                 <th width="160">&nbsp;</th>
             </tr>
@@ -69,26 +69,41 @@
                     <td>
                         <volist name="v['products']" id="p">
                         <div class="media">
-                            <div class="media-left">
-                                <img class="media-object" src="{$p['product_image']|default='/static/images/nopic.png'}" alt="{$p['product_title']}">
-                            </div>
+                            <img class="media-object mr-2 rounded" width="50" src="{$p['product_image']|default='/static/images/nopic.png'}" alt="{$p['product_title']}">
                             <div class="media-body">
-                                <h4 class="media-heading">{$p['product_title']}</h4>
+                                <h5 class="media-heading">{$p['product_title']}</h5>
                                 <div>￥{$p['product_price']} &times; {$p['count']}件</div>
                             </div>
                         </div>
                         </volist>
                     </td>
+                    <td>{$v.order_no}<br /><span class="text-muted">{$v.create_time|showdate}</span></td>
                     <td>
-                        [{$v.member_id}]{$v['username']}
+                        <div class="media">
+                            <if condition="!empty($v['avatar'])">
+                                <img src="{$v.avatar}" class="mr-2 rounded" width="30"/>
+                            </if>
+                            <div class="media-body">
+                                <h5 class="mt-0 mb-1" style="font-size:13px;">
+                                    <if condition="!empty($v['nickname'])">
+                                        {$v.nickname}
+                                        <else/>
+                                        {$v.username}
+                                    </if>
+                                </h5>
+                                <div style="font-size:12px;">
+                                    [{$v.member_id} {$levels[$v['level_id']]['level_name']}]
+                                </div>
+                            </div>
+                        </div>
                     </td>
-                    <td>{$v.payamount}<br />{$v.commission_amount}</td>
-                    <td>{$v.create_time|showdate}</td>
+                    <td>
+                        {$v.payamount} <if condition="$v['status'] EQ 0"><a href="javascript:" class="reprice" data-id="{$v.order_id}" data-price="{$v['payamount']}" title="改价"><i class="ion-md-create"></i> </a> </if><br />
+                        {$v.rebate_total}
+                    </td>
                     <td>
                         {$v.status|order_status|raw}
-                        <if condition="$v['isaudit'] EQ 1">
-                            <span class="badge badge-secondary">已审核</span>
-                            <else/>
+                        <if condition="$v['isaudit'] EQ 0">
                             <span class="badge badge-warning">待审核</span>
                         </if>
                         <if condition="$v['rebated'] EQ 1">
@@ -99,9 +114,13 @@
                     </td>
                     <td class="operations">
                         <a class="btn btn-outline-primary" title="详情" href="{:url('order/detail',array('id'=>$v['order_id']))}"><i class="ion-md-document"></i> </a>
-                        <a class="btn btn-outline-primary btn-status" title="状态" href="javascript:" data-id="{$v.order_id}"  data-status="{$v['status']+1}"><i class="ion-md-checkbox-outline"></i> </a>
+                        <a class="btn btn-outline-primary btn-status" title="状态" href="javascript:" data-id="{$v.order_id}"  data-status="{$v['status']+1}" data-express="{$v.express_code}/{$v.express_no}"><i class="ion-md-checkbox-outline"></i> </a>
                         <if condition="$v['rebated'] NEQ 1">
-                            <a class="btn btn-outline-success btn-audit" title="审核" href="javascript:" data-id="{$v.order_id}"  data-status="1"><i class="ion-md-checkmark-circle"></i> </a>
+                            <if condition="$v['isaudit'] EQ 1">
+                                <a class="btn btn-outline-warning btn-audit" title="取消审核" href="javascript:" data-id="{$v.order_id}"  data-status="0"><i class="ion-md-remove-circle"></i> </a>
+                                <else/>
+                                <a class="btn btn-outline-success btn-audit" title="审核" href="javascript:" data-id="{$v.order_id}"  data-status="1"><i class="ion-md-checkmark-circle"></i> </a>
+                            </if>
                         </if>
                         <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('order/delete',array('id'=>$v['order_id']))}"><i class="ion-md-trash"></i> </a>
                     </td>
@@ -121,7 +140,7 @@
                         <option value="1">已支付，待发货</option>
                         <option value="2">已发货，待收货</option>
                         <option value="3">已收货，待评价</option>
-                        <option value="3">已完成</option>
+                        <option value="4">已完成</option>
                         <option value="-1">订单作废</option>
                     </select>
                 </div>
@@ -151,6 +170,7 @@
             $('.btn-status').click(function() {
                 var id=$(this).data('id');
                 var status=$(this).data('status');
+                var express=$(this).data('express').split('/');
                 var dlg=new Dialog({
                     onshown:function(body){
                         var select=body.find('select.status-id');
@@ -161,7 +181,8 @@
                             }else{
                                 body.find('.express_no').hide();
                             }
-                        });
+                        }).val(express[0]||'');
+                        body.find('.express-no').val(express[1]||'');
                         select.val(status);
                         select.change(function(){
                             if(select.val()=='2'){
@@ -223,6 +244,31 @@
                     }
                 }).show(tpl2,'订单审核');
             });
+
+            $('.reprice').click(function (e) {
+                var id=$(this).data('id');
+                var orig_price=$(this).data('price')
+                var dlg=dialog.prompt('当前价格：'+orig_price,function (input) {
+                    $.ajax({
+                        url:'{:url("reprice")}',
+                        type:'POST',
+                        data:{
+                            id:id,
+                            price:input,
+                        },
+                        dataType:'JSON',
+                        success:function(json){
+                            if(json.code==1) {
+                                dlg.hide();
+                                location.reload();
+                            }else{
+                                dialog.error(json.msg)
+                            }
+                        }
+                    })
+                    return false;
+                })
+            })
         });
     </script>
 

@@ -3,6 +3,7 @@
 
 namespace app\common\model;
 
+use app\common\core\BaseModel;
 use think\Db;
 
 /**
@@ -29,8 +30,8 @@ class MemberCartModel extends BaseModel
     }
     public function mapProduct($product,$sku){
         $data=[];
-        $productMaps=['id'=>'product_id','title'=>'product_title','image'=>'product_image','spec_data','levels','is_discount','is_commission','type'];
-        $skuMaps=['sku_id','storage','sale','goods_no'=>'sku_goods_no','weight'=>'product_weight','specs','price'=>'product_price','market_price','cost_price','image'=>'sku_image'];
+        $productMaps=['id'=>'product_id','title'=>'product_title','image'=>'product_image','spec_data','levels','is_discount','postage_id','is_commission','type'];
+        $skuMaps=['sku_id','storage','sale','goods_no'=>'sku_goods_no','weight'=>'product_weight','specs','price'=>'product_price','ext_price'=>'ext_price','market_price','cost_price','image'=>'sku_image'];
         foreach ($productMaps as $k=>$v){
             if(is_string($k)){
                 $data[$v]=$product[$k];
@@ -94,27 +95,26 @@ class MemberCartModel extends BaseModel
     }
     public function getCart($member_id, $sku_ids='')
     {
-        $model=Db::view('MemberCart',['id','member_id','product_id','sku_id','product_title'=>'cart_product_title','product_image'=>'cart_product_image','product_price'=>'cart_product_price','count','sort'])
-            ->view('ProductSku',['storage','sale','goods_no'=>'sku_goods_no','weight','specs','price'=>'product_price','market_price','cost_price','image'=>'sku_image'],'ProductSku.sku_id=MemberCart.sku_id','LEFT')
-            ->view('Product',['title'=>'product_title','image'=>'product_image','spec_data','levels','is_discount','is_commission','type'],'MemberCart.product_id=Product.id','LEFT')
-            ->where('MemberCart.member_id',$member_id);
+        $model = Db::name('MemberCart')->where('member_id',$member_id);
         if(!empty($sku_ids)){
-            $model->whereIn('MemberCart.sku_id',idArr($sku_ids));
+            $model->whereIn('sku_id',idArr($sku_ids));
         }
-        $lists = $model->order('MemberCart.sort DESC')->select();
-        foreach ($lists as $k=>&$item){
-            if(!empty($item['spec_data'])){
-                $item['spec_data']=json_decode($item['spec_data'],true);
-            }else{
-                $item['spec_data']=[];
-            }
-            if(!empty($item['specs'])){
-                $item['specs']=json_decode($item['specs'],true);
-            }else{
-                $item['specs']=[];
-            }
-            if(!empty($item['levels'])) {
-                $item['levels'] = json_decode($item['levels'], true);
+        $carts = $model->order('sort DESC')->select();
+        $lists = [];
+        if(!empty($carts)) {
+            $datas = ProductModel::getForOrder(array_column($carts, 'count', 'sku_id'));
+            $datas = array_column($datas, NULL, 'sku_id');
+            foreach ($carts as $cart) {
+                
+                if(isset($datas[$cart['sku_id']])){
+                    $item = $datas[$cart['sku_id']];
+                }else{
+                    $item=[];
+                }
+                $item['cart_product_price']=$cart['product_price'];
+                $item['cart_product_image']=$cart['product_image'];
+                $item['cart_product_title']=$cart['product_title'];
+                $lists[]=$item;
             }
         }
         return $lists;

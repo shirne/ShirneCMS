@@ -1,3 +1,21 @@
+function transOption(option) {
+    if(!option)return {};
+    var newopt={};
+    for(var i in option){
+        switch (i){
+            case 'viewmode':
+                newopt['viewMode']=option[i];
+                break;
+            case 'keepopen':
+                newopt['keepOpen']=option[i];
+                break;
+            default:
+                newopt[i]=option[i];
+        }
+    }
+    return newopt;
+}
+
 //日期组件
 if($.fn.datetimepicker) {
     var tooltips= {
@@ -18,23 +36,7 @@ if($.fn.datetimepicker) {
         nextCentury: '下个世纪'
     };
 
-    function transOption(option) {
-        if(!option)return {};
-        var newopt={};
-        for(var i in option){
-            switch (i){
-                case 'viewmode':
-                    newopt['viewMode']=option[i];
-                    break;
-                case 'keepopen':
-                    newopt['keepOpen']=option[i];
-                    break;
-                default:
-                    newopt[i]=option[i];
-            }
-        }
-        return newopt;
-    }
+
     $('.datepicker').each(function(){
         var config=$.extend({
             tooltips:tooltips,

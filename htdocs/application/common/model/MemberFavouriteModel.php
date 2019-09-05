@@ -3,11 +3,30 @@
 namespace app\common\model;
 
 
+use app\common\core\BaseModel;
 use think\Db;
 
 class MemberFavouriteModel extends BaseModel
 {
+    const TYPE_PRODUCT='product';
+    const TYPE_ARTICLE='article';
+
     protected $autoWriteTimestamp = true;
+
+    public function getFavourites($type)
+    {
+        $model = Db::view('memberFavourite','*');
+        if($type == static::TYPE_PRODUCT){
+            $model->view('product','title,image,min_price,max_price')
+            ->where('memberFavourite.fav_type',$type);
+        }elseif($type == static::TYPE_ARTICLE){
+            $model->view('product','title,image,min_price,max_price')
+            ->where('memberFavourite.fav_type',$type);
+        }else{
+            throw new \Exception('Unsupported favourite type '.$type);
+        }
+        return $model->paginate();
+    }
 
     public function isFavourite($member_id,$type,$id){
         return Db::name('memberFavourite')
@@ -54,7 +73,7 @@ class MemberFavouriteModel extends BaseModel
         if(empty($exist)){
             self::create($data);
         }else{
-            self::update($data);
+            self::update($data,['id'=>$exist['id']]);
         }
         return true;
     }

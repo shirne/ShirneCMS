@@ -3,6 +3,7 @@
 namespace app\admin\controller;
 
 
+use app\common\model\MemberCashinModel;
 use app\common\model\MemberRechargeModel;
 use shirne\excel\Excel;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
@@ -162,10 +163,10 @@ class PaylogController extends BaseController
             return redirect(url('',['status'=>$status,'key'=>base64_encode($key)]));
         }
         $key=empty($key)?'':base64_decode($key);
-        $model=Db::view('__MEMBER_CASHIN__ mc','*')->view('__MEMBER__ m',['username','realname'],'mc.member_id=m.id','LEFT');
-        $where=array();
+        $model=Db::view('__MEMBER_CASHIN__ mc','*')->view('__MEMBER__ m',['username','nickname','avatar','realname'],'mc.member_id=m.id','LEFT');
+        
         if(!empty($key)){
-            $model->where('m.username|mc.card_name','LIKE',"%$key%");
+            $model->where('m.username|m.nickname|m.realname|mc.card_name','LIKE',"%$key%");
         }
         if($status!==''){
             $model->where('m.status',$status);
@@ -176,7 +177,7 @@ class PaylogController extends BaseController
 
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
-        $total=Db::name('MemberCashin')->where('status',1)->sum('amount');
+        $total=Db::name('MemberCashin')->where('status','gt',0)->sum('amount');
         $this->assign('total',$total);
         $this->assign('status',$status);
         $this->assign('keyword',$key);
@@ -243,19 +244,18 @@ class PaylogController extends BaseController
     public function cashupdate($id=''){
         $id=intval($id);
         if($id==0)$this->error('参数错误 ');
-        $cash=Db::name('member_cashin')->find($id);
+        $cash=MemberCashinModel::get($id);
         if(empty($cash))$this->error('提现单不存在');
         if($cash['status']!=0)$this->error('提现单已处理过了');
-
-
 
         $data=array();
         $data['status']=1;
         $data['audit_time']=time();
-        Db::name('member_cashin')->where('id',$cash['id'])->update($data);
+        $cash->updateStatus($data);
+        //Db::name('member_cashin')->where('id',$cash['id'])->update($data);
 
-        Db::name('member')->where('id',$cash['member_id'])->setDec('froze_money',$cash['amount']);
-        Db::name('member')->where('id',$cash['member_id'])->setInc('total_cashin',$cash['amount']);
+        //Db::name('member')->where('id',$cash['member_id'])->setDec('froze_money',$cash['amount']);
+        //Db::name('member')->where('id',$cash['member_id'])->setInc('total_cashin',$cash['amount']);
         user_log($this->mid,'cashaudit',1,'处理提现单 '.$id ,'manager');
         $this->success('处理成功！');
     }
@@ -267,18 +267,14 @@ class PaylogController extends BaseController
     public function cashdelete($id=''){
         $id=intval($id);
         if($id==0)$this->error('参数错误 ');
-        $cash=Db::name('member_cashin')->find($id);
+        $cash=MemberCashinModel::get($id);
         if(empty($cash))$this->error('提现单不存在');
+        
         if($cash['status']!=0)$this->error('提现单已处理过了');
 
-        $cash=Db::name('member_cashin')->lock(true)->find($id);
-        if($cash['status']!=0)$this->error('提现单已处理过了');
-        $data['status']=2;
-        Db::name('member_cashin')->where('id',$cash['id'])->update($data);
+        $data['status']=-1;
+        $cash->updateStatus($data);
 
-        money_log($cash['member_id'],$cash['amount'],'提现驳回','cash');
-
-        Db::name('member')->where('id',$cash['member_id'])->setDec('froze_money',$cash['amount']);
         user_log($this->mid,'cashdelete',1,'驳回提现单 '.$id ,'manager');
         $this->success('处理成功！');
     }

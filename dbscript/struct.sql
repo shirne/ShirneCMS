@@ -36,11 +36,27 @@ CREATE TABLE `sa_manager` (
   `update_time` int(11) DEFAULT '0',
   `login_ip` varchar(50) DEFAULT '',
   `status` tinyint(1) DEFAULT '1' COMMENT '0:禁止登陆 1:正常',
-  `type` tinyint(1) DEFAULT '1' COMMENT '1:超级管理员 2:普通管理员',
+  `type` tinyint(1) DEFAULT '1' COMMENT 'role.type',
   `logintime` INT(11) NULL DEFAULT 0,
   `last_view_member` INT(11) NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `sa_manager_role`
+--
+DROP TABLE IF EXISTS `sa_manager_role`;
+CREATE TABLE `sa_manager_role` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `type` TINYINT NOT NULL DEFAULT 0,
+  `role_name` VARCHAR(50) NOT NULL DEFAULT '',
+  `global` VARCHAR(200) NULL DEFAULT '',
+  `detail` TEXT NULL,
+  `create_time` int(11) DEFAULT '0',
+  `update_time` int(11) DEFAULT '0',
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `type_UNIQUE` (`type` ASC)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -199,9 +215,13 @@ CREATE TABLE `sa_links` (
   `lang` varchar(10) DEFAULT NULL COMMENT '语言',
   `main_id` int(11) DEFAULT NULL COMMENT '主id',
   `title` varchar(100) DEFAULT '',
+  `group` varchar(50) DEFAULT '',
   `logo` varchar(150) DEFAULT '',
   `url` varchar(150) DEFAULT '',
   `sort` int(11) DEFAULT 0,
+  `status` int(11) DEFAULT 0,
+  `create_time` int(11) DEFAULT 0,
+  `update_time` int(11) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -269,6 +289,7 @@ DROP TABLE IF EXISTS `sa_member`;
 CREATE TABLE `sa_member` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(50) NOT NULL,
+  `nickname` varchar(50) NOT NULL DEFAULT '',
   `realname` varchar(50) NOT NULL DEFAULT '',
   `level_id` int(11) DEFAULT '0',
   `lang` varchar(10) DEFAULT NULL COMMENT '语言',
@@ -299,6 +320,8 @@ CREATE TABLE `sa_member` (
   `money` int(11) DEFAULT '0',
   `reward` int(11) DEFAULT '0',
   `froze_money` int(11) DEFAULT '0',
+  `froze_credit` int(11) DEFAULT '0',
+  `froze_reward` int(11) DEFAULT '0',
   `total_cashin` int(11) DEFAULT '0',
   `total_recharge` int(11) DEFAULT '0',
   `total_consume` int(11) DEFAULT '0',
@@ -323,8 +346,12 @@ CREATE TABLE `sa_pay_order` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
   `member_id` INT NULL DEFAULT 0,
   `order_no` VARCHAR(30) NULL,
-  `order_type` VARCHAR(20) '',
+  `order_type` VARCHAR(20) DEFAULT '',
+  `pay_data` TEXT,
+  `pay_id` INT NULL DEFAULT '0',
   `pay_type` VARCHAR(20) NULL DEFAULT '',
+  `prepay_id` VARCHAR(50) NULL DEFAULT '',
+  `trade_type` VARCHAR(20) NULL DEFAULT '' COMMENT '交易类型',
   `order_id` INT NULL DEFAULT 0,
   `create_time` INT NULL DEFAULT 0,
   `pay_time` INT NULL DEFAULT 0,
@@ -332,9 +359,26 @@ CREATE TABLE `sa_pay_order` (
   `status` TINYINT NULL DEFAULT 0,
   `pay_bill` VARCHAR(40) NULL DEFAULT '',
   `time_end` VARCHAR(20) NULL DEFAULT '',
+  `is_refund` TINYINT NULL DEFAULT 0 COMMENT '是否退款',
+  `refund_fee` DECIMAL(10,2) NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `sa_pay_order_refund` (
+ `id` INT NOT NULL AUTO_INCREMENT,
+ `member_id` int(10) unsigned NOT NULL,
+ `order_id` int(10) unsigned NOT NULL,
+ `refund_no` VARCHAR(20) NOT NULL,
+ `refund_fee` DECIMAL(10,2) NULL DEFAULT 0,
+ `status` TINYINT NULL DEFAULT 0 COMMENT '状态 0-未退款 1- 退款中 2- 已退款',
+ `reason` VARCHAR(50) NOT NULL,
+ `refund_result` VARCHAR(50) NOT NULL,
+ `refund_time` INT NULL DEFAULT 0,
+ `create_time` INT NULL DEFAULT 0,
+ `update_time` INT NULL DEFAULT 0,
+ PRIMARY KEY (`id`),
+ UNIQUE KEY `refund_no`(`refund_no`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT = '订单退款记录';
 
 DROP TABLE IF EXISTS `sa_member_freeze`;
 
@@ -354,6 +398,8 @@ DROP TABLE IF EXISTS `sa_member_token`;
 CREATE TABLE `sa_member_token` (
   `token_id` BIGINT NOT NULL AUTO_INCREMENT,
   `member_id` INT UNSIGNED NULL DEFAULT 0,
+  `platform` VARCHAR(30) NULL,
+  `appid` VARCHAR(30) NULL,
   `token` VARCHAR(50) NULL,
   `create_time` INT NULL DEFAULT 0,
   `update_time` INT NULL DEFAULT 0,
@@ -364,6 +410,18 @@ CREATE TABLE `sa_member_token` (
   KEY `token` (`token`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `sa_oauth_app`;
+
+CREATE TABLE `sa_oauth_app` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `platform` VARCHAR(20) NULL,
+  `appid` VARCHAR(30) NULL,
+  `appsecret` VARCHAR(50) NULL,
+  `create_time` INT NULL DEFAULT 0,
+  `update_time` INT NULL DEFAULT 0,
+  PRIMARY KEY (`id`),
+  KEY `appid` (`appid`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `sa_member_message`;
 
@@ -397,7 +455,9 @@ CREATE TABLE `sa_member_level` (
   `short_name` VARCHAR(10) NULL,
   `style` VARCHAR(10) default 'secondary',
   `is_default` TINYINT NULL DEFAULT 0,
-  `level_price` DECIMAL(10,2) NULL COMMENT '购买价格',
+  `upgrade_type` TINYINT NULL DEFAULT 0 COMMENT '1: 累计消费升级, 2: 购买升级',
+  `diy_price` tinyint NULL DEFAULT 0 COMMENT '自定义价格',
+  `level_price` DECIMAL(10,2) NULL COMMENT '购买价格/累计金额',
   `discount` TINYINT NULL DEFAULT 100 COMMENT '会员折扣',
   `is_agent` TINYINT NULL DEFAULT 0 COMMENT '是否代理组',
   `sort` INT NULL DEFAULT 0,
@@ -407,6 +467,17 @@ CREATE TABLE `sa_member_level` (
   PRIMARY KEY (`level_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `sa_member_level_log`;
+CREATE TABLE `sa_member_level_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NOT NULL,
+  `level_id` int(11) NOT NULL,
+  `amount` int(11) DEFAULT '0' COMMENT '金额 单位分',
+  `create_time` int(11) DEFAULT NULL,
+  `status` tinyint(4) DEFAULT '0',
+  `remark` varchar(45) DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `sa_member_agent`;
 
@@ -494,6 +565,7 @@ DROP TABLE IF EXISTS `sa_member_recharge`;
 CREATE TABLE `sa_member_recharge` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `member_id` int(11) NOT NULL,
+  `platform` VARCHAR(30) NULL,
   `paytype_id` int(11) NOT NULL,
   `amount` int(11) DEFAULT '0' COMMENT '金额 单位分',
   `create_time` int(11) DEFAULT NULL,
@@ -513,10 +585,16 @@ DROP TABLE IF EXISTS `sa_member_cashin`;
 CREATE TABLE `sa_member_cashin` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `member_id` int(11) NOT NULL,
+  `platform` VARCHAR(30) NULL,
+  `appid` varchar(30) DEFAULT '',
+  `form_id` varchar(50) DEFAULT '',
+  `cashtype` varchar(20) DEFAULT '',
   `amount` int(11) DEFAULT '0' COMMENT '金额 单位分',
+  `cash_fee` int(11) NULL DEFAULT '0',
   `real_amount` int(11) DEFAULT '0',
-  `create_time` int(11) DEFAULT NULL,
   `audit_time` int(11) DEFAULT '0',
+  `payment_time` int(11) DEFAULT 0,
+  `fail_time` int(11) DEFAULT 0,
   `bank_id` int(11) DEFAULT '0',
   `bank` varchar(50) DEFAULT '',
   `bank_name` varchar(50) DEFAULT '',
@@ -524,7 +602,9 @@ CREATE TABLE `sa_member_cashin` (
   `cardno` varchar(20) DEFAULT '',
   `status` tinyint(4) DEFAULT '0',
   `remark` varchar(50) DEFAULT '',
-  `cashtype` varchar(50) DEFAULT '',
+  `reason` varchar(100) NULL DEFAULT '',
+  `create_time` int(11) DEFAULT 0,
+  `update_time` int(11) DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `member_id` (`member_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -559,6 +639,9 @@ CREATE TABLE `sa_award_log`(
   `from_member_id` int(11) NOT NULL,
   `amount` int(11) DEFAULT '0' COMMENT '金额 单位分',
   `real_amount` int(11) DEFAULT '0',
+  `status` tinyint(4) DEFAULT 0,
+  `give_time` int(11) DEFAULT 0,
+  `cancel_time` int(11) DEFAULT 0,
   `create_time` int(11) DEFAULT NULL,
   `remark` varchar(50) DEFAULT '',
   PRIMARY KEY (`id`)
@@ -716,7 +799,7 @@ CREATE TABLE `sa_article` (
   `digg` INT(11) DEFAULT '0',
   `comment` INT(11) DEFAULT '0',
   `views` INT(11) DEFAULT '0',
-  `type` tinyint(1) DEFAULT '1' COMMENT '1:普通,2:置顶,3:热门,4:推荐',
+  `type` tinyint(1) UNSIGNED DEFAULT '1' COMMENT '1:普通,2:置顶,4:热门,8:推荐',
   `status` tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
   KEY `cate_id` (`cate_id`),
@@ -764,6 +847,7 @@ CREATE TABLE `sa_article_comment` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `member_id` int(11) NOT NULL DEFAULT '0',
   `article_id` int(11) NOT NULL DEFAULT '0',
+  `nickname` varchar(50) NOT NULL DEFAULT '',
   `email` varchar(150) NOT NULL DEFAULT '',
   `create_time` int(11) NOT NULL DEFAULT '0',
   `device` varchar(50) NOT NULL DEFAULT '',
@@ -826,12 +910,13 @@ CREATE TABLE `sa_feedback` (
   `email` varchar(150) NOT NULL DEFAULT '',
   `type` tinyint(4) DEFAULT '0',
   `create_time` int(11) NOT NULL DEFAULT '0',
+  `update_time` int(11) NOT NULL DEFAULT '0',
   `ip` varchar(50) NOT NULL DEFAULT '',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `content` text,
   `reply` varchar(255) DEFAULT '',
   `manager_id` int(11) DEFAULT '0',
-  `reply_at` int(11) DEFAULT '0',
+  `reply_time` int(11) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `member_id` (`member_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

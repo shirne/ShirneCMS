@@ -1,7 +1,7 @@
 <?php
 namespace app\index\controller;
 
-use app\admin\model\MemberLevelModel;
+use app\common\model\MemberLevelModel;
 use app\common\model\MemberModel;
 use app\common\model\WechatModel;
 use EasyWeChat\Factory;
@@ -109,7 +109,7 @@ class BaseController extends Controller
     /**
      * @param int $time
      */
-    public function checkSubmitRate($time = 2){
+    protected function checkSubmitRate($time = 2){
         
         if (!$time) $time = 2;
         $key = '__check_submit_rate__';
@@ -122,8 +122,13 @@ class BaseController extends Controller
         session($key, time());
     }
     
-    public function _empty(){
-        $this->error('页面不存在',url('index/index/index'));
+    public function _empty($error='页面不存在',$description='', $redirect=null){
+        
+        $this->assign('error',$error);
+        $this->assign('description',$description);
+        if(empty($redirect))$redirect=url('index/index/index');
+        $this->assign('redirect',$redirect);
+        return $this->fetch('public/empty');
     }
     
     /**
@@ -301,7 +306,7 @@ class BaseController extends Controller
      */
     protected function initLevel(){
         if($this->isLogin && empty($this->userLevel)){
-            $this->userLevel=MemberLevelModel::get($this->user['level_id']);
+            $this->userLevel=getMemberLevel($this->user['level_id']);
         }
     }
 
@@ -357,10 +362,24 @@ class BaseController extends Controller
         }
     }
 
+    private $currentWechats=[];
+    protected function getWechatAccount($type,$force=false){
+        if(!isset($this->currentWechats[$type]) || $force) {
+            $this->currentWechats[$type] = cache('default_' . $type);
+            if (empty($wechat) || $force == true) {
+                $wechat = \think\Db::name('Wechat')->where('type', $type)
+                    ->where('account_type', 'service')
+                    ->order('is_default DESC')->find();
+                cache('default_' . $type, $wechat,['expire'=>60*60*12]);
+                $this->currentWechats[$type] = $wechat;
+            }
+        }
+        return $this->currentWechats[$type];
+    }
 
     protected function getShareData($url = '')
     {
-        $this->wechat=getWechatAccount('wechat');
+        $this->wechat=$this->getWechatAccount('wechat');
         if(!empty($this->wechat['appid'])) {
             $app = Factory::officialAccount(WechatModel::to_config($this->wechat));
             if($url)$app->jssdk->setUrl($url);

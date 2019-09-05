@@ -2,6 +2,8 @@
 
 namespace app\common\model;
 
+use app\common\core\BaseModel;
+
 /**
  * Class WechatReplyModel
  * @package app\common\model

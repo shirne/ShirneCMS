@@ -1,7 +1,7 @@
 <?php
 namespace app\admin\model;
 
-use app\common\model\BaseModel;
+use app\common\core\BaseModel;
 use think\Db;
 
 /**
@@ -10,6 +10,8 @@ use think\Db;
  */
 class PageModel extends BaseModel
 {
+    protected $autoWriteTimestamp = true;
+    
     public static function init(){
         self::event('after_write', function ($page) {
             if (!empty($page['group'])) {

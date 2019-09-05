@@ -19,7 +19,7 @@ class PageController extends BaseController{
             if (empty($page)) $this->error('页面不存在');
             $group=$page['group'];
         }elseif(empty($group)){
-            $this->error('页面不存在');
+            return $this->_empty('页面不存在');
         }
 
         $model=Db::name('page');

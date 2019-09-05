@@ -6,6 +6,7 @@ html {
 }
 
 body {
+  padding-top: 3.5rem;
   font-family: "Microsoft YaHei", sans-serif;
   background: $bg-light;
   font-size: 1rem;
@@ -141,9 +142,21 @@ h6 {
     }
   }
 }
+@keyframes loading {
+  from {
+    transform: rotate(0);
+  }
+  to{
+    transform: rotate(359deg);
+  }
+}
 
+.ani-loading{
+  animation: loading 2s infinite linear;
+}
 .chgstatus{
-  padding:4px 8px 4px 24px;
+  padding:4px 8px;
+  padding-left: 24px;
   position: relative;
   background:#17a2b8;
   border-radius:30px;
@@ -412,30 +425,19 @@ h6 {
   }
 }
 
-.breadcrumb-nav{
+.breadcrumb {
+  background: #e9e9e9;
+  border-bottom: 1px solid #E9E9E9;
+  padding: 0.5rem 1rem;
+  box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.05);
 
-  position: relative;
-  .bread_refresh{
-    position: absolute;
-    right:10px;
-    top:2px;
-    font-size:22px;
-  }
-  .breadcrumb {
-    background: #e9e9e9;
-    border-bottom: 1px solid #E9E9E9;
-    padding: 0.5rem 1rem;
-    box-shadow: 0 0 1px 0 rgba(0, 0, 0, 0.05);
+  a {
+    color: #666;
 
-    a {
-      color: #666;
-
-      &:hover {
-        text-decoration: none;
-      }
+    &:hover {
+      text-decoration: none;
     }
   }
-
 }
 
 .tab-container {
@@ -463,7 +465,8 @@ h6 {
     width: 100%;
     z-index: 109;
     box-shadow: 0 0 5px rgba(0,0,0,.5);
-    padding: 10px 0 10px 30px;
+    padding: 10px 0;
+    padding-left: 250px;
     .btn{
       padding-left:1.5rem;
       padding-right:1.5rem;

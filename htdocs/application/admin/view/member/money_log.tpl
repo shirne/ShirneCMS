@@ -101,15 +101,49 @@
             <foreach name="logs" item="v">
                 <tr>
                     <td>{$v.id}</td>
-                    <td><if condition="$v['member_id']">
-                            <a href="{:url('money_log',array('id'=>$v['member_id'],'fromdate'=>$fromdate,'todate'=>$todate,'from_id'=>$from_id,'type'=>$type))}" >[{$v['member_id']} {$levels[$v['level_id']]['level_name']}]{$v['username']}</a>
+                    <td>
+                        <if condition="$v['member_id']">
+                            <a href="{:url('money_log',array('id'=>$v['member_id'],'fromdate'=>$fromdate,'todate'=>$todate,'from_id'=>$from_id,'type'=>$type))}" class="media">
+                                <if condition="!empty($v['avatar'])">
+                                    <img src="{$v.avatar}" class="mr-2 rounded" width="30"/>
+                                </if>
+                                <div class="media-body">
+                                    <h5 class="mt-0 mb-1" style="font-size:13px;">
+                                        <if condition="!empty($v['nickname'])">
+                                            {$v.nickname}
+                                            <else/>
+                                            {$v.username}
+                                        </if>
+                                    </h5>
+                                    <div style="font-size:12px;">
+                                        [{$v.member_id} {$levels[$v['level_id']]['level_name']}]
+                                    </div>
+                                </div>
+                            </a>
                             <else/>
                             -
-                        </if></td>
+                        </if>
+                    </td>
                     <td class="{$v['amount']>0?'text-success':'text-danger'}">{$v.field|money_type|raw}&nbsp;{$v.amount|showmoney}</td>
                     <td>
                         <if condition="$v['from_member_id']">
-                            <a href="{:url('money_log',array('id'=>$id,'fromdate'=>$fromdate,'todate'=>$todate,'from_id'=>$v['from_member_id'],'type'=>$type))}" >[{$v['from_member_id']} {$levels[$v['from_level_id']]['level_name']}]{$v['from_username']}</a>
+                            <a href="{:url('money_log',array('id'=>$id,'fromdate'=>$fromdate,'todate'=>$todate,'from_id'=>$v['from_member_id'],'type'=>$type))}" class="media">
+                                <if condition="!empty($v['from_avatar'])">
+                                    <img src="{$v.from_avatar}" class="mr-2 rounded" width="30"/>
+                                </if>
+                                <div class="media-body">
+                                    <h5 class="mt-0 mb-1" style="font-size:13px;">
+                                        <if condition="!empty($v['from_nickname'])">
+                                            {$v.from_nickname}
+                                            <else/>
+                                            {$v.from_username}
+                                        </if>
+                                    </h5>
+                                    <div style="font-size:12px;">
+                                        [{$v.from_member_id} {$levels[$v['from_level_id']]['level_name']}]
+                                    </div>
+                                </div>
+                            </a>
                             <else/>
                             -
                         </if>

@@ -1,6 +1,6 @@
 <div class="form-row form-group">
-    <label for="v-wechat_autologin" class="col-3 col-md-2 text-right align-middle">微信自动登录</label>
-    <div class="col-9 col-md-8 col-lg-6">
+    <label for="v-wechat_autologin" class="text-right align-middle">微信自动登录</label>
+    <div class="pl-2 pr-2">
         <div class="btn-group btn-group-toggle" data-toggle="buttons">
             <foreach name="setting.wechat_autologin.data" item="value" key="k">
                 <if condition="$k==$setting['wechat_autologin']['value']">
@@ -15,6 +15,9 @@
             </foreach>
         </div>
     </div>
+    <div class="col">
+        <div class="text-muted">开启自动登录时用户从微信环境进入则自动跳转授权并使用授权信息登录或自动注册</div>
+    </div>
 </div>
 <div class="form-row mb-3">
     <div class="col-12 col-lg-6">
@@ -22,7 +25,7 @@
             <div class="card-header">验证码<span class="float-right"><a href="https://www.geetest.com/" target="_blank">极验</a></span></div>
             <div class="card-body">
                 <div class="form-row form-group">
-                    <label for="v-captcha_mode" class="col-3 col-md-2 text-right align-middle">验证码模式</label>
+                    <label for="v-captcha_mode" class="text-right align-middle">验证码模式</label>
                     <div class="col">
                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
                             <foreach name="setting.captcha_mode.data" item="value" key="k">

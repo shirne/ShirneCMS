@@ -36,7 +36,22 @@
         <foreach name="lists" item="v">
             <tr>
                 <td>{$v.id}</td>
-                <td>{$v.username}</td>
+                <td>
+                    <div class="media">
+                        <if condition="!empty($v['avatar'])">
+                            <img src="{$v.avatar}" class="mr-2 rounded" width="30"/>
+                        </if>
+                        <div class="media-body">
+                            <h5 class="mt-0 mb-1" >
+                                <if condition="!empty($v['nickname'])">
+                                    {$v.nickname}
+                                    <else/>
+                                    {$v.username}
+                                </if>
+                            </h5>
+                        </div>
+                    </div>
+                </td>
                 <td>{$v.action}</td>
                 <td><if condition="$v.result EQ 1"><span class="badge badge-success">成功</span><else/><span class="badge badge-danger">失败</span> </if></td>
                 <td>{$v.create_time|showdate}</td>

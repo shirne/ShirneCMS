@@ -3,14 +3,14 @@
 namespace app\common\model;
 
 
+use app\common\core\BaseModel;
 use think\Db;
-use think\Model;
 
 /**
  * Class AwardLogModel
  * @package app\common\model
  */
-class AwardLogModel extends Model
+class AwardLogModel extends BaseModel
 {
     /**
      * 记录奖励
@@ -49,15 +49,63 @@ class AwardLogModel extends Model
                     'amount' => $award,
                     'real_amount' => $award,
                     'remark' => $remark,
+                    'status'=>$order_id>0?0:1,
                     'create_time' => $time
                 ];
             }
 
-            money_log($uidgroup, $award, $remark, $type, $from_id, $field);
+            if(empty($order_id))money_log($uidgroup, $award, $remark, $type, $from_id, $field);
 
             $count += Db::name('AwardLog')->insertAll($datas);
         }
         return $count;
+    }
+    
+    public static function giveout($orderid,$field='reward'){
+        $logs = Db::name('AwardLog')->where('order_id',$orderid)
+            ->where('status',0)->select();
+        $logids=[];
+        foreach ($logs as $log){
+            $loged=money_log($log['member_id'], $log['amount'], $log['remark'], $log['type'], $log['from_member_id'], $field);
+            if(!empty($loged))$logids[]=$log['id'];
+        }
+        if(!empty($logids)) {
+            Db::name('AwardLog')->whereIn('id', $logids)->update(['status'=>1,'give_time'=>time()]);
+        }
+        return true;
+    }
+    
+    public static function cancel($orderid){
+        Db::name('AwardLog')->where('order_id',$orderid)
+            ->where('status',0)->update(['status'=>-1,'cancel_time'=>time()]);
+        
+        return true;
+    }
+    
+    public static function ranks($mode='month'){
+        $model = Db::name('awardLog')->where('status','gt',-1);
+        if($mode=='month'){
+            $model->where('create_time','gt',strtotime(date('Y-m-01')));
+        }elseif($mode=='year'){
+            $model->where('create_time','gt',strtotime(date('Y-01-01')));
+        }
+        $list = $model->field('member_id, sum(amount) as total_amount')->group('member_id')
+            ->order('total_amount DESC')
+            ->limit(10)->select();
+        if(!empty($list)){
+            $list = array_filter($list,function($item){
+                return $item['total_amount']>0;
+            });
+            if(!empty($list)){
+                $user_ids =array_column($list,'member_id');
+                $users=Db::name('member')->whereIn('id',$user_ids)->field('id,nickname,username,avatar')->select();
+                $users = array_column($users,NULL,'id');
+                foreach ($list as &$item){
+                    $item['user']=$users[$item['member_id']];
+                }
+            }
+        }
+        return $list;
     }
 
     public static function rand_award($total,$count,$total_count,$precision=0,$ratio=5,$disperse=100000)

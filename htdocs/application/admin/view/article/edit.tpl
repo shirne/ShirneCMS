@@ -64,10 +64,10 @@
         <div class="form-row">
             <label class="col-2 col-md-1">文章类型</label>
             <div class="form-group col-8 col-md-4">
-                <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <div class="btn-group btn-group-toggle" data-toggle="buttons" >
                     <volist name="types" id="type" key="k">
-                        <label class="btn btn-outline-secondary{$key==$article['type']?' active':''}">
-                            <input type="radio" name="type" value="{$key}" autocomplete="off" {$key==$article['type']?'checked':''}>{$type}
+                        <label class="btn btn-outline-secondary{$key==($article['type'] & $key)?' active':''}">
+                            <input type="checkbox" name="type[]" value="{$key}" autocomplete="off" {$key==($article['type'] & $key)?'checked':''}>{$type}
                         </label>
                     </volist>
                 </div>

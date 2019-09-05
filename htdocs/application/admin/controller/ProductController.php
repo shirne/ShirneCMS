@@ -4,6 +4,7 @@ namespace app\admin\controller;
 
 
 use app\admin\model\SpecificationsModel;
+use app\common\model\PostageModel;
 use app\common\model\ProductModel;
 use app\common\model\ProductSkuModel;
 use app\admin\validate\ProductSkuValidate;
@@ -21,7 +22,35 @@ use think\Exception;
 class ProductController extends BaseController
 {
 
-    public function search($key='',$cate=0,$brand=0,$type=0){
+    public function search($key='',$cate=0,$brand=0,$type=0, $searchtype=''){
+        if($searchtype == 'sku'){
+            return $this->searchSku($key,$cate,$brand,$type);
+        }
+        return $this->searchProduct($key,$cate,$brand,$type);
+    }
+    
+    private function searchSku($key='',$cate=0,$brand=0,$type=0){
+        $model=Db::view('productSku','sku_id,goods_no as sku_goods_no,price')
+            ->view('product','id,title,image,min_price,max_price,goods_no,create_time','product.id=productSku.sku_id')
+            ->where('product.status',1);
+        if(!empty($key)){
+            $model->where('product.id|product.title|product.vice_title|product.goods_no|productSku.goods_no','like',"%$key%");
+        }
+        if($cate>0){
+            $model->whereIn('product.cate_id',ProductCategoryFacade::getSubCateIds($cate));
+        }
+        if($brand>0){
+            $model->where('product.brand_id',intval($brand));
+        }
+        if(!empty($type)){
+            $model->where('product.type',$type);
+        }
+        
+        $lists=$model->order('product.id ASC,productSku.sku_id ASC')->limit(10)->select();
+        return json(['data'=>$lists,'code'=>1]);
+    }
+    
+    private function searchProduct($key='',$cate=0,$brand=0,$type=0){
         $model=Db::name('product')
             ->where('status',1);
         if(!empty($key)){
@@ -36,7 +65,7 @@ class ProductController extends BaseController
         if(!empty($type)){
             $model->where('type',$type);
         }
-
+    
         $lists=$model->field('id,title,image,min_price,max_price,goods_no,create_time')
             ->order('id ASC')->limit(10)->select();
         return json(['data'=>$lists,'code'=>1]);
@@ -89,7 +118,36 @@ class ProductController extends BaseController
 
         return $this->fetch();
     }
+    
+    public function set_increment($incre){
+        $this->setAutoIncrement('product',$incre);
+    }
 
+    private function processData($data){
+        $skus=$data['skus'];
+        if(empty($data['levels']))$data['levels']=[];
+        $data['max_price']=array_max($skus,'price');
+        $data['min_price']=array_min($skus,'price');
+        $data['market_price']=array_max($skus,'market_price');
+        $data['storage']=array_sum(array_column($skus,'storage'));
+        if(!empty($data['prop_data'])){
+            $data['prop_data']=array_combine($data['prop_data']['keys'],$data['prop_data']['values']);
+        }else{
+            $data['prop_data']=[];
+        }
+        if($data['is_commission'] == 3){
+            $data['commission_percent']=$data['commission_amount'];
+        }elseif($data['is_commission']==4){
+            $data['commission_percent']=$data['commission_levels'];
+        }
+        unset($data['commission_amount']);
+        unset($data['commission_levels']);
+        if($data['is_commission'] < 2){
+            unset($data['commission_percent']);
+        }
+        return $data;
+    }
+    
     /**
      * 添加
      * @param int $cid
@@ -128,16 +186,8 @@ class ProductController extends BaseController
                 }
                 unset($data['delete_image']);
                 $data['user_id'] = $this->mid;
+                $data = $this->processData($data);
                 $skus=$data['skus'];
-                $data['max_price']=array_max($skus,'price');
-                $data['min_price']=array_min($skus,'price');
-                $data['storage']=array_sum(array_column($skus,'storage'));
-                if(empty($data['levels']))$data['levels']=[];
-                if(!empty($data['prop_data'])){
-                    $data['prop_data']=array_combine($data['prop_data']['keys'],$data['prop_data']['values']);
-                }else{
-                    $data['prop_data']=[];
-                }
                 unset($data['skus']);
                 $model=ProductModel::create($data);
                 if ($model['id']) {
@@ -155,12 +205,18 @@ class ProductController extends BaseController
             }
         }
         $model=array('type'=>1,'status'=>1,'cate_id'=>$cid,'is_discount'=>1,'is_commission'=>1);
+        
+        $levels=getMemberLevels();
         $this->assign("category",ProductCategoryFacade::getCategories());
         $this->assign("brands",ProductCategoryFacade::getBrands(0));
         $this->assign('product',$model);
         $this->assign('skus',[[]]);
-        $this->assign('levels',getMemberLevels());
+        $this->assign('levels',$levels);
+        $this->assign('price_levels',array_filter($levels,function($item){
+            return $item['diy_price']==1;
+        }));
         $this->assign('types',getProductTypes());
+        $this->assign('postages',PostageModel::getCacheData());
         $this->assign('id',0);
         return $this->fetch('edit');
     }
@@ -207,14 +263,9 @@ class ProductController extends BaseController
                 }
                 $model=ProductModel::get($id);
                 $skus=$data['skus'];
-                if(!empty($data['prop_data'])){
-                    $data['prop_data']=array_combine($data['prop_data']['keys'],$data['prop_data']['values']);
-                }else{
-                    $data['prop_data']=[];
-                }
-                $data['max_price']=array_max($skus,'price');
-                $data['min_price']=array_min($skus,'price');
-                $data['storage']=array_sum(array_column($skus,'storage'));
+    
+                $data = $this->processData($data);
+                
                 if ($model->allowField(true)->save($data)) {
                     //不删除图片，可能会导致订单数据图片不显示
                     //delete_image($delete_images);
@@ -245,12 +296,17 @@ class ProductController extends BaseController
         }
         $skuModel=new ProductSkuModel();
         $skus=$skuModel->where('product_id',$id)->select();
+        $levels = getMemberLevels();
         $this->assign("category",ProductCategoryFacade::getCategories());
         $this->assign("brands",ProductCategoryFacade::getBrands(0));
-        $this->assign('levels',getMemberLevels());
+        $this->assign('levels',$levels);
+        $this->assign('price_levels',array_filter($levels,function($item){
+            return $item['diy_price']==1;
+        }));
         $this->assign('product',$model);
         $this->assign('skus',$skus->isEmpty()?[[]]:$skus);
         $this->assign('types',getProductTypes());
+        $this->assign('postages',PostageModel::getCacheData());
         $this->assign('id',$id);
         return $this->fetch();
     }
@@ -310,12 +366,12 @@ class ProductController extends BaseController
         $result = Db::name('product')->where('id','in',idArr($id))->update($data);
         if ($result && $data['status'] === 1) {
             user_log($this->mid,'pushproduct',1,'上架商品 '.$id ,'manager');
-            $this -> success("上架成功", url('Product/index'));
+            $this->success("上架成功", url('Product/index'));
         } elseif ($result && $data['status'] === 0) {
             user_log($this->mid,'cancelproduct',1,'下架商品 '.$id ,'manager');
-            $this -> success("下架成功", url('Product/index'));
+            $this->success("下架成功", url('Product/index'));
         } else {
-            $this -> error("操作失败");
+            $this->error("操作失败");
         }
     }
 

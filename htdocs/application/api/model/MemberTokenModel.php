@@ -2,7 +2,7 @@
 
 namespace app\api\model;
 
-use app\common\model\BaseModel;
+use app\common\core\BaseModel;
 use think\facade\Log;
 
 /**
@@ -13,10 +13,17 @@ class MemberTokenModel extends BaseModel
 {
     protected $pk='token_id';
     private $hash='sw4GomU4LXvYqcaLctXCLK43eRcob';
-    private $expire=720;
+    private $expire=1800;
 
     protected $autoWriteTimestamp = true;
-
+    
+    public function __construct($data = [])
+    {
+        parent::__construct($data);
+        $config_expire = config('app.token_expire');
+        if($config_expire)$this->expire = $config_expire;
+    }
+    
     protected function getToken($memid,$hash=''){
         if(empty($hash))$hash=$this->hash;
         return md5($hash.date('YmdHis').microtime().str_pad($memid,11));
@@ -37,35 +44,42 @@ class MemberTokenModel extends BaseModel
         );
         if(!$response){
             $token['member_id']=$data['member_id'];
+            $token['platform']=$data['platform'];
+            $token['appid']=$data['appid'];
             $token['create_time']=$data['create_time'];
             $token['update_time']=$data['update_time'];
         }
         return $token;
     }
-    public function findToken($token){
+    public function findToken($token, $response=false){
         $token=$this->where('token',$token)->find();
         if(empty($token)){
             return false;
         }
-        return $this->mapToken($token,false);
+        return $this->mapToken($token,$response);
     }
-    public function createToken($member_id){
-        $token=$this->where('member_id',$member_id)->find();
+    public function createToken($member_id,$platform='app', $appid=''){
+        $token=$this->where('member_id',$member_id)
+            ->where('platform',$platform)
+            ->where('appid',$appid)
+            ->find();
         $data=array(
             'token'=>$this->getToken($member_id),
             'expire_in'=>$this->expire
         );
         $data['refresh_token']=$this->getToken($member_id,str_shuffle($data['token']));
         if(empty($token)){
+            $data['platform']=$platform;
+            $data['appid']=$appid;
             $data['member_id']=$member_id;
             $added=static::create($data);
             if(!$added['token_id']){
                 Log::record('Token insert error:'.$this->getError());
             }
         }else{
-            static::update($data,['member_id'=>$member_id]);
+            static::update($data,['member_id'=>$member_id,'platform'=>$platform,'appid'=>$appid]);
         }
-        return $this->mapToken($this->where('member_id',$member_id)->find(),true);
+        return $this->findToken($data['token'],true);
     }
     public function refreshToken($refresh){
         $token=$this->where('refresh_token',$refresh)->find();
@@ -81,6 +95,6 @@ class MemberTokenModel extends BaseModel
 
         static::update($data,['member_id'=>$token['member_id']]);
 
-        return $this->mapToken($this->where('member_id',$token['member_id'])->find());
+        return $this->findToken($data['token'],true);
     }
 }

@@ -3,7 +3,7 @@
 namespace app\admin\validate;
 
 
-use app\common\validate\BaseUniqueValidate;
+use app\common\core\BaseUniqueValidate;
 
 /**
  * 商品规格数据验证

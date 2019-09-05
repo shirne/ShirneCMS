@@ -3,7 +3,7 @@
 namespace app\admin\controller;
 
 
-use app\admin\model\NoticeModel;
+use app\common\model\NoticeModel;
 use app\admin\validate\NoticeValidate;
 use think\Db;
 

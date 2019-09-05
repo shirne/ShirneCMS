@@ -15,11 +15,12 @@
 	<div class="page-header">管理员权限</div>
 	<div id="page-content">
 <form action="{:url('manager/permision',array('id'=>$model['manager_id']))}" class="form-horizontal" method="post">
+	<div class="text-muted">已禁用的权限需要先在角色管理中启用</div>
 	<div class="card">
 		<div class="card-header">全局权限</div>
 		<div class="card-body">
-			<label><input type="checkbox" name="global[]" value="edit" <if condition="in_array('edit',$model['global'])">checked</if> />&nbsp;编辑</label>
-			<label><input type="checkbox" name="global[]" value="del" <if condition="in_array('del',$model['global'])">checked</if> />&nbsp;删除</label>
+			<label><input type="checkbox" name="global[]" value="edit" {$role->hasGlobalPerm('edit')?'':'disabled'} <if condition="in_array('edit',$model['global']) ">checked</if> />&nbsp;编辑</label>
+			<label><input type="checkbox" name="global[]" value="del" {$role->hasGlobalPerm('del')?'':'disabled'} <if condition="in_array('del',$model['global'])">checked</if> />&nbsp;删除</label>
 		</div>
 	</div>
 	<div class="card mt-4 mb-4">
@@ -32,7 +33,7 @@
 				<label class="col-2"><input type="checkbox" onclick="checkline(this)" />&nbsp;{$perm.title}</label>
 				<div class="col-10">
 					<foreach name="perm.items" item="item" key="k">
-						<label title="{$item}"><input type="checkbox" name="detail[]" value="{$key}_{$k}" <if condition="in_array($key.'_'.$k,$model['detail'])">checked</if> />&nbsp;{$item}</label>
+						<label title="{$item}"><input type="checkbox" name="detail[]" {$role->hasPerm($key.'_'.$k)?'':'disabled'} value="{$key}_{$k}" <if condition="in_array($key.'_'.$k,$model['detail'])">checked</if> />&nbsp;{$item}</label>
 					</foreach>
 				</div>
 				</div>
@@ -54,19 +55,19 @@
 <script type="text/javascript">
 function checkall(src){
 	var checked=$(src).is(':checked');
-	$('[name^=global]').prop('checked',checked);
-	$('[name^=detail]').prop('checked',checked);
-	$('[onclick^=checkline]').prop('checked',checked);
+	$('[name^=global]:not(:disabled)').prop('checked',checked);
+	$('[name^=detail]:not(:disabled)').prop('checked',checked);
+	$('[name^=checkline]:not(:disabled)').prop('checked',checked);
 }
 function checkline(src){
 	var checked=$(src).is(':checked');
-	$(src).parents('li').find('[name^=detail]').prop('checked',checked);
+	$(src).parents('li').find('[name^=detail]:not(:disabled)').prop('checked',checked);
 }
 $('input[name^=detail]').click(function(){
 	var row=$(this).parents('li.list-group-item');
 	var p=row.find('div.col-10');
 	if(p.find(':checked').length==p.find('input').length){
-		row.find('label.col-2 input').prop('checked',true);
+		row.find('label.col-2 input:not(:disabled)').prop('checked',true);
 	}else{
 		row.find('label.col-2 input').prop('checked',false);
 	}
@@ -76,7 +77,7 @@ jQuery(function(){
 		var row=$(this);
 		var p=row.find('div.col-10');
 		if(p.find(':checked').length==p.find('input').length){
-			row.find('label.col-2 input').prop('checked',true);
+			row.find('label.col-2 input:not(:disabled)').prop('checked',true);
 		}else{
 			row.find('label.col-2 input').prop('checked',false);
 		}

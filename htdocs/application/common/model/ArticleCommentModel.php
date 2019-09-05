@@ -1,13 +1,9 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: shirne
- * Date: 2018/5/5
- * Time: 9:33
- */
 
 namespace app\common\model;
 
+
+use app\common\core\BaseModel;
 
 class ArticleCommentModel extends BaseModel
 {

@@ -1,6 +1,7 @@
 <?php
 namespace app\common\model;
 
+use app\common\core\BaseModel;
 use think\Db;
 
 /**
@@ -38,17 +39,27 @@ class SettingModel extends BaseModel
             foreach (self::$settings as $set) {
                 if (empty($set['group'])) $set['group'] = 'common';
                 if (!isset($return[$set['group']])) $return[$set['group']] = array();
-                if($parse && $set['type']=='check') {
-                    $set['value'] = @unserialize($set['value']);
-                    if(empty($set['value']))$set['value']=array();
+                if($parse) {
+                    if ($set['type'] == 'check') {
+                        $set['value'] = @unserialize($set['value']);
+                        if (empty($set['value'])) $set['value'] = array();
+                    }
+                    if ($set['type'] == 'json' || $set['type'] == 'array') {
+                        $set['value'] = self::parse_value($set['value']);
+                    }
                 }
                 $return[$set['group']][$set['key']] = $all ? $set : $set['value'];
             }
         } else {
             foreach (self::$settings as $set) {
-                if($parse && $set['type']=='check') {
-                    $set['value'] = @unserialize($set['value']);
-                    if(empty($set['value']))$set['value']=array();
+                if($parse) {
+                    if ($set['type'] == 'check') {
+                        $set['value'] = @unserialize($set['value']);
+                        if (empty($set['value'])) $set['value'] = array();
+                    }
+                    if ($set['type'] == 'json' || $set['type'] == 'array') {
+                        $set['value'] = self::parse_value($set['value']);
+                    }
                 }
                 $return[$set['key']] = $all ? $set : $set['value'];
             }
@@ -122,6 +133,20 @@ class SettingModel extends BaseModel
         }
         self::clearCache();
         return true;
+    }
+
+    private static function parse_value($val)
+    {
+        if(!empty($val) && !is_array($val)){
+            $arr = json_decode($val,true);
+            if(!empty($arr))return $arr;
+        }
+        return [];
+    }
+
+    private static function serialize_value($val)
+    {
+        return json_encode($val,JSON_UNESCAPED_UNICODE);
     }
 
     /**

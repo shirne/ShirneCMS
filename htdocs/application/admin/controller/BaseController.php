@@ -124,6 +124,29 @@ class BaseController extends Controller {
         }
         return false;
     }
+    
+    protected function setAutoIncrement($table, $incre){
+        $incre = intval($incre);
+        if($incre<1){
+            $this->error('起始id必须大于1');
+        }
+        $maxid = Db::name($table)->max('id');
+        if($incre<$maxid){
+            $this->error('起始id必须大于当前数据的最大id :'.$maxid);
+        }
+    
+        try {
+            $succed = Db::execute('ALTER TABLE ' . config('database.prefix').$table . ' AUTO_INCREMENT = ' . intval($incre));
+        }catch(Exception $e){
+            $this->error($e->getMessage());
+        }
+        if($succed){
+            user_log($this->mid,'set_increment',1,'设置['.$table.']起始id'.$incre,'manager');
+            $this->success('设置成功');
+        }else{
+            $this->error('设置失败');
+        }
+    }
 
     /**
      * 兼容ajax的数据注册
@@ -157,7 +180,7 @@ class BaseController extends Controller {
     protected function fetch($template = '', $vars = [], $config = [])
     {
         if($this->request->isAjax()){
-            $this->result($this->viewData);
+            $this->result($this->viewData,1);
         }
 
         return $this->view->fetch($template, $vars, $config);

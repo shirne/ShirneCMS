@@ -1,8 +1,10 @@
 <?php
 
 namespace app\admin\controller;
+
 use app\admin\validate\ProductCouponValidate;
 use app\common\facade\ProductCategoryFacade;
+use app\common\model\ProductCouponModel;
 use think\Db;
 
 /**
@@ -18,11 +20,15 @@ class ProductCouponController extends BaseController
      * @return mixed
      */
     public function index($key=''){
-        $model = Db::name('ProductCoupon');
+        $model = Db::view('productCoupon','*')
+            ->view('productCategory',['title'=>'category_title'],'productCategory.id=productCoupon.cate_id','left')
+            ->view('productBrand',['title'=>'brand_title'],'productBrand.id=productCoupon.brand_id','left')
+            ->view('product',['title'=>'product_title'],'product.id=productCoupon.product_id','left')
+            ->view('productSku','goods_no','productSku.sku_id=productCoupon.sku_id','left');
         if(!empty($key)){
-            $model->whereLike('title|flag',"%$key%");
+            $model->whereLike('productCoupon.title|productCategory.title|productBrand.title|product.title|productSku.goods_no',"%$key%");
         }
-        $lists=$model->order('id DESC')->paginate(15);
+        $lists=$model->order('productCoupon.id DESC')->paginate(15);
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
         return $this->fetch();
@@ -40,7 +46,8 @@ class ProductCouponController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             }else{
-                if (Db::name("ProductCoupon")->insert($data)) {
+                $model=ProductCouponModel::create($data);
+                if ($model['id']) {
                     $this->success(lang('Add success!'), url('productCoupon/index'));
                 } else {
                     $this->error(lang('Add failed!'));
@@ -49,6 +56,7 @@ class ProductCouponController extends BaseController
         }
         $model=array('status'=>1,'type'=>1,'bind_type'=>0,'expiry_type'=>1);
         $this->assign('model',$model);
+        $this->assign('levels',getMemberLevels());
         $this->assign("category",ProductCategoryFacade::getCategories());
         $this->assign('id',0);
         return $this->fetch('update');
@@ -56,12 +64,13 @@ class ProductCouponController extends BaseController
 
     /**
      * 修改
-     * @param $id
+     * @param int $id
      * @return string
      */
     public function update($id)
     {
         $id = intval($id);
+        $model = ProductCouponModel::get($id);
 
         if ($this->request->isPost()) {
             $data=$this->request->post();
@@ -70,10 +79,8 @@ class ProductCouponController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             }else{
-                $model = Db::name("ProductCoupon");
 
-                $data['id']=$id;
-                if ($model->update($data)) {
+                if ($model->save($data)) {
                     $this->success(lang('Update success!'), url('productCoupon/index'));
                 } else {
                     $this->error(lang('Update failed!'));
@@ -81,7 +88,6 @@ class ProductCouponController extends BaseController
             }
         }
 
-        $model = Db::name('ProductCoupon')->where('id', $id)->find();
         if(empty($model)){
             $this->error('优惠券不存在');
         }
@@ -104,6 +110,9 @@ class ProductCouponController extends BaseController
         }
         $this->assign('sku',$sku);
         $this->assign('id',$id);
+        $this->assign('model',$model);
+        $this->assign("category",ProductCategoryFacade::getCategories());
+        $this->assign('levels',getMemberLevels());
         return $this->fetch();
 
     }

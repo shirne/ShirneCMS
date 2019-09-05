@@ -3,7 +3,7 @@
 namespace app\admin\validate;
 
 
-use app\common\validate\BaseUniqueValidate;
+use app\common\core\BaseUniqueValidate;
 
 /**
  * 管理员资料验证
@@ -16,7 +16,8 @@ class ManagerValidate extends BaseUniqueValidate
         'username'=>'require|unique:manager,%id%',
         'email'=>'email|unique:manager,%id%',
         'mobile'=>'mobile|unique:manager,%id%',
-        'password'=>'require|min:6'
+        'password'=>'require|min:6',
+        'type'=>'require|min:1'
     );
 
     protected $message   = array(
@@ -28,6 +29,7 @@ class ManagerValidate extends BaseUniqueValidate
         'mobile.unique' => '手机号码已存在',
         'password.require' => '手机号码格式错误',
         'password.min' => '手机号码已存在',
+        'type' => '请设置管理员角色',
     );
 
     protected $scene = array(

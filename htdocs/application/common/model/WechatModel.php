@@ -2,6 +2,9 @@
 
 namespace app\common\model;
 
+use app\common\core\BaseModel;
+use EasyWeChat\Factory;
+
 /**
  * Class WechatModel
  * @package app\common\model
@@ -24,6 +27,30 @@ class WechatModel extends BaseModel
 
     public function toConfig(){
         return self::to_config($this);
+    }
+    
+    public static function createApp($wechat){
+    
+        $options=self::to_config($wechat);
+    
+        switch ($wechat['account_type']) {
+            case 'wechat':
+            case 'subscribe':
+            case 'service':
+                return Factory::officialAccount($options);
+                break;
+            case 'miniprogram':
+            case 'minigame':
+                return Factory::miniProgram($options);
+                break;
+            case 'platform':
+                return Factory::openPlatform($options);
+                break;
+            default:
+                
+                break;
+        }
+        return null;
     }
 
     public static function to_pay_config($data,$notify='', $useCert=false){

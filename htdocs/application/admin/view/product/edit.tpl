@@ -66,12 +66,12 @@
                     </if>
                 </div>
             </div>
-            <div class="col-4">
+            <div class="col-5">
                 <div class="card form-group">
                     <div class="card-header">商品属性</div>
                     <div class="card-body">
                         <div class="form-row">
-                            <label class="col-3">是否发布</label>
+                            <label style="width: 80px;">是否发布</label>
                             <div class="form-group col">
                                 <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
                                     <label class="btn btn-outline-secondary{$product['status']=='1'?' active':''}">
@@ -84,19 +84,31 @@
                             </div>
                         </div>
                         <div class="form-row">
-                            <label class="col-3">商品类型</label>
+                            <label style="width: 80px;">商品类型</label>
                             <div class="form-group col">
-                                <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
-                                    <volist name="types" id="type" key="k">
+                                <div class="btn-group btn-group-toggle btn-group-sm type-groups" data-toggle="buttons">
+                                    <foreach name="types" id="type" key="k">
                                         <label class="btn btn-outline-secondary{$k==$product['type']?' active':''}">
                                             <input type="radio" name="type" value="{$k}" autocomplete="off" {$k==$product['type']?'checked':''}>{$type}
+                                        </label>
+                                    </foreach>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row type_level">
+                            <label style="width: 80px;">&nbsp;</label>
+                            <div class="form-group col">
+                                <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
+                                    <volist name="levels" id="lv" key="k">
+                                        <label class="btn btn-outline-secondary{$k==$product['level_id']?' active':''}">
+                                            <input type="radio" name="level_id" value="{$k}" autocomplete="off" {$k==$product['level_id']?'checked':''}>{$lv.level_name}
                                         </label>
                                     </volist>
                                 </div>
                             </div>
                         </div>
                         <div class="form-row">
-                            <label class="col-3">支持折扣</label>
+                            <label style="width: 80px;">支持折扣</label>
                             <div class="form-group col">
                                 <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
                                     <label class="btn btn-outline-secondary{$product['is_discount']==1?' active':''}">
@@ -109,14 +121,20 @@
                             </div>
                         </div>
                         <div class="form-row">
-                            <label class="col-3">支持分佣</label>
+                            <label style="width: 80px;">支持分佣</label>
                             <div class="form-group col">
                                 <div class="btn-group btn-group-toggle btn-group-sm commision-groups" data-toggle="buttons">
                                     <label class="btn btn-outline-secondary{$product['is_commission']==1?' active':''}">
                                         <input type="radio" name="is_commission" value="1" autocomplete="off" {$product['is_commission']==1?'checked':''}>支持
                                     </label>
                                     <label class="btn btn-outline-secondary{$product['is_commission']==2?' active':''}">
-                                        <input type="radio" name="is_commission" value="2" autocomplete="off" {$product['is_commission']==2?'checked':''}>独立分佣
+                                        <input type="radio" name="is_commission" value="2" autocomplete="off" {$product['is_commission']==2?'checked':''}>设置比例
+                                    </label>
+                                    <label class="btn btn-outline-secondary{$product['is_commission']==3?' active':''}">
+                                        <input type="radio" name="is_commission" value="3" autocomplete="off" {$product['is_commission']==3?'checked':''}>设置金额
+                                    </label>
+                                    <label class="btn btn-outline-secondary{$product['is_commission']==4?' active':''}">
+                                        <input type="radio" name="is_commission" value="4" autocomplete="off" {$product['is_commission']==4?'checked':''}>详细设置
                                     </label>
                                     <label class="btn btn-outline-secondary{$product['is_commission']==0?' active':''}">
                                         <input type="radio" name="is_commission" value="0" autocomplete="off" {$product['is_commission']==0?'checked':''}>不支持
@@ -124,17 +142,17 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-row commission_box">
-                            <label class="col-3">独立分佣比例</label>
+
+                        <php>$layercounts = array_column($levels,'commission_layer');$layercount = max($layercounts);</php>
+                        <div class="form-row commission_box cbox2">
                             <div class="form-group col">
-                                <php>$layercounts = array_column($levels,'commission_layer');$layercount = max($layercounts);</php>
                                 <for start="0" end="$layercount">
-                                    <div class="input-group col">
+                                    <div class="input-group mb-2 col">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">第 {$i+1} 代</span>
                                         </div>
                                         <input type="text" name="commission_percent[{$i}]"
-                                               value="{$product['commission_percent'][$i]}"
+                                               value="{$product['commission_percent'][$i]|ignore_array}"
                                                class="form-control"/>
                                         <div class="input-group-append">
                                             <span class="input-group-text">%</span>
@@ -143,8 +161,42 @@
                                 </for>
                             </div>
                         </div>
+                        <div class="form-row commission_box cbox3">
+                            <div class="form-group col">
+                                <for start="0" end="$layercount">
+                                    <div class="input-group mb-2 col">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">第 {$i+1} 代</span>
+                                        </div>
+                                        <input type="text" name="commission_amount[{$i}]"
+                                               value="{$product['commission_percent'][$i]|ignore_array}"
+                                               class="form-control"/>
+                                    </div>
+                                </for>
+                            </div>
+                        </div>
+                        <div class="form-row commission_box cbox4">
+                            <div class="form-group col">
+                                <volist name="levels" id="lv" key="k">
+                                <div class="input-group mb-2 col">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">{$lv.level_name}</span>
+                                    </div>
+                                    <for start="0" end="$layercount">
+                                            <input type="text" name="commission_levels[{$k}][{$i}]"
+                                                   value="{$product['commission_percent'][$k][$i]?:''}"
+                                                   class="form-control"/>
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">/</span>
+                                            </div>
+                                    </for>
+                                </div>
+                                </volist>
+                            </div>
+                        </div>
+                        <div class="commission_desc mb-2 text-muted">此处佣金层级按会员组设置的最大层级，不需要分佣的层级填写0即可，如需增加分级，先在会员组中设置一个最大值</div>
                         <div class="form-row">
-                            <label class="col-3">限制购买</label>
+                            <label style="width: 80px;">限制购买</label>
                             <div class="form-group col">
                                 <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
                                     <volist name="levels" id="lv" key="k">
@@ -153,6 +205,23 @@
                                         </label>
                                     </volist>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <label style="width: 80px;">运费设置</label>
+                            <div class="form-group col">
+                                <select class="form-control form-control-sm" name="postage_id" >
+                                    <option value="0">免运费</option>
+                                    <volist name="postages" id="pos" key="k">
+                                        <php>
+                                            $selected='';
+                                            if(($product['id']==0 && $pos['is_default']) || $product['postage_id']==$pos['id']){
+                                                $selected='selected';
+                                            }
+                                        </php>
+                                        <option value="{$pos.id}" {$selected}>{$pos.title}{$pos['is_default']?'(默认)':''}</option>
+                                    </volist>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -201,6 +270,7 @@
                     <th scope="col">规格图片</th>
                     <th scope="col">重量(克)&nbsp;<a class="batch-set" title="批量设置" href="javascript:" data-field="weight"><i class="ion-md-create"></i> </a> </th>
                     <th scope="col">销售价&nbsp;<a class="batch-set" title="批量设置" href="javascript:" data-field="price"><i class="ion-md-create"></i> </a></th>
+                    <th scope="col">独立价&nbsp;<a class="batch-set" title="批量设置" href="javascript:" data-field="ext_price"><i class="ion-md-create"></i> </a></th>
                     <th scope="col">市场价&nbsp;<a class="batch-set" title="批量设置" href="javascript:" data-field="market_price"><i class="ion-md-create"></i> </a></th>
                     <th scope="col">成本价&nbsp;<a class="batch-set" title="批量设置" href="javascript:" data-field="cost_price"><i class="ion-md-create"></i> </a></th>
                     <th scope="col">库存&nbsp;<a class="batch-set" title="批量设置" href="javascript:" data-field="storage"><i class="ion-md-create"></i> </a></th>
@@ -217,9 +287,18 @@
                             <input type="hidden" class="field-sku_id" name="skus[{$k}][sku_id]" value="{$sku.sku_id}"/>
                             <input type="text" class="form-control field-goods_no" name="skus[{$k}][goods_no]" value="{$sku.goods_no}">
                         </td>
-                        <td><input type="hidden" class="field-sku_id" name="skus[{$k}][image]" value="{$sku.image}"/><img class="imgupload" src="{$sku.image|default='/static/images/noimage.png'}" /> </td>
+                        <td><input type="hidden" class="field-sku_id" name="skus[{$k}][image]" value="{$sku.image}"/><img class="imgupload rounded" src="{$sku.image|default='/static/images/noimage.png'}" /> </td>
                         <td><input type="text" class="form-control field-weight" name="skus[{$k}][weight]" value="{$sku.weight}"> </td>
                         <td><input type="text" class="form-control field-price" name="skus[{$k}][price]" value="{$sku.price}"> </td>
+                        <td>
+                            <if condition="!empty($price_levels)">
+                                <foreach name="price_levels" id="plv">
+                                    <div class="input-group input-group-sm"><span class="input-group-prepend"><span class="input-group-text">{$plv.level_name}</span></span><input type="text" class="form-control field-ext_price" data-level_id="{$plv.level_id}" name="skus[{$k}][ext_price][{$plv.level_id}]" value="{$sku['ext_price'][$plv['level_id']]?:''}"></div>
+                                </foreach>
+                                <else/>
+                                -
+                            </if>
+                        </td>
                         <td><input type="text" class="form-control field-market_price" name="skus[{$k}][market_price]" value="{$sku.market_price}"> </td>
                         <td><input type="text" class="form-control field-cost_price" name="skus[{$k}][cost_price]" value="{$sku.cost_price}"> </td>
                         <td><input type="text" class="form-control field-storage" name="skus[{$k}][storage]" value="{$sku.storage}"> </td>
@@ -259,6 +338,7 @@
         var rows=null;
         var isready=false;
         var goods_no=$('[name=goods_no]').val();
+        var diy_levels=JSON.parse('{$price_levels|array_values|json_encode|raw}');
         var skus=JSON.parse('{$skus|json_encode|raw}');
 
         function setSpecs(specids) {
@@ -346,12 +426,21 @@
                     goods_no: '',
                     weight: '',
                     price: '',
+                    ext_price: {},
                     market_price: '',
                     cost_price: '',
                     storage: ''
                 };
                 for(var i in sku){
-                    sku[i]=$(this).find('.field-'+i).val();
+                    if(i=='ext_price'){
+                        var ext_prices=$(this).find('.field-' + i);
+                        ext_prices.each(function () {
+                            var lid=$(this).data('level_id')
+                            sku[i][lid]=$(this).val()
+                        })
+                    }else {
+                        sku[i] = $(this).find('.field-' + i).val();
+                    }
                 }
                 sku.specs={};
                 var speccells=$(this).find('.spec-val');
@@ -361,6 +450,8 @@
                 skus.push(sku);
             });
         }
+
+        var diytpl='';
         function resetSkus(){
             if(!isready)return;
             var nrows=[],specrows=$('.spec-groups .spec-row');
@@ -377,6 +468,17 @@
                 }
                 spec_datas.push(datas);
             }
+            if(!diytpl){
+                if(diy_levels && diy_levels.length>0) {
+                    var diyarr = [];
+                    for (i = 0; i < diy_levels.length; i++) {
+                        diyarr.push('<div class="input-group input-group-sm"><span class="input-group-prepend"><span class="input-group-text">'+diy_levels[i].level_name+'</span></span><input type="text" class="form-control field-ext_price" data-level_id="'+diy_levels[i].level_id+'" name="skus[{@i}][ext_price]['+diy_levels[i].level_id+']" value="{@ext_price.'+diy_levels[i].level_id+'}"></div>');
+                    }
+                    diytpl = diyarr.join("\n");
+                }else{
+                    diytpl = ' - ';
+                }
+            }
 
             var rowhtml='<tr data-idx="{@i}">\n' +
                 '   {@specs}\n' +
@@ -384,9 +486,10 @@
                 '       <input type="hidden" class="field-sku_id" name="skus[{@i}][sku_id]" value="{@sku_id}"/>\n'+
                 '       <input type="text" class="form-control field-goods_no" name="skus[{@i}][goods_no]" value="{@goods_no}">\n' +
                 '   </td>\n' +
-                '   <td><input type="hidden" class="field-image" name="skus[{@i}][image]" value="{@image}"/><img class="imgupload" src="{@image|default=/static/images/noimage.png}" /></td>\n' +
+                '   <td><input type="hidden" class="field-image" name="skus[{@i}][image]" value="{@image}"/><img class="imgupload rounded" src="{@image|default=/static/images/noimage.png}" /></td>\n' +
                 '   <td><input type="text" class="form-control field-weight" name="skus[{@i}][weight]" value="{@weight}"> </td>\n' +
                 '   <td><input type="text" class="form-control field-price" name="skus[{@i}][price]" value="{@price}"> </td>\n' +
+                '   <td>' + diytpl + '</td>\n' +
                 '   <td><input type="text" class="form-control field-market_price" name="skus[{@i}][market_price]" value="{@market_price}"> </td>\n' +
                 '   <td><input type="text" class="form-control field-cost_price" name="skus[{@i}][cost_price]" value="{@cost_price}"> </td>\n' +
                 '   <td><input type="text" class="form-control field-storage" name="skus[{@i}][storage]" value="{@storage}"> </td>\n' +
@@ -426,6 +529,7 @@
                         image: skus[i].image,
                         weight: skus[i].weight,
                         price: skus[i].price,
+                        ext_price: skus[i].ext_price,
                         market_price: skus[i].market_price,
                         cost_price: skus[i].cost_price,
                         storage: skus[i].storage
@@ -438,6 +542,7 @@
                 goods_no: '',
                 weight: '',
                 price: '',
+                ext_price: {},
                 market_price: '',
                 cost_price: '',
                 storage: ''
@@ -535,20 +640,43 @@
         });
         $('.batch-set').click(function (e) {
             var field=$(this).data('field');
-            dialog.prompt('请输入要设置的数据',function(val) {
-                if(field==='goods_no'){
-                    if(!val){
+            var message='请输入要设置的数据';
+            if(field === 'ext_price'){
+                message={
+                    title:message,
+                    multi:{}
+                }
+                for(var i=0;i<diy_levels.length;i++){
+                    message.multi[diy_levels[i].level_id]=diy_levels[i].level_name;
+                }
+            }
+            dialog.prompt(message,function(val) {
+                if(field==='goods_no') {
+                    if (!val) {
                         dialog.warning('请填写货号');
                         return false;
                     }
-                    if(!goods_no){
-                        goods_no=val;
+                    if (!goods_no) {
+                        goods_no = val;
                         $('[name=goods_no]').val(val);
                     }
                     $('.spec-table tbody .field-' + field).each(function () {
                         //console.log(this)
-                        var row=$(this).parents('tr');
-                        $(this).val(val+'_'+row.data('idx'));
+                        var row = $(this).parents('tr');
+                        $(this).val(val + '_' + row.data('idx'));
+                    })
+                }else if(field==='ext_price'){
+                    for(var k in val){
+                        val[k]=parseFloat(val[k]);
+                        if(isNaN(val[k])){
+                            dialog.warning('请填写数值');
+                            return false;
+                        }
+                    }
+                    var extputs=$('.spec-table tbody .field-' + field);
+                    extputs.each(function () {
+                        var key=$(this).data('level_id')
+                        $(this).val(val[key])
                     })
                 }else {
                     val=parseFloat(val);
@@ -602,10 +730,18 @@
         });
         $('.commision-groups label').click(function () {
             var val=$(this).find('input').val();
-            if(val==2){
-                $('.commission_box').show();
+            $('.commission_desc,.commission_box').hide();
+            if(val>1){
+                $('.commission_desc,.commission_box.cbox'+val).show();
+            }
+        }).filter('.active').trigger('click');
+
+        $('.type-groups label').click(function () {
+            var val=$(this).find('input').val();
+            if(val>2){
+                $('.type_level').show();
             }else{
-                $('.commission_box').hide();
+                $('.type_level').hide();
             }
         }).filter('.active').trigger('click');
         isready=true;

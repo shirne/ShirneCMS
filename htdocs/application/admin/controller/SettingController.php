@@ -23,13 +23,24 @@ class SettingController extends BaseController
         if($this->request->isPost()){
             $this->checkPermision("setting_update");
             $data=$this->request->post();
-            $settings=getSettings(true,false,true);
+            $settings=getSettings(true,false,false);
             foreach ($data as $k=>$v){
                 if(substr($k,0,2)=='v-'){
                     $key=substr($k,2);
-                    if(is_array($v))$v=serialize($v);
-                    if(isset($settings[$key]) && $settings[$key]['value']!=$v) {
-                        Db::name('setting')->where('key', $key)->update(array('value' => $v));
+                    if(isset($settings[$key])) {
+                        if (is_array($v)) {
+                            if(in_array($settings[$key]['type'],['json','array'])){
+                                if($settings[$key]['type'] == 'array'){
+                                    $v = array_values($v);
+                                }
+                                $v = json_encode($v,JSON_UNESCAPED_UNICODE);
+                            }else {
+                                $v = serialize($v);
+                            }
+                        }
+                        if ($settings[$key]['value'] != $v) {
+                            Db::name('setting')->where('key', $key)->update(array('value' => $v));
+                        }
                     }
                 }
             }

@@ -2,6 +2,7 @@
 
 namespace app\index\controller;
 
+use app\common\model\PostageModel;
 use app\common\model\ProductModel;
 use app\common\facade\ProductCategoryFacade;
 use app\common\model\ProductCommentModel;
@@ -49,9 +50,8 @@ class ProductController extends BaseController
 
         $lists->each(function($item){
             if(!empty($item['prop_data'])){
-                $item['prop_data']=json_decode($item['prop_data'],true);
+                $item['prop_data']=force_json_decode($item['prop_data'],true);
             }
-            $item['prop_data']=[];
             return $item;
         });
 
@@ -64,14 +64,14 @@ class ProductController extends BaseController
     public function view($id){
         $product = ProductModel::get($id);
         if(empty($product)){
-            $this->error('商品不存在');
+            return $this->_empty('商品不存在');
         }
         $this->seo($product['title']);
         $this->category($product['cate_id']);
 
         $this->assign('product', $product);
-        $skuModel=new ProductSkuModel();
-        $this->assign('skus', $skuModel->where('product_id',$product['id'])->select());
+        $this->assign('postage',PostageModel::getDesc($product['postage_id']));
+        $this->assign('skus', ProductSkuModel::where('product_id',$product['id'])->select());
         $this->assign('images',Db::name('ProductImages')->where('product_id',$product['id'])->select());
         return $this->fetch();
     }

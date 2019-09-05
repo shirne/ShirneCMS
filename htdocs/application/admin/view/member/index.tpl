@@ -16,7 +16,8 @@
                     <a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="disable">禁用</a>
                 </div>
                 <a href="{:url('member/statics')}" class="btn btn-outline-info btn-sm mr-2"><i class="ion-md-stats"></i> 会员统计</a>
-                <a href="{:url('member/add')}" class="btn btn-outline-primary btn-sm"><i class="ion-md-add"></i> 添加会员</a>
+                <a href="{:url('member/add')}" class="btn btn-outline-primary btn-sm mr-2"><i class="ion-md-add"></i> 添加会员</a>
+                <a href="javascript:" class="btn btn-outline-warning btn-sm action-btn" data-need-checks="false" data-action="setIncrement"><i class="ion-md-add"></i> 设置起始ID</a>
             </div>
         </div>
         <div class="col col-6">
@@ -49,8 +50,6 @@
                 <th>手机/邮箱</th>
                 <th>余额</th>
                 <th>推荐人</th>
-                <th>注册时间</th>
-                <th>上次登陆</th>
                 <th>代理</th>
                 <th>类型/级别</th>
                 <th width="200">&nbsp;</th>
@@ -61,8 +60,29 @@
         <volist name="lists" id="v" empty="$empty">
             <tr>
                 <td><input type="checkbox" name="id" value="{$v.id}" /></td>
-                <td>{$v.username}
-                    <if condition="$v.status eq 1"><else/><span class="badge badge-danger" >禁用</span></if><br/>{$v.realname}</td>
+                <td>
+                    <div class="media">
+                        <if condition="!empty($v['avatar'])">
+                            <img src="{$v.avatar}" class="mr-2 rounded" width="60"/>
+                        </if>
+                        <div class="media-body">
+                            <h5 class="text-nowrap mt-0 mb-1">
+                                [{$v.id}]
+                                <if condition="!empty($v['nickname'])">
+                                    {$v.nickname}
+                                    <else/>
+                                    {$v.username}
+                                </if>
+                                <if condition="$v.status eq 1"><else/><span class="badge badge-danger" >禁用</span></if>
+                            </h5>
+                            <div style="font-size:12px;">
+                            <if condition="!empty($v['realname'])">真实姓名：{$v.realname}</if>
+                            注册时间：{$v.create_time|showdate}<br/>
+                                上次登陆：{$v.logintime|showdate} <if condition="!empty($v['login_ip'])">[{$v.login_ip}]</if>
+                            </div>
+                        </div>
+                    </div>
+                </td>
                 <td>{$v.mobile}<br />{$v.email}</td>
                 <td>
                     <foreach name="moneyTypes" item="mt" key="k">
@@ -76,14 +96,26 @@
                 </td>
                 <td>
                     <empty name="v.refer_name">
-                        -
+                        <a href="javascript:" data-id="{$v.id}" class="bindreferer">设置</a>
                         <else/>
-                        {$v.refer_name}[{$v.referer}]<br />
-                        {$v.refer_realname}
+                        <div class="media">
+                            <if condition="!empty($v['refer_avatar'])">
+                                <img src="{$v.refer_avatar}" class="mr-2 rounded" width="30"/>
+                            </if>
+                            <div class="media-body">
+                                <h5 class="mt-0 mb-1">
+                                    [{$v.referer}]
+                                    <if condition="!empty($v['refer_nickname'])">
+                                        {$v.refer_nickname}
+                                        <else/>
+                                        {$v.refer_name}
+                                    </if>
+                                </h5>
+                                <div><a href="javascript:" data-id="{$v.id}" class="bindreferer">更换</a></div>
+                            </div>
+                        </div>
                     </empty>
                 </td>
-                <td>{$v.create_time|showdate}</td>
-                <td>{$v.login_ip}<br />{$v.logintime|showdate}</td>
                 <td class="operations">
 
                     <if condition="$v.is_agent neq 0">
@@ -96,7 +128,7 @@
                 </td> 
                 <td>
                     <span class="badge badge-info">{$types[$v['type']]}</span>
-                    <span class="badge badge-info">{$levels[$v['level_id']]['level_name']}</span>
+                    <span class="badge badge-{$levels[$v['level_id']]['style']}">{$levels[$v['level_id']]['level_name']}</span>
                 </td>
                 <td class="operations">
                     <a class="btn btn-outline-primary" title="编辑" href="{:url('member/update',array('id'=>$v['id']))}"><i class="ion-md-create"></i> </a>
@@ -168,6 +200,24 @@
                     });
                 });
             };
+            w.actionSetIncrement=function () {
+                dialog.prompt('请输入新的起始ID',function (input) {
+                    $.ajax({
+                        url:"{:url('member/set_increment',['incre'=>'__INCRE__'])}".replace('__INCRE__',input),
+                        type:'GET',
+                        dataType:'JSON',
+                        success:function(json){
+                            if(json.code==1){
+                                dialog.alert(json.msg,function() {
+                                    location.reload();
+                                });
+                            }else{
+                                dialog.warning(json.msg);
+                            }
+                        }
+                    });
+                })
+            }
         })(window);
         jQuery(function(){
             var tpl=$('#rechargeTpl').text();
@@ -212,6 +262,28 @@
                     }
                 }).show(tpl,'会员充值');
             });
+            $('.bindreferer').click(function (e) {
+                var id=$(this).data('id')
+                dialog.pickUser(function (user) {
+                    $.ajax({
+                        url:"{:url('set_referer')}",
+                        dataType:'json',
+                        data:{
+                            id:id,
+                            referer:user.id
+                        },
+                        success:function (json) {
+                            dialog.alert(json.msg,function () {
+                                if(json.code==1){
+                                    location.reload()
+                                }
+                            })
+
+                        }
+                    })
+                    return false;
+                },{is_agent:1})
+            })
         });
     </script>
 </block>

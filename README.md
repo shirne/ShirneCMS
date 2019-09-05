@@ -10,7 +10,7 @@ ShirneCMS
 [小程序企业官网](https://gitee.com/shirnecn/website_mapp)
 [小程序商城](https://gitee.com/shirnecn/shop_mapp)
 
-## 功能说明
+## 功能特点
 
 本项目侧重于二次开发使用，后台功能在逐步完善。前台功能仅用于功能演示。目前个人及团队的一些订制项目均基于此后台开发。
 * 后台管理员登录验证，基于方法名的全局权限验证系统
@@ -28,10 +28,16 @@ ShirneCMS
 * 微信基本功能接入(自动登录，接口绑定，支付，公众号菜单)
 * API模块采用简单的OAuth模式实现登录授权，微信授权，token刷新等
 
-## 计划功能
+## 功能规划
+
+### 系统功能结构图
+![功能结构图](screenshot/struct.png "功能结构图")
 
 ### 系统基础
 - [x] 后台界面使用标签页(dev_tabs分支)
+- [x] 分类/文章模块
+- [x] 单页模块
+- [ ] 文章模块自定义字段
 
 ### 商城系统
 - [x] 无限级分类
@@ -39,11 +45,15 @@ ShirneCMS
 - [x] 商品规格，分类绑定规格
 - [x] 购物车
 - [x] SKU管理
-- [x] 订单管理……需优化流程
-- [x] 商品品牌p……测试中
-- [x] 优惠券……开发中
-- [ ] 邮费模板
+- [x] 订单管理
+- [x] 商品品牌
+- [x] 优惠券
+- [x] 邮费模板
 - [ ] 促销功能
+
+### 其它功能
+- [x] 积分商城……测试中
+- [x] 会员签到
 
 ### 多语言支持
 - [x] 前台多语言切换逻辑
@@ -53,6 +63,7 @@ ShirneCMS
 - [x] 粉丝管理 
 - [x] 自动回复……待测试
 - [x] 素材管理……待测试
+- [x] 模板消息……开发中
 - [ ] 二维码管理
 - [ ] 客服管理
 
@@ -62,8 +73,8 @@ ShirneCMS
 - [x] 登录接口（账号密码登录，小程序授权登录）
 - [x] 产品接口
 - [x] 购物车接口
-- [x] 订单及支付接口……待测试
-- [x] 会员相关功能接口……待测试
+- [x] 订单及支付接口
+- [x] 会员相关功能接口
 
 ## 前端库引用
 
@@ -100,7 +111,9 @@ cnpm install<br />
 >scripts/struct.sql 数据表结构<br />
 scripts/init.sql 初始数据<br />
 scripts/update_shop.sql 商城模块<br />
-scripts/update_wechat.sql 微信模块
+scripts/update_credit.sql 积分商城<br />
+scripts/update_wechat.sql 微信模块<br />
+scripts/update_sign.sql 会员签到
 
 项目目录
 
@@ -158,18 +171,19 @@ xxx.test.com 为本地测试目录，配置方法：
 导航配置 navigator.php
 
 ## 后台功能截图
-![登录](screenshot/login.jpg "登录")
-![主面板](screenshot/dashboard.jpg "主面板")
-![分类管理](screenshot/category.jpg "分类管理")
-![添加分类](screenshot/category-add.jpg "添加分类")
-![发布文章](screenshot/article-add.jpg "发布文章")
-![发布商品](screenshot/product-add.jpg "发布商品")
-![发布商品](screenshot/product-add2.jpg "发布商品")
-![订单统计](screenshot/order-static.jpg "订单统计")
-![广告管理](screenshot/ad.jpg "广告管理")
-![系统设置](screenshot/setting.jpg "系统设置")
-![会员组](screenshot/user-level.jpg "会员组")
-![微信菜单](screenshot/wechat-menu.jpg "微信菜单")
+|登录|主面板|
+|:---:|:---:|
+|![登录](screenshot/login.jpg "登录")|![主面板](screenshot/dashboard.jpg "主面板")|
+|分类管理|添加分类|
+|![分类管理](screenshot/category.jpg "分类管理")|![添加分类](screenshot/category-add.jpg "添加分类")|
+|发布文章|发布商品|
+|![发布文章](screenshot/article-add.jpg "发布文章")|![发布商品](screenshot/product-add.jpg "发布商品")|
+|发布商品|订单统计|
+|![发布商品](screenshot/product-add2.jpg "发布商品")|![订单统计](screenshot/order-static.jpg "订单统计")|
+|广告管理|系统设置|
+|![广告管理](screenshot/ad.jpg "广告管理")|![系统设置](screenshot/setting.jpg "系统设置")|
+|会员组|微信菜单|
+|![会员组](screenshot/user-level.jpg "会员组")|![微信菜单](screenshot/wechat-menu.jpg "微信菜单")|
 
 ## 联系我
 欢迎技术探讨，部署安装及定制开发收费

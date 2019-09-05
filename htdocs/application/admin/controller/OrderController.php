@@ -6,6 +6,7 @@ use app\common\model\OrderModel;
 use shirne\excel\Excel;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use think\Db;
+use think\Exception;
 
 /**
  * 订单管理
@@ -27,7 +28,7 @@ class OrderController extends BaseController
         }
         $key=empty($key)?"":base64_decode($key);
         $model=Db::view('order','*')
-            ->view('member',['username','realname','avatar','level_id'],'member.id=order.member_id','LEFT')
+            ->view('member',['username','realname','nickname','avatar','level_id'],'member.id=order.member_id','LEFT')
             ->where('order.delete_time',0);
 
         if(!empty($key)){
@@ -61,6 +62,7 @@ class OrderController extends BaseController
         $this->assign('audit',$audit);
         $this->assign('expresscodes',config('express.'));
         $this->assign('lists',$lists);
+        $this->assign('levels',getMemberLevels());
         $this->assign('page',$lists->render());
         return $this->fetch();
     }
@@ -153,8 +155,36 @@ class OrderController extends BaseController
             $data['express_no']=$express_no;
             $data['express_code']=$express_code;
         }
-        $order->save($data);
+        $order->updateStatus($data);
         user_log($this->mid,'auditorder',1,'更新订单 '.$id .' '.$audit,'manager');
+        $this->success('操作成功');
+    }
+    
+    
+    
+    /**
+     * 改价
+     * @param $id
+     * @param $price
+     * @throws Exception
+     */
+    public function reprice($id,$price)
+    {
+        $order = OrderModel::get($id);
+        if(empty($id) || empty($order)){
+            $this->error('订单不存在');
+        }
+        if($order['status']!=0){
+            $this->error('订单当前状态不可改价');
+        }
+        $price=$this->request->post('price');
+        
+        $data=array(
+            'payamount'=>round(floatval($price),2)
+        );
+        
+        $order->save($data);
+        user_log($this->mid,'repriceorder',1,'订单改价 '.$id .' '.$price,'manager');
         $this->success('操作成功');
     }
 
@@ -168,7 +198,8 @@ class OrderController extends BaseController
             $this->error('订单不存在');
         }
         $audit=$this->request->post('status/d');
-        $order->save(['isaudit'=>$audit]);
+        
+        $order->audit();
         user_log($this->mid,'auditorder',1,'审核订单 '.$id .' '.$audit,'manager');
         $this->success('操作成功');
     }

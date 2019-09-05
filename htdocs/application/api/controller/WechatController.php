@@ -2,7 +2,7 @@
 
 namespace app\api\controller;
 
-use app\api\Processer\BaseProcesser;
+use app\api\processer\BaseProcesser;
 use app\common\model\MemberOauthModel;
 use app\common\model\OrderModel;
 use app\common\model\PayOrderModel;
@@ -323,7 +323,12 @@ class WechatController extends Controller{
             }
 
             if(!empty($data)){
-                $order->updateStatus($data);
+                try {
+                    $order->updateStatus($data);
+                }catch(\Exception $e){
+                    Log::record($e->getMessage());
+                    Log::record($e->getTraceAsString());
+                }
             }
 
             return true;
@@ -339,7 +344,7 @@ class WechatController extends Controller{
 
         $response = $app->handlePaidNotify(function ($message, $fail) {
             // 记录日志
-            Log::record(var_export($message,TRUE),'pay');
+            Log::record(var_export($message,TRUE),'scanpay');
 
             return true;
         });

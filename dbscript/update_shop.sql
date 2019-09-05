@@ -1,13 +1,14 @@
 
 INSERT INTO `sa_permission` (`id`, `parent_id`,`name`, `url`,`key`, `icon`, `sort_id`, `disable`)
 VALUES
-  (6,0,'商城','','Shop','ion-md-cart',2,0),
-  (61,6,'分类管理','ProductCategory/index','product_category_index','ion-md-medical',0,0),
-  (62,6,'品牌管理','ProductBrand/index','product_brand_index','ion-md-bookmark',0,0),
-  (63,6,'商品管理','Product/index','product_index','ion-md-gift',0,0),
-  (64,6,'优惠券管理','ProductCoupon/index','product_coupon_index','ion-md-pricetags',0,0),
-  (65,6,'订单管理','Order/index','order_index','ion-md-list-box',0,0),
-  (66,6,'订单统计','OrderStatics/index','order_statics_index','ion-md-stats',0,0);
+  (3,0,'商城','','Shop','ion-md-cart',2,0),
+  (31,3,'分类管理','ProductCategory/index','product_category_index','ion-md-medical',0,0),
+  (32,3,'品牌管理','ProductBrand/index','product_brand_index','ion-md-bookmark',0,0),
+  (33,3,'商品管理','Product/index','product_index','ion-md-gift',0,0),
+  (34,3,'优惠券管理','ProductCoupon/index','product_coupon_index','ion-md-pricetags',0,0),
+  (35,3,'订单管理','Order/index','order_index','ion-md-list-box',0,0),
+  (36,3,'订单统计','OrderStatics/index','order_statics_index','ion-md-stats',0,0),
+  (37,3,'运费模板','ProductCoupon/index','product_coupon_index','ion-md-train',0,0);
 
 DROP TABLE IF EXISTS `sa_member_cart`;
 
@@ -19,6 +20,7 @@ CREATE TABLE `sa_member_cart` (
   `product_title` varchar(100) DEFAULT NULL,
   `product_image` varchar(150) DEFAULT NULL,
   `product_price` DECIMAL(10,2) DEFAULT NULL,
+  `product_weight` INT(11) DEFAULT 0,
   `count` int(11) DEFAULT NULL,
   `sort` INT(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
@@ -80,7 +82,7 @@ CREATE TABLE `sa_product_coupon` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `lang` varchar(10) DEFAULT NULL COMMENT '语言',
   `main_id` int(11) DEFAULT NULL COMMENT '主id',
-  `title` varchar(100) DEFAULT NULL,
+  `title` varchar(100) NOT NULL DEFAULT '',
   `bind_type` tinyint(11) DEFAULT 0 COMMENT '0-通用 1-类目 2-品牌 3-指定商品 4-指定sku',
   `cate_id` int(11) DEFAULT 0,
   `brand_id` int(11) DEFAULT 0,
@@ -94,6 +96,8 @@ CREATE TABLE `sa_product_coupon` (
   `end_time` int(11) DEFAULT 0,
   `status` tinyint(11) DEFAULT 1,
   `stock` int(11) DEFAULT 1000 COMMENT '-1 无限库存',
+  `levels_limit` varchar(100) DEFAULT '',
+  `count_limit` int(11) DEFAULT 0 COMMENT '0 不限制领取数量',
   `receive` int(11) DEFAULT 0,
   `expiry_type` tinyint(11) DEFAULT 0,
   `expiry_time` int(11) DEFAULT 0,
@@ -136,18 +140,21 @@ CREATE TABLE `sa_product` (
   `prop_data` text,
   `max_price` DECIMAL(10,2) DEFAULT 0 COMMENT '最高价格',
   `min_price` DECIMAL(10,2) DEFAULT 0 COMMENT '最低价格',
+  `market_price` DECIMAL(10,2) DEFAULT 0 COMMENT '市场价格',
   `content` text,
-  `create_time` int(11) DEFAULT '0',
-  `update_time` int(11) DEFAULT '0',
   `level_id` int(11) DEFAULT 0,
   `levels` varchar(100) DEFAULT '',
   `storage` int(11) DEFAULT '0',
+  `postage_id` int(11) DEFAULT '0',
+  `postage` DECIMAL(10,2) DEFAULT '0',
   `sale` int(11) DEFAULT '0' COMMENT '总销量',
   `type` tinyint(4) DEFAULT '1',
   `is_commission` tinyint(4) DEFAULT '1',
-  `commission_percent`  VARCHAR(200) DEFAULT '',
+  `commission_percent`  text,
   `is_discount` tinyint(4) DEFAULT '1',
   `status` tinyint(4) NOT NULL DEFAULT '1',
+  `create_time` int(11) DEFAULT '0',
+  `update_time` int(11) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `cate_id` (`cate_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -161,9 +168,11 @@ CREATE TABLE `sa_product_sku` (
   `image` varchar(150) DEFAULT NULL,
   `goods_no` varchar(50) DEFAULT NULL,
   `price` DECIMAL(10,2) DEFAULT 0 COMMENT '购买价格',
+  `ext_price` varchar(300) DEFAULT '' COMMENT '独立价格',
   `market_price` DECIMAL(10,2) DEFAULT 0 COMMENT '市场价格',
   `cost_price` DECIMAL(10,2) DEFAULT 0 COMMENT '成本价格',
   `weight` int(11) DEFAULT '0',
+  `size` varchar(50) DEFAULT '0',
   `storage` int(11) DEFAULT '0',
   `sale` int(11) DEFAULT '0',
   PRIMARY KEY (`sku_id`),
@@ -210,21 +219,32 @@ DROP TABLE IF EXISTS `sa_order`;
 
 CREATE TABLE `sa_order` (
   `order_id` INT NOT NULL AUTO_INCREMENT,
+  `platform` VARCHAR(30) NULL,
+  `appid` varchar(30) DEFAULT '',
   `order_no` VARCHAR(30) NULL,
   `member_id` INT NULL,
   `payamount` DECIMAL(10,2) NULL DEFAULT 0,
+  `product_amount` DECIMAL(10,2) NULL DEFAULT 0,
+  `discount_amount` DECIMAL(10,2) NULL DEFAULT 0,
   `commission_amount` DECIMAL(10,2) NULL DEFAULT 0,
   `commission_special` TEXT NULL,
   `level_id` INT NULL,
   `create_time` INT NULL DEFAULT 0,
   `pay_time` INT NULL DEFAULT 0,
+  `deliver_time` INT NULL DEFAULT 0,
   `confirm_time` INT NULL DEFAULT 0,
+  `comment_time` INT NULL DEFAULT 0,
+  `reason` VARCHAR(50) NULL COMMENT '取消/退款原因',
   `cancel_time` INT NULL DEFAULT 0,
+  `refund_time` INT NULL DEFAULT 0,
   `rebated` INT NULL DEFAULT 0,
   `rebate_time` INT NULL DEFAULT 0,
+  `rebate_total` DECIMAL(10,2) NULL DEFAULT 0,
   `status` TINYINT NULL DEFAULT 0 COMMENT '订单状态',
+  `noticed` TINYINT NULL DEFAULT 0 COMMENT '通知状态',
   `isaudit` TINYINT NULL DEFAULT 0 COMMENT '审核状态',
   `delete_time` INT NULL DEFAULT 0 COMMENT '删除状态',
+  `form_id` VARCHAR(45) NULL,
   `remark` VARCHAR(250) NULL,
   `address_id` INT NULL,
   `recive_name` VARCHAR(45) NULL,
@@ -233,11 +253,40 @@ CREATE TABLE `sa_order` (
   `city` VARCHAR(45) NULL,
   `area` VARCHAR(45) NULL,
   `address` VARCHAR(150) NULL,
+  `postage_area_id` int(11) DEFAULT '0',
+  `postage` DECIMAL(10,2) DEFAULT '0',
   `express_no` VARCHAR(100) NULL,
   `express_code` VARCHAR(20) NULL,
   `type` TINYINT NULL DEFAULT 1,
   PRIMARY KEY (`order_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `sa_express_code`;
+
+CREATE TABLE `sa_express_code` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) DEFAULT '',
+  `express` varchar(50) DEFAULT '',
+  `status` tinyint(1) DEFAULT '1',
+  `use_times` int(11) DEFAULT '0',
+  `create_time` INT NULL DEFAULT 0,
+  `update_time` INT NULL DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `sa_express_cache`;
+
+CREATE TABLE `sa_express_cache` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `express_no` VARCHAR(100) NULL,
+  `express_code` VARCHAR(20) NULL,
+  `create_time` INT NULL DEFAULT 0,
+  `update_time` INT NULL DEFAULT 0,
+  `data` text,
+  PRIMARY KEY (`id`),
+  KEY `express_no` (`express_no`),
+  KEY `express_code` (`express_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `sa_order_product`;
 
@@ -258,3 +307,31 @@ CREATE TABLE `sa_order_product` (
   PRIMARY KEY (`id`),
   KEY `product_id` (`product_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `sa_postage`;
+CREATE TABLE `sa_postage` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `title` VARCHAR(50) NULL,
+  `is_default` TINYINT NULL DEFAULT 0,
+  `calc_type` TINYINT NULL DEFAULT 0 COMMENT '0-按重  1-按件 2-按体积',
+  `area_type` TINYINT NULL DEFAULT 0,
+  `specials` TEXT,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `sa_postage_area`;
+CREATE TABLE `sa_postage_area` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `postage_id` INT NOT NULL,
+  `sort` INT NULL DEFAULT 0,
+  `first` INT NULL DEFAULT 0 COMMENT '0-按重  1-按件 2-按体积',
+  `first_fee` DECIMAL(10,2) NULL DEFAULT 0,
+  `extend` INT NULL DEFAULT 0,
+  `extend_fee` DECIMAL(10,2) NULL DEFAULT 0,
+  `ceiling` DECIMAL(10,2) NULL DEFAULT 0,
+  `free_limit` DECIMAL(10,2) NULL DEFAULT 0,
+  `expresses` VARCHAR(200) NULL DEFAULT '',
+  `areas` TEXT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+

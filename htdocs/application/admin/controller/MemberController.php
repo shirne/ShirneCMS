@@ -4,6 +4,7 @@ namespace app\admin\controller;
 use app\common\model\MemberModel;
 use app\common\validate\MemberValidate;
 use think\Db;
+use think\Exception;
 
 /**
  * 会员管理
@@ -25,7 +26,7 @@ class MemberController extends BaseController
      * @param int $type
      * @return \think\response\Json
      */
-    public function search($key='',$type=0){
+    public function search($key='',$type=0, $is_agent=-1){
         $model=Db::name('member')
             ->where('status',1);
         if(!empty($key)){
@@ -34,8 +35,11 @@ class MemberController extends BaseController
         if(!empty($type)){
             $model->where('type',$type);
         }
+        if($is_agent>-1){
+            $model->where('is_agent',$is_agent);
+        }
 
-        $lists=$model->field('id,username,realname,mobile,avatar,level_id,is_agent,gender,email,create_time')
+        $lists=$model->field('id,username,nickname,realname,mobile,avatar,level_id,is_agent,gender,email,create_time')
             ->order('id ASC')->limit(10)->select();
         return json(['data'=>$lists,'code'=>1]);
     }
@@ -54,7 +58,7 @@ class MemberController extends BaseController
         }
         $keyword=empty($keyword)?"":base64_decode($keyword);
         $model = Db::view('__MEMBER__ m','*')
-            ->view('__MEMBER__ rm',['username'=> 'refer_name','realname'=> 'refer_realname','is_agent'=> 'refer_agent'],'m.referer=rm.id','LEFT');
+            ->view('__MEMBER__ rm',['username'=> 'refer_name','nickname'=> 'refer_nickname','realname'=> 'refer_realname','avatar'=> 'refer_avatar','is_agent'=> 'refer_agent'],'m.referer=rm.id','LEFT');
         if(!empty($keyword)){
             $model->whereLike('m.username|m.email|m.realname',"%$keyword%");
         }
@@ -85,6 +89,29 @@ class MemberController extends BaseController
         $this->assign('referer',$referer);
         $this->assign('keyword',$keyword);
         return $this->fetch();
+    }
+    
+    public function set_increment($incre){
+        $this->setAutoIncrement('member',$incre);
+    }
+    
+    public function set_referer($id=0, $referer=0){
+        if(empty($id) || empty($referer))$this->error('参数错误');
+        $id=intval($id);
+        $referer=intval($referer);
+        
+        $member=Db::name('member')->find($id);
+        if(empty($member))$this->error('会员不存在');
+        $rmember=Db::name('member')->find($referer);
+        if(empty($rmember) || !$rmember['is_agent'])$this->error('设置的推荐人不是代理');
+        
+        $result=MemberModel::update(['referer'=>$referer],['id'=>$id]);
+        if($result){
+            user_log($this->mid,'setreferer',1,'设置推荐人 '.$id.'/'.$referer ,'manager');
+            $this->success('设置成功');
+        }else{
+            $this->error('设置失败');
+        }
     }
 
     /**
@@ -128,6 +155,90 @@ class MemberController extends BaseController
             $this->error('取消失败');
         }
     }
+    
+    /**
+     * 佣金记录
+     * @param int $id
+     * @param int $from_id
+     * @param string $fromdate
+     * @param string $todate
+     * @param string $status
+     * @param string $type
+     * @return mixed
+     */
+    public function award_log($id=0,$from_id=0,$fromdate='',$todate='',$status='',$type='all'){
+        $model=Db::view('AwardLog mlog','*')
+            ->view('Member m',['username','nickname','avatar','level_id','mobile'],'m.id=mlog.member_id','LEFT')
+            ->view('Member fm',['username'=>'from_username','nickname'=>'from_nickname','avatar'=>'from_avatar','level_id'=>'from_level_id','mobile'=>'from_mobile'],'fm.id=mlog.from_member_id','LEFT');
+        
+        $levels=getMemberLevels();
+        
+        if($id>0){
+            $model->where('mlog.member_id',$id);
+            $this->assign('member',Db::name('member')->find($id));
+        }
+        if($from_id>0){
+            $model->where('mlog.from_member_id',$from_id);
+            $this->assign('from_member',Db::name('member')->find($from_id));
+        }
+        if(!empty($type) && $type!='all'){
+            $model->where('mlog.type',$type);
+        }else{
+            $type='all';
+        }
+        if($status !== ''){
+            $model->where('mlog.status',$status);
+        }
+        
+        if(!empty($todate)){
+            $totime=strtotime($todate.' 23:59:59');
+            if($totime===false)$todate='';
+        }
+        if(!empty($fromdate)) {
+            $fromtime = strtotime($fromdate);
+            if ($fromtime === false) $fromdate = '';
+        }
+        if(!empty($fromtime)){
+            if(!empty($totime)){
+                $model->whereBetween('mlog.create_time',array($fromtime,$totime));
+            }else{
+                $model->where('mlog.create_time','EGT',$fromtime);
+            }
+        }else{
+            if(!empty($totime)){
+                $model->where('mlog.create_time','ELT',$totime);
+            }
+        }
+        
+        $logs = $model->order('ID DESC')->paginate(15);
+        
+        $types=getLogTypes();
+        $allstatus=['-1'=>'已取消','0'=>'待发放','1'=>'已发放'];
+        
+        $stacrows=$model->group('mlog.status,mlog.type')->field('mlog.status,mlog.type,sum(mlog.amount) as total_amount')->select();
+        $statics=[];
+        foreach ($stacrows as $row){
+            $statics[$row['status']][$row['type']]=$row['total_amount'];
+        }
+        foreach ($statics as $k=>$list){
+            $statics[$k]['sum']=array_sum($statics[$k]);
+        }
+        
+        $this->assign('id',$id);
+        $this->assign('from_id',$from_id);
+        $this->assign('fromdate',$fromdate);
+        $this->assign('todate',$todate);
+        $this->assign('type',$type);
+        $this->assign('status',$status);
+        
+        $this->assign('types',$types);
+        $this->assign('allstatus',$allstatus);
+        $this->assign('levels',$levels);
+        $this->assign('statics', $statics);
+        $this->assign('logs', $logs);
+        $this->assign('page',$logs->render());
+        return $this->fetch();
+    }
 
     /**
      * 余额记录
@@ -141,8 +252,8 @@ class MemberController extends BaseController
      */
     public function money_log($id=0,$from_id=0,$fromdate='',$todate='',$field='all',$type='all'){
         $model=Db::view('MemberMoneyLog mlog','*')
-            ->view('Member m',['username','level_id','mobile'],'m.id=mlog.member_id','LEFT')
-            ->view('Member fm',['username'=>'from_username','level_id'=>'from_level_id','mobile'=>'from_mobile'],'fm.id=mlog.member_id','LEFT');
+            ->view('Member m',['username','nickname','avatar','level_id','mobile'],'m.id=mlog.member_id','LEFT')
+            ->view('Member fm',['username'=>'from_username','nickname'=>'from_nickname','avatar'=>'from_avatar','level_id'=>'from_level_id','mobile'=>'from_mobile'],'fm.id=mlog.from_member_id','LEFT');
 
         $levels=getMemberLevels();
 
@@ -228,7 +339,7 @@ class MemberController extends BaseController
         }
 
         $model=Db::view('MemberLog','*')
-            ->view('Member',['username'],'MemberLog.member_id=Member.id','LEFT');
+            ->view('Member',['username','nickname','avatar'],'MemberLog.member_id=Member.id','LEFT');
 
         if(!empty($key)){
             $key = base64_decode($key);

@@ -130,9 +130,9 @@ class WechatController extends BaseController
                     if(empty($default)){
                         $data['is_default']=1;
                     }
-                }else{
+                }/*else{
                     $data['is_default']=0;
-                }
+                }*/
                 $model=WechatModel::get($id);
                 if(empty($model['hash'])){
                     $data['hash']=$this->createHash();

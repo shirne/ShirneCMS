@@ -2,26 +2,25 @@
 
 namespace app\task\controller;
 
-
-use app\common\command\Install;
-use app\common\model\ArticleModel;
-use app\common\model\MemberRechargeModel;
-use app\common\model\PayOrderModel;
-use app\common\model\ProductModel;
+use app\common\model\OrderModel;
 use think\Console;
 use think\console\Input;
 use think\console\Output;
 use think\Controller;
 use think\Db;
+use think\facade\Env;
+use think\facade\Log;
 use think\Response;
 
 class UtilController extends Controller
 {
     public function cropimage($img){
+        Log::close();
         return crop_image($img,$_GET);
     }
 
     public function cacheimage($img){
+        Log::close();
         $paths=explode('.',$img);
         if(count($paths)==3) {
             preg_match_all('/(w|h|q|m)(\d+)(?:_|$)/', $paths[1], $matches);
@@ -41,40 +40,32 @@ class UtilController extends Controller
 
     public function daily()
     {
-        # code...
-        $rows = Db::name('product')->whereLike('title',["%1%","%2%"],'AND')->select();
-        var_export($rows);
-        $instance=ProductModel::getInstance();
-        echo $instance->getName();
-        $instance=ArticleModel::getInstance();
-        echo $instance->getName();
-    }
-
-    public function install($sql='',$mode='')
-    {
-        $console=Console::init(false);
-        $output=new Output('buffer');
-        $args=['install'];
-        if(!empty($sql)){
-            $args[]='--sql';
-            $args[]=$sql;
+        $time = time();
+        $isbreaked=false;
+        $orders = Db::name('Order')->where('status',0)
+            ->where('noticed',0)
+            ->where('create_time','<',time()-10*60)->select();
+        $ids = [];
+        foreach ($orders as $order){
+            $ids[]=$order['order_id'];
+            OrderModel::sendOrderMessage($order,'order_need_pay');
+            if(time()-$time>25){
+                $isbreaked=true;
+                break;
+            }
         }
-        if(!empty($mode)){
-            $args[]='--mode';
-            $args[]=$mode;
+        Db::name('Order')->whereIn('order_id',$ids)->update(['noticed'=>1]);
+        if($isbreaked)exit;
+    
+        $orders = Db::name('Order')->where('status',0)
+            ->where('create_time','<',time()-30*60)->select();
+        foreach ($orders as $order){
+            OrderModel::getInstance()->updateStatus(['status'=>-1,'cancel_time'=>time(),'reason'=>'订单长时间未支付自动取消'],['order_id'=>$order['order_id']]);
+            if(time()-$time>25){
+                break;
+            }
         }
-        if($this->request->has('admin','post')){
-            $args[]='--admin';
-            $args[]=$this->request->post('admin');
-        }
-        if($this->request->has('password','post')){
-            $args[]='--password';
-            $args[]=$this->request->post('password');
-        }
-        $input=new Input($args);
-
-        $console->doRun($input, $output);
-        return $output->fetch();
+        exit;
     }
 
 }

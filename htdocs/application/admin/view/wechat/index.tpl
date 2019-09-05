@@ -47,6 +47,7 @@
                             <a class="btn btn-outline-dark" href="{:url('wechat.fans/index',array('wid'=>$v['id']))}" ><i class="ion-md-contacts"></i> 粉丝</a>
                             <a class="btn btn-outline-dark" href="{:url('wechat.reply/index',array('wid'=>$v['id']))}" ><i class="ion-md-chatboxes"></i> 回复</a>
                             <a class="btn btn-outline-dark" href="{:url('wechat.menu/edit',array('wid'=>$v['id']))}"><i class="ion-md-reorder"></i> 菜单</a>
+                            <a class="btn btn-outline-dark" href="{:url('wechat.tplmsg/index',array('wid'=>$v['id']))}"><i class="ion-md-notifications"></i> 模板消息</a>
                         </div>
                     </td>
                     <td class="operations">

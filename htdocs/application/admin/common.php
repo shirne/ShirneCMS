@@ -88,4 +88,9 @@ function list_empty($col=5){
     return '<tr><td colspan="'.$col.'" class="text-center text-muted">暂时没有记录</td></tr>';
 }
 
+function ignore_array($val){
+    if(is_array($val))return '';
+    return strval($val);
+}
+
 //end file

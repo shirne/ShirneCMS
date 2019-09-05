@@ -26,6 +26,7 @@
             <tr>
                 <th width="50">编号</th>
                 <th>LOGO</th>
+                <th>分组</th>
                 <th>标题</th>
                 <th>地址</th>
                 <th>优先级</th>
@@ -33,7 +34,7 @@
             </tr>
         </thead>
         <tbody>
-        <php>$empty=list_empty(6);</php>
+            <php>$empty=list_empty(7);</php>
         <volist name="lists" id="v" empty="$empty">
             <tr>
                 <td>{$v.id}</td>
@@ -46,6 +47,7 @@
                         -
                     </if>
                 </td>
+                <td>{$v.group|default='无'}</td>
                 <td>{$v.title}</td>
                 <td><a href="{$v.url}" target="_blank">{$v.url}</a> </td>
                 <td>{$v.sort}</td> 

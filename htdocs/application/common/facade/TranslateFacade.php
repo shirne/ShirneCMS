@@ -2,8 +2,7 @@
 
 namespace app\common\facade;
 
-
-use extcore\SimpleFacade;
+use app\common\core\SimpleFacade;
 
 /**
  * 表字段翻译

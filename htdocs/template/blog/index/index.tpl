@@ -30,7 +30,7 @@
     <div class="row">
         <div class="col-lg-9">
             <ul class="list-group article-list">
-                <article:list var="articles" />
+                <article:list var="articles" order="create_time DESC" />
                 <volist name="articles" id="art">
                 <li class="list-group-item">
                     <if condition="!empty($art['cover'])">
@@ -55,7 +55,7 @@
             <div class="card">
                 <div class="card-header">支持一下</div>
                 <div class="card-body text-center">
-                    <img src="__STATIC__/images/qrcode.png"/>
+                    <img style="max-width: 100%" src="__STATIC__/images/qrcode.png"/>
                 </div>
             </div>
             <div class="card">

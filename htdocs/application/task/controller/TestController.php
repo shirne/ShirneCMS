@@ -2,8 +2,12 @@
 
 namespace app\task\controller;
 
+use app\common\model\OrderModel;
+use app\common\model\PayOrderModel;
+use app\common\model\PostageModel;
 use shirne\common\Image;
 use think\Db;
+use think\facade\Log;
 
 
 /**
@@ -22,14 +26,34 @@ class TestController
         exit;
     }
     
+    public function updatedb(){
+        $dbs=[];
+    
+        foreach ($dbs as $sql){
+            Db::execute($sql);
+        }
+        exit;
+    }
+    
     public function model(){
-        $model=Db::name('manager');
-        $manage=$model->where('id',1)->find();
-        var_export($manage);
-        $manage=$model->removeOption()->whereIn('id',[2,3])->select();
-        var_export($manage);
-        $manage=$model->removeOption()->where('id',1)->find();
-        var_export($manage);
+        
+        exit;
+        $paymodel = PayOrderModel::get(10);
+        $paymodel->save(['status'=>0]);
+        $data = [
+            'status'=>1,
+            'pay_time'=>time(),
+            'pay_bill'=>'4200000396201908281858444566',
+            'time_end'=>'20190828004001'
+        ];
+        try {
+            $paymodel->updateStatus($data);
+        }catch(\Exception $e){
+            Log::record($e->getMessage());
+            Log::record($e->getTraceAsString());
+        }
+        
+        OrderModel::sendOrderMessage(5,'order_deliver');
         exit;
     }
 }

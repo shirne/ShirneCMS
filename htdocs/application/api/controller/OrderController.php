@@ -1,17 +1,21 @@
 <?php
 
-namespace app\api\Controller;
+namespace app\api\controller;
 
-use app\admin\model\MemberLevelModel;
+
 use app\common\facade\MemberCartFacade;
 use app\common\facade\OrderFacade;
-use app\common\model\MemberOauthModel;
 use app\common\model\OrderModel;
+use app\common\model\PayOrderModel;
+use app\common\model\PostageModel;
+use app\common\model\ProductModel;
 use app\common\model\WechatModel;
 use app\common\validate\OrderValidate;
 use EasyWeChat\Factory;
+use think\Facade\Log;
 use think\Db;
 
+use function GuzzleHttp\json_encode;
 
 /**
  * 订单操作
@@ -22,72 +26,47 @@ class OrderController extends AuthedController
 {
     public function prepare(){
         $order_skus=$this->input['products'];
+        $address=$this->input['address'];
         $skuids=array_column($order_skus,'sku_id');
         $products=Db::view('ProductSku','*')
-            ->view('Product',['title'=>'product_title','image'=>'product_image','levels','is_discount'],'ProductSku.product_id=Product.id','LEFT')
+            ->view('Product',['title'=>'product_title','image'=>'product_image','levels','is_discount','postage_id'],'ProductSku.product_id=Product.id','LEFT')
             ->whereIn('ProductSku.sku_id',idArr($skuids))
             ->select();
-
-        return $this->response([
-            'products'=>$products,
-            'address'=>Db::name('MemberAddress')->where('member_id',$this->user['id'])->order('is_default DESC')->find(),
-            'express'=>[
-                'fee'=>0,
-                'title'=>'快递免邮'
-            ]
-        ]);
+        
+        $result=['products'=>$products];
+        if(empty($address)){
+            $address = Db::name('MemberAddress')->where('member_id',$this->user['id'])->order('is_default DESC')->find();
+            $result['address']=$address;
+        }
+        $result['express'] = PostageModel::calcolate($products,$address);
+        return $this->response($result);
 
     }
     public function confirm($from='quick'){
+        $this->check_submit_rate();
+        
         $order_skus=$this->input['products'];
         if(empty($order_skus))$this->error('未选择下单商品');
         $sku_ids=array_column($order_skus,'sku_id');
         if($from=='cart'){
             $products=MemberCartFacade::getCart($this->user['id'],$sku_ids);
         }else{
-            $products=Db::view('ProductSku','*')
-                ->view('Product',['title'=>'product_title','spec_data','image'=>'product_image','levels','is_discount','is_commission','type'],'ProductSku.product_id=Product.id','LEFT')
-                ->whereIn('ProductSku.sku_id',idArr($sku_ids))
-                ->select();
-            $counts=array_index($order_skus,'count,sku_id');
-            $userLevel=MemberLevelModel::get($this->user['level_id']);
-            foreach ($products as $k=>&$item){
-                $item['product_price']=$item['price'];
-
-                if($item['is_discount'] && $userLevel['discount']){
-                    $item['product_price']=$item['product_price']*$userLevel['discount']*.01;
-                }
-                if(!empty($item['image']))$item['product_image']=$item['image'];
-                if(isset($counts[$item['sku_id']])){
-                    $item['count']=$counts[$item['sku_id']];
-                }else{
-                    $item['count']=1;
-                }
-                if(!empty($item['levels'])){
-                    $levels=json_decode($item['levels'],true);
-                    if(!in_array($this->user['level_id'],$levels)){
-                        $this->error('您当前会员组不允许购买商品['.$item['product_title'].']');
-                    }
-                }
-            }
-            unset($item);
+            $skucounts = array_column($order_skus,'count','sku_id');
+            $products=ProductModel::getForOrder($skucounts);
         }
-
-        $total_price=0;
-        $ordertype=1;
-        foreach ($products as $item){
-            $total_price += $item['product_price']*$item['count'];
-            if($item['type']==2){
-                $ordertype=2;
+        $products = array_column($products,NULL,'sku_id');
+        foreach ($order_skus as $k=>$item){
+            if(!isset($products[$item['sku_id']])){
+                $this->error('部分商品已下架');
             }
+            $products[$item['sku_id']]['postage_area_id']=$item['postage_area_id'];
+            $order_skus[$k]= $products[$item['sku_id']];
         }
+        
         //todo 邮费模板
 
-        if($total_price != $this->input['total_price']){
-            $this->error('下单商品价格已变动');
-        }
 
-        $data=$this->request->only('address_id,pay_type,remark,form_id','put');
+        $data=$this->request->only('address_id,pay_type,remark,form_id,total_price,total_postage','put');
 
         $validate=new OrderValidate();
         if(!$validate->check($data)){
@@ -97,7 +76,17 @@ class OrderController extends AuthedController
                 ->where('address_id',$data['address_id'])->find();
             $balancepay=$data['pay_type']=='balance'?1:0;
 
-            $result=OrderFacade::makeOrder($this->user,$products,$address,$data['remark'],$balancepay,$ordertype);
+            $platform=$this->request->tokenData['platform']?:'';
+            $appid=$this->request->tokenData['appid']?:'';
+            $remark=[
+                'remark'=>$data['remark'],
+                'platform'=>$platform,
+                'appid'=>$appid,
+                'form_id'=>$data['form_id'],
+                'total_price'=>$data['total_price'],
+                'total_postage'=>$data['total_postage'],
+            ];
+            $result=OrderFacade::makeOrder($this->user,$order_skus,$address,$remark,$balancepay);
             if($result){
                 if($from=='cart'){
                     MemberCartFacade::delCart($sku_ids,$this->user['id']);
@@ -109,7 +98,7 @@ class OrderController extends AuthedController
                     if(method_exists($this,$method)){
                         return $this->$method($result);
                     }else{
-                        return $this->response(['order_id',$result],1,'下单成功，请尽快支付');
+                        return $this->response(['order_id'=>$result],1,'下单成功，请尽快支付');
                     }
 
                 }
@@ -119,53 +108,71 @@ class OrderController extends AuthedController
         }
     }
 
-    public function wechatpay($order_id){
-        $order=OrderModel::get($order_id);
-        if(empty($order) || $order['status']!=0){
-            $this->error('订单已支付或不存在!',0,['order_id'=>$order_id]);
+    public function wechatpay($order_id, $trade_type='JSAPI', $payid=0){
+        $trade_type = strtoupper($trade_type);
+        if($payid)$wechat=WechatModel::where('id|hash',$payid)->where('type','wechat')->find();
+        if($trade_type == 'JSAPI' ) {
+            if(empty($this->wechatUser) && !empty($wechat)){
+                $this->wechatUser = Db::name('memberOauth')->where('member_id',$this->user['id'])
+                ->where('type_id',$wechat['id'])->find();
+            }
+            if(!empty($this->wechatUser) && !$payid){
+                $payid = $this->wechatUser['type_id'];
+            }
+            if(empty($this->wechatUser)){
+                $this->error('未获取用户信息');
+            }
         }
-        $wechat_id=$this->input['wechat_id'];
-        $wechat=$wechat=Db::name('wechat')->where('type','wechat')
-            ->where('id',$wechat_id)->find();
+        if(empty($wechat) && $payid){
+            $wechat=WechatModel::where('id|hash',$payid)
+                ->where('type','wechat')->find();
+        }
         if(empty($wechat)){
-            $this->error('服务器配置错误',ERROR_LOGIN_FAILED,['order_id'=>$order_id]);
+            $this->error('参数错误');
         }
-        $userauth=MemberOauthModel::where('member_id',$this->user['id'])
-            ->where('type_id',$wechat_id)
-            ->where('type','wechat')
-            ->find();
-        if(empty($userauth)){
-            $this->error('需要用户授权openid',ERROR_NEED_OPENID,['order_id'=>$order_id]);
+    
+        $paymodel = PayOrderModel::getInstance();
+        $payorder = $paymodel->createFromOrder($wechat['id'],PayOrderModel::PAY_TYPE_WECHAT,$order_id,$trade_type);
+        if(empty($payorder)){
+            if(in_array($paymodel->getErrNo(),[8,9])){
+                $this->success($paymodel->getError());
+            }
+            $this->error($paymodel->getError());
         }
+    
+        
         $config=WechatModel::to_pay_config($wechat);
-
+    
         $app = Factory::payment($config);
-
+    
         $result = $app->order->unify([
-            'body' => '订单-'.$order['order_no'],
-            'out_trade_no' => $order['order_no'],
-            'total_fee' => $order['payamount']*100,
+            'body' => '订单-'.$order_id,
+            'out_trade_no' => $payorder['order_no'],
+            'total_fee' => $payorder['pay_amount'],
             //'spbill_create_ip' => '', // 可选，如不传该参数，SDK 将会自动获取相应 IP 地址
-            'notify_url' => url('api/wechat/payresult','',true,true),
-            'trade_type' => 'JSAPI',
-            'openid' => $userauth['openid'],
+            'notify_url' => url('api/wechat/payresult',['hash'=>$wechat['hash']],true,true),
+            'trade_type' => $trade_type,
+            'openid' => empty($this->wechatUser)?'':$this->wechatUser['openid'],
         ]);
-        if(empty($result) || $result['return_code']!='SUCCESS'){
-            $this->error('支付发起失败',0,['order_id'=>$order_id]);
+        if(empty($result) || $result['return_code']!='SUCCESS' || $result['result_code']!='SUCCESS'){
+            Log::record(json_encode($result,JSON_UNESCAPED_UNICODE));
+            $this->error('支付发起失败');
         }
-
-        $params=[
-            'appId'=>$result['appid'],
-            'timeStamp'=>time(),
-            'nonceStr'=>$result['nonce_str'],
-            'package'=>'prepay_id='.$result['prepay_id'],
-            'signType'=>'MD5'
-        ];
-        ksort($params);
-        $string=$this->ToUrlParams($params)."&key=".$config['key'];
-        $params['paySign']=strtoupper(md5($string));
-
-        return $this->response(['payment'=>$params,'order_id'=>$order_id]);
+        $data=['payorder'=>$payorder];
+        if($trade_type == 'NATIVE'){
+            $data['code_url']=$result['code_url'];
+        }
+        if($trade_type == 'MWEB'){
+            $data['mweb_url']=$result['mweb_url'];
+        }
+        if($trade_type == 'JSAPI'){
+            $data['payment']=$payorder->getSignedData($result,$config['key']);
+        }
+        if(!empty($result['prepay_id'])){
+            PayOrderModel::where('id',$payorder['id'])->update(['prepay_id'=>$result['prepay_id']]);
+        }
+    
+        return $this->response($data);
     }
     public function balancepay($order_id){
         $order=OrderModel::get($order_id);
@@ -178,18 +185,5 @@ class OrderController extends AuthedController
             $this->success('支付成功!',1,['order_id'=>$order_id]);
         }
         $this->error('支付失败!',0,['order_id'=>$order_id]);
-    }
-    protected function ToUrlParams($arr)
-    {
-        $buff = "";
-        foreach ($arr as $k => $v)
-        {
-            if($k != "sign" && $v != "" && !is_array($v)){
-                $buff .= $k . "=" . $v . "&";
-            }
-        }
-
-        $buff = trim($buff, "&");
-        return $buff;
     }
 }

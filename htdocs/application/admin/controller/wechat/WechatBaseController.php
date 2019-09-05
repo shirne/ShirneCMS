@@ -4,7 +4,7 @@ namespace app\admin\controller\wechat;
 
 
 use app\admin\controller\BaseController;
-use EasyWeChat\Factory;
+use app\common\model\WechatModel;
 use think\Db;
 
 /**
@@ -18,22 +18,31 @@ class WechatBaseController extends BaseController
     protected $currentWechat=null;
 
     /**
-     * @var \EasyWeChat\OfficialAccount\Application
+     * @var \EasyWeChat\OfficialAccount\Application|\EasyWeChat\MiniProgram\Application|\EasyWeChat\OpenPlatform\Application
      */
     protected $wechatApp=null;
 
     public function initialize()
     {
         parent::initialize();
-
-        $this->wechatApp = $this->get_app($this->request->param('wid'));
+        $wid = $this->request->param('wid/d');
+        if(!$wid){
+            $wid=cookie('wechat_id');
+            $wid=intval($wid);
+        }else{
+            cookie('wechat_id',$wid);
+        }
+        if($wid) {
+            $this->wid = $wid;
+            $this->wechatApp = $this->get_app($wid);
+        }
     }
 
     /**
      * @param $wid
      * @return \EasyWeChat\OfficialAccount\Application
      */
-    private function get_app($wid){
+    protected function get_app($wid){
         if(is_array($wid)){
             $wechat=$wid;
         }else {
@@ -46,12 +55,7 @@ class WechatBaseController extends BaseController
         $this->currentWechat=$wechat;
         $this->assign('wechat',$this->currentWechat);
         $this->assign('wid',$wid);
-
-        return Factory::officialAccount([
-            'token'=>$wechat['token'],
-            'app_id'=>$wechat['appid'],
-            'secret'=>$wechat['appsecret'],
-            'aes_key'=>$wechat['encodingaeskey']
-        ]);
+        
+        return WechatModel::createApp($wechat);
     }
 }

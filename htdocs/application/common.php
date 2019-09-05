@@ -12,6 +12,15 @@
 // 应用公共文件
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
+define('ART_TYPE_NORMAL',1);
+define('ART_TYPE_TOP',2);
+define('ART_TYPE_HOT',4);
+define('ART_TYPE_RECOMMEND',8);
+
+define('PRO_TYPE_NORMAL',1);
+define('PRO_TYPE_UPGRADE',2);
+define('PRO_TYPE_BIND',4);
+
 function writelog($message,$type=\think\Log::INFO){
     if(config('app_debug')==true){
         \think\facade\Log::record($message,$type);
@@ -36,6 +45,7 @@ function force_json_decode($string){
  */
 function media($src,$width='',$height='',$quality=70){
     $root = config('template.oss_root');
+    $src = ltrim($src,'.');
     if(empty($root)){
         return $src;
     }else {
@@ -49,7 +59,8 @@ function media($src,$width='',$height='',$quality=70){
  * @return string
  */
 function local_media($src){
-    if(strpos($src,'/'===0)){
+    $src = ltrim($src,'.');
+    if(strpos($src,'/')===0 || strpos($src,'://')===false){
         return url('/','',false,true).$src;
     }
     return $src;
@@ -143,15 +154,17 @@ function getWechatMaterialTypes(){
 }
 function getArticleTypes(){
     return [
-        1=>lang('Normal'),
-        2=>lang('Top'),
-        3=>lang('Hot'),
-        4=>lang('Recommend')
+        ART_TYPE_NORMAL=>lang('Normal'),
+        ART_TYPE_TOP=>lang('Top'),
+        ART_TYPE_HOT=>lang('Hot'),
+        ART_TYPE_RECOMMEND=>lang('Recommend')
     ];
 }
 function getProductTypes(){
     return [
-        1=>lang('Normal')
+        PRO_TYPE_NORMAL=>lang('Normal'),
+        PRO_TYPE_UPGRADE=>lang('Price Upgrade'),
+        PRO_TYPE_BIND=>lang('Bind Upgrade')
     ];
 }
 function getOauthTypes(){
@@ -178,6 +191,7 @@ function settingGroups($name = '')
         'common' => lang('Common Settings'),
         'member' => lang('Member Settings'),
         'third' => lang('Third Settings'),
+        'sign' => lang('Sign Settings'),
         'advance' => lang('Advance Settings'),
     );
     if (empty($name)) {
@@ -204,6 +218,8 @@ function settingTypes($key = '')
     $types['textarea'] = lang('Textarea');
     $types['location'] = lang('Location Picker');
     $types['image'] = lang('Upload Image');
+    $types['json'] = lang('Json');
+    $types['array'] = lang('Array');
     $types['html'] = lang('Editor');
 
     if (empty($key)) {
@@ -366,6 +382,8 @@ function status_type($status){
  */
 function get_order_status($status){
     switch ($status){
+        case "-3":
+            return lang('Refunding');
         case "-2":
             return lang('Cancelled');
         case "-1":
@@ -424,6 +442,18 @@ function money_type($type,$wrap=true){
     }
     return $wrap?wrap_label(lang('Unknown'),'default'):lang('Unknown');
 }
+function award_status($status,$wrap=true){
+    switch ($status){
+        case "1":
+            return $wrap?wrap_label(lang('Gived'),'success'):lang('Gived');
+        case "-1":
+            return $wrap?wrap_label(lang('Canceled'),'secondary'):lang('Canceled');
+        case "0":
+            return $wrap?wrap_label(lang('Waiting'),'warning'):lang('Waiting');
+        
+    }
+    return $wrap?wrap_label(lang('Unknown'),'default'):lang('Unknown');
+}
 function wrap_label($text,$type='secondary'){
     return "<span class=\"badge badge-$type\">$text</span>";
 }
@@ -440,7 +470,8 @@ function print_remark($data){
 
 function maskphone($phone){
     $l=strlen($phone);
-    return substr($phone,0,3).str_repeat('*',$l-7).substr($phone,$l-4);
+    $masklen=min($l-7,4);
+    return substr($phone,0,3).str_repeat('*',$masklen).substr($phone,$l-4);
 }
 
 function maskemail($email){
@@ -555,21 +586,14 @@ function get_translate($table,$key,$field='',$lang=''){
 }
 
 
-function getMemberLevels()
+function getMemberLevels($force=false)
 {
-    static $levels;
-    if (empty($levels)) {
-        $levels = cache('levels');
-        if (empty($levels)) {
-            $model=new \app\admin\model\MemberLevelModel();
-            $data =  $model->order('sort ASC,level_id ASC')->select();
-            $levels=array_index($data,'level_id');
-            cache('levels', $levels);
-        }
-    }
-    return $levels;
+    return \app\common\model\MemberLevelModel::getCacheData($force);
 }
-
+function getMemberLevel($level_id){
+    $levels=getMemberLevels();
+    return $levels[$level_id]?:[];
+}
 function getLevelConfig($levels){
     $configs=array(
         'commission_layer'=>0
@@ -797,17 +821,6 @@ function getPageGroups($force=false){
     return $groups;
 }
 
-function getWechatAccount($type='wechat',$force=false){
-    $wechat=cache('default_'.$type);
-    if(empty($wechat) || $force==true){
-        $wechat=\think\Db::name('Wechat')->where('type',$type)
-            ->where('account_type','service')
-            ->order('is_default DESC')->find();
-        cache('default_'.$type,$wechat);
-    }
-    return $wechat;
-}
-
 /**
  * 获取全部配置
  * @param $all bool 是否全部数据
@@ -1032,17 +1045,22 @@ function array_index($arr,$index,$ismulti=false){
     return $return;
 }
 
+define('COMBINE_PAD_NONE',0);
+define('COMBINE_PAD_VALUE',1);
+define('COMBINE_PAD_KEY',2);
 /**
  * 兼容的array_combine
- * @param $keys
- * @param $vals
- * @param bool $pad
+ * @param array $keys
+ * @param array $vals
+ * @param int $pad_mode
+ * @param int|string|mixed $value_default
+ * @param string $key_prefix
  * @return array
  */
-function array_combine_cmp($keys,$vals,$pad=FALSE){
+function array_combine_cmp($keys,$vals,$pad_mode=0, $value_default="",$key_prefix='extra_field_'){
     $kcount = count($keys);
     $vcount = count($vals);
-    if (!$pad) {
+    if (!$pad_mode) {
         if($kcount > $vcount) {
             $keys = array_slice($keys, 0, $vcount);
         }elseif($kcount < $vcount){
@@ -1050,20 +1068,20 @@ function array_combine_cmp($keys,$vals,$pad=FALSE){
         }
     } else {
         // more headers than row fields
-        if ($kcount > $vcount) {
+        if ($kcount > $vcount && ($pad_mode & COMBINE_PAD_VALUE)==COMBINE_PAD_VALUE) {
             // how many fields are we missing at the end of the second array?
             // Add empty strings to ensure arrays $a and $b have same number of elements
             $more = $kcount - $vcount;
             for($i = 0; $i < $more; $i++) {
-                $b[] = "";
+                $vals[] = $value_default;
             }
             // more fields than headers
-        } else if ($kcount < $vcount) {
+        } else if ($kcount < $vcount && ($pad_mode & COMBINE_PAD_KEY)==COMBINE_PAD_KEY) {
             $more = $vcount - $kcount;
             // fewer elements in the first array, add extra keys
             for($i = 0; $i < $more; $i++) {
-                $key = 'extra_field_0' . $i;
-                $a[] = $key;
+                $key = $key_prefix . $i;
+                $keys[] = $key;
             }
 
         }
@@ -1172,6 +1190,11 @@ function format_date($date_str, $format){
         return date($format,$time);
     }
     return '';
+}
+
+function number_empty($val){
+    $tval = floatval($val);
+    return empty($tval)?'':$val;
 }
 
 /**

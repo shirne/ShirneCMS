@@ -1,7 +1,7 @@
 <?php
 
 
-namespace app\api\Controller;
+namespace app\api\controller;
 
 /**
  * 已被授权的控制器基类

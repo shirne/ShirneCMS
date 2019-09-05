@@ -66,6 +66,10 @@ class ArticleController extends BaseController
 
         return $this->fetch();
     }
+    
+    public function set_increment($incre){
+        $this->setAutoIncrement('article',$incre);
+    }
 
     /**
      * 添加
@@ -98,6 +102,7 @@ class ArticleController extends BaseController
                 if(!empty($data['description']))$data['description']=cutstr($data['content'],240);
                 if(!empty($data['create_time']))$data['create_time']=strtotime($data['create_time']);
                 if(empty($data['create_time']))unset($data['create_time']);
+
                 $model=ArticleModel::create($data);
                 if ($model->id) {
                     delete_image($delete_images);
