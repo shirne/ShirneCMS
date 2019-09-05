@@ -18,10 +18,40 @@ class WechatModel extends BaseModel
             'response_type' => 'array',
             'log' => config('log.wechat'),
         ];
-        $options['token']=$data['token'];
-        $options['aes_key']=$data['encodingaeskey'];
-        $options['app_id']=$data['appid'];
-        $options['secret']=$data['appsecret'];
+        if($data['account_type'] == 'work') {
+            $options['corp_id'] = $data['appid'];
+            $options['secret'] = $data['appsecret'];
+            
+            $options['agent_id'] = '';
+        }else if($data['account_type'] == 'openwork'){
+            $options['corp_id'] = $data['appid'];
+    
+            $options['suite_id'] = '';
+            $options['suite_secret'] = $data['appsecret'];
+            
+            $options['token'] = $data['token'];
+            $options['aes_key'] = $data['encodingaeskey'];
+            
+            $options['reg_template_id']='';
+            $options['redirect_uri_install']='';
+            $options['redirect_uri_single']='';
+            $options['redirect_uri_oauth']='';
+        }else if($data['account_type'] == 'micromerchant'){
+            $options['appid'] = $data['appid'];
+            $options['key'] = '';
+            $options['apiv3_key'] = '';
+            $options['cert_path'] = '';
+            $options['key_path'] = '';
+    
+    
+            $options['serial_no'] = '';
+            $options['certificate'] = '';
+        }else {
+            $options['app_id'] = $data['appid'];
+            $options['secret'] = $data['appsecret'];
+            $options['token'] = $data['token'];
+            $options['aes_key'] = $data['encodingaeskey'];
+        }
         return $options;
     }
 
@@ -46,6 +76,12 @@ class WechatModel extends BaseModel
             case 'platform':
                 return Factory::openPlatform($options);
                 break;
+            case 'work':
+                return Factory::work($options);
+            case 'openwork':
+                return Factory::openWork($options);
+            case 'micromerchant':
+                return Factory::microMerchant($options);
             default:
                 
                 break;
