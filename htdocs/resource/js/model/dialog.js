@@ -227,7 +227,7 @@
             return this.message(message,'info',time);
         },
         loading:function (message,time) {
-            return this.message(message,'loading',time);
+            return this.message(message?message:'加载中...','loading',time);
         },
         message:function (message,type,time) {
             var cssClass='bg-info text-white';
@@ -244,7 +244,9 @@
                         cssClass='bg-warning text-white';
                         break;
                     case 'loading':
-                        icon='refresh d-inline-block ani-loading';
+                        icon='<div class="spinner-border text-light" role="status">\n' +
+                            '  <span class="sr-only">Loading...</span>\n' +
+                            '</div>';
                         cssClass='bg-info text-white';
                         if(!time)time=10;
                         break;
@@ -254,7 +256,8 @@
                         break;
                 }
             }
-            var html='<div class="dialog-message" ><i class="ion-md-'+icon+'"></i>&nbsp;&nbsp;'+message+'<a href="javascript:" class="ion-md-close closebtn"></a></div>';
+            if(type != 'loading')icon= '<i class="ion-md-'+icon+'"></i>';
+            var html='<div class="dialog-message" >'+icon+'&nbsp;&nbsp;'+message+'<a href="javascript:" class="ion-md-close closebtn"></a></div>';
 
             var dlg= new Dialog({
                 footer:false,
@@ -502,14 +505,25 @@
         },
         pickList:function (config,callback,filter) {
             if(typeof config==='string')config={url:config};
+            if(Object.prototype.toString.call(config) == '[object Array]'){
+                config = {
+                    isajax:false,
+                    list:config
+                };
+            }
+            var icon = config.icon?'<i class="ion-md-checkmark"></i> ':''
             config=$.extend({
-                'url':'',
-                'name':'对象',
-                'searchHolder':'根据名称搜索',
-                'idkey':'id',
-                'onRow':null,
-                'extend':null,
-                'rowTemplate':'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action" style="line-height:30px;">{if @avatar}<img src="{@avatar}" style="width:30px;height:30px;border-radius: 100%;margin-right:10px;" />{else}<i class="ion-md-person"></i>{/if} [{@id}]&nbsp;{if @nickname}{@nickname}{else}{@username}{/if}&nbsp;&nbsp;&nbsp;{if @mobile}<small><i class="ion-md-phone-portrait"></i> {@mobile}</small>{/if}</a>'
+                url:'',
+                title:'',
+                isajax:true,
+                list:[],
+                name:'项目',
+                searchHolder:'根据名称搜索',
+                idkey:'id',
+                titlekey:'title',
+                onRow:null,
+                extend:null,
+                rowTemplate:'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action" style="line-height:30px;">'+icon+'[{@id}]&nbsp;{@title}</a>'
             },config||{});
             var current=null;
             var exthtml='';
@@ -517,6 +531,15 @@
                 exthtml='<select name="'+config.extend.name+'" class="form-control"><option value="">'+config.extend.title+'</option></select>';
             }
             if(!filter)filter={};
+
+            var title='请选择'+config.name;
+            var contentTpl='<div class="list-group list-group-picker mt-2" style="max-height:500px;overflow: auto;"></div>';
+            if(config.isajax){
+                title='请搜索并选择'+config.name;
+                contentTpl = '<div class="input-group">'+exthtml+'<input type="text" class="form-control searchtext" name="keyword" placeholder="'+config.searchHolder+'"/><div class="input-group-append"><a class="btn btn-outline-secondary searchbtn"><i class="ion-md-search"></i></a></div></div>'+contentTpl;
+            }
+            if(!config.title)config.title=title;
+
             var dlg=new Dialog({
                 'backdrop':'static',
                 'onshown':function(body){
@@ -524,6 +547,21 @@
                     var input=body.find('.searchtext');
                     var listbox=body.find('.list-group');
                     var isloading=false;
+                    listbox.on('click','a.list-group-item',function () {
+                        var id = $(this).data('id');
+                        for (var i = 0; i < config.list.length; i++) {
+                            if(config.list[i][config.idkey]==id){
+                                current=config.list[i];
+                                listbox.find('a.list-group-item').removeClass('active');
+                                $(this).addClass('active');
+                                break;
+                            }
+                        }
+                    });
+                    if(!config.isajax){
+                        listbox.html(config.rowTemplate.compile(config.list, true));
+                        return;
+                    }
                     var extField=null;
                     if(config.extend){
                         extField=body.find('[name='+config.extend.name+']');
@@ -554,18 +592,9 @@
                                     isloading=false;
                                     if(json.code===1){
                                         if(json.data && json.data.length) {
+                                            config.list = json.data
                                             listbox.html(config.rowTemplate.compile(json.data, true));
-                                            listbox.find('a.list-group-item').click(function () {
-                                                var id = $(this).data('id');
-                                                for (var i = 0; i < json.data.length; i++) {
-                                                    if(json.data[i][config.idkey]==id){
-                                                        current=json.data[i];
-                                                        listbox.find('a.list-group-item').removeClass('active');
-                                                        $(this).addClass('active');
-                                                        break;
-                                                    }
-                                                }
-                                            })
+
                                         }else{
                                             listbox.html('<span class="list-loading"><i class="ion-md-warning"></i> 没有检索到'+config.name+'</span>');
                                         }
@@ -588,13 +617,15 @@
                         return result;
                     }
                 }
-            }).show('<div class="input-group">'+exthtml+'<input type="text" class="form-control searchtext" name="keyword" placeholder="'+config.searchHolder+'"/><div class="input-group-append"><a class="btn btn-outline-secondary searchbtn"><i class="ion-md-search"></i></a></div></div><div class="list-group list-group-picker mt-2"></div>','请搜索并选择'+config.name);
+            }).show(contentTpl,config.title);
+            return dlg;
         },
         pickUser:function(callback,filter){
             return this.pickList({
                 'url':window.get_search_url('member'),
                 'name':'会员',
-                'searchHolder':'根据会员id或名称，电话来搜索'
+                'searchHolder':'根据会员id或名称，电话来搜索',
+                'rowTemplate':'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action" style="line-height:30px;">{if @avatar}<img src="{@avatar}" style="width:30px;height:30px;border-radius: 100%;margin-right:10px;" />{else}<i class="ion-md-person"></i>{/if} [{@id}]&nbsp;{if @nickname}{@nickname}{else}{@username}{/if}&nbsp;&nbsp;&nbsp;{if @mobile}<small><i class="ion-md-phone-portrait"></i> {@mobile}</small>{/if}</a>'
             },callback,filter);
         },
         pickArticle:function(callback,filter){
@@ -632,6 +663,7 @@
         },
         pickLocate:function(type, callback, locate){
             var settedLocate=null;
+            var height=$(window).height()*.6
             var dlg=new Dialog({
                 'size':'lg',
                 'backdrop':'static',
@@ -640,19 +672,21 @@
                     var input=body.find('.searchtext');
                     var mapbox=body.find('.map');
                     var mapinfo=body.find('.mapinfo');
-                    mapbox.css('height',$(window).height()*.6);
                     var isloading=false;
-                    var map=InitMap('tencent',mapbox,function(address,locate){
-                        mapinfo.html(address+'&nbsp;'+locate.lng+','+locate.lat);
-                        settedLocate=locate;
-                    },locate);
-                    btn.click(function(){
-                        var search=input.val();
-                        map.setLocate(search);
-                    });
-                    body.find('.setToCenter').click(function (e) {
-                        map.showAtCenter();
-                    })
+                    setTimeout(function () {
+                        var map=InitMap('tencent',mapbox,function(address,locate){
+                            mapinfo.html(address+'&nbsp;'+locate.lng+','+locate.lat);
+                            settedLocate=locate;
+                        },locate);
+                        btn.click(function(){
+                            var search=input.val();
+                            map.setLocate(search);
+                        });
+                        body.find('.setToCenter').click(function (e) {
+                            map.showAtCenter();
+                        })
+                    },500)
+
                 },
                 'onsure':function(body){
                     if(!settedLocate){
@@ -665,9 +699,10 @@
                     }
                 }
             }).show('<div class="input-group"><input type="text" class="form-control searchtext" name="keyword" placeholder="填写地址检索位置"/><div class="input-group-append"><a class="btn btn-outline-secondary searchbtn"><i class="ion-md-search"></i></a></div></div>' +
-                '<div class="map mt-2"></div>' +
+                '<div class="map mt-2" style="height:'+height+'px"></div>' +
                 '<div class="float-right mt-2 mapactions"><a href="javascript:" class="setToCenter">定位到地图中心</a></div>' +
                 '<div class="mapinfo mt-2 text-muted">未选择位置</div>','请选择地图位置');
+            return dlg;
         }
     };
 
