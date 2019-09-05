@@ -58,7 +58,8 @@
                         <span class="badge badge-{$levels[$v['level_id']]['style']}">{$levels[$v['level_id']]['level_name']}</span>
                     </td>
                     <td class="operations">
-                        <a class="btn btn-outline-primary" title="同步" href="{:url('member.fans/update',array('id'=>$v['id']))}"><i class="ion-md-sync"></i> </a>
+                        <a class="btn btn-outline-primary sendmsg" title="发消息" href="javascript:" data-openid="{$v.openid}"><i class="ion-md-text"></i> </a>
+                        <a class="btn btn-outline-primary" title="同步" href="{:url('wechat.fans/sync',array('openid'=>$v['openid'],'single'=>1))}"><i class="ion-md-sync"></i> </a>
                     </td>
                 </tr>
             </volist>
@@ -70,6 +71,52 @@
 </block>
 <block name="script">
     <script type="text/javascript">
+        jQuery(function ($) {
+            $('.sendmsg').click(function (e) {
+                var openid=$(this).data('openid');
+                dialog.action([
+                    '发送文本消息',
+                    '发送文章'
+                ],function (type) {
+                    if(type==0){
+                        dialog.prompt('请填写发送内容',function (text) {
+                            if(text){
+                                sendMessage(openid,'text',text)
+                            }
+                        })
+                    }else if(type==1){
+                        dialog.pickArticle(function (article) {
+                            sendMessage(openid,'news',{
+                                title:article.title,
+                                description:article.description,
+                                image:article.cover,
+                                url:"{:url('index/article/view',['id'=>'__ID__'])}".replace('__ID__',article.id)
+                            });
+                        })
+                    }
+                })
+            })
+            function sendMessage(openid,type,content){
+                var dlg=dialog.loading('正在发送')
+                $.ajax({
+                    url:"{:url('wechat.fans/sendmsg')}",
+                    data:{
+                        openid:openid,
+                        msgtype:type,
+                        content:content
+                    },
+                    dataType:'json',
+                    success:function (json) {
+                        dlg.close()
+                        if(json.code==1){
+                            dialog.success(json.msg)
+                        }else{
+                            dialog.error(json.msg)
+                        }
+                    }
+                })
+            }
 
+        })
     </script>
 </block>

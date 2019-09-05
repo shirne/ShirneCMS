@@ -3,6 +3,9 @@
 namespace app\admin\controller\wechat;
 
 use app\common\model\MemberOauthModel;
+use EasyWeChat\Kernel\Messages\News;
+use EasyWeChat\Kernel\Messages\NewsItem;
+use EasyWeChat\Kernel\Messages\Text;
 use think\Db;
 
 /**
@@ -20,13 +23,28 @@ class FansController extends WechatBaseController
         $this->assign('page',$lists->render());
         return $this->fetch();
     }
+    
+    public function sendmsg($openid, $msgtype, $content){
+        $service = $this->wechatApp->customer_service;
+        if($msgtype == 'text'){
+            $messager = $service->message(new Text($content));
+        }elseif($msgtype=='news'){
+            $content['image']=local_media($content['image']);
+            $messager = $service->message(new News([new NewsItem($content)]));
+        }else{
+            $this->error('暂时不支持的消息');
+        }
+    
+        $result=$messager->to($openid)->send();
+        $this->success('消息已发送');
+    }
 
     /**
      * 同步粉丝资料
      * @param string $openid
      * @param bool $single
      */
-    public function sync($openid='',$single=false){
+    public function sync($openid='',$single=0){
         $app=$this->wechatApp;
         $wechat=$this->currentWechat;
 
@@ -37,7 +55,7 @@ class FansController extends WechatBaseController
                     ->update(MemberOauthModel::mapUserInfo($user));
             }else {
                 $users = $app->user->select(explode(',', $openid));
-                foreach ($users as $user){
+                foreach ($users['user_info_list'] as $user){
                     Db::name('MemberOauth')->where('openid',$user['openid'])
                         ->update(MemberOauthModel::mapUserInfo($user));
                 }
@@ -45,7 +63,7 @@ class FansController extends WechatBaseController
         }else{
             $result=$app->user->list($openid);
             $users = $app->user->select($result['data']['openid']);
-            $this->updateUsers($users,$this->wid);
+            $this->updateUsers($users['user_info_list'],$this->wid);
 
             $sesskey='fans_count_'.$wechat['appid'];
             $count=(int)session($sesskey);
@@ -57,7 +75,6 @@ class FansController extends WechatBaseController
                 session($sesskey,null);
             }
         }
-
 
         $this->success('同步成功');
     }
@@ -76,8 +93,7 @@ class FansController extends WechatBaseController
                 $userData['member_id']=0;
                 $userData['type']='wechat';
                 $userData['type_id']=$wid;
-                Db::name('MemberOauth')->where('openid', $user['openid'])
-                    ->update($userData);
+                Db::name('MemberOauth')->insert($userData);
             }
         }
     }

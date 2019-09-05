@@ -5,6 +5,7 @@ namespace app\admin\controller\wechat;
 
 use app\admin\controller\BaseController;
 use app\common\model\WechatModel;
+use EasyWeChat\Kernel\ServiceContainer;
 use think\Db;
 
 /**
@@ -18,7 +19,7 @@ class WechatBaseController extends BaseController
     protected $currentWechat=null;
 
     /**
-     * @var \EasyWeChat\OfficialAccount\Application|\EasyWeChat\MiniProgram\Application|\EasyWeChat\OpenPlatform\Application
+     * @var ServiceContainer
      */
     protected $wechatApp=null;
 
