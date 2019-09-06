@@ -127,8 +127,8 @@ class WechatModel extends BaseModel
 
         // 如需使用敏感接口（如退款、发送红包等）需要配置 API 证书路径(登录商户平台下载 API 证书)
         if($useCert){
-            $config['cert_path'] = $data['cert_path'];
-            $config['key_path']  = $data['key_path'];
+            $config['cert_path'] = realpath(DOC_ROOT.$data['cert_path']);
+            $config['key_path']  = realpath(DOC_ROOT.$data['key_path']);
         }
 
         if($notify){
