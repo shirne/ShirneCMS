@@ -5,6 +5,8 @@
 *.log
 /htdocs/thinkphp
 .env
+htdocs/cert
+!htdocs/cert/cacert.pem
 /htdocs/public/uploads/*
 !/htdocs/public/uploads/index.html
 /htdocs/resource/node_modules

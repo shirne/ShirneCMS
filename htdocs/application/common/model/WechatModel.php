@@ -12,7 +12,34 @@ use EasyWeChat\Factory;
 class WechatModel extends BaseModel
 {
     protected $autoWriteTimestamp = true;
-
+    
+    public function setCertPathAttr($val, $data){
+        return $this->check_secure_file($val, $data);
+    }
+    public function setKeyPathAttr($val, $data){
+        return $this->check_secure_file($val, $data);
+    }
+    protected function check_secure_file($val, $data){
+        if(!empty($val)){
+            if(strpos($val,'/../cert/')!==0){
+                $truefile = DOC_ROOT.$val;
+                if(file_exists($truefile)){
+                    $fileparts = pathinfo($truefile);
+                    if(!empty($fileparts['basename'])) {
+                        $newname = '/../cert/' . $data['appid'] . '/' . $fileparts['basename'];
+                        $path = dirname(DOC_ROOT . $newname);
+                        if (!is_dir($path)) mkdir($path, 0777, true);
+                        rename($truefile, DOC_ROOT . $newname);
+    
+                        return $newname;
+                    }
+                }
+                return '';
+            }
+        }
+        return $val;
+    }
+    
     public static function to_config($data){
         $options=[
             'response_type' => 'array',
