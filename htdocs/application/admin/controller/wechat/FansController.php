@@ -6,6 +6,7 @@ use app\common\model\MemberOauthModel;
 use EasyWeChat\Kernel\Messages\News;
 use EasyWeChat\Kernel\Messages\NewsItem;
 use EasyWeChat\Kernel\Messages\Text;
+use EasyWeChat\OfficialAccount\Application;
 use think\Db;
 
 /**
@@ -21,6 +22,9 @@ class FansController extends WechatBaseController
         $lists=$model->paginate(15);
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
+        
+        $this->assign('support_message',$this->wechatApp instanceof Application);
+        $this->assign('support_sync',$this->wechatApp instanceof Application);
         return $this->fetch();
     }
     
@@ -85,15 +89,26 @@ class FansController extends WechatBaseController
         foreach ($userinfos as $user){
             $userData=MemberOauthModel::mapUserInfo($user);
             if(isset($userauths[$user['openid']])) {
-                Db::name('MemberOauth')->where('openid', $user['openid'])
-                    ->update($userData);
+                if(!empty($user['unionid'])){
+                    Db::name('MemberOauth')->where('unionid', $user['unionid'])
+                        ->update($userData);
+                }else {
+                    Db::name('MemberOauth')->where('openid', $user['openid'])
+                        ->update($userData);
+                }
             }else{
+                if(!empty($user['unionid'])){
+                    Db::name('MemberOauth')->where('unionid', $user['unionid'])
+                        ->update($userData);
+                }
+                
                 $userData['email']='';
                 $userData['is_follow']=1;
                 $userData['member_id']=0;
                 $userData['type']='wechat';
                 $userData['type_id']=$wid;
                 Db::name('MemberOauth')->insert($userData);
+                
             }
         }
     }

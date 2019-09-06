@@ -7,7 +7,9 @@
         <div class="row list-header">
             <div class="col col-6">
                 <div class="btn-toolbar list-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                    <if condition="$support_sync">
                     <a href="{:url('wechat.fans/sync',['wid'=>$wid])}" class="btn btn-outline-info btn-sm mr-2"><i class="ion-md-sync"></i> 同步粉丝</a>
+                    </if>
                 </div>
             </div>
             <div class="col col-6">
@@ -53,13 +55,17 @@
                         </div>
                     </td>
                     <td>[{$v.member_id}]{$v.username}</td>
-                    <td>{$v.create_time|showdate}</td>
+                    <td>{$v.subscribe_time|showdate}<br />{$v.create_time|showdate}</td>
                     <td>
                         <span class="badge badge-{$levels[$v['level_id']]['style']}">{$levels[$v['level_id']]['level_name']}</span>
                     </td>
                     <td class="operations">
+                        <if condition="$support_message">
                         <a class="btn btn-outline-primary sendmsg" title="发消息" href="javascript:" data-openid="{$v.openid}"><i class="ion-md-text"></i> </a>
+                        </if>
+                        <if condition="$support_sync">
                         <a class="btn btn-outline-primary" title="同步" href="{:url('wechat.fans/sync',array('openid'=>$v['openid'],'single'=>1))}"><i class="ion-md-sync"></i> </a>
+                        </if>
                     </td>
                 </tr>
             </volist>

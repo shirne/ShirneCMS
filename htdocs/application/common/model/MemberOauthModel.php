@@ -29,6 +29,7 @@ class MemberOauthModel extends BaseModel
         $data['province'] =$userInfo['province'];
         $data['country'] =$userInfo['country'];
         $data['language'] =$userInfo['language'];
+        $data['subscribe_time']=$userInfo['subscribe_time'];
 
         return $data;
     }
