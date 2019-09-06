@@ -26,6 +26,8 @@ class BaseHandler
     protected $account_id;
     protected $account_type;
     
+    protected $user;
+    
     public function __construct($app=null)
     {
         $this->app = $app;
@@ -35,28 +37,11 @@ class BaseHandler
     }
     
     protected function onSubscribe($message,$userInfo){
-        $user=Db::name('memberOauth')->where('type_id',$this->account_id)
-            ->where('type',$this->account_type)
-            ->where('openid',$message['FromUserName'])->find();
         
-        $data=MemberOauthModel::mapUserInfo($userInfo);
-        $data['is_follow']=1;
-        //可能是首次订阅
-        if(empty($user)){
-            $data['member_id']=0;
-            $data['email'] ='';
-            $data['type'] = $this->account_type;
-            $data['type_id'] = $this->account_id;
-            MemberOauthModel::create($data);
-            Db::name('memberOauth')->where('type_id',$this->account_id)
-                ->where('type',$this->account_type)
-                ->where('openid',$message['FromUserName'])->find();
-            
+        $this->user = MemberOauthModel::checkUser($userInfo, $this->account);
+        if(!$this->user['is_new']){
             return $this->getTypeReply('resubscribe');
         }
-        Db::name('memberOauth')->where('type_id',$this->account_id)
-            ->where('type',$this->account_type)
-            ->where('openid',$message['FromUserName'])->update($data);
         
         return $this->getTypeReply('subscribe');
     }
