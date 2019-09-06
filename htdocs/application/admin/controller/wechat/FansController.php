@@ -3,6 +3,7 @@
 namespace app\admin\controller\wechat;
 
 use app\common\model\MemberOauthModel;
+use EasyWeChat\Kernel\Messages\Media;
 use EasyWeChat\Kernel\Messages\News;
 use EasyWeChat\Kernel\Messages\NewsItem;
 use EasyWeChat\Kernel\Messages\Text;
@@ -32,9 +33,12 @@ class FansController extends WechatBaseController
         $service = $this->wechatApp->customer_service;
         if($msgtype == 'text'){
             $messager = $service->message(new Text($content));
-        }elseif($msgtype=='news'){
-            $content['image']=local_media($content['image']);
+        }elseif($msgtype=='news') {
+            $content['image'] = local_media($content['image']);
             $messager = $service->message(new News([new NewsItem($content)]));
+        }elseif($msgtype=='media'){
+            if($content['type']=='news' || $content['type']=='video')$content['type'] = 'mp'.$content['type'];
+            $messager = $service->message(new Media($content['media_id'],$content['type']));
         }else{
             $this->error('暂时不支持的消息');
         }

@@ -11,6 +11,20 @@ use think\Db;
  */
 class MaterialController extends WechatBaseController
 {
+    public function search($key='',$type=''){
+        $model=Db::name('wechatMaterial');
+        if(!empty($key)){
+            $model->where('id|media_id|keyword|title','like',"%$key%");
+        }
+        if(!empty($type)){
+            $model->where('type',$type);
+        }
+        
+        $lists=$model->field('id,type,title,media_id,keyword,description')
+            ->order('id ASC')->limit(10)->select();
+        return json(['data'=>$lists,'code'=>1]);
+    }
+    
     /**
      * 素材管理
      * @param $key

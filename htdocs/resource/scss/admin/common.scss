@@ -96,7 +96,6 @@ h6 {
   }
 }
 .input-group-middle {
-  display: -ms-flexbox;
   display: flex;
 
   > .input-group-text {
@@ -741,11 +740,7 @@ table {
 }
 .list-group-picker {
   .list-group-item {
-    display: -ms-flexbox;
-    display:-webkit-flex;
     display:flex;
-    -ms-flex-direction: row;
-    -webkit-flex-direction: row;
     flex-direction: row;
     .imgview {
       width:12%;
@@ -759,9 +754,10 @@ table {
       background-repeat: no-repeat;
     }
     .text-block{
-      -ms-flex: 1 1 auto;
-      -webkit-flex: 1 1 auto;
       flex:1 1 auto;
+      line-height: 1.4em;
+      max-height: 4.2em;
+      overflow: hidden;
     }
   }
 }

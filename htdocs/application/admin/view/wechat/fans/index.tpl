@@ -82,7 +82,9 @@
                 var openid=$(this).data('openid');
                 dialog.action([
                     '发送文本消息',
-                    '发送文章'
+                    '发送文章',
+                    '发送产品',
+                    '发送素材'
                 ],function (type) {
                     if(type==0){
                         dialog.prompt('请填写发送内容',function (text) {
@@ -98,6 +100,29 @@
                                 image:article.cover,
                                 url:"{:url('index/article/view',['id'=>'__ID__'])}".replace('__ID__',article.id)
                             });
+                        })
+                    }else if(type==2){
+                        dialog.pickProduct(function (product) {
+                            sendMessage(openid,'news',{
+                                title:product.title,
+                                description:product.description,
+                                image:product.image,
+                                url:"{:url('index/product/view',['id'=>'__ID__'])}".replace('__ID__',article.id)
+                            });
+                        })
+                    }else if(type==3){
+                        dialog.pickList({
+                            url:"{:url('wechat.material/search')}",
+                            title:'素材类型',
+                            htmlRow:'<option value="{@id}">{@title}</option>',
+                            list:[
+                                { id: 'image',title:'图片'},
+                                { id: 'video',title:'视频'},
+                                { id: 'voice',title:'语音'},
+                                { id: 'news',title:'图文'},
+                            ]
+                        },function (material) {
+                            sendMessage(openid,'media',{media_id:material.media_id,type:material.type});
                         })
                     }
                 })

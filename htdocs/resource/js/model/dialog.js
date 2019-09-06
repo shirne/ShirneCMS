@@ -565,14 +565,18 @@
                     var extField=null;
                     if(config.extend){
                         extField=body.find('[name='+config.extend.name+']');
-                        $.ajax({
-                           url:config.extend.url,
-                            type:'GET',
-                            dataType:'JSON',
-                            success:function (json) {
-                                extField.append(config.extend.htmlRow.compile(json.data,true));
-                            }
-                        });
+                        if(config.extend.list){
+                            extField.append(config.extend.htmlRow.compile(config.extend.list, true));
+                        }else {
+                            $.ajax({
+                                url: config.extend.url,
+                                type: 'GET',
+                                dataType: 'JSON',
+                                success: function (json) {
+                                    extField.append(config.extend.htmlRow.compile(json.data, true));
+                                }
+                            });
+                        }
                     }
                     btn.click(function(){
                         if(isloading)return;
