@@ -652,11 +652,12 @@ DROP TABLE IF EXISTS `sa_member_oauth`;
 
 CREATE TABLE `sa_member_oauth` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `member_id` int(11) NOT NULL,
+  `member_id` int(11) NOT NULL DEFAULT 0,
   `type` varchar(20) DEFAULT NULL COMMENT 'qq/sina/github/weixin/wxapp',
   `type_id` INT DEFAULT 0,
   `openid` varchar(64) DEFAULT '',
   `unionid` varchar(64) DEFAULT '',
+  `subscribe_time` int(11) DEFAULT 0,
   `data` TEXT,
   `create_time` int(11) DEFAULT 0,
   `update_time` int(11) DEFAULT 0,
