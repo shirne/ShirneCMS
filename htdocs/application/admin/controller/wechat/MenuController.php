@@ -2,6 +2,8 @@
 
 namespace app\admin\controller\wechat;
 
+use EasyWeChat\OfficialAccount\Application;
+
 /**
  * 菜单管理
  * Class MenuController
@@ -17,6 +19,9 @@ class MenuController extends WechatBaseController
      */
     public function edit($refresh=0)
     {
+        if(!$this->wechatApp instanceof Application){
+            $this->error('该类型账号不支持自定义菜单功能');
+        }
         $app=$this->wechatApp;
         $model=$this->currentWechat;
         $cacheKey='wechat-menu-'.$model['appid'];

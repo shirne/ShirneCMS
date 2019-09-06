@@ -27,3 +27,7 @@ VALUES
 
 ALTER TABLE `sa_member_oauth`
   ADD `subscribe_time` int(11) DEFAULT '0' AFTER `unionid`;
+
+ALTER TABLE `sa_wechat_material_article`
+ADD `thumb_url` VARCHAR(150) NULL DEFAULT '' AFTER `material_id`,
+  ADD `url` VARCHAR(200) NULL DEFAULT '' AFTER `content`;

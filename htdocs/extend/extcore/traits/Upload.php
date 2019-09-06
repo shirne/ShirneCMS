@@ -55,7 +55,7 @@ trait Upload
     protected function checkFile($file,$isImg=false) {
         //文件上传失败
         if($file['error'] !== 0) {
-            $this->uploadError= '文件上传失败！';
+            $this->uploadError= '文件上传失败'.($file['error']).'！';
             return false;
         }
         //检查文件类型

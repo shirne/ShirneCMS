@@ -29,11 +29,10 @@ class WechatController extends BaseController
         }
         $key=empty($key)?"":base64_decode($key);
         $model = Db::name('wechat');
-        $where=array();
         if(!empty($key)){
-            $where[] = array('title|appid','like',"%$key%");
+            $model->whereLike('title|appid',"%$key%");
         }
-        $lists=$model->where($where)->order('ID DESC')->paginate(15);
+        $lists=$model->order('ID DESC')->paginate(15);
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
         return $this->fetch();

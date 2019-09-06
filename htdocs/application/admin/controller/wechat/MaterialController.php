@@ -1,6 +1,7 @@
 <?php
 
 namespace app\admin\controller\wechat;
+use EasyWeChat\OfficialAccount\Application;
 use think\Db;
 
 /**
@@ -17,9 +18,12 @@ class MaterialController extends WechatBaseController
      * @param int $page
      * @return mixed
      */
-    public function index($key='',$type='news',$page=1){
+    public function index($key='',$type='news'){
         if($this->request->isPost()){
             return redirect(url('',['wid'=>$this->wid,'key'=>base64_encode($key),'type'=>$type]));
+        }
+        if(!$this->wechatApp instanceof Application){
+            $this->error('该类型账号不支持素材管理功能');
         }
         $key=empty($key)?"":base64_decode($key);
         $model = Db::name('wechatMaterial');
@@ -37,13 +41,12 @@ class MaterialController extends WechatBaseController
      * 素材同步
      * @param $type
      */
-    public function sync($type){
+    public function sync($type, $count=0){
         $app=$this->wechatApp;
 
-        $count=0;
         $totals=$app->material->stats();
         $total_count=$totals[$type.'_count'];
-        while($count<$total_count){
+        if($count<$total_count){
             $materials=$app->material->list($type,$count,20);
             if(!empty($materials['item'])){
                 foreach ($materials['item'] as $item){
@@ -56,23 +59,49 @@ class MaterialController extends WechatBaseController
                     if(in_array($type,['image','voice','video'])){
                         $data['url']=$item['url'];
                         $data['title']=$item['name'];
-                    }
-                    if($type=='news'){
-                        $data['content']=json_encode($item['content'],JSON_UNESCAPED_UNICODE);
+                    }else{
+                        $data['title']=$item['content']['news_item'][0]['title'];
                     }
                     if(empty($exist)){
                         $data['media_id']=$item['media_id'];
-                        Db::name('wechatMaterial')->insert($data);
+                        $result = Db::name('wechatMaterial')->insert($data,false,true);
+                        $exist = ['id'=>$result];
                     }else{
-                        Db::name('wechatMaterial')->where('id',$exist['id'])
+                        $result = Db::name('wechatMaterial')->where('id',$exist['id'])
                             ->update($data);
+                    }
+    
+                    if($result && $type=='news'){
+                        $content=is_array($item['content'])?$item['content']:json_encode($item['content'],JSON_UNESCAPED_UNICODE);
+                        $exists =Db::name('wechatMaterialArticle')->where('material_id',$exist['id'])->select();
+                        $exists = array_index($exists,'title');
+                        $updateids=[];
+                        foreach ($content['news_item'] as $news){
+                            $news['update_time']=time();
+                            if(isset($exists[$news['title']])){
+                                Db::name('wechatMaterialArticle')->where('id',$exists[$news['title']]['id'])
+                                    ->update($news);
+                                $updateids[]=$exists[$news['title']]['id'];
+                            }else{
+                                $news['wechat_id'] = $this->wid;
+                                $news['material_id'] = $exist['id'];
+                                $news['create_time']=time();
+                                $aid = Db::name('wechatMaterialArticle')->insert($news,false,true);
+                                $updateids[]=$aid;
+                            }
+                        }
+                        Db::name('wechatMaterialArticle')->where('wechat_id',$this->wid)
+                            ->where('material_id',$exist['id'])
+                            ->whereNotIn('id',$updateids)->delete();
                     }
                 }
             }
-
-            $count += $materials['ITEM_COUNT'];
+            if($materials['item_count']>0) {
+                $count += $materials['item_count'];
+                $this->success('已同步 ' . $count . '/' . $total_count, url('wechat.material/sync', ['type' => $type, 'count' => $count ]));
+            }
         }
-        $this->success('同步成功');
+        $this->success('同步成功 '.$total_count);
     }
 
     /**

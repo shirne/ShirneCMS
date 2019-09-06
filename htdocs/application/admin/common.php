@@ -86,4 +86,10 @@ function ignore_array($val){
     return strval($val);
 }
 
+function wechat_is_official($type){
+    if(in_array($type,['wechat','subscribe','service'])){
+        return true;
+    }
+    return false;
+}
 //end file

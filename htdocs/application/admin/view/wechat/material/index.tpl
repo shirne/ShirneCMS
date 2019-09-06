@@ -9,7 +9,7 @@
         <div class="row list-header">
             <div class="col-6">
                 <a href="{:url('wechat/index')}" class="btn btn-outline-primary btn-sm"><i class="ion-md-arrow-back"></i> 返回列表</a>
-                <a href="{:url('wechat.marerial/sync',array('wid'=>$wid))}" class="btn btn-outline-primary btn-sm btn-sync"><i class="ion-md-sync"></i> 同步素材</a>
+                <a href="{:url('wechat.material/sync',array('type'=>'__TYPE__'))}" class="btn btn-outline-primary btn-sm btn-sync"><i class="ion-md-sync"></i> 同步素材</a>
                 <a href="javascript:" class="btn btn-outline-primary btn-sm"><i class="ion-md-add"></i> 添加素材</a>
             </div>
             <div class="col-6">
@@ -27,7 +27,7 @@
             <thead>
             <tr>
                 <th width="50">编号</th>
-                <th>素材ID</th>
+                <th>素材标题</th>
                 <th>类型</th>
                 <th>更新日期</th>
                 <th>关键字</th>
@@ -35,10 +35,11 @@
             </tr>
             </thead>
             <tbody>
+            <php>$empty=list_empty(6);</php>
             <volist name="lists" id="v" empty="$empty">
                 <tr>
                     <td>{$v.id}</td>
-                    <td>{$v.media_id}</td>
+                    <td>{$v.title|default='无标题'}<br /><span class="text-muted" style="font-size: 12px;">{$v.media_id}</span></td>
                     <td>{$v.type}</td>
                     <td>{$v.update_time|showdate}</td>
                     <td>{$v.keyword}</td>
@@ -60,19 +61,43 @@
                 e.preventDefault();
                 var self=$(this);
                 if(self.data('syncing'))return;
-                self.data('syncing',1);
-                self.addClass('disabled');
-                var url=self.attr('href');
-                $.ajax({
-                    url:url,
-                    dataType:'JSON',
-                    type:'GET',
-                    success:function (json) {
-                        self.data('syncing',0);
-                        self.removeClass('disabled');
-                        dialog.alert(json.msg);
-                    }
+                dialog.action(['图片（image）','视频（video）','语音 （voice）','图文（news）'],function (idx) {
+                    self.data('syncing',1);
+                    self.addClass('disabled');
+                    var loading = dialog.loading('正在同步...',100)
+                    var url=self.attr('href');
+                    $.ajax({
+                        url:url.replace('__TYPE__',['image','video','voice','news'][idx]),
+                        dataType:'JSON',
+                        type:'GET',
+                        success:function (json) {
+                            loading.close()
+                            if(json.msg.indexOf('成功')>-1) {
+                                self.data('syncing', 0);
+                                self.removeClass('disabled');
+
+                                if (json.code == 1) {
+                                    dialog.success(json.msg);
+                                    setTimeout(function () {
+                                        location.reload()
+                                    }, 600)
+                                } else {
+                                    dialog.error(json.msg)
+                                }
+                            }else{
+                                var func=arguments.callee
+                                loading = dialog.loading(json.msg,100)
+                                $.ajax({
+                                    url:json.url,
+                                    dataType:'JSON',
+                                    type:'GET',
+                                    success:func
+                                })
+                            }
+                        }
+                    })
                 })
+
             })
         })
     </script>

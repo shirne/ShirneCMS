@@ -43,10 +43,13 @@
                     <td>
                         <div class="btn-group btn-group-sm">
                             <a class="btn btn-outline-dark qrcode-btn" href="javascript:" data-qrcode="{$v.qrcode}"><i class="ion-md-expand"></i> 二维码</a>
-                            <a class="btn btn-outline-dark" href="{:url('wechat.material/index',array('wid'=>$v['id']))}" ><i class="ion-md-appstore"></i> 素材</a>
+                            <if condition="wechat_is_official($v['account_type'])">
+                            <a class="btn btn-outline-dark" href="{:url('wechat.material/index',array('wid'=>$v['id']))}" ><i class="ion-md-appstore"></i> 素材</a></if>
                             <a class="btn btn-outline-dark" href="{:url('wechat.fans/index',array('wid'=>$v['id']))}" ><i class="ion-md-contacts"></i> 粉丝</a>
+                            <if condition="wechat_is_official($v['account_type'])">
                             <a class="btn btn-outline-dark" href="{:url('wechat.reply/index',array('wid'=>$v['id']))}" ><i class="ion-md-chatboxes"></i> 回复</a>
                             <a class="btn btn-outline-dark" href="{:url('wechat.menu/edit',array('wid'=>$v['id']))}"><i class="ion-md-reorder"></i> 菜单</a>
+                            </if>
                             <a class="btn btn-outline-dark" href="{:url('wechat.tplmsg/index',array('wid'=>$v['id']))}"><i class="ion-md-notifications"></i> 模板消息</a>
                         </div>
                     </td>
