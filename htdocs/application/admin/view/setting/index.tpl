@@ -298,11 +298,16 @@
         });
         $('.locationPick').click(function () {
             var input=$(this).parents('.input-group').find('input[type=text]');
-            var locates=input.val().split(',');
+            var locate=null
+            var locates=input.val()
+            if(locates){
+                locates=locates.split(',');
+                locate={lng:locates[0],lat:locates[1]}
+            }
             dialog.pickLocate('',function (locate) {
                 console.log(locate);
                 input.val(locate.lng+','+locate.lat);
-            },{lng:locates[0],lat:locates[1]});
+            },locate);
         });
         $('.html-content').each(function (idx,item) {
             UE.getEditor($(item).attr('id'),{
