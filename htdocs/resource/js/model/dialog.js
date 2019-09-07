@@ -18,9 +18,9 @@
         '    </div>\n' +
         '</div>';
     var dialogIdx=0;
-    function format_btn(btn){
+    function format_btn(btn,isdefault){
         if(typeof(btn) === typeof 'a'){
-            return {'text':btn};
+            btn = {'text':btn,'isdefault':isdefault?true:false};
         }
         if(btn.isdefault){
             if(!btn.type){
@@ -34,7 +34,7 @@
         //处理按钮
         if(opts.btns) {
             if (typeof(opts.btns) == 'string') {
-                opts.btns = [format_btn(opts.btns)];
+                opts.btns = [format_btn(opts.btns,true)];
             }
             else if(opts.btns instanceof Array) {
                 for (var i = 0; i < opts.btns.length; i++) {
