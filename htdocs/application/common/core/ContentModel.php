@@ -148,7 +148,7 @@ class ContentModel extends BaseModel
      */
     public function tagList($attrs, $filter=false)
     {
-        $model=$this->tagBase($attrs['hidden']?:null);
+        $model=$this->tagBase(isset($attrs['hidden'])?$attrs['hidden']:null);
         if(!empty($attrs['category'])){
             $cate_id=$attrs['category'];
             if(!is_int($cate_id)){
@@ -199,7 +199,7 @@ class ContentModel extends BaseModel
         }
         $model->order($attrs['order']);
         
-        if($attrs['page']){
+        if(!empty($attrs['page'])){
             $page = max(1,intval($attrs['page']));
             $pagesize = isset($attrs['pagesize'])?intval($attrs['pagesize']):10;
             if($pagesize<1)$pagesize=1;

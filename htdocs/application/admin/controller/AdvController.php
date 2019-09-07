@@ -82,6 +82,7 @@ class AdvController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             }else{
+                if(!isset($data['ext_set']))$data['ext_set']=[];
                 $updated=$model->allowField(true)->save($data);
                 if ($updated) {
                     $this->success(lang('Update success!'), url('adv/index'));

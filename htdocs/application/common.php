@@ -28,9 +28,9 @@ function writelog($message,$type=\think\Log::INFO){
 }
 
 function force_json_decode($string){
-    if(is_array($string)){
-        return $string;
-    }
+    if(is_array($string))return $string;
+    if(empty($string))return [];
+    
     $json = @json_decode($string,true);
     return empty($json)?[]:$json;
 }

@@ -56,12 +56,7 @@ class AdvGroupModel extends BaseModel
             }
             return $item;
         }
-        if(!empty($item['ext_data'])){
-            $item['ext'] = @json_decode($item['ext_data'],true);
-        }
-        if(!is_array($item['ext'])){
-            $item['ext'] = [];
-        }
+        $item['ext'] = force_json_decode($item['ext_data']);
         return $item;
     }
 }

@@ -280,8 +280,8 @@
                 <tbody>
                     <foreach name="skus" item="sku" key="k">
                     <tr data-idx="{$k}">
-                        <foreach name="sku['specs']" item="spec" key="sk">
-                            <td><input type="hidden" class="spec-val" data-specid="{$sk}" name="skus[{$k}][specs][{$sk}]" value="{$spec}" />{$spec}</td>
+                        <foreach name="product['spec_data']" item="spec" key="sk">
+                            <td><input type="hidden" class="spec-val" data-specid="{$sk}" name="skus[{$k}][specs][{$sk}]" value="{$sku['specs'][$sk]}" />{$sku['specs'][$sk]}</td>
                         </foreach>
                         <td>
                             <input type="hidden" class="field-sku_id" name="skus[{$k}][sku_id]" value="{$sku.sku_id}"/>

@@ -135,6 +135,7 @@ class ProductController extends BaseController
         }else{
             $data['prop_data']=[];
         }
+        if(!isset($data['spec_data']))$data['spec_data']=[];
         if($data['is_commission'] == 3){
             $data['commission_percent']=$data['commission_amount'];
         }elseif($data['is_commission']==4){
@@ -271,6 +272,7 @@ class ProductController extends BaseController
                     //delete_image($delete_images);
                     $existsIds=[];
                     foreach ($skus as $sku){
+                        if(!isset($sku['specs']))$sku['specs']=[];
                         if($sku['sku_id']) {
                             ProductSkuModel::update($sku);
                             $existsIds[]=$sku['sku_id'];

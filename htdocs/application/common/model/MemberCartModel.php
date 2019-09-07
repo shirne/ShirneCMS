@@ -108,8 +108,10 @@ class MemberCartModel extends BaseModel
                 
                 if(isset($datas[$cart['sku_id']])){
                     $item = $datas[$cart['sku_id']];
+                    $item['id']=$cart['id'];
                 }else{
-                    $item=[];
+                    //商品已删除或下架
+                    $item=$cart;
                 }
                 $item['cart_product_price']=$cart['product_price'];
                 $item['cart_product_image']=$cart['product_image'];
