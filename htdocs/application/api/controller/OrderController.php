@@ -74,7 +74,8 @@ class OrderController extends AuthedController
         }else{
             $address=Db::name('MemberAddress')->where('member_id',$this->user['id'])
                 ->where('address_id',$data['address_id'])->find();
-            $balancepay=$data['pay_type']=='balance'?1:0;
+            $balancepay=0;
+            if(isset($data['pay_type']) && $data['pay_type']=='balance')$balancepay=1;
 
             $platform=$this->request->tokenData['platform']?:'';
             $appid=$this->request->tokenData['appid']?:'';
@@ -103,7 +104,7 @@ class OrderController extends AuthedController
 
                 }
             }else{
-                $this->error('下单失败');
+                $this->error('下单失败:'.OrderFacade::getError());
             }
         }
     }

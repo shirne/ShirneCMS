@@ -198,7 +198,7 @@ class OrderModel extends BaseModel
 
     public function makeOrder($member,$products,$address,$extdata,$balance_pay=1,$ordertype=1){
         if(empty($member) || empty($member['id'])){
-            $this->error='指定的下单用户资料错误';
+            $this->setError('指定的下单用户资料错误');
             return false;
         }
         
@@ -226,30 +226,30 @@ class OrderModel extends BaseModel
     
         //运费模板
         $postage_area_ids = array_column($products,'postage_area_id');
-        $postage_area_ids = array_unique(array_filter($postage_area_ids));
+        if(!empty($postage_area_ids))$postage_area_ids = array_unique(array_filter($postage_area_ids));
         if(!empty($postage_area_ids)){
             $postageareas=PostageModel::getAreaList($postage_area_ids);
         }
         foreach ($products as $k=>$product){
             if($product['storage']<$product['count']){
-                $this->error='商品['.$product['product_title'].']库存不足';
+                $this->setError('商品['.$product['product_title'].']库存不足');
                 return false;
             }
             if($product['count']<1){
-                $this->error='商品['.$product['product_title'].']数量错误';
+                $this->setError('商品['.$product['product_title'].']数量错误');
                 return false;
             }
     
             if(!empty($product['levels'])){
                 if (!in_array($member['level_id'], $product['levels'])) {
-                    $this->error='您当前会员组不允许购买商品[' . $product['product_title'] . ']';
+                    $this->setError('您当前会员组不允许购买商品[' . $product['product_title'] . ']');
                     return false;
                 }
             }
             
             $release_price=$product['product_price'];
             if($level['diy_price']==1 && isset($product['ext_price'][$level['level_id']])){
-                $release_price = round($product['ext_price'][$level['level_id']]);
+                $release_price = round($product['ext_price'][$level['level_id']],2);
             }else {
                 if ($product['is_discount']) {
                     $release_price = round($release_price * $discount,2);
@@ -261,10 +261,10 @@ class OrderModel extends BaseModel
             $total_price += $price;
             
             //运费
-            if($product['postage_id']>0){
+            if($product['postage_id']>0 && !empty($postageareas)){
                 $parea_id=$product['postage_area_id']?:0;
                 if(!isset($postageareas[$parea_id])){
-                    $this->error='参数错误';
+                    $this->setError('参数错误');
                     return false;
                 }
                 
@@ -338,8 +338,8 @@ class OrderModel extends BaseModel
                         while($atotal>0){
                             $curfee += $area['extend_fee'];
                             $atotal-=$area['extend'];
-                            if($area['ceiling']>0 && $atotal>$area['ceiling']){
-                                $atotal=$area['ceiling'];
+                            if($area['ceiling']>0 && $curfee>$area['ceiling']){
+                                $curfee=$area['ceiling'];
                                 break;
                             }
                         }
@@ -365,8 +365,8 @@ class OrderModel extends BaseModel
         //比较客户端传来的价格
         if(is_array($extdata) ){
             if(isset($extdata['total_price'])) {
-                if ($total_price != $extdata['total_price']*100) {
-                    $this->error = '下单商品价格已变动';
+                if ($total_price != intval($extdata['total_price']*100)) {
+                    $this->setError('下单商品价格已变动');
             
                     return false;
                 }
@@ -375,7 +375,7 @@ class OrderModel extends BaseModel
             //邮费价格误差控制在0.5以内
             if( isset($extdata['total_postage'])) {
                 if (abs($postage_fee - $extdata['total_postage'])>.5) {
-                    $this->error = '邮费价格已变动';
+                    $this->setError('邮费价格已变动');
                 
                     return false;
                 }else{
@@ -385,18 +385,19 @@ class OrderModel extends BaseModel
         }
         
         $this->startTrans();
-
+        
         if($balance_pay) {
             $debit = money_log($member['id'], -$total_price, "下单支付", 'consume',0,is_string($balance_pay)?$balance_pay:'money');
             if ($debit) $status = 1;
             else{
-                $this->error="余额不足";
+                $this->setError("余额不足");
                 return false;
             }
         }
         $time=time();
+        $orderno=$this->create_no();
         $orderdata=array(
-            'order_no'=>$this->create_no(),
+            'order_no'=>$orderno,
             'member_id'=>$member['id'],
             'level_id'=>$level_id,
             'payamount'=>$total_price*.01 + $postage_fee,
@@ -431,7 +432,7 @@ class OrderModel extends BaseModel
             $orderdata['remark']=$extdata;
         }
         $result= $this->insert($orderdata,false,true);
-
+        
         if($result){
             $i=0;
             foreach ($products as $product){
@@ -462,7 +463,7 @@ class OrderModel extends BaseModel
             }
             $this->commit();
         }else{
-            $this->error = "入单失败";
+            $this->setError("入单失败");
             $this->rollback();
         }
         if($status>0 ){
