@@ -96,6 +96,24 @@ class AdvController extends BaseController
         $this->assign('id',$id);
         return $this->fetch();
     }
+    
+    public function lock($id){
+        $booth=AdvGroupModel::get(intval($id));
+        if(empty($booth)){
+            $this->error('广告位不存在');
+        }
+        $booth->save(['locked'=>1]);
+        $this->success('锁定成功');
+    }
+    
+    public function unlock($id){
+        $booth=AdvGroupModel::get(intval($id));
+        if(empty($booth)){
+            $this->error('广告位不存在');
+        }
+        $booth->save(['locked'=>0]);
+        $this->success('解锁成功');
+    }
 
     /**
      * 删除广告位

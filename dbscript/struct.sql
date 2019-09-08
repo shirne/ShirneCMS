@@ -178,8 +178,10 @@ CREATE TABLE `sa_adv_group` (
   `flag` varchar(50) DEFAULT '',
   `ext_set` varchar(500) DEFAULT '',
   `create_time` int(11) DEFAULT 0,
-  `status` int(11) DEFAULT 0,
-  PRIMARY KEY (`id`)
+  `locked` tinyint(11) DEFAULT 0,
+  `status` tinyint(11) DEFAULT 0,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `flag_UNIQUE` (`flag` ASC)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -201,7 +203,7 @@ CREATE TABLE `sa_adv_item` (
   `create_time` int(11) DEFAULT 0,
   `update_time` int(11) DEFAULT 0,
   `sort` int(11) DEFAULT 0,
-  `status` int(11) DEFAULT 0,
+  `status` tinyint(11) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

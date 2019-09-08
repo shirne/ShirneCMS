@@ -27,7 +27,7 @@
                 <th width="50">编号</th>
                 <th>名称</th>
                 <th>调用标识</th>
-                <th width="160">&nbsp;</th>
+                <th width="180">&nbsp;</th>
             </tr>
         </thead>
         <tbody>
@@ -38,12 +38,18 @@
                 <td>{$v.title}</td>
                 <td>{$v.flag}</td>
                 <td class="operations">
-                    <a class="btn btn-outline-primary" title="编辑" href="{:url('adv/update',array('id'=>$v['id']))}"><i class="ion-md-create"></i></a>
+                    <if condition="$v['locked']">
+                        <a class="btn btn-outline-primary" title="解锁" href="{:url('adv/unlock',array('id'=>$v['id']))}"><i class="ion-md-unlock"></i></a>
+                        <else/>
+                        <a class="btn btn-outline-primary" title="编辑" href="{:url('adv/update',array('id'=>$v['id']))}"><i class="ion-md-create"></i></a>
+                        <a class="btn btn-outline-primary" title="锁定" href="{:url('adv/lock',array('id'=>$v['id']))}"><i class="ion-md-lock"></i></a>
+                    </if>
+
                     <a class="btn btn-outline-primary" title="广告列表" href="{:url('adv/itemlist',array('gid'=>$v['id']))}"><i class="ion-md-menu"></i></a>
                     <a class="btn btn-outline-primary" title="添加广告" href="{:url('adv/itemadd',array('gid'=>$v['id']))}"><i class="ion-md-add"></i></a>
-                    <a class="btn btn-outline-danger link-confirm" data-confirm="您真的确定要删除吗？
-
-删除后将不能恢复!" title="删除" href="{:url('adv/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i></a>
+                    <if condition="$v['locked'] eq 0">
+                    <a class="btn btn-outline-danger link-confirm" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" title="删除" href="{:url('adv/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i></a>
+                    </if>
                 </td>
             </tr>
         </volist>
