@@ -1,15 +1,15 @@
 (function(window,$){
-    var dialogTpl='<div class="modal fade" id="{@id}" tabindex="-1" role="dialog" aria-labelledby="{@id}Label" aria-hidden="true">\n' +
-        '    <div class="modal-dialog">\n' +
-        '        <div class="modal-content">\n' +
+    var dialogTpl='<div class="modal fade" id="{@id}" {if tabindex}tabindex="{@tabindex}"{/if} role="dialog" aria-labelledby="{@id}Label" aria-hidden="true">\n' +
+        '    <div class="modal-dialog {@size}">\n' +
+        '        <div class="modal-content {@contentClass}">\n' +
         '            <div class="modal-header">\n' +
-        '                <h4 class="modal-title" id="{@id}Label"></h4>\n' +
+        '                <h4 class="modal-title" id="{@id}Label">{@title}</h4>\n' +
         '                <button type="button" class="close" data-dismiss="modal">\n' +
         '                    <span aria-hidden="true">&times;</span>\n' +
         '                    <span class="sr-only">Close</span>\n' +
         '                </button>\n' +
         '            </div>\n' +
-        '            <div class="modal-body">\n' +
+        '            <div class="modal-body {@bodyClass}">\n' +
         '            </div>\n' +
         '            <div class="modal-footer">\n' +
         '                <nav class="nav nav-fill"></nav>\n' +
@@ -47,21 +47,22 @@
         }
 
         this.options=$.extend({
-            'id':'modal_dialog_'+dialogIdx++,
-            'header':true,
-            'footer':true,
-            'backdrop':true,
-            'size':'',
-            'btns':[
+            id:'modal_dialog_'+dialogIdx++,
+            header:true,
+            footer:true,
+            backdrop:true,
+            tabindex:-1,
+            size:'',
+            btns:[
                 {'text':'取消','type':'secondary'},
                 {'text':'确定','isdefault':true,'type':'primary'}
             ],
-            'contentClass':'',
-            'onsure':null,
-            'onshow':null,
-            'onshown':null,
-            'onhide':null,
-            'onhidden':null
+            contentClass:'',
+            onsure:null,
+            onshow:null,
+            onshown:null,
+            onhide:null,
+            onhidden:null
         },opts);
         if(!this.options.btns)this.options.btns=[];
         var btncount=this.options.btns.length;
@@ -112,10 +113,18 @@
         if(!title)title='系统提示';
 
         if(this.box.length<1) {
-            $(document.body).append(dialogTpl.replace('modal-body','modal-body'+(this.options.bodyClass?(' '+this.options.bodyClass):'')).compile({'id': this.options.id}));
+            $(document.body).append(dialogTpl.compile({
+                id: this.options.id,
+                bodyClass:this.options.bodyClass,
+                contentClass:this.options.contentClass,
+                tabindex:this.options.tabindex,
+                size:this.options.size?('modal-'+this.options.size):'',
+                title:title
+            }));
             this.box=$('#'+this.options.id);
         }else{
             this.box.unbind();
+            this.box.find('.modal-title').text(title);
         }
         if(!this.options.header){
             this.box.find('.modal-header').remove();
@@ -135,7 +144,6 @@
             this.box.data('keyboard',false);
         }
 
-        //this.box.find('.modal-footer .btn-primary').unbind();
         var self=this;
         Dialog.instance=self;
 
@@ -145,18 +153,6 @@
             btns.push(this.generBtn(this.options.btns[i],i));
         }
         this.box.find('.modal-footer .nav').html(btns.join('\n'));
-
-        var dialog=this.box.find('.modal-dialog');
-        dialog.removeClass('modal-sm').removeClass('modal-lg');
-        if(this.options.size=='sm') {
-            dialog.addClass('modal-sm');
-        }else if(this.options.size=='lg') {
-            dialog.addClass('modal-lg');
-        }
-        if(this.options.contentClass){
-            dialog.find('.modal-content').addClass(this.options.contentClass);
-        }
-        this.box.find('.modal-title').text(title);
 
         var body=this.box.find('.modal-body');
         body.html(html);
@@ -263,6 +259,7 @@
                 footer:false,
                 header:false,
                 backdrop:false,
+                tabindex:'',
                 size:'sm',
                 contentClass:cssClass,
                 onshow:function (body) {
@@ -297,10 +294,10 @@
                 message=message['content'];
             }
             var iconMap= {
-                'success':'checkmark-circle',
-                'info': 'information-circle',
-                'warning':'alert',
-                'error':'remove-circle'
+                success:'checkmark-circle',
+                info: 'information-circle',
+                warning:'alert',
+                error:'remove-circle'
             };
             var color='primary';
             if(icon===undefined)icon='information-circle';
@@ -374,16 +371,16 @@
             var inteval=0;
 
             var dlg = new Dialog({
-                'header':false,
-                'size':'sm',
-                'backdrop':'static',
-                'onsure':function(){
+                header:false,
+                size:'sm',
+                backdrop:'static',
+                onsure:function(){
                     if(confirm && typeof confirm==='function'){
                         called=true;
                         return confirm();
                     }
                 },
-                'onhide':function () {
+                onhide:function () {
                     clearInterval(inteval);
                     if(called === false && typeof cancel === 'function'){
                         return cancel();
