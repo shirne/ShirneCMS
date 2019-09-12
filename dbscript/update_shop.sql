@@ -102,6 +102,7 @@ CREATE TABLE `sa_product_coupon` (
   `expiry_type` tinyint(11) DEFAULT 0,
   `expiry_time` int(11) DEFAULT 0,
   `expiry_day` int(11) DEFAULT 0,
+  `status` tinyint(11) DEFAULT 1,
   `cost_credit` int(11) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -113,10 +114,15 @@ CREATE TABLE `sa_member_coupon` (
   `coupon_id` int(11) DEFAULT 0,
   `member_id` int(11) DEFAULT 0,
   `title` varchar(100) DEFAULT '',
+  `bind_type` tinyint(11) DEFAULT 0 COMMENT '0-通用 1-类目 2-品牌 3-指定商品 4-指定sku',
   `cate_id` int(11) DEFAULT 0,
   `brand_id` int(11) DEFAULT 0,
   `product_id` int(11) DEFAULT 0,
   `sku_id` int(11) DEFAULT 0,
+  `type` tinyint(4) DEFAULT 0 COMMENT '0- 满减 1-折扣',
+  `limit` int(11) DEFAULT 0,
+  `amount` int(11) DEFAULT 0,
+  `discount` int(11) DEFAULT 0,
   `create_time` int(11) DEFAULT 0,
   `expiry_time` int(11) DEFAULT 0,
   `status` tinyint(11) DEFAULT 1,
