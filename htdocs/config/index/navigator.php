@@ -19,10 +19,10 @@ return array (
       0 => 'Article/index',
       1 => 
       array (
-        'name' => 'news',
+        'name' => '新闻资讯',
       ),
     ),
-    'subnav' => 'Article/news',
+    'subnav' => 'Article/新闻资讯',
   ),
   2 => 
   array (
@@ -33,10 +33,10 @@ return array (
       0 => 'Article/index',
       1 => 
       array (
-        'name' => 'cases',
+        'name' => '作品展示',
       ),
     ),
-    'subnav' => 'Article/cases',
+    'subnav' => 'Article/作品展示',
   ),
   3 => 
   array (
@@ -46,11 +46,7 @@ return array (
     'url' => 
     array (
       0 => 'Page/index',
-      1 => 
-      array (
-        'group' => 'about',
-      ),
     ),
-    'subnav' => 'Page/about',
+    'subnav' => 'Page/',
   ),
 );

@@ -22,12 +22,12 @@ class NoticeController extends BaseController
     public function index($type='')
     {
         $model = Db::name('Notice');
-        $where=array();
+        
         if(!empty($type )){
-            $where['type'] = $type;
+            $model->where('type', $type);
         }
 
-        $lists=$model->where($where)->order('ID DESC')->paginate(15);
+        $lists=$model->order('ID DESC')->paginate(15);
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
         return $this->fetch();

@@ -4,7 +4,7 @@
 <include file="public/bread" menu="notice_index" title="公告详情" />
 
 <div id="page-wrapper">
-    <div class="page-header">修改公告</div>
+    <div class="page-header">{$id>0?'修改':'添加'}公告</div>
     <div class="page-content">
     <form method="post" action="">
         <div class="form-group">
@@ -39,7 +39,7 @@
         </div>
         <div class="form-group">
             <input type="hidden" name="id" value="{$model.id}">
-            <button type="submit" class="btn btn-primary">更新</button>
+            <button type="submit" class="btn btn-primary">保存</button>
         </div>
     </form>
     </div>
