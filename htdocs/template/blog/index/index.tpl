@@ -44,7 +44,7 @@
                             {$art.description}
                         </div>
                         <div class="text-muted">
-                            <span><i class="ion-md-time"></i> {$art.create_time|showdate}</span>
+                            <a href="{:url('index/article/index',['name'=>$art['category_name']])}"><span  class="badge badge-secondary">{$art.category_title}</span></a> <span><i class="ion-md-time"></i> {$art.create_time|showdate}</span>
                         </div>
                     </div>
                 </li>

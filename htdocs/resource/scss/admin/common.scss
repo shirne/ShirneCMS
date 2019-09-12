@@ -90,6 +90,7 @@ h6 {
 .form-group{
   label{
     align-self: center;
+    white-space: nowrap;
     &[class^=col] {
       margin-bottom : 0;
     }
