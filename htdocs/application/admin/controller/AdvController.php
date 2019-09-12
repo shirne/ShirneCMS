@@ -16,6 +16,18 @@ use think\Exception;
  */
 class AdvController extends BaseController
 {
+    public function search($key=''){
+        $model=Db::name('AdvGroup')
+            ->where('status',1);
+        if(!empty($key)){
+            $model->where('id|title|flag','like',"%$key%");
+        }
+        
+        $lists=$model->field('id,title,flag,status,create_time')
+            ->order('id ASC')->limit(10)->select();
+        return json(['data'=>$lists,'code'=>1]);
+    }
+    
     /**
      * 管理
      * @param $key

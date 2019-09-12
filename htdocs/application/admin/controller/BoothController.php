@@ -42,14 +42,16 @@ class BoothController extends BaseController
             }else{
                 $created=BoothModel::create($data);
                 if ($created['id']) {
-                    $this->success(lang('Add success!'), url('adv/index'));
+                    $this->success(lang('Add success!'), url('booth/index'));
                 } else {
                     $this->error(lang('Add failed!'));
                 }
             }
         }
-        $model=array('status'=>1);
+        $model=array('status'=>1,'type'=>'article','data'=>['type'=>0,'parent_id'=>0,'category_id'=>0]);
         $this->assign('model',$model);
+        $this->assign('article_types',getArticleTypes());
+        $this->assign('booth_types',BoothModel::$booth_types);
         $this->assign('id',0);
         return $this->fetch('update');
     }
@@ -65,7 +67,7 @@ class BoothController extends BaseController
         $id = intval($id);
         $model=BoothModel::get($id);
         if(empty($model) ){
-            $this->error('广告组不存在');
+            $this->error('展位不存在');
         }
         
         if ($this->request->isPost()) {
@@ -79,7 +81,7 @@ class BoothController extends BaseController
                 if(!isset($data['ext_set']))$data['ext_set']=[];
                 $updated=$model->allowField(true)->save($data);
                 if ($updated) {
-                    $this->success(lang('Update success!'), url('adv/index'));
+                    $this->success(lang('Update success!'), url('booth/index'));
                 } else {
                     $this->error(lang('Update failed!'));
                 }
@@ -87,6 +89,8 @@ class BoothController extends BaseController
         }
         
         $this->assign('model',$model);
+        $this->assign('article_types',getArticleTypes());
+        $this->assign('booth_types',BoothModel::$booth_types);
         $this->assign('id',$id);
         return $this->fetch();
     }
@@ -110,17 +114,15 @@ class BoothController extends BaseController
     }
     
     /**
-     * 删除广告位
+     * 删除展位
      */
     public function delete($id)
     {
         $id = intval($id);
-        $force=$this->request->post('force/d',0);
-        $model = Db::name('Booth');
         
-        $result = $model->delete($id);
+        $result = BoothModel::where('locked',0)->where('id',$id)->delete();
         if($result){
-            $this->success(lang('Delete success!'), url('adv/index'));
+            $this->success(lang('Delete success!'), url('booth/index'));
         }else{
             $this->error(lang('Delete failed!'));
         }

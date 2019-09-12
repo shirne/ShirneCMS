@@ -46,8 +46,8 @@
                 <input type="hidden" name="delete_cover" value="{$article.cover}"/>
             </if>
         </div>
-        <div class="form-row">
-            <label class="col-2" style="max-width: 80px;">自定义字段</label>
+        <div class="form-row align-items-baseline">
+            <label class="pl-2 mr-2">自定义字段</label>
             <div class="form-group col">
                 <div class="prop-groups">
                     <foreach name="article['prop_data']" item="prop" key="k">
@@ -61,9 +61,9 @@
                 <a href="javascript:" class="btn btn-outline-dark btn-sm addpropbtn"><i class="ion-md-add"></i> 添加属性</a>
             </div>
         </div>
-        <div class="form-row">
-            <label class="col-2 col-md-1">文章类型</label>
-            <div class="form-group col-8 col-md-4">
+        <div class="form-row align-items-center">
+            <label class="pl-2 mr-2">文章类型</label>
+            <div class="form-group col">
                 <div class="btn-group btn-group-toggle" data-toggle="buttons" >
                     <volist name="types" id="type" key="k">
                         <label class="btn btn-outline-secondary{$key==($article['type'] & $key)?' active':''}">

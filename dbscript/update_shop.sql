@@ -148,7 +148,7 @@ CREATE TABLE `sa_product` (
   `postage_id` int(11) DEFAULT '0',
   `postage` DECIMAL(10,2) DEFAULT '0',
   `sale` int(11) DEFAULT '0' COMMENT '总销量',
-  `type` tinyint(4) DEFAULT '1',
+  `type` tinyint(4) DEFAULT '0',
   `is_commission` tinyint(4) DEFAULT '1',
   `commission_percent`  text,
   `is_discount` tinyint(4) DEFAULT '1',
@@ -255,10 +255,13 @@ CREATE TABLE `sa_order` (
   `address` VARCHAR(150) NULL,
   `postage_area_id` int(11) DEFAULT '0',
   `postage` DECIMAL(10,2) DEFAULT '0',
+  `invoice_id` int(11) DEFAULT '0',
   `express_no` VARCHAR(100) NULL,
   `express_code` VARCHAR(20) NULL,
   `type` TINYINT NULL DEFAULT 1,
-  PRIMARY KEY (`order_id`)
+  PRIMARY KEY (`order_id`),
+  INDEX `orderno_index` (`order_no` ASC),
+  INDEX `memberid_index` (`member_id` ASC)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `sa_express_code`;

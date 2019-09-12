@@ -8,7 +8,7 @@ use app\common\core\BaseTabLib;
 class Goods extends BaseTabLib
 {
     protected $tags =[
-        'list'=>['attr'=>'var,category,type,limit,image,recursive','close'=>0],
+        'list'=>['attr'=>'var,category,type,ids,limit,image,recursive','close'=>0],
         'relation'=>['attr'=>'var,category,id,limit','close'=>0],
         'cates'=>['attr'=>'var,pid','close'=>0],
         'cate'=>['attr'=>'var,name','close'=>0],

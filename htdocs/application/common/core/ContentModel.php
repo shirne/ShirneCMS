@@ -160,6 +160,11 @@ class ContentModel extends BaseModel
                 $model->where($this->model.".cate_id",$cate_id);
             }
         }
+        $sortids=[];
+        if(!empty($attrs['ids'])){
+            $sortids=idArr($attrs['ids']);
+            $model->whereIn($this->model . ".id",$sortids);
+        }
         if(!empty($attrs['keyword'])){
             $model->whereLike($this->getSearchFields(),"%{$attrs['keyword']}%");
         }
@@ -204,6 +209,7 @@ class ContentModel extends BaseModel
             $pagesize = isset($attrs['pagesize'])?intval($attrs['pagesize']):10;
             if($pagesize<1)$pagesize=1;
             $list = $model->paginate($pagesize,false,['page'=>$page]);
+            
         }else {
             if (empty($attrs['limit'])) {
                 $attrs['limit'] = 10;
@@ -211,6 +217,16 @@ class ContentModel extends BaseModel
             $model->limit($attrs['limit']);
     
             $list = $model->select();
+            
+            if(!empty($sortids) && count($sortids)>1){
+                $newlist=[];
+                $list = array_column($list,null,'id');
+                foreach ($sortids as $id){
+                    if(isset($list[$id]))$newlist[]=$list[$id];
+                }
+                $list=$newlist;
+                unset($newlist);
+            }
         }
         
         return $this->afterTagList($this->analysisType($list),$attrs);

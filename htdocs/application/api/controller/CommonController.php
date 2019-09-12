@@ -3,6 +3,7 @@
 namespace app\api\controller;
 
 use app\common\model\AdvGroupModel;
+use app\common\model\BoothModel;
 use app\common\model\LinksModel;
 use app\common\model\MemberSignModel;
 use app\common\model\NoticeModel;
@@ -108,6 +109,10 @@ class CommonController extends BaseController
             }
         }
         return null;
+    }
+    
+    public function booth($flags){
+        return $this->response(BoothModel::fetchBooth($flags));
     }
 
     /**

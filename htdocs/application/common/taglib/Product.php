@@ -11,7 +11,7 @@ use app\common\core\BaseTabLib;
 class Product extends BaseTabLib
 {
     protected $tags =[
-        'list'=>['attr'=>'var,category,type,limit,image,withsku,withimgs,recursive','close'=>0],
+        'list'=>['attr'=>'var,category,type,ids,limit,image,withsku,withimgs,recursive','close'=>0],
         'relation'=>['attr'=>'var,category,id,limit,withsku,withimgs','close'=>0],
         'prev'=>['attr'=>'var,category,id','close'=>0],
         'next'=>['attr'=>'var,category,id','close'=>0],
