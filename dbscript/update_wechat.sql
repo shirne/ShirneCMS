@@ -1,7 +1,4 @@
 
---
--- Table structure for table `sa_wechat`
---
 
 DROP TABLE IF EXISTS `sa_wechat`;
 CREATE TABLE `sa_wechat` (
@@ -32,9 +29,6 @@ CREATE TABLE `sa_wechat` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Table structure for table `sa_wechat_reply`
---
 
 DROP TABLE IF EXISTS `sa_wechat_reply`;
 CREATE TABLE `sa_wechat_reply` (
@@ -51,9 +45,6 @@ CREATE TABLE `sa_wechat_reply` (
   PRIMARY KEY (`id`)
  )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Table structure for table `sa_wechat_material`
---
 
 DROP TABLE IF EXISTS `sa_wechat_material`;
 CREATE TABLE `sa_wechat_material` (
@@ -69,9 +60,6 @@ CREATE TABLE `sa_wechat_material` (
   PRIMARY KEY (`id`)
  )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
- --
--- Table structure for table `sa_wechat_material_article`
---
 
 DROP TABLE IF EXISTS `sa_wechat_material_article`;
 CREATE TABLE `sa_wechat_material_article` (
@@ -96,10 +84,6 @@ CREATE TABLE `sa_wechat_material_article` (
  )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
---
--- Table structure for table `sa_wechat_template_message`
---
-
 DROP TABLE IF EXISTS `sa_wechat_template_message`;
 CREATE TABLE `sa_wechat_template_message` (
   `id` INT NOT NULL AUTO_INCREMENT,
@@ -112,5 +96,23 @@ CREATE TABLE `sa_wechat_template_message` (
   `content` TEXT,
   `create_time` INT NULL,
   `update_time` INT NULL,
+  PRIMARY KEY (`id`)
+ )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ DROP TABLE IF EXISTS `sa_task_template`;
+CREATE TABLE `sa_task_template` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `wechat_id` INT NOT NULL,
+  `type` VARCHAR(30) NULL,
+  `send_type` VARCHAR(30) NULL,
+  `title` VARCHAR(50) NULL,
+  `msgid` VARCHAR(30) NULL,
+  `template_id` VARCHAR(60) NULL,
+  `content` TEXT,
+  `status` TINYINT(4) NULL DEFAULT 0,
+  `send_result` VARCHAR(50) NULL DEFAULT '',
+  `create_time` INT NULL DEFAULT 0,
+  `update_time` INT NULL DEFAULT 0,
+  `finish_time` INT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
  )ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -139,12 +139,12 @@ class BaseHandler
         $msgid=$message['MsgID'];
         if($result=='success') {
             Db::name('taskTemplate')->where('msgid', $msgid)->update([
-                'is_send'=>2,
+                'status'=>2,
                 'send_result'=>$result
             ]);
         }else{
             Db::name('taskTemplate')->where('msgid', $msgid)->update([
-                'is_send'=>-2,
+                'status'=>-2,
                 'send_result'=>$result
             ]);
         }
