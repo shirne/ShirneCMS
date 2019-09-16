@@ -30,9 +30,9 @@ class AuthMiddleware
             if(!empty($token)) {
                 if($token['update_time']+$token['expire_in']>time()){
                     $user = Db::name('Member')->find($token['member_id']);
-                    if($user['status']==1) {
+                    if(!empty($user) && $user['status']==1) {
                         $request->tokenData = $token;
-                        $request->user = Db::name('Member')->find($token['member_id']);
+                        $request->user = $user;
                     }else{
                         $errorno=ERROR_MEMBER_DISABLED;
                     }
