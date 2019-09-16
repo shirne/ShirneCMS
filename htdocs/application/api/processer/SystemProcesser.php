@@ -10,7 +10,7 @@ use think\Db;
 
 class SystemProcesser extends BaseProcesser
 {
-    public static function getActions()
+    public function _getActions()
     {
         return [
             'processer'=>'system',

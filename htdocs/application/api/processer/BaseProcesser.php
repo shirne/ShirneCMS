@@ -48,12 +48,24 @@ abstract class BaseProcesser
         }
         return $this->processers;
     }
+    
+    private static $instances=[];
+    public static function getInstance(){
+        $class=static::class;
+        if(!isset(self::$instances[$class])){
+            self::$instances[$class]=new static();
+        }
+        return self::$instances[$class];
+    }
+    public static function getActions(){
+        return static::getInstance()->_getActions();
+    }
 
     /**
      * 获取该处理器的方法及参数
      * @return array
      */
-    public abstract function getActions();
+    protected abstract function _getActions();
 
     /**
      * @param $args

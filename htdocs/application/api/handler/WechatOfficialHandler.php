@@ -32,7 +32,14 @@ class WechatOfficialHandler extends BaseHandler implements EventHandlerInterface
                     case 'SCAN':
                         return $this->onScan($message,$message['EventKey']);
                         break;
+                    case 'scancode_waitmsg':
+                        break;
+                    case 'scancode_push':
+                        break;
                     case 'LOCATION':
+                        return $this->onLocation($message);
+                        break;
+                    case 'location_select':
                         return $this->onLocation($message);
                         break;
                     case 'CLICK':
@@ -41,8 +48,17 @@ class WechatOfficialHandler extends BaseHandler implements EventHandlerInterface
                     case 'VIEW':
                         return $this->onView($message);
                         break;
+                    case 'view_miniprogram':
+                        return $this->onView($message);
+                        break;
                     case 'TEMPLATESENDJOBFINISH':
                         $this->updateTplMsg($message);
+                        break;
+                    case 'pic_weixin':
+                        break;
+                    case 'pic_photo_or_album':
+                        break;
+                    case 'pic_sysphoto':
                         break;
                     default:
                         return '收到事件消息';
