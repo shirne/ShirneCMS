@@ -664,7 +664,7 @@ class OrderModel extends BaseModel
                     foreach ($specials as $special) {
                         $amount = 0;
                         if ($special['type'] == 3) {
-                            $amount += $special['amouts'][$i] ?: 0;
+                            $amount += $special['amounts'][$i] ?: 0;
                         } elseif ($special['type'] == 4) {
                             $amount += $special['level_amounts'][$parents[$i]['level_id']][$i] ?: 0;
                         } else {
