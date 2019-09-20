@@ -89,6 +89,7 @@ VALUES
   ( 'm_checkcode', '验证码', 'radio', 'member', '0',1, '1', '', '0:关闭\r\n1:启用'),
   ( 'autoaudit', '订单自动审核', 'radio', 'member', '0',1, '1', '', '0:关闭\r\n1:启用'),
   ( 'commission_type', '佣金本金计算', 'radio', 'member', '0',1, '0', '', '0:购买价-成本价\r\n1:销售价-成本价\r\n2:购买价\r\n3:销售价'),
+  ( 'agent_start', '分销员佣金', 'radio', 'member', '0',1, '0', '', '0:从上级起返\r\n1:从自己起返'),
   ( 'commission_delay', '佣金到账时机', 'radio', 'member', '0',1, '0', '', '0:订单完成\r\n1:订单支付\r\n2:订单完成后'),
   ( 'commission_delay_days', '佣金到账延迟', 'text', 'member', '0',1, '0', '', ''),
   ( 'cash_types', '提现方式', 'array', 'member', '0',1, '', '', 'unioncard:银行卡\r\nwechat:微信企业付款\r\nwechatpack:微信红包\r\nwechatminipack:小程序红包\r\nalipay:支付宝转账'),

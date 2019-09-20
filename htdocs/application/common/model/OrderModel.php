@@ -641,6 +641,10 @@ class OrderModel extends BaseModel
             $levels = getMemberLevels();
             $levelConfig = getLevelConfig($levels);
             $parents = getMemberParents($member['id'], $levelConfig['commission_layer'], false);
+            $startself=getSetting('agent_start');
+            if($member['isagent'] && $startself==1){
+                array_unshift($parents,$member);
+            }
             
             if (!empty($parents)) {
                 $pids = array_column($parents, 'id');

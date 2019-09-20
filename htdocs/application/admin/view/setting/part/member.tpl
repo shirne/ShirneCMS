@@ -127,7 +127,26 @@
             </foreach>
         </div>
         <div >
-            <div class="text-muted">购买价为会员实际购买时的价格，可能有会员等级的打折，优惠券，等级特价等，销售价和成本价为产品规格中设置的价格</div>
+            <div class="text-muted">购买价为会员实际购买时的价格，可能有会员等级的折扣，等级特价等，销售价和成本价为产品规格中设置的价格</div>
+        </div>
+    </div>
+</div>
+
+<div class="form-row form-group">
+    <label for="v-agent_start" class="col-3 col-md-2 text-right align-middle">{$setting['agent_start']['title']}</label>
+    <div class="col-9 col-md-8 col-lg-6">
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+            <foreach name="setting.agent_start.data" item="value" key="k">
+                <if condition="$k==$setting['agent_start']['value']">
+                    <label class="btn btn-outline-secondary active">
+                        <input type="radio" name="v-agent_start" value="{$k}" autocomplete="off" checked> {$value}
+                    </label>
+                    <else />
+                    <label class="btn btn-outline-secondary">
+                        <input type="radio" name="v-agent_start" value="{$k}" autocomplete="off"> {$value}
+                    </label>
+                </if>
+            </foreach>
         </div>
     </div>
 </div>
@@ -179,6 +198,9 @@
                     </label>
                 </if>
             </foreach>
+        </div>
+        <div >
+            <div class="text-muted">企业付款、微信红包、小程序红包，需要在微信支付中开通对应的功能才可以启用。<br />微信红包、小程序红包限额200,日限额10个/1000元。<br />支付商户开通条件：1、入驻时间超过90天 2、连续正常交易30天。</div>
         </div>
     </div>
 </div>
