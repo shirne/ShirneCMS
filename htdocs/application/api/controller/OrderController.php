@@ -95,8 +95,8 @@ class OrderController extends AuthedController
                 if($balancepay) {
                     return $this->response(['order_id',$result],1,'下单成功');
                 }else{
-                    $method=$data['pay_type'].'pay';
-                    if(method_exists($this,$method)){
+                    $method=isset($data['pay_type'])?($data['pay_type'].'pay'):'';
+                    if($method && method_exists($this,$method)){
                         return $this->$method($result);
                     }else{
                         return $this->response(['order_id'=>$result],1,'下单成功，请尽快支付');

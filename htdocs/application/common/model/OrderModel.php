@@ -447,7 +447,7 @@ class OrderModel extends BaseModel
                     'product_image'=>$product['product_image'],
                     'product_orig_price'=>$product['product_price'],
                     'product_price'=>$product['release_price'],
-                    'product_weight'=>$product['product_weight'],
+                    'product_weight'=>$product['weight'],
                     'count'=>$product['count'],
                     'sort'=>$i++
                 ]);
@@ -642,7 +642,7 @@ class OrderModel extends BaseModel
             $levelConfig = getLevelConfig($levels);
             $parents = getMemberParents($member['id'], $levelConfig['commission_layer'], false);
             $startself=getSetting('agent_start');
-            if($member['isagent'] && $startself==1){
+            if($member['is_agent'] && $startself==1){
                 array_unshift($parents,$member);
             }
             
