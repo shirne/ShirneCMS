@@ -94,8 +94,11 @@ class MemberCashinModel extends BaseModel
                 
             }
             
-            //小程序下如果未获得form_id，需要从支付信息中获取 prepay_id
+            //小程序下如果未获得form_id，则无法发送模板消息
             if($wechat['account_type'] == 'miniprogram' || $wechat['account_type'] == 'minigame'){
+                if(empty($order['form_id'])){
+                    continue;
+                }
                 $msgdata['form_id']=$order['form_id'];
             }
             
