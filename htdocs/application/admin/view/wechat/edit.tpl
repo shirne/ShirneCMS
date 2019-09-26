@@ -90,16 +90,32 @@
                         <label for="original">二维码</label>
                         <div class="input-group">
                             <div class="custom-file">
-                                <input type="file" class="custom-file-input" name="upload_qrcode"/>
+                                <input type="file" accept="image/*" class="custom-file-input" name="upload_qrcode"/>
                                 <label class="custom-file-label" for="upload_qrcode">选择文件</label>
                             </div>
                         </div>
                         <if condition="$model['qrcode']">
                             <figure class="figure">
-                                <img src="{$model.qrcode}" class="figure-img img-fluid rounded" alt="image">
+                                <img src="{$model.qrcode}" accept="image/*" class="figure-img img-fluid rounded" alt="image">
                                 <figcaption class="figure-caption text-center">{$model.qrcode}</figcaption>
                             </figure>
                             <input type="hidden" name="delete_qrcode" value="{$model.qrcode}"/>
+                        </if>
+                    </div>
+                    <div class="col form-group">
+                        <label for="original">分享图</label>
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" accept="image/*" class="custom-file-input" name="upload_shareimg"/>
+                                <label class="custom-file-label" for="upload_shareimg">选择文件</label>
+                            </div>
+                        </div>
+                        <if condition="$model['shareimg']">
+                            <figure class="figure">
+                                <img src="{$model.shareimg}" class="figure-img img-fluid rounded" alt="image">
+                                <figcaption class="figure-caption text-center">{$model.shareimg}</figcaption>
+                            </figure>
+                            <input type="hidden" name="delete_shareimg" value="{$model.shareimg}"/>
                         </if>
                     </div>
                 </div>

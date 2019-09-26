@@ -51,6 +51,8 @@ class WechatTemplateMessageModel extends BaseModel
             'order_complete'=>['title'=>'订单完成通知','title_id'=>'OPENTM410586294','keywords'=>'订单编号、订单金额、订单详情、完成时间'],
             'order_cancel'=>['title'=>'订单取消通知','title_id'=>'TM00850','keywords'=>'订单金额、商品详情、收货信息、订单编号'],
             
+            'order_commission'=>['title'=>'分销成功提醒','title_id'=>'OPENTM402027183','keywords'=>'商品信息、商品单价、商品佣金、分销时间'],
+            
             'cash_apply'=>['title'=>'提现申请通知','title_id'=>'OPENTM412896310','keywords'=>'提现金额、提现时间、提现手续费、预计到账金额、预计到账时间'],
             'cash_audit'=>['title'=>'提现审核通知','title_id'=>'OPENTM411835838','keywords'=>'提现金额、申请时间、审核状态、原因说明'],
             'cash_fail'=>['title'=>'提现失败通知','title_id'=>'OPENTM416674061','keywords'=>'提现金额、提现时间、提现状态、失败原因'],

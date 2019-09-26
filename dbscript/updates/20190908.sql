@@ -18,3 +18,7 @@ CREATE TABLE `sa_booth` (
   PRIMARY KEY (`id`),
   UNIQUE INDEX `flag_UNIQUE` (`flag`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+ALTER TABLE `sa_wechat` 
+ADD  `shareimg` varchar(150) DEFAULT '' AFTER  `qrcode`;

@@ -34,6 +34,25 @@
         </if>
     </div>
 </div>
+
+<div class="form-row form-group">
+    <label for="v-site-shareimg" class="col-3 col-md-2 text-right align-middle">默认分享图</label>
+    <div class="col-9 col-md-8 col-lg-6">
+        <div class="input-group">
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" name="upload_site-shareimg">
+                <label class="custom-file-label" for="upload_site-shareimg">选择文件</label>
+            </div>
+        </div>
+        <if condition="$setting['site-shareimg']['value']">
+            <figure class="figure">
+                <img src="{$setting['site-shareimg']['value']}" class="figure-img img-fluid rounded" alt="image">
+                <figcaption class="figure-caption text-center">{$setting['site-shareimg']['value']}</figcaption>
+            </figure>
+            <input type="hidden" name="delete_site-shareimg" value="{$setting['site-shareimg']['value']}"/>
+        </if>
+    </div>
+</div>
 <div class="form-row form-group">
     <label for="v-site-tongji" class="col-3 col-md-2 text-right align-middle">统计代码</label>
     <div class="col-9 col-md-8 col-lg-6">

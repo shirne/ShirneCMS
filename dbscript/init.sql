@@ -55,6 +55,7 @@ VALUES
   ('site-keywords','关键词','text','common',0,1,'关键词1,关键词2','关键词',''),
   ('site-description','站点描述','text','common',0,1,'站点描述信息','站点描述',''),
   ('site-weblogo','站点logo','image','common',0,1,'','站点logo',''),
+  ('site-shareimg','默认分享图','image','common',0,1,'','默认分享图',''),
   ('site-tongji','统计代码','textarea','common',0,1,'','统计代码',''),
   ('site-icp','ICP备案号','text','common',0,1,'','ICP备案号',''),
   ('gongan-icp','公安备案号','text','common',0,1,'','公安备案号',''),
