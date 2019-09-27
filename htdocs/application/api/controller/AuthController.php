@@ -162,7 +162,7 @@ class AuthController extends BaseController
             if($member['avatar']==$oauth['avatar'])$updata['avatar']=$data['avatar'];
             if(empty($member['referer']) && !empty($agent) && $member['agentcode']!=$agent){
                 $refererid=$this->getAgentId($agent);
-                if($refererid != $member['id']){
+                if($refererid != $member['id'] && !$member['is_agent']){
                     $updata['referer'] = $refererid;
                 }
             }

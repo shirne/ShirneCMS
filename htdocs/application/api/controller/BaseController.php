@@ -89,6 +89,10 @@ class BaseController extends Controller
     }
     
     public function _empty(){
+        $static_file=DOC_ROOT.DIRECTORY_SEPARATOR.$this->request->action(true);
+        if(file_exists($static_file)){
+            exit(file_get_contents($static_file));
+        }
         $this->error('接口不存在');
     }
 
