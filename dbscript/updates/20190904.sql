@@ -22,8 +22,8 @@ ALTER TABLE `sa_member`
 INSERT INTO `sa_setting` ( `key`,`title`,`type`,`group`,`sort`,`is_sys`, `value`, `description`,`data`)
 VALUES
   ( 'cash_types', '提现方式', 'array', 'member', '0',1, '', '', 'unioncard:银行卡\r\nwechat:微信企业付款\r\nwechatpack:微信红包\r\nwechatminipack:小程序红包\r\nalipay:支付宝转账'),
-  ( 'cash_fee_min', '最低手续费', 'array', 'member', '0',1, '1', '', ''),
-  ( 'cash_fee_max', '封顶手续费', 'array', 'member', '0',1, '50', '', '');
+  ( 'cash_fee_min', '最低手续费', 'text', 'member', '0',1, '1', '', ''),
+  ( 'cash_fee_max', '封顶手续费', 'text', 'member', '0',1, '50', '', '');
 
 
 ALTER TABLE `sa_member_oauth`
