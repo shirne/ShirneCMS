@@ -6,6 +6,7 @@ namespace app\api\controller\member;
 
 use app\api\controller\AuthedController;
 use app\common\model\MemberCashinModel;
+use app\common\model\MemberOauthModel;
 use app\common\validate\MemberCardValidate;
 use extcore\traits\Upload;
 use think\Db;
@@ -220,8 +221,34 @@ class AccountController extends AuthedController
             'remark'=>$remark
         );
         if($rdata['cashtype']=='wechat') {
+            $openid=$this->request->param('openid');
+            if(empty($openid)){
+                $appid=$this->request->tokenData['appid'];
+                $appraw=Db::name('wechat')->where('appid',$appid)->find();
+                if(!empty($appraw)){
+                    $authraw=MemberOauthModel::where('type',$appraw['account_type'])
+                        ->where('member_id',$this->user['id'])->find();
+                    if(!empty($authraw)){
+                        $openid=$authraw['openid'];
+                    }
+                }
+            }else{
+                $authraw=MemberOauthModel::where('openid',$openid)
+                    ->where('member_id',$this->user['id'])->find();
+                if(!empty($authraw)){
+                    $appraw=Db::name('wechat')->where('id',$authraw['type_id'])->find();
+                    if(!empty($appraw)){
+                        $appid=$appraw['appid'];
+                    }
+                }
+            }
+            if(empty($openid) || empty($appid)){
+                $this->error('提现微信账户错误');
+            }
+            $data['card_name']=$openid;
+            $data['bank_name']=$appid;
         }elseif($rdata['cashtype']=='alipay'){
-            $data['cardno']=$this->request->param('cardno');
+            $data['card_name']=$this->request->param('alipay');
         }else {
     
             $bank_id=intval($rdata['card_id']);
