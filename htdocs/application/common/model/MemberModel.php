@@ -156,6 +156,27 @@ class MemberModel extends BaseModel
         }
         return $sons;
     }
+    
+    public static function autoBindAgent($member,$agent){
+        if(!is_array($member) && is_numeric($member)){
+            $member = static::where('id',$member)->find();
+            if(empty($member))return false;
+        }
+        if($member['is_agent'] || $member['referer'] ||
+            $member['agentcode']==$agent|| $member['id']==$agent){
+            return false;
+        }
+        
+        $agentMember=static::where('agentcode|id',$agent)
+            ->where('is_agent','GT',0)
+            ->where('status',1)->find();
+        if(empty($agentMember) || $agentMember['id']==$member['id'] || !$agentMember['is_agent']){
+            return false;
+        }
+        
+        static::update(['referer'=>$agentMember['id']],array('id'=>$member['id']));
+        return true;
+    }
 
     /**
      * 从第三方授权接口的用户资料创建会员

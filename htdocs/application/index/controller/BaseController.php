@@ -76,12 +76,10 @@ class BaseController extends Controller
 
         $agent = $this->request->param('agent');
         if(!empty($agent)){
-            $amem=Db::name('Member')->where('is_agent','GT',0)
-                ->where('agentcode',$agent)
-                ->where('status',1)->find();
-            if(!empty($amem)){
-                Log::record('With Agent code: '.$agent.','.$amem['id']);
-                session('agent',$amem['id']);
+            $agent=preg_replace('/[^a-zA-Z0-9_-]*/','',$agent);
+            if($agent) {
+                Log::record('With Agent code: ' . $agent );
+                session('agent', $agent);
             }
         }
 
@@ -91,12 +89,9 @@ class BaseController extends Controller
 
         if($this->isLogin && empty($this->user['referer'])){
             $agent = session('agent');
-            if($agent && $agent != $this->userid){
-                $parents = getMemberParents($this->userid,0);
-                if(!in_array($agent,$parents)) {
-                    session('agent',null);
-                    MemberModel::update(['referer' => $agent], ['id' => $this->userid]);
-                }
+            if($agent){
+                MemberModel::autoBindAgent($this->user,$agent);
+                session('agent',null);
             }
         }
 

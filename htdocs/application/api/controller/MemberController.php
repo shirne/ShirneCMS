@@ -2,6 +2,7 @@
 
 namespace app\api\controller;
 
+use app\common\model\MemberModel;
 use app\common\validate\MemberValidate;
 use extcore\traits\Upload;
 use think\Db;
@@ -16,11 +17,15 @@ class MemberController extends AuthedController
 {
     use Upload;
 
-    public function profile(){
+    public function profile($agent=''){
         $profile=Db::name('member')
             ->hidden('password,salt,sec_password,sec_salt,delete_time')
             ->where('id',$this->user['id'])
             ->find();
+        
+        if(!empty($agent)){
+            MemberModel::autoBindAgent($profile,$agent);
+        }
         
         $levels = getMemberLevels();
         $profile['level']=$levels[$profile['level_id']]?:[];
