@@ -77,7 +77,7 @@
                 <td>{$v.status|audit_status|raw}</td>
                 <td class="operations">
                     <if condition="$v['status'] EQ 0">
-                    <a class="btn btn-outline-success link-confirm" title="确认" data-confirm="确认已完成转账?" href="{:url('Paylog/cashupdate',array('id'=>$v['id']))}"><i class="ion-md-checkmark-circle"></i> </a>
+                    <a class="btn btn-outline-success pay-confirm" title="确认" data-id="{$v.id}" data-amount="{$v.real_amount}" data-cashtype="{$v.cashtype}"  href="javascript:"><i class="ion-md-checkmark-circle"></i> </a>
                     <a class="btn btn-outline-danger link-confirm" title="无效" data-confirm="您真的确定要作废吗？" href="{:url('Paylog/cashdelete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
                         <else/>
                         -
@@ -90,4 +90,79 @@
     {$page|raw}
 </div>
 
+</block>
+<block name="script">
+    <script type="text/javascript">
+        jQuery(function($){
+            var cashtypes="{:implode(',',getSetting('cash_types'))}".split(',')
+            $('.pay-confirm').click(function(e){
+                e.preventDefault();
+                e.stopPropagation();
+                var  id=$(this).data('id'),
+                cashtype=$(this).data('cashtype'),
+                amount=$(this).data('amount');
+                var url="{:url('Paylog/cashupdate',['id'=>'__ID__'])}".replace('__ID__',id)
+                var paylist=[],paytype_list=[];
+                var paytype_picked=function(paytype){
+                    var loading=dialog.loading('正在处理')
+                    $.ajax({
+                        url:url,
+                        dataType:'json',
+                        type:'POST',
+                        data:{
+                           paytype: paytype
+                        },
+                        success:function(json){
+                            loading.close()
+                            if(json.code==1){
+                                dialog.success(json.msg)
+                                setTimeout(function(){
+                                    location.reload()
+                                },500)
+                            }else{
+                                dialog.error(json.msg)
+                            }
+                        }
+                    })
+                }
+                if(cashtype=='alipay'){
+                    dialog.confirm('请确认款项已转入对应支付宝账户',function(){
+                        paytype_picked('alipay')
+                    })
+                    return false;
+                }else if(cashtype=='wechat'){
+                    if(cashtypes.indexOf('wechat')>-1){
+                        paylist.push('企业付款')
+                        paytype_list.push('wechat')
+                    }
+                    if(amount<=20000){
+                        if(cashtypes.indexOf('wechatpack')>-1){
+                            paylist.push('微信红包')
+                            paytype_list.push('wechatpack')
+                        }
+                        if(cashtypes.indexOf('wechatminipack')>-1){
+                            paylist.push('小程序红包')
+                            paytype_list.push('wechatminipack')
+                        }
+                    }
+                }else{
+                    if(cashtypes.indexOf('wechat')>-1){
+                        paylist.push('企业付款')
+                        paytype_list.push('wechat')
+                        paylist.push('手动打款')
+                        paytype_list.push('handle')
+                    }else{
+                        dialog.confirm('请确认款项已转入对应银行账户',function(){
+                            paytype_picked('handle')
+                        })
+                        return false;
+                    }
+                }
+                dialog.action(paylist,function(idx){
+                    paytype_picked(paytype_list[idx]);
+                    return true;
+                },'请选择打款方式')
+            })
+        })
+    </script>
 </block>

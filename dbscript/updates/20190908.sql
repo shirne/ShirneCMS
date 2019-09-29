@@ -22,3 +22,6 @@ CREATE TABLE `sa_booth` (
 
 ALTER TABLE `sa_wechat` 
 ADD  `shareimg` varchar(150) DEFAULT '' AFTER  `qrcode`;
+
+ALTER TABLE `sa_member_cashin` 
+ADD  `paytype` varchar(20) DEFAULT '' AFTER  `cashtype`;

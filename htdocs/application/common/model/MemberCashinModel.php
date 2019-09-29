@@ -27,15 +27,21 @@ class MemberCashinModel extends BaseModel
             static::sendCashMessage($item['id'],'cash_fail');
         }elseif($status == 1){
             Db::name('member')->where('id',$item['member_id'])->setInc('total_cashin',$item['amount']);
+            $waitsend=false;
             if($item['cashtype']=='wechat'){
-            
+                $waitsend=true;
+
+                //todo 微信企业付款
                 
             }elseif($item['cashtype']=='alipay'){
-            
-            }else{
-                Db::name('member')->where('id',$item['member_id'])->setDec('froze_reward',$item['amount']);
-                money_log($item['member_id'],$item['amount'],'提现成功','cash',0,'reward');
                 
+            }else{
+                //todo，是否微信企业付款
+                
+            }
+            if(!$waitsend){
+                Db::name('member')->where('id',$item['member_id'])->setDec('froze_reward',$item['amount']);
+                money_log($item['member_id'],-$item['amount'],'提现成功','cash',0,'reward');
             }
             static::sendCashMessage($item['id'],'cash_audit');
         }

@@ -591,6 +591,7 @@ CREATE TABLE `sa_member_cashin` (
   `appid` varchar(30) DEFAULT '',
   `form_id` varchar(50) DEFAULT '',
   `cashtype` varchar(20) DEFAULT '',
+  `paytype` varchar(20) DEFAULT '',
   `amount` int(11) DEFAULT '0' COMMENT '金额 单位分',
   `cash_fee` int(11) NULL DEFAULT '0',
   `real_amount` int(11) DEFAULT '0',

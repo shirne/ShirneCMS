@@ -4,7 +4,10 @@ namespace app\admin\controller;
 
 
 use app\common\model\MemberCashinModel;
+use app\common\model\MemberOauthModel;
 use app\common\model\MemberRechargeModel;
+use app\common\model\WechatModel;
+use EasyWeChat\Factory;
 use shirne\excel\Excel;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use think\Db;
@@ -241,23 +244,110 @@ class PaylogController extends BaseController
      * 提现成功
      * @param string $id
      */
-    public function cashupdate($id=''){
+    public function cashupdate($id='',$paytype=''){
         $id=intval($id);
         if($id==0)$this->error('参数错误 ');
         $cash=MemberCashinModel::get($id);
         if(empty($cash))$this->error('提现单不存在');
         if($cash['status']!=0)$this->error('提现单已处理过了');
 
+        $successed=true;
+        if($paytype=='wechat'){
+            $successed=false;
+            if($cash['cashtype']=='wechat'){
+                $wechats=MemberOauthModel::getAccountsByMemberAndType($cash['member_id']);
+            }else{
+                $wechats=WechatModel::where('account_type','service')->select();
+            }
+            foreach($wechats as $wechat){
+                if(empty($wechat['cert_path']) || empty(empty($wechat['key_path'])))continue;
+                $payment=Factory::payment(WechatModel::to_pay_config($wechat));
+                $paydata=[
+                    'partner_trade_no' => 'CASH'.$cash['id'], // 商户订单号，需保持唯一性(只能是字母或者数字，不能包含有符号)
+                    'openid' =>  $wechat['openid'],
+                    'check_name' => 'NO_CHECK', // NO_CHECK：不校验真实姓名, FORCE_CHECK：强校验真实姓名
+                    're_user_name' => $cash['card_name'], // 如果 check_name 设置为FORCE_CHECK，则必填用户真实姓名
+                    'amount' => $cash['real_amount'], // 企业付款金额，单位为分
+                    'desc' => '提现', // 企业付款操作说明信息。必填
+                ];
+                if($cash['cashtype']=='wechat'){
+                    $paydata['openid']=$wechat['openid'];
+                    $paydata['check_name']='FORCE_CHECK';
+                    $paydata['re_user_name']=$cash['card_name'];
+                }else{
+                    $paydata['enc_bank_no']=$cash['cardno'];
+                    $paydata['enc_true_name']=$cash['card_name'];
+                    $paydata['bank_code']=$this->getBankCode($cash['bank']);
+                }
+
+                $result = $payment->transfer->toBalance($paydata);
+            }
+        }elseif($paytype=='wechatpack'){
+            $successed=false;
+            $wechats=MemberOauthModel::getAccountsByMemberAndType($cash['member_id']);
+            foreach($wechats as $wechat){
+                if(empty($wechat['cert_path']) || empty(empty($wechat['key_path'])))continue;
+                $payment=Factory::payment(WechatModel::to_pay_config($wechat));
+                $redpackData = [
+                    'mch_billno'   => 'CASH'.$cash['id'],
+                    'send_name'    => getSetting('site-name'),
+                    're_openid'    => $wechat['openid'],
+                    'total_num'    => 1,  //固定为1，可不传
+                    'total_amount' => $cash['real_amount'],  //单位为分，不小于100
+                    'wishing'      => '恭喜发财',
+                    //'client_ip'    => '192.168.0.1',  //可不传，不传则由 SDK 取当前客户端 IP
+                    'act_name'     => '提现',
+                    'remark'       => '',
+                    // ...
+                ];
+                $result = $payment->redpack->sendNormal($redpackData);
+            }
+        }elseif($paytype=='wechatminipack'){
+            $successed=false;
+            $wechats=MemberOauthModel::getAccountsByMemberAndType($cash['member_id'],'miniprogram');
+            foreach($wechats as $wechat){
+                
+                if(!empty($cash['appid']) && $wechat['appid']==$cash['appid']){
+                    if(empty($wechat['cert_path']) || empty(empty($wechat['key_path']))){
+                        $this->error('小程序支付信息配置错误');
+                    }
+                    //$payment=Factory::payment(WechatModel::to_pay_config($wechat));
+
+                    $this->error('暂不支持小程序红包');
+                }
+            }
+        }else{
+            $paytype='handle';
+        }
+        if(!empty($result)){
+            if($result['return_code']!='SUCCESS'){
+                $this->error($result['return_msg']);
+            }
+            if($result['result_code']=='SUCCESS'){
+                $successed=true;
+            }else{
+                $this->error($result['err_code'].':'.$result['err_code_des']);
+            }
+        }
+        if(!$successed){
+            $this->error('支付信息配置错误');
+        }
+        
+
         $data=array();
+        $data['paytype']=$paytype;
         $data['status']=1;
         $data['audit_time']=time();
         $cash->updateStatus($data);
-        //Db::name('member_cashin')->where('id',$cash['id'])->update($data);
-
-        //Db::name('member')->where('id',$cash['member_id'])->setDec('froze_money',$cash['amount']);
-        //Db::name('member')->where('id',$cash['member_id'])->setInc('total_cashin',$cash['amount']);
+        
         user_log($this->mid,'cashaudit',1,'处理提现单 '.$id ,'manager');
         $this->success('处理成功！');
+    }
+
+    private function getBankCode($bankname)
+    {
+        $banklist=banklist(true);
+        return isset($banklist[$bankname])?$banklist[$bankname]:'';
     }
 
     /**
