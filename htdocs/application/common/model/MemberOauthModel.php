@@ -43,6 +43,16 @@ class MemberOauthModel extends BaseModel
         
         return $user;
     }
+
+    public static function getAccountsByMemberAndType($member_id, $type = 'service')
+    {
+        return Db::view('wechat','*')
+        ->view('memberOauth',['member_id','openid'],'memberOauth.type_id=wechat.id')
+        ->where('memberOauth.type',$type )
+        ->where('memberOauth.member_id',$member_id )
+        ->where('wechat.account_type',$type )
+        ->select();
+    }
     
     public static function mapUserInfo($userInfo){
         $data=[];
