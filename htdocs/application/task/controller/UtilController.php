@@ -16,7 +16,11 @@ class UtilController extends Controller
 {
     public function cropimage($img){
         Log::close();
-        return crop_image($img,$_GET);
+        
+        $imageCrop=new \extcore\ImageCrop($img, $this->request->get());
+        $response = $imageCrop->crop();
+        $response->cacheControl('max-age=2592000');
+        return $response;
     }
 
     public function cacheimage($img){
@@ -32,6 +36,7 @@ class UtilController extends Controller
             if($response->getCode()==200) {
                 file_put_contents(DOC_ROOT . '/' . $img, $response->getData());
             }
+            $response->cacheControl('max-age=2592000');
             return $response;
         }else{
             return redirect(ltrim(config('upload.default_img'),'.'));
