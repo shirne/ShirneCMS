@@ -112,7 +112,13 @@ class ArticleController extends BaseController
         if(empty($digg)){
             if($type=='up') {
                 $article->setInc('digg', 1);
-                Db::name('articleDigg')->insert();
+                Db::name('articleDigg')->insert([
+                    'article_id'=>$id,
+                    'member_id'=>$this->user['id'],
+                    'create_time'=>time(),
+                    'device'=>'',
+                    'ip'=>$this->request->ip()
+                ]);
                 $article['digg'] += 1;
             }else{
                 $this->error('您没对这篇文章点过赞',0);
