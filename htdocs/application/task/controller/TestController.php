@@ -36,7 +36,8 @@ class TestController
     }
     
     public function model(){
-        
+        $parents=getMemberParents(request()->param('id'),0,false);
+        var_dump($parents);
         exit;
         $paymodel = PayOrderModel::get(10);
         $paymodel->save(['status'=>0]);

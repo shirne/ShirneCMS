@@ -128,6 +128,49 @@ class ContentModel extends BaseModel
     protected function afterTagList($lists,$attrs){
         return $lists;
     }
+
+    protected function appendTagData($lists, $key, $vals=[], $idKey='id')
+    {
+        $datas = [];
+        if(is_array($key)){
+            if(empty($key)){
+                return $lists;
+            }
+            $datas=$key;
+            if(is_string($vals) && !empty($vals)){
+                $idKey=$vals;
+            }
+        }else{
+            $datas[$key]=$vals;
+        }
+
+        if($lists instanceof Paginator){
+            $lists->each(function ($item)use($datas,$idKey){
+                foreach($datas as $key=>$values){
+                    if(isset($values[$item[$idKey]])){
+                        $item[$key]=$values[$item[$idKey]];
+                    }else{
+                        $item[$key]=[];
+                    }
+                }
+                
+                return $this->afterTagItem($item);
+            });
+        }else{
+            foreach ($lists as &$item){
+                foreach($datas as $key=>$values){
+                    if(isset($values[$item[$idKey]])){
+                        $item[$key]=$values[$item[$idKey]];
+                    }else{
+                        $item[$key]=[];
+                    }
+                }
+                $item=$this->afterTagItem($item);
+            }
+            unset($item);
+        }
+        return $lists;
+    }
     
     /**
      * 重写，标签单项之后的数据处理
@@ -135,7 +178,7 @@ class ContentModel extends BaseModel
      * @param $attrs array
      * @return mixed
      */
-    protected function afterTagItem($item,$attrs){
+    protected function afterTagItem($item,$attrs=[]){
         return $item;
     }
 

@@ -72,6 +72,22 @@
                     </volist>
                 </div>
             </div>
+            <label class="pl-2 mr-2">浏览量</label>
+            <div class="form-group col">
+                <div class="input-group">
+                    <input type="text" class="form-control" readonly value="{$article['views']}" />
+                    <span class="input-group-middle"><span class="input-group-text">+</span></span>
+                    <input type="text" class="form-control" name="v_views" title="虚拟浏览量" value="{$article['v_views']}" />
+                </div>
+            </div>
+            <label class="pl-2 mr-2">点赞数</label>
+            <div class="form-group col">
+                <div class="input-group">
+                    <input type="text" class="form-control" readonly value="{$article['digg']}" />
+                    <span class="input-group-middle"><span class="input-group-text">+</span></span>
+                    <input type="text" class="form-control" name="v_digg" title="虚拟点赞数" value="{$article['v_digg']}" />
+                </div>
+            </div>
         </div>
         <div class="form-group">
             <label for="description">文章摘要</label>

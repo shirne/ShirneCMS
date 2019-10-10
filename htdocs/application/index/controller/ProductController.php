@@ -66,6 +66,7 @@ class ProductController extends BaseController
         if(empty($product)){
             return $this->_empty('商品不存在');
         }
+        $product['sale']+=$product['v_sale'];
         $this->seo($product['title']);
         $this->category($product['cate_id']);
 

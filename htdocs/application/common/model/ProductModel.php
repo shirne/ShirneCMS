@@ -51,56 +51,23 @@ class ProductModel extends ContentModel
     protected function afterTagList($lists,$attrs){
         if(!empty($lists)){
             $pids = array_column(is_array($lists)?$lists:$lists->items(),'id');
+            $append=[];
             if(!empty($attrs['withsku'])){
                 $skus=ProductSkuModel::whereIn('product_id',$pids)->select();
                 $skus = array_index($skus,'product_id',true);
-                if($lists instanceof Paginator){
-                    $lists->each(function ($item)use($skus){
-                        if(isset($skus[$item['id']])){
-                            $item['skus']=$skus[$item['id']];
-                        }else{
-                            $item['skus']=[];
-                        }
-                        return $item;
-                    });
-                }else{
-                    foreach ($lists as &$item){
-                        if(isset($skus[$item['id']])){
-                            $item['skus']=$skus[$item['id']];
-                        }else{
-                            $item['skus']=[];
-                        }
-                    }
-                    unset($item);
-                }
+                $append['skus']=$skus;
             }
             if(!empty($attrs['withimgs'])){
                 $imgs=Db::name('productImages')->whereIn('product_id',$pids)->select();
                 $imgs = array_index($imgs,'product_id',true);
-                if($lists instanceof Paginator){
-                    $lists->each(function ($item)use($imgs){
-                        if(isset($imgs[$item['id']])){
-                            $item['imgs']=$imgs[$item['id']];
-                        }else{
-                            $item['imgs']=[];
-                        }
-                        return $item;
-                    });
-                }else{
-                    foreach ($lists as &$item){
-                        if(isset($imgs[$item['id']])){
-                            $item['imgs']=$imgs[$item['id']];
-                        }else{
-                            $item['imgs']=[];
-                        }
-                    }
-                    unset($item);
-                }
+                $append['imgs']=$imgs;
             }
+            $lists = $this->appendTagData($lists, $append);
         }
         return $lists;
     }
     protected function afterTagItem($item,$attrs){
+        $item['sale']=$item['sale']+intval($item['v_sale']);
         return $item;
     }
 

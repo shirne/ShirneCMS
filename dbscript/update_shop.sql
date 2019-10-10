@@ -154,6 +154,7 @@ CREATE TABLE `sa_product` (
   `postage_id` int(11) DEFAULT '0',
   `postage` DECIMAL(10,2) DEFAULT '0',
   `sale` int(11) DEFAULT '0' COMMENT '总销量',
+  `v_sale` int(11) DEFAULT '0' COMMENT '虚拟销量',
   `type` tinyint(4) DEFAULT '0',
   `is_commission` tinyint(4) DEFAULT '1',
   `commission_percent`  text,

@@ -69,6 +69,8 @@ class ArticleController extends BaseController{
         $this->category($article['cate_id']);
 
         $article->setInc('views',1);
+        $article['views']+=$article['v_views'];
+        $article['digg']+=$article['v_digg'];
 
         $this->assign('article', $article);
         $this->assign('images',Db::name('ArticleImages')->where('article_id',$article['id'])->select());

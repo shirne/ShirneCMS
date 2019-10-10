@@ -84,6 +84,16 @@
                             </div>
                         </div>
                         <div class="form-row">
+                            <label style="width: 80px;">商品销量</label>
+                            <div class="form-group col">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" readonly value="{$product['sale']}" />
+                                    <span class="input-group-middle"><span class="input-group-text">+</span></span>
+                                    <input type="text" class="form-control" name="v_sale" title="虚拟销量" value="{$product['v_sale']}" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
                             <label style="width: 80px;">商品类型</label>
                             <div class="form-group col">
                                 <div class="btn-group btn-group-toggle btn-group-sm type-groups" data-toggle="buttons">

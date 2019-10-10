@@ -36,27 +36,15 @@ class ArticleModel extends ContentModel
             if(!empty($attrs['withimgs'])){
                 $imgs=Db::name('articleImages')->whereIn('product_id',$pids)->select();
                 $imgs = array_index($imgs,'product_id',true);
-                if($lists instanceof Paginator){
-                    $lists->each(function ($item)use($imgs){
-                        if(isset($imgs[$item['id']])){
-                            $item['imgs']=$imgs[$item['id']];
-                        }else{
-                            $item['imgs']=[];
-                        }
-                        return $item;
-                    });
-                }else{
-                    foreach ($lists as &$item){
-                        if(isset($imgs[$item['id']])){
-                            $item['imgs']=$imgs[$item['id']];
-                        }else{
-                            $item['imgs']=[];
-                        }
-                    }
-                    unset($item);
-                }
+                $lists = $this->appendTagData($lists,'imgs', $imgs);
             }
         }
         return $lists;
+    }
+
+    protected function afterTagItem($item,$attrs=[]){
+        $item['digg']=$item['digg']+intval($item['v_digg']);
+        $item['views']=$item['views']+intval($item['v_views']);
+        return $item;
     }
 }

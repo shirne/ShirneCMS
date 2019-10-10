@@ -9,6 +9,7 @@
                     <a href="{:url('index/article/index',array('name'=>$category['name']))}">{$category.title}</a>
                     &nbsp;&nbsp;
                     <i class="ion-md-calendar"></i>&nbsp;{$article.create_time|showdate}
+                    <i class="ion-md-paper-plane"></i>&nbsp;{$article.views}
                 </div>
                 <div class="article-content">
                     <div>

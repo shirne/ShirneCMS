@@ -78,6 +78,8 @@ class ArticleController extends BaseController
             $this->error('文章不存在',0);
         }
         $article->setInc('views',1);
+        $article['views']+=$article['v_views'];
+        $article['digg']+=$article['v_digg'];
         $images=Db::name('ArticleImages')->where('article_id',$article['id'])->select();
 
         $digg=false;
@@ -119,7 +121,6 @@ class ArticleController extends BaseController
                     'device'=>'',
                     'ip'=>$this->request->ip()
                 ]);
-                $article['digg'] += 1;
             }else{
                 $this->error('您没对这篇文章点过赞',0);
             }
@@ -127,14 +128,13 @@ class ArticleController extends BaseController
             if($type!=='up'){
                 $article->setDec('digg',1);
                 Db::name('articleDigg')->where('id',$digg['id'])->delete();
-                $article['digg']-=1;
             }else{
                 $this->error('您已经点过赞啦',0);
             }
         }
 
         return $this->response([
-            'digg'=>$article['digg']
+            'digg'=>$article['digg']+$article['v_digg']
         ]);
     }
 
