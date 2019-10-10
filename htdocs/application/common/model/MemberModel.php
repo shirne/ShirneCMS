@@ -113,14 +113,16 @@ class MemberModel extends BaseModel
     public static function getParents($userid,$level=5,$getid=true)
     {
         $parents=[];
+        $ids=[];
         $currentid=$userid;
         $user=Db::name('Member')->where('id',$currentid)->field('id,level_id,username,referer')->find();
         $layer=0;
         while(!empty($user)){
             $layer++;
+            $ids[]=$user['id'];
             $currentid=$user['referer'];
             if(!$currentid)break;
-            if($userid == $currentid){
+            if(in_array($currentid, $ids)!==false){
                 Log::record('会员 '.$userid.' 在查找上级时在第 '.$layer.' 层出现递归',\think\Log::ERROR);
                 break;
             }
