@@ -86,7 +86,7 @@
                         <div class="form-row">
                             <label style="width: 80px;">商品销量</label>
                             <div class="form-group col">
-                                <div class="input-group">
+                                <div class="input-group input-group-sm">
                                     <input type="text" class="form-control" readonly value="{$product['sale']}" />
                                     <span class="input-group-middle"><span class="input-group-text">+</span></span>
                                     <input type="text" class="form-control" name="v_sale" title="虚拟销量" value="{$product['v_sale']}" />
@@ -155,9 +155,9 @@
 
                         <php>$layercounts = array_column($levels,'commission_layer');$layercount = max($layercounts);</php>
                         <div class="form-row commission_box cbox2">
-                            <div class="form-group col">
+                            <div class="form-group mb-0 col">
                                 <for start="0" end="$layercount">
-                                    <div class="input-group mb-2 col">
+                                    <div class="input-group input-group-sm mb-2 col">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">第 {$i+1} 代</span>
                                         </div>
@@ -172,9 +172,9 @@
                             </div>
                         </div>
                         <div class="form-row commission_box cbox3">
-                            <div class="form-group col">
+                            <div class="form-group mb-0 col">
                                 <for start="0" end="$layercount">
-                                    <div class="input-group mb-2 col">
+                                    <div class="input-group input-group-sm mb-2 col">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">第 {$i+1} 代</span>
                                         </div>
@@ -186,9 +186,9 @@
                             </div>
                         </div>
                         <div class="form-row commission_box cbox4">
-                            <div class="form-group col">
+                            <div class="form-group mb-0 col">
                                 <volist name="levels" id="lv" key="k">
-                                <div class="input-group mb-2 col">
+                                <div class="input-group input-group-sm mb-2 col">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">{$lv.level_name}</span>
                                     </div>

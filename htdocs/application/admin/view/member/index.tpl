@@ -132,7 +132,7 @@
                 </td> 
                 <td>
                     
-                    <a href="javascript:" class="btn btn-sm pl-1 pr-1 pt-0 pb-0 btn-{$levels[$v['level_id']]['style']} btn-setlevel" data-id="{$v.id}" data-level="{$v.level_id}" title="点击修改">{$levels[$v['level_id']]['level_name']}&nbsp;<i class="ion-md-create"></i></a>
+                    <a href="javascript:" class="btn btn-sm has-tooltip pl-1 pr-1 pt-0 pb-0 btn-{$levels[$v['level_id']]['style']} btn-setlevel" data-id="{$v.id}" data-level="{$v.level_id}" title="点击修改">{$levels[$v['level_id']]['level_name']}&nbsp;<i class="ion-md-create"></i></a>
                 </td>
                 <td class="operations">
                     <a class="btn btn-outline-primary" title="编辑" href="{:url('member/update',array('id'=>$v['id']))}"><i class="ion-md-create"></i> </a>

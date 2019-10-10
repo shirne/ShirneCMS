@@ -66,7 +66,7 @@ class ProductModel extends ContentModel
         }
         return $lists;
     }
-    protected function afterTagItem($item,$attrs){
+    protected function afterTagItem($item,$attrs=[]){
         $item['sale']=$item['sale']+intval($item['v_sale']);
         return $item;
     }

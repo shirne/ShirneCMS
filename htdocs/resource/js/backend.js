@@ -148,7 +148,7 @@ jQuery(function ($) {
     });
 
     //表格行操作提示
-    $('.operations .btn').tooltip();
+    $('.operations .btn,.has-tooltip').tooltip();
 
     //异步显示资料链接
     $('a[rel=ajax]').click(function (e) {
