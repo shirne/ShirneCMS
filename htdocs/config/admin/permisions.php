@@ -3,10 +3,10 @@ return array(
     'category'=>array(
         'title'=>'内容分类',
         'items'=>array(
-            'index'=>'内容分类查看',
-            'add'=>'内容分类添加',
-            'edit'=>'内容分类修改',
-            'delete'=>'内容分类删除'
+            'index'=>'分类查看',
+            'add'=>'分类添加',
+            'edit'=>'分类修改',
+            'delete'=>'分类删除'
         )
     ),
     'article'=>array(
@@ -16,7 +16,11 @@ return array(
             'add'=>'文章添加',
             'edit'=>'文章修改',
             'delete'=>'文章删除',
-            'push'=>'文章发布',
+            'status'=>'文章发布',
+            'imagelist'=>'文章图集',
+            'imageadd'=>'添加图片',
+            'imageupdate'=>'修改图片',
+            'imagedelete'=>'删除图片',
             'comments'=>'评论查看',
             'commentview'=>'评论回复',
             'commentstatus'=>'评论审核',
@@ -26,10 +30,10 @@ return array(
     'productcategory'=>array(
         'title'=>'产品分类',
         'items'=>array(
-            'index'=>'内容分类查看',
-            'add'=>'内容分类添加',
-            'edit'=>'内容分类修改',
-            'delete'=>'内容分类删除'
+            'index'=>'分类查看',
+            'add'=>'分类添加',
+            'edit'=>'分类修改',
+            'delete'=>'分类删除'
         )
     ),
     'product'=>array(
@@ -40,16 +44,34 @@ return array(
             'edit'=>'产品修改',
             'delete'=>'产品删除',
             'push'=>'产品上下架',
+            'get_specs'=>'规格数据',
+            'imagelist'=>'文章图集',
+            'imageadd'=>'添加图片',
+            'imageupdate'=>'修改图片',
+            'imagedelete'=>'删除图片',
             'comments'=>'评论查看',
             'commentview'=>'评论回复',
             'commentstatus'=>'评论审核',
             'commentdelete'=>'评论删除'
         )
     ),
-    'order'=>array(
-        'title'=>'产品管理',
+    'productcoupon'=>array(
+        'title'=>'优惠券管理',
         'items'=>array(
-            'index'=>'订单查看',
+            'index'=>'优惠券管理',
+            'add'=>'添加优惠券',
+            'update'=>'修改优惠券',
+            'delete'=>'删除优惠券',
+            'itemlist'=>'已领优惠券',
+            'itemdelete'=>'删除已领优惠券'
+        ),
+    ),
+    'order'=>array(
+        'title'=>'订单管理',
+        'items'=>array(
+            'index'=>'订单列表',
+            'export'=>'订单导出',
+            'detail'=>'订单详情',
             'delete'=>'订单删除',
             'audit'=>'订单审核',
             'status'=>'订单状态',
@@ -174,7 +196,7 @@ return array(
     'wechat'=>array(
         'title'=>'微信管理',
         'items'=>array(
-            'index'=>'公众号查看',
+            'index'=>'公众号列表',
             'add'=>'公众号添加',
             'edit'=>'公众号修改',
             'delete'=>'公众号删除',
@@ -188,6 +210,46 @@ return array(
             'materialdelete'=>'素材删除',
             'reply'=>'回复管理'
         )
-    )
+    ),
+    'wechat.fans'=>array(
+        'title'=>'微信粉丝管理',
+        'items'=>array(
+            'index'=>'粉丝列表',
+            'sendmsg'=>'推送消息',
+            'sync'=>'同步粉丝',
+        ),
+    ),
+    'wechat.menu'=>array(
+        'title'=>'微信菜单管理',
+        'items'=>array(
+            'edit'=>'编辑菜单',
+        ),
+    ),
+    'wechat.material'=>array(
+        'title'=>'微信素材管理',
+        'items'=>array(
+            'index'=>'素材列表',
+            'sync'=>'素材同步',
+            'delete'=>'删除素材',
+        ),
+    ),
+    'wechat.reply'=>array(
+        'title'=>'微信回复管理',
+        'items'=>array(
+            'index'=>'回复列表',
+            'add'=>'添加回复',
+            'edit'=>'编辑回复',
+            'delete'=>'删除回复',
+        ),
+    ),
+    'wechat.tplmsg'=>array(
+        'title'=>'微信模板消息设置',
+        'items'=>array(
+            'index'=>'模板消息查看',
+            'sync'=>'同步模板消息',
+            'add'=>'添加模板消息',
+            'del'=>'删除模板消息',
+        ),
+    ),
 );
 //end
