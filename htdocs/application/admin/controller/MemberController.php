@@ -83,6 +83,7 @@ class MemberController extends BaseController
         $this->assign('lists',$lists);
         $this->assign('moneyTypes',getMoneyFields(false));
         $this->assign('types',getMemberTypes());
+        $this->assign('typestyles',['default','info','warning','danger']);
         $this->assign('levels',getMemberLevels());
         $this->assign('type',$type);
         $this->assign('page',$lists->render());
@@ -95,22 +96,53 @@ class MemberController extends BaseController
         $this->setAutoIncrement('member',$incre);
     }
     
+    public function set_level($id=0, $level_id=0){
+        if(empty($id) || empty($level_id))$this->error('参数错误');
+        $id=intval($id);
+        $level_id=intval($level_id);
+
+        $member = MemberModel::get($id);
+        if(empty($member))$this->error('会员不存在');
+        
+        $result=$member->save(['level_id'=>$level_id]);
+        if($result){
+            user_log($this->mid,'setlevel',1,'设置会员等级 '.$id.'/'.$level_id ,'manager');
+            $this->success('设置成功');
+        }else{
+            $this->error('设置失败');
+        }
+    }
+
     public function set_referer($id=0, $referer=0){
         if(empty($id) || empty($referer))$this->error('参数错误');
         $id=intval($id);
         $referer=intval($referer);
-        
-        $member=Db::name('member')->find($id);
+
+        $member = MemberModel::get($id);
         if(empty($member))$this->error('会员不存在');
-        $rmember=Db::name('member')->find($referer);
-        if(empty($rmember) || !$rmember['is_agent'])$this->error('设置的推荐人不是代理');
         
-        $result=MemberModel::update(['referer'=>$referer],['id'=>$id]);
+        $result=$member->setReferer($referer);
         if($result){
             user_log($this->mid,'setreferer',1,'设置推荐人 '.$id.'/'.$referer ,'manager');
             $this->success('设置成功');
         }else{
-            $this->error('设置失败');
+            $this->error('设置失败：'.$member->getError());
+        }
+    }
+
+    public function del_referer($id=0){
+        if(empty($id) )$this->error('参数错误');
+        $id=intval($id);
+        
+        $member=MemberModel::get($id);
+        if(empty($member))$this->error('会员不存在');
+        
+        $result=$member->clrReferer();
+        if($result){
+            user_log($this->mid,'delreferer',1,'清除推荐人 '.$id.'/'.$member['referer'] ,'manager');
+            $this->success('清除成功');
+        }else{
+            $this->error('清除失败');
         }
     }
 

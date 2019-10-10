@@ -23,21 +23,21 @@
         <div class="col col-6">
             <form action="{:url('member/index')}" method="post">
                 <div class="form-row">
-                <div class="form-group col input-group input-group-sm">
-                    <div class="input-group-prepend">
-                    <span class="input-group-text">上级</span>
+                    <div class="form-group col input-group input-group-sm">
+                        <div class="input-group-prepend">
+                        <span class="input-group-text">上级</span>
+                        </div>
+                        <input type="text" class="form-control" name="referer" placeholder="填写id或会员名" value="{$referer}">
                     </div>
-                    <input type="text" class="form-control" name="referer" placeholder="填写id或会员名" value="{$referer}">
-                </div>
-                <div class="form-group col input-group input-group-sm">
-                    <div class="input-group-prepend">
-                    <span class="input-group-text">关键字</span>
+                    <div class="form-group col input-group input-group-sm">
+                        <div class="input-group-prepend">
+                        <span class="input-group-text">关键字</span>
+                        </div>
+                        <input type="text" class="form-control" value="{$keyword}" name="keyword" placeholder="输入用户名或者邮箱关键词搜索">
+                        <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="submit"><i class="ion-md-search"></i></button>
+                        </div>
                     </div>
-                    <input type="text" class="form-control" value="{$keyword}" name="keyword" placeholder="输入用户名或者邮箱关键词搜索">
-                    <div class="input-group-append">
-                      <button class="btn btn-outline-secondary" type="submit"><i class="ion-md-search"></i></button>
-                    </div>
-                </div>
                 </div>
             </form>
         </div>
@@ -50,8 +50,8 @@
                 <th>手机/邮箱</th>
                 <th>余额</th>
                 <th>推荐人</th>
-                <th>代理</th>
-                <th>类型/级别</th>
+                <th width="90">代理</th>
+                <th width="120">级别</th>
                 <th width="200">&nbsp;</th>
             </tr>
         </thead>
@@ -73,6 +73,7 @@
                                     <else/>
                                     {$v.username}
                                 </if>
+                                <span class="badge badge-{$typestyles[$v['type']]}">{$types[$v['type']]}</span>
                                 <if condition="$v.status eq 1"><else/><span class="badge badge-danger" >禁用</span></if>
                             </h5>
                             <div style="font-size:12px;">
@@ -111,12 +112,15 @@
                                         {$v.refer_name}
                                     </if>
                                 </h5>
-                                <div><a href="javascript:" data-id="{$v.id}" class="bindreferer">更换</a></div>
+                                <div>
+                                    <a href="javascript:" data-id="{$v.id}" class="bindreferer">更换</a>
+                                    <a href="javascript:" data-id="{$v.id}" class="delreferer">清除</a>
+                                </div>
                             </div>
                         </div>
                     </empty>
                 </td>
-                <td class="operations">
+                <td class="operations text-left">
 
                     <if condition="$v.is_agent neq 0">
                         <a class="btn btn-outline-primary" title="查看下线" href="{:url('member/index',array('referer'=>$v['id']))}"><i class="ion-md-people"></i> </a>
@@ -127,8 +131,8 @@
 
                 </td> 
                 <td>
-                    <span class="badge badge-info">{$types[$v['type']]}</span>
-                    <span class="badge badge-{$levels[$v['level_id']]['style']}">{$levels[$v['level_id']]['level_name']}</span>
+                    
+                    <a href="javascript:" class="btn btn-sm pl-1 pr-1 pt-0 pb-0 btn-{$levels[$v['level_id']]['style']} btn-setlevel" data-id="{$v.id}" data-level="{$v.level_id}" title="点击修改">{$levels[$v['level_id']]['level_name']}&nbsp;<i class="ion-md-create"></i></a>
                 </td>
                 <td class="operations">
                     <a class="btn btn-outline-primary" title="编辑" href="{:url('member/update',array('id'=>$v['id']))}"><i class="ion-md-create"></i> </a>
@@ -161,6 +165,9 @@
             <div class="col-12 form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">充值金额</span> </div><input type="text" name="amount" class="form-control" placeholder="请填写充值金额"/> </div></div>
             <div class="col-12 form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">充值原因</span> </div><input type="text" name="reson" class="form-control" placeholder="请填写充值原因"/> </div> </div>
         </div>
+    </script>
+    <script type="text/plain" id="member_level">
+        {$levels|array_values|json_encode|raw}
     </script>
     <script type="text/javascript">
         (function(w){
@@ -283,6 +290,59 @@
                     })
                     return false;
                 },{is_agent:1})
+            })
+            $('.delreferer').click(function (e) {
+                var id=$(this).data('id')
+                dialog.confirm('确定清除该会员的推荐人？',function () {
+                    $.ajax({
+                        url:"{:url('del_referer')}",
+                        dataType:'json',
+                        data:{
+                            id:id
+                        },
+                        success:function (json) {
+                            dialog.alert(json.msg,function () {
+                                if(json.code==1){
+                                    location.reload()
+                                }
+                            })
+
+                        }
+                    })
+                    return false;
+                },{is_agent:1})
+            })
+
+            var levels=JSON.parse($('#member_level').text());
+            $('.btn-setlevel').click(function(e){
+                var id=$(this).data('id')
+                var level_id=$(this).data('level')
+                dialog.pickList({
+                    isajax:false,
+                    list:levels,
+                    idkey:'level_id',
+                    rowTemplate:'<a href="javascript:" data-id="{@level_id}" class="list-group-item list-group-item-action" style="line-height:30px;">[{@level_id}]&nbsp;{@level_name}</a>'
+                },function(level){
+                    if(level.level_id==level_id){
+                        dialog.warning('未修改')
+                        return false;
+                    }
+                    $.ajax({
+                        url:"{:url('set_level')}",
+                        dataType:'json',
+                        data:{
+                            id:id,
+                            level_id:level.level_id
+                        },
+                        success:function (json) {
+                            dialog.alert(json.msg,function () {
+                                if(json.code==1){
+                                    location.reload()
+                                }
+                            })
+                        }
+                    })
+                })
             })
         });
     </script>

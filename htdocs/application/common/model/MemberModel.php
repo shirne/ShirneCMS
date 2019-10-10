@@ -47,6 +47,51 @@ class MemberModel extends BaseModel
             }
         });
     }
+
+    public function setReferer($referer){
+        if(!$this['id']){
+            $this->setError('会员未初始化');
+            return false;
+        }
+        if(empty($referer)){
+            $this->setError('推荐人不存在');
+            return false;
+        }
+        if($this['id'] == $referer || $this['agentcode']==$referer){
+            $this->setError('不能将会员设为自己的推荐人');
+            return false;
+        }
+        $rmember=Db::name('member')->where('id|agentcode',$referer)->find();
+        if(empty($rmember) || !$rmember['is_agent']){
+            $this->setError('设置的推荐人不是代理');
+            return false;
+        }
+        
+        $parents = MemberModel::getParents($rmember['id'], 0);
+        if(in_array($this['id'], $parents)){
+            $this->setError('推荐人关系冲突');
+            return false;
+        }
+
+        $this->save(['referer'=>$rmember['id']]);
+        return true;
+    }
+
+    public function clrReferer(){
+        if(!$this['id']){
+            $this->setError('会员未初始化');
+            return false;
+        }
+        $referer = $this['referer'];
+        if($referer){
+            $this->save(['referer'=>0]);
+            Db::name('member')->where('id',$referer)->setDec('recom_count',1);
+            $parents=static::getParents($referer,0);
+            array_unshift($parents,$referer);
+            Db::name('member')->whereIn('id',$parents)->setDec('team_count',1);
+        }
+        return true;
+    }
     
     public static function checkAgent($member){
         if($member['is_agent'])return;
@@ -201,7 +246,7 @@ class MemberModel extends BaseModel
         ];
         $member = self::create($data);
         if($member && !empty($member['id'])){
-            MemberModel::update(['referer'=>$referer],array('id'=>$member['id']));
+            $member->setReferer($referer);
         }
         return $member;
     }
