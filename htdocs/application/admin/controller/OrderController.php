@@ -3,6 +3,7 @@
 namespace app\admin\controller;
 
 use app\common\model\OrderModel;
+use app\common\model\PayOrderModel;
 use shirne\excel\Excel;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use think\Db;
@@ -130,9 +131,11 @@ class OrderController extends BaseController
         if(empty($model))$this->error('订单不存在');
         $member=Db::name('Member')->find($model['member_id']);
         $products = Db::name('OrderProduct')->where('order_id',  $id)->select();
+        $payorders = PayOrderModel::filterTypeAndId('order',$id)->select();
         $this->assign('model',$model);
         $this->assign('member',$member);
         $this->assign('products',$products);
+        $this->assign('payorders',$payorders);
         return $this->fetch();
     }
 
@@ -186,6 +189,47 @@ class OrderController extends BaseController
         $order->save($data);
         user_log($this->mid,'repriceorder',1,'订单改价 '.$id .' '.$price,'manager');
         $this->success('操作成功');
+    }
+
+    /**
+     * 支付订单查询
+     * @param $id
+     */
+    public function paystatus($id){
+        $order = OrderModel::get($id);
+        if(empty($id) || empty($order)){
+            $this->error('订单不存在');
+        }
+        if($order['status']!=0){
+            $this->error('订单当前状态非待支付');
+        }
+        $payorders = PayOrderModel::filterTypeAndId('order',$id)->select();
+        if(empty($payorders)){
+            $this->error('该订单没有在线支付记录');
+        }
+        
+        $this->success('操作成功', null, ['lists'=>$payorders]);
+    }
+
+    /**
+     * 支付状态查询 todo
+     * @param $payid
+     */
+    public function payquery($payid){
+        $payorder = PayOrderModel::get($payid);
+        if(empty($payorder)){
+            $this->error('支付订单不存在');
+        }
+        $result=$payorder->checkStatus();
+        if($result){
+            if($payorder->getErrNo()){
+                $this->error('查询成功：'.$payorder->getError());
+            }else{
+                $this->success('订单已支付');
+            }
+        }else{
+            $this->error($payorder->getError());
+        }
     }
 
     /**

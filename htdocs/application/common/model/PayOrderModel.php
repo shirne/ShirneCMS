@@ -2,7 +2,7 @@
 
 namespace app\common\model;
 
-
+use EasyWeChat\Factory;
 use app\common\core\BaseModel;
 use think\Db;
 
@@ -158,6 +158,49 @@ class PayOrderModel extends BaseModel
         
         $buff = trim($buff, "&");
         return $buff;
+    }
+
+    public function checkStatus(){
+        if(!$this['id'] || $this['status']!=0){
+            $this->setError('当前状态错误');
+            return false;
+        }
+
+        if(!$this['pay_id']){
+            $this->setError('支付信息错误');
+            return false;
+        }
+
+        if($this['pay_type']=='wechat'){
+            $wechat = WechatModel::get($this['pay_id']);
+            $config = WechatModel::to_pay_config($wechat);
+            $app = Factory::payment($config);
+            
+            $result=$app->order->queryByOutTradeNumber($this['order_no']);
+            if($result['return_code']=='SUCCESS' && $result['result_code']=='SUCCESS'){
+                if($result['trade_state']=='SUCCESS'){
+                    $this->updateStatus([
+                        'status'=>1,
+                        'pay_time'=>time(),
+                        'pay_bill'=>$result['transaction_id'],
+                        'time_end'=>$result['time_end']
+                    ]);
+                }else{
+                    $this->updateStatus(['status'=>-1]);
+                    $this->setError($result['trade_state_desc']);
+                }
+            }else{
+                $this->setError( $result['err_code_des']?:$result['return_msg']);
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static function filterTypeAndId($type,$id){
+        return static::where('order_type',$type)
+        ->where('order_id',$id);
     }
 
 }

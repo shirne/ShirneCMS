@@ -76,6 +76,64 @@
                 </table>
             </div>
         </div>
+        <if condition="!empty($payorders)">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">支付信息</h3>
+                </div>
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>支付单号</th>
+                                <th>发起时间</th>
+                                <th>支付类型</th>
+                                <th>支付状态</th>
+                                <th>交易号</th>
+                                <th>是否有退款</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <volist name="payorders" id="po">
+                        <tr>
+                            <td>{$po.order_no}</td>
+                            <td>{$po.create_time|showdate}</td>
+                            <td>
+                                <if condition="$po['pay_type'] == 'wechat'">
+                                    <span class="badge badge-success has-tooltip" title="{$po.trade_type}">微信支付</span>
+                                <elseif condition="$po['pay_type'] == 'alipay'" />
+                                    <span class="badge badge-info">支付宝</span>
+                                <else/>
+                                    <span class="badge badge-secondary">{$po.pay_type}</span>
+                                </if>
+                            </td>
+                            <td>
+                                <if condition="$po['status'] == 1">
+                                    <span class="badge badge-success">已支付</span><br />
+                                    <span class="badge badge-secondary">{$po.pay_time|showdate}</span>
+                                <elseif condition="$po['status'] LT 0"/>
+                                    <span class="badge badge-secondary">已失效</span>
+                                    <else/>
+                                    <span class="badge badge-warning has-tooltip paystatus" title="查询支付状态" data-id="{$po.id}" >未支付</span>
+                                </if>
+
+                            </td>
+                            <td>{$po.pay_bill}</td>
+                            <td>
+                                <if condition="$po['is_refund'] == 1">
+                                    <span class="badge badge-warning">有退款</span>
+                                    {$po.refund_fee}
+                                <else/>
+                                    <span class="badge badge-secondary">无退款</span>
+                                </if>
+                            </td>
+                        </tr>
+                        </volist>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </if>
         <if condition="$model['status'] GT 1">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -117,4 +175,32 @@
             </div>
         </div>
     </div>
+</block>
+<block name="script">
+    <script type="text/javascript">
+        jQuery(function($){
+            $('.paystatus').click(function(e){
+                var id=$(this).data('id');
+                var loading=dialog.loading();
+                $.ajax({
+                    url:"{:url('payquery')}",
+                    dataType:'json',
+                    data:{
+                        payid:id
+                    },
+                    success:function(json){
+                        loading.close();
+                        if(json.code==1){
+                            dialog.success(json.msg)
+                        }else{
+                            dialog.error(json.msg)
+                        }
+                        setTimeout(function(){
+                            location.reload()
+                        },800)
+                    }
+                })
+            });
+        })
+    </script>
 </block>
