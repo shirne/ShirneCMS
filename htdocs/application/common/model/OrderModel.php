@@ -425,7 +425,7 @@ class OrderModel extends BaseModel
         );
         if(is_array($extdata)){
             foreach ($extdata as $k=>$val){
-                if(!isset($orderdata[$k]) && !in_array($k,['status','rebated','total_price'])){
+                if(!isset($orderdata[$k]) && !in_array($k,['status','rebated','total_price','total_postage'])){
                     $orderdata[$k]=$val;
                 }
             }
