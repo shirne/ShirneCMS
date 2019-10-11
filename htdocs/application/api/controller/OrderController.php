@@ -4,7 +4,7 @@ namespace app\api\controller;
 
 
 use app\common\facade\MemberCartFacade;
-use app\common\facade\OrderFacade;
+//use app\common\facade\OrderFacade;
 use app\common\model\OrderModel;
 use app\common\model\PayOrderModel;
 use app\common\model\PostageModel;
@@ -87,7 +87,12 @@ class OrderController extends AuthedController
                 'total_price'=>$data['total_price'],
                 'total_postage'=>$data['total_postage'],
             ];
-            $result=OrderFacade::makeOrder($this->user,$order_skus,$address,$remark,$balancepay);
+            try{
+                $orderModel=new OrderModel();
+                $result=$orderModel->makeOrder($this->user,$order_skus,$address,$remark,$balancepay);
+            }catch(\Exception $e){
+                $this->error($e->getMessage());
+            }
             if($result){
                 if($from=='cart'){
                     MemberCartFacade::delCart($sku_ids,$this->user['id']);
@@ -104,7 +109,7 @@ class OrderController extends AuthedController
 
                 }
             }else{
-                $this->error('下单失败:'.OrderFacade::getError());
+                $this->error('下单失败:'.$orderModel->getError());
             }
         }
     }

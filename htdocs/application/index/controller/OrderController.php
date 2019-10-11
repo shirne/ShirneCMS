@@ -10,7 +10,7 @@ namespace app\index\controller;
 
 
 use app\common\facade\MemberCartFacade;
-use app\common\facade\OrderFacade;
+//use app\common\facade\OrderFacade;
 use app\common\model\CreditOrderModel;
 use app\common\model\MemberOauthModel;
 use app\common\model\OrderModel;
@@ -64,7 +64,8 @@ class OrderController extends AuthedController
                     'platform'=>'web',
                     'total_price'=>$data['total_price']
                 ];
-                $result=OrderFacade::makeOrder($this->user,$products,$address,$remark,$balancepay);
+                $orderModel=new OrderModel();
+                $result=$orderModel->makeOrder($this->user,$products,$address,$remark,$balancepay);
                 if($result){
                     if($from=='cart'){
                         MemberCartFacade::delCart($sku_ids,$this->userid);
@@ -80,7 +81,7 @@ class OrderController extends AuthedController
                         }
                     }
                 }else{
-                    $this->error('下单失败:'.OrderFacade::getError());
+                    $this->error('下单失败:'.$orderModel->getError());
                 }
             }
         }

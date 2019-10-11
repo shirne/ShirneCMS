@@ -201,6 +201,7 @@ class OrderModel extends BaseModel
             $this->setError('指定的下单用户资料错误');
             return false;
         }
+        //Log::record('create order:'.var_export(func_get_args(),true));
         
         //折扣
         $levels=getMemberLevels();
@@ -367,7 +368,6 @@ class OrderModel extends BaseModel
             if(isset($extdata['total_price'])) {
                 if ($total_price != intval($extdata['total_price']*100)) {
                     $this->setError('下单商品价格已变动');
-            
                     return false;
                 }
             }
@@ -376,7 +376,6 @@ class OrderModel extends BaseModel
             if( isset($extdata['total_postage'])) {
                 if (abs($postage_fee - $extdata['total_postage'])>.5) {
                     $this->setError('邮费价格已变动');
-                
                     return false;
                 }else{
                     $postage_fee = round($extdata['total_postage'],2);
@@ -390,12 +389,14 @@ class OrderModel extends BaseModel
             $debit = money_log($member['id'], -$total_price, "下单支付", 'consume',0,is_string($balance_pay)?$balance_pay:'money');
             if ($debit) $status = 1;
             else{
+                $this->rollback();
                 $this->setError("余额不足");
                 return false;
             }
         }
         $time=time();
         $orderno=$this->create_no();
+        Log::record('order no:'.$orderno);
         $orderdata=array(
             'order_no'=>$orderno,
             'member_id'=>$member['id'],
@@ -424,15 +425,21 @@ class OrderModel extends BaseModel
         );
         if(is_array($extdata)){
             foreach ($extdata as $k=>$val){
-                if(!isset($orderdata) && !in_array($k,['status','rebated','total_price'])){
+                if(!isset($orderdata[$k]) && !in_array($k,['status','rebated','total_price'])){
                     $orderdata[$k]=$val;
                 }
             }
         }else{
             $orderdata['remark']=$extdata;
         }
-        $result= $this->insert($orderdata,false,true);
-        
+        try{
+            Log::record("创建订单：".var_export($orderdata,true));
+            $result= $this->insert($orderdata,false,true);
+        }catch(\Exception $e){
+            $this->rollback();
+            $this->setError($e->getMessage());
+            return false;
+        }
         if($result){
             $i=0;
             foreach ($products as $product){
@@ -462,13 +469,14 @@ class OrderModel extends BaseModel
                     ->update();
             }
             $this->commit();
+            if($status>0 ){
+                self::getInstance()->updateStatus(['status'=>$status,'pay_time'=>time()],['order_id'=>$result]);
+            }
         }else{
-            $this->setError("入单失败");
             $this->rollback();
+            $this->setError("入单失败");
         }
-        if($status>0 ){
-            self::getInstance()->updateStatus(['status'=>$status,'pay_time'=>time()],['order_id'=>$result]);
-        }
+        
         return $result;
     }
     

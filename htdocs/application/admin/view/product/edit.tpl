@@ -206,8 +206,8 @@
                         </div>
                         <div class="commission_desc mb-2 text-muted">此处佣金层级按会员组设置的最大层级，不需要分佣的层级填写0即可，如需增加分级，先在会员组中设置一个最大值</div>
                         <div class="form-row">
-                            <label style="width: 80px;">限制购买</label>
-                            <div class="form-group col">
+                            <label style="width: 80px;">购买限制</label>
+                            <div class="form-group mb-1 col">
                                 <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
                                     <volist name="levels" id="lv" key="k">
                                         <label class="btn btn-outline-secondary{:fix_in_array($k,$product['levels'])?' active':''}">
@@ -215,6 +215,12 @@
                                         </label>
                                     </volist>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <label style="width: 80px;">&nbsp;</label>
+                            <div class="form-group col">
+                                <div class="text-muted">只有选中的会员组可以购买，不选则不限制</div>
                             </div>
                         </div>
                         <div class="form-row">
