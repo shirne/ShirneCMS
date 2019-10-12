@@ -178,8 +178,10 @@ CREATE TABLE `sa_adv_group` (
   `flag` varchar(50) DEFAULT '',
   `ext_set` varchar(500) DEFAULT '',
   `create_time` int(11) DEFAULT 0,
-  `status` int(11) DEFAULT 0,
-  PRIMARY KEY (`id`)
+  `locked` tinyint(11) DEFAULT 0,
+  `status` tinyint(11) DEFAULT 0,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `flag_UNIQUE` (`flag` ASC)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -201,7 +203,7 @@ CREATE TABLE `sa_adv_item` (
   `create_time` int(11) DEFAULT 0,
   `update_time` int(11) DEFAULT 0,
   `sort` int(11) DEFAULT 0,
-  `status` int(11) DEFAULT 0,
+  `status` tinyint(11) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -589,6 +591,7 @@ CREATE TABLE `sa_member_cashin` (
   `appid` varchar(30) DEFAULT '',
   `form_id` varchar(50) DEFAULT '',
   `cashtype` varchar(20) DEFAULT '',
+  `paytype` varchar(20) DEFAULT '',
   `amount` int(11) DEFAULT '0' COMMENT '金额 单位分',
   `cash_fee` int(11) NULL DEFAULT '0',
   `real_amount` int(11) DEFAULT '0',
@@ -652,11 +655,12 @@ DROP TABLE IF EXISTS `sa_member_oauth`;
 
 CREATE TABLE `sa_member_oauth` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `member_id` int(11) NOT NULL,
+  `member_id` int(11) NOT NULL DEFAULT 0,
   `type` varchar(20) DEFAULT NULL COMMENT 'qq/sina/github/weixin/wxapp',
   `type_id` INT DEFAULT 0,
   `openid` varchar(64) DEFAULT '',
   `unionid` varchar(64) DEFAULT '',
+  `subscribe_time` int(11) DEFAULT 0,
   `data` TEXT,
   `create_time` int(11) DEFAULT 0,
   `update_time` int(11) DEFAULT 0,
@@ -797,8 +801,10 @@ CREATE TABLE `sa_article` (
   `cate_id` INT(11) DEFAULT NULL,
   `user_id` INT(11) DEFAULT NULL,
   `digg` INT(11) DEFAULT '0',
+  `v_digg` INT(11) DEFAULT '0',
   `comment` INT(11) DEFAULT '0',
   `views` INT(11) DEFAULT '0',
+  `v_views` INT(11) DEFAULT '0',
   `type` tinyint(1) UNSIGNED DEFAULT '1' COMMENT '1:普通,2:置顶,4:热门,8:推荐',
   `status` tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),

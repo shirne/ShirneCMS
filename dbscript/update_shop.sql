@@ -102,6 +102,7 @@ CREATE TABLE `sa_product_coupon` (
   `expiry_type` tinyint(11) DEFAULT 0,
   `expiry_time` int(11) DEFAULT 0,
   `expiry_day` int(11) DEFAULT 0,
+  `status` tinyint(11) DEFAULT 1,
   `cost_credit` int(11) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -113,10 +114,15 @@ CREATE TABLE `sa_member_coupon` (
   `coupon_id` int(11) DEFAULT 0,
   `member_id` int(11) DEFAULT 0,
   `title` varchar(100) DEFAULT '',
+  `bind_type` tinyint(11) DEFAULT 0 COMMENT '0-通用 1-类目 2-品牌 3-指定商品 4-指定sku',
   `cate_id` int(11) DEFAULT 0,
   `brand_id` int(11) DEFAULT 0,
   `product_id` int(11) DEFAULT 0,
   `sku_id` int(11) DEFAULT 0,
+  `type` tinyint(4) DEFAULT 0 COMMENT '0- 满减 1-折扣',
+  `limit` int(11) DEFAULT 0,
+  `amount` int(11) DEFAULT 0,
+  `discount` int(11) DEFAULT 0,
   `create_time` int(11) DEFAULT 0,
   `expiry_time` int(11) DEFAULT 0,
   `status` tinyint(11) DEFAULT 1,
@@ -148,7 +154,8 @@ CREATE TABLE `sa_product` (
   `postage_id` int(11) DEFAULT '0',
   `postage` DECIMAL(10,2) DEFAULT '0',
   `sale` int(11) DEFAULT '0' COMMENT '总销量',
-  `type` tinyint(4) DEFAULT '1',
+  `v_sale` int(11) DEFAULT '0' COMMENT '虚拟销量',
+  `type` tinyint(4) DEFAULT '0',
   `is_commission` tinyint(4) DEFAULT '1',
   `commission_percent`  text,
   `is_discount` tinyint(4) DEFAULT '1',
@@ -219,16 +226,17 @@ DROP TABLE IF EXISTS `sa_order`;
 
 CREATE TABLE `sa_order` (
   `order_id` INT NOT NULL AUTO_INCREMENT,
-  `platform` VARCHAR(30) NULL,
+  `platform` VARCHAR(30) NULL DEFAULT '',
   `appid` varchar(30) DEFAULT '',
-  `order_no` VARCHAR(30) NULL,
-  `member_id` INT NULL,
+  `order_no` VARCHAR(30) NOT NULL,
+  `member_id` INT NULL DEFAULT 0,
   `payamount` DECIMAL(10,2) NULL DEFAULT 0,
   `product_amount` DECIMAL(10,2) NULL DEFAULT 0,
+  `cost_amount` DECIMAL(10,2) NULL DEFAULT 0,
   `discount_amount` DECIMAL(10,2) NULL DEFAULT 0,
   `commission_amount` DECIMAL(10,2) NULL DEFAULT 0,
   `commission_special` TEXT NULL,
-  `level_id` INT NULL,
+  `level_id` INT NULL DEFAULT 0,
   `create_time` INT NULL DEFAULT 0,
   `pay_time` INT NULL DEFAULT 0,
   `deliver_time` INT NULL DEFAULT 0,
@@ -255,10 +263,13 @@ CREATE TABLE `sa_order` (
   `address` VARCHAR(150) NULL,
   `postage_area_id` int(11) DEFAULT '0',
   `postage` DECIMAL(10,2) DEFAULT '0',
+  `invoice_id` int(11) DEFAULT '0',
   `express_no` VARCHAR(100) NULL,
   `express_code` VARCHAR(20) NULL,
   `type` TINYINT NULL DEFAULT 1,
-  PRIMARY KEY (`order_id`)
+  PRIMARY KEY (`order_id`),
+  UNIQUE INDEX `orderno_index` (`order_no` ASC),
+  INDEX `memberid_index` (`member_id` ASC)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `sa_express_code`;
@@ -301,6 +312,7 @@ CREATE TABLE `sa_order_product` (
   `product_image` varchar(150) DEFAULT NULL,
   `product_orig_price` DECIMAL(10,2) DEFAULT NULL,
   `product_price` DECIMAL(10,2) DEFAULT NULL,
+  `product_cost_price` DECIMAL(10,2) DEFAULT NULL,
   `product_weight` INT(11) DEFAULT 0,
   `count` int(11) DEFAULT NULL,
   `sort` INT(11) NOT NULL DEFAULT '0',

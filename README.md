@@ -49,6 +49,7 @@ ShirneCMS
 - [x] 商品品牌
 - [x] 优惠券
 - [x] 邮费模板
+- [ ] 推荐位
 - [ ] 促销功能
 
 ### 其它功能
@@ -60,10 +61,11 @@ ShirneCMS
 - [ ] 前后台多语言翻译（中/英）……开发中
  
 ### 微信功能完善
-- [x] 粉丝管理 
-- [x] 自动回复……待测试
-- [x] 素材管理……待测试
-- [x] 模板消息……开发中
+- [x] 粉丝管理/同步/推送消息(文本/文章/产品/素材)
+- [x] 自动回复(文本/图文)，托管消息处理待支持
+- [x] 素材管理
+- [x] 自定义菜单(待增加: 小程序绑定/回复绑定/处理程序绑定)
+- [x] 模板消息……支持预设ID导入
 - [ ] 二维码管理
 - [ ] 客服管理
 
@@ -95,12 +97,12 @@ ShirneCMS
 
 PHP库引用[Composer](https://getcomposer.org/download/)
 
->cd htdocs<br />
+>cd src<br />
 >composer install
 
 Javascript/CSS构建[Gulp](https://www.gulpjs.com.cn/)
 
->cd htdocs/resource<br />
+>cd src/resource<br />
 cnpm install<br />
 构建并监视文件：gulp<br />
 清理dest目录: gulp clean<br />
@@ -117,8 +119,8 @@ scripts/update_sign.sql 会员签到
 
 项目目录
 
->htdocs 项目根目录<br />
-htdocs/public 网站根目录
+>src 项目根目录<br />
+src/public 网站根目录
 
 ## 安装说明
 
@@ -176,14 +178,22 @@ xxx.test.com 为本地测试目录，配置方法：
 |![登录](screenshot/login.jpg "登录")|![主面板](screenshot/dashboard.jpg "主面板")|
 |分类管理|添加分类|
 |![分类管理](screenshot/category.jpg "分类管理")|![添加分类](screenshot/category-add.jpg "添加分类")|
-|发布文章|发布商品|
-|![发布文章](screenshot/article-add.jpg "发布文章")|![发布商品](screenshot/product-add.jpg "发布商品")|
-|发布商品|订单统计|
-|![发布商品](screenshot/product-add2.jpg "发布商品")|![订单统计](screenshot/order-static.jpg "订单统计")|
-|广告管理|系统设置|
-|![广告管理](screenshot/ad.jpg "广告管理")|![系统设置](screenshot/setting.jpg "系统设置")|
-|会员组|微信菜单|
-|![会员组](screenshot/user-level.jpg "会员组")|![微信菜单](screenshot/wechat-menu.jpg "微信菜单")|
+|发布文章|发布单页|
+|![发布文章](screenshot/article-add.jpg "发布文章")|![单页](screenshot/single.jpg "发布单页")|
+|发布商品|发布商品|
+|![发布商品](screenshot/product-add.jpg "发布商品")|![发布商品](screenshot/product-add2.jpg "发布商品")|
+|运费模板|订单统计|
+|![运费模板](screenshot/postage.jpg "运费模板")|![订单统计](screenshot/order-static.jpg "订单统计")|
+|系统设置|优惠券|
+|![系统设置](screenshot/setting.jpg "系统设置")|![优惠券](screenshot/coupon.jpg "优惠券")|
+|会员设置|签到设置|
+|![会员设置](screenshot/setting-member.jpg "会员设置")|![签到设置](screenshot/setting-sign.jpg "签到设置")|
+|会员组|会员管理|
+|![会员组](screenshot/user-level.jpg "会员组")|![会员管理](screenshot/user.jpg "会员管理")|
+|微信设置|微信菜单|
+|![微信设置](screenshot/wechat-setting.jpg "微信设置")|![微信菜单](screenshot/wechat-menu.jpg "微信菜单")|
+|广告位|发布广告|
+|![广告位](screenshot/ad-group.jpg "广告位")|![发布广告](screenshot/ad-detail.jpg "发布广告")|
 
 ## 联系我
 欢迎技术探讨，部署安装及定制开发收费
