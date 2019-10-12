@@ -97,12 +97,12 @@ ShirneCMS
 
 PHP库引用[Composer](https://getcomposer.org/download/)
 
->cd htdocs<br />
+>cd src<br />
 >composer install
 
 Javascript/CSS构建[Gulp](https://www.gulpjs.com.cn/)
 
->cd htdocs/resource<br />
+>cd src/resource<br />
 cnpm install<br />
 构建并监视文件：gulp<br />
 清理dest目录: gulp clean<br />
@@ -119,8 +119,8 @@ scripts/update_sign.sql 会员签到
 
 项目目录
 
->htdocs 项目根目录<br />
-htdocs/public 网站根目录
+>src 项目根目录<br />
+src/public 网站根目录
 
 ## 安装说明
 
