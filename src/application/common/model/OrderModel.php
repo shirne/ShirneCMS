@@ -215,6 +215,8 @@ class OrderModel extends BaseModel
         $status=0;
         //总价 单位分
         $total_price=0;
+        //总成本价
+        $total_cost_price=0;
         $commission_type= getSetting('commission_type');
         //分佣本金 单位分
         $commission_amount=0;
@@ -260,6 +262,10 @@ class OrderModel extends BaseModel
             $price = round($release_price * 100 * $product['count']);
             
             $total_price += $price;
+
+            $cost_price = intval($product['cost_price'] * 100) * $product['count'];
+
+            $total_cost_price += $cost_price;
             
             //运费
             if($product['postage_id']>0 && !empty($postageareas)){
@@ -285,7 +291,7 @@ class OrderModel extends BaseModel
 
             if($product['is_commission'] == 1 ){
                 $orig_price = intval($product['product_price'] * 100) * $product['count'];
-                $cost_price = intval($product['cost_price'] * 100) * $product['count'];
+                
                 if($commission_type==3){
                     $commission_amount += $orig_price;
                 }elseif($commission_type==2){
@@ -300,7 +306,7 @@ class OrderModel extends BaseModel
                     }
                 }
             }elseif($product['is_commission'] == 2){
-                $cost_price=intval($product['cost_price']*100)* $product['count'];
+                
                 if($price>$cost_price) {
                     $comm_special[]=[
                         'type'=>2,
@@ -405,6 +411,7 @@ class OrderModel extends BaseModel
             'postage'=>$postage_fee,
             'product_amount'=>$total_price*.01,
             'discount_amount'=>$discount_amount*.01,
+            'cost_amount'=>$total_cost_price*.01,
             'commission_amount'=>$commission_amount*.01,
             'commission_special'=>json_encode($comm_special),
             'status'=>0,
@@ -453,6 +460,7 @@ class OrderModel extends BaseModel
                     'product_title'=>$product['product_title'],
                     'product_image'=>$product['product_image'],
                     'product_orig_price'=>$product['product_price'],
+                    'product_cost_price'=>$product['product_cost_price'],
                     'product_price'=>$product['release_price'],
                     'product_weight'=>$product['weight'],
                     'count'=>$product['count'],

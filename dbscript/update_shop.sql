@@ -226,16 +226,17 @@ DROP TABLE IF EXISTS `sa_order`;
 
 CREATE TABLE `sa_order` (
   `order_id` INT NOT NULL AUTO_INCREMENT,
-  `platform` VARCHAR(30) NULL,
+  `platform` VARCHAR(30) NULL DEFAULT '',
   `appid` varchar(30) DEFAULT '',
-  `order_no` VARCHAR(30) NULL,
-  `member_id` INT NULL,
+  `order_no` VARCHAR(30) NOT NULL,
+  `member_id` INT NULL DEFAULT 0,
   `payamount` DECIMAL(10,2) NULL DEFAULT 0,
   `product_amount` DECIMAL(10,2) NULL DEFAULT 0,
+  `cost_amount` DECIMAL(10,2) NULL DEFAULT 0,
   `discount_amount` DECIMAL(10,2) NULL DEFAULT 0,
   `commission_amount` DECIMAL(10,2) NULL DEFAULT 0,
   `commission_special` TEXT NULL,
-  `level_id` INT NULL,
+  `level_id` INT NULL DEFAULT 0,
   `create_time` INT NULL DEFAULT 0,
   `pay_time` INT NULL DEFAULT 0,
   `deliver_time` INT NULL DEFAULT 0,
@@ -267,7 +268,7 @@ CREATE TABLE `sa_order` (
   `express_code` VARCHAR(20) NULL,
   `type` TINYINT NULL DEFAULT 1,
   PRIMARY KEY (`order_id`),
-  INDEX `orderno_index` (`order_no` ASC),
+  UNIQUE INDEX `orderno_index` (`order_no` ASC),
   INDEX `memberid_index` (`member_id` ASC)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -311,6 +312,7 @@ CREATE TABLE `sa_order_product` (
   `product_image` varchar(150) DEFAULT NULL,
   `product_orig_price` DECIMAL(10,2) DEFAULT NULL,
   `product_price` DECIMAL(10,2) DEFAULT NULL,
+  `product_cost_price` DECIMAL(10,2) DEFAULT NULL,
   `product_weight` INT(11) DEFAULT 0,
   `count` int(11) DEFAULT NULL,
   `sort` INT(11) NOT NULL DEFAULT '0',

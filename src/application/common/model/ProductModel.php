@@ -81,9 +81,10 @@ class ProductModel extends ContentModel
     
         foreach ($products as $k=>&$item){
             $item['product_price']=$item['price'];
+            $item['product_cost_price']=$item['cost_price'];
         
             if(!empty($item['image']))$item['product_image']=$item['image'];
-            if(isset($counts[$item['sku_id']])){
+            if(isset($skucounts[$item['sku_id']])){
                 $item['count']=$skucounts[$item['sku_id']];
             }else{
                 $item['count']=1;

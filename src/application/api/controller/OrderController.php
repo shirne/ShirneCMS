@@ -146,20 +146,25 @@ class OrderController extends AuthedController
             $this->error($paymodel->getError());
         }
     
+        try{
+            $config=WechatModel::to_pay_config($wechat);
         
-        $config=WechatModel::to_pay_config($wechat);
-    
-        $app = Factory::payment($config);
-    
-        $result = $app->order->unify([
-            'body' => '订单-'.$order_id,
-            'out_trade_no' => $payorder['order_no'],
-            'total_fee' => $payorder['pay_amount'],
-            //'spbill_create_ip' => '', // 可选，如不传该参数，SDK 将会自动获取相应 IP 地址
-            'notify_url' => url('api/wechat/payresult',['hash'=>$wechat['hash']],true,true),
-            'trade_type' => $trade_type,
-            'openid' => empty($this->wechatUser)?'':$this->wechatUser['openid'],
-        ]);
+            $app = Factory::payment($config);
+        
+            $result = $app->order->unify([
+                'body' => '订单-'.$order_id,
+                'out_trade_no' => $payorder['order_no'],
+                'total_fee' => $payorder['pay_amount'],
+                //'spbill_create_ip' => '', // 可选，如不传该参数，SDK 将会自动获取相应 IP 地址
+                'notify_url' => url('api/wechat/payresult',['hash'=>$wechat['hash']],true,true),
+                'trade_type' => $trade_type,
+                'openid' => empty($this->wechatUser)?'':$this->wechatUser['openid'],
+            ]);
+        }catch(\Exception $e){
+            Log::record($e->getMessage());
+            Log::record($e->getTraceAsString());
+            $this->error('支付发起失败');
+        }
         if(empty($result) || $result['return_code']!='SUCCESS' || $result['result_code']!='SUCCESS'){
             Log::record(json_encode($result,JSON_UNESCAPED_UNICODE));
             $this->error('支付发起失败');
