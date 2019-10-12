@@ -48,6 +48,7 @@
                     <th width="50">日期</th>
                     <th>单量</th>
                     <th>金额</th>
+                    <th>成本</th>
                     <th>返奖额</th>
                 </tr>
                 </thead>
@@ -57,6 +58,7 @@
                             <th>{$item['awdate']}</th>
                             <td>{$item['order_count']}</td>
                             <td>{$item['order_amount']}</td>
+                            <td>{$item['total_cost_amount']}</td>
                             <td>{$item['order_rebate']}</td>
                         </tr>
                     </foreach>
@@ -104,10 +106,16 @@
                     borderColor: bdColors[1],
                     borderWidth: 1
                 },{
-                    label: '订单总返佣',
-                    data: JSON.parse('{:json_encode(array_column($statics,"order_rebate"))}'),
+                    label: '订单总成本',
+                    data: JSON.parse('{:json_encode(array_column($statics,"total_cost_amount"))}'),
                     backgroundColor: bgColors[2],
                     borderColor: bdColors[2],
+                    borderWidth: 1
+                },{
+                    label: '订单总返佣',
+                    data: JSON.parse('{:json_encode(array_column($statics,"order_rebate"))}'),
+                    backgroundColor: bgColors[3],
+                    borderColor: bdColors[3],
                     borderWidth: 1
                 }]
             },

@@ -34,7 +34,7 @@ class OrderStaticsController extends BaseController
             $format="'%Y'";
         }
 
-        $model=Db::name('order')->field('count(order_id) as order_count,sum(payamount) as order_amount,sum(rebate_total) as order_rebate,date_format(from_unixtime(create_time),' . $format . ') as awdate');
+        $model=Db::name('order')->field('count(order_id) as order_count,sum(payamount) as order_amount,sum(rebate_total) as order_rebate,sum(cost_amount) as total_cost_amount,date_format(from_unixtime(create_time),' . $format . ') as awdate');
         
         if(empty($start_date)){
             if($type=='date'){

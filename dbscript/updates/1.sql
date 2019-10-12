@@ -58,3 +58,7 @@ CREATE TABLE `sa_o_auth` (
 
 
 ALTER TABLE `sa_notice` ADD  `page` varchar(100) DEFAULT '',ADD  `summary` VARCHAR(500) DEFAULT '';
+
+alter table sa_member
+ add `recom_performance` BIGINT DEFAULT 0,
+ add `total_performance` BIGINT DEFAULT 0;
