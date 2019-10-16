@@ -66,7 +66,7 @@
     </div>
 </block>
 <block name="script">
-    <script type="text/plain" id="configTpl">
+    <script type="text/html" id="configTpl">
         <div class="form-group">
             <label for="token">接口地址</label>
             <div class="input-group">

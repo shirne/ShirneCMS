@@ -54,7 +54,7 @@
 				<th>发布时间</th>
 				<th>分类</th>
 				<th>状态</th>
-				<th width="160">&nbsp;</th>
+				<th width="200">&nbsp;</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -95,10 +95,11 @@
 						</if>
 					</td>
 					<td class="operations">
-					<a class="btn btn-outline-primary" title="编辑" href="{:url('product/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> </a>
+						<a class="btn btn-outline-primary" title="编辑" href="{:url('product/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> </a>
+						<a class="btn btn-outline-primary qrcode-btn" data-id="{$v.id}" title="二维码" href="javascript:"><i class="ion-md-qr-scanner"></i> </a>
 						<a class="btn btn-outline-primary" title="图集" href="{:url('product/imagelist',array('aid'=>$v['id']))}"><i class="ion-md-images"></i> </a>
 						<a class="btn btn-outline-primary" title="评论" href="{:url('product/comments',array('aid'=>$v['id']))}"><i class="ion-md-chatboxes"></i> </a>
-					<a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('product/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
+						<a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('product/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
 					</td>
 				</tr>
 			</volist>
@@ -110,12 +111,40 @@
 </div>
 </block>
 <block name="script">
+	<script type="text/html" id="qrdialog-tpl">
+		<form type="post" target="_blank" action="{:url('qrcode')}" >
+			<input type="hidden" name="id" />
+			<div class="form-group">
+				<label for="qrtype">生成类型</label>
+				<div class="btn-group btn-group-toggle" data-toggle="buttons">
+					<label class="btn btn-outline-primary"> <input type="radio" name="qrtype" value="url" autocomplete="off" > 网址二维码</label>
+					<label class="btn btn-outline-primary"> <input type="radio" name="qrtype" value="minicode" autocomplete="off" > 小程序码</label>
+					<label class="btn btn-outline-primary"> <input type="radio" name="qrtype" value="miniqr" autocomplete="off" > 小程序二维码</label>
+
+				</div>
+			</div>
+			<div class="form-group miniprogramrow">
+				<label for="miniprogram">小程序</label>
+				<div class="input-group">
+					<select name="miniprogram" class="form-control">
+						<option value="">请选择小程序</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="size">图片大小</label>
+				<div class="input-group">
+					<input type="text" name="size" class="form-control" value="430">
+				</div>
+			</div>
+		</form>
+	</script>
 	<script type="text/javascript">
 		(function(w){
 			w.actionPublish=function(ids){
 				dialog.confirm('确定将选中产品发布到前台？',function() {
 				    $.ajax({
-						url:'{:url('product/push',['id'=>'__id__','status'=>1])}'.replace('__id__',ids.join(',')),
+						url:"{:url('product/push',['id'=>'__id__','status'=>1])}".replace('__id__',ids.join(',')),
 						type:'GET',
 						dataType:'JSON',
 						success:function(json){
@@ -133,7 +162,7 @@
             w.actionCancel=function(ids){
                 dialog.confirm('确定取消选中产品的发布状态？',function() {
                     $.ajax({
-                        url:'{:url('product/push',['id'=>'__id__','status'=>0])}'.replace('__id__',ids.join(',')),
+                        url:"{:url('product/push',['id'=>'__id__','status'=>0])}".replace('__id__',ids.join(',')),
                         type:'GET',
                         dataType:'JSON',
                         success:function(json){
@@ -151,7 +180,7 @@
             w.actionDelete=function(ids){
                 dialog.confirm('确定删除选中的产品？',function() {
                     $.ajax({
-                        url:'{:url('product/delete',['id'=>'__id__'])}'.replace('__id__',ids.join(',')),
+                        url:"{:url('product/delete',['id'=>'__id__'])}".replace('__id__',ids.join(',')),
                         type:'GET',
                         dataType:'JSON',
                         success:function(json){
@@ -184,6 +213,44 @@
 					});
 				})
 			}
-        })(window)
+        })(window);
+		jQuery(function($){
+			var html=$('#qrdialog-tpl').text();
+			$('.qrcode-btn').click(function(){
+				var id=$(this).data('id')
+				var dlg = new Dialog({
+					onshown:function(body){
+						body.find('[name=id]').val(id);
+						var mprow=body.find('.miniprogramrow');
+						body.find('[name=qrtype]').change(function(e){
+							if($(this).val()=='url'){
+								mprow.hide();
+							}else{
+								mprow.show();
+							}
+						}).eq(0).parent().trigger('click');
+						$.ajax({
+							url:"{:url('wechat/search',['type'=>'miniprogram'])}",
+							dataType:'json',
+							success:function(json){
+								if(json.code==1){
+									var select=body.find('[name=miniprogram]')
+									if(json.data && json.data.length>0){
+										select.append('<option value="{@id}">{@title}</option>'.compile(json.data,true))
+										select.val(json.data[0].id)
+										body.find('[name=qrtype]').eq(1).parent().trigger('click');
+									}else{
+										select.find('option').eq(0).text('暂无可用的小程序')
+									}
+								}
+							}
+						})
+					},
+					onsure:function(body){
+						body.find('form').submit();
+					}
+				}).show(html,'生成二维码');
+			})
+		})
 	</script>
 </block>

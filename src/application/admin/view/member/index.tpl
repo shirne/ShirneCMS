@@ -155,7 +155,7 @@
 
 </block>
 <block name="script">
-    <script type="text/plain" id="rechargeTpl">
+    <script type="text/html" id="rechargeTpl">
         <div class="row" style="margin:0 10%;">
             <div class="col-12 form-group"><div class="input-group"><div ><span class="input-group-text">充值类型</span> </div><div class="col w-50 text-center" ><div class="btn-group btn-group-toggle" data-toggle="buttons">
                 <foreach name="moneyTypes" item="mt" key="k">

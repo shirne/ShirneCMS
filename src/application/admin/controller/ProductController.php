@@ -11,6 +11,7 @@ use app\admin\validate\ProductSkuValidate;
 use app\admin\validate\ProductValidate;
 use app\admin\validate\ImagesValidate;
 use app\common\facade\ProductCategoryFacade;
+use app\common\model\WechatModel;
 use think\Db;
 use think\Exception;
 
@@ -121,6 +122,31 @@ class ProductController extends BaseController
     
     public function set_increment($incre){
         $this->setAutoIncrement('product',$incre);
+    }
+
+    public function qrcode($id, $qrtype='url', $size=430, $miniprogram=0){
+        $product=ProductModel::get($id);
+        if($qrtype=='url'){
+            $url = url('index/product/view',['id'=>$id], true, true);
+            $content=gener_qrcode($url, $size);
+        }else{
+            if($size>1280)$size=1280;
+            $content = $this->miniprogramQrcode($miniprogram, ['path'=>'product/detail?id='.$id], $qrtype, $size);
+        }
+        return download($content,$product['title'].'-qrcode.png',true);
+    }
+
+    private function miniprogramQrcode($wechatid, $params, $qrtype, $size){
+        $app = WechatModel::createApp($wechatid);
+        if(!$app){
+            $this->error('小程序账号错误');
+        }
+        if($qrtype=='miniqr'){
+            $response = $app->app_code->get($params['path'],['width'=>$size]);
+        }else{
+            $response = $app->app_code->getQrCode($params['path'], $size);
+        }
+        return $response->getBody()->getContents();
     }
 
     private function processData($data){

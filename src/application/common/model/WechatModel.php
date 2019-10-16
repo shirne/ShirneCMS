@@ -87,31 +87,35 @@ class WechatModel extends BaseModel
     }
     
     public static function createApp($wechat){
-    
-        $options=self::to_config($wechat);
-    
-        switch ($wechat['account_type']) {
-            case 'wechat':
-            case 'subscribe':
-            case 'service':
-                return Factory::officialAccount($options);
-                break;
-            case 'miniprogram':
-            case 'minigame':
-                return Factory::miniProgram($options);
-                break;
-            case 'platform':
-                return Factory::openPlatform($options);
-                break;
-            case 'work':
-                return Factory::work($options);
-            case 'openwork':
-                return Factory::openWork($options);
-            case 'micromerchant':
-                return Factory::microMerchant($options);
-            default:
-                
-                break;
+        if(is_numeric($wechat)){
+            $wechat = static::get($wechat);
+        }
+        if(!empty($wechat)){
+            $options=self::to_config($wechat);
+        
+            switch ($wechat['account_type']) {
+                case 'wechat':
+                case 'subscribe':
+                case 'service':
+                    return Factory::officialAccount($options);
+                    break;
+                case 'miniprogram':
+                case 'minigame':
+                    return Factory::miniProgram($options);
+                    break;
+                case 'platform':
+                    return Factory::openPlatform($options);
+                    break;
+                case 'work':
+                    return Factory::work($options);
+                case 'openwork':
+                    return Factory::openWork($options);
+                case 'micromerchant':
+                    return Factory::microMerchant($options);
+                default:
+                    
+                    break;
+            }
         }
         return null;
     }
