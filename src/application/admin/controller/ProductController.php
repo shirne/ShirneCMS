@@ -131,7 +131,7 @@ class ProductController extends BaseController
             $content=gener_qrcode($url, $size);
         }else{
             if($size>1280)$size=1280;
-            $content = $this->miniprogramQrcode($miniprogram, ['path'=>'product/detail?id='.$id], $qrtype, $size);
+            $content = $this->miniprogramQrcode($miniprogram, ['path'=>'pages/product/detail?id='.$id], $qrtype, $size);
         }
         return download($content,$product['title'].'-qrcode.png',true);
     }
@@ -142,9 +142,9 @@ class ProductController extends BaseController
             $this->error('小程序账号错误');
         }
         if($qrtype=='miniqr'){
-            $response = $app->app_code->get($params['path'],['width'=>$size]);
-        }else{
             $response = $app->app_code->getQrCode($params['path'], $size);
+        }else{
+            $response = $app->app_code->get($params['path'],['width'=>$size]);
         }
         return $response->getBody()->getContents();
     }
