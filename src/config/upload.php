@@ -17,7 +17,15 @@ return [
 
     'default_quality' => 80,
 
-    'driverConfig'=>[]
+    'driver_mode'=>'mirror',
+    'driver_config'=>[
+        'driver' => 'oss',
+        'access_id' => '',
+        'secret_key' => '',
+        'bucket' => '',
+        'domain' => '',
+        'url' => ''
+    ]
 ];
 //oss driverConfig
 /*

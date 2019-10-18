@@ -6,7 +6,9 @@ use app\common\facade\MemberFavouriteFacade;
 use app\common\facade\ProductCategoryFacade;
 use app\common\model\PostageModel;
 use app\common\model\ProductModel;
+use app\common\model\WechatModel;
 use app\common\model\ProductSkuModel;
+use shirne\common\Poster;
 use think\Db;
 
 /**
@@ -106,6 +108,103 @@ class ProductController extends BaseController
             'images'=>$images
         ]);
     }
+
+    public function share($id, $type='url'){
+        $product = ProductModel::get($id);
+        if(empty($product)){
+            $this->error('商品不存在');
+        }
+        
+        $data=[
+            'avatar'=>'',
+            'nickname'=>'',
+            'image'=>'.'.$product['image'],
+            'title'=>$product['title'],
+            'vice_title'=>$product['vice_title'],
+            'price'=>$product['min_price'],
+            'qrcode'=>''
+        ];
+        if(strpos($data['title'],'【')==0 && strpos($data['title'],'】')>0){
+            $data['title'] = mb_substr($data['title'],mb_strpos($data['title'],'】')+1);
+        }
+        foreach($product['prop_data'] as $key=>$val){
+            if($key=='产区'){
+                $data['prop_from']="产　区：".$val;
+            }elseif($key=='原产国'){
+                $data['prop_from']="原产国：".$val;
+            }elseif($key=='酒精度'){
+                $data['prop_alcohol']="酒精度：".$val;
+            }elseif($key=='净含量'){
+                $data['prop_volume']="净含量：".$val;
+            }elseif($key=='口感'){
+                $data['vice_title']="口　感：".$val;
+            }
+        }
+
+        if(!in_array($type,['url','miniqr'])){
+            $this->error('分享图类型错误');
+        }
+        $params=['id'=>$id];
+        if($this->isLogin && $this->user['is_agent'] > 0){
+            $data['avatar']=$this->user['avatar'];
+            $data['nickname']=$this->user['nickname'];
+            $params['agent']=$this->user['agentcode'];
+            $qrurl = './uploads/pshare/'.$id.'/'.($this->user['id']%100).'/'.$this->user['agentcode'].'-'.$type.'-p'.$id.'-qrcode.jpg';
+            $sharepath = './uploads/pshare/'.$id.'/'.($this->user['id']%100).'/'.$this->user['agentcode'].'-'.$type.'-p'.$id.'.jpg';
+        }else{
+            $data['avatar']='.'.$this->config['site-weblogo'];
+            $data['nickname']=$this->config['site-name'];
+            $qrurl = './uploads/pshare/'.$id.'/share-qrcode-'.$type.'.png';
+            $sharepath = './uploads/pshare/'.$id.'/share-'.$type.'.png';
+        }
+        $imgurl = media(ltrim($sharepath,'.'));
+        if(!file_exists($sharepath) || filemtime($sharepath)<$product['update_time'] || filemtime($sharepath)<$this->user['update_time']){
+
+            if($type == 'url'){
+                $url = url('index/product/view',$params, true, true);
+                $content=gener_qrcode($url, 430);
+                
+                file_put_contents($qrurl,$content);
+            }else{
+                $appid=$this->request->tokenData['appid'];
+                $wechat=WechatModel::where('appid',$appid)->find();
+                if(empty($wechat)){
+                    $this->error('分享图生成失败(wechat)');
+                }
+                $content = $this->miniprogramQrcode($wechat, ['path'=>'pages/product/detail', 'scene'=> $params], 430);
+            }
+            $dir = dirname($qrurl);
+            if(!is_dir($dir)){
+                mkdir($dir,0777,true);
+            }
+            file_put_contents($qrurl,$content);
+            $data['qrcode']=$qrurl;
+
+            $dir = dirname($sharepath);
+            if(!is_dir($dir)){
+                mkdir($dir,0777,true);
+            }
+
+            $config=config('share.');
+            $poster = new Poster($config);
+            $poster->generate($data);
+            $poster->save($sharepath);
+            $imgurl .= '?_t='.time();
+        }
+        
+        return $this->response(['share_url'=>$imgurl]);
+    }
+
+    private function miniprogramQrcode($wechatid, $params, $size){
+        $app = WechatModel::createApp($wechatid);
+        if(!$app){
+            $this->error('小程序账号错误');
+        }
+        $response = $app->app_code->getUnlimit(http_build_query($params['scene']), ['page'=>$params['path'],'width'=>$size]);
+        
+        return $response->getBody()->getContents();
+    }
+
 
     public function comments($id){
         $product = ProductModel::get($id);

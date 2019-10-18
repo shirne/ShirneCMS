@@ -2,8 +2,6 @@
 
 
 namespace shirne\common;
-
-
 use think\facade\Log;
 
 class Poster
@@ -111,7 +109,7 @@ class Poster
                             }
                         }
         
-                        //logging_simple('帖图:'.$card[$k].'-'.logging_implode([$set['x'],$set['y'],$sx,$sy,$set['width'],$set['height'],$w,$h]),'info');
+                        Log::record('帖图:'.$data[$k].'-'.json_encode([$set['x'],$set['y'],$sx,$sy,$set['width'],$set['height'],$w,$h],JSON_UNESCAPED_UNICODE),'info');
                         imagecopyresampled($bg, $sub, $set['x'], $set['y'], $sx, $sy, $set['width'], $set['height'], $w, $h);
                         imagedestroy($sub);
                     }
@@ -192,9 +190,16 @@ class Poster
                             $text .= $set['sufix'];
                         }
                     }
+
+
+                    //限制宽度
+                    if(!empty($set['width'])){
+                        $text = $this->autoWrap($text, $set['size'],$set['width']);
+                        Log::record($text);
+                    }
                     
                     $textbox = imagettfbbox($set['size'],$set['angle'],$set['font'],$text);
-                    //logging_simple('文字盒:'.$text.'-'.logging_implode($textbox),'info');
+                    Log::record('文字盒:'.$text.'-'.json_encode($textbox,JSON_UNESCAPED_UNICODE),'info');
                     //左下角偏移
                     $set['x'] -= $textbox[0];
                     $set['y'] -= $textbox[1];
@@ -216,7 +221,7 @@ class Poster
                     $sizes[$k]=[$set['x'],$set['y'],$textbox[2]-$textbox[0],$textbox[1]-$textbox[5]];
                     $color = $this->transColor($set['color'],$bg);
                     
-                    //logging_simple('打字:'.$text.'-'.logging_implode([$set['size'],$set['angle'],$set['x'],$set['y'],$color,$set['font']]),'info');
+                    Log::record('打字:'.$text.'-'.json_encode([$set['size'],$set['angle'],$set['x'],$set['y'],$color,$set['font']], JSON_UNESCAPED_UNICODE),'info');
                     imagettftext($bg,$set['size'],$set['angle'],$set['x'],$set['y'],$color,$set['font'],$text);
                     
                     if($set['badge'] && is_array($set['badge']['images'])){
@@ -266,9 +271,34 @@ class Poster
         imagejpeg($this->bg,$path,80);
         return true;
     }
+
+    protected function autoWrap($text, $textSize, $width){
+        if($width>0 && !empty($text)){
+            $rowwidth=0;
+            $strarr=preg_split('//u',$text);
+            $text='';
+            for($i=0;$i<count($strarr);$i++){
+                if(empty($strarr[$i]))continue;
+                $code = mb_ord($strarr[$i]);
+                if($code>255){
+                    $cwidth = $textSize;
+                }else{
+                    $cwidth = $textSize*.5;
+                }
+                if($rowwidth + $cwidth > $width){
+                    $rowwidth = $cwidth;
+                    $text .= "\n";
+                }else{
+                    $rowwidth += $cwidth;
+                }
+                
+                $text .= $strarr[$i];
+            }
+        }
+        return $text;
+    }
     
-    protected function filter_emoji($str)
-    {
+    protected function filter_emoji($str){
         $str = preg_replace_callback(    //执行一个正则表达式搜索并且使用一个回调进行替换
             '/./u',
             function (array $match) {
