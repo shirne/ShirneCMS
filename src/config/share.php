@@ -5,17 +5,12 @@ return [
     'data'=>[
         'image'=>[
             'type'=>'image',
-            'x'=>92,
-            'y'=>92,
+            'x'=>72,
+            'y'=>76,
             'width'=>750,
             'height'=>750,
         ],
-        'title'=>[
-            'x'=>103,
-            'y'=>893,
-            'size'=>34,
-            'color'=>'#111'
-        ],
+        'bg'=>['type'=>'background'],
         /* 'price'=>[
             'x'=>272,
             'y'=>915,
@@ -37,32 +32,56 @@ return [
         ], */
         'qrcode'=>[
             'type'=>'image',
-            'x'=>658,
-            'y'=>914,
-            'width'=>184,
-            'height'=>184,
+            'x'=>606,
+            'y'=>870,
+            'width'=>172,
+            'height'=>172,
+        ],
+        'title'=>[
+            'x'=>105,
+            'y'=>878,
+            'width'=>368,
+            'maxline'=>2,
+            'size'=>28,
+            'color'=>'#111'
         ],
         'prop_from'=>[
-            'x'=>107,
-            'y'=>962,
+            'offset'=>[
+                'field'=>'title',
+                'type'=>'lb'
+            ],
+            'x'=>0,
+            'y'=>20,
             'size'=>16,
             'color'=>'#333'
         ],
         'prop_alcohol'=>[
-            'x'=>107,
-            'y'=>1000,
+            'offset'=>[
+                'field'=>'prop_from',
+                'type'=>'lb'
+            ],
+            'x'=>0,
+            'y'=>10,
             'size'=>16,
             'color'=>'#333'
         ],
         'prop_volume'=>[
-            'x'=>107,
-            'y'=>1038,
+            'offset'=>[
+                'field'=>'prop_alcohol',
+                'type'=>'lb'
+            ],
+            'x'=>0,
+            'y'=>10,
             'size'=>16,
             'color'=>'#333'
         ],
         'vice_title'=>[
-            'x'=>107,
-            'y'=>1076,
+            'offset'=>[
+                'field'=>'prop_volume',
+                'type'=>'lb'
+            ],
+            'x'=>0,
+            'y'=>10,
             'width'=>400,
             'size'=>16,
             'color'=>'#333'

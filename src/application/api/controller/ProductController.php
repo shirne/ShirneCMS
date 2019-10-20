@@ -163,8 +163,6 @@ class ProductController extends BaseController
             if($type == 'url'){
                 $url = url('index/product/view',$params, true, true);
                 $content=gener_qrcode($url, 430);
-                
-                file_put_contents($qrurl,$content);
             }else{
                 $appid=$this->request->tokenData['appid'];
                 $wechat=WechatModel::where('appid',$appid)->find();
@@ -190,6 +188,8 @@ class ProductController extends BaseController
             $poster->generate($data);
             $poster->save($sharepath);
             $imgurl .= '?_t='.time();
+        }else{
+            $imgurl .= '?_t='.filemtime($sharepath);
         }
         
         return $this->response(['share_url'=>$imgurl]);
