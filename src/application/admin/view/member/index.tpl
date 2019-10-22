@@ -252,6 +252,7 @@
                             data:{
                                 id:id,
                                 amount:amount,
+                                field:body.find('input[name=field]:checked').val(),
                                 reson:body.find('input[name=reson]').val()
                             },
                             dataType:'JSON',

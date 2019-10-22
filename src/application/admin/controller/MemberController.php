@@ -512,7 +512,7 @@ class MemberController extends BaseController
         }
 
         $atext=$amount>0?'充值':'扣款';
-        $logid=money_log($id,intval($amount*100),'系统扣款'.$atext.$reson,'system',0,$field);
+        $logid=money_log($id,intval($amount*100),'系统'.$atext.$reson,'system',0,$field);
         if($logid){
             user_log($this->mid,'recharge',1,'会员'.$atext.' '.$id.','.$amount ,'manager');
             $this->success($atext.'成功');
