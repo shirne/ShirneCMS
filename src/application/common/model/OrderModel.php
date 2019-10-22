@@ -317,11 +317,13 @@ class OrderModel extends BaseModel
             }elseif($product['is_commission'] == 3){
                 $comm_special[]=[
                     'type'=>3,
+                    'count'=>$product['count'],
                     'amounts'=>force_json_decode($product['commission_percent'])
                 ];
             }elseif($product['is_commission'] == 4){
                 $comm_special[]=[
                     'type'=>4,
+                    'count'=>$product['count'],
                     'level_amounts'=>force_json_decode($product['commission_percent'])
                 ];
             }
@@ -684,9 +686,9 @@ class OrderModel extends BaseModel
                     foreach ($specials as $special) {
                         $amount = 0;
                         if ($special['type'] == 3) {
-                            $amount += $special['amounts'][$i] ?: 0;
+                            $amount += ($special['amounts'][$i] ?: 0) * $special['count'];
                         } elseif ($special['type'] == 4) {
-                            $amount += $special['level_amounts'][$parents[$i]['level_id']][$i] ?: 0;
+                            $amount += ($special['level_amounts'][$parents[$i]['level_id']][$i] ?: 0) * $special['count'];
                         } else {
                             if ($special['amount'] > 0 && !empty($special['percent'][$i])) {
                                 $curPercent = floatVal($special['percent'][$i]);

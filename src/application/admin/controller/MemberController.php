@@ -507,7 +507,7 @@ class MemberController extends BaseController
         if(floatval($amount)!=$amount){
             $this->error('金额错误');
         }
-        if(!in_array($field,['money','credit'])){
+        if(!in_array($field,['money','credit','reward'])){
             $this->error('充值类型错误');
         }
 
