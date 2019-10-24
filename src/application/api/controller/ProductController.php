@@ -213,6 +213,7 @@ class ProductController extends BaseController
         }
         $comments=Db::view('productComment','*')
             ->view('member',['username','realname','avatar'],'member.id=productComment.member_id','LEFT')
+            ->where('productComment.status',1)
             ->where('product_id',$id)->paginate(10);
 
         return $this->response([

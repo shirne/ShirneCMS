@@ -100,11 +100,22 @@ class ProductController extends BaseController
                 }
             }
         }
+        $comments=Db::view('productComment','*')
+            ->view('member',['username','realname','avatar'],'member.id=productComment.member_id','LEFT')
+            ->where('productComment.status',1)
+            ->where('product_id',$id)->paginate(10);
+        
+        if($this->request->isAjax()){
+            $this->success('','',[
+                'comments'=>$comments,
+                'page'=>$comments->currentPage(),
+                'total'=>$comments->total(),
+                'total_page'=>$comments->lastPage(),
+            ]);
+        }
+            
         $this->seo($product['title']);
         $this->category($product['cate_id']);
-        $comments=Db::view('productComment','*')
-            ->view('member',['username','realname'],'member.id=productComment.member_id','LEFT')
-            ->where('product_id',$id)->paginate(10);
 
         $this->assign('product',$product);
         $this->assign('comments',$comments);
