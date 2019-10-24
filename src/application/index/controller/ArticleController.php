@@ -125,11 +125,33 @@ class ArticleController extends BaseController{
                 }
             }
         }
+
+        $model=Db::view('articleComment','*')
+        ->view('member',['username','realname','avatar'],'member.id=articleComment.member_id','LEFT')
+        ->where('article_id',$id);
+
+        if($this->isLogin){
+            $model->where(function($query){
+                return $query->where('articleComment.status',1)
+                ->whereOr('articleComment.member_id',$this->userid);
+            });
+        }else{
+            $model->where('articleComment.status',1);
+        }
+
+        $comments=$model->paginate(10);
+
+        if($this->request->isAjax()){
+            $this->success('','',[
+                'comments'=>$comments,
+                'page'=>$comments->currentPage(),
+                'total'=>$comments->total(),
+                'total_page'=>$comments->lastPage(),
+            ]);
+        }
+
         $this->seo($article['title']);
         $this->category($article['cate_id']);
-        $comments=Db::view('articleComment','*')
-        ->view('member',['username','realname'],'member.id=articleComment.member_id','LEFT')
-        ->where('article_id',$id)->paginate(10);
 
         $this->assign('article',$article);
         $this->assign('comments',$comments);

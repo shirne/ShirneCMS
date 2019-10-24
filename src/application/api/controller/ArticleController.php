@@ -139,9 +139,18 @@ class ArticleController extends BaseController
     }
 
     public function comments($id){
-        $comments=Db::view('articleComment','*')
-            ->view('member',['username','realname','avatar'],'member.id=articleComment.member_id','LEFT')
-            ->where('article_id',$id)->paginate(10);
+        $model = Db::view('articleComment','*')
+        ->view('member',['username','realname','avatar'],'member.id=articleComment.member_id','LEFT')
+        ->where('article_id',$id);
+        if($this->isLogin){
+            $model->where(function($query){
+                return $query->where('articleComment.status',1)
+                ->whereOr('articleComment.member_id',$this->user['id']);
+            });
+        }else{
+            $model->where('articleComment.status',1);
+        }
+        $comments=$model->paginate(10);
 
         return $this->response([
             'lists'=>$comments->items(),
