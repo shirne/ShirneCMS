@@ -103,6 +103,15 @@ a{
   }
 }
 
+.card-comment{
+  border-radius:0;
+  border:0;
+  .card-header{
+    border-bottom:1px $color-eye-darker solid;
+    background:#fff;
+  }
+}
+
 .sidecolumn{
   .card{
     margin-bottom:20px;

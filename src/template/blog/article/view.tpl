@@ -10,10 +10,10 @@
                     <div class="article-body">
                         <h1 class="article-title">{$article.title}</h1>
                         <div class="article-info text-muted text-center">
-                            <a
-                                href="{:url('index/article/index',array('name'=>$category['name']))}">{$category.title}</a>
-                            &nbsp;&nbsp;
-                            <i class="ion-md-calendar"></i>&nbsp;{$article.create_time|showdate}
+                            <a href="{:url('index/article/index',array('name'=>$category['name']))}"><i class="ion-md-pricetag"></i> {$category.title}</a>
+                            <span class="ml-2"><i class="ion-md-calendar"></i> {$article.create_time|showdate}</span>
+                            <span class="ml-2"><i class="ion-md-paper-plane"></i> {$article.views}</span>
+                            <span class="ml-2"><i class="ion-md-text"></i> {$article.comment}</span>
                         </div>
                         <if condition="!empty($images)">
                             <div class="article-slides">
@@ -42,6 +42,31 @@
                             <div>
                                 {$article.content|raw}
                             </div>
+                        </div>
+                    </div>
+
+                    <div class="card card-comment mt-3">
+                        <div class="card-header">
+                            评论
+                        </div>
+                        <div class="card-body">
+                            <if condition="$article['close_comment']">
+                                <div class="empty">评论已关闭</div>
+                            <else/>
+                                <if condition="empty($comments)">
+                                    <div class="empty">暂无评论</div>
+                                <else/>
+                                    <volist name="comments" id="cmt">
+                                        <div class="media">
+                                            <img src="..." class="mr-3" alt="...">
+                                            <div class="media-body">
+                                                <h5 class="mt-0">Media heading</h5>
+                                                Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                                            </div>
+                                        </div>
+                                    </volist>
+                                </if>
+                            </if>
                         </div>
                     </div>
                 </div>

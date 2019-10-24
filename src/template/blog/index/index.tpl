@@ -34,7 +34,7 @@
                 <volist name="articles" id="art">
                 <li class="list-group-item">
                     <if condition="!empty($art['cover'])">
-                    <a class="list-img" style="background-image:url({$art.cover})">
+                    <a class="list-img" href="{:url('index/article/view',['id'=>$art['id']])}" style="background-image:url({$art.cover})">
                         <img class="card-img-top" src="{$art.cover}" alt="Card image cap">
                     </a>
                     </if>
@@ -44,7 +44,10 @@
                             {$art.description}
                         </div>
                         <div class="text-muted">
-                            <a href="{:url('index/article/index',['name'=>$art['category_name']])}"><span  class="badge badge-secondary">{$art.category_title}</span></a> <span><i class="ion-md-time"></i> {$art.create_time|showdate}</span>
+                            <a href="{:url('index/article/index',['name'=>$art['category_name']])}"><span  class="badge badge-secondary">{$art.category_title}</span></a>
+                            <span class="ml-2"><i class="ion-md-time"></i> {$art.create_time|showdate}</span>
+                            <span class="ml-2"><i class="ion-md-paper-plane"></i> {$art.views}</span>
+                            <span class="ml-2" data-anchor="comment"><i class="ion-md-text"></i> {$art.comment}</span>
                         </div>
                     </div>
                 </li>
