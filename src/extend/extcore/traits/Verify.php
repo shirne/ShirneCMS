@@ -3,7 +3,7 @@
 namespace extcore\traits;
 
 use think\captcha\Captcha;
-use third\GeetestLib;
+use shirne\third\GeetestLib;
 
 trait Verify{
 
