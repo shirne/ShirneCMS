@@ -30,6 +30,30 @@ a{
   color:$color-text-dark;
 }
 
+.my-card{
+  border-radius:0;
+  border:0;
+  .card-header{
+    border-bottom:1px $color-eye-darker solid;
+    background:#fff;
+  }
+}
+.btn{
+  border-radius: 0;
+}
+.input-group-text{
+  border-radius: 0;
+  border: 0;
+  background: transparent;
+  border-bottom:1px #009dac solid;
+}
+.form-control{
+  border-radius: 0;
+  border: 0;
+  border-bottom:1px #009dac solid;
+}
+
+
 .nav-box{
   padding-top:0;
   padding-bottom:0;
@@ -118,6 +142,9 @@ a{
     .avatar{
       width:50px;height:50px;
     }
+    .comment-info{
+      font-size:0.8rem;
+    }
   }
 }
 
@@ -166,7 +193,7 @@ a{
     }
     .art-view{
       flex:auto;
-      padding:.5rem 1rem;
+      padding:.8rem 1rem;
       display:flex;
       flex-direction: column;
       h3{
@@ -262,6 +289,27 @@ a{
       text-overflow: ellipsis;
       width: 100%;
     }
+  }
+}
+
+.page-item{
+  .page-link{
+    color:#009dac;
+  }
+  &.active{
+    .page-link{
+      color:#fff;
+      background-color: #009dac;
+      border-color: #009dac;
+    }
+  }
+  &:first-child .page-link{
+    border-top-left-radius: 0; 
+    border-bottom-left-radius: 0; 
+  }
+  &:last-child .page-link{
+    border-top-right-radius: 0; 
+    border-bottom-right-radius: 0; 
   }
 }
 

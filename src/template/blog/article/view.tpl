@@ -53,6 +53,7 @@
                             <if condition="$article['close_comment']">
                                 <div class="empty">评论已关闭</div>
                             <else/>
+                                
                                 <div class="comment_list">
 
                                 </div>
@@ -73,7 +74,7 @@
             <div class="media-body">
                 <h6 class="mt-0">{@nickname}</h6>
                 {@content|html_encode}
-                <div class="text-muted">于 {@create_time|timestamp_date}</div>
+                <div class="comment-info text-muted">于 {@create_time|timestamp_date}</div>
             </div>
         </div>
     </script>
