@@ -112,13 +112,14 @@
                         if(json.code==1){
                             if(json.data.comments && json.data.comments.length>0){
                                 $('.comment_list').append(commentTpl.compile(json.data.comments,true))
-                            }
-                            if(json.data.page >= json.data.total_page){
+                            }else{
                                 if(page==1){
                                     $('.comment_action').html('<div class="empty">暂无评论</div>');
-                                }else{
-                                    $('.comment_action').html('<div class="text-muted text-center mt-2">没有更多评论了</div>');
+                                    return;
                                 }
+                            }
+                            if(json.data.page >= json.data.total_page){
+                                $('.comment_action').html('<div class="text-muted text-center mt-2">没有更多评论了</div>');
                             }else{
                                 $('.comment_action').html('<div class="text-muted text-center mt-2"><a href="javascript:" class="linkmore">点击加载更多</a></div>');
                             }
