@@ -103,11 +103,12 @@ class ProductController extends BaseController
         $comments=Db::view('productComment','*')
             ->view('member',['username','realname','avatar'],'member.id=productComment.member_id','LEFT')
             ->where('productComment.status',1)
-            ->where('product_id',$id)->paginate(10);
+            ->where('product_id',$id)
+            ->order('productComment.create_time desc')->paginate(10);
         
         if($this->request->isAjax()){
             $this->success('','',[
-                'comments'=>$comments,
+                'comments'=>$comments->items(),
                 'page'=>$comments->currentPage(),
                 'total'=>$comments->total(),
                 'total_page'=>$comments->lastPage(),

@@ -139,11 +139,11 @@ class ArticleController extends BaseController{
             $model->where('articleComment.status',1);
         }
 
-        $comments=$model->paginate(10);
+        $comments=$model->order('articleComment.create_time desc')->paginate(10);
 
         if($this->request->isAjax()){
             $this->success('','',[
-                'comments'=>$comments,
+                'comments'=>$comments->items(),
                 'page'=>$comments->currentPage(),
                 'total'=>$comments->total(),
                 'total_page'=>$comments->lastPage(),

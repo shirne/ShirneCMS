@@ -53,19 +53,10 @@
                             <if condition="$article['close_comment']">
                                 <div class="empty">评论已关闭</div>
                             <else/>
-                                <if condition="empty($comments)">
-                                    <div class="empty">暂无评论</div>
-                                <else/>
-                                    <volist name="comments" id="cmt">
-                                        <div class="media">
-                                            <img src="..." class="mr-3" alt="...">
-                                            <div class="media-body">
-                                                <h5 class="mt-0">Media heading</h5>
-                                                Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-                                            </div>
-                                        </div>
-                                    </volist>
-                                </if>
+                                <div class="comment_list">
+
+                                </div>
+                                <div class="comment_action"></div>
                             </if>
                         </div>
                     </div>
@@ -76,11 +67,73 @@
     </div>
 </block>
 <block name="script">
+    <script type="text/html" id="comment_tpl">
+        <div class="media mt-2">
+            <img src="{@avatar|default=/static/images/avatar-default.png}" class="avatar mr-3 rounded" alt="{@nickname}">
+            <div class="media-body">
+                <h6 class="mt-0">{@nickname}</h6>
+                {@content|html_encode}
+                <div class="text-muted">于 {@create_time|timestamp_date}</div>
+            </div>
+        </div>
+    </script>
     <script type="text/javascript" src="__STATIC__/ueditor/third-party/SyntaxHighlighter/shCore.js"></script>
     <script type="text/javascript">
-        SyntaxHighlighter.highlight();
-        $('.carousel-indicators').eq(0).addClass('active')
-        $('.carousel-item').eq(0).addClass('active')
-        $('.carousel').carousel()
+        jQuery(function($){
+            SyntaxHighlighter.highlight();
+            $('.carousel-indicators').eq(0).addClass('active')
+            $('.carousel-item').eq(0).addClass('active')
+            $('.carousel').carousel()
+
+            var page=1;
+            var commentTpl=$('#comment_tpl').text();
+            var isloading=false;
+            $('.comment_action').on('click','.linkmore',function(e){
+                page++;
+                loadPage();
+            })
+            $('.comment_action').on('click','.linkagain',function(e){
+                loadPage();
+            })
+            function loadPage(){
+                if(isloading)return;
+                isloading=true;
+                $('.comment_action').html('<div class="text-muted text-center"><div class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Loading...</span></div>&nbsp;加载中...</div>');
+                
+                $.ajax({
+                    url:"{:url('index/article/comment',['id'=>$article['id']])}",
+                    dataType:'json',
+                    type:'get',
+                    data:{
+                        page:page
+                    },
+                    success:function(json){
+                        isloading=false;
+                        if(json.code==1){
+                            if(json.data.comments && json.data.comments.length>0){
+                                $('.comment_list').append(commentTpl.compile(json.data.comments,true))
+                            }
+                            if(json.data.page >= json.data.total_page){
+                                if(page==1){
+                                    $('.comment_action').html('<div class="empty">暂无评论</div>');
+                                }else{
+                                    $('.comment_action').html('<div class="text-muted text-center mt-2">没有更多评论了</div>');
+                                }
+                            }else{
+                                $('.comment_action').html('<div class="text-muted text-center mt-2"><a href="javascript:" class="linkmore">点击加载更多</a></div>');
+                            }
+                        }else{
+
+                        }
+                    },
+                    error:function(){
+                        isloading=false;
+                        $('.comment_action').html('<div class="text-muted text-center mt-2"><a href="javascript:" class="linkagain">加载出错，点击重试</a></div>');
+                    }
+                })
+            }
+            loadPage();
+        })
+        
     </script>
 </block>

@@ -150,7 +150,7 @@ class ArticleController extends BaseController
         }else{
             $model->where('articleComment.status',1);
         }
-        $comments=$model->paginate(10);
+        $comments=$model->order('articleComment.create_time desc')->paginate(10);
 
         return $this->response([
             'lists'=>$comments->items(),
