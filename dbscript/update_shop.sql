@@ -102,7 +102,6 @@ CREATE TABLE `sa_product_coupon` (
   `expiry_type` tinyint(11) DEFAULT 0,
   `expiry_time` int(11) DEFAULT 0,
   `expiry_day` int(11) DEFAULT 0,
-  `status` tinyint(11) DEFAULT 1,
   `cost_credit` int(11) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

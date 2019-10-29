@@ -37,8 +37,8 @@ TRUNCATE TABLE `sa_manager_role`;
 INSERT INTO `sa_manager_role` (`id`,`type`, `role_name`,`global`, `detail`, `create_time`, `update_time`)
 VALUES
   (1,1,'系统管理员','','','1436679338','1436935104'),
-  (1,5,'网站管理员','','','1436679338','1436935104'),
-  (1,9,'网站编辑','','','1436679338','1436935104');
+  (2,5,'网站管理员','','','1436679338','1436935104'),
+  (3,9,'网站编辑','','','1436679338','1436935104');
 
 TRUNCATE TABLE `sa_manager`;
 
