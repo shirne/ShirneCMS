@@ -5,10 +5,13 @@
 *.log
 /src/thinkphp
 .env
+
 src/cert
 !src/cert/cacert.pem
+
 /src/public/uploads/*
 !/src/public/uploads/index.html
+
 /src/resource/node_modules
 /src/resource/dest
 /src/public/aspnet_client
