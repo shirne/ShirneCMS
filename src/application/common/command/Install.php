@@ -110,8 +110,8 @@ class Install extends Command
         }
 
         $admin='admin';
-        if($input->hasOption('admin')){
-            $admin=$input->getOption('admin');
+        if($input->hasOption('username')){
+            $admin=$input->getOption('username');
         }
         $password='123456';
         if($input->hasOption('password')){

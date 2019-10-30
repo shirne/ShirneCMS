@@ -4,7 +4,7 @@ ShirneCMS
 基于[ThinkPHP5.1](https://github.com/top-think/think/tree/5.1)+[bootstrap4.x](https://v4.bootcss.com/docs/4.0/getting-started/introduction/)开发的后台管理系统,集成会员管理，文章管理，产品管理，微信接入，第三方登录等功能
 
 > 运行环境要求PHP7.1.3以上，Mysql5.5以上<br />
-> PHP扩展：gd,mysql,pdo,cURL,OpenSSL,SimpleXML,fileinfo,cli。
+> PHP扩展：mbstring,gd,mysql,pdo,cURL,OpenSSL,SimpleXML,fileinfo,cli。
 
 ## 相关项目
 [小程序企业官网](https://gitee.com/shirnecn/website_mapp)
@@ -34,6 +34,7 @@ ShirneCMS
 ![功能结构图](screenshot/struct.png "功能结构图")
 
 ### 系统基础
+- [x] 系统安装
 - [x] 后台界面使用标签页(dev_tabs分支)
 - [x] 分类/文章模块
 - [x] 单页模块
@@ -136,7 +137,9 @@ src/public 网站根目录
 
 
 > 修改数据库配置文件 config/database.php<br />
-> 手动安装数据库脚本 或者 通过命令行(php think install)或网页安装( 域名/task/util/install )
+> 手动安装数据库脚本
+> 通过命令行安装(php think install)
+> 网页安装( 域名/task/install ) 服务器配置不高的情况下,安装全部功能, 有可能出现超时错误
 
 #### 后台默认登录账号 [演示网站](http://cms.qisoweb.com/admin)
 >test<br />

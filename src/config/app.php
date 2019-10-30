@@ -22,7 +22,8 @@ return [
     'app_name'               => 'shirnecms',
     // 应用地址
     'app_host'               => '',
-    'app_realse'               => '20190828',
+    // 应用版本
+    'app_release'            => '20190828',
     // 应用调试模式
     'app_debug'              => true,
     // 应用Trace
