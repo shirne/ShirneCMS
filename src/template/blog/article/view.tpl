@@ -107,10 +107,10 @@
         </div>
     </script>
     <script type="text/javascript" src="__STATIC__/ueditor/third-party/SyntaxHighlighter/shCore.js"></script>
-    <script type="text/javascript" src="__STATIC__/js/markdown.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/marked.min.js"></script>
     <script type="text/javascript">
         function markdown2html(text){
-            return markdown.toHTML(html_decode(text));
+            return marked(html_decode(text));
         }
         jQuery(function($){
             SyntaxHighlighter.highlight();
