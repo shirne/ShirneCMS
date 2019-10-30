@@ -36,6 +36,7 @@ a{
   .card-header{
     border-bottom:1px $color-eye-darker solid;
     background:#fff;
+    font-weight: bold;
   }
 }
 .btn{
@@ -136,11 +137,26 @@ a{
   }
 }
 
+.comment-form{
+  padding-bottom:1rem;
+  border-bottom:1px #eee solid;
+  .avatar{
+    width:40px;height:40px;
+  }
+  .form-control{
+    border: 1px #eee solid;
+  }
+}
+
+
 .comment_list{
   .media{
     border-bottom:1px #eee solid;
     .avatar{
-      width:50px;height:50px;
+      width:40px;height:40px;
+    }
+    .comment-content{
+      font-size:0.9rem;
     }
     .comment-info{
       font-size:0.8rem;

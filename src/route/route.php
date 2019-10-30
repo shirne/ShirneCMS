@@ -26,13 +26,13 @@ Route::group('article',[
     ':id'=>'index/article/view',
     'comment/:id'=>'index/article/comment',
     '[:name]'=>'index/article/index'
-])->method('GET');
+])->method('GET|POST');
 
 Route::group('product',[
     ':id'=>'index/product/view',
     'comment/:id'=>'index/product/comment',
     '[:name]'=>'index/product/index'
-])->method('GET');
+])->method('GET|POST');
 
 Route::group('cart',[
     'index'=>'index/cart/index',

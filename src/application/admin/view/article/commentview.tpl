@@ -2,7 +2,7 @@
 
 <block name="body">
 
-    <include file="public/bread" menu="article_index" title="查看评论" />
+    <include file="public/bread" menu="article_comments" title="查看评论" />
 
     <div id="page-wrapper">
         <div class="page-header">查看评论</div>
@@ -10,7 +10,7 @@
             <form method="post" action="{:url('article/commentview')}">
                 <div class="form-group">
                     <div>
-                        <img src="{$member.avatar}" width="40" height="40" class="rounded-circle size4" /> {$member.nickname} 在 <a href="{:url('index/article/view',['id'=>$article['id']])}" target="_blank">{$article.title}</a> 的评论&nbsp;&nbsp;<span class="text-muted">{$model.create_time|showdate}</span>
+                        <img src="{$member.avatar}" width="40" height="40" class="rounded-circle size4" /> {$model.nickname} 在 <a href="{:url('index/article/view',['id'=>$article['id']])}" target="_blank">{$article.title}</a> 的评论&nbsp;&nbsp;<span class="text-muted">{$model.create_time|showdate}</span>
                     </div>
                 </div>
                 <div class="form-group">

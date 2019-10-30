@@ -53,8 +53,36 @@
                             <if condition="$article['close_comment']">
                                 <div class="empty">评论已关闭</div>
                             <else/>
+                                <form class="comment-form" name="commentForm" action="{:url('index/article/comment',['id'=>$article['id']])}" method="POST">
+                                <div class="media comment-form mt-2">
+                                    <img src="{$member.avatar|default='/static/images/avatar-default.png'}" class="avatar mr-3 rounded" alt="{$member.nickname}">
+                                    <div class="media-body">
+                                        <input type="hidden" name="reply_id" value="0">
+                                        <if condition="$isLogin">
+                                            <textarea name="content" placeholder="说点什么..." class="form-control"></textarea>
+                                            <div class="d-flex mt-2">
+                                                <div class="flex-fill text-muted">支持除链接外的Markdown语法</div>
+                                                <input type="submit" class="btn btn-info" value="提交评论">
+                                            </div>
+                                        <elseif condition="$config['anonymous_comment']" />
+                                            <textarea name="content" placeholder="说点什么..." class="form-control"></textarea>
+                                            <div class="d-flex mt-2">
+                                                <div class="w-25"><input type="text" name="email" class="form-control float-left" placeholder="填写邮箱"/> </div>
+                                                <div class="flex-fill text-muted pl-2" style="line-height:38px;"> 或<a href="{:url('index/login/index')}">登录</a>后评论</div>
+                                                <input type="submit" class="btn btn-info" value="提交评论">
+                                            </div>
+                                        <else/>
+                                            <textarea name="content" readonly class="form-control"></textarea>
+                                            <div class="d-flex mt-2">
+                                                <div class="flex-fill text-muted">请<a href="{:url('index/login/index')}">登录</a>后评论</div>
+                                                <input type="submit" class="btn btn-info" disabled value="提交评论">
+                                            </div>
+                                        </if>
+                                    </div>
+                                </form>
+                                </div>
                                 
-                                <div class="comment_list">
+                                <div class="comment_list mt-3">
 
                                 </div>
                                 <div class="comment_action"></div>
@@ -72,14 +100,18 @@
         <div class="media mt-2">
             <img src="{@avatar|default=/static/images/avatar-default.png}" class="avatar mr-3 rounded" alt="{@nickname}">
             <div class="media-body">
-                <h6 class="mt-0">{@nickname}</h6>
-                {@content|html_encode}
-                <div class="comment-info text-muted">于 {@create_time|timestamp_date}</div>
+                <h6 class="mt-0">{@nickname}{if @status == 0}<span class="badge badge-warning">审核中</span>{/if}{if @status < 0}<span class="badge badge-danger">已隐藏</span>{/if}</h6>
+                <div class="comment-content mb-1">{@content|markdown2html}</div>
+                <div class="comment-info mb-1 text-muted">于 {@create_time|timestamp_date}</div>
             </div>
         </div>
     </script>
     <script type="text/javascript" src="__STATIC__/ueditor/third-party/SyntaxHighlighter/shCore.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/markdown.min.js"></script>
     <script type="text/javascript">
+        function markdown2html(text){
+            return markdown.toHTML(html_decode(text));
+        }
         jQuery(function($){
             SyntaxHighlighter.highlight();
             $('.carousel-indicators').eq(0).addClass('active')
@@ -99,7 +131,7 @@
             function loadPage(){
                 if(isloading)return;
                 isloading=true;
-                $('.comment_action').html('<div class="text-muted text-center"><div class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Loading...</span></div>&nbsp;加载中...</div>');
+                $('.comment_action').html('<div class="text-muted text-center mt-2"><div class="spinner-border spinner-border-sm" role="status"><span class="sr-only">Loading...</span></div>&nbsp;加载中...</div>');
                 
                 $.ajax({
                     url:"{:url('index/article/comment',['id'=>$article['id']])}",
@@ -135,6 +167,43 @@
                 })
             }
             loadPage();
+
+            $('.comment-form').submit(function(e){
+                e.preventDefault();
+                var content=$(this).find('[name=content]').val();
+                if(!content){
+                    dialog.error('您还没填写评论内容呢');
+                    return false;
+                }
+                if("{$isLogin?1:''}"==''){
+                    var email=$(this).find('[name=email]').val();
+                    if(!content){
+                        dialog.error('请登录或填写邮箱再提交评论');
+                        return false;
+                    }
+                }
+                var submit=$(this).find('[type=submit]')
+                submit.prop('disabled',true);
+                $.ajax({
+                    url:$(this).attr('action'),
+                    type:'POST',
+                    dataType:'json',
+                    data:$(this).serialize(),
+                    success:function(json){
+                        submit.prop('disabled',false);
+                        if(json.code==1){
+                            $('.comment-form')[0].reset();
+                            dialog.success(json.msg);
+                        }else{
+                            dialog.error(json.msg);
+                        }
+                    },
+                    error:function(){
+                        submit.prop('disabled',false);
+                        dialog.error('提交失败了,请稍候再试');
+                    }
+                })
+            });
         })
         
     </script>

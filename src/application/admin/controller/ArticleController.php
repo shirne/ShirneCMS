@@ -361,7 +361,7 @@ class ArticleController extends BaseController
             $where[]=['article.title|category.title','like',"%$key%"];
         }
 
-        $lists=$model->where($where)->paginate(10);
+        $lists=$model->where($where)->order('articleComment.create_time desc')->paginate(10);
 
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());

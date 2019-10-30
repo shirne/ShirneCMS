@@ -9,7 +9,7 @@ use think\facade\Log;
  * Class ThirdBase
  * @package third
  */
-class ThirdBase
+class ThirdBase extends ThirdModelBase
 {
     protected $appid;
     protected $appsecret;
@@ -19,11 +19,6 @@ class ThirdBase
     
     protected $userAgent;
 
-    protected $debug;
-    public $errCode = 0;
-    protected $errCodeKey='errcode';
-    public $errMsg = "";
-    protected $errMsgKey='errmsg';
     protected $logcallback;
 
     public function __construct($options)
@@ -31,32 +26,7 @@ class ThirdBase
         $this->userAgent = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36';
         $this->appid = isset($options['appid'])?$options['appid']:'';
         $this->appsecret = isset($options['appsecret'])?$options['appsecret']:'';
-        $this->debug = isset($options['debug'])?$options['debug']:false;
         $this->logcallback = isset($options['logcallback'])?$options['logcallback']:false;
-    }
-    
-    protected function set_error($errmsg, $errno = -1){
-        $this->errMsg = $errmsg;
-        $this->errCode = $errno;
-    }
-    protected function clear_error(){
-        $this->set_error('',0);
-    }
-    
-    public function get_error(){
-        if($this->errCode==0){
-            return [];
-        }
-        return [
-            'errno'=>$this->errCode,
-            'errmsg'=>$this->errMsg
-        ];
-    }
-    public function has_error(){
-        return $this->errCode != 0;
-    }
-    public function get_error_msg(){
-        return $this->errMsg;
     }
     
 
@@ -142,35 +112,4 @@ class ThirdBase
         return $this->http($url,$param,'POST');
     }
 
-    /**
-     * 设置缓存，按需重载
-     * @param string $cachename
-     * @param mixed $value
-     * @param int $expired
-     * @return boolean
-     */
-    protected function setCache($cachename,$value,$expired){
-        cache($cachename,$value,$expired);
-        return false;
-    }
-
-    /**
-     * 获取缓存，按需重载
-     * @param string $cachename
-     * @return mixed
-     */
-    protected function getCache($cachename){
-        cache($cachename);
-        return false;
-    }
-
-    /**
-     * 清除缓存，按需重载
-     * @param string $cachename
-     * @return boolean
-     */
-    protected function removeCache($cachename){
-        cache($cachename,null);
-        return false;
-    }
 }

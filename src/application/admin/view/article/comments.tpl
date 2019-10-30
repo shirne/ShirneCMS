@@ -1,7 +1,7 @@
 <extend name="public:base" />
 
 <block name="body">
-    <include file="public/bread" menu="article_index" title="文章列表" />
+    <include file="public/bread" menu="article_comments" title="文章列表" />
     <div id="page-wrapper">
 
         <div class="row list-header">
@@ -47,20 +47,22 @@
             <tr>
                 <th width="50">编号</th>
                 <th>文章</th>
-                <th>发布时间</th>
-                <th>评论者</th>
+                <th width="160">发布时间</th>
+                <th width="160">昵称</th>
+                <th width="160">邮箱</th>
                 <th>内容摘要</th>
-                <th>状态</th>
-                <th width="160">&nbsp;</th>
+                <th width="60">状态</th>
+                <th width="80">&nbsp;</th>
             </tr>
             </thead>
             <tbody>
             <foreach name="lists" item="v">
                 <tr>
                     <td><input type="checkbox" name="id" value="{$v.id}" /></td>
-                    <td>[{$v.category_title}]{$v.title}</td>
+                    <td>[{$v.category_title}]{$v.article_title}</td>
                     <td>{$v.create_time|showdate}</td>
-                    <td>{$v.username}</td>
+                    <td>{$v.nickname}<br />{$v.username}</td>
+                    <td>{$v.email}</td>
                     <td>{$v.content|cutstr=20}</td>
                     <td>
                         <if condition="$v.status eq 1">
