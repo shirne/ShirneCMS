@@ -443,6 +443,9 @@ class MemberController extends BaseController
                 if(!isset($data['level_id'])){
                     $data['level_id']=getDefaultLevel();
                 }
+                if(isset($data['birth'])){
+                    $data['birth']=strtotime($data['birth']);
+                }
                 $member=MemberModel::create($data);
                 if ($member->id) {
                     user_log($this->mid,'adduser',1,'添加会员'.$member->id ,'manager');
@@ -478,6 +481,9 @@ class MemberController extends BaseController
                     $data['password'] = encode_password($data['password'],$data['salt']);
                 }else{
                     unset($data['password']);
+                }
+                if(isset($data['birth'])){
+                    $data['birth']=strtotime($data['birth']);
                 }
 
                 //更新

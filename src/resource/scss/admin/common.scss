@@ -94,6 +94,9 @@ h6 {
     &[class^=col] {
       margin-bottom : 0;
     }
+    &.form-label{
+      width:70px;
+    }
   }
 }
 .input-group-middle {
