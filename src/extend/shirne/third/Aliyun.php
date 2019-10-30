@@ -2,8 +2,8 @@
 
 namespace shirne\third;
 
-use AlibabaCloud\Client\Profile\DefaultProfile;
-use AlibabaCloud\Green\V20180509\Green;
+use AlibabaCloud\Client\AlibabaCloud;
+use AlibabaCloud\Green\Green;
 use think\facade\Log;
 
 class Aliyun extends ThirdModelBase
@@ -27,28 +27,24 @@ class Aliyun extends ThirdModelBase
     public function greenScan($content)
     {
         if(empty($this->accessKeyId) || empty($this->accessKeySecret))return 0;
-        $iClientProfile = DefaultProfile::getProfile("cn-shanghai", $this->accessKeyId, $this->accessKeySecret); // TODO
-        DefaultProfile::addEndpoint("cn-shanghai", "cn-shanghai", "Green", "green.cn-shanghai.aliyuncs.com");
-        $client = new DefaultAcsClient($iClientProfile);
-
-        $request = new Green\TextScanRequest();
-        $request->setMethod("POST");
-        $request->setAcceptFormat("JSON");
-
-        $task = array(
-            'dataId' =>  uniqid(),
-            'content' => $content
-        );
-        $request->setContent(json_encode(array(
-            "tasks" => array($task),
-            "scenes" => array("antispam")
-        )));
 
         try {
-            $response = $client->getAcsResponse($request);
-            print_r($response);
-            if (200 == $response->code) {
-                $taskResults = $response->data;
+            AlibabaCloud::accessKeyClient($this->accessKeyId,$this->accessKeySecret)
+            ->regionId('cn-shenzhen')
+            ->asDefaultClient();
+
+            $request = Green::v20180509()->textScan();
+            $task = array(
+                'dataId' =>  uniqid(),
+                'content' => $content
+            );
+            $result = $request->setContent(json_encode(array(
+                "tasks" => array($task),
+                "scenes" => array("antispam")
+            )))->request();
+
+            if (200 == $result->code) {
+                $taskResults = $result->data;
                 foreach ($taskResults as $taskResult) {
                     if (200 == $taskResult->code) {
                         $sceneResults = $taskResult->results;
@@ -61,17 +57,18 @@ class Aliyun extends ThirdModelBase
                             }elseif($suggestion == 'review'){
                                 return 0;
                             }
-
+                            Log::record($content);
+                            Log::record(json_encode($taskResults,JSON_UNESCAPED_UNICODE));
                             return -1;
                         }
                     } else {
-                        $this->set_error("task process fail:" + $response->code);
-                        Log::record("task process fail:" + $response->code);
+                        $this->set_error("task process fail:" + $result->code);
+                        Log::record("task process fail:" + $result->code);
                     }
                 }
             } else {
-                $this->set_error("detect fail. code:" + $response->code);
-                Log::record("detect fail. code:" + $response->code);
+                $this->set_error("detect fail. code:" + $result->code);
+                Log::record("detect fail. code:" + $result->code);
             }
         } catch (\Exception $e) {
             $this->set_error($e->getMessage());

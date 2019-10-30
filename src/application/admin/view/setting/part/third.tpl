@@ -219,7 +219,7 @@
                     </div>
                     <div class="col-2">
                         <input type="hidden" id="sslhidden" name="v-aliyun_oss_ssl" value="{$setting['aliyun_oss_domain']['value']}" />
-                        <label><input type="checkbox" {$setting['aliyun_oss_domain']['value']==1?'checked':''} class="sslcheck" value="1"/> 是否SSL</label>
+                        <label><input type="checkbox" {$setting['aliyun_oss_ssl']['value']==1?'checked':''} class="sslcheck" value="1"/> 是否SSL</label>
                     </div>
                 </div>
             </div>
