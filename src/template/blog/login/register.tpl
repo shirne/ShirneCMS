@@ -39,9 +39,9 @@
 						<div class="form-group">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">{:lang('Username')}</span>
+									<span class="input-group-text"><i class="ion-md-person"></i></span>
 								</div>
-								<input type="text" class="form-control" name="username">
+								<input type="text" class="form-control" placeholder="{:lang('Username')}" name="username">
 							</div>
 							<div class="col-md-10">
 								<span class="form-text text-muted">用户名以6—10位数字和字母组成 <i>*</i></span>
@@ -50,9 +50,9 @@
 						<div class="form-group">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">{:lang('Password')}</span>
+									<span class="input-group-text"><i class="ion-md-lock"></i></span>
 								</div>
-								<input type="password" class="form-control" name="password">
+								<input type="password" class="form-control" placeholder="{:lang('Password')}" name="password">
 							</div>
 							<div class="col-md-10">
 								<span class="form-text text-muted">密码以6—20位字符，可包含大小写字母，数字及特殊符号<i>*</i></span>
@@ -61,9 +61,9 @@
 						<div class="form-group">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">{:lang('Confirm password')}</span>
+									<span class="input-group-text"><i class="ion-md-lock"></i></span>
 								</div>
-								<input type="password" class="form-control" name="repassword">
+								<input type="password" class="form-control" placeholder="{:lang('Confirm password')}" name="repassword">
 							</div>
 							<div class="col-md-10">
 								<span class="form-text text-muted">请再次确认您输入的密码<i>*</i></span>
@@ -72,9 +72,9 @@
 						<div class="form-group">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">{:lang('Mobile')}</span>
+									<span class="input-group-text"><i class="ion-md-phone-portrait"></i></span>
 								</div>
-								<input type="text" class="form-control" name="mobile">
+								<input type="text" class="form-control" placeholder="{:lang('Mobile')}" name="mobile">
 								<if condition="$config['sms_code'] EQ 1">
 									<div class="input-group-append">
 										<a class="btn btn-outline-secondary input-group-addon sms_send_btn">发送验证码</a>
@@ -89,9 +89,9 @@
 							<div class="form-group">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">短信验证</span>
+									<span class="input-group-text"><i class="ion-md-checkmark"></i></span>
 								</div>
-								<input type="text" class="form-control" name="mobilecheck">
+								<input type="text" class="form-control" placeholder="短信验证" name="mobilecheck">
 							</div>
 							</div>
 						</if>
@@ -100,9 +100,9 @@
 						<div class="form-group">
 							<div class="input-group">
 								<div class="input-group-prepend">
-									<span class="input-group-text">激活码</span>
+									<span class="input-group-text"><i class="ion-md-checkmark"></i></span>
 								</div>
-								<input type="text" class="form-control" name="invite_code">
+								<input type="text" class="form-control" placeholder="激活码" name="invite_code">
 							</div>
 							<div class="col-md-10">
 								<span class="form-text text-muted">您的推荐人提供给你的激活码<if condition="$config['m_invite'] eq 2"><i>*</i></if></span>

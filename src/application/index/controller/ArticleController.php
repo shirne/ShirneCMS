@@ -98,6 +98,7 @@ class ArticleController extends BaseController{
             $this->error(lang('Arguments error!'));
         }
         if($this->request->isPost()){
+            $this->checkSubmitRate(2);
             $data=$this->request->only('email,is_anonymous,content,reply_id','POST');
             if($this->config['anonymous_comment']==0 && !$this->isLogin){
                 $this->error('请登陆后评论');

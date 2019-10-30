@@ -8,6 +8,12 @@
         <div class="page-content">
             <form role="form" method="post" action="{:aurl('index/member/profile')}">
                 <div class="form-row">
+                    <label for="realname" class="col-2 control-label">登录账号：</label>
+                    <div class="form-group col-10">
+                        <span class="form-control" >{$user.username}</span>
+                    </div>
+                </div>
+                <div class="form-row">
                     <label for="realname" class="col-2 control-label">真实姓名：</label>
                     <div class="form-group col-10">
                         <input type="text" class="form-control" name="realname" value="{$user.realname}"/>
@@ -29,10 +35,10 @@
                     <label for="is_default" class="col-2 control-label">性别：</label>
                     <div class="form-group col-10">
                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                            <label class="btn btn-secondary {$user.gender==1?'active':''}">
+                            <label class="btn btn-outline-secondary {$user.gender==1?'active':''}">
                                 <input type="radio" name="gender" value="1" autocomplete="off" {$user.gender==1?'checked':''}> 男士
                             </label>
-                            <label class="btn btn-secondary {$user.gender==2?'active':''}">
+                            <label class="btn btn-outline-secondary {$user.gender==2?'active':''}">
                                 <input type="radio" name="gender" value="2" autocomplete="off" {$user.gender==2?'checked':''}> 女士
                             </label>
                         </div>
@@ -41,7 +47,7 @@
                 <div class="form-row">
                     <label for="mobile" class="col-2 control-label">生日：</label>
                     <div class="form-group col-10">
-                        <input type="text" class="form-control datepicker" name="birth" value="{$user.birth}"/>
+                        <input type="text" class="form-control datepicker" name="birth" value="{$user.birth|showdate}"/>
                     </div>
                 </div>
                 <div class="form-row">
@@ -58,7 +64,7 @@
                 </div>
                 <div class="form-row align-content-center submitline">
                     <div class="form-group col-12">
-                        <button type="submit" class="btn btn-block btn-primary">提交保存</button>
+                        <button type="submit" class="btn btn-block btn-info">提交保存</button>
                     </div>
                 </div>
             </form>

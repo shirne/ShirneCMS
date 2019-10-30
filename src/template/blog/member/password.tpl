@@ -30,7 +30,7 @@
         </div>
         <div class="form-group submitline">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="submit" class="btn btn-block btn-primary create">提交保存</button>
+                <button type="submit" class="btn btn-block btn-info create">提交保存</button>
             </div>
         </div>
     </form>

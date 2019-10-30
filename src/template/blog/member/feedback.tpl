@@ -10,7 +10,7 @@
                     {$v.content}
                 </div>
                 <if condition="$v['reply_at'] GT 1">
-                    <div><span class="badge badge-primary">管理员回复</span>{$v.reply}</div>
+                    <div><span class="badge badge-info">管理员回复</span>{$v.reply}</div>
                 <else/>
                     <span class="badge badge-danger">待回复</span>
                 </if>
@@ -23,7 +23,7 @@
                 <div class="form-group">
                     <textarea name="content" class="form-control" id="" cols="30" rows="5"></textarea>
                 </div>
-                <div class="form-group"><input type="submit" class="btn btn-primary" value="提交" /></div>
+                <div class="form-group"><input type="submit" class="btn btn-info" value="提交" /></div>
             </form>
         </li>
         </if>

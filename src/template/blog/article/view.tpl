@@ -68,13 +68,13 @@
                                             <textarea name="content" placeholder="说点什么..." class="form-control"></textarea>
                                             <div class="d-flex mt-2">
                                                 <div class="w-25"><input type="text" name="email" class="form-control float-left" placeholder="填写邮箱"/> </div>
-                                                <div class="flex-fill text-muted pl-2" style="line-height:38px;"> 或<a href="{:url('index/login/index')}">登录</a>后评论</div>
+                                                <div class="flex-fill text-muted pl-2" style="line-height:38px;"> 或<a class="pl-1 pr-1 text-info" href="{:url('index/login/index')}">登录</a>后评论</div>
                                                 <input type="submit" class="btn btn-info" value="提交评论">
                                             </div>
                                         <else/>
                                             <textarea name="content" readonly class="form-control"></textarea>
                                             <div class="d-flex mt-2">
-                                                <div class="flex-fill text-muted">请<a href="{:url('index/login/index')}">登录</a>后评论</div>
+                                                <div class="flex-fill text-muted">请<a class="pl-1 pr-1 text-info" href="{:url('index/login/index')}">登录</a>后评论</div>
                                                 <input type="submit" class="btn btn-info" disabled value="提交评论">
                                             </div>
                                         </if>
