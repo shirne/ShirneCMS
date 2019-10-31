@@ -51,7 +51,7 @@ class GoodsController extends BaseController
     public function view($id){
         $goods = GoodsModel::get($id);
         if(empty($goods)){
-            return $this->_empty('商品不存在');
+            return $this->errorPage('商品不存在');
         }
         $this->seo($goods['title']);
         $this->category($goods['cate_id']);

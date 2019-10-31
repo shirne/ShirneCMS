@@ -64,7 +64,7 @@ class ArticleController extends BaseController{
     public function view($id){
         $article = ArticleModel::get($id);
         if(empty($article)){
-            return $this->_empty(lang('Article not exists!'));
+            return $this->errorPage(lang('Article not exists!'));
         }
         $this->seo($article['title']);
         $this->category($article['cate_id']);

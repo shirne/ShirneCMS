@@ -114,7 +114,7 @@
 						</div>
 						<div class="form-group">
 							<div class="text-center">
-								{:lang('Have an account?')}<a href="{:url('index/login/index')}">{:lang('Goto sign in')}</a>
+								{:lang('Have an account?')}<a class="text-info pl-2" href="{:url('index/login/index')}">{:lang('Goto sign in')}</a>
 							</div>
 						</div>
 					</form>

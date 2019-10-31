@@ -54,7 +54,7 @@
 						</div>
 						<div class="form-group">
 							<div class="text-center">
-							{:lang('No account yet?')}<a href="{:url('index/login/register')}">{:lang('Create an account')}</a>
+							{:lang('No account yet?')}<a class="text-info pl-2" href="{:url('index/login/register')}">{:lang('Create an account')}</a>
 							</div>
 						</div>
 					</form>
