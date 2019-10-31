@@ -468,7 +468,7 @@
             }).show(contentHtml.compile({input:inputHtml}),title);
         },
         action:function (list,callback,title) {
-            var html='<div class="list-group"><a href="javascript:" class="list-group-item list-group-item-action">'+list.join('</a><a href="javascript:" class="list-group-item list-group-item-action">')+'</a></div>';
+            var html='<div class="list-group"  style="max-height: 70vh;overflow: auto;"><a href="javascript:" class="list-group-item list-group-item-action">'+list.join('</a><a href="javascript:" class="list-group-item list-group-item-action">')+'</a></div>';
             var actions=null;
             var dlg=new Dialog({
                 'bodyClass':'modal-action',
