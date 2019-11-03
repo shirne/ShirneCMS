@@ -136,7 +136,88 @@ class OrderController extends BaseController
         $this->assign('member',$member);
         $this->assign('products',$products);
         $this->assign('payorders',$payorders);
+        $this->assign('expresscodes',config('express.'));
         return $this->fetch();
+    }
+
+    public function setcancel($id){
+        $order = OrderModel::get($id);
+        if(empty($id) || empty($order)){
+            $this->error('订单不存在');
+        }
+        if($order['status'] > 0){
+            $this->error('订单不可取消');
+        }
+        $order->updateStatus(['status'=>-1]);
+        user_log($this->mid,'cancelorder',1,'取消订单 '.$id ,'manager');
+        $this->success('操作成功');
+    }
+    public function setpayed($id){
+        $order = OrderModel::get($id);
+        if(empty($id) || empty($order)){
+            $this->error('订单不存在');
+        }
+        if($order['status'] < 0){
+            $this->error('订单已失效');
+        }
+        if($order['status'] >= 1){
+            $this->error('订单已支付');
+        }
+        $paytype=$this->request->post('paytype');
+        if($paytype == 'balance'){
+            $debit = money_log($order['member_id'], -$order['payamount']*100, "订单支付", 'consume',0,'money');
+            if(!$debit){
+                $this->error('用户余额不足');
+            }
+        }else{
+            $paytype = 'offline';
+        }
+        $order->updateStatus(['status'=>1,'pay_type'=>$paytype]);
+        user_log($this->mid,'orderpay',1,'订单支付 '.$id ,'manager');
+        $this->success('操作成功');
+    }
+    public function setdelivery($id){
+        $order = OrderModel::get($id);
+        if(empty($id) || empty($order)){
+            $this->error('订单不存在');
+        }
+        if($order['status'] < 0){
+            $this->error('订单已失效');
+        }
+        if($order['status'] < 1){
+            $this->error('订单未支付');
+        }
+        if($order['status'] > 2){
+            $this->error('订单已发货');
+        }
+        $express_no=$this->request->post('express_no');
+        $express_code=$this->request->post('express_code');
+        
+        $order->updateStatus([
+            'status'=>2,
+            'express_no'=>$express_no,
+            'express_code'=>$express_code
+        ]);
+        user_log($this->mid,'orderdelivery',1,'订单发货 '.$id ,'manager');
+        $this->success('操作成功');
+    }
+    public function setreceive($id){
+        $order = OrderModel::get($id);
+        if(empty($id) || empty($order)){
+            $this->error('订单不存在');
+        }
+        if($order['status'] < 0){
+            $this->error('订单已失效');
+        }
+        if($order['status'] < 2){
+            $this->error('订单未发货');
+        }
+        if($order['status'] >= 3){
+            $this->error('订单已完成');
+        }
+        $order->updateStatus(['status'=>3]);
+        user_log($this->mid,'orderconfirm',1,'订单确认 '.$id ,'manager');
+        $this->success('操作成功');
     }
 
     /**
@@ -144,23 +225,7 @@ class OrderController extends BaseController
      * @param $id
      */
     public function status($id){
-        $order = OrderModel::get($id);
-        if(empty($id) || empty($order)){
-            $this->error('订单不存在');
-        }
-        $audit=$this->request->post('status/d');
-        $express_no=$this->request->post('express_no');
-        $express_code=$this->request->post('express_code');
-        $data=array(
-            'status'=>$audit
-        );
-        if(!empty($express_code)){
-            $data['express_no']=$express_no;
-            $data['express_code']=$express_code;
-        }
-        $order->updateStatus($data);
-        user_log($this->mid,'auditorder',1,'更新订单 '.$id .' '.$audit,'manager');
-        $this->success('操作成功');
+        $this->error('操作已失效');
     }
     
     

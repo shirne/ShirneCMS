@@ -74,7 +74,10 @@ return array(
             'detail'=>'订单详情',
             'delete'=>'订单删除',
             'audit'=>'订单审核',
-            'status'=>'订单状态',
+            'setcancel'=>'取消订单',
+            'setpayed'=>'订单支付',
+            'setdelivery'=>'订单发货',
+            'setreceive'=>'订单收货'
         )
     ),
     'page'=>array(

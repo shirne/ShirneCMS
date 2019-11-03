@@ -237,6 +237,7 @@ CREATE TABLE `sa_order` (
   `commission_special` TEXT NULL,
   `level_id` INT NULL DEFAULT 0,
   `create_time` INT NULL DEFAULT 0,
+  `pay_type` VARCHAR(20) NULL COMMENT '付款方式',
   `pay_time` INT NULL DEFAULT 0,
   `deliver_time` INT NULL DEFAULT 0,
   `confirm_time` INT NULL DEFAULT 0,

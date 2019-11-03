@@ -77,6 +77,7 @@ CREATE TABLE `sa_credit_order` (
   `paycredit` DECIMAL(10,2) NULL DEFAULT 0,
   `payamount` DECIMAL(10,2) NULL DEFAULT 0,
   `create_time` INT NULL DEFAULT 0,
+  `pay_type` VARCHAR(20) NULL COMMENT '付款方式',
   `pay_time` INT NULL DEFAULT 0,
   `confirm_time` INT NULL DEFAULT 0,
   `cancel_time` INT NULL DEFAULT 0,

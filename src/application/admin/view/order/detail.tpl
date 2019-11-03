@@ -3,7 +3,7 @@
 <block name="body">
     <include file="public/bread" menu="order_index" section="项目" title="订单管理" />
 
-    <div id="page-wrapper">
+    <div id="page-wrapper" class="page-form">
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">订单信息</h3>
@@ -70,6 +70,19 @@
                         <th >支付金额</th>
                         <td colspan="3">
                             ￥{$model.payamount}
+                            <if condition="!empty($model['pay_type'])">
+                                <if condition="$model['pay_type'] EQ 'offline'">
+                                    <span class="badge badge-warning">线下支付</span>
+                                    <elseif condition="$model['pay_type'] EQ 'balance'"/>
+                                    <span class="badge badge-primary">余额支付</span>
+                                    <elseif condition="$model['pay_type'] EQ 'wechat'"/>
+                                    <span class="badge badge-success">微信支付</span>
+                                    <elseif condition="$model['pay_type'] EQ 'alipay'"/>
+                                    <span class="badge badge-info">支付宝</span>
+                                    <else/>
+                                    <span class="badge badge-secondary">{$model['pay_type']}</span>
+                                </if>
+                            </if>
                         </td>
                     </tr>
                     </tbody>
@@ -174,11 +187,27 @@
                 </table>
             </div>
         </div>
+        <if condition="$model['status'] GT -1 AND $model['status'] LT 3">
+            <div class="form-group submit-btn">
+                <if condition="$model['status'] EQ 0">
+                    <a class="btn btn-outline-danger btn-status" title="取消订单" data-id="{$model.order_id}" href="javascript:"  data-status="-1" ><i class="ion-md-close-circle-outline"></i> 取消订单</a>
+                    <a class="btn btn-outline-warning btn-status" title="设置支付状态" data-id="{$model.order_id}" href="javascript:" data-status="1" ><i class="ion-md-wallet"></i> 设置支付状态</a>
+                <elseif condition="$model['status'] EQ 1" />
+                    <a class="btn btn-outline-info btn-status" title="发货" href="javascript:" data-id="{$model.order_id}" data-status="2" data-express="{$model.express_code}/{$model.express_no}"><i class="ion-md-train"></i> 发货</a>
+                <elseif condition="$model['status'] EQ 2" />
+                    <a class="btn btn-outline-secondary btn-status" title="修改发货信息" href="javascript:" data-id="{$model.order_id}" data-status="2" data-express="{$model.express_code}/{$model.express_no}"><i class="ion-md-subway"></i> 修改发货信息</a>
+                    <a class="btn btn-outline-success btn-status" title="收货" href="javascript:" data-id="{$model.order_id}" data-status="3" ><i class="ion-md-checkbox-outline"></i> 收货</a>
+                </if>
+            </div>
+        </if>
     </div>
 </block>
 <block name="script">
+        <include file="order/_status_tpl" />
     <script type="text/javascript">
         jQuery(function($){
+            
+
             $('.paystatus').click(function(e){
                 var id=$(this).data('id');
                 var loading=dialog.loading();

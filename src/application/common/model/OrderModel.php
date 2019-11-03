@@ -480,7 +480,7 @@ class OrderModel extends BaseModel
             }
             $this->commit();
             if($status>0 ){
-                self::getInstance()->updateStatus(['status'=>$status,'pay_time'=>time()],['order_id'=>$result]);
+                self::getInstance()->updateStatus(['status'=>$status,'pay_type'=>'balance','pay_time'=>time()],['order_id'=>$result]);
             }
         }else{
             $this->rollback();

@@ -119,12 +119,14 @@ class PayOrderModel extends BaseModel
                 case 'credit':
                     CreditOrderModel::getInstance()->updateStatus([
                         'status'=>1,
+                        'pay_type'=>$item['pay_type'],
                         'pay_time'=>$item['pay_time']
                     ],['order_id'=>$item['order_id']]);
                     break;
                 default:
                     OrderModel::getInstance()->updateStatus([
                         'status'=>1,
+                        'pay_type'=>$item['pay_type'],
                         'pay_time'=>$item['pay_time']
                     ],['order_id'=>$item['order_id']]);
                     break;
