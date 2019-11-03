@@ -19,10 +19,25 @@ class AccessMiddleware
             $response = $next($request);
         }
         
-        $response->header('Access-Control-Allow-Origin','*');
-        $response->header('Access-Control-Allow-Methods','*');
-        $response->header('Access-Control-Allow-Headers','x-requested-with,content-type,token');
+        static::allowAcrossDomain($response);
         
+        return $response;
+    }
+
+    public static $acrossHeaders=[
+        'Access-Control-Allow-Origin'=>'*',
+        'Access-Control-Allow-Methods'=>'*',
+        'Access-Control-Allow-Headers'=>'x-requested-with,content-type,token'
+    ];
+
+    /**
+     * @param $response Response
+     * @return Response
+     */
+    public static function allowAcrossDomain($response){
+        foreach(static::$acrossHeaders as $key=>$value){
+            $response->header($key, $value);
+        }
         return $response;
     }
 }

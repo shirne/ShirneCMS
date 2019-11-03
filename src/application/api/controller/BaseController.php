@@ -3,6 +3,7 @@
 namespace app\api\controller;
 
 use app\api\facade\MemberTokenFacade;
+use app\api\middleware\AccessMiddleware;
 use think\Controller;
 use think\Db;
 
@@ -139,6 +140,6 @@ class BaseController extends Controller
             'msg'  => $msg,
             'time' => time(),
             'data' => $data,
-        ]);
+        ], 200, AccessMiddleware::$acrossHeaders);
     }
 }
