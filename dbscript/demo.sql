@@ -1,7 +1,7 @@
 LOCK TABLES `sa_member` WRITE;
 /*!40000 ALTER TABLE `sa_member` DISABLE KEYS */;
 
-INSERT INTO `sa_member` (`id`, `username`,`realname`,`mobile`, `email`, `password`, `salt`, `avatar`, `create_at`, `update_at`, `login_ip`, `status`, `type`)
+INSERT INTO `sa_member` (`id`, `username`,`realname`,`mobile`, `email`, `password`, `salt`, `avatar`, `create_time`, `create_time`, `login_ip`, `status`, `type`)
 VALUES
   (1,'test','测试用户','18888888888','123456@qq.com','60271966bbad6ead5faa991772a9277f', 'z5La7s0P',NULL,'1436679338','1436935104','0.0.0.0',1,1);
 
@@ -11,10 +11,10 @@ UNLOCK TABLES;
 LOCK TABLES `sa_page` WRITE;
 /*!40000 ALTER TABLE `sa_page` DISABLE KEYS */;
 
-INSERT INTO `sa_page` (`id`, `title`, `name`, `content`)
+INSERT INTO `sa_page` (`id`, `title`, `group`, `name`, `content`)
 VALUES
-	(1,'关于我们','about','&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;关于我们&lt;/p&gt;&lt;p&gt;关于我们&lt;/p&gt;&lt;p&gt;关于我们&lt;/p&gt;'),
-	(2,'联系我们','contact','&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;联系我们&lt;/p&gt;&lt;p&gt;联系我们&lt;/p&gt;&lt;p&gt;联系我们&lt;/p&gt;&lt;p&gt;联系我们&lt;/p&gt;&lt;p&gt;联系我们&lt;/p&gt;&lt;p&gt;联系我们&lt;/p&gt;&lt;p&gt;联系我们&lt;/p&gt;&lt;p&gt;联系我们&lt;/p&gt;&lt;p&gt;联系我们&lt;/p&gt;');
+	(1,'关于我们','profile','about','&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;关于我们&lt;/p&gt;&lt;p&gt;关于我们&lt;/p&gt;&lt;p&gt;关于我们&lt;/p&gt;'),
+	(2,'联系我们','contact','about','&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;联系我们&lt;/p&gt;&lt;p&gt;联系我们&lt;/p&gt;&lt;p&gt;联系我们&lt;/p&gt;&lt;p&gt;联系我们&lt;/p&gt;&lt;p&gt;联系我们&lt;/p&gt;&lt;p&gt;联系我们&lt;/p&gt;&lt;p&gt;联系我们&lt;/p&gt;&lt;p&gt;联系我们&lt;/p&gt;&lt;p&gt;联系我们&lt;/p&gt;');
 
 /*!40000 ALTER TABLE `sa_page` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -32,28 +32,22 @@ UNLOCK TABLES;
 LOCK TABLES `sa_category` WRITE;
 /*!40000 ALTER TABLE `sa_category` DISABLE KEYS */;
 
-INSERT INTO `sa_category` (`id`, `pid`, `name`, `title`, `keywords`, `description`)
-VALUES
-	(1,0,'default','默认分类','默认分类','默认分类描述'),
-	(2,0,'biancheng','编程技术','',''),
-	(3,0,'system','操作系统','',''),
-	(4,0,'news','业界新闻','',''),
-	(5,0,'jianzhan','建站教程','',''),
-	(6,2,'html','HTML','',''),
-	(7,2,'css','CSS','',''),
-	(8,2,'php','PHP','',''),
-	(9,5,'discuz','Discuz','',''),
-	(10,5,'wordpress','wordpress','',''),
-	(11,3,'macos','Mac OS','',''),
-	(12,3,'linux','Linux','',''),
-	(13,7,'css2','CSS2','',''),
-	(14,7,'css3','CSS3','','');
+INSERT INTO `sa_category`(`id`,`pid`,`title`,`short`,`name`,`icon`,`image`,`sort`,`keywords`,`description`)VALUES
+(1,0,'新闻动态','新闻','news','','',0,'',''),
+(2,0,'案例中心','案例','cases','','',0,'',''),
+(3,1,'行业新闻','行业','industry','','',0,'',''),
+(4,1,'公司新闻','公司','company','','',0,'',''),
+(5,1,'常见问题','FAQ','faq','','',0,'',''),
+(6,2,'网站建设','网站','web','','',0,'',''),
+(7,2,'微信平台','微信','wechat','','',0,'',''),
+(8,2,'企业APP','APP','app','','',0,'',''),
+(9,2,'画册/LOGO','AI','design','','',0,'','');
 
 /*!40000 ALTER TABLE `sa_category` ENABLE KEYS */;
 UNLOCK TABLES;
 
 LOCK TABLES `sa_article` WRITE;
-/*!40000 ALTER TABLE `sa_post` DISABLE KEYS */;
+/*!40000 ALTER TABLE `sa_article` DISABLE KEYS */;
 
 INSERT INTO `sa_article` (`id`, `title`, `content`, `time`, `cate_id`, `user_id`, `type`)
 VALUES
@@ -71,5 +65,5 @@ VALUES
 	(12,'部分用户反映 Apple Watch表带扣不紧表壳','&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;威锋网讯，Apple&amp;nbsp;Watch&amp;nbsp;可能贯彻了苹果最先进的技术和工艺，但也依然是苹果全新产品类别的第一代产品而已。&lt;/p&gt;&lt;p&gt;正因如此，可能它会存在一些在之前的产品中没有遇到过的问题。正如早前有用户反映，倘若手腕上有很深的纹身就有可能影响到&amp;nbsp;Apple&amp;nbsp;Watch&amp;nbsp;对穿戴者的数据监测功能，近日又有一个新的问题困扰着部分用户。&lt;/p&gt;&lt;p&gt;根据&amp;nbsp;MacRumors&amp;nbsp;透露，有部分用户反映&amp;nbsp;Apple&amp;nbsp;Watch&amp;nbsp;的表带扣不紧，这可能是表带和表壳连接的结构出现了问题。从视频中我们可以看到表带并没有能够很好地扣紧表带，会出现滑落的情况。&lt;/p&gt;&lt;p&gt;反映这个问题的用户表示当时他从脱下外套的时候&amp;nbsp;Apple&amp;nbsp;Watch&amp;nbsp;就从手中脱落，并摔到了地板上，还“滑行”了一下，经过检查发现，需要几次反复推拉才可以让表带扣紧表壳。&lt;/p&gt;&lt;p&gt;尽管如此，用户还是不需要过分担心，因为这毕竟属于少数情况。正如&amp;nbsp;Apple&amp;nbsp;Watch&amp;nbsp;也遇到了触觉反馈不灵敏的问题，但苹果并没有让这些设备流入市面。&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;','1430544614',8,1,2),
 	(13,'微信支付向政府与媒体类订阅号开放','&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;金日，微信公众平台宣布，为了逐步开放微信支付的能力，现允许认证的政府与媒体类订阅号申请微信支付。&lt;/p&gt;&lt;p&gt;认证的政府与媒体类订阅号是指，订阅号在进行微信认证时，选择的主体类型是政府或者媒体。满足微信支付申请条件的帐号，将在左侧导航中出现“微信支付”的文字，点击即可进行申请。&lt;/p&gt;&lt;p&gt;微信方面表示，政府、媒体订阅号开支付是为了在保障安全的前提下，让他们有更丰富的运营手段和盈收模式。&lt;/p&gt;&lt;p&gt;微信支付正在逐步打开。本月23日，微信支付的企业付款已经全面开放，而此前，微信支付只能提供客户向企业单向付款。&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;','1430544638',7,1,3);
 
-/*!40000 ALTER TABLE `sa_post` ENABLE KEYS */;
+/*!40000 ALTER TABLE `sa_article` ENABLE KEYS */;
 UNLOCK TABLES;
