@@ -350,11 +350,33 @@
                 icon = undefined;
             }
 
+            var title='';
+            var size='sm';
+            var btns=[
+                {'text':'取消','type':'secondary'},
+                {'text':'确定','isdefault':true,'type':'primary'}
+            ];
+            if($.isPlainObject(message)){
+                if(message['title']){
+                    title=message['title'];
+                }
+                if(message['size']!==undefined){
+                    size=message['size'];
+                }
+                if(message['btns']!==undefined){
+                    btns=message['btns'];
+                }
+                if(message['content']===undefined){
+                    throw 'message.content can not be empty.';
+                }
+                message=message['content'];
+            }
+
             var iconMap= {
-                'success':'checkmark-circle',
-                'info': 'information-circle',
-                'warning':'alert',
-                'error':'remove-circle'
+                success:'checkmark-circle',
+                info: 'information-circle',
+                warning:'alert',
+                error:'remove-circle'
             };
             var color='primary';
             if(!icon)icon='information-circle';
@@ -371,7 +393,7 @@
             var inteval=0;
 
             var dlg = new Dialog({
-                header:false,
+                header: title?true:false,
                 size:'sm',
                 backdrop:'static',
                 onsure:function(){
@@ -386,7 +408,7 @@
                         return cancel();
                     }
                 }
-            }).show(html);
+            }).show(html, title);
 
             if(countdown && typeof countdown === 'number') {
                 var btn = dlg.box.find('.modal-footer .btn-outline-primary');
