@@ -4,5 +4,8 @@
   "sub":true,
   "elision":true,
   "expr": true,
-  "evil": true
+  "evil": true,
+  "globals": {
+    "console": true
+  }
 }
