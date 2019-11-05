@@ -71,7 +71,15 @@ class CommonController extends BaseController
                 }else{
                     $m[0] = ucfirst($m[0]);
                 }
-                $controller = \container()->make('\\app\\api\\controller\\' . $m[0] . 'Controller');
+                if(in_array($m[0],['Base','Auth','Authed','Wechat'])){
+                    return null;
+                }
+                try{
+                    $controller = \container()->make('\\app\\api\\controller\\' . $m[0] . 'Controller');
+                }catch(\Exception $e){
+                    Log::record($e->getMessage(),'error');
+                    return null;
+                }
             }
             $m = $m[1];
         } else {
