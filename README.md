@@ -102,8 +102,8 @@ PHP库引用[Composer](https://getcomposer.org/download/)
 >composer install
 
 打包下载(zip包解压后放入src目录,即application同级目录)
->[packages](https://pan.baidu.com/s/1bVU5uneXaq89jzZNyN0U0Q) 含thinkphp5.1.38 及vendor目录的其它包<br />
->提取码：s1n6 
+>[packages](https://pan.baidu.com/s/1i5l0qblUhhendpIhOqu4Iw) 含thinkphp5.1.38 及vendor目录的其它包<br />
+>提取码：7cwl
 
 Javascript/CSS构建[Gulp](https://www.gulpjs.com.cn/)
 
