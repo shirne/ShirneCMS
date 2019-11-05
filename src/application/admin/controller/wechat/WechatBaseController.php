@@ -5,6 +5,7 @@ namespace app\admin\controller\wechat;
 
 use app\admin\controller\BaseController;
 use app\common\model\WechatModel;
+use EasyWeChat\Kernel\Exceptions\HttpException;
 use EasyWeChat\Kernel\ServiceContainer;
 use think\Db;
 
@@ -58,5 +59,18 @@ class WechatBaseController extends BaseController
         $this->assign('wid',$wid);
         
         return WechatModel::createApp($wechat);
+    }
+
+    /**
+     * @param $exception \Exception
+     */
+    protected function apiException($exception){
+        if($exception instanceof HttpException){
+            $response = $exception->formattedResponse;
+            if(!empty($response['errcode'])){
+                $this->error('API Error: '.$response['errcode'].' '.$response['errmsg']);
+            }
+        }
+        $this->error($exception->getMessage());
     }
 }

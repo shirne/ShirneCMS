@@ -61,7 +61,11 @@ class MaterialController extends WechatBaseController
         $totals=$app->material->stats();
         $total_count=$totals[$type.'_count'];
         if($count<$total_count){
-            $materials=$app->material->list($type,$count,20);
+            try{
+                $materials=$app->material->list($type,$count,20);
+            }catch(\Exception $e){
+                $this->apiException($e);
+            }
             if(!empty($materials['item'])){
                 foreach ($materials['item'] as $item){
                     $exist=Db::name('wechatMaterial')->where('media_id',$item['media_id'])->find();
@@ -124,7 +128,11 @@ class MaterialController extends WechatBaseController
      */
     public function delete($media_id){
 
-        $this->wechatApp->material->delete($media_id);
+        try{
+            $this->wechatApp->material->delete($media_id);
+        }catch(\Exception $e){
+            $this->error($e);
+        }
         Db::name('wechatMaterial')->where('media_id',$media_id)->delete();
 
         $this->success('删除成功');

@@ -43,7 +43,11 @@ class FansController extends WechatBaseController
             $this->error('暂时不支持的消息');
         }
     
-        $result=$messager->to($openid)->send();
+        try{
+            $result=$messager->to($openid)->send();
+        }catch(\Exception $e){
+            $this->apiException($e);
+        }
         $this->success('消息已发送');
     }
 
@@ -58,19 +62,31 @@ class FansController extends WechatBaseController
 
         if($single) {
             if(strpos($openid,',')===false) {
-                $user = $app->user->get($openid);
+                try{
+                    $user = $app->user->get($openid);
+                }catch(\Exception $e){
+                    $this->apiException($e);
+                }
                 Db::name('MemberOauth')->where('openid',$openid)
                     ->update(MemberOauthModel::mapUserInfo($user));
             }else {
-                $users = $app->user->select(explode(',', $openid));
+                try{
+                    $users = $app->user->select(explode(',', $openid));
+                }catch(\Exception $e){
+                    $this->apiException($e);
+                }
                 foreach ($users['user_info_list'] as $user){
                     Db::name('MemberOauth')->where('openid',$user['openid'])
                         ->update(MemberOauthModel::mapUserInfo($user));
                 }
             }
         }else{
-            $result=$app->user->list($openid);
-            $users = $app->user->select($result['data']['openid']);
+            try{
+                $result=$app->user->list($openid);
+                $users = $app->user->select($result['data']['openid']);
+            }catch(\Exception $e){
+                $this->apiException($e);
+            }
             $this->updateUsers($users['user_info_list'],$this->wid);
 
             $sesskey='fans_count_'.$wechat['appid'];

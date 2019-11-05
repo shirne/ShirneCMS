@@ -59,7 +59,7 @@ class TplmsgController extends WechatBaseController
         try {
             $result = $this->wechatApp->template_message->getTemplates($offset,20);
         }catch(\Exception $e){
-            $this->error($e->getMessage());
+            $this->apiException($e);
         }
         if(!empty($result) && empty($result['errcode'])){
             if(empty($result['list'])){
@@ -105,7 +105,7 @@ class TplmsgController extends WechatBaseController
         try {
             $result = $this->wechatApp->template_message->getPrivateTemplates();
         }catch(\Exception $e){
-            $this->error($e->getMessage());
+            $this->apiException($e);
         }
         if(!empty($result) && empty($result['errcode'])){
             if(empty($result['template_list'])){
@@ -182,7 +182,7 @@ class TplmsgController extends WechatBaseController
                 $result=$this->wechatApp->template_message->add($tpl['title_id'],$ids);
             }
         }catch(\Exception $e){
-            $this->error($e->getMessage());
+            $this->apiException($e);
         }
         if(!empty($result) && empty($result['errcode'])){
             $exists=WechatTemplateMessageModel::where('type',$key)->where('wechat_id',$this->wid)->find();
@@ -203,7 +203,7 @@ class TplmsgController extends WechatBaseController
         try{
             $result=$this->wechatApp->template_message->addTemplate($tpl['title_id']);
         }catch(\Exception $e){
-            $this->error($e->getMessage());
+            $this->apiException($e);
         }
         if(!empty($result) && empty($result['errcode'])){
             $exists=WechatTemplateMessageModel::where('type',$key)->where('wechat_id',$this->wid)->find();
@@ -243,7 +243,7 @@ class TplmsgController extends WechatBaseController
             }
             
         }catch(\Exception $e){
-            $this->error($e->getMessage());
+            $this->apiException($e);
         }
         if(!empty($result) && empty($result['errcode'])){
             WechatTemplateMessageModel::where('id',$exists['id'])->where('wechat_id',$this->wid)->delete();
