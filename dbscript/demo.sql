@@ -1,7 +1,7 @@
 LOCK TABLES `sa_member` WRITE;
 /*!40000 ALTER TABLE `sa_member` DISABLE KEYS */;
 
-INSERT INTO `sa_member` (`id`, `username`,`realname`,`mobile`, `email`, `password`, `salt`, `avatar`, `create_time`, `create_time`, `login_ip`, `status`, `type`)
+INSERT INTO `sa_member` (`id`, `username`,`realname`,`mobile`, `email`, `password`, `salt`, `avatar`, `create_time`, `update_time`, `login_ip`, `status`, `type`)
 VALUES
   (1,'test','测试用户','18888888888','123456@qq.com','60271966bbad6ead5faa991772a9277f', 'z5La7s0P',NULL,'1436679338','1436935104','0.0.0.0',1,1);
 
