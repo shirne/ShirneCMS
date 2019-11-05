@@ -8,7 +8,9 @@ use app\common\model\MemberOauthModel;
 use app\common\model\OauthAppModel;
 use app\common\model\WechatModel;
 use EasyWeChat\Factory;
+use shirne\captcha\Captcha;
 use think\Db;
+use think\facade\Cache;
 use think\facade\Env;
 use think\facade\Log;
 
@@ -19,25 +21,101 @@ use think\facade\Log;
  */
 class AuthController extends BaseController
 {
+    protected $accessToken='';
+    protected $accessSession=[];
+
     public function initialize(){
         parent::initialize();
+
+        $this->accessToken = request()->header('access_token');
+        if(!$this->accessToken){
+            $this->accessToken = request()->param('access_token');
+        }
+        if($this->accessToken){
+            $session = cache('access_'.$this->accessToken);
+            if(!empty($session)){
+                $sessData = json_decode($session, true);
+                if(!empty($sessData)){
+                    $this->accessSession = $sessData;
+                }else{
+                    $this->accessToken = '';
+                }
+            }
+        }
+        if(empty($this->accessToken) &&
+            !in_array($this->request->action(), ['token','wxlogin','refresh'])
+            ){
+            $this->error('未授权访问',ERROR_LOGIN_FAILED);
+        }
     }
 
-    public function login($appid, $username, $password, $sign){
-        $this->check_submit_rate(2,'global',md5($username));
-        $data = $this->request->put();
-        if(empty($appid) || empty($sign)){
+    public function __destruct()
+    {
+        if(!$this->accessToken){
+            if(empty($this->accessSession)){
+                $this->accessSession=['time'=>time()];
+            }
+            cache(
+                'access_'.$this->accessToken, 
+                json_encode($this->accessSession, JSON_UNESCAPED_UNICODE),
+                ['expire'=>60*10]
+            );
+        }
+    }
+
+    public function token($appid){
+        $app=$this->getApp($appid);
+        if(empty($app)){
             $this->error('未授权APP',ERROR_LOGIN_FAILED);
         }
-        $app=false;
-        try {
-            $app = OauthAppModel::checkSign($data);
-        }catch(\Exception $e){
-            Log::record($e->getMessage());
-            Log::record($e->getTraceAsString());
+
+        if($this->accessToken){
+            cache('access_'.$this->accessToken, null);
+            $this->accessToken='';
+            $this->accessSession=[];
         }
-        if($app == false){
-            $this->error('APP授权验签失败',ERROR_LOGIN_FAILED);
+
+        //根据IP限制token获取频率
+
+        $this->accessToken = $this->createToken();
+        
+        return $this->response($this->accessToken);
+    }
+    private function createToken(){
+        $token = md5(config('app.app_key').time().microtime().mt_rand(999,9999));
+        
+        while(Cache::has('access_'.$token)){
+            $token = md5(config('app.app_key').time().microtime().mt_rand(999,9999));
+        }
+        return $token;
+    }
+
+    private function getApp($appid){
+        if(empty($appid)){
+            return false;
+        }
+        $app=OauthAppModel::where('appid',$appid)->find();
+        if(empty($app)){
+            return false;
+        }
+        return $app;
+    }
+
+    public function login($appid, $username, $password){
+        
+        $this->check_submit_rate(2,'global',md5($username));
+        $data = $this->request->put();
+        $app=$this->getApp($appid);
+        if(empty($app)){
+            $this->error('未授权APP',ERROR_LOGIN_FAILED);
+        }
+        
+        if(!empty($this->accessSession['need_verify'])){
+            $verify = new Captcha(array('seKey'=>config('session.sec_key')), Cache::instance());
+            $checked = $verify->check($data['verify'],'_api_'.$this->accessToken);
+            if(!$checked){
+                $this->error('请填写验证码',ERROR_LOGIN_FAILED);
+            }
         }
         
         if(empty($username) || empty($password)){
@@ -50,11 +128,12 @@ class AuthController extends BaseController
                     $token = MemberTokenFacade::createToken($member['id'], $app['platform'], $app['appid']);
                     if (!empty($token)) {
                         user_log($member['id'], 'login', 1, '登录成功');
-            
+                        $this->accessSession['need_verify'] = 0;
                         return $this->response($token);
                     }
                 } else {
                     user_log($member['id'], 'login', 0, '登录失败');
+                    $this->accessSession['need_verify'] = 1;
                 }
             }else{
                 $this->error('账户已被禁用',ERROR_MEMBER_DISABLED);
@@ -238,8 +317,31 @@ class AuthController extends BaseController
         $this->error('刷新失败',ERROR_REFRESH_TOKEN_INVAILD);
     }
 
+    public function captcha(){
+
+        $verify = new Captcha(array('seKey'=>config('session.sec_key')), Cache::instance());
+
+        $verify->fontSize = 13;
+        $verify->length = 4;
+        return $verify->entry('_api_'.$this->accessToken);
+    }
+
     /**
-     * 注册会员
+     * todo
+     */
+    public function verify(){
+
+    }
+
+    /**
+     * todo
+     */
+    public function forget(){
+
+    }
+
+    /**
+     * 注册会员 todo
      */
     public function register(){
 
