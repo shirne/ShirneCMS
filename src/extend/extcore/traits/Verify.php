@@ -2,7 +2,7 @@
 
 namespace extcore\traits;
 
-use think\captcha\Captcha;
+use shirne\captcha\Captcha;
 use shirne\third\GeetestLib;
 
 trait Verify{

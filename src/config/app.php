@@ -24,6 +24,8 @@ return [
     'app_host'               => '',
     // 应用版本
     'app_release'            => '20190828',
+    //应用加密串
+    'app_key'                => 'scmsN8qv9EJD',
     // 应用调试模式
     'app_debug'              => true,
     // 应用Trace

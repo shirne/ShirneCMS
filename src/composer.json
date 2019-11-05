@@ -23,7 +23,7 @@
         "ext-curl":"*",
         "ext-fileinfo":"*",
         "topthink/framework": "5.1.*",
-        "topthink/think-captcha": "^2.0",
+        "shirne/captcha": "1.0.2",
         "topthink/think-image": "^1.0",
         "topthink/think-helper": "^1.0",
         "endroid/qr-code": "^2.5",
