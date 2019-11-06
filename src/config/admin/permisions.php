@@ -77,7 +77,8 @@ return array(
             'setcancel'=>'取消订单',
             'setpayed'=>'订单支付',
             'setdelivery'=>'订单发货',
-            'setreceive'=>'订单收货'
+            'setreceive'=>'订单收货',
+            'setcomplete'=>'订单完成'
         )
     ),
     'page'=>array(

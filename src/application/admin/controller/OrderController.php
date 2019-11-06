@@ -220,6 +220,25 @@ class OrderController extends BaseController
         $this->success('操作成功');
     }
 
+    public function setcomplete($id){
+        $order = OrderModel::get($id);
+        if(empty($id) || empty($order)){
+            $this->error('订单不存在');
+        }
+        if($order['status'] < 0){
+            $this->error('订单已失效');
+        }
+        if($order['status'] < 3){
+            $this->error('订单未收货');
+        }
+        if($order['status'] >= 4){
+            $this->error('订单已完成');
+        }
+        $order->updateStatus(['status'=>4]);
+        user_log($this->mid,'ordercomplete',1,'订单完成 '.$id ,'manager');
+        $this->success('操作成功');
+    }
+
     /**
      * 订单进度修改
      * @param $id

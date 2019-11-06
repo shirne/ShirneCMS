@@ -6,6 +6,9 @@
         <div class="text-muted status_ext status_ext_3"> 
             确定客户已签收? <br />此操作最好由客户在会员中心自行处理
         </div>
+        <div class="text-muted status_ext status_ext_4"> 
+            确定完成订单? <br />此操作将忽略评价流程直接结算订单
+        </div>
         <div class="col-12 form-group status_ext paytype_row">
             <div class="input-group">
                 <div ><span class="input-group-text">付款方式</span> </div>
@@ -39,7 +42,7 @@
 <script type="text/javascript">
 jQuery(function($){
     var statusTitles=['订单取消','订单支付','订单发货','订单确认','订单完成'];
-    var actions=['setcancel','setpayed','setdelivery','setreceive'];
+    var actions=['setcancel','setpayed','setdelivery','setreceive','setcomplete'];
     var tpl=$('#orderStatus').text();
     $('.btn-status').click(function() {
         var id=$(this).data('id');
@@ -69,6 +72,8 @@ jQuery(function($){
                     body.find('.status_ext_0').show();
                 }else if(status == 3){
                     body.find('.status_ext_3').show();
+                }else if(status == 4){
+                    body.find('.status_ext_4').show();
                 }
                 
             },

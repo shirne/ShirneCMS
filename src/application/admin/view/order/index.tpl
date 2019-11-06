@@ -122,7 +122,9 @@
                             <a class="btn btn-outline-info btn-status" title="发货" href="javascript:" data-id="{$v.order_id}"  data-status="2" data-express="{$v.express_code}/{$v.express_no}"><i class="ion-md-train"></i> </a>
                         <elseif condition="$v['status'] EQ 2" />
                             <a class="btn btn-outline-secondary btn-status" title="修改发货信息" href="javascript:" data-id="{$v.order_id}"  data-status="2" data-express="{$v.express_code}/{$v.express_no}"><i class="ion-md-subway"></i> </a>
-                            <a class="btn btn-outline-success btn-status" title="收货" href="javascript:" data-id="{$v.order_id}"  data-status="3" ><i class="ion-md-checkbox-outline"></i> </a>
+                            <a class="btn btn-outline-success btn-status" title="收货" href="javascript:" data-id="{$v.order_id}"  data-status="3" ><i class="ion-md-exit"></i> </a>
+                        <elseif condition="$v['status'] EQ 3" />
+                            <a class="btn btn-outline-success btn-status" title="完成" href="javascript:" data-id="{$v.order_id}"  data-status="4" ><i class="ion-md-checkbox-outline"></i> </a>
                         </if>
 
                         <if condition="$v['rebated'] NEQ 1">
