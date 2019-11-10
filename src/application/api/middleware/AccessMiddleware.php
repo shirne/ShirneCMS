@@ -27,7 +27,7 @@ class AccessMiddleware
     public static $acrossHeaders=[
         'Access-Control-Allow-Origin'=>'*',
         'Access-Control-Allow-Methods'=>'*',
-        'Access-Control-Allow-Headers'=>'x-requested-with,content-type,token'
+        'Access-Control-Allow-Headers'=>'*'
     ];
 
     /**

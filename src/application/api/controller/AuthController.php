@@ -51,7 +51,7 @@ class AuthController extends BaseController
 
     public function __destruct()
     {
-        if(!$this->accessToken){
+        if($this->accessToken){
             if(empty($this->accessSession)){
                 $this->accessSession=['time'=>time()];
             }
@@ -75,10 +75,10 @@ class AuthController extends BaseController
             $this->accessSession=[];
         }
 
-        //根据IP限制token获取频率
+        // TODO: 根据IP限制token获取频率
 
         $this->accessToken = $this->createToken();
-        
+        $this->accessSession['appid']=$appid;
         return $this->response($this->accessToken);
     }
     private function createToken(){
@@ -101,11 +101,11 @@ class AuthController extends BaseController
         return $app;
     }
 
-    public function login($appid, $username, $password){
+    public function login($username, $password){
         
         $this->check_submit_rate(2,'global',md5($username));
         $data = $this->request->put();
-        $app=$this->getApp($appid);
+        $app=$this->getApp($this->accessSession['appid']);
         if(empty($app)){
             $this->error('未授权APP',ERROR_LOGIN_FAILED);
         }
