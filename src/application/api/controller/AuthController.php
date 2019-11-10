@@ -326,6 +326,13 @@ class AuthController extends BaseController
         return $verify->entry('_api_'.$this->accessToken);
     }
 
+    public function quit(){
+        if($this->isLogin){
+            MemberTokenFacade::clearToken($this->token);
+        }
+        $this->success('退出成功');
+    }
+
     /**
      * todo
      */
