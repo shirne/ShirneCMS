@@ -4,6 +4,7 @@ namespace app\api\controller;
 
 use app\common\model\MemberModel;
 use app\common\validate\MemberValidate;
+use app\api\facade\MemberTokenFacade;
 use extcore\traits\Upload;
 use think\Db;
 use think\Loader;
@@ -96,7 +97,13 @@ class MemberController extends AuthedController
     
     }
     
-    
+    public function quit(){
+        if($this->isLogin){
+            MemberTokenFacade::clearToken($this->token);
+        }
+        $this->success('退出成功');
+    }
+
     public function addresses(){
         return action('member.address/index');
     }
