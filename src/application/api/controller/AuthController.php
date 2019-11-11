@@ -7,6 +7,7 @@ use app\common\model\MemberModel;
 use app\common\model\MemberOauthModel;
 use app\common\model\OauthAppModel;
 use app\common\model\WechatModel;
+use app\common\validate\MemberValidate;
 use EasyWeChat\Factory;
 use shirne\captcha\Captcha;
 use think\Db;
@@ -463,11 +464,25 @@ class AuthController extends BaseController
      * 注册会员
      */
     public function register($agent = ''){
-        $this->checkSubmitRate(2);
+        $this->check_submit_rate(2);
         $app=$this->getApp($this->accessSession['appid']);
         if(empty($app)){
             $this->error('未授权APP',ERROR_LOGIN_FAILED);
         }
+
+        // 未开启手机验证码的情况下验证图形码
+        if($this->config['sms_code'] != 1) {
+            $verifycode = $this->request->param('verify');
+            if(empty($verifycode)){
+                $this->error('请填写验证码',ERROR_NEED_VERIFY);
+            }
+            $verify = new Captcha(array('seKey'=>config('session.sec_key')), Cache::instance());
+            $checked = $verify->check($verifycode,'_api_'.$this->accessToken);
+            if(!$checked){
+                $this->error('验证码错误',ERROR_NEED_VERIFY);
+            }
+        }
+
         $data=$this->request->only('username,password,repassword,email,realname,mobile,mobilecheck','post');
 
         $validate=new MemberValidate();
@@ -547,7 +562,7 @@ class AuthController extends BaseController
         Db::commit();
         $token = MemberTokenFacade::createToken($model['id'], $app['platform'], $app['appid']);
 
-        $this->success("注册成功",'',$token);
+        $this->success("注册成功",1,$token);
     }
 
 }
