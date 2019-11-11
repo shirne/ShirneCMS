@@ -7,6 +7,7 @@ use app\common\facade\MemberFavouriteFacade;
 use app\common\model\ArticleCommentModel;
 use app\common\model\ArticleModel;
 use app\common\validate\ArticleCommentValidate;
+use shirne\third\Aliyun;
 use think\Db;
 
 /**
@@ -160,29 +161,57 @@ class ArticleController extends BaseController
         ]);
     }
 
-    public function do_comment(){
+    public function do_comment($id){
         $this->check_submit_rate();
+        $article = Db::name('article')->find($id);
+        if(empty($article)){
+            $this->error(lang('Arguments error!'));
+        }
         
-        $data=$this->request->only('article_id,email,is_anonymous,content,reply_id','put');
+        $data=$this->request->only('email,is_anonymous,content,reply_id','put');
+        if($this->config['anonymous_comment']==0 && !$this->isLogin){
+            $this->error('请登陆后评论');
+        }
+        $data['article_id']=$id;
         $validate=new ArticleCommentValidate();
         if(!$validate->check($data)){
             $this->error($validate->getError(),0);
         }else{
             $data['member_id']=$this->isLogin?$this->user['id']:0;
+            $data['member_id']=$this->userid;
             if(!empty($data['member_id'])){
                 $data['email']=$this->user['email'];
+                $data['nickname']=$this->user['nickname']?:$this->user['username'];
+
+                //检测会员评论频率
+                $check = ArticleCommentModel::checkSubmitByMember($id, $this->userid);
             }else{
                 if(empty($data['email'])){
-                    $this->error('请填写邮箱',0);
+                    $this->error('请填写邮箱');
                 }
+
+                $check = ArticleCommentModel::checkSubmitByIP($id);
+            }
+            if(!$check){
+                $this->error('系统繁忙,请稍后再提交评论');
             }
             if(!empty($data['reply_id'])){
                 $reply=Db::name('ArticleComment')->find($data['reply_id']);
                 if(empty($reply)){
-                    $this->error('回复的评论不存在',0);
+                    $this->error('回复的评论不存在');
                 }
                 $data['group_id']=empty($reply['group_id'])?$reply['id']:$reply['group_id'];
             }
+            $data['content']=preg_replace_callback('/\[([^\]]+)\]\([^\)]+\)/',function($matches){
+                return $matches[0];
+            },$data['content']);
+
+            $aliyun = new Aliyun($this->config);
+            $detected = $aliyun->greenScan($data['content']);
+            if($detected < 0){
+                $this->error('系统检测到您的评论含有非法或无意义内容,请重新组织内容');
+            }
+            $data['status']=$detected;
             $model=ArticleCommentModel::create($data);
             if($model['id']){
                 $this->success('评论成功');

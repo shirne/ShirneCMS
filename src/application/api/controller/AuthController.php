@@ -63,7 +63,12 @@ class AuthController extends BaseController
         }
     }
 
-    public function token($appid){
+    private function getIpKey(){
+        $ip = $this->request->ip();
+        return 'access_'.str_replace([':','.'],'_',$ip);
+    }
+
+    public function token($appid, $agent = ''){
         $app=$this->getApp($appid);
         if(empty($app)){
             $this->error('未授权APP',ERROR_LOGIN_FAILED);
@@ -75,10 +80,30 @@ class AuthController extends BaseController
             $this->accessSession=[];
         }
 
-        // TODO: 根据IP限制token获取频率
+        // 根据IP限制token获取频率
+        $ipkey = $this->getIpKey();
+        $ipcount = cache($ipkey);
+        if(!$ipcount){
+            cache($ipkey, 1, ['expire'=>60*60]);
+        }else{
+            if($ipcount >= 10){
+                $this->error('操作过于频繁');
+            }
+            cache($ipkey, $ipcount+1, ['expire'=>60*60]);
+        }
 
         $this->accessToken = $this->createToken();
         $this->accessSession['appid']=$appid;
+
+        if($agent){
+            $agentMember = Db('member')->where('agentcode',$agent)
+                ->where('status',1)
+                ->where('is_agent','gt',0)->find();
+            if(!empty($agentMember)){
+                $this->accessSession['agent'] = $agentMember['id'];
+            }
+        }
+
         return $this->response($this->accessToken);
     }
     private function createToken(){
@@ -111,36 +136,56 @@ class AuthController extends BaseController
         }
         
         if(!empty($this->accessSession['need_verify'])){
+            if(empty($data['verify'])){
+                $this->error('请填写验证码',ERROR_NEED_VERIFY);
+            }
             $verify = new Captcha(array('seKey'=>config('session.sec_key')), Cache::instance());
             $checked = $verify->check($data['verify'],'_api_'.$this->accessToken);
             if(!$checked){
-                $this->error('请填写验证码',ERROR_LOGIN_FAILED);
+                $this->error('验证码错误',ERROR_NEED_VERIFY);
             }
         }
         
         if(empty($username) || empty($password)){
             $this->error('请填写登录账号及密码',ERROR_LOGIN_FAILED);
         }
+        $errcount = $this->accessSession['error_count'];
+        if($errcount > 4){
+            $this->error('登录尝试次数过多',ERROR_LOGIN_FAILED);
+        }
         $member = Db::name('Member')->where('username',$username)->find();
+        $respdata=[];
         if(!empty($member) ){
+            $merrorcount = intval(cache('login_error_'.$member['id']));
+            if($merrorcount > 4){
+                $this->error('登录尝试次数过多',ERROR_LOGIN_FAILED);
+            }
             if($member['status']==1) {
                 if (compare_password($member, $password)) {
                     $token = MemberTokenFacade::createToken($member['id'], $app['platform'], $app['appid']);
                     if (!empty($token)) {
+                        cache($this->getIpKey(),NULL);
                         user_log($member['id'], 'login', 1, '登录成功');
                         $this->accessSession['need_verify'] = 0;
+                        $this->accessSession['error_count'] = 0;
+                        cache('login_error_'.$member['id'], NULL);
+
                         return $this->response($token);
                     }
                 } else {
                     user_log($member['id'], 'login', 0, '登录失败');
                     $this->accessSession['need_verify'] = 1;
+                    $this->accessSession['error_count'] = $errcount + 1;
+                    $respdata['need_verify']=1;
+                    $merrorcount += 1;
+                    cache('login_error_'.$member['id'],$merrorcount,['expire'=>60*60]);
                 }
             }else{
                 $this->error('账户已被禁用',ERROR_MEMBER_DISABLED);
             }
         }
 
-        $this->error('登录失败',ERROR_LOGIN_FAILED);
+        $this->error('登录失败',ERROR_LOGIN_FAILED,$respdata);
     }
 
     /**
@@ -321,7 +366,7 @@ class AuthController extends BaseController
 
         $verify = new Captcha(array('seKey'=>config('session.sec_key')), Cache::instance());
 
-        $verify->fontSize = 13;
+        $verify->fontSize = 16;
         $verify->length = 4;
         return $verify->entry('_api_'.$this->accessToken);
     }
@@ -334,24 +379,175 @@ class AuthController extends BaseController
     }
 
     /**
-     * todo
+     * todo 验证码
      */
     public function verify(){
 
     }
 
     /**
-     * todo
+     * todo 忘记密码
      */
-    public function forget(){
+    public function forget($step = 0){
+        $app=$this->getApp($this->accessSession['appid']);
+        if(empty($app)){
+            $this->error('未授权APP',ERROR_LOGIN_FAILED);
+        }
 
+        //第一步:确认账号
+        if($step == 0){
+            $account = $this->request->param('account');
+            $account_type = $this->request->param('type');
+            $model = Db::name('member')->where('status',1);
+            if($account_type == 'mobile'){
+                $model->where('mobile',$account)->where('mobile_bind',1);
+            }elseif($account_type=='email'){
+                $model->where('email',$account)->where('email_bind',1);
+            }else{
+                $this->error('账号类型错误');
+            }
+            $member = $model->find();
+            if(empty($member)){
+                $this->error('账号错误');
+            }
+            if($account_type == 'mobile'){
+                //发送验证码
+                $verify = '';
+            }elseif($account_type=='email'){
+                //发送验证码
+                $verify = '';
+            }
+            $this->accessSession['forget_account']=$member['id'];
+            $this->accessSession['forget_verify']=$verify;
+            $this->success('验证码已发送');
+
+        //第二步:验证验证码
+        }elseif($step == 1){
+            if(empty($this->accessSession['forget_account'])){
+                $this->success('验证失效,请重新填写账号');
+            }
+            $verifycode = $this->request->param('verify');
+            if(empty($this->accessSession['forget_verify'])){
+                $this->error('验证码已失效');
+            }
+            if($verifycode != $this->accessSession['forget_verify']){
+                $this->error('验证码错误');
+            }
+
+            $this->accessSession['forget_pass']=1;
+            $this->success('验证通过');
+
+        //第三步:重置密码
+        }elseif($step == 2){
+            if(empty($this->accessSession['forget_account'])){
+                $this->success('验证失效,请重新填写账号');
+            }
+            if(empty($this->accessSession['forget_pass'])){
+                $this->success('验证失效,请重新发送验证码');
+            }
+            $password = $this->request->param('password');
+            $repassword = $this->request->param('repassword');
+
+            if($password != $repassword){
+                $this->success('两次密码输入不一致，请确认输入');
+            }
+
+            $data['salt']=random_str(8);
+            $data['password']=encode_password($password,$data['salt']);
+            Db::name('member')->where('id',$this->accessSession['forget_account'])->update($data);
+            $this->success('密码重置成功!');
+        }
     }
 
     /**
-     * 注册会员 todo
+     * 注册会员
      */
-    public function register(){
+    public function register($agent = ''){
+        $this->checkSubmitRate(2);
+        $app=$this->getApp($this->accessSession['appid']);
+        if(empty($app)){
+            $this->error('未授权APP',ERROR_LOGIN_FAILED);
+        }
+        $data=$this->request->only('username,password,repassword,email,realname,mobile,mobilecheck','post');
 
+        $validate=new MemberValidate();
+        $validate->setId();
+        if(!$validate->scene('register')->check($data)){
+            $this->error($validate->getError());
+        }
+
+        $invite_code=$this->request->post('invite_code');
+        if(($this->config['m_invite']==1 && !empty($invite_code)) || $this->config['m_invite']==2) {
+            if (empty($invite_code)) $this->error("请填写激活码");
+            $invite = Db::name('invite_code')->where(array('code' => $invite_code, 'is_lock' => 0, 'member_use' => 0))->find();
+            if (empty($invite) || ($invite['invalid_at'] > 0 && $invite['invalid_at'] < time())) {
+                $this->error("激活码不正确");
+            }
+        }
+
+        if($this->config['sms_code'] == 1) {
+            if (empty($data['mobilecheck'])) {
+                $this->error(' 请填写手机验证码');
+            }
+            $service=new CheckcodeService();
+            $verifyed=$service->verifyCode($data['mobile'],$data['mobilecheck']);
+            if(!$verifyed){
+                $this->error(' 手机验证码填写错误');
+            }
+            $data['mobile_bind']=1;
+            unset($data['mobilecheck']);
+        }
+
+        Db::startTrans();
+        if(!empty($invite)) {
+            $invite = Db::name('invite_code')->lock(true)->find($invite['id']);
+            if (!empty($invite['member_use'])) {
+                Db::rollback();
+                $this->error("激活码已被使用");
+            }
+            $data['referer']=$invite['member_id'];
+            if($invite['level_id']){
+                $data['level_id']=$invite['level_id'];
+            }else{
+                $data['level_id']=getDefaultLevel();
+            }
+        }else{
+            $agentid = isset($this->accessSession['agent'])?intval($this->accessSession['agent']):0;
+            if($agent){
+                $agentMember = Db('member')->where('agentcode',$agent)
+                    ->where('status',1)
+                    ->where('is_agent','gt',0)->find();
+                if(!empty($agentMember)){
+                    $agentid = $agentMember['id'];
+                }
+            }
+            $data['referer']=$agentid;
+            $data['level_id']=getDefaultLevel();
+        }
+        $data['salt']=random_str(8);
+        $data['password']=encode_password($data['password'],$data['salt']);
+        $data['login_ip']=$this->request->ip();
+
+        unset($data['repassword']);
+        $model=MemberModel::create($data);
+
+        if(empty($model['id'])){
+            Db::rollback();
+            $this->error("注册失败");
+        }
+        if(!empty($invite)) {
+            $invite['member_use'] = $model['id'];
+            $invite['use_at'] = time();
+            Db::name('invite_code')->update($invite);
+        }
+        if(!empty($this->accessSession['openid'])){
+            Db::name('memberOauth')->where('openid',$this->accessSession['openid'])
+                ->update(['member_id'=>$model['id']]);
+        }
+        Db::commit();
+        $token = MemberTokenFacade::createToken($model['id'], $app['platform'], $app['appid']);
+
+        $this->success("注册成功",'',$token);
     }
 
 }
