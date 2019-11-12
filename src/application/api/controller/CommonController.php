@@ -28,7 +28,7 @@ class CommonController extends BaseController
      * @return \think\response\Json
      */
     public function batch(){
-        $methods=$this->get_param('methods');
+        $methods=$this->request->param('methods');
         $data=[];
         if(!empty($methods)) {
             $methods = explode(',', $methods);

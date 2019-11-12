@@ -16,7 +16,7 @@ use think\Db;
 class CreditOrderController extends AuthedController
 {
     public function prepare(){
-        $order_skus=$this->input['goods'];
+        $order_skus=$this->request->param('goods');
         $skuids=array_column($order_skus,'sku_id');
         $goods=Db::view('GoodsSku','*')
             ->view('Goods',['title'=>'product_title','image'=>'product_image','levels','is_discount'],'GoodsSku.product_id=Goods.id','LEFT')
@@ -34,7 +34,7 @@ class CreditOrderController extends AuthedController
 
     }
     public function confirm(){
-        $input_goods=$this->input['goods'];
+        $input_goods=$this->request->param('goods');
         if(empty($input_goods))$this->error('未选择下单商品');
         $goods_ids = array_column($input_goods,'id');
         $goods=Db::view('Goods','*')
@@ -64,7 +64,7 @@ class CreditOrderController extends AuthedController
         }
         //todo 邮费模板
 
-        if($total_price != $this->input['total_price']){
+        if($total_price != $this->request->param('total_price')){
             $this->error('下单商品价格已变动');
         }
 

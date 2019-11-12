@@ -195,7 +195,7 @@ class AuthController extends BaseController
      */
     public function wxLogin($wxid, $code){
         
-        $agent=isset($this->input['agent'])?$this->input['agent']:'';
+        $agent=$this->request->param('agent');
         $wechat=Db::name('wechat')->where('type','wechat')
             ->where('id|hash',$wxid)->find();
         if(empty($wechat)){
@@ -218,7 +218,7 @@ class AuthController extends BaseController
         }
         //调试模式允许mock登录
         if($wechat['is_debug'] && $code=='the code is a mock one'){
-            $rowData = $this->input['rawData'];
+            $rowData = $this->request->param('rawData');
             $userinfo = json_decode($rowData, TRUE);
             $session=['openid'=>md5($userinfo['nickName'])];
         }else {
@@ -227,9 +227,9 @@ class AuthController extends BaseController
                 $this->error('登录失败', ERROR_LOGIN_FAILED);
             }
 
-            $rowData = $this->input['rawData'];
+            $rowData = $this->request->param('rawData');
             if (!empty($rowData)) {
-                $signature = $this->input['signature'];
+                $signature = $this->request->param('signature');
                 if (sha1($rowData . $session['session_key']) == $signature) {
                     $userinfo = json_decode($rowData, TRUE);
                 }

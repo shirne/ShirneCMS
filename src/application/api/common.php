@@ -2,7 +2,7 @@
 
 define('ERROR_NEED_LOGIN',99);//需要登录
 define('ERROR_LOGIN_FAILED',101);//登录失败
-define('ERROR_NEED_VERIFY',104);//需要登录
+define('ERROR_NEED_VERIFY',104);//需要验证码
 define('ERROR_NEED_REGISTER',109);//登录失败,需要绑定
 define('ERROR_REGISTER_FAILED',111);//注册失败
 define('ERROR_TOKEN_INVAILD',102);//token无效

@@ -31,6 +31,9 @@ class BaseController extends Controller
         parent::initialize();
         $this->config=getSettings();
 
+        /**
+         * @deprecated DO NOT use this property
+         */
         $this->input=$this->request->put();
 
         $this->checkLogin();
@@ -95,19 +98,6 @@ class BaseController extends Controller
             exit(file_get_contents($static_file));
         }
         $this->error('接口不存在');
-    }
-
-    protected function get_param($key){
-        if(isset($this->input[$key])){
-            return $this->input[$key];
-        }
-        return $this->request->param($key);
-    }
-    protected function has_param($key){
-        if(!isset($this->input[$key])){
-            return $this->request->has($key);
-        }
-        return true;
     }
 
     protected function error($msg = '', $code = 0, $data = '', $wait = 3, array $header = [])

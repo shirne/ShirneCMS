@@ -25,8 +25,8 @@ use function GuzzleHttp\json_encode;
 class OrderController extends AuthedController
 {
     public function prepare(){
-        $order_skus=$this->input['products'];
-        $address=$this->input['address'];
+        $order_skus=$this->request->param('products');
+        $address=$this->request->param('address');
         $skuids=array_column($order_skus,'sku_id');
         $products=Db::view('ProductSku','*')
             ->view('Product',['title'=>'product_title','image'=>'product_image','levels','is_discount','postage_id'],'ProductSku.product_id=Product.id','LEFT')
@@ -45,7 +45,7 @@ class OrderController extends AuthedController
     public function confirm($from='quick'){
         $this->check_submit_rate();
         
-        $order_skus=$this->input['products'];
+        $order_skus=$this->request->param('products');
         if(empty($order_skus))$this->error('未选择下单商品');
         $sku_ids=array_column($order_skus,'sku_id');
         if($from=='cart'){
