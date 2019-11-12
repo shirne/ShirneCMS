@@ -7,8 +7,11 @@ ShirneCMS
 > PHP扩展：mbstring,gd,mysql,pdo,cURL,OpenSSL,SimpleXML,fileinfo,cli。
 
 ## 相关项目
-[小程序企业官网](https://gitee.com/shirnecn/website_mapp)
-[小程序商城](https://gitee.com/shirnecn/shop_mapp)
+
+[小程序企业官网](https://gitee.com/shirnecn/website_mapp)<br />
+[小程序商城](https://gitee.com/shirnecn/shop_mapp)<br />
+[FlutterAPP](https://gitee.com/shirnecn/ShirneApp) -- 开发中<br />
+[VueShop](https://gitee.com/shirnecn/ShirneVueShop) -- 开发中<br />
 
 ## 功能特点
 
