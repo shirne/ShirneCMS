@@ -110,6 +110,7 @@ ShirneCMS
 
 [CMS安装说明](doc/INSTALL.md)
 
+[API接口说明](doc/api/index.md)
 
 ## 演示
 #### 后台默认登录账号 [演示网站](http://cms.qisoweb.com/admin)
