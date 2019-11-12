@@ -234,7 +234,7 @@ class MemberModel extends BaseModel
     public static function createFromOauth($data,$referer=0)
     {
         $data=[
-            'username' => $data['openid'],
+            'username' => '#'.$data['openid'],
             'nickname' => $data['nickname'],
             'password' => '',
             'salt'=>'',

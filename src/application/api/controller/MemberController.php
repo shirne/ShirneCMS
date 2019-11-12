@@ -34,11 +34,26 @@ class MemberController extends AuthedController
     }
 
     public function update_profile(){
-        $data=$this->request->only(['realname','email','mobile','gender','birth','qq','wechat','alipay'],'put');
-        if(!empty($data['birth']) && $data['birth']!='') {
+        $data=$this->request->only(['username','nickname','realname','email','mobile','gender','birth','qq','wechat','alipay','province','city','county','address'],'put');
+        if(isset($data['username'])){
+            if(strpos($this->user['username'],'#')===false){
+                $this->error('登录名不可修改');
+            }
+            if(empty($data['username'])){
+                $this->error('要修改的用户名不能为空');
+            }
+            if(!preg_match('/^[a-zA-Z][A-Za-z0-9\-\_]{5,19}$/',$data['username'])){
+                $this->error('用户名格式不正确');
+            }
+            $exists= Db::name('member')->where('username',$data['username'])->find();
+            if(!empty($exists)){
+                $this->error('用户名已存在');
+            }
+        }
+        if(!empty($data['birth'])) {
             $data['birth'] = strtotime($data['birth']);
         }else{
-            unset($data['birth']);
+            if(isset($data['birth'])) unset($data['birth']);
         }
         $validate=new MemberValidate();
         $validate->setId($this->user['id']);
@@ -47,7 +62,7 @@ class MemberController extends AuthedController
         }else{
             $data['id']=$this->user['id'];
             Db::name('Member')->update($data);
-            user_log($this->user['id'],'addressadd',1,'修改个人资料');
+            user_log($this->user['id'],'update_profile',1,'修改个人资料');
             $this->success('保存成功');
         }
     }
