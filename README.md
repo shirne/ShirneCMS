@@ -79,7 +79,8 @@ ShirneCMS
 - [x] 订单及支付接口
 - [x] 会员相关功能接口
 
-## 前端库引用
+## 感谢
+### 前端库
 
 [twbs/bootstrap 4.x](https://v4.bootcss.com/docs/4.0/getting-started/introduction/)<br />
 [components/jquery 3.3.1](http://api.jquery.com/)<br />
@@ -88,47 +89,14 @@ ShirneCMS
 [chartjs/Chart.js 2.7.2](https://chartjs.bootcss.com/docs/)<br />
 [swiper](http://www.swiper.com.cn/)
 
-## 后端库引用
+### 后端库
+[ThinkPHP](http://www.thinkphp.cn/)<br />
 [EasyWechat](https://www.easywechat.com/docs/3.x/zh-CN/index)<br />
 [phpoffice/phpspreadsheet](https://phpspreadsheet.readthedocs.io/en/develop/)<br />
 [phpmailer](https://github.com/PHPMailer/PHPMailer)<br />
 [endroid/qr-code](https://github.com/endroid/qr-code)
 
-## 开发说明
-
-PHP库引用[Composer](https://getcomposer.org/download/)
-
->cd src<br />
->composer install
-
-打包下载(zip包解压后放入src目录,即application同级目录)
->[packages](https://pan.baidu.com/s/1i5l0qblUhhendpIhOqu4Iw) 含thinkphp5.1.38 及vendor目录的其它包<br />
->提取码：7cwl
-
-Javascript/CSS构建[Gulp](https://www.gulpjs.com.cn/)
-
->cd src/resource<br />
-cnpm install<br />
-构建并监视文件：gulp4<br />
-清理dest目录: gulp4 clean<br />
-只构建文件: gulp4 build<br />
-只监视文件: gulp4 watch
-
-数据库
-
->scripts/struct.sql 数据表结构<br />
-scripts/init.sql 初始数据<br />
-scripts/update_shop.sql 商城模块<br />
-scripts/update_credit.sql 积分商城<br />
-scripts/update_wechat.sql 微信模块<br />
-scripts/update_sign.sql 会员签到
-
-项目目录
-
->src 项目根目录<br />
-src/public 网站根目录
-
-## 安装说明
+## 安装 及 开发说明
 
 #### 服务器环境
 
@@ -136,12 +104,14 @@ src/public 网站根目录
 >Apache2.2以上 + mod_rewrite <br />
 >Nginx
 
+[Windows配置说明](doc/WINDOWS.md)
 
-> 修改数据库配置文件 config/database.php<br />
-> 手动安装数据库脚本
-> 通过命令行安装(php think install)
-> 网页安装( 域名/task/install ) 服务器配置不高的情况下,安装全部功能, 有可能出现超时错误
+[CentOS配置说明](doc/CENTOS.md)
 
+[CMS安装说明](doc/INSTALL.md)
+
+
+## 演示
 #### 后台默认登录账号 [演示网站](http://cms.qisoweb.com/admin)
 >test<br />
 密码：123456
@@ -152,33 +122,8 @@ src/public 网站根目录
 
 ## 常见问题
 
-#### SSL证书错误
-接入微信公众号后，进入公众号管理页面出现 curl: (60) SSL certificate problem: unable to get local issuer certificate 错误，需要在php.ini中配置
-```$ini
-curl.cainfo = /path/to/downloaded/cacert.pem
-```
-并重启相关服务器 （cacert.pem在htdocs/cert目录下，该文件为从微信平台下载）
+常见问题 [Dialog](doc/QA.md)
 
-#### 虚拟主机不支持在web根目录之外布署系统
-
-步骤较多，移步另一个说明[虚拟主机不支持web目录之外上传文件的解决办法](VIRTUAL.md)
-
-#### 小程序本地测试 xxx.test.com无法访问
-
-xxx.test.com 为本地测试目录，配置方法：
-1. 在hosts 中增加 指定域名，指向到 127.0.0.1
-2. 在本地服务器环境(IIS, Apache)中绑定该域名
-3. 浏览器中打开该域名，即可访问到本地测试站点
-
-## 模板说明
-
-分离模板目录配置 template.independence
-
-标签库 [product](TAGLIB.md#product),[article](TAGLIB.md#article) 和 [extendtag](TAGLIB.md#extendtag)
-
-弹出框组件说明 [Dialog](DIALOG.md)
-
-导航配置 navigator.php
 
 ## 后台功能截图
 |登录|主面板|

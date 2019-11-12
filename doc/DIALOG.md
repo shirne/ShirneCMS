@@ -11,9 +11,9 @@
 
 | | | |
 |:---:|:---:|:---:|
-|![提示信息](screenshot/dialog/message-success.png)|![提示信息](screenshot/dialog/message-error.png)|![提示信息](screenshot/dialog/message-loading.png)|
-|![提示信息](screenshot/dialog/alert.png)|![提示信息](screenshot/dialog/confirm.png)|![提示信息](screenshot/dialog/action.png)|
-|![提示信息](screenshot/dialog/pickArticle.png)|![提示信息](screenshot/dialog/pickProduct.png)|![提示信息](screenshot/dialog/pickLocate.png)|
+|![提示信息](../screenshot/dialog/message-success.png)|![提示信息](../screenshot/dialog/message-error.png)|![提示信息](../screenshot/dialog/message-loading.png)|
+|![提示信息](../screenshot/dialog/alert.png)|![提示信息](../screenshot/dialog/confirm.png)|![提示信息](../screenshot/dialog/action.png)|
+|![提示信息](../screenshot/dialog/pickArticle.png)|![提示信息](../screenshot/dialog/pickProduct.png)|![提示信息](../screenshot/dialog/pickLocate.png)|
 
 ### 参数表
 
