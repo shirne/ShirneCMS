@@ -160,6 +160,7 @@ class AccountController extends AuthedController
     
     public function cash_config(){
         $wechats=WechatModel::where('account_type','service')->select();
+        $user = $this->user;
         return $this->response([
             'types'=>$this->config['cash_types'],
             'limit'=>$this->config['cash_limit'],
@@ -168,7 +169,8 @@ class AccountController extends AuthedController
             'fee'=>$this->config['cash_fee'],
             'fee_min'=>$this->config['cash_fee_min'],
             'fee_max'=>$this->config['cash_fee_max'],
-            'wechats'=>array_map(function($item){
+            'wechats'=>array_map(function($item)use($user){
+                $followed = DB::name('member_oauth')->where('member_id',$user['id'])->where('type_id',$item['id'])->find();
                 return [
                     'id'=>$item['id'],
                     'type'=>$item['type'],
@@ -177,6 +179,7 @@ class AccountController extends AuthedController
                     'title'=>$item['title'],
                     'qrcode'=>$item['qrcode'],
                     'logo'=>$item['logo'],
+                    'is_follow'=>empty($followed) || empty($followed['is_follow'])?0:1
                 ];
             },$wechats->toArray())
         ]);
