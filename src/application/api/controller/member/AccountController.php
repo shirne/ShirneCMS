@@ -8,6 +8,7 @@ use app\api\controller\AuthedController;
 use app\common\model\MemberCashinModel;
 use app\common\model\MemberOauthModel;
 use app\common\validate\MemberCardValidate;
+use app\common\model\WechatModel;
 use extcore\traits\Upload;
 use think\Db;
 
@@ -158,6 +159,7 @@ class AccountController extends AuthedController
     }
     
     public function cash_config(){
+        $wechats=WechatModel::where('account_type','service')->select();
         return $this->response([
             'types'=>$this->config['cash_types'],
             'limit'=>$this->config['cash_limit'],
@@ -166,6 +168,17 @@ class AccountController extends AuthedController
             'fee'=>$this->config['cash_fee'],
             'fee_min'=>$this->config['cash_fee_min'],
             'fee_max'=>$this->config['cash_fee_max'],
+            'wechats'=>array_map(function($item){
+                return [
+                    'id'=>$item['id'],
+                    'type'=>$item['type'],
+                    'account_type'=>$item['account_type'],
+                    'hash'=>$item['hash'],
+                    'title'=>$item['title'],
+                    'qrcode'=>$item['qrcode'],
+                    'logo'=>$item['logo'],
+                ];
+            },$wechats->toArray())
         ]);
     }
     
