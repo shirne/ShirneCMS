@@ -121,7 +121,7 @@ function cleanTask(done) {
 function copyDest(done) {
     console.log('Copy dest to public...');
     copy(['dest/**/*.css','dest/**/*.css.map','dest/**/*.min.js','dest/**/*.min.js.map'],'../public/static/',function () {
-        done()
+        if(done)done()
     });
 }
 function watchAll() {
