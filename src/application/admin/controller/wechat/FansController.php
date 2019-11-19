@@ -122,7 +122,8 @@ class FansController extends WechatBaseController
         $userauths=array_index($userauths,'openid');
         foreach ($userinfos as $user){
             $userData=MemberOauthModel::mapUserInfo($user);
-            
+            $userData['type']=$this->currentWechat['account_type'];
+            $userData['type_id']=$wid;
             if(isset($userauths[$user['openid']])) {
                 if(!empty($user['unionid'])){
                     if(!$userauths[$user['openid']]['member_id']){
@@ -138,6 +139,7 @@ class FansController extends WechatBaseController
                         ->update($userData);
                 }
             }else{
+                $userData['member_id']=0;
                 if(!empty($user['unionid'])){
                     $hasMember = Db::name('MemberOauth')->where('unionid',$userData['unionid'])->where('member_id','>',0)->find();
                     if(!empty($hasMember['member_id'])){
@@ -149,9 +151,6 @@ class FansController extends WechatBaseController
                 
                 $userData['email']='';
                 $userData['is_follow']=1;
-                $userData['member_id']=0;
-                $userData['type']='wechat';
-                $userData['type_id']=$wid;
                 Db::name('MemberOauth')->insert($userData);
                 
             }
