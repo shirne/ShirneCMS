@@ -77,17 +77,13 @@ class CreditPromotionController extends BaseController
         return $this->fetch();
     }
     /**
-     * 删除会员组
+     * 删除策略
      */
     public function delete($id)
     {
         $id = intval($id);
-        $count=Db::name('Product')->where('promotion_id',$id)->count();
-        if($count>0){
-            $this->error("该分组尚有会员,不能删除");
-        }
-        $model = Db::name('creditPromotion');
-        $result = $model->delete($id);
+        
+        $result = Db::name('creditPromotion')->delete($id);
         if($result){
             CreditPromotionModel::clearCache();
             $this->success("删除成功", url('creditPromotion/index'));
