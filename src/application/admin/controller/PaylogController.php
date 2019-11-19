@@ -263,12 +263,12 @@ class PaylogController extends BaseController
             
             foreach($wechats as $wechat){
                 if(empty($wechat['cert_path']) || empty($wechat['key_path']))continue;
-                $payment=Factory::payment(WechatModel::to_pay_config($wechat));
+                $payment=Factory::payment(WechatModel::to_pay_config($wechat,'',true));
                 $paydata=[
                     'partner_trade_no' => 'CASH'.$cash['id'], // 商户订单号，需保持唯一性(只能是字母或者数字，不能包含有符号)
                     'openid' =>  $wechat['openid'],
                     'check_name' => 'NO_CHECK', // NO_CHECK：不校验真实姓名, FORCE_CHECK：强校验真实姓名
-                    're_user_name' => $cash['card_name'], // 如果 check_name 设置为FORCE_CHECK，则必填用户真实姓名
+                    //'re_user_name' => $cash['card_name'], // 如果 check_name 设置为FORCE_CHECK，则必填用户真实姓名
                     'amount' => $cash['real_amount'], // 企业付款金额，单位为分
                     'desc' => '提现', // 企业付款操作说明信息。必填
                 ];
@@ -290,7 +290,7 @@ class PaylogController extends BaseController
             $wechats=MemberOauthModel::getAccountsByMemberAndType($cash['member_id']);
             foreach($wechats as $wechat){
                 if(empty($wechat['cert_path']) || empty(empty($wechat['key_path'])))continue;
-                $payment=Factory::payment(WechatModel::to_pay_config($wechat));
+                $payment=Factory::payment(WechatModel::to_pay_config($wechat,'',true));
                 $redpackData = [
                     'mch_billno'   => 'CASH'.$cash['id'],
                     'send_name'    => getSetting('site-name'),

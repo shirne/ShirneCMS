@@ -81,7 +81,7 @@
                 <td>{$v.cashtype|showcashtype}</td>
                 <td>
                     <if condition="$v.cashtype EQ 'wechat'">
-
+                        {$v.card_name}
                         <elseif condition="$v.cashtype EQ 'alipay'"/>
                         {$v.card_name}
                         <else/>

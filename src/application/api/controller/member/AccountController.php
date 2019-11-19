@@ -261,8 +261,8 @@ class AccountController extends AuthedController
             if(empty($openid) || empty($appid)){
                 $this->error('提现微信账户错误');
             }
-            $data['card_name']=$openid;
-            $data['cardno']=$this->request->param('realname');
+            $data['cardno']=$openid;
+            $data['card_name']=$this->request->param('realname');
             $data['bank_name']=$appid;
         }elseif($rdata['cashtype']=='alipay'){
             $data['card_name']=$this->request->param('alipay');
