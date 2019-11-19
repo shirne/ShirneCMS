@@ -364,6 +364,7 @@ function feedback_status($status,$wrap=true)
 function audit_status($status,$wrap=true)
 {
     $statusText = array(lang('Unaudited'), lang('Confirmed'), lang('Invalid'));
+    $statusText[-1]=lang('Invalid');
     return $wrap?wrap_label($statusText[$status],status_type($status)):$statusText[$status];
 }
 
@@ -376,10 +377,11 @@ function audit_status($status,$wrap=true)
 function show_status($status,$wrap=true)
 {
     $statusText = array(lang('Hidden'), lang('Shown'));
+    $statusText[-1]=lang('Invalid');
     return $wrap?wrap_label($statusText[$status],status_type($status)):$statusText[$status];
 }
 function status_type($status){
-    return ['warning','success','default'][$status];
+    return $status>=0?['warning','success','secondary'][$status]:'secondary';
 }
 
 /**

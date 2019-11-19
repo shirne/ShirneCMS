@@ -11,6 +11,7 @@ use EasyWeChat\Factory;
 use shirne\excel\Excel;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use think\Db;
+use think\facade\Log;
 
 /**
  * 充值提现管理
@@ -259,8 +260,9 @@ class PaylogController extends BaseController
             }else{
                 $wechats=WechatModel::where('account_type','service')->select();
             }
+            
             foreach($wechats as $wechat){
-                if(empty($wechat['cert_path']) || empty(empty($wechat['key_path'])))continue;
+                if(empty($wechat['cert_path']) || empty($wechat['key_path']))continue;
                 $payment=Factory::payment(WechatModel::to_pay_config($wechat));
                 $paydata=[
                     'partner_trade_no' => 'CASH'.$cash['id'], // 商户订单号，需保持唯一性(只能是字母或者数字，不能包含有符号)
@@ -322,6 +324,7 @@ class PaylogController extends BaseController
         }else{
             $paytype='handle';
         }
+        Log::record('提现:'.var_export($result,true));
         if(!empty($result)){
             if($result['return_code']!='SUCCESS'){
                 $this->error($result['return_msg']);
