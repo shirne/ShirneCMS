@@ -281,6 +281,7 @@ class PaylogController extends BaseController
                 }
 
                 $result = $payment->transfer->toBalance($paydata);
+                break;
             }
         }elseif($paytype=='wechatpack'){
             $successed=false;
@@ -301,6 +302,7 @@ class PaylogController extends BaseController
                     // ...
                 ];
                 $result = $payment->redpack->sendNormal($redpackData);
+                break;
             }
         }elseif($paytype=='wechatminipack'){
             $successed=false;
@@ -314,6 +316,7 @@ class PaylogController extends BaseController
                     //$payment=Factory::payment(WechatModel::to_pay_config($wechat));
 
                     $this->error('暂不支持小程序红包');
+                    break;
                 }
             }
         }else{
