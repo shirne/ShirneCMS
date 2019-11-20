@@ -252,7 +252,7 @@
         
         $('.install-form').submit(function(e){
             e.preventDefault();
-            $('.btn-submit').prop('disabled',true);
+            $('.btn-submit,.btn-prev').prop('disabled',true);
             $('.msgbox').html('<div class="alert alert-secondary" role="alert"><div class="spinner-border  spinner-border-sm text-secondary" role="status">  <span class="sr-only">Loading...</span></div> 正在执行安装...</div>').show();
             $.ajax({
                 url:"{:url('task/install/index')}",
@@ -260,7 +260,7 @@
                 type:'POST',
                 data:$(this).serialize(),
                 success:function(json){
-                    $('.btn-submit').prop('disabled',false);
+                    $('.btn-submit,.btn-prev').prop('disabled',false);
                     if(json.code==1){
                         $('.btn-submit,.btn-prev').hide();
                         $('.step').hide();
@@ -272,7 +272,7 @@
                     }
                 },
                 error:function(){
-                    $('.btn-submit').prop('disabled',false);
+                    $('.btn-submit,.btn-prev').prop('disabled',false);
                     $('.msgbox').html('<div class="alert alert-danger" role="alert">安装失败,请检查安装日志</div>').show();
                 }
             })
