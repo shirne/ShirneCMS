@@ -107,7 +107,7 @@
 			w.actionPublish=function(ids){
 				dialog.confirm('确定将选中文章发布到前台？',function() {
 				    $.ajax({
-						url:'{:url('goods/push',['id'=>'__id__','type'=>1])}'.replace('__id__',ids.join(',')),
+						url:"{:url('goods/push',['id'=>'__id__','type'=>1])}".replace('__id__',ids.join(',')),
 						type:'GET',
 						dataType:'JSON',
 						success:function(json){
@@ -125,7 +125,7 @@
             w.actionCancel=function(ids){
                 dialog.confirm('确定取消选中文章的发布状态？',function() {
                     $.ajax({
-                        url:'{:url('goods/push',['id'=>'__id__','type'=>0])}'.replace('__id__',ids.join(',')),
+                        url:"{:url('goods/push',['id'=>'__id__','type'=>0])}".replace('__id__',ids.join(',')),
                         type:'GET',
                         dataType:'JSON',
                         success:function(json){
@@ -143,7 +143,7 @@
             w.actionDelete=function(ids){
                 dialog.confirm('确定删除选中的文章？',function() {
                     $.ajax({
-                        url:'{:url('goods/delete',['id'=>'__id__'])}'.replace('__id__',ids.join(',')),
+                        url:"{:url('goods/delete',['id'=>'__id__'])}".replace('__id__',ids.join(',')),
                         type:'GET',
                         dataType:'JSON',
                         success:function(json){

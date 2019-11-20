@@ -5,7 +5,7 @@ namespace app\common\model;
 use app\common\core\ContentModel;
 
 /**
- * Class ProductModel
+ * Class GoodsModel
  * @package app\common\model
  */
 class GoodsModel extends ContentModel
