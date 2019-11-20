@@ -279,7 +279,9 @@ class AuthController extends BaseController
             
         }else{
             //更新资料
-            MemberOauthModel::update($data,$condition);
+            //MemberOauthModel::update($data,$condition);
+            $data['member_id']=$member['id'];
+            
             $updata=array();
             $updata['gender']=$data['gender'];
             $updata['city']=$data['city'];
@@ -297,6 +299,7 @@ class AuthController extends BaseController
             }
         }
         if(empty($oauth)){
+            $data['openid']=$session['openid'];
             MemberOauthModel::create($data);
         }else{
             MemberOauthModel::update($data,['id'=>$oauth['id']]);

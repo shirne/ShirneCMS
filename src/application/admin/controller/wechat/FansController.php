@@ -132,12 +132,10 @@ class FansController extends WechatBaseController
                             $userData['member_id']=$hasMember['member_id'];
                         }
                     }
-                    Db::name('MemberOauth')->where('unionid', $user['unionid'])
-                        ->update($userData);
-                }else {
-                    Db::name('MemberOauth')->where('openid', $user['openid'])
-                        ->update($userData);
                 }
+                Db::name('MemberOauth')->where('openid', $user['openid'])
+                        ->update($userData);
+                
             }else{
                 $userData['member_id']=0;
                 if(!empty($user['unionid'])){
@@ -145,8 +143,6 @@ class FansController extends WechatBaseController
                     if(!empty($hasMember['member_id'])){
                         $userData['member_id']=$hasMember['member_id'];
                     }
-                    Db::name('MemberOauth')->where('unionid', $user['unionid'])
-                        ->update($userData);
                 }
                 
                 $userData['email']='';
