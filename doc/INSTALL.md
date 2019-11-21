@@ -41,6 +41,8 @@ php think install
 
 > 网页安装( 域名/task/install ) 服务器配置不高的情况下,安装全部功能, 有可能出现超时错误
 
+**注意** 网页安装时把 dbscript 目录上传到 src目录下(application同级目录)
+
 安装完成后就可以访问了
 > 后台地址: 域名/admin<br />
 > 默认账号: admin/123456

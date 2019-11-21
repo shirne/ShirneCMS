@@ -80,6 +80,10 @@ class Install extends Command
             if(!is_dir($sqlpath)){
                 $sqlpath=$path.'../../dbscript';
             }
+            if(!is_readable($sqlpath)){
+                $output->error('Please ensure the dbscript folder exists and accessable.');
+                return;
+            }
             if(!is_dir($sqlpath)){
                 $output->error('Please upload the dbscript folder or specify sql option.');
                 return;

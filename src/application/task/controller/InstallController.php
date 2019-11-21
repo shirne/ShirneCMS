@@ -14,6 +14,8 @@ use think\facade\Env;
 use think\Db;
 use think\facade\Log;
 
+define('MYSQL_MIN_VERSION','5.5.3');
+
 class InstallController extends Controller
 {
     /**
@@ -89,7 +91,7 @@ class InstallController extends Controller
         }
         
         $envs=[];
-        $mysqlenv=['title'=>'Mysql','require'=>'5.6','current'=>'','pass'=>null];
+        $mysqlenv=['title'=>'Mysql','require'=>MYSQL_MIN_VERSION,'current'=>'','pass'=>null];
         $dbcfg=config('database.');
         try{
             if(!empty($dbcfg['hostname'])){
@@ -184,9 +186,9 @@ class InstallController extends Controller
             $this->error('数据库连接失败');
         }
 
-        if($versionstr && version_compare($versionstr,'5.6','>=')){
+        if($versionstr && version_compare($versionstr,MYSQL_MIN_VERSION,'>=')){
             $this->success('数据库连接成功');
         }
-        $this->error('数据库版本最低5.6,当前'.$versionstr);
+        $this->error('数据库版本最低'.MYSQL_MIN_VERSION.',当前'.$versionstr);
     }
 }
