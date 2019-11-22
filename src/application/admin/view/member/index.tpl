@@ -50,7 +50,7 @@
                 <th>手机/邮箱</th>
                 <th>余额</th>
                 <th>推荐人</th>
-                <th width="90">代理</th>
+                <th width="120">代理</th>
                 <th width="120">级别</th>
                 <th width="200">&nbsp;</th>
             </tr>
@@ -124,9 +124,10 @@
 
                     <if condition="$v.is_agent neq 0">
                         <a class="btn btn-outline-primary" title="查看下线" href="{:url('member/index',array('referer'=>$v['id']))}"><i class="ion-md-people"></i> </a>
-                        <a class="btn btn-outline-danger link-confirm" data-confirm="取消代理不能更改已注册的用户!!!" title="取消代理" href="{:url('member/cancel_agent',array('id'=>$v['id']))}" ><i class="ion-md-log-out"></i> </a>
+                        <a class="btn btn-outline-danger link-confirm" data-confirm="取消代理不能更改已注册的用户!!!" title="取消代理" href="{:url('member/cancel_agent',array('id'=>$v['id']))}" ><i class="ion-md-log-out"></i> </a><br />
+                        <a class="btn btn-sm pl-1 pr-1 pt-0 pb-0 mt-2 btn-{$agents[$v['is_agent']]['style']} btn-setagent" title="更改级别" data-id="{$v.id}" data-agent="{$v.is_agent}" href="{:url('member/set_agent',array('id'=>$v['id']))}" >{$agents[$v['is_agent']]['name']}&nbsp;<i class="ion-md-create"></i></a>
                     <else/>
-                        <a class="btn btn-outline-primary {$v.refer_agent>2?'disabled':''}" title="设置代理" href="{:url('member/set_agent',array('id'=>$v['id']))}" ><i class="ion-md-check"></i> </a>
+                        <a class="btn btn-outline-primary"  data-id="{$v.id}" data-agent="0" title="设置代理" href="{:url('member/set_agent',array('id'=>$v['id']))}" ><i class="ion-md-medal"></i> </a>
                     </if>
 
                 </td> 
@@ -172,6 +173,9 @@
             <div class="col-12 form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">充值金额</span> </div><input type="text" name="amount" class="form-control" placeholder="请填写充值金额"/> </div></div>
             <div class="col-12 form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">充值原因</span> </div><input type="text" name="reson" class="form-control" placeholder="请填写充值原因"/> </div> </div>
         </div>
+    </script>
+    <script type="text/plain" id="member_agent">
+        {$agents|array_values|json_encode|raw}
     </script>
     <script type="text/plain" id="member_level">
         {$levels|array_values|json_encode|raw}
@@ -341,6 +345,40 @@
                         data:{
                             id:id,
                             level_id:level.level_id
+                        },
+                        success:function (json) {
+                            dialog.alert(json.msg,function () {
+                                if(json.code==1){
+                                    location.reload()
+                                }
+                            })
+                        }
+                    })
+                })
+            });
+
+            var agents=JSON.parse($('#member_agent').text());
+            $('.btn-setagent').click(function(e){
+                e.preventDefault();
+
+                var id=$(this).data('id')
+                var agent_id=$(this).data('agent')
+                dialog.pickList({
+                    isajax:false,
+                    list:agents,
+                    idkey:'id',
+                    rowTemplate:'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action" style="line-height:30px;">[{@id}]&nbsp;{@name} {@cost_credit}积分 {@total_award}收益  </a>'
+                },function(agent){
+                    if(agent.id==agent_id){
+                        dialog.warning('未修改')
+                        return false;
+                    }
+                    $.ajax({
+                        url:"{:url('set_agent')}",
+                        dataType:'json',
+                        data:{
+                            id:id,
+                            agent_id:agent.id
                         },
                         success:function (json) {
                             dialog.alert(json.msg,function () {

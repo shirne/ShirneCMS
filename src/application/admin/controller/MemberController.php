@@ -1,6 +1,7 @@
 <?php
 namespace app\admin\controller;
 
+use app\common\model\MemberAgentModel;
 use app\common\model\MemberModel;
 use app\common\validate\MemberValidate;
 use think\Db;
@@ -85,6 +86,7 @@ class MemberController extends BaseController
         $this->assign('types',getMemberTypes());
         $this->assign('typestyles',['default','info','warning','danger']);
         $this->assign('levels',getMemberLevels());
+        $this->assign('agents',MemberAgentModel::getCacheData());
         $this->assign('type',$type);
         $this->assign('page',$lists->render());
         $this->assign('referer',$referer);
@@ -150,15 +152,15 @@ class MemberController extends BaseController
      * 设置代理
      * @param int $id
      */
-    public function set_agent($id=0){
+    public function set_agent($id=0, $agent_id=1){
         if(empty($id))$this->error('会员不存在');
         $member=Db::name('member')->find($id);
         if(empty($member))$this->error('会员不存在');
 
 
-        if($member['is_agent'])$this->success('设置成功');
+        if($member['is_agent'] == $agent_id)$this->success('设置成功');
 
-        $result=MemberModel::setAgent($id);
+        $result=MemberModel::setAgent($id, $agent_id);
         if($result){
             user_log($this->mid,'setagent',1,'设置代理 '.$id ,'manager');
             $this->success('设置成功');

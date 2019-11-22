@@ -121,13 +121,17 @@ class MemberModel extends BaseModel
      * @param $member_id
      * @return int|string
      */
-    public static function setAgent($member_id){
+    public static function setAgent($member_id, $agent_id = 1){
         $data=array();
-        $data['agentcode']=random_str(8);
-        while(Db::name('member')->where('agentcode',$data['agentcode'])->find()){
+        $member = Db::name('member')->where('id',$member_id)->find();
+        if(empty($member))return false;
+        if(empty($member['agentcode'])){
             $data['agentcode']=random_str(8);
+            while(Db::name('member')->where('agentcode',$data['agentcode'])->count()>0){
+                $data['agentcode']=random_str(8);
+            }
         }
-        $data['is_agent']=1;
+        $data['is_agent']=$agent_id;
         return Db::name('member')->where('id',$member_id)->update($data);
     }
 

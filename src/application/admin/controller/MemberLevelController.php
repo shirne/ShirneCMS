@@ -47,7 +47,7 @@ class MemberLevelController extends BaseController
                 $data['style']=$styles[$id-1];
                 Db::name('memberAgent')->where('id',$id)->update($data);
             }
-
+            MemberAgentModel::clearCacheData();
             $this->success('保存成功！',url('memberLevel/agent'));
             
         }
@@ -72,6 +72,7 @@ class MemberLevelController extends BaseController
                     ]);
                 }
             }
+            MemberAgentModel::clearCacheData();
             $lists=$model->order('id ASC')->select();
         }
         $this->assign('lists',$lists);
