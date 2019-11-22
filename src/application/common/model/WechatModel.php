@@ -86,11 +86,18 @@ class WechatModel extends BaseModel
         return self::to_config($this);
     }
     
-    public static function createApp($wechat){
+    public static function createApp($wechat, $ispay=false, $payset=[]){
         if(is_numeric($wechat)){
             $wechat = static::get($wechat);
         }
+        if(is_string($wechat)){
+            $wechat = static::where(['appid'=>$wechat])->find();
+        }
         if(!empty($wechat)){
+            if($ispay){
+                $config=WechatModel::to_pay_config($wechat, $payset['notify']??'', $payset['use_cert']??false);
+                return Factory::payment($config);
+            }
             $options=self::to_config($wechat);
         
             switch ($wechat['account_type']) {
@@ -136,6 +143,7 @@ class WechatModel extends BaseModel
         }
 
         if($notify){
+            $notify = str_replace('__HASH__',$data['hash'],$notify);
             $config['notify_url']=$notify;
         }
         return $config;

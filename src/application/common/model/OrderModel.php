@@ -9,6 +9,14 @@ use shirne\third\KdExpress;
 use think\Exception;
 use think\facade\Log;
 
+define('ORDER_STATUS_REFUND',-2);
+define('ORDER_STATUS_CANCEL',-1);
+define('ORDER_STATUS_UNPAIED',0);
+define('ORDER_STATUS_PAIED',1);
+define('ORDER_STATUS_SHIPED',2);
+define('ORDER_STATUS_RECEIVED',3);
+define('ORDER_STATUS_FINISH',4);
+
 /**
  * Class OrderModel
  * @package app\common\model
@@ -85,27 +93,27 @@ class OrderModel extends BaseModel
     protected function beforeStatus($data)
     {
         $data = parent::beforeStatus($data);
-        if($data['status']==1){
+        if($data['status'] == ORDER_STATUS_PAIED){
             if(!isset($data['pay_time'])){
                 $data['pay_time']=time();
             }
-        }elseif($data['status']==2){
+        }elseif($data['status'] == ORDER_STATUS_SHIPED){
             if(!isset($data['deliver_time'])){
                 $data['deliver_time']=time();
             }
-        }elseif($data['status']==3){
+        }elseif($data['status'] == ORDER_STATUS_RECEIVED){
             if(!isset($data['confirm_time'])){
                 $data['confirm_time']=time();
             }
-        }elseif($data['status']==4){
+        }elseif($data['status'] == ORDER_STATUS_FINISH){
             if(!isset($data['comment_time'])){
                 $data['comment_time']=time();
             }
-        }elseif($data['status']<-2){
+        }elseif($data['status'] < ORDER_STATUS_REFUND){
             if(!isset($data['refund_time'])){
                 $data['refund_time']=time();
             }
-        }elseif($data['status']<0){
+        }elseif($data['status'] < ORDER_STATUS_UNPAIED){
             if(!isset($data['cancel_time'])){
                 $data['cancel_time']=time();
             }
@@ -144,16 +152,16 @@ class OrderModel extends BaseModel
             }
             if($item['status'] < $status){
                 switch ($status){
-                    case 1:
+                    case ORDER_STATUS_PAIED:
                         $this->afterPay($item);
                         break;
-                    case 2:
+                    case ORDER_STATUS_SHIPED:
                         $this->afterDeliver($item);
                         break;
-                    case 3:
+                    case ORDER_STATUS_RECEIVED:
                         $this->afterReceive($item);
                         break;
-                    case 4:
+                    case ORDER_STATUS_FINISH:
                         $this->afterComplete($item);
                         break;
                 }
@@ -196,7 +204,7 @@ class OrderModel extends BaseModel
      * @return mixed
      */
 
-    public function makeOrder($member,$products,$address,$extdata,$balance_pay=1,$ordertype=1){
+    public function makeOrder($member, $products, $address, $extdata, $balance_pay=1, $ordertype=1){
         if(empty($member) || empty($member['id'])){
             $this->setError('指定的下单用户资料错误');
             return false;
@@ -395,7 +403,7 @@ class OrderModel extends BaseModel
         
         if($balance_pay) {
             $debit = money_log($member['id'], -$total_price, "下单支付", 'consume',0,is_string($balance_pay)?$balance_pay:'money');
-            if ($debit) $status = 1;
+            if ($debit) $status = ORDER_STATUS_PAIED;
             else{
                 $this->rollback();
                 $this->setError("余额不足");
@@ -416,7 +424,7 @@ class OrderModel extends BaseModel
             'cost_amount'=>$total_cost_price*.01,
             'commission_amount'=>$commission_amount*.01,
             'commission_special'=>json_encode($comm_special),
-            'status'=>0,
+            'status'=> ORDER_STATUS_UNPAIED,
             'isaudit'=>getSetting('autoaudit')==1?1:0,
             //'remark'=>$remark,
             'address_id'=>$address['address_id'],

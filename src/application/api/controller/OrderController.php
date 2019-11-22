@@ -180,7 +180,7 @@ class OrderController extends AuthedController
             $data['payment']=$payorder->getSignedData($result,$config['key']);
         }
         if(!empty($result['prepay_id'])){
-            PayOrderModel::where('id',$payorder['id'])->update(['prepay_id'=>$result['prepay_id']]);
+            PayOrderModel::where('id',$payorder['id'])->update(['prepay_id'=>$result['prepay_id'],'appid'=>$wechat['appid']]);
         }
     
         return $this->response($data);

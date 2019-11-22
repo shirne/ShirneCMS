@@ -352,6 +352,7 @@ CREATE TABLE `sa_pay_order` (
   `pay_data` TEXT,
   `pay_id` INT NULL DEFAULT '0',
   `pay_type` VARCHAR(20) NULL DEFAULT '',
+  `appid` VARCHAR(30) NULL DEFAULT '',
   `prepay_id` VARCHAR(50) NULL DEFAULT '',
   `trade_type` VARCHAR(20) NULL DEFAULT '' COMMENT '交易类型',
   `order_id` INT NULL DEFAULT 0,

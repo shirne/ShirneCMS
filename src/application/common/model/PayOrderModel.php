@@ -105,6 +105,52 @@ class PayOrderModel extends BaseModel
         ]);
     }
 
+    /**
+     * 退款
+     */
+    public static function refund($orderid, $order_type, $reason){
+        $payorder = Db::name('payOrder')->where('order_type',$order_type)
+            ->where('status',1)
+            ->where('order_id',$orderid)
+            ->find();
+        
+        if(!empty($payorder)){
+            if($payorder['pay_type']=='wechat'){
+                static $apps=[];
+                if(!isset($apps[$payorder['appid']])){
+                    $apps[$payorder['appid']] = WechatModel::createApp($payorder['appid'],true, ['notify'=>url('api/wechat/refund',['hash'=>'__HASH__'],true,true),'use_cert'=>true]);
+                }
+                if($apps[$payorder['appid']]){
+                    $refund_id = PayOrderRefundModel::createFromPayOrder($payorder, $reason);
+                    if($refund_id > 0){
+                        $refund = PayOrderRefundModel::get($refund_id);
+                        $result = $apps[$payorder['appid']]->refund->byOutTradeNumber($payorder['order_no'], $refund['refund_no'], $payorder['pay_amount'], $refund['refund_fee'], [
+                            'refund_desc' => $reason,
+                        ]);
+                        if($result['return_code'] == 'SUCCESS'){
+                            if($result['result_code'] == 'SUCCESS'){
+                                Db::name('payOrder')->where('id',$orderid)->update(['is_refund'=>1,'refund_fee'=>['INC',$refund['refund_fee']]]);
+                                Db::name('payOrderRefund')->where('id',$refund_id)->update(['status'=>1,'refund_result'=>$result['refund_id']]);
+                                return true;
+                            }else{
+                                Db::name('payOrderRefund')->where('id',$refund_id)->update(['status'=>-1,'refund_result'=>$result['err_code'].':'.$result['err_code_des']]);
+                            }
+                        }else{
+                            Db::name('payOrderRefund')->where('id',$refund_id)->update(['status'=>-1,'refund_result'=>$result['return_msg']]);
+                        }
+                    }else{
+                        Log::record('订单 '.$order_type.' '.$orderid.'退款失败,退款单创建失败');
+                    }
+                }
+            }else{
+                Log::record('订单 '.$order_type.' '.$orderid.'退款失败,暂不支持支付方式 '.$payorder['pay_type']);
+            }
+        }else{
+            Log::record('订单 '.$order_type.' '.$orderid.'退款失败,未找到支付单');
+        }
+        return false;
+    }
+
     protected function triggerStatus($item, $status, $newData=[])
     {
         parent::triggerStatus($item, $status, $newData);

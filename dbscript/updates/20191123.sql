@@ -1,0 +1,1 @@
+ALTER TABLE `sa_pay_order` ADD `appid` VARCHAR(30) NULL DEFAULT '' after `pay_type`;

@@ -7,6 +7,17 @@ use app\common\core\BaseModel;
 use shirne\third\KdExpress;
 use think\Db;
 
+define('CREDIT_STATUS_REFUND',-2);
+define('CREDIT_STATUS_CANCEL',-1);
+define('CREDIT_STATUS_UNPAIED',0);
+define('CREDIT_STATUS_PAIED',1);
+define('CREDIT_STATUS_SHIPED',2);
+define('CREDIT_STATUS_RECEIVED',3);
+define('CREDIT_STATUS_FINISH',4);
+
+/**
+ * CreditOrderModel
+ */
 class CreditOrderModel extends BaseModel
 {
     protected $pk='order_id';
