@@ -5,6 +5,7 @@ namespace app\api\controller;
 use app\common\model\AdvGroupModel;
 use app\common\model\BoothModel;
 use app\common\model\LinksModel;
+use app\common\model\MemberAgentModel;
 use app\common\model\MemberSignModel;
 use app\common\model\NoticeModel;
 use think\Db;
@@ -207,6 +208,30 @@ class CommonController extends BaseController
         }
         return $this->response($data);
     }
+
+    /**
+     * 获取配置
+     */
+    public function config($group){
+        if(!empty($group) && $group != 'third'){
+            $settings = getSettings(false,true);
+            if(strpos($group,',')===false){
+                return $this->response(isset($settings[$group])?$settings[$group]:new \stdClass());
+            }else{
+                $groups = explode(',',$group);
+                $rdata=[];
+                foreach($groups as $g){
+                    $g = trim(strtolower($g));
+                    if($g != 'third'){
+                        $rdata[$g] = isset($settings[$group])?$settings[$group]:new \stdClass();
+                    }
+                }
+
+                return $this->response($rdata);
+            }
+        }
+        return $this->response(new \stdClass());
+    }
     
     /**
      * 签到排名
@@ -237,6 +262,9 @@ class CommonController extends BaseController
         }
         if(in_array('levels',$keyarr)){
             $datas['levels']=getMemberLevels();
+        }
+        if(in_array('agents',$keyarr)){
+            $datas['agents']=MemberAgentModel::getCacheData();
         }
         
         return $this->response($datas);
