@@ -15,11 +15,11 @@ return [
     // 服务器地址
     'hostname'        => 'localhost',
     // 数据库名
-    'database'        => 'wabao99',
+    'database'        => 'shirnecms',
     // 用户名
-    'username'        => 'wabao99',
+    'username'        => 'root',
     // 密码
-    'password'        => '1gi7u1B8',
+    'password'        => '123456',
     // 端口
     'hostport'        => '',
     // 连接dsn
