@@ -121,10 +121,17 @@ class MemberModel extends BaseModel
      * @param $member_id
      * @return int|string
      */
-    public static function setAgent($member_id, $agent_id = 1){
+    public static function setAgent($member_id, $agent_id = 1, $type='system', $remark = ''){
+        $agents = MemberAgentModel::getCacheData();
+        $agent = isset($agents[$agent_id])?$agents[$agent_id]:[];
         $data=array();
-        $member = Db::name('member')->where('id',$member_id)->find();
-        if(empty($member))return false;
+        if(is_array($member_id)){
+            $member = $member_id;
+            $member_id = $member['id'];
+        }else{
+            $member = Db::name('member')->where('id',$member_id)->find();
+            if(empty($member))return false;
+        }
         if(empty($member['agentcode'])){
             $data['agentcode']=random_str(8);
             while(Db::name('member')->where('agentcode',$data['agentcode'])->count()>0){
@@ -132,7 +139,18 @@ class MemberModel extends BaseModel
             }
         }
         $data['is_agent']=$agent_id;
-        return Db::name('member')->where('id',$member_id)->update($data);
+        $data['update_time']=time();
+        $result = Db::name('member')->where('id',$member_id)->update($data);
+        if($result){
+            Db::name('memberAgentLog')->insert([
+                'member_id'=>$member_id,
+                'agent_id'=>$agent_id,
+                'type'=>$type,
+                'remark'=>$remark,
+                'create_time'=>time(),
+            ]);
+        }
+        return $result;
     }
 
     /**
