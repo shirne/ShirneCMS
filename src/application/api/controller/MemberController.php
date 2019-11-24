@@ -5,6 +5,9 @@ namespace app\api\controller;
 use app\common\model\MemberModel;
 use app\common\validate\MemberValidate;
 use app\api\facade\MemberTokenFacade;
+use app\common\model\MemberAgentModel;
+use app\common\model\MemberLevelLogModel;
+use app\common\model\MemberLevelModel;
 use extcore\traits\Upload;
 use think\Db;
 use think\Loader;
@@ -29,7 +32,9 @@ class MemberController extends AuthedController
         }
         
         $levels = getMemberLevels();
-        $profile['level']=$levels[$profile['level_id']]?:[];
+        $profile['level']=$levels[$profile['level_id']] ?? new \stdClass();
+        $agents = MemberAgentModel::getCacheData();
+        $profile['agent'] = $agents[$profile['is_agent']] ?? new \stdClass();
         return $this->response($profile);
     }
 
@@ -90,6 +95,37 @@ class MemberController extends AuthedController
         return $this->response([
             'url'=>$uploaded['url']
         ]);
+    }
+
+    public function upgrade(){
+        $target = $this->request->post('level_id');
+        $balance_pay = $this->request->post('balance_pay') == '1';
+        $levels = MemberLevelModel::getCacheData();
+        if($target<=0 || !isset($levels[$target])){
+            $this->error('升级级别错误',0);
+        }
+
+        $curLevel = $this->user['level_id']?$levels[$this->user['level_id']]:null;
+        $level = $levels[$target];
+        if(!$curLevel || $curLevel['sort'] >= $level['sort']){
+            $this->error('升级级别错误',0);
+        }
+
+        if($level['upgrade_type'] == 0){
+            $this->error('该等级不可申请',0);
+        }
+
+        $model = new MemberLevelLogModel();
+        $insert_id = $model->makeOrder($this->user, $level, '', $balance_pay );
+
+        if($insert_id === false){
+            $this->error($model->getError());
+        }
+        if($balance_pay){
+            $this->success('开通成功');
+        }else{
+            $this->success('UL_'.$insert_id, 1, '申请已提交');
+        }
     }
     
     public function change_password(){

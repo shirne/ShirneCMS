@@ -164,12 +164,6 @@ class CreditOrderModel extends BaseModel
             'express_no' =>'',
             'express_code'=>''
         );
-        //$servModel=new MemberServiceModel();
-        //$services = $servModel->getServices($address);
-        //$orderdata = array_merge($orderdata,$services);
-        /*if($status>0){
-            $orderdata['pay_time']=time();
-        }*/
 
         $result= $this->insert($orderdata,false,true);
 
@@ -199,7 +193,7 @@ class CreditOrderModel extends BaseModel
             $this->rollback();
         }
         if($status>0 ){
-            self::update(['status'=>$status,'pay_time'=>time()],['order_id'=>$result]);
+            self::getInstance()->updateStatus(['status'=>$status,'pay_time'=>time()],['order_id'=>$result]);
         }
         return $result;
     }

@@ -39,6 +39,13 @@ class PayOrderModel extends BaseModel
                 $order['order_no'] = 'CZ_' . str_pad($order['id'], 6, '0', STR_PAD_LEFT);
                 $orderid = $order['id'];
             }
+        }elseif(strpos($orderno,'UL_')===0){
+            $ordertype = 'upgrade';
+            $orderno = intval(substr($orderno, 3));
+            $order = MemberLevelLogModel::get($orderno);
+            if(!empty($order)) {
+                $orderid = $order['id'];
+            }
         }elseif(strpos($orderno,'PO_')===0){
             $ordertype = 'credit';
             $orderno = intval(substr($orderno, 3));
