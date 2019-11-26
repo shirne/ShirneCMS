@@ -91,6 +91,7 @@ CREATE TABLE `sa_credit_order` (
   `city` VARCHAR(50) NULL,
   `area` VARCHAR(50) NULL,
   `address` VARCHAR(150) NULL,
+  `reason` VARCHAR(100) NULL,
   `express_no` VARCHAR(100) NULL,
   `express_code` VARCHAR(20) NULL,
   `express_data` TEXT NULL,

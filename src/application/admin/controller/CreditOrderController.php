@@ -122,30 +122,178 @@ class CreditOrderController extends BaseController
         return $this->fetch();
     }
 
+    public function setcancel($id){
+        $order = CreditOrderModel::get($id);
+        if(empty($id) || empty($order)){
+            $this->error('订单不存在');
+        }
+        if($order['status'] > 0){
+            $this->error('订单不可取消');
+        }
+        $order->updateStatus(['status'=>-1]);
+        user_log($this->mid,'cancelcreditorder',1,'取消积分订单 '.$id ,'manager');
+        $this->success('操作成功');
+    }
+    public function setpayed($id){
+        $order = CreditOrderModel::get($id);
+        if(empty($id) || empty($order)){
+            $this->error('订单不存在');
+        }
+        if($order['status'] < 0){
+            $this->error('订单已失效');
+        }
+        if($order['status'] >= 1){
+            $this->error('订单已支付');
+        }
+        $paytype=$this->request->post('paytype');
+        if($paytype == 'balance'){
+            $debit = money_log($order['member_id'], -$order['payamount']*100, "积分订单支付", 'consume',0,'money');
+            if(!$debit){
+                $this->error('用户余额不足');
+            }
+        }else{
+            $paytype = 'offline';
+        }
+        $order->updateStatus(['status'=>1,'pay_type'=>$paytype]);
+        user_log($this->mid,'creditorderpay',1,'积分订单支付 '.$id ,'manager');
+        $this->success('操作成功');
+    }
+    public function setdelivery($id){
+        $order = CreditOrderModel::get($id);
+        if(empty($id) || empty($order)){
+            $this->error('订单不存在');
+        }
+        if($order['status'] < 0){
+            $this->error('订单已失效');
+        }
+        if($order['status'] < 1){
+            $this->error('订单未支付');
+        }
+        if($order['status'] > 2){
+            $this->error('订单已发货');
+        }
+        $express_no=$this->request->post('express_no');
+        $express_code=$this->request->post('express_code');
+        
+        $order->updateStatus([
+            'status'=>2,
+            'express_no'=>$express_no,
+            'express_code'=>$express_code
+        ]);
+        user_log($this->mid,'creditorderdelivery',1,'积分订单发货 '.$id ,'manager');
+        $this->success('操作成功');
+    }
+    public function setreceive($id){
+        $order = CreditOrderModel::get($id);
+        if(empty($id) || empty($order)){
+            $this->error('订单不存在');
+        }
+        if($order['status'] < 0){
+            $this->error('订单已失效');
+        }
+        if($order['status'] < 2){
+            $this->error('订单未发货');
+        }
+        if($order['status'] >= 3){
+            $this->error('订单已完成');
+        }
+        $order->updateStatus(['status'=>3]);
+        user_log($this->mid,'creditorderconfirm',1,'积分订单确认 '.$id ,'manager');
+        $this->success('操作成功');
+    }
+
+    public function setcomplete($id){
+        $order = CreditOrderModel::get($id);
+        if(empty($id) || empty($order)){
+            $this->error('订单不存在');
+        }
+        if($order['status'] < 0){
+            $this->error('订单已失效');
+        }
+        if($order['status'] < 3){
+            $this->error('订单未收货');
+        }
+        if($order['status'] >= 4){
+            $this->error('订单已完成');
+        }
+        $order->updateStatus(['status'=>4]);
+        user_log($this->mid,'creditordercomplete',1,'积分订单完成 '.$id ,'manager');
+        $this->success('操作成功');
+    }
+
     /**
      * 订单进度修改
      * @param $id
      */
     public function status($id){
+        $this->success('操作已失效');
+    }
+    /**
+     * 改价
+     * @param $id
+     * @param $price
+     * @throws Exception
+     */
+    public function reprice($id,$price)
+    {
         $order = CreditOrderModel::get($id);
         if(empty($id) || empty($order)){
             $this->error('订单不存在');
         }
-        $audit=$this->request->post('status/d');
-        $express_no=$this->request->post('express_no');
-        $express_code=$this->request->post('express_code');
-        $data=array(
-            'status'=>$audit
-        );
-        if(!empty($express_code)){
-            $data['express_no']=$express_no;
-            $data['express_code']=$express_code;
+        if($order['status']!=0){
+            $this->error('订单当前状态不可改价');
         }
+        $price=$this->request->post('price');
+        
+        $data=array(
+            'payamount'=>round(floatval($price),2)
+        );
+        
         $order->save($data);
-        user_log($this->mid,'auditorder',1,'更新订单 '.$id .' '.$audit,'manager');
+        user_log($this->mid,'repricecreditorder',1,'积分订单改价 '.$id .' '.$price,'manager');
         $this->success('操作成功');
     }
 
+    /**
+     * 支付订单查询
+     * @param $id
+     */
+    public function paystatus($id){
+        $order = CreditOrderModel::get($id);
+        if(empty($id) || empty($order)){
+            $this->error('订单不存在');
+        }
+        if($order['status']!=0){
+            $this->error('订单当前状态非待支付');
+        }
+        $payorders = PayOrderModel::filterTypeAndId('order',$id)->select();
+        if(empty($payorders)){
+            $this->error('该订单没有在线支付记录');
+        }
+        
+        $this->success('操作成功', null, ['lists'=>$payorders]);
+    }
+
+    /**
+     * 支付状态查询 todo
+     * @param $payid
+     */
+    public function payquery($payid){
+        $payorder = PayOrderModel::get($payid);
+        if(empty($payorder)){
+            $this->error('支付订单不存在');
+        }
+        $result=$payorder->checkStatus();
+        if($result){
+            if($payorder->getErrNo()){
+                $this->error('查询成功：'.$payorder->getError());
+            }else{
+                $this->success('订单已支付');
+            }
+        }else{
+            $this->error($payorder->getError());
+        }
+    }
 
     /**
      * 删除订单
@@ -156,7 +304,6 @@ class CreditOrderController extends BaseController
         $model = Db::name('creditOrder');
         $result = $model->whereIn("order_id",idArr($id))->useSoftDelete('delete_time',time())->delete();
         if($result){
-            //Db::name('creditOrderGoods')->whereIn("order_id",idArr($id))->delete();
             user_log($this->mid,'deleteorder',1,'删除订单 '.$id ,'manager');
             $this->success("删除成功", url('Order/index'));
         }else{
