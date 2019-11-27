@@ -5,3 +5,8 @@ ADD `cancel_time` int(11) DEFAULT 0 AFTER `pay_time`;
 ALTER TABLE `sa_pay_order` ADD `appid` VARCHAR(30) NULL DEFAULT '' after `pay_type`;
 
 alter table sa_credit_order add `reason` VARCHAR(100) NULL after address;
+
+ALTER TABLE `sa_credit_order`
+ADD `deliver_time` INT NULL DEFAULT 0 AFTER `pay_time`,
+ADD `comment_time` INT NULL DEFAULT 0 AFTER `deliver_time`,
+ADD `refund_time` INT NULL DEFAULT 0 AFTER `comment_time`;
