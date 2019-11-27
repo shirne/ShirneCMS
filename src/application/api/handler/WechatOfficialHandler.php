@@ -17,6 +17,10 @@ class WechatOfficialHandler extends BaseHandler implements EventHandlerInterface
     public function handle($message = null)
     {
         Log::record('接收到消息:'.var_export($message,true),'Wechat');
+        if(empty($message) || !isset($message['MsgType'])){
+            return '';
+        }
+        
         //非订阅事件自动处理会员
         if($message['MsgType'] != 'event' || $message['event']!= 'subscribe'){
             $hasUser = MemberOauthModel::where('openid',$message['FromUserName'])->find();
@@ -30,7 +34,7 @@ class WechatOfficialHandler extends BaseHandler implements EventHandlerInterface
 
         switch ($message['MsgType']) {
             case 'event':
-                switch ($message['event']){
+                switch ($message['Event']){
                     case 'subscribe':
                         $userinfo=$this->app->user->get($message['FromUserName']);
                         if(!empty($message['EventKey'])){
