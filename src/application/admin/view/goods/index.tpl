@@ -56,7 +56,7 @@
 				<th>发布时间</th>
 				<th>分类</th>
 				<th>状态</th>
-				<th width="200">操作</th>
+				<th width="100">&nbsp;</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -69,7 +69,7 @@
 						</figure></td>
 					<td><if condition="$v['type'] GT 1"><span class="badge badge-info">{$types[$v['type']]}</span></if>{$v.title}</td>
 					<td>
-						{$v.price} 积分/{$v['vice_title']|default='件'}
+						{$v.price} 积分/{$v['unit']|default='件'}
 					</td>
 					<td>
 						{$v.storage}
@@ -86,11 +86,11 @@
 							<span class="badge badge-secondary">未发布</span>
 						</if>
 					</td>
-					<td>
-					<a class="btn btn-outline-dark btn-sm" href="{:url('goods/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> 编辑</a>
-						<a class="btn btn-outline-dark btn-sm" href="{:url('goods/imagelist',array('aid'=>$v['id']))}"><i class="ion-md-images"></i> 图集</a>
+					<td class="operations">
+					<a class="btn btn-outline-primary btn-sm" href="{:url('goods/edit',array('id'=>$v['id']))}" title="编辑"><i class="ion-md-create"></i> </a>
+						<a class="btn btn-outline-primary btn-sm" href="{:url('goods/imagelist',array('aid'=>$v['id']))}" title="图集"><i class="ion-md-images"></i> </a>
 						<!--a class="btn btn-outline-dark btn-sm" href="{:url('goods/comments',array('aid'=>$v['id']))}"><i class="ion-md-chatboxes"></i> 评论</a-->
-					<a class="btn btn-outline-dark btn-sm" href="{:url('goods/delete',array('id'=>$v['id']))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
+					<a class="btn btn-outline-danger btn-sm link-confirm" href="{:url('goods/delete',array('id'=>$v['id']))}" title="删除" data-confirm="您真的确定要删除吗？\n\n删除后将不能恢复!" ><i class="ion-md-trash"></i> </a>
 					</td>
 				</tr>
 			</foreach>

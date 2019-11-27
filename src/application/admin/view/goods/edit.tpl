@@ -12,11 +12,13 @@
                     <div class="input-group">
                         <div class="input-group-prepend"><span class="input-group-text">商品名称</span> </div>
                         <input type="text" name="title" class="form-control" value="{$goods.title}" id="goods-title" placeholder="输入商品名称">
+                        <div class="input-group-prepend"><span class="input-group-text">单位</span> </div>
+                        <input type="text" name="unit" class="form-control" value="{$goods.unit}" id="goods-unit" style="max-width:50px;" placeholder="单位">
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="input-group">
-                        <div class="input-group-prepend"><span class="input-group-text">商品单位</span> </div>
+                        <div class="input-group-prepend"><span class="input-group-text">商品简介</span> </div>
                         <input type="text" name="vice_title" class="form-control" value="{$goods.vice_title}" id="goods-vice_title">
                     </div>
                 </div>

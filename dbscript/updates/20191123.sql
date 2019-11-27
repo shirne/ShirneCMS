@@ -10,3 +10,6 @@ ALTER TABLE `sa_credit_order`
 ADD `deliver_time` INT NULL DEFAULT 0 AFTER `pay_time`,
 ADD `comment_time` INT NULL DEFAULT 0 AFTER `deliver_time`,
 ADD `refund_time` INT NULL DEFAULT 0 AFTER `comment_time`;
+
+ ALTER TABLE `sa_goods`
+ ADD `unit` varchar(10) DEFAULT NULL;

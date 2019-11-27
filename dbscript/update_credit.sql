@@ -40,6 +40,7 @@ CREATE TABLE `sa_goods` (
   `cate_id` int(11) DEFAULT NULL,
   `title` varchar(150) DEFAULT NULL,
   `vice_title` varchar(200) DEFAULT NULL,
+  `unit` varchar(10) DEFAULT NULL,
   `goods_no` varchar(50) DEFAULT NULL,
   `image` varchar(150) DEFAULT NULL,
   `prop_data` text,
