@@ -125,6 +125,55 @@ class CommonController extends BaseController
     }
 
     /**
+     * 全站搜索
+     */
+    public function search($keyword, $model='', $price=''){
+
+        $unionModel = Db::field('id,title,vice_title,cover as image,0 as price,status,0 sale,create_time,update_time,\'article\' as model')
+        ->name('article');
+        if(empty($model) || $model=='product'){
+            $unionModel->union(function($query){
+                $query->field('id,title,vice_title,image,min_price as price,status,sale,create_time,update_time,\'product\' as model')
+                ->name('product');
+            });
+        }
+        if(empty($model) || $model=='goods'){
+            $unionModel->union(function($query){
+                $query->field('id,title,vice_title,image,price,status,sale,create_time,update_time,\'goods\' as model')
+                ->name('goods');
+            });
+        }
+
+        $table=Db::table(
+            $unionModel->buildSql().' search_table')
+        ->where('status',1);
+
+        if(!empty($keyword)){
+            $table->whereLike('title|vice_title',"%$keyword%");
+        }
+        if(!empty($price)){
+            $parts = explode('-',$price);
+            if(count($parts)>1){
+                $table->whereBetween('price',[intval($parts[0]),intval($parts[1])]);
+            }else{
+                $table->where('price','gt',intval($price));
+            }
+        }
+        if(!empty($model)){
+            $table->where('model',$model);
+        }
+
+        $lists = $table->order('sale DESC,create_time DESC')->paginate(10);
+
+        return $this->response([
+            'lists'=>$lists->items(),
+            'page'=>$lists->currentPage(),
+            'total'=>$lists->total(),
+            'total_page'=>$lists->lastPage(),
+        ]);
+    }
+
+    /**
      * 获取广告图
      * @param $flag
      * @return Response
