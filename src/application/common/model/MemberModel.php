@@ -275,7 +275,7 @@ class MemberModel extends BaseModel
 
     public static function checkUpdata($data, $member){
         $updata=array();
-        if(isset($data['gender']) && $updata['gender']!=$data['gender'])$updata['gender']=$data['gender'];
+        if(isset($data['gender']) && $member['gender']!=$data['gender'])$updata['gender']=$data['gender'];
         if(empty($member['province']) && !empty($data['province']))$updata['province']=$data['province'];
         if(empty($member['city']) && !empty($data['city']))$updata['city']=$data['city'];
         if(empty($member['county']) && !empty($data['county']))$updata['county']=$data['county'];

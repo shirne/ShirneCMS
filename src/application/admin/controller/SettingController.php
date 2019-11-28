@@ -23,43 +23,23 @@ class SettingController extends BaseController
         if($this->request->isPost()){
             $this->checkPermision("setting_update");
             $data=$this->request->post();
-            $settings=getSettings(true,false,false);
-            foreach ($data as $k=>$v){
-                if(substr($k,0,2)=='v-'){
-                    $key=substr($k,2);
-                    if(isset($settings[$key])) {
-                        if (is_array($v)) {
-                            if(in_array($settings[$key]['type'],['json','array'])){
-                                if($settings[$key]['type'] == 'array'){
-                                    $v = array_values($v);
-                                }
-                                $v = json_encode($v,JSON_UNESCAPED_UNICODE);
-                            }else {
-                                $v = serialize($v);
-                            }
-                        }
-                        if ($settings[$key]['value'] != $v) {
-                            Db::name('setting')->where('key', $key)->update(array('value' => $v));
-                        }
-                    }
-                }
-            }
             $delete_images=[];
             $errmsgs=[];
+            $settings=getSettings(true,false,false);
             foreach ($settings as $k=>$row){
                 if($row['type']=='image'){
                     $uploaded=$this->upload('setting','upload_'.$k);
                     if($uploaded){
-                        Db::name('setting')->where('key', $k)->update(array('value' => $uploaded['url']));
+                        $data['v-'.$k]=$uploaded['url'];
                         $delete_images[]=$data['delete_'.$k];
                     }elseif($this->uploadErrorCode>102){
                         $errmsgs[]=$row['title'].':'.$this->uploadError;
                     }
                 }
             }
-            cache('setting',null);
-            user_log($this->mid,'sysconfig',1,'修改系统配置' ,'manager');
+            $result = save_setting($data);
             delete_image($delete_images);
+            user_log($this->mid,'sysconfig',1,'修改系统配置' ,'manager');
             $this->success('配置已更新<br />'.implode(',',$errmsgs),url('setting/index',array('group'=>$group)));
         }
         $this->assign('group',$group);
