@@ -9,6 +9,7 @@ use app\common\model\OauthAppModel;
 use app\common\model\WechatModel;
 use app\common\validate\MemberValidate;
 use EasyWeChat\Factory;
+use EasyWeChat\OfficialAccount\Application;
 use shirne\captcha\Captcha;
 use think\Db;
 use think\facade\Cache;
@@ -154,7 +155,7 @@ class AuthController extends BaseController
         if($errcount > 4){
             $this->error('登录尝试次数过多',ERROR_LOGIN_FAILED);
         }
-        $member = Db::name('Member')->where('username',$username)->find();
+        $member = MemberModel::where('username',$username)->find();
         $respdata=[];
         if(!empty($member) ){
             $merrorcount = intval(cache('login_error_'.$member['id']));
@@ -171,6 +172,17 @@ class AuthController extends BaseController
                         $this->accessSession['error_count'] = 0;
                         cache('login_error_'.$member['id'], NULL);
 
+                        $openid = $this->request->param('openid');
+                        if(!empty($openid)){
+                            $oauth = MemberOauthModel::where('openid',$openid)->find();
+                            if(!empty($oauth)){
+                                MemberOauthModel::where('openid',$openid)->where('member_id',0)->update(['member_id'=>$member['id']]);
+                                $updata = MemberModel::checkUpdata($oauth,$member);
+                                if(!empty($updata)){
+                                    $member->save($updata);
+                                }
+                            }
+                        }
                         return $this->response($token);
                     }
                 } else {
@@ -206,7 +218,7 @@ class AuthController extends BaseController
             case 'wechat':
             case 'subscribe':
             case 'service':
-                $this->error('该接口不支持公众号登录',ERROR_LOGIN_FAILED);
+                $weapp = Factory::officialAccount($options);
                 break;
             case 'miniprogram':
             case 'minigame':
@@ -216,22 +228,32 @@ class AuthController extends BaseController
                 $this->error('配置错误',ERROR_LOGIN_FAILED);
                 break;
         }
-        //调试模式允许mock登录
-        if($wechat['is_debug'] && $code=='the code is a mock one'){
-            $rowData = $this->request->param('rawData');
-            $userinfo = json_decode($rowData, TRUE);
-            $session=['openid'=>md5($userinfo['nickName'])];
-        }else {
-            $session = $weapp->auth->session($code);
-            if (empty($session) || empty($session['openid'])) {
+
+        if($weapp instanceof Application){
+            $userinfo = $weapp->oauth->user()->getOriginal();
+            if(empty($userinfo)){
                 $this->error('登录失败', ERROR_LOGIN_FAILED);
             }
+            $rowData = json_encode($userinfo, JSON_UNESCAPED_UNICODE);
+            $session=['openid'=>$userinfo['openid'],'unionid'=>$userinfo['unionid']];
+        }else{
+            //调试模式允许mock登录
+            if($wechat['is_debug'] && $code=='the code is a mock one'){
+                $rowData = $this->request->param('rawData');
+                $userinfo = json_decode($rowData, TRUE);
+                $session=['openid'=>md5($userinfo['nickName']),'unionid'=>''];
+            }else {
+                $session = $weapp->auth->session($code);
+                if (empty($session) || empty($session['openid'])) {
+                    $this->error('登录失败', ERROR_LOGIN_FAILED);
+                }
 
-            $rowData = $this->request->param('rawData');
-            if (!empty($rowData)) {
-                $signature = $this->request->param('signature');
-                if (sha1($rowData . $session['session_key']) == $signature) {
-                    $userinfo = json_decode($rowData, TRUE);
+                $rowData = $this->request->param('rawData');
+                if (!empty($rowData)) {
+                    $signature = $this->request->param('signature');
+                    if (sha1($rowData . $session['session_key']) == $signature) {
+                        $userinfo = json_decode($rowData, TRUE);
+                    }
                 }
             }
         }
@@ -246,7 +268,7 @@ class AuthController extends BaseController
         if(!empty($oauth) && $oauth['member_id']) {
             $member = MemberModel::where('id', $oauth['member_id'])->find();
         }elseif($this->isLogin){
-            $member=$this->user;
+            $member=MemberModel::where('id', $this->user['id'])->find();
         }elseif($session['unionid']){
             $sameAuth=MemberOauthModel::where('unionid',$session['unionid'])->find();
             if(!empty($sameAuth)){
@@ -261,43 +283,33 @@ class AuthController extends BaseController
         
         if(empty($member)){
             $register=getSetting('m_register');
-            if($register=='1'){
-                $this->error('登录失败', ERROR_NEED_REGISTER);
-            }
-            //自动注册
-            $data['openid']=$session['openid'];
+            if($register!='1'){
             
-            $referid = $this->getAgentId($agent);
-            $member = MemberModel::createFromOauth($data, $referid);
-            
-            if($member['id']){
-                $data['member_id']=$member['id'];
+                //自动注册
+                $data['openid']=$session['openid'];
                 
-            }else{
-                $this->error('登录失败',ERROR_LOGIN_FAILED);
+                $referid = $this->getAgentId($agent);
+                $member = MemberModel::createFromOauth($data, $referid);
+                
+                if($member['id']){
+                    $data['member_id']=$member['id'];
+                }
             }
             
         }else{
             //更新资料
-            //MemberOauthModel::update($data,$condition);
-            $data['member_id']=$member['id'];
-            
-            $updata=array();
-            $updata['gender']=$data['gender'];
-            $updata['city']=$data['city'];
-            if($member['realname']==$oauth['nickname'])$updata['realname']=$data['nickname'];
-            if($member['avatar']==$oauth['avatar'])$updata['avatar']=$data['avatar'];
-            if(empty($member['referer']) && !empty($agent) && $member['agentcode']!=$agent){
-                $refererid=$this->getAgentId($agent);
-                if($refererid != $member['id'] && !$member['is_agent']){
-                    $updata['referer'] = $refererid;
-                }
+            if(empty($oauth['member_id'])){
+                $data['member_id'] = $member['id'];
             }
+            $updata=MemberModel::checkUpdata($data, $member);
             if(!empty($updata)){
-                
                 MemberModel::update($updata,array('id'=>$member['id']));
             }
+            if(empty($member['referer']) && !empty($agent) && $member['agentcode']!=$agent){
+                $member->setReferer($agent);
+            }
         }
+        
         if(empty($oauth)){
             $data['openid']=$session['openid'];
             MemberOauthModel::create($data);
@@ -305,18 +317,27 @@ class AuthController extends BaseController
             MemberOauthModel::update($data,['id'=>$oauth['id']]);
         }
         
-        if($member['status'] != 1){
-            $this->error('账户已被禁用',ERROR_MEMBER_DISABLED);
+        if($this->isLogin){
+            return $this->response(['openid'=>$session['openid']]);
         }
 
-        $token=MemberTokenFacade::createToken($member['id'],$wechat['type'].'-'.$wechat['account_type'], $wechat['appid']);
-        if(!empty($token)) {
-            MemberModel::update([
-                'login_ip'=>request()->ip(),
-                'logintime'=>time()
-            ],['id'=>$member['id']]);
-            user_log($member['id'],'login',1,'登录'.$wechat['title']);
-            return $this->response($token);
+        if(!empty($member)){
+
+            if($member['status'] != 1){
+                $this->error('账户已被禁用',ERROR_MEMBER_DISABLED, ['openid'=>$session['openid']]);
+            }
+
+            $token=MemberTokenFacade::createToken($member['id'],$wechat['type'].'-'.$wechat['account_type'], $wechat['appid']);
+            if(!empty($token)) {
+                MemberModel::update([
+                    'login_ip'=>request()->ip(),
+                    'logintime'=>time()
+                ],['id'=>$member['id']]);
+                user_log($member['id'],'login',1,'登录'.$wechat['title']);
+                $token['openid']=$session['openid'];
+                return $this->response($token);
+            }
+            
         }
         $this->error('登录失败',ERROR_LOGIN_FAILED);
     }
@@ -342,12 +363,38 @@ class AuthController extends BaseController
      * @return array
      */
     private function wxMapdata($userinfo,$rowData){
+        $nickname = '';
+        if(isset($userinfo['nickName'])){
+            $nickname = $userinfo['nickName'];
+        }
+        if(isset($userinfo['nickname'])){
+            $nickname = $userinfo['nickname'];
+        }
+
+        $avatar = '';
+        if(isset($userinfo['avatar'])){
+            $avatar = $userinfo['avatar'];
+        }
+        if(isset($userinfo['avatarUrl'])){
+            $avatar = $userinfo['avatarUrl'];
+        }
+        if(isset($userinfo['headimgurl'])){
+            $avatar = $userinfo['headimgurl'];
+        }
+        $gender = '';
+        if(isset($userinfo['gender'])){
+            $gender = $userinfo['gender'];
+        }
+        if(isset($userinfo['sex'])){
+            $gender = $userinfo['sex'];
+        }
         return array(
             'data'=>$rowData,
             'is_follow'=>0,
-            'nickname'=>$userinfo['nickName'],
-            'gender'=>$userinfo['gender'],
-            'avatar'=>$userinfo['avatarUrl'],
+            'nickname'=>$nickname,
+            'gender'=>$gender,
+            //'unionid'=>isset($userinfo['unionid'])?$userinfo['unionid']:'',
+            'avatar'=>$avatar,
             'city'=>$userinfo['city'],
             'province'=>$userinfo['province'],
             'country'=>isset($userinfo['country'])?$userinfo['country']:'',
@@ -516,6 +563,11 @@ class AuthController extends BaseController
             unset($data['mobilecheck']);
         }
 
+        $openid = $this->request->param('openid');
+        if(empty($openid)){
+            $openid = $this->accessSession['openid'];
+        }
+
         Db::startTrans();
         if(!empty($invite)) {
             $invite = Db::name('invite_code')->lock(true)->find($invite['id']);
@@ -547,6 +599,15 @@ class AuthController extends BaseController
         $data['login_ip']=$this->request->ip();
 
         unset($data['repassword']);
+        if(!empty($openid)){
+            $oauth = MemberOauthModel::where('openid',$openid)->find();
+            if(!empty($oauth)){
+                $updata = MemberModel::checkUpdata($oauth,$data);
+                $data = array_merge($data, $updata);
+            }else{
+                $openid = '';
+            }
+        }
         $model=MemberModel::create($data);
 
         if(empty($model['id'])){
@@ -561,6 +622,9 @@ class AuthController extends BaseController
         if(!empty($this->accessSession['openid'])){
             Db::name('memberOauth')->where('openid',$this->accessSession['openid'])
                 ->update(['member_id'=>$model['id']]);
+        }
+        if(!empty($openid)){
+            MemberOauthModel::where('openid',$openid)->where('member_id',0)->update(['member_id'=>$model['id']]);
         }
         Db::commit();
         $token = MemberTokenFacade::createToken($model['id'], $app['platform'], $app['appid']);

@@ -1132,7 +1132,7 @@ function compare_password($user,$password){
 }
 
 function compare_secpassword($user,$password){
-    return encode_password($password,md5($user['id']))===$user['secpassword'];
+    return encode_password($password,$user['secsalt'])===$user['secpassword'];
 }
 
 

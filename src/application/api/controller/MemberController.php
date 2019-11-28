@@ -143,9 +143,45 @@ class MemberController extends AuthedController
         Db::name('Member')->where('id',$this->user['id'])->update($data);
         $this->success('密码修改成功');
     }
-    
+
     public function sec_password(){
-    
+        $password=$this->request->post('password');
+        if(empty($this->user['secpassword'])){
+            if(!compare_password($this->user,$password)){
+                $this->error('当前密码输入错误',0);
+            }
+        }else{
+            if(!compare_secpassword($this->user,$password)){
+                $this->error('安全密码输入错误',0);
+            }
+        }
+        
+        $newpassword=$this->request->post('newpassword');
+        $salt=random_str(8);
+        $data=array(
+            'secpassword'=>encode_password($newpassword,$salt),
+            'secsalt'=>$salt
+        );
+        Db::name('Member')->where('id',$this->user['id'])->update($data);
+        $this->success('安全密码修改成功');
+    }
+
+    public function search($keyword){
+        if(empty($keyword)){
+            $this->error('请输入会员名或手机号');
+        }
+        $result = Db::name('member')->where('id|username|mobile',$keyword)->find();
+        if(empty($result)){
+            $this->error('未搜索到会员');
+        }
+        return $this->response([
+            'id'=>$result['id'],
+            'username'=>$result['username'],
+            'nickname'=>$result['username'],
+            'realname'=>$result['realname'],
+            'mobile'=>$result['mobile'],
+            'avatar'=>$result['avatar'],
+        ]);
     }
     
     public function quit(){

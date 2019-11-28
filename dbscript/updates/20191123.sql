@@ -13,3 +13,7 @@ ADD `refund_time` INT NULL DEFAULT 0 AFTER `comment_time`;
 
  ALTER TABLE `sa_goods`
  ADD `unit` varchar(10) DEFAULT NULL;
+
+ ALTER TABLE `sa_member`
+ADD `secpassword` varchar(32) NOT NULL default '' after `salt`,
+ ADD `secsalt` varchar(8) NOT NULL default '' after `secpassword`;
