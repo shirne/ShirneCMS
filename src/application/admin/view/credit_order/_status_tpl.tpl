@@ -83,7 +83,7 @@ jQuery(function($){
                         status:status
                     };
                 if(data.status==1){
-                    data['pay_type']=body.find('[name=pay_type]:checked').val();
+                    data['paytype']=body.find('[name=paytype]:checked').val();
                 }else if(data.status==2){
                     data['express_code']=body.find('select.express-code').val();
                     data['express_no']=body.find('.express-no').val();
