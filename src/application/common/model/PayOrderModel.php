@@ -162,25 +162,27 @@ class PayOrderModel extends BaseModel
     {
         parent::triggerStatus($item, $status, $newData);
         if($status==1 ){
+            $paytime = isset($newData['pay_time'])?$newData['pay_time']:0;
+            if(!$paytime)$paytime=time();
             switch ($item['order_type']){
                 case 'recharge':
                     MemberRechargeModel::getInstance()->updateStatus([
                         'status'=>1,
-                        'audit_time'=>$item['pay_time']
+                        'audit_time'=>$paytime
                     ],['id'=>$item['order_id']]);
                     break;
                 case 'credit':
                     CreditOrderModel::getInstance()->updateStatus([
                         'status'=>1,
                         'pay_type'=>$item['pay_type'],
-                        'pay_time'=>$item['pay_time']
+                        'pay_time'=>$paytime
                     ],['order_id'=>$item['order_id']]);
                     break;
                 default:
                     OrderModel::getInstance()->updateStatus([
                         'status'=>1,
                         'pay_type'=>$item['pay_type'],
-                        'pay_time'=>$item['pay_time']
+                        'pay_time'=>$paytime
                     ],['order_id'=>$item['order_id']]);
                     break;
             }
