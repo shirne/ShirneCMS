@@ -3,6 +3,7 @@
 namespace shirne\third;
 
 use AlibabaCloud\Client\AlibabaCloud;
+use AlibabaCloud\Dysmsapi\Dysmsapi;
 use AlibabaCloud\Green\Green;
 use think\facade\Log;
 
@@ -43,7 +44,7 @@ class Aliyun extends ThirdModelBase
                 "scenes" => array("antispam")
             )))->request();
 
-            if (200 == $result->code) {
+            if (200 == $result->Code) {
                 $taskResults = $result->data;
                 foreach ($taskResults as $taskResult) {
                     if (200 == $taskResult->code) {
@@ -62,13 +63,47 @@ class Aliyun extends ThirdModelBase
                             return -1;
                         }
                     } else {
-                        $this->set_error("task process fail:" + $result->code);
-                        Log::record("task process fail:" + $result->code);
+                        $this->set_error("task process fail:" + $result->Message);
+                        Log::record("task process fail:" + $result->Code);
                     }
                 }
             } else {
-                $this->set_error("detect fail. code:" + $result->code);
-                Log::record("detect fail. code:" + $result->code);
+                $this->set_error("detect fail. code:" + $result->Code);
+                Log::record("detect fail. " + json_encode($result,JSON_UNESCAPED_UNICODE));
+            }
+        } catch (\Exception $e) {
+            $this->set_error($e->getMessage());
+            Log::record($e->getMessage());
+            Log::record($e->getTraceAsString());
+        }
+        return 0;
+    }
+
+    public function sendSms($mobiles, $param, $tplCode, $sign){
+        if(empty($this->accessKeyId) || empty($this->accessKeySecret))return 0;
+        try {
+            if(is_string($param)){
+                $param = ['code'=>$param];
+            }
+            $param = json_encode($param,JSON_UNESCAPED_UNICODE);
+
+            AlibabaCloud::accessKeyClient($this->accessKeyId,$this->accessKeySecret)
+            ->regionId('cn-shenzhen')
+            ->asDefaultClient();
+
+            $request = Dysmsapi::v20170525()->sendSms();
+            
+            $result = $request->withPhoneNumbers($mobiles)
+                ->withSignName($sign)
+                ->withTemplateCode($tplCode)
+                ->withTemplateParam($param)
+                ->request();
+
+            if (200 == $result->Code || $result->Code == 'OK') {
+                return 1;
+            } else {
+                $this->set_error($result->Message);
+                Log::record("sendsms fail." . json_encode($result,JSON_UNESCAPED_UNICODE));
             }
         } catch (\Exception $e) {
             $this->set_error($e->getMessage());
