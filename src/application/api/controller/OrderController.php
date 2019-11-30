@@ -119,14 +119,20 @@ class OrderController extends AuthedController
         if($payid)$wechat=WechatModel::where('id|hash',$payid)->where('type','wechat')->find();
         if($trade_type == 'JSAPI' ) {
             if(empty($this->wechatUser) && !empty($wechat)){
-                $this->wechatUser = Db::name('memberOauth')->where('member_id',$this->user['id'])
-                ->where('type_id',$wechat['id'])->find();
+                $openid = $this->request->param('openid');
+                if($openid){
+                    $this->wechatUser = Db::name('memberOauth')->where('openid',$openid)
+                    ->where('type_id',$wechat['id'])->find();
+                }else{
+                    $this->wechatUser = Db::name('memberOauth')->where('member_id',$this->user['id'])
+                    ->where('type_id',$wechat['id'])->find();
+                }
             }
             if(!empty($this->wechatUser) && !$payid){
                 $payid = $this->wechatUser['type_id'];
             }
             if(empty($this->wechatUser)){
-                $this->error('未获取用户信息');
+                $this->error('用户未绑定微信号');
             }
         }
         if(empty($wechat) && $payid){

@@ -155,7 +155,11 @@ class AuthController extends BaseController
         if($errcount > 4){
             $this->error('登录尝试次数过多',ERROR_LOGIN_FAILED);
         }
-        $member = MemberModel::where('username',$username)->find();
+        if(ValidateHelper::isMobile($username)){
+            $member = MemberModel::where('mobile',$username)->where('mobile_bind',1)->find();
+        }else{
+            $member = MemberModel::where('username',$username)->find();
+        }
         $respdata=[];
         if(!empty($member) ){
             $merrorcount = intval(cache('login_error_'.$member['id']));
