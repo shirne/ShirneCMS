@@ -181,6 +181,7 @@ class AccountController extends AuthedController
                     'title'=>$item['title'],
                     'qrcode'=>$item['qrcode'],
                     'logo'=>$item['logo'],
+                    'openid'=>$followed['openid']??'',
                     'avatar'=>$followed['avatar']??'',
                     'nickname'=>$followed['nickname']??'',
                     'is_follow'=>empty($followed) || empty($followed['is_follow'])?0:1
@@ -226,7 +227,13 @@ class AccountController extends AuthedController
         
         $platform=$this->request->tokenData['platform']?:'';
         $appid=$this->request->tokenData['appid']?:'';
-        $cash_fee=round($amount*$this->config['cash_fee']*.01);
+        $cash_fee=round($amount*$this->config['cash_fee']/100);
+        if($this->config['cash_fee_min']> 0 && $cash_fee < $this->config['cash_fee_min']*100){
+            $cash_fee=round($this->config['cash_fee_min']*100);
+        }
+        if($this->config['cash_fee_max']> 0 && $cash_fee > $this->config['cash_fee_max']*100){
+            $cash_fee=round($this->config['cash_fee_max']*100);
+        }
         $data=array(
             'member_id'=>$this->user['id'],
             'platform'=>$platform,
