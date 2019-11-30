@@ -76,23 +76,40 @@ class CreditOrderController extends AuthedController
         }else{
             $address=Db::name('MemberAddress')->where('member_id',$this->user['id'])
                 ->where('address_id',$data['address_id'])->find();
-            $balancepay=$data['pay_type']=='balance'?1:0;
+            $balancepay=0;
+            if(!empty($data['pay_type']) ){
+                if($data['pay_type']=='balance' || $data['pay_type']=='money')$balancepay=1;
 
-            $result=CreditOrderFacade::makeOrder($this->user,$goods,$address,$data['remark'],$balancepay);
+                if(!$balancepay){
+                    $this->error('支付方式错误');
+                }
+            }
+            if($balancepay){
+                $secpassword=$this->request->param('secpassword');
+                if(empty($secpassword)){
+                    $this->error('请填写安全密码');
+                }
+                if(!compare_secpassword($this->user,$secpassword)){
+                    $this->error('安全密码错误');
+                }
+            }
+
+            $orderModel=new CreditOrderFacade();
+            $result=$orderModel->makeOrder($this->user,$goods,$address,$data['remark'],$balancepay);
             if($result){
                 if($balancepay) {
-                    return $this->response(['order_id',$result],1,'下单成功');
+                    return $this->response(['order_id'=>$result],1,'下单成功');
                 }else{
                     $method=$data['pay_type'].'pay';
                     if(method_exists($this,$method)){
                         return $this->$method($result);
                     }else{
-                        return $this->response(['order_id',$result],1,'下单成功，请尽快支付');
+                        return $this->response(['order_id'=>$result],1,'下单成功，请尽快支付');
                     }
 
                 }
             }else{
-                $this->error('下单失败');
+                $this->error($orderModel->getError()?:'下单失败');
             }
         }
     }

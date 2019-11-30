@@ -3,7 +3,7 @@
 namespace app\admin\controller;
 
 use app\common\model\CreditOrderModel;
-use excel\Excel;
+use shirne\excel\Excel;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use think\Db;
 
@@ -98,7 +98,7 @@ class CreditOrderController extends BaseController
         foreach ($rows as $row){
             $prodata = Db::name('creditOrderGoods')->where('order_id', $row['order_id'])->find();
             $excel->addRow(array(
-                $row['order_id'],order_status($row['status'],false),date('Y/m/d H:i:s',$row['create_at']),$row['member_id'],$row['username'],
+                $row['order_id'],order_status($row['status'],false),date('Y/m/d H:i:s',$row['create_time']),$row['member_id'],$row['username'],
                 $prodata['goods_title'],$row['payamount'],$row['recive_name'],$row['mobile'],$row['province'],$row['city'],$row['area'],$row['address']
             ));
         }

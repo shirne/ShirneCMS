@@ -75,7 +75,22 @@ class OrderController extends AuthedController
             $address=Db::name('MemberAddress')->where('member_id',$this->user['id'])
                 ->where('address_id',$data['address_id'])->find();
             $balancepay=0;
-            if(isset($data['pay_type']) && $data['pay_type']=='balance')$balancepay=1;
+            if(!empty($data['pay_type']) ){
+                if($data['pay_type']=='balance' || $data['pay_type']=='money')$balancepay=1;
+
+                if(!$balancepay){
+                    $this->error('支付方式错误');
+                }
+            }
+            if($balancepay){
+                $secpassword=$this->request->param('secpassword');
+                if(empty($secpassword)){
+                    $this->error('请填写安全密码');
+                }
+                if(!compare_secpassword($this->user,$secpassword)){
+                    $this->error('安全密码错误');
+                }
+            }
 
             $platform=$this->request->tokenData['platform']?:'';
             $appid=$this->request->tokenData['appid']?:'';
@@ -191,14 +206,24 @@ class OrderController extends AuthedController
     
         return $this->response($data);
     }
-    public function balancepay($order_id){
+    public function balancepay($order_id, $type='money'){
+        if(!in_array($type,['money'])){
+            $this->error('支付方式错误!');
+        }
+        $secpassword=$this->request->param('secpassword');
+        if(empty($secpassword)){
+            $this->error('请填写安全密码');
+        }
+        if(!compare_secpassword($this->user,$secpassword)){
+            $this->error('安全密码错误');
+        }
         $order=OrderModel::get($order_id);
         if(empty($order)|| $order['status']!=0){
             $this->error('订单已支付或不存在!',0,['order_id'=>$order_id]);
         }
         $debit = money_log($order['member_id'], -$order['payamount']*100, "下单支付", 'consume',0,'money');
         if ($debit){
-            $order->save(['status'=>1,'pay_type'=>'balance','pay_time'=>time()]);
+            $order->save(['status'=>1,'pay_type'=>$type,'pay_time'=>time()]);
             $this->success('支付成功!',1,['order_id'=>$order_id]);
         }
         $this->error('支付失败!',0,['order_id'=>$order_id]);
