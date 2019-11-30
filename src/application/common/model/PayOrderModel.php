@@ -124,14 +124,19 @@ class PayOrderModel extends BaseModel
         if(!empty($payorder)){
             if($payorder['pay_type']=='wechat'){
                 static $apps=[];
-                if(!isset($apps[$payorder['appid']])){
-                    $apps[$payorder['appid']] = WechatModel::createApp($payorder['appid'],true, ['notify'=>url('api/wechat/refund',['hash'=>'__HASH__'],true,true),'use_cert'=>true]);
+                $appid = $payorder['pay_id'];
+                if(!$appid){
+                    Log::record('订单 '.$order_type.' '.$orderid.'退款失败,退款配置错误');
+                    return false;
                 }
-                if($apps[$payorder['appid']]){
+                if(!isset($apps[$appid])){
+                    $apps[$appid] = WechatModel::createApp($appid,true, ['notify'=>url('api/wechat/refund',['hash'=>'__HASH__'],true,true),'use_cert'=>true]);
+                }
+                if($apps[$appid]){
                     $refund_id = PayOrderRefundModel::createFromPayOrder($payorder, $reason);
                     if($refund_id > 0){
                         $refund = PayOrderRefundModel::get($refund_id);
-                        $result = $apps[$payorder['appid']]->refund->byOutTradeNumber($payorder['order_no'], $refund['refund_no'], $payorder['pay_amount'], $refund['refund_fee'], [
+                        $result = $apps[$appid]->refund->byOutTradeNumber($payorder['order_no'], $refund['refund_no'], $payorder['pay_amount'], $refund['refund_fee'], [
                             'refund_desc' => $reason,
                         ]);
                         if($result['return_code'] == 'SUCCESS'){

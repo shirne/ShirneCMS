@@ -48,7 +48,7 @@ class PayOrderRefundModel extends BaseModel
             
             //todo
         }elseif($status < 0){
-            Db::name('payOrder')->where('id',$this['order_id'])->update(['refund_fee'=>['DEC',$this['refund_fee']]]);
+            Db::name('payOrder')->where('id',$this['order_id'])->update(['refund_fee'=>['INC',$this['refund_fee']]]);
         }
     }
     
