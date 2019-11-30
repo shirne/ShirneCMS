@@ -10,6 +10,7 @@ use app\common\model\MemberOauthModel;
 use app\common\validate\MemberCardValidate;
 use app\common\model\WechatModel;
 use extcore\traits\Upload;
+use shirne\common\ValidateHelper;
 use think\Db;
 
 class AccountController extends AuthedController
@@ -145,7 +146,8 @@ class AccountController extends AuthedController
         return $this->response([
             'recharges'=>$recharges->items(),
             'total'=>$recharges->total(),
-            'page'=>$recharges->currentPage()
+            'page'=>$recharges->currentPage(),
+            'total_page'=>$recharges->lastPage()
         ]);
     }
     
@@ -179,6 +181,8 @@ class AccountController extends AuthedController
                     'title'=>$item['title'],
                     'qrcode'=>$item['qrcode'],
                     'logo'=>$item['logo'],
+                    'avatar'=>$followed['avatar']??'',
+                    'nickname'=>$followed['nickname']??'',
                     'is_follow'=>empty($followed) || empty($followed['is_follow'])?0:1
                 ];
             },$wechats->toArray())
@@ -195,7 +199,8 @@ class AccountController extends AuthedController
         return $this->response([
             'total'=>$cashes->total(),
             'cashes'=>$cashes->items(),
-            'page'=>$cashes->currentPage()
+            'page'=>$cashes->currentPage(),
+            'total_page'=>$cashes->lastPage()
         ]);
     }
     public function cash(){
@@ -283,6 +288,9 @@ class AccountController extends AuthedController
                 }
                 if (empty($carddata['cardno'])) {
                     $this->error('请填写卡号');
+                }
+                if(ValidateHelper::isBankcard($carddata['cardno'])){
+                    $this->error('银行卡号错误');
                 }
                 $carddata['member_id'] = $this->user['id'];
                 $bank_id = Db::name('MemberCard')->insert($carddata, false, true);
