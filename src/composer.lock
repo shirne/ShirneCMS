@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9d0db5175e24b5c40c55be128d54d175",
+    "content-hash": "a2d3ad16f1835431c9f80d9ed92cf001",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -135,6 +135,54 @@
                 "tool"
             ],
             "time": "2019-10-11T11:09:47+00:00"
+        },
+        {
+            "name": "alibabacloud/dysmsapi",
+            "version": "1.7.184",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/alibabacloud-sdk-php/dysmsapi.git",
+                "reference": "12f0760c1f32f4f4993831bc9999d3f0b55e2258"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/alibabacloud-sdk-php/dysmsapi/zipball/12f0760c1f32f4f4993831bc9999d3f0b55e2258",
+                "reference": "12f0760c1f32f4f4993831bc9999d3f0b55e2258",
+                "shasum": ""
+            },
+            "require": {
+                "alibabacloud/client": "^1.5",
+                "php": ">=5.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "AlibabaCloud\\Dysmsapi\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Alibaba Cloud SDK",
+                    "email": "sdk-team@alibabacloud.com",
+                    "homepage": "http://www.alibabacloud.com"
+                }
+            ],
+            "description": "Alibaba Cloud Dysmsapi SDK for PHP",
+            "homepage": "https://www.alibabacloud.com/",
+            "keywords": [
+                "alibaba",
+                "alibabacloud",
+                "aliyun",
+                "cloud",
+                "dysmsapi",
+                "library",
+                "sdk"
+            ],
+            "time": "2019-11-14T14:53:04+00:00"
         },
         {
             "name": "alibabacloud/green",
