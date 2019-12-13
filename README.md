@@ -80,7 +80,12 @@ ShirneCMS
 - [x] 产品接口
 - [x] 购物车接口
 - [x] 订单及支付接口
-- [x] 会员相关功能接口
+- [x] 会员资料
+- [x] 会员签到,签到排行
+- [x] 收货地址管理
+- [x] 订单管理
+- [x] 账户管理(余额/积分明细,提现充值) ……在线充值接口待开发
+- [ ] 会员升级申请
 
 ## 感谢
 ### 前端库
@@ -98,6 +103,10 @@ ShirneCMS
 [phpoffice/phpspreadsheet](https://phpspreadsheet.readthedocs.io/en/develop/)<br />
 [phpmailer](https://github.com/PHPMailer/PHPMailer)<br />
 [endroid/qr-code](https://github.com/endroid/qr-code)
+
+### 字体(生成图片使用)
+[NotoSansCJKsc]
+[百度网盘](https://pan.baidu.com/s/1i5l0qblUhhendpIhOqu4Iw) 提取码：7cwl
 
 ## 安装 及 开发说明
 
