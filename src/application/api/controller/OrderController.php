@@ -12,7 +12,7 @@ use app\common\model\ProductModel;
 use app\common\model\WechatModel;
 use app\common\validate\OrderValidate;
 use EasyWeChat\Factory;
-use think\Facade\Log;
+use think\facade\Log;
 use think\Db;
 
 use function GuzzleHttp\json_encode;
