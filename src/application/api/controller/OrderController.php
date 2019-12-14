@@ -15,8 +15,6 @@ use EasyWeChat\Factory;
 use think\facade\Log;
 use think\Db;
 
-use function GuzzleHttp\json_encode;
-
 /**
  * 订单操作
  * Class OrderController
