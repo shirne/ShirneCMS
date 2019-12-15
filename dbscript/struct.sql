@@ -640,6 +640,7 @@ CREATE TABLE `sa_award_log`(
   `member_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
   `type` varchar(20) DEFAULT '',
+  `field` varchar(20) DEFAULT '',
   `from_member_id` int(11) NOT NULL,
   `amount` int(11) DEFAULT '0' COMMENT '金额 单位分',
   `real_amount` int(11) DEFAULT '0',
