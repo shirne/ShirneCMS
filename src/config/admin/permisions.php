@@ -179,7 +179,8 @@ return array(
     'setting'=>array(
         'title'=>'系统配置',
         'items'=>array(
-            'index'=>'系统配置',
+            'index'=>'系统配置查看',
+            'update'=>'配置保存',
             'import'=>'配置导入',
             'export'=>'配置导出',
             'advance'=>'配置管理',
