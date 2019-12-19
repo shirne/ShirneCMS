@@ -19,7 +19,7 @@ class CreditOrderController extends BaseController
             ->where('creditOrder.delete_time',0);
 
         if(!empty($key)){
-            $model->whereLike('creditOrder.order_no|member.username|member.realname|creditOrder.recive_name|creditOrder.mobile',"%$key%");
+            $model->whereLike('creditOrder.order_no|member.username|member.nickname|member.realname|creditOrder.recive_name|creditOrder.mobile',"%$key%");
         }
         if($status!==''){
             $model->where('creditOrder.status',$status);
@@ -43,7 +43,7 @@ class CreditOrderController extends BaseController
             });
         }
 
-        $this->assign('key',$key);
+        $this->assign('keyword',$key);
         $this->assign('status',$status);
         $this->assign('audit',$audit);
         $this->assign('orderids',empty($orderids)?0:implode(',',$orderids));

@@ -40,7 +40,7 @@
                             </select>
                         </div>
                         <div class="col-6 form-group input-group input-group-sm">
-                            <input type="text" class="form-control" name="key" placeholder="输入关键词搜索">
+                            <input type="text" class="form-control" name="key" value="{$keyword}" placeholder="输入关键词搜索">
                             <span class="input-group-append">
                               <button class="btn btn-outline-secondary" type="submit"><i class="ion-md-search"></i></button>
                             </span>

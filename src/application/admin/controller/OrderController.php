@@ -33,7 +33,7 @@ class OrderController extends BaseController
             ->where('order.delete_time',0);
 
         if(!empty($key)){
-            $model->whereLike('order.order_no|member.username|member.realname|order.recive_name|order.mobile',"%$key%");
+            $model->whereLike('order.order_no|member.username|member.nickname|member.realname|order.recive_name|order.mobile',"%$key%");
         }
         if($status!==''){
             $model->where('order.status',$status);
@@ -57,7 +57,7 @@ class OrderController extends BaseController
             });
         }
 
-        $this->assign('key',$key);
+        $this->assign('keyword',$key);
         $this->assign('status',$status);
         $this->assign('orderids',empty($orderids)?0:implode(',',$orderids));
         $this->assign('audit',$audit);
