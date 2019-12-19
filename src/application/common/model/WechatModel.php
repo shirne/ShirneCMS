@@ -96,6 +96,9 @@ class WechatModel extends BaseModel
         if(!empty($wechat)){
             if($ispay){
                 $config=WechatModel::to_pay_config($wechat, $payset['notify']??'', $payset['use_cert']??false);
+                if(empty($config)){
+                    return false;
+                }
                 return Factory::payment($config);
             }
             $options=self::to_config($wechat);
@@ -138,6 +141,9 @@ class WechatModel extends BaseModel
 
         // 如需使用敏感接口（如退款、发送红包等）需要配置 API 证书路径(登录商户平台下载 API 证书)
         if($useCert){
+            if(empty($data['cert_path']) || empty($data['key_path'])){
+                return false;
+            }
             $config['cert_path'] = realpath(DOC_ROOT.$data['cert_path']);
             $config['key_path']  = realpath(DOC_ROOT.$data['key_path']);
         }

@@ -31,7 +31,7 @@ class PayOrderRefundModel extends BaseModel
             'member_id'=>$payOrder['member_id'],
             'order_id'=>$payOrder['id'],
             'refund_no'=>static::create_no(),
-            'refund_fee'=>$refundFee?$refundFee:$payOrder['pay_amount'],
+            'refund_fee'=>$refundFee?$refundFee:($payOrder['pay_amount']*0.01),
             'status'=>0,
             'reason'=>$reason,
             'create_time'=>time(),

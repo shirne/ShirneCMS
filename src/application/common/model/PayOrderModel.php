@@ -5,6 +5,7 @@ namespace app\common\model;
 use EasyWeChat\Factory;
 use app\common\core\BaseModel;
 use think\Db;
+use think\facade\Log;
 
 /**
  * Class PayOrderModel
@@ -136,7 +137,7 @@ class PayOrderModel extends BaseModel
                     $refund_id = PayOrderRefundModel::createFromPayOrder($payorder, $reason);
                     if($refund_id > 0){
                         $refund = PayOrderRefundModel::get($refund_id);
-                        $result = $apps[$appid]->refund->byOutTradeNumber($payorder['order_no'], $refund['refund_no'], $payorder['pay_amount'], $refund['refund_fee'], [
+                        $result = $apps[$appid]->refund->byOutTradeNumber($payorder['order_no'], $refund['refund_no'], $payorder['pay_amount'], $refund['refund_fee']*100, [
                             'refund_desc' => $reason,
                         ]);
                         if($result['return_code'] == 'SUCCESS'){
@@ -153,6 +154,9 @@ class PayOrderModel extends BaseModel
                     }else{
                         Log::record('订单 '.$order_type.' '.$orderid.'退款失败,退款单创建失败');
                     }
+                }else{
+                    Log::record('订单 '.$order_type.' '.$orderid.'退款失败,退款配置错误');
+                    return false;
                 }
             }else{
                 Log::record('订单 '.$order_type.' '.$orderid.'退款失败,暂不支持支付方式 '.$payorder['pay_type']);
