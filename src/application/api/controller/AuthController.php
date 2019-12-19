@@ -181,7 +181,7 @@ class AuthController extends BaseController
                             $oauth = MemberOauthModel::where('openid',$openid)->find();
                             if(!empty($oauth)){
                                 MemberOauthModel::where('openid',$openid)->where('member_id',0)->update(['member_id'=>$member['id']]);
-                                $updata = MemberModel::checkUpdata($oauth,$member);
+                                $updata = MemberModel::checkUpdata($oauth->getData(),$member);
                                 if(!empty($updata)){
                                     $member->save($updata);
                                 }
@@ -606,7 +606,7 @@ class AuthController extends BaseController
         if(!empty($openid)){
             $oauth = MemberOauthModel::where('openid',$openid)->find();
             if(!empty($oauth)){
-                $updata = MemberModel::checkUpdata($oauth,$data);
+                $updata = MemberModel::checkUpdata($oauth->getData(),$data);
                 $data = array_merge($data, $updata);
             }else{
                 $openid = '';
