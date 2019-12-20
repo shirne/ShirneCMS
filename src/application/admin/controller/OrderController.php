@@ -140,6 +140,30 @@ class OrderController extends BaseController
         return $this->fetch();
     }
 
+    public function setstatus($ids){
+        $ids = idArr($ids);
+        $status = $this->request->param('status');
+
+        $orders = OrderModel::whereIn('order_id',$ids)->select();
+        if(empty($orders)){
+            $this->error('参数无效');
+        }
+        $errors=[];
+        foreach($orders as $order){
+            if($order['status'] < 1){
+                $errors[] = '订单['.$order['order_id'].']状态错误';
+                continue;
+            }
+            if($order['status'] < $status){
+                for($i=$order['status']+1;$i<=$status;$i++){
+                    $order->updateStatus($i);
+                }
+            }
+        }
+
+        $this->success(implode("\n",$errors)."\n操作完成");
+    }
+
     public function setcancel($id){
         $order = OrderModel::get($id);
         if(empty($id) || empty($order)){

@@ -94,7 +94,7 @@
                 <td class="operations">
                     <if condition="$v['status'] EQ 0">
                     <a class="btn btn-outline-success pay-confirm" title="确认" data-id="{$v.id}" data-amount="{$v.real_amount}" data-cashtype="{$v.cashtype}"  href="javascript:"><i class="ion-md-checkmark-circle"></i> </a>
-                    <a class="btn btn-outline-danger link-confirm" title="无效" data-confirm="您真的确定要作废吗？" href="{:url('Paylog/cashdelete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
+                    <a class="btn btn-outline-danger link-confirm" title="无效" data-confirm="您真的确定要作废吗？\n此操作将取消申请并将全部金额退回到会员的提现账户" href="{:url('Paylog/cashdelete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
                         <else/>
                         -
                     </if>

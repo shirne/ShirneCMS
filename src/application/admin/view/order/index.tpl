@@ -8,16 +8,27 @@
 
         <div class="row">
             <div class="col-6">
-                <div class="btn-group btn-group-sm" role="group" aria-label="Button group with nested dropdown">
-                    <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        导出订单
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                        <a class="dropdown-item" href="{:url('order/export',['order_ids'=>$orderids])}" target="_blank" >导出本页</a>
-                        <a class="dropdown-item" href="{:url('order/export',['status'=>1])}" target="_blank">导出未处理</a>
-                        <a class="dropdown-item" href="{:url('order/export',['status'=>$status,'audit'=>$audit,'key'=>base64_encode($key)])}" target="_blank">导出筛选结果</a>
+                <div class="btn-toolbar list-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                    <div class="btn-group btn-group-sm mr-2" role="group" aria-label="check action group">
+                        <a href="javascript:" class="btn btn-outline-secondary checkall-btn" data-toggle="button" aria-pressed="false">全选</a>
+                        <a href="javascript:" class="btn btn-outline-secondary checkreverse-btn">反选</a>
+                    </div>
+                    <div class="btn-group btn-group-sm mr-2" role="group" aria-label="action button group">
+                        <a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="setStatus">设置状态</a>
+                        <a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="delete">{:lang('Delete')}</a>
+                    </div>
+                    <div class="btn-group btn-group-sm" role="group" aria-label="Button group with nested dropdown">
+                        <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            导出订单
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                            <a class="dropdown-item" href="{:url('order/export',['order_ids'=>$orderids])}" target="_blank" >导出本页</a>
+                            <a class="dropdown-item" href="{:url('order/export',['status'=>1])}" target="_blank">导出未处理</a>
+                            <a class="dropdown-item" href="{:url('order/export',['status'=>$status,'audit'=>$audit,'key'=>base64_encode($key)])}" target="_blank">导出筛选结果</a>
+                        </div>
                     </div>
                 </div>
+                
             </div>
             <div class="col-6">
                 <form action="{:url('order/index')}" method="post">
@@ -65,7 +76,7 @@
             <php>$empty=list_empty(7);</php>
             <volist name="lists" id="v" empty="$empty">
                 <tr>
-                    <td>{$v.order_id}</td>
+                    <td><input type="checkbox" name="id" value="{$v.order_id}" /><br />{$v.order_id}</td>
                     <td>
                         <volist name="v['products']" id="p">
                         <div class="media">
@@ -146,6 +157,37 @@
 <block name="script">
         <include file="order/_status_tpl" />
     <script type="text/javascript">
+    (function(w){
+        w.actionSetStatus=function(ids){
+            dialog.action(['设为已发货(无物流)','设为已收货','设为已完成'],function(idx){
+                var loading = dialog.loading('正在处理');
+                $.ajax({
+                    url:"{:url('setstatus')}",
+                    dataType:'json',
+                    type:'POST',
+                    data:{
+                        ids:ids.join(','),
+                        status:idx+2
+                    },
+                    success:function(json){
+                        loading.close()
+                        if(json.code == 1){
+                            dialog.success(json.msg)
+                            setTimeout(function(){
+                                location.reload();
+                            },800)
+                        }else{
+                            dialog.error(json.msg)
+                        }
+                    },
+                    error:function(){
+                        loading.close()
+                        dialog.error('服务器错误')
+                    }
+                })
+            });
+        }
+    })(window);
         jQuery(function(){
             
 
