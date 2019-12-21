@@ -3,9 +3,8 @@
 namespace app\common\model;
 
 
-use app\common\core\BaseModel;
+use app\common\core\BaseOrderModel;
 use think\Db;
-use shirne\third\KdExpress;
 use think\Exception;
 use think\facade\Log;
 
@@ -21,20 +20,9 @@ define('ORDER_STATUS_FINISH',4);
  * Class OrderModel
  * @package app\common\model
  */
-class OrderModel extends BaseModel
+class OrderModel extends BaseOrderModel
 {
     protected $pk='order_id';
-    
-    private function create_no(){
-        $maxid=$this->field('max(order_id) as maxid')->find();
-        $maxid = $maxid['maxid'];
-        if(empty($maxid))$maxid=0;
-        return date('YmdHis').$this->pad_orderid($maxid+1,4);
-    }
-    private function pad_orderid($id,$len=4){
-        $strlen=strlen($id);
-        return $strlen<$len?str_pad($id,$len,'0',STR_PAD_LEFT):substr($id,$strlen-$len);
-    }
 
     public static function init()
     {
@@ -88,37 +76,6 @@ class OrderModel extends BaseModel
             self::setLevel($item);
             self::doRebate($item);
         }
-    }
-    
-    protected function beforeStatus($data)
-    {
-        $data = parent::beforeStatus($data);
-        if($data['status'] == ORDER_STATUS_PAIED){
-            if(!isset($data['pay_time'])){
-                $data['pay_time']=time();
-            }
-        }elseif($data['status'] == ORDER_STATUS_SHIPED){
-            if(!isset($data['deliver_time'])){
-                $data['deliver_time']=time();
-            }
-        }elseif($data['status'] == ORDER_STATUS_RECEIVED){
-            if(!isset($data['confirm_time'])){
-                $data['confirm_time']=time();
-            }
-        }elseif($data['status'] == ORDER_STATUS_FINISH){
-            if(!isset($data['comment_time'])){
-                $data['comment_time']=time();
-            }
-        }elseif($data['status'] < ORDER_STATUS_REFUND){
-            if(!isset($data['refund_time'])){
-                $data['refund_time']=time();
-            }
-        }elseif($data['status'] < ORDER_STATUS_UNPAIED){
-            if(!isset($data['cancel_time'])){
-                $data['cancel_time']=time();
-            }
-        }
-        return $data;
     }
     
     protected function triggerStatus($item, $status, $newData=[])
@@ -592,31 +549,6 @@ class OrderModel extends BaseModel
         return false;
     }
     
-    protected static function transkey($keywords){
-        $maps=[
-            'order_no'=>['单号','订单号','订单编号','订单号码'],
-            'amount'=>['待付金额','订单金额'],
-            'goods'=>['商品详情','物品名称','商品名称','物品详情'],
-            'pay_notice'=>['支付提醒'],
-            'create_date'=>['下单时间','购买时间'],
-            'express'=>['快递公司'],
-            'deliver_date'=>['发货时间'],
-            'confirm_date'=>['确认时间'],
-            'reason'=>['取消原因']
-        ];
-        if(!is_array($keywords)){
-            $keywords = explode('、',$keywords);
-        }
-        foreach ($keywords as $idx=>$keyword){
-            foreach ($maps as $key=>$words){
-                if(in_array($keyword,$words)){
-                    $keywords[$idx]=$key;
-                    break;
-                }
-            }
-        }
-        return $keywords;
-    }
     
     /**
      * 根据设置或升级原则进行升级
@@ -729,44 +661,4 @@ class OrderModel extends BaseModel
         return $results;
     }
 
-     /**
-     * @param bool $force
-     * @return array
-     */
-    public function fetchExpress($force=false)
-    {
-    
-        $data=[];
-        if(!empty($this->express_no) && !empty($this->express_code)) {
-            $cacheData = Db::name('expressCache')->where('express_code',$this->express_code)
-                ->where('express_no',$this->express_no)->find();
-            if(empty($cacheData) || $force || $cacheData['update_time']<time()-3600) {
-                $express = new KdExpress([
-                    'appid' => getSetting('kd_userid'),
-                    'appsecret' => getSetting('kd_apikey')
-                ]);
-                $data = $express->QueryExpressTraces($this->express_code, $this->express_no);
-                if(!empty($data)) {
-                    $newData = ['data' => json_encode($data, JSON_UNESCAPED_UNICODE)];
-                    if (empty($cacheData)) {
-                        $newData['express_code'] = $this->express_code;
-                        $newData['express_no'] = $this->express_no;
-                        $newData['create_time'] = $newData['update_time'] = time();
-                        Db::name('expressCache')->insert($newData);
-                    } else {
-                        $newData['update_time'] = time();
-                        Db::name('expressCache')->where('id', $cacheData['id'])->update($newData);
-                    }
-                }else{
-                    $data=[];
-                }
-            }elseif(!empty($cacheData['data'])){
-                $data = json_decode($cacheData['data'],true);
-                if(is_string($data)){
-                    $data = json_decode($data,true);
-                }
-            }
-        }
-        return $data;
-    }
 }

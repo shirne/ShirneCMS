@@ -3,8 +3,7 @@
 namespace app\common\model;
 
 
-use app\common\core\BaseModel;
-use shirne\third\KdExpress;
+use app\common\core\BaseOrderModel;
 use think\Db;
 
 define('CREDIT_STATUS_REFUND',-2);
@@ -15,26 +14,11 @@ define('CREDIT_STATUS_SHIPED',2);
 define('CREDIT_STATUS_RECEIVED',3);
 define('CREDIT_STATUS_FINISH',4);
 
-class CreditOrderModel extends BaseModel
+class CreditOrderModel extends BaseOrderModel
 {
     protected $pk='order_id';
     protected $type = [];
 
-    private function create_no(){
-        $maxid=$this->field('max(order_id) as maxid')->find();
-        $maxid = $maxid['maxid'];
-        if(empty($maxid))$maxid=0;
-        return date('YmdHis').$this->pad_orderid($maxid+1,3);
-    }
-    private function pad_orderid($id,$len=3){
-        $strlen=strlen($id);
-        return $strlen<$len?str_pad($id,$len,'0',STR_PAD_LEFT):substr($id,$strlen-$len);
-    }
-
-    public static function init()
-    {
-        parent::init();
-    }
 
     public static function getCounts($member_id=0){
         $model=Db::name('creditOrder')->where('delete_time',0);
@@ -208,32 +192,4 @@ class CreditOrderModel extends BaseModel
     }
 
 
-    /**
-     * @param bool $force
-     * @return array
-     */
-    public function fetchExpress($force=false)
-    {
-        if($force || $this->express_time<time()-3600)
-        {
-            if(!$force && !empty($this->express_data)){
-                $express=json_decode($this->express_data);
-                if($express['Success']==true && $express['State']==3){
-                    return $express;
-                }
-            }
-            if(!empty($this->express_no) && !empty($this->express_code)) {
-                $express = new KdExpress([
-                    'appid'=>getSetting('kd_userid'),
-                    'appsecret'=>getSetting('kd_apikey')
-                ]);
-                $data = $express->QueryExpressTraces($this->express_code, $this->express_no);
-                $this->express_data=$data;
-                $this->express_time=time();
-                $this->save();
-            }
-        }
-
-        return empty($this->express_data)?[]:json_decode($this->express_data,TRUE);
-    }
 }
