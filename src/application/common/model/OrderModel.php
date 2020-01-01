@@ -661,4 +661,19 @@ class OrderModel extends BaseOrderModel
         return $results;
     }
 
+    public function refund($order = null, $reason = '', $type = ''){
+        if(empty($order)){
+            $order = $this->getOrigin();
+            $reason = $order['reason']?:'订单取消';
+            $type = 'order-cancel';
+        }
+        if($order['pay_type'] == 'balance'){
+            return money_log($order['member_id'], $order['payamount'] * 100,$reason,$type);
+        }elseif($order['pay_type'] == 'offline'){
+            return true;
+        }else{
+            return PayOrderModel::refund($order['order_id'],'order',$reason);
+        }
+    }
+
 }
