@@ -121,18 +121,15 @@
                     </empty>
                 </td>
                 <td class="operations text-left">
-
                     <if condition="$v.is_agent neq 0">
                         <a class="btn btn-outline-primary" title="查看下线" href="{:url('member/index',array('referer'=>$v['id']))}"><i class="ion-md-people"></i> </a>
                         <a class="btn btn-outline-danger link-confirm" data-confirm="取消代理不能更改已注册的用户!!!" title="取消代理" href="{:url('member/cancel_agent',array('id'=>$v['id']))}" ><i class="ion-md-log-out"></i> </a><br />
                         <a class="btn btn-sm pl-1 pr-1 pt-0 pb-0 mt-2 btn-{$agents[$v['is_agent']]['style']} btn-setagent" title="更改级别" data-id="{$v.id}" data-agent="{$v.is_agent}" href="{:url('member/set_agent',array('id'=>$v['id']))}" >{$agents[$v['is_agent']]['name']}&nbsp;<i class="ion-md-create"></i></a>
                     <else/>
-                        <a class="btn btn-outline-primary"  data-id="{$v.id}" data-agent="0" title="设置代理" href="{:url('member/set_agent',array('id'=>$v['id']))}" ><i class="ion-md-medal"></i> </a>
+                        <a class="btn btn-sm btn-outline-primary"  data-id="{$v.id}" data-agent="0" title="设置代理" href="{:url('member/set_agent',array('id'=>$v['id']))}" ><i class="ion-md-medal"></i> </a>
                     </if>
-
-                </td> 
+                </td>
                 <td>
-                    
                     <a href="javascript:" class="btn btn-sm has-tooltip pl-1 pr-1 pt-0 pb-0 btn-{$levels[$v['level_id']]['style']} btn-setlevel" data-id="{$v.id}" data-level="{$v.level_id}" title="点击修改">{$levels[$v['level_id']]['level_name']}&nbsp;<i class="ion-md-create"></i></a>
                 </td>
                 <td class="operations">
@@ -143,7 +140,7 @@
                     <if condition="$v.status eq 1">
                         <a class="btn btn-outline-warning link-confirm" title="禁用" data-confirm="禁用后用户将不能登陆!\n请确认!!!" href="{:url('member/status',array('id'=>$v['id'],'type'=>0))}" ><i class="ion-md-remove-circle-outline"></i> </a>
                         <else/>
-                        <a class="btn btn-outline-success" title="启用" href="{:url('member/status',array('id'=>$v['id'],'type'=>1))}" style="color:#50AD1E;"><i class="ion-md-check"></i> </a>
+                        <a class="btn btn-outline-success link-confirm" title="启用" data-confirm="确认启用用户?" href="{:url('member/status',array('id'=>$v['id'],'type'=>1))}" style="color:#50AD1E;"><i class="ion-md-checkmark-circle"></i> </a>
                     </if>
                     <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="警告：删除会员将清除所有与会员相关的资料并且无法恢复!\n请确认!!!" href="{:url('member/delete',array('id'=>$v['id']))}" ><i class="ion-md-close"></i> </a>
                 </td>
@@ -185,7 +182,7 @@
             w.actionEnable=function(ids){
                 dialog.confirm('确定将选中会员设置为正常状态？',function() {
                     $.ajax({
-                        url:"{:url('member/delete',['id'=>'__id__','type'=>1])}".replace('__id__',ids.join(',')),
+                        url:"{:url('member/status',['id'=>'__id__','type'=>1])}".replace('__id__',ids.join(',')),
                         type:'GET',
                         dataType:'JSON',
                         success:function(json){
@@ -203,7 +200,7 @@
             w.actionDisable=function(ids){
                 dialog.confirm('确定禁用选中会员？',function() {
                     $.ajax({
-                        url:"{:url('member/delete',['id'=>'__id__','type'=>0])}".replace('__id__',ids.join(',')),
+                        url:"{:url('member/status',['id'=>'__id__','type'=>0])}".replace('__id__',ids.join(',')),
                         type:'GET',
                         dataType:'JSON',
                         success:function(json){

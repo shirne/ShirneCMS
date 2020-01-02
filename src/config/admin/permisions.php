@@ -139,7 +139,8 @@ return array(
             'logclear'=>'会员日志清除',
             'add'=>'会员添加',
             'update'=>'会员修改',
-            'delete'=>'会员禁用',
+            'status'=>'会员禁用',
+            'delete'=>'会员删除',
             'set_agent'=>'设置代理',
             'cancel_agent'=>'取消代理'
         )
