@@ -156,6 +156,7 @@ return array(
     'paylog'=>array(
         'title'=>'财务相关',
         'items'=>array(
+            'index'=>'第三方支付明细',
             'recharge'=>'充值查看',
             'rechargeupdate'=>'充值确认',
             'rechargecancel'=>'充值撤销',
