@@ -1,19 +1,19 @@
 <extend name="public:base" />
 
 <block name="body">
-    <include file="public/bread" menu="member_money_log" title="" />
+    <include file="public/bread" menu="paylog_index" title="" />
 
     <div id="page-wrapper">
         <div class="row list-header">
             <div class="col-md-12">
-                <form action="{:url('member/money_log',searchKey('fromdate,todate',''))}" class="form-inline" method="post">
+                <form action="{:url('paylog/index',searchKey('fromdate,todate',''))}" class="form-inline" method="post">
                     <div class="btn-group">
                         <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            余额类型:  {$fields[$field]} <span class="caret"></span>
+                           订单类型 {$orderTypes[$ordertype]} <span class="caret"></span>
                         </button>
                         <div class="dropdown-menu">
-                            <foreach name="fields" item="t" key="k">
-                                <a class="dropdown-item" href="{:url('money_log',searchKey('field',$k))}">{$t}</a>
+                            <foreach name="orderTypes" item="t" key="k">
+                                <a class="dropdown-item" href="{:url('index',searchKey('ordertype',$k))}">{$t}</a>
                             </foreach>
                         </div>
                     </div>
@@ -31,26 +31,17 @@
                             <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">会员: {$member.username}<span class="caret"></span>
                             </button>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="{:url('money_log',searchKey('id',0))}">不限会员</a>
-                            </div>
-                        </div>
-                    </if>
-                    <if condition="$from_id">
-                        <div class="btn-group ml-3">
-                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">来源: {$from_member.username}<span class="caret"></span>
-                            </button>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" href="{:url('money_log',searchKey('from_id',0))}">不限来源</a>
+                                <a class="dropdown-item" href="{:url('index',searchKey('id',0))}">不限会员</a>
                             </div>
                         </div>
                     </if>
                     <div class="btn-group ml-3">
                         <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            日志类型:  {$types[$type]} <span class="caret"></span>
+                           支付类型: {$payTypes[$type]} <span class="caret"></span>
                         </button>
                         <div class="dropdown-menu">
-                            <foreach name="types" item="t" key="k">
-                                <a class="dropdown-item" href="{:url('money_log',searchKey('type',$k))}">{$t}</a>
+                            <foreach name="payTypes" item="t" key="k">
+                                <a class="dropdown-item" href="{:url('index',searchKey('type',$k))}">{$t}</a>
                             </foreach>
                         </div>
                     </div>
@@ -61,7 +52,7 @@
             <thead>
             <tr>
                 <th class="text-center">\</th>
-                <foreach name="types" item="t" key="k">
+                <foreach name="orderTypes" item="t" key="k">
                     <if condition="$k NEQ 'all'">
                     <th>{$t}</th>
                     </if>
@@ -69,11 +60,11 @@
                 <th>合计</th>
             </tr>
             <tbody>
-                <foreach name="fields" item="f" key="fk">
+                <foreach name="payTypes" item="f" key="fk">
                     <if condition="$fk NEQ 'all'">
                     <tr>
                         <th>{$f}</th>
-                        <foreach name="types" item="t" key="tk">
+                        <foreach name="orderTypes" item="t" key="tk">
                             <if condition="$tk NEQ 'all'">
                             <td>{$statics[$fk][$tk]|showmoney}</td>
                             </if>
@@ -88,12 +79,14 @@
         <table class="table table-hover table-striped">
             <thead>
             <tr>
-                <th width="50">编号</th>
+                <th width="50">#</th>
+                <th>支付单号</th>
                 <th>用户名</th>
                 <th>金额</th>
-                <th>来源</th>
+                <th>支付渠道</th>
+                <th>订单</th>
                 <th>时间</th>
-                <th>备注</th>
+                <th>退款</th>
                 <th width="70"></th>
             </tr>
             </thead>
@@ -101,9 +94,10 @@
             <foreach name="logs" item="v">
                 <tr>
                     <td>{$v.id}</td>
+                    <td>{$v.order_no}</td>
                     <td>
                         <if condition="$v['member_id']">
-                            <a href="{:url('money_log',array('id'=>$v['member_id'],'fromdate'=>$fromdate,'todate'=>$todate,'from_id'=>$from_id,'type'=>$type))}" class="media">
+                            <a href="{:url('index',array('id'=>$v['member_id'],'fromdate'=>$fromdate,'todate'=>$todate,'from_id'=>$from_id))}" class="media">
                                 <if condition="!empty($v['avatar'])">
                                     <img src="{$v.avatar}" class="mr-2 rounded" width="30"/>
                                 </if>
@@ -124,32 +118,15 @@
                             -
                         </if>
                     </td>
-                    <td class="{$v['amount']>0?'text-success':'text-danger'}">{$v.field|money_type|raw}&nbsp;{$v.amount|showmoney}</td>
-                    <td>
-                        <if condition="$v['from_member_id']">
-                            <a href="{:url('money_log',array('id'=>$id,'fromdate'=>$fromdate,'todate'=>$todate,'from_id'=>$v['from_member_id'],'type'=>$type))}" class="media">
-                                <if condition="!empty($v['from_avatar'])">
-                                    <img src="{$v.from_avatar}" class="mr-2 rounded" width="30"/>
-                                </if>
-                                <div class="media-body">
-                                    <h5 class="mt-0 mb-1" style="font-size:13px;">
-                                        <if condition="!empty($v['from_nickname'])">
-                                            {$v.from_nickname}
-                                            <else/>
-                                            {$v.from_username}
-                                        </if>
-                                    </h5>
-                                    <div style="font-size:12px;">
-                                        [{$v.from_member_id} {$levels[$v['from_level_id']]['level_name']}]
-                                    </div>
-                                </div>
-                            </a>
-                            <else/>
-                            -
-                        </if>
-                    </td>
+                    <td class="text-success">￥{$v.pay_amount|showmoney}</td>
+                    <td>{$payTypes[$v['pay_type']]}</td>
+                    <td><a href="{:url($orderDetails[$v['order_type']],['id'=>$v['order_id']])}" target="_blank">{$orderTypes[$v['order_type']]}</a></td>
                     <td>{$v.create_time|showdate}</td>
-                    <td>{$v.reson}</td>
+                    <td><if condition="$v['is_refund'] GT 0">
+                        <span class="badge badge-warning">{$v['is_refund']}次 共￥{$v['refund_fee']}</span>
+                        <else/>
+                        <span class="badge badge-secondary">无</span>
+                    </if></td>
                     <td>
 
                     </td>

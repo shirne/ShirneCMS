@@ -17,6 +17,17 @@ class PayOrderModel extends BaseModel
     const PAY_TYPE_ALIPAY='alipay';
     protected $type = ['pay_data'=>'array'];
 
+    public static $orderTypes = [
+        'order'=>'商城订单',
+        'groupbuy'=>'团购订单',
+        'credit'=>'积分订单',
+        'recharge'=>'充值订单'
+    ];
+    public static $payTypes = [
+        'wechat'=>'微信支付',
+        'alipay'=>'支付宝'
+    ];
+
     private static function create_no(){
         $maxid=Db::name('payOrder')->max('id');
         if(empty($maxid))$maxid=0;

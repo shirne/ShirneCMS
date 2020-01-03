@@ -6,6 +6,7 @@ namespace app\admin\controller;
 use app\common\model\MemberCashinModel;
 use app\common\model\MemberOauthModel;
 use app\common\model\MemberRechargeModel;
+use app\common\model\PayOrderModel;
 use app\common\model\WechatModel;
 use EasyWeChat\Factory;
 use shirne\excel\Excel;
@@ -20,6 +21,88 @@ use think\facade\Log;
  */
 class PaylogController extends BaseController
 {
+    public function index($id=0,$fromdate='',$todate='',$ordertype='all',$type='all', $showall = 0){
+        $model=Db::view('payOrder po','*')
+        ->view('Member m',['username','nickname','avatar','level_id','mobile'],'m.id=po.member_id','LEFT');
+
+        $levels=getMemberLevels();
+
+        if($id>0){
+            $model->where('po.member_id',$id);
+            $this->assign('member',Db::name('member')->find($id));
+        }
+        if(!$showall){
+            $model->where('po.status','gt',0);
+        }
+        
+        if(!empty($type) && $type!='all'){
+            $model->where('po.pay_type',$type);
+        }else{
+            $type='all';
+        }
+        if(!empty($ordertype) && $ordertype!='all'){
+            $model->where('po.order_type',$ordertype);
+        }else{
+            $field='all';
+        }
+
+        if(!empty($todate)){
+            $totime=strtotime($todate.' 23:59:59');
+            if($totime===false)$todate='';
+        }
+        if(!empty($fromdate)) {
+            $fromtime = strtotime($fromdate);
+            if ($fromtime === false) $fromdate = '';
+        }
+        if(!empty($fromtime)){
+            if(!empty($totime)){
+                $model->whereBetween('po.create_time',array($fromtime,$totime));
+            }else{
+                $model->where('po.create_time','EGT',$fromtime);
+            }
+        }else{
+            if(!empty($totime)){
+                $model->where('po.create_time','ELT',$totime);
+            }
+        }
+
+        $logs = $model->order('ID DESC')->paginate(15);
+
+        $all = ['all'=> '全部'];
+        $orderTypes=array_merge($all, PayOrderModel::$orderTypes);
+        $payTypes=array_merge($all, PayOrderModel::$payTypes);
+
+        $orderDetails=[
+            'order'=>'order/detail',
+            'credit'=>'creditOrder/detail',
+            'groupbuy'=>'groupbuy.order/detail'
+        ];
+
+        $stacrows=$model->group('po.order_type,po.pay_type')->field('po.order_type,po.pay_type,sum(po.pay_amount) as total_amount')->select();
+        $statics=[];
+        foreach ($stacrows as $row){
+            $statics[$row['pay_type']][$row['order_type']]=$row['total_amount'];
+        }
+        foreach ($statics as $k=>$list){
+            $statics[$k]['sum']=array_sum($list);
+        }
+
+        $this->assign('id',$id);
+        $this->assign('fromdate',$fromdate);
+        $this->assign('todate',$todate);
+        $this->assign('type',$type);
+        $this->assign('ordertype',$ordertype);
+
+        $this->assign('orderTypes',$orderTypes);
+        $this->assign('orderDetails',$orderDetails);
+        $this->assign('payTypes',$payTypes);
+        $this->assign('levels',$levels);
+        $this->assign('statics', $statics);
+        $this->assign('logs', $logs);
+        $this->assign('page',$logs->render());
+        return $this->fetch();
+    }
+    
     /**
      * 充值管理
      * @param string $key
