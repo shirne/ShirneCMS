@@ -8,7 +8,7 @@ VALUES
   (34,3,'优惠券管理','ProductCoupon/index','product_coupon_index','ion-md-pricetags',0,0),
   (35,3,'订单管理','Order/index','order_index','ion-md-list-box',0,0),
   (36,3,'订单统计','OrderStatics/index','order_statics_index','ion-md-stats',0,0),
-  (37,3,'运费模板','ProductCoupon/index','product_coupon_index','ion-md-train',0,0);
+  (37,3,'运费模板','ProductPostage/index','product_postage_index','ion-md-train',0,0);
 
 DROP TABLE IF EXISTS `sa_member_cart`;
 

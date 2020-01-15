@@ -21,6 +21,7 @@
         "ext-json":"*",
         "ext-gd":"*",
         "ext-curl":"*",
+        "ext-zip":"*",
         "ext-fileinfo":"*",
         "topthink/framework": "5.1.*",
         "shirne/captcha": "1.0.2",
