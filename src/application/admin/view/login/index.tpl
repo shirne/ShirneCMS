@@ -11,7 +11,7 @@
     <link href="__STATIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Add custom CSS here -->
-    <link href="__STATIC__/admin/css/common.css" rel="stylesheet">
+    <link href="__STATIC__/admin/css/common.css?v={:config('template.static_version')}" rel="stylesheet">
     <link rel="stylesheet" href="__STATIC__/ionicons/css/ionicons.min.css">
     <style type="text/css">
         #canvas {
@@ -80,23 +80,24 @@
                 <h3 class="m-2 text-danger">您使用的浏览器功能不完整</h3>
                 <div class="mb-3"><b>双核</b>浏览器请切换到<b>极速模式</b>使用</div>
                 <h3 class="text-success mb-3">推荐使用</h3>
-                <div class="row">
-                    <a class="col" href="https://www.google.cn/chrome/" target="_blank">
+                <div class="browser-list">
+                    <a class="browser-item" href="https://www.google.cn/chrome/" target="_blank">
                         <div class="browser-icon" style="background-image:url(/static/admin/images/chrome-logo.svg)"></div>
                         <div class="browser-text">谷哥</div>
                     </a>
-                    <a class="col" href="https://www.mozilla.org/zh-CN/firefox/new/" target="_blank">
+                    <a class="browser-item" href="https://www.mozilla.org/zh-CN/firefox/new/" target="_blank">
                         <div class="browser-icon" style="background-image:url(/static/admin/images/firefox-logo.png)"></div>
                         <div class="browser-text">火狐</div>
                     </a>
-                    <a class="col" href="https://browser.360.cn/ee/" target="_blank">
+                    <a class="browser-item" href="https://browser.360.cn/ee/" target="_blank">
                         <div class="browser-icon" style="background-image:url(/static/admin/images/360-logo.png)"></div>
                         <div class="browser-text">360极速</div>
                     </a>
-                    <a class="col" href="https://www.opera.com/zh-cn" target="_blank">
+                    <a class="browser-item" href="https://www.opera.com/zh-cn" target="_blank">
                         <div class="browser-icon" style="background-image:url(/static/admin/images/opera-logo.png)"></div>
                         <div class="browser-text">Opera</div>
                     </a>
+                    <div class="clear-fix"></div>
                 </div>
                 <div class="mt-3"><a href="javascript:" class="text-muted force-login">我知道了，继续登录</a> </div>
             </div>
