@@ -168,6 +168,25 @@ CREATE TABLE `sa_subscribe_email` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
+-- Table structure for table `sa_booth`
+--
+
+DROP TABLE IF EXISTS `sa_booth`;
+CREATE TABLE `sa_booth` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(100) DEFAULT '',
+  `flag` varchar(50) NOT NULL DEFAULT '',
+  `type` varchar(30) NOT NULL DEFAULT '',
+  `data` TEXT,
+  `locked` tinyint(11) DEFAULT '0',
+  `create_time` int(11) DEFAULT 0,
+  `update_time` int(11) DEFAULT 0,
+  `status` tinyint(11) DEFAULT 0,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `flag_UNIQUE` (`flag`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
 -- Table structure for table `sa_adv_group`
 --
 
