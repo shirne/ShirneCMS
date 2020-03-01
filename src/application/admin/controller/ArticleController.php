@@ -114,7 +114,7 @@ class ArticleController extends BaseController
                 }
             }
         }
-        $model=array('type'=>1,'cate_id'=>$cid);
+        $model=array('type'=>1,'cate_id'=>$cid,'digg'=>0,'views'=>0);
         $this->assign("category",CategoryFacade::getCategories());
         $this->assign('article',$model);
         $this->assign('types',getArticleTypes());

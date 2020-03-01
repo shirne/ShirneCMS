@@ -231,7 +231,7 @@ class ProductController extends BaseController
                 }
             }
         }
-        $model=array('type'=>1,'status'=>1,'cate_id'=>$cid,'is_discount'=>1,'is_commission'=>1);
+        $model=array('type'=>1,'status'=>1,'cate_id'=>$cid,'is_discount'=>1,'is_commission'=>1,'sale'=>0);
         
         $levels=getMemberLevels();
         $this->assign("category",ProductCategoryFacade::getCategories());
