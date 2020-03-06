@@ -78,7 +78,7 @@ class PaylogController extends BaseController
             'groupbuy'=>'groupbuy.order/detail'
         ];
 
-        $stacrows=$model->group('po.order_type,po.pay_type')->field('po.order_type,po.pay_type,sum(po.pay_amount) as total_amount')->select();
+        $stacrows=$model->group('po.order_type,po.pay_type')->setOption('field',[])->setOption('order','po.order_type')->field('po.order_type,po.pay_type,sum(po.pay_amount) as total_amount')->select();
         $statics=[];
         foreach ($stacrows as $row){
             $statics[$row['pay_type']][$row['order_type']]=$row['total_amount'];
