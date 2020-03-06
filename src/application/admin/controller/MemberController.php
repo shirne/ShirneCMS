@@ -249,7 +249,7 @@ class MemberController extends BaseController
         $types=getLogTypes();
         $allstatus=['-1'=>'已取消','0'=>'待发放','1'=>'已发放'];
         
-        $stacrows=$model->group('mlog.status,mlog.type')->field('mlog.status,mlog.type,sum(mlog.amount) as total_amount')->select();
+        $stacrows=$model->group('mlog.status,mlog.type')->setOption('field',[])->setOption('order','mlog.field')->field('mlog.status,mlog.type,sum(mlog.amount) as total_amount')->select();
         $statics=[];
         foreach ($stacrows as $row){
             $statics[$row['status']][$row['type']]=$row['total_amount'];
@@ -335,7 +335,7 @@ class MemberController extends BaseController
         $types=getLogTypes();
         $fields=getMoneyFields();
 
-        $stacrows=$model->group('mlog.field,mlog.type')->field('mlog.field,mlog.type,sum(mlog.amount) as total_amount')->select();
+        $stacrows=$model->group('mlog.field,mlog.type')->setOption('field',[])->setOption('order','mlog.field')->field('mlog.field,mlog.type,sum(mlog.amount) as total_amount')->select();
         $statics=[];
         foreach ($stacrows as $row){
             $statics[$row['field']][$row['type']]=$row['total_amount'];
