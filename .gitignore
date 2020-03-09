@@ -12,7 +12,7 @@ src/cert
 /src/public/uploads/*
 !/src/public/uploads/index.html
 
-/src/resource/node_modules
-/src/resource/dest
+/resource/node_modules
+/resource/dest
 /src/public/aspnet_client
 /src/public/static/fonts

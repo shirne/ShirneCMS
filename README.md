@@ -11,7 +11,7 @@ ShirneCMS
 [小程序企业官网](https://gitee.com/shirnecn/website_mapp)<br />
 [小程序商城](https://gitee.com/shirnecn/shop_mapp)<br />
 [FlutterAPP](https://gitee.com/shirnecn/ShirneApp) -- 开发中<br />
-[VueShop](https://gitee.com/shirnecn/ShirneVueShop) -- 开发中<br />
+[VueShop](https://gitee.com/shirnecn/ShirneVueShop) -- 优化中<br />
 
 ## 功能特点
 
@@ -123,6 +123,23 @@ ShirneCMS
 [CMS安装说明](doc/INSTALL.md)
 
 [API接口说明](doc/api/index.md)
+
+## Docker
+配置参见Dockerfile
+注：仅初步配置成功环境参数，具体运行过程中还有一些文件权限和挂载问题未搞清楚
+
+```
+// 创建镜像
+cd ./docker-php-apache
+docker build -t shirnecms .
+
+// 运行
+docker run -itd -p 8080:80/tcp -v $PWD/src:/data/wwwroot/shirnecms:rw shirnecms --privileged=true
+
+// 需要在线导入sql，则把dbscript拷贝到容器中
+docker cp dbscript <容器ID>:/data/wwwroot/shirnecms/
+
+```
 
 ## 演示
 #### 后台默认登录账号 [演示网站](http://cms.qisoweb.com/admin)
