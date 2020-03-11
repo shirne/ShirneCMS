@@ -139,6 +139,9 @@ docker run -itd -p 8080:80/tcp -v $PWD/src:/data/wwwroot/shirnecms:rw shirnecms 
 // 需要在线导入sql，则把dbscript拷贝到容器中
 docker cp dbscript <容器ID>:/data/wwwroot/shirnecms/
 
+// macos中mysql使用宿主机的话主机填写
+docker.for.mac.host.internal
+
 ```
 
 ## 演示
