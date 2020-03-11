@@ -5,6 +5,8 @@ RUN cp /etc/apt/sources.list /etc/apt/sources.list.bak
 RUN echo 'deb https://mirrors.aliyun.com/debian stable main contrib non-free' > /etc/apt/sources.list \
     && echo 'deb https://mirrors.aliyun.com/debian stable-updates main contrib non-free' >> /etc/apt/sources.list 
 
+RUN a2enmod rewrite
+
 # php modules
 RUN apt-get update \
     && apt-get install -y \
