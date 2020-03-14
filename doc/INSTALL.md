@@ -54,11 +54,11 @@ php think install
 
 >src 项目根目录<br />
 src/public 网站根目录
-src/resource 前端开发目录
+resource 前端开发目录
 
 ### Javascript/CSS构建[Gulp](https://www.gulpjs.com.cn/)
 
->cd src/resource<br />
+>cd resource<br />
 cnpm install<br />
 构建并监视文件：gulp4<br />
 清理dest目录: gulp4 clean<br />
