@@ -2,16 +2,16 @@
 
 <block name="body">
 
-<include file="public/bread" menu="goods_category_index" title="" />
+<include file="public/bread" menu="credit_category_index" title="" />
 
 <div id="page-wrapper">
     
     <div class="row list-header">
         <div class="col-6">
-            <a href="{:url('goodsCategory/add')}" class="btn btn-outline-primary btn-sm"><i class="ion-md-add"></i> 添加分类</a>
+            <a href="{:url('credit.category/add')}" class="btn btn-outline-primary btn-sm"><i class="ion-md-add"></i> 添加分类</a>
         </div>
         <div class="col-6">
-            <form action="{:url('goodsCategory/index')}" method="post">
+            <form action="{:url('credit.category/index')}" method="post">
                 <div class="input-group input-group-sm">
                     <input type="text" class="form-control" name="key" placeholder="输入分类标题或者别名关键词搜索">
                     <div class="input-group-append">
@@ -40,10 +40,10 @@
                 <td>{$v.sort}</td>
                 <td>
                     <div class="btn-group" role="group" aria-label="Basic example">
-                        <a class="btn btn-outline-dark btn-sm" href="{:url('goods/add',array('cid'=>$v['id']))}"><i class="ion-md-add"></i> 发布</a>
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('goodsCategory/add',array('pid'=>$v['id']))}"><i class="ion-md-add"></i> 添加</a>
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('goodsCategory/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> 编辑</a>
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('goodsCategory/delete',array('id'=>$v['id']))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
+                        <a class="btn btn-outline-dark btn-sm" href="{:url('credit.goods/add',array('cid'=>$v['id']))}"><i class="ion-md-add"></i> 发布</a>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('credit.category/add',array('pid'=>$v['id']))}"><i class="ion-md-add"></i> 添加</a>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('credit.category/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> 编辑</a>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('credit.category/delete',array('id'=>$v['id']))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
                     </div>
                 </td>
             </tr>

@@ -1,13 +1,15 @@
 <?php
 
-namespace app\admin\controller;
+namespace app\admin\controller\credit;
 
+use app\admin\controller\BaseController;
 use app\common\model\CreditOrderModel;
+use app\common\model\PayOrderModel;
 use shirne\excel\Excel;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use think\Db;
 
-class CreditOrderController extends BaseController
+class OrderController extends BaseController
 {
     public function index($key='',$status='',$audit=''){
         if($this->request->isPost()){

@@ -1,7 +1,7 @@
 <extend name="public:base" />
 
 <block name="body">
-<include file="public/bread" menu="goods_index" title="商品列表" />
+<include file="public/bread" menu="credit_goods_index" title="商品列表" />
 <div id="page-wrapper">
 
 	<div class="row list-header">
@@ -87,10 +87,10 @@
 						</if>
 					</td>
 					<td class="operations">
-					<a class="btn btn-outline-primary btn-sm" href="{:url('goods/edit',array('id'=>$v['id']))}" title="编辑"><i class="ion-md-create"></i> </a>
-						<a class="btn btn-outline-primary btn-sm" href="{:url('goods/imagelist',array('aid'=>$v['id']))}" title="图集"><i class="ion-md-images"></i> </a>
-						<!--a class="btn btn-outline-dark btn-sm" href="{:url('goods/comments',array('aid'=>$v['id']))}"><i class="ion-md-chatboxes"></i> 评论</a-->
-					<a class="btn btn-outline-danger btn-sm link-confirm" href="{:url('goods/delete',array('id'=>$v['id']))}" title="删除" data-confirm="您真的确定要删除吗？\n\n删除后将不能恢复!" ><i class="ion-md-trash"></i> </a>
+					<a class="btn btn-outline-primary btn-sm" href="{:url('credit.goods/edit',array('id'=>$v['id']))}" title="编辑"><i class="ion-md-create"></i> </a>
+						<a class="btn btn-outline-primary btn-sm" href="{:url('credit.goods/imagelist',array('aid'=>$v['id']))}" title="图集"><i class="ion-md-images"></i> </a>
+						<!--a class="btn btn-outline-dark btn-sm" href="{:url('credit.goods/comments',array('aid'=>$v['id']))}"><i class="ion-md-chatboxes"></i> 评论</a-->
+					<a class="btn btn-outline-danger btn-sm link-confirm" href="{:url('credit.goods/delete',array('id'=>$v['id']))}" title="删除" data-confirm="您真的确定要删除吗？\n\n删除后将不能恢复!" ><i class="ion-md-trash"></i> </a>
 					</td>
 				</tr>
 			</foreach>
@@ -107,7 +107,7 @@
 			w.actionPublish=function(ids){
 				dialog.confirm('确定将选中文章发布到前台？',function() {
 				    $.ajax({
-						url:"{:url('goods/push',['id'=>'__id__','type'=>1])}".replace('__id__',ids.join(',')),
+						url:"{:url('credit.goods/push',['id'=>'__id__','type'=>1])}".replace('__id__',ids.join(',')),
 						type:'GET',
 						dataType:'JSON',
 						success:function(json){
@@ -123,9 +123,9 @@
                 });
             };
             w.actionCancel=function(ids){
-                dialog.confirm('确定取消选中文章的发布状态？',function() {
+                dialog.confirm('确定取消选中商品的发布状态？',function() {
                     $.ajax({
-                        url:"{:url('goods/push',['id'=>'__id__','type'=>0])}".replace('__id__',ids.join(',')),
+                        url:"{:url('credit.goods/push',['id'=>'__id__','type'=>0])}".replace('__id__',ids.join(',')),
                         type:'GET',
                         dataType:'JSON',
                         success:function(json){
@@ -143,7 +143,7 @@
             w.actionDelete=function(ids){
                 dialog.confirm('确定删除选中的文章？',function() {
                     $.ajax({
-                        url:"{:url('goods/delete',['id'=>'__id__'])}".replace('__id__',ids.join(',')),
+                        url:"{:url('credit.goods/delete',['id'=>'__id__'])}".replace('__id__',ids.join(',')),
                         type:'GET',
                         dataType:'JSON',
                         success:function(json){
@@ -161,7 +161,7 @@
 			w.actionSetIncrement=function () {
 				dialog.prompt('请输入新的起始ID',function (input) {
 					$.ajax({
-						url:"{:url('goods/set_increment',['incre'=>'__INCRE__'])}".replace('__INCRE__',input),
+						url:"{:url('credit.goods/set_increment',['incre'=>'__INCRE__'])}".replace('__INCRE__',input),
 						type:'GET',
 						dataType:'JSON',
 						success:function(json){

@@ -2,22 +2,18 @@
 INSERT INTO `sa_permission` (`id`, `parent_id`,`name`, `url`,`key`, `icon`, `sort_id`, `disable`)
 VALUES
   (4,0,'积分商城','','CreditShop','ion-md-cart',2,0),
-  (41,4,'分类管理','GoodsCategory/index','goods_category_index','ion-md-medical',0,0),
-  (42,4,'商品管理','Goods/index','goods_index','ion-md-gift',0,0),
-  (43,4,'积分策略','CreditPromotion/index','credit_promotion_index','ion-md-cog',0,0),
-  (44,4,'订单管理','CreditOrder/index','credit_order_index','ion-md-list-box',0,0);
+  (41,4,'分类管理','credit.category/index','credit_category_index','ion-md-medical',0,0),
+  (42,4,'商品管理','credit.goods/index','credit_goods_index','ion-md-gift',0,0),
+  (43,4,'积分策略','credit.promotion/index','credit_promotion_index','ion-md-cog',0,0),
+  (44,4,'订单管理','credit.order/index','credit_order_index','ion-md-list-box',0,0);
 
-DROP TABLE IF EXISTS `sa_credit_promotion`;
+INSERT INTO `sa_setting` ( `key`,`title`,`type`,`group`,`sort`,`is_sys`, `value`, `description`,`data`)
+VALUES
+  ( 'credit_pagetitle', 'SEO标题', 'text', 'credit', '0', 1 , '0', '', ''),
+  ( 'credit_keyword', 'SEO关键字', 'text', 'credit', '0', 1 , '0', '', ''),
+  ( 'credit_description', 'SEO简介', 'text', 'credit', '0', 1 , '0', '', ''),
+  ( 'credit_rate', '下单赠送积分', 'text', 'credit', '0', 1 , '0', '', '');
 
-CREATE TABLE `sa_credit_promotion` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(30) NULL,
-  `is_default` TINYINT NULL DEFAULT 0,
-  `share_percent` INT DEFAULT 0,
-  `send_percent` INT NULL DEFAULT 0,
-  `sort` INT NULL DEFAULT 0,
-  PRIMARY KEY (`id`)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `sa_goods_category`;
 CREATE TABLE `sa_goods_category` (

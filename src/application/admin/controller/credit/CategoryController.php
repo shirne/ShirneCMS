@@ -6,16 +6,16 @@
  * Time: 17:48
  */
 
-namespace app\admin\controller;
+namespace app\admin\controller\credit;
 
-
+use app\admin\controller\BaseController;
 use app\admin\model\SpecificationsModel;
 use app\admin\validate\GoodsCategoryValidate;
 use app\common\facade\GoodsCategoryFacade;
 use app\common\model\GoodsCategoryModel;
 use think\Db;
 
-class GoodsCategoryController extends BaseController
+class CategoryController extends BaseController
 {
     public function index(){
         $this->assign('model',GoodsCategoryFacade::getCategories(true));
@@ -39,7 +39,7 @@ class GoodsCategoryController extends BaseController
                 $model=GoodsCategoryModel::create($data);
                 if ($model['id']) {
                     GoodsCategoryFacade::clearCache();
-                    $this->success("添加成功", url('goodsCategory/index'));
+                    $this->success("添加成功", url('credit.category/index'));
                 } else {
                     $this->error("添加失败");
                 }
@@ -85,7 +85,7 @@ class GoodsCategoryController extends BaseController
 
                 delete_image($delete_images);
                 GoodsCategoryFacade::clearCache();
-                $this->success("保存成功", url('goodsCategory/index'));
+                $this->success("保存成功", url('credit.category/index'));
             }
         }else{
             $model = GoodsCategoryModel::get($id);
@@ -125,7 +125,7 @@ class GoodsCategoryController extends BaseController
         $result = Db::name('GoodsCategory')->where('id','in',$id)->delete();
         if($result){
             GoodsCategoryFacade::clearCache();
-            $this->success("分类删除成功", url('goodsCategory/index'));
+            $this->success("分类删除成功", url('credit.category/index'));
         }else{
             $this->error("分类删除失败");
         }

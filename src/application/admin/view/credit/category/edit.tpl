@@ -2,7 +2,7 @@
 
 <block name="body">
 
-    <include file="public/bread" menu="goods_category_index" title="分类信息"/>
+    <include file="public/bread" menu="credit_category_index" title="分类信息"/>
 
     <div id="page-wrapper">
         <div class="page-header">{$id>0?'编辑':'添加'}分类</div>

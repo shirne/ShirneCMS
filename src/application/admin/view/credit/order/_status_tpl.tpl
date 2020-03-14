@@ -90,7 +90,7 @@ jQuery(function($){
                 }
                 
                 $.ajax({
-                    url:"{:url('credit_order/[action]')}".replace('[action]',action),
+                    url:"{:url('credit.order/[action]')}".replace('[action]',action),
                     type:'POST',
                     data:data,
                     dataType:'JSON',

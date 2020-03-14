@@ -206,7 +206,7 @@
     </div>
 </block>
 <block name="script">
-    <include file="credit_order/_status_tpl" />
+    <include file="credit/order/_status_tpl" />
     <script type="text/javascript">
         jQuery(function ($) {
 

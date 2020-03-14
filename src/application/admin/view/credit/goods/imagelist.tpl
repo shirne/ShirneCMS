@@ -2,17 +2,17 @@
 
 <block name="body">
 
-<include file="public/bread" menu="goods_index" title="图集列表" />
+<include file="public/bread" menu="credit_goods_index" title="图集列表" />
 
 <div id="page-wrapper">
     
     <div class="row list-header">
         <div class="col-6">
-            <a href="{:url('goods/index')}" class="btn btn-outline-primary btn-sm"><i class="ion-md-arrow-back"></i> 返回列表</a>
-            <a href="{:url('goods/imageadd',array('aid'=>$aid))}" class="btn btn-outline-primary btn-sm"><i class="ion-md-add"></i> 添加图片</a>
+            <a href="{:url('credit.goods/index')}" class="btn btn-outline-primary btn-sm"><i class="ion-md-arrow-back"></i> 返回列表</a>
+            <a href="{:url('credit.goods/imageadd',array('aid'=>$aid))}" class="btn btn-outline-primary btn-sm"><i class="ion-md-add"></i> 添加图片</a>
         </div>
         <div class="col-6">
-            <form action="{:url('goods/imagelist')}" method="post">
+            <form action="{:url('credit.goods/imagelist')}" method="post">
                 <div class="input-group input-group-sm">
                     <input type="text" class="form-control" name="key" placeholder="输入标题或者地址关键词搜索">
                     <div class="input-group-append">
@@ -42,8 +42,8 @@
                 <td>{$v.title}</td>
                 <td>{$v.sort}</td>
                 <td>
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('goods/imageupdate',array('id'=>$v['id'],'aid'=>$aid))}"><i class="ion-md-create"></i> 编辑</a>
-                    <a class="btn btn-outline-dark btn-sm" href="{:url('goods/imagedelete',array('id'=>$v['id'],'aid'=>$aid))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('credit.goods/imageupdate',array('id'=>$v['id'],'aid'=>$aid))}"><i class="ion-md-create"></i> 编辑</a>
+                    <a class="btn btn-outline-dark btn-sm" href="{:url('credit.goods/imagedelete',array('id'=>$v['id'],'aid'=>$aid))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
                 </td>
             </tr>
         </foreach>

@@ -15,15 +15,15 @@
                             导出订单
                         </button>
                         <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                            <a class="dropdown-item" href="{:url('credit_order/export',['order_ids'=>$orderids])}" target="_blank" >导出本页</a>
-                            <a class="dropdown-item" href="{:url('credit_order/export',['status'=>1])}" target="_blank">导出未处理</a>
-                            <a class="dropdown-item" href="{:url('credit_order/export',['status'=>$status,'audit'=>$audit,'key'=>base64_encode($key)])}" target="_blank">导出筛选结果</a>
+                            <a class="dropdown-item" href="{:url('credit.order/export',['order_ids'=>$orderids])}" target="_blank" >导出本页</a>
+                            <a class="dropdown-item" href="{:url('credit.order/export',['status'=>1])}" target="_blank">导出未处理</a>
+                            <a class="dropdown-item" href="{:url('credit.order/export',['status'=>$status,'audit'=>$audit,'key'=>base64_encode($key)])}" target="_blank">导出筛选结果</a>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-6">
-                <form action="{:url('credit_order/index')}" method="post">
+                <form action="{:url('credit.order/index')}" method="post">
                     <div class="form-row">
                         <div class="col-3 form-group">
                             <select name="status" class="form-control form-control-sm">
@@ -84,7 +84,7 @@
                         {$v.status|order_status|raw}
                     </td>
                     <td class="operations">
-                        <a class="btn btn-outline-primary" title="详情" href="{:url('credit_order/detail',array('id'=>$v['order_id']))}"><i class="ion-md-document"></i> </a>
+                        <a class="btn btn-outline-primary" title="详情" href="{:url('credit.order/detail',array('id'=>$v['order_id']))}"><i class="ion-md-document"></i> </a>
                         
                         <if condition="$v['status'] EQ 0">
                             <a class="btn btn-outline-danger btn-status" title="取消订单" href="javascript:" data-id="{$v.order_id}"  data-status="-1" ><i class="ion-md-close-circle-outline"></i> </a>
@@ -97,7 +97,7 @@
                         <elseif condition="$v['status'] EQ 3" />
                             <a class="btn btn-outline-success btn-status" title="完成" href="javascript:" data-id="{$v.order_id}"  data-status="4" ><i class="ion-md-checkbox-outline"></i> </a>
                         </if>
-                        <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('credit_order/delete',array('id'=>$v['order_id']))}"><i class="ion-md-trash"></i> </a>
+                        <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('credit.order/delete',array('id'=>$v['order_id']))}"><i class="ion-md-trash"></i> </a>
                     </td>
                 </tr>
             </volist>

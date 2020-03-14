@@ -6,13 +6,10 @@
  * Time: 17:47
  */
 
-namespace app\admin\controller;
+namespace app\admin\controller\credit;
 
-
-use app\admin\model\SpecificationsModel;
+use app\admin\controller\BaseController;
 use app\common\model\GoodsModel;
-use app\common\model\GoodsSkuModel;
-use app\admin\validate\GoodsSkuValidate;
 use app\admin\validate\GoodsValidate;
 use app\admin\validate\ImagesValidate;
 use app\common\facade\GoodsCategoryFacade;
@@ -83,7 +80,7 @@ class GoodsController extends BaseController
                     //delete_image($delete_images);
 
                     user_log($this->mid,'addgoods',1,'添加商品 '.$model->id ,'manager');
-                    $this->success("添加成功", url('Goods/index'));
+                    $this->success("添加成功", url('credit.goods/index'));
                 } else {
                     delete_image($data['image']);
                     $this->error("添加失败");
@@ -135,7 +132,7 @@ class GoodsController extends BaseController
                     //delete_image($delete_images);
 
                     user_log($this->mid, 'updategoods', 1, '修改商品 ' . $id, 'manager');
-                    $this->success("编辑成功", url('goods/index'));
+                    $this->success("编辑成功", url('credit.goods/index'));
                 } else {
                     delete_image($data['image']);
                     $this->error("编辑失败");
@@ -166,7 +163,7 @@ class GoodsController extends BaseController
 
             Db::name('goodsImages')->where('goods_id','in',idArr($id))->delete();
             user_log($this->mid,'deletegoods',1,'删除商品 '.$id ,'manager');
-            $this->success("删除成功", url('Goods/index'));
+            $this->success("删除成功", url('credit.goods/index'));
         }else{
             $this->error("删除失败");
         }
@@ -178,10 +175,10 @@ class GoodsController extends BaseController
         $result = Db::name('goods')->where('id','in',idArr($id))->update($data);
         if ($result && $data['status'] === 1) {
             user_log($this->mid,'pushgoods',1,'上架商品 '.$id ,'manager');
-            $this -> success("上架成功", url('Goods/index'));
+            $this -> success("上架成功", url('credit.goods/index'));
         } elseif ($result && $data['status'] === 0) {
             user_log($this->mid,'cancelgoods',1,'下架商品 '.$id ,'manager');
-            $this -> success("下架成功", url('Goods/index'));
+            $this -> success("下架成功", url('credit.goods/index'));
         } else {
             $this -> error("操作失败");
         }
@@ -192,7 +189,7 @@ class GoodsController extends BaseController
      * @param $aid
      * @return mixed
      */
-    public function imagelist($aid){
+    public function imagelist($aid,$key=''){
         $model = Db::name('GoodsImages');
         $goods=Db::name('Goods')->find($aid);
         if(empty($goods)){
@@ -223,7 +220,7 @@ class GoodsController extends BaseController
                     $data['image']=$uploaded['url'];
                 }
                 $model = Db::name("GoodsImages");
-                $url=url('goods/imagelist',array('aid'=>$aid));
+                $url=url('credit.goods/imagelist',array('aid'=>$aid));
                 if ($model->insert($data)) {
                     $this->success("添加成功",$url);
                 } else {
@@ -254,7 +251,7 @@ class GoodsController extends BaseController
                 $this->error($validate->getError());
             }else{
                 $model = Db::name("GoodsImages");
-                $url=url('goods/imagelist',array('aid'=>$data['goods_id']));
+                $url=url('credit.goods/imagelist',array('aid'=>$data['goods_id']));
                 $delete_images=[];
                 $uploaded=$this->upload('goods','upload_image');
                 if(!empty($uploaded)){
@@ -292,7 +289,7 @@ class GoodsController extends BaseController
         $model = Db::name('GoodsImages');
         $result = $model->delete($id);
         if($result){
-            $this->success("删除成功", url('goods/imagelist',array('aid'=>$aid)));
+            $this->success("删除成功", url('credit.goods/imagelist',array('aid'=>$aid)));
         }else{
             $this->error("删除失败");
         }
