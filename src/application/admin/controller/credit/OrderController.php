@@ -307,7 +307,7 @@ class OrderController extends BaseController
         $result = $model->whereIn("order_id",idArr($id))->useSoftDelete('delete_time',time())->delete();
         if($result){
             user_log($this->mid,'deleteorder',1,'删除订单 '.$id ,'manager');
-            $this->success("删除成功", url('Order/index'));
+            $this->success("删除成功", url('credit.order/index'));
         }else{
             $this->error("删除失败");
         }

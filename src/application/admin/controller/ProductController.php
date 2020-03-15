@@ -534,7 +534,7 @@ class ProductController extends BaseController
     public function comments($id=0,$key=''){
         $model = Db::view('productComment','*')
             ->view('member',['username','level_id','avatar'],'member.id=productComment.member_id','LEFT')
-            ->view('product',['title'=>'product_title','cate_id','cover'],'product.id=productComment.product_id','LEFT')
+            ->view('product',['title'=>'product_title','cate_id','image'],'product.id=productComment.product_id','LEFT')
             ->view('productCategory',['name'=>'category_name','title'=>'category_title'],'product.cate_id=productCategory.id','LEFT');
         $where=array();
         if($id>0){
