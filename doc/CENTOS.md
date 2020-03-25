@@ -68,13 +68,13 @@ FLUSH PRIVILEGES;
 ### 配置web站点(virtualhost)
 ```conf
 <VirtualHost *:80>
- DocumentRoot /源码上传目录/public
+ DocumentRoot /path/to/shirnecms/src/public
  ServerName www.域名.com
  ServerAlias 域名.com
  Options +ExecCGI
- php_admin_value open_basedir "/源码上传目录/:/tmp/"
+ php_admin_value open_basedir "/path/to/shirnecms/src/:/tmp/"
  
- <Directory /data/web/webpsi/public/>
+ <Directory /path/to/shirnecms/src/public/>
   Options -Indexes +FollowSymlinks  
   AllowOverride All  
   Require all granted  
