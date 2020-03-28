@@ -30,6 +30,9 @@ class InstallController extends Controller
         }
         
         if($this->request->isPost()) {
+            set_time_limit(0);
+            @ini_set('max_execution_time',0);
+            
             $db = $this->request->post('db');
             if(!empty($db) && !empty($db['hostname'])){
                 $dbconfig=config('database.');
