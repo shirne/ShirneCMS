@@ -9,7 +9,8 @@ VALUES
   (35,3,'订单管理','Order/index','order_index','ion-md-list-box',0,0),
   (36,3,'订单统计','OrderStatics/index','order_statics_index','ion-md-stats',0,0),
   (37,3,'运费模板','ProductPostage/index','product_postage_index','ion-md-train',0,0),
-  (38,3,'商城配置','shop.promotion/index','shop_promotion_index','ion-md-cog',0,0);
+  (38,3,'帮助中心','shop.help/index','shop_help_index','ion-md-help-circle',0,0),
+  (39,3,'商城配置','shop.promotion/index','shop_promotion_index','ion-md-cog',0,0);
 
 INSERT INTO `sa_setting` ( `key`,`title`,`type`,`group`,`sort`,`is_sys`, `value`, `description`,`data`)
 VALUES
@@ -278,6 +279,45 @@ CREATE TABLE `sa_order` (
   UNIQUE INDEX `orderno_index` (`order_no` ASC),
   INDEX `memberid_index` (`member_id` ASC)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS `sa_help_category`;
+CREATE TABLE `sa_help_category` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `pid` int(11) DEFAULT NULL COMMENT '父分类ID',
+  `title` varchar(100) DEFAULT NULL COMMENT '分类名称',
+  `short` varchar(20) DEFAULT NULL COMMENT '分类简称',
+  `name` varchar(50) DEFAULT NULL COMMENT '分类别名',
+  `icon` varchar(100) DEFAULT NULL COMMENT '图标',
+  `image` varchar(100) DEFAULT NULL COMMENT '大图',
+  `sort` int(11) DEFAULT NULL COMMENT '排序',
+  `keywords` varchar(255) DEFAULT NULL COMMENT '分类关键词',
+  `description` varchar(255) DEFAULT NULL COMMENT '分类描述',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `sa_help`;
+CREATE TABLE `sa_help` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `cate_id` int(11) DEFAULT NULL,
+  `title` varchar(150) DEFAULT NULL,
+  `vice_title` varchar(200) DEFAULT NULL,
+  `description` varchar(250) DEFAULT NULL,
+  `image` varchar(150) DEFAULT NULL,
+  `digg` INT(11) DEFAULT '0',
+  `v_digg` INT(11) DEFAULT '0',
+  `views` INT(11) DEFAULT '0',
+  `v_views` INT(11) DEFAULT '0',
+  `prop_data` text,
+  `content` text,
+  `create_time` int(11) DEFAULT '0',
+  `update_time` int(11) DEFAULT '0',
+  `sort` int(11) DEFAULT '0',
+  `type` tinyint(4) DEFAULT '1',
+  `status` tinyint(4) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`id`),
+  KEY `cate_id` (`cate_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `sa_express_code`;
 
