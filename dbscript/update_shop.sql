@@ -300,6 +300,7 @@ DROP TABLE IF EXISTS `sa_help`;
 CREATE TABLE `sa_help` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `cate_id` int(11) DEFAULT NULL,
+  `user_id` INT(11) DEFAULT '0',
   `title` varchar(150) DEFAULT NULL,
   `vice_title` varchar(200) DEFAULT NULL,
   `description` varchar(250) DEFAULT NULL,

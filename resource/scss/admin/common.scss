@@ -330,7 +330,6 @@ h6 {
   }
   .page-content{
     width: 100%;
-    overflow-x: scroll;
   }
 }
 
@@ -385,6 +384,12 @@ h6 {
 @media (max-width: 991px) {
   .page-form .submit-btn{
     padding-left:1.5rem;
+  }
+  #page-wrapper {
+    .page-content{
+      width: 100%;
+      overflow-x: scroll;
+    }
   }
 }
 
