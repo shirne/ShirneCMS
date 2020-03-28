@@ -34,8 +34,8 @@ class ArticleModel extends ContentModel
         if(!empty($lists)){
             $pids = array_column(is_array($lists)?$lists:$lists->items(),'id');
             if(!empty($attrs['withimgs'])){
-                $imgs=Db::name('articleImages')->whereIn('product_id',$pids)->select();
-                $imgs = array_index($imgs,'product_id',true);
+                $imgs=Db::name('articleImages')->whereIn('article_id',$pids)->select();
+                $imgs = array_index($imgs,'article_id',true);
                 $lists = $this->appendTagData($lists,'imgs', $imgs);
             }
         }
