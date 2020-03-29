@@ -48,22 +48,25 @@ class AgentController extends AuthedController
     private function get_share_img($platform,$page){
     
         $sharepath = './uploads/share/'.($this->user['id']%100).'/'.$this->user['agentcode'].'-'.$platform.'.jpg';
-        $bgpath = './uploads/share/bg.png';
-        if(!file_exists($bgpath)){
+        $config=config('poster.');
+        if(empty($config) || empty($config['background'])){
+            $this->error('请配置海报生成样式(config/poster.php)');
+        }
+        if(!file_exists($config['background'])){
             $this->error('分享图生成失败(bg)');
         }
         if(file_exists($sharepath)){
             $fileatime=filemtime($sharepath);
             if($this->user['update_time']<$fileatime &&
-                filemtime($bgpath)<$fileatime
+                filemtime($config['background'])<$fileatime
             ){
                 return media(ltrim($sharepath,'.'));
             }
         }
-        $this->create_share_img($bgpath,$sharepath,$page);
+        $this->create_share_img($config,$sharepath,$page);
         return media(ltrim($sharepath,'.'));
     }
-    private function create_share_img($bgpath,$sharepath,$page){
+    private function create_share_img($config,$sharepath,$page){
         $appid=$this->request->tokenData['appid'];
         $wechat=WechatModel::where('appid',$appid)->find();
         if(empty($wechat)){
@@ -90,8 +93,8 @@ class AgentController extends AuthedController
                 $this->error('小程序码生成失败');
             }
         }
-        $config=config('poster.');
-        $config['background']=$bgpath;
+        
+        //$config['background']=$bgpath;
         $poster = new Poster($config);
         $poster->generate([
             'appcode'=>$filename,

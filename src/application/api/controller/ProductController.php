@@ -10,6 +10,7 @@ use app\common\model\WechatModel;
 use app\common\model\ProductSkuModel;
 use shirne\common\Poster;
 use think\Db;
+use think\facade\Log;
 
 /**
  * 产品操作接口
@@ -127,19 +128,6 @@ class ProductController extends BaseController
         if(strpos($data['title'],'【')==0 && strpos($data['title'],'】')>0){
             $data['title'] = mb_substr($data['title'],mb_strpos($data['title'],'】')+1);
         }
-        foreach($product['prop_data'] as $key=>$val){
-            if($key=='产区'){
-                $data['prop_from']="产　区：".$val;
-            }elseif($key=='原产国'){
-                $data['prop_from']="原产国：".$val;
-            }elseif($key=='酒精度'){
-                $data['prop_alcohol']="酒精度：".$val;
-            }elseif($key=='净含量'){
-                $data['prop_volume']="净含量：".$val;
-            }elseif($key=='口感'){
-                $data['vice_title']="口　感：".$val;
-            }
-        }
 
         if(!in_array($type,['url','miniqr'])){
             $this->error('分享图类型错误');
@@ -158,7 +146,14 @@ class ProductController extends BaseController
             $sharepath = './uploads/pshare/'.$id.'/share-'.$type.'.png';
         }
         $imgurl = media(ltrim($sharepath,'.'));
-        if(!file_exists($sharepath) || filemtime($sharepath)<$product['update_time'] || filemtime($sharepath)<$this->user['update_time']){
+        $config=config('share.');
+        if(empty($config) || empty($config['background'])){
+            $this->error('请配置产品海报生成样式(config/share.php)');
+        }
+        if(!file_exists($sharepath) || 
+            filemtime($sharepath) < $product['update_time'] || 
+            filemtime($sharepath) < $this->user['update_time'] ||
+            filemtime($sharepath) < filemtime($config['background'] )){
 
             if($type == 'url'){
                 $url = url('index/product/view',$params, true, true);
@@ -183,7 +178,7 @@ class ProductController extends BaseController
                 mkdir($dir,0777,true);
             }
 
-            $config=config('share.');
+            
             $poster = new Poster($config);
             $poster->generate($data);
             $poster->save($sharepath);
@@ -201,8 +196,11 @@ class ProductController extends BaseController
             $this->error('小程序账号错误');
         }
         $response = $app->app_code->getUnlimit(http_build_query($params['scene']), ['page'=>$params['path'],'width'=>$size]);
-        
-        return $response->getBody()->getContents();
+        if ($response instanceof \EasyWeChat\Kernel\Http\StreamResponse) {
+            return $response->getBody()->getContents();
+        }
+        Log::record(var_export($response,true));
+        $this->error('小程序码生成失败');
     }
 
 

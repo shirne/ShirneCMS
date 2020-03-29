@@ -65,12 +65,21 @@ class Poster
     }
     
     public function generate($data){
-        if(!$this->config['data'])return false;
+        if(!$this->config['data']){
+            Log::record('海报配置错误');
+            return false;
+        }
         $bgpath = $this->config['background'];
-        if(!file_exists($bgpath))return false;
+        if(!file_exists($bgpath)){
+            Log::record('海报背景设置错误:'.$bgpath);
+            return false;
+        }
         $this->bg = imagecreatefrompng($bgpath);
         //imagealphablending()
-        if(!$this->bg)return false;
+        if(!$this->bg){
+            Log::record('海报背景读取失败:'.$bgpath);
+            return false;
+        }
         
         $fontpath=$this->config['font'];
         foreach ($this->config['data'] as $k=> &$set){

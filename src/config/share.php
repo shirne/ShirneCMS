@@ -45,7 +45,7 @@ return [
             'size'=>28,
             'color'=>'#111'
         ],
-        'prop_from'=>[
+        /* 'prop_from'=>[
             'offset'=>[
                 'field'=>'title',
                 'type'=>'lb'
@@ -74,7 +74,7 @@ return [
             'y'=>10,
             'size'=>16,
             'color'=>'#333'
-        ],
+        ], */
         'vice_title'=>[
             'offset'=>[
                 'field'=>'prop_volume',
