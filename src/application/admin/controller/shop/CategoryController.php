@@ -55,7 +55,7 @@ class CategoryController extends BaseController
                 $model=ProductCategoryModel::create($data);
                 if ($model['id']) {
                     ProductCategoryFacade::clearCache();
-                    $this->success(lang('Add success!'), url('productCategory/index'));
+                    $this->success(lang('Add success!'), url('shop.category/index'));
                 } else {
                     $this->error(lang('Add failed!'));
                 }
@@ -109,7 +109,7 @@ class CategoryController extends BaseController
 
                 delete_image($delete_images);
                 ProductCategoryFacade::clearCache();
-                $this->success(lang('Update success!'), url('productCategory/index'));
+                $this->success(lang('Update success!'), url('shop.category/index'));
             }
         }else{
             $model = ProductCategoryModel::get($id);
@@ -150,7 +150,7 @@ class CategoryController extends BaseController
         $result = Db::name('ProductCategory')->where('id','in',$id)->delete();
         if($result){
             ProductCategoryFacade::clearCache();
-            $this->success(lang('Delete success!'), url('productCategory/index'));
+            $this->success(lang('Delete success!'), url('shop.category/index'));
         }else{
             $this->error(lang('Delete failed!'));
         }

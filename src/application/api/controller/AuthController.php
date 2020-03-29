@@ -11,6 +11,7 @@ use app\common\validate\MemberValidate;
 use EasyWeChat\Factory;
 use EasyWeChat\OfficialAccount\Application;
 use shirne\captcha\Captcha;
+use shirne\common\ValidateHelper;
 use think\Db;
 use think\facade\Cache;
 use think\facade\Env;

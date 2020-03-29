@@ -115,5 +115,7 @@ TRUNCATE TABLE `sa_member_level`;
 
 INSERT INTO `sa_member_level`(`level_id`,`level_name`,`short_name`,`is_default`,`level_price`,`sort`,`commission_layer`,`commission_percent`) VALUES (1,'普通会员','普',1,0.00,0,3,'[\"0\",\"0\",\"0\"]');
 
+TRUNCATE TABLE `sa_oauth_app`;
 
+INSERT INTO `sa_oauth_app`(`platform`, `appid`, `appsecret`) VALUES ('web', 'web', '111111');;
 
