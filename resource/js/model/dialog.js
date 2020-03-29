@@ -306,7 +306,9 @@
                 icon=iconMap[icon];
             }
             if(icon) {
-                html = '<div class="row" style="align-items: center;"><div class="col-3 text-right"><i class="ion-md-{@icon} text-{@color}" style="font-size:3em;"></i> </div><div class="col-9" >{@message}</div> </div>'.compile({
+                html = icon=='none'?'<div class="container-fluid">{@message}</div>'.compile({
+                    message: message
+                }):'<div class="row" style="align-items: center;"><div class="col-3 text-right"><i class="ion-md-{@icon} text-{@color}" style="font-size:3em;"></i> </div><div class="col-9" >{@message}</div> </div>'.compile({
                     message: message,
                     icon: icon,
                     color: color
@@ -379,12 +381,14 @@
                 error:'remove-circle'
             };
             var color='primary';
-            if(!icon)icon='information-circle';
+            if(icon===undefined)icon='information-circle';
             else if(iconMap[icon]){
                 color = icon==='error'?'danger':icon;
                 icon = iconMap[icon];
             }
-            var html='<div class="row" style="align-items: center;"><div class="col-3 text-right"><i class="ion-md-{@icon} text-{@color}" style="font-size:3em;"></i> </div><div class="col-9" >{@message}</div> </div>'.compile({
+            var html=icon=='none'?'<div class="container-fluid">{@message}</div>'.compile({
+                message: message
+            }):'<div class="row" style="align-items: center;"><div class="col-3 text-right"><i class="ion-md-{@icon} text-{@color}" style="font-size:3em;"></i> </div><div class="col-9" >{@message}</div> </div>'.compile({
                 message:message,
                 icon:icon,
                 color:color
@@ -394,7 +398,7 @@
 
             var dlg = new Dialog({
                 header: title?true:false,
-                size:'sm',
+                size:size,
                 backdrop:'static',
                 onsure:function(){
                     if(confirm && typeof confirm==='function'){
