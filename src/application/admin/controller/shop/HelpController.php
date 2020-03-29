@@ -5,6 +5,7 @@ namespace app\admin\controller\shop;
 use app\admin\controller\BaseController;
 use app\common\model\HelpModel;
 use app\admin\validate\HelpValidate;
+use app\admin\validate\CategoryValidate;
 use app\common\facade\HelpCategoryFacade;
 use think\Db;
 
@@ -184,6 +185,53 @@ class HelpController extends BaseController
         } else {
             $this -> error("操作失败");
         }
+    }
+
+    public function category($id = 0){
+
+        if($this->request->isPost()){
+            $data=$this->request->post();
+            $validate=new CategoryValidate();
+            $validate->setId($id);
+
+            if (!$validate->check($data)) {
+                $this->error($validate->getError());
+            } else {
+                $delete_images=[];
+                $iconupload=$this->upload('category','upload_icon');
+                if(!empty($iconupload)){
+                    $data['icon']=$iconupload['url'];
+                    $delete_images[]=$data['delete_icon'];
+                }
+                $uploaded=$this->upload('category','upload_image');
+                if(!empty($uploaded)){
+                    $data['image']=$uploaded['url'];
+                    $delete_images[]=$data['delete_image'];
+                }
+                unset($data['delete_icon']);
+                unset($data['delete_image']);
+
+                if($id > 0){
+                    $result=Db::name('helpCategory')->where('id',$id)->update($data);
+                }else{
+                    $result=Db::name('helpCategory')->insert($data);
+                }
+
+                if ($result) {
+                    delete_image($delete_images);
+                    HelpCategoryFacade::clearCache();
+                    $this->success(lang('Update success!'), url('tender.category/index'));
+                } else {
+                    delete_image([$data['icon'],$data['image']]);
+                    $this->error(lang('Update failed!'));
+                }
+            }
+        }
+        $model = Db::name('helpCategory')->find($id);
+        if(empty($model)){
+            $this->error('分类不存在');
+        }
+        return json(['data'=>$model,'code'=>1]);
     }
 
 }

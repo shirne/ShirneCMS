@@ -381,6 +381,20 @@ h6 {
     }
   }
 }
+
+.side-cate{
+  .list-group-item{
+    a{
+      text-decoration: none;
+    }
+    &.active{
+      a{
+        color: #fff;
+      }
+    }
+  }
+}
+
 @media (max-width: 991px) {
   .page-form .submit-btn{
     padding-left:1.5rem;
