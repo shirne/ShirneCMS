@@ -2,13 +2,13 @@
 INSERT INTO `sa_permission` (`id`, `parent_id`,`name`, `url`,`key`, `icon`, `sort_id`, `disable`)
 VALUES
   (3,0,'商城','','Shop','ion-md-cart',2,0),
-  (31,3,'分类管理','ProductCategory/index','product_category_index','ion-md-medical',0,0),
-  (32,3,'品牌管理','ProductBrand/index','product_brand_index','ion-md-bookmark',0,0),
-  (33,3,'商品管理','Product/index','product_index','ion-md-gift',0,0),
-  (34,3,'优惠券管理','ProductCoupon/index','product_coupon_index','ion-md-pricetags',0,0),
-  (35,3,'订单管理','Order/index','order_index','ion-md-list-box',0,0),
-  (36,3,'订单统计','OrderStatics/index','order_statics_index','ion-md-stats',0,0),
-  (37,3,'运费模板','ProductPostage/index','product_postage_index','ion-md-train',0,0),
+  (31,3,'分类管理','shop.category/index','shop_category_index','ion-md-medical',0,0),
+  (32,3,'品牌管理','shop.brand/index','shop_brand_index','ion-md-bookmark',0,0),
+  (33,3,'商品管理','shop.product/index','shop_product_index','ion-md-gift',0,0),
+  (34,3,'优惠券管理','shop.coupon/index','shop_coupon_index','ion-md-pricetags',0,0),
+  (35,3,'订单管理','shop.order/index','shop_order_index','ion-md-list-box',0,0),
+  (36,3,'订单统计','shop.orderStatics/index','shop_order_statics_index','ion-md-stats',0,0),
+  (37,3,'运费模板','shop.postage/index','shop_postage_index','ion-md-train',0,0),
   (38,3,'帮助中心','shop.help/index','shop_help_index','ion-md-help-circle',0,0),
   (39,3,'商城配置','shop.promotion/index','shop_promotion_index','ion-md-cog',0,0);
 
