@@ -21,10 +21,10 @@ class HelpController extends BaseController
             return redirect(url('',['cate_id'=>$cate_id,'key'=>base64_encode($key)]));
         }
         $key=empty($key)?"":base64_decode($key);
-        $model = Db::view('help','*')->view('category',['name'=>'category_name','title'=>'category_title'],'help.cate_id=category.id','LEFT')
+        $model = Db::view('help','*')->view('helpCategory',['name'=>'category_name','title'=>'category_title'],'help.cate_id=helpCategory.id','LEFT')
             ->view('manager',['username'],'help.user_id=manager.id','LEFT');
         if(!empty($key)){
-            $model->whereLike('help.title|manager.username|category.title',"%$key%");
+            $model->whereLike('help.title|manager.username|helpCategory.title',"%$key%");
         }
         if($cate_id>0){
             $model->whereIn('help.cate_id',HelpCategoryFacade::getSubCateIds($cate_id));
