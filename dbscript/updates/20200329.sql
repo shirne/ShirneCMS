@@ -1,0 +1,1 @@
+ALTER TABLE `sa_award_log` ADD `field` varchar(20) DEFAULT AFTER `type`;
