@@ -25,8 +25,8 @@ class AddressController extends BaseController
                 $this->error('删除失败！');
             }
         }
-        $addressed=Db::name('MemberAddress')->where('member_id',$this->userid)->select();
-        $this->assign('addressed',$addressed);
+        $addresses=Db::name('MemberAddress')->where('member_id',$this->userid)->select();
+        $this->assign('addresses',$addresses);
         return $this->fetch();
     }
 
