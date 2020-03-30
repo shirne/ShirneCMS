@@ -17,7 +17,7 @@ class InvoiceController extends BaseController
         if($this->request->isPost()){
             $data=$this->request->only('id','post');
             $result=Db::name('MemberInvoice')->where('member_id',$this->userid)
-                ->whereIn('invoice_id',idArr($data['id']))->delete();
+                ->whereIn('id',idArr($data['id']))->delete();
             if($result){
                 user_log($this->userid,'invoicedel',1,'删除发票资料:'.$data['id']);
                 $this->success('删除成功！');
@@ -61,7 +61,7 @@ class InvoiceController extends BaseController
             ->where('member_id',$this->userid)
             ->where('id',$id)->find();
         if(empty($invoice)){
-            $this->error('地址资料不存在');
+            $this->error('发票资料不存在');
         }
         if($this->request->isPost()){
             $data=$this->request->only('title,type,tax_no,address,telephone,bank,caedno,is_default','post');
