@@ -2,25 +2,25 @@
 
 <block name="body">
 
-<include file="public/bread" menu="links_index" title="链接信息" />
+<include file="public/bread" menu="keywords_index" title="关键字信息" />
 
 <div id="page-wrapper">
-    <div class="page-header">{$id>0?'编辑':'添加'}链接</div>
+    <div class="page-header">{$id>0?'编辑':'添加'}关键字</div>
     <div class="page-content">
     <form method="post" action="" enctype="multipart/form-data">
         <div class="form-group">
-            <label for="title">链接标题</label>
-            <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="输入链接标题">
+            <label for="title">关键字</label>
+            <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="输入关键字">
         </div>
         <div class="form-group">
-            <label for="url">链接地址</label>
-            <input type="text" name="url" class="form-control" value="{$model.url}" placeholder="输入链接标题">
+            <label for="description">关键字说明</label>
+            <input type="text" name="description" class="form-control" value="{$model.description}" placeholder="输入关键字说明">
         </div>
         <div class="form-row">
             <div class="form-group col">
                 <label for="group">分组</label>
                 <div class="input-group">
-                    <input type="text" name="group" class="form-control" value="{$model.group}" placeholder="链接分组" >
+                <input type="text" name="group" class="form-control" value="{$model.group}" placeholder="关键字分组" >
                     <select class="form-control" onchange="var val=$(this).val();if(val)this.form.group.value=val;">
                         <option value="">选择分组</option>
                         <volist name="groups" id="group">
@@ -30,8 +30,8 @@
                 </div>
             </div>
             <div class="form-group col">
-                <label for="sort">优先级</label>
-                <input type="text" name="sort" class="form-control" value="{$model.sort}" placeholder="越小越靠前" >
+                <label for="v_hot">热度</label>
+                <input type="text" name="v_hot" class="form-control" value="{$model.v_hot}" placeholder="越小越靠前" >
             </div>
         </div>
         <div class="form-group">

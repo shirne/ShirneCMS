@@ -11,12 +11,32 @@ use app\common\core\BaseTabLib;
 class Extendtag extends BaseTabLib
 {
     protected $tags =[
+        'keywords'=>['attr'=>'var,group,limit','close'=>0],
         'links'=>['attr'=>'var,group,limit','close'=>0],
         'advs'=>['attr'=>'var,flag,limit','close'=>0],
         'notices'=>['attr'=>'var,limit','close'=>0],
         'notice'=>['attr'=>'var,name','close'=>0],
         'feedback'=>['attr'=>'var,limit,page','close'=>0]
     ];
+
+    public function tagKeywords($tag){
+        $var  = isset($tag['var']) ? $tag['var'] : 'keywords';
+        $group = isset($tag['group']) ? $this->parseArg($tag['group']) : '';
+
+        $parseStr='<?php ';
+        if(empty($group)){
+            $group = "''";
+        }
+        $parseStr.='$'.$var.'=\app\common\model\KeywordsModel::getKeywords('.$group;
+        
+        if(!empty($tag['limit'])){
+            $parseStr .= ','.intval($tag['limit']);
+        }
+        $parseStr .= ');';
+
+        $parseStr .= ' ?>';
+        return $parseStr;
+    }
 
     public function tagLinks($tag){
         $var  = isset($tag['var']) ? $tag['var'] : 'links';

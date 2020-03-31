@@ -268,6 +268,24 @@ CREATE TABLE `sa_notice` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
+-- Table structure for table `sa_keywords`
+--
+
+DROP TABLE IF EXISTS `sa_keywords`;
+CREATE TABLE `sa_keywords` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(60) DEFAULT '',
+  `description` varchar(200) DEFAULT '',
+  `group` varchar(20) DEFAULT '',
+  `v_hot` int(11) DEFAULT 0,
+  `hot` int(11) DEFAULT 0,
+  `status` int(11) DEFAULT 0,
+  `create_time` int(11) DEFAULT 0,
+  `update_time` int(11) DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
 -- Table structure for table `sa_o_auth`
 --
 
