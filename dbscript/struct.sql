@@ -536,6 +536,18 @@ CREATE TABLE `sa_member_agent` (
   PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `sa_member_agent_log`;
+
+CREATE TABLE `sa_member_agent_log` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `member_id` INT NULL DEFAULT 0,
+  `agent_id` INT NULL DEFAULT 0,
+  `type` VARCHAR(10) NULL,
+  `remark` VARCHAR(100) NULL DEFAULT '',
+  `create_time` INT NULL DEFAULT 0,
+  PRIMARY KEY (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS `sa_member_invoice`;
 
 CREATE TABLE `sa_member_invoice` (
