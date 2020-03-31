@@ -40,7 +40,7 @@ class PermissionController extends BaseController
      * @param $pid
      * @return mixed
      */
-    public function add($pid){
+    public function add($pid=0){
         if ($this->request->isPost()) {
             $data = $this->request->post();
             $validate = new PermissionValidate();
@@ -90,6 +90,7 @@ class PermissionController extends BaseController
             $this->error('要编辑的项不存在');
         }
         $this->assign('perm',$model);
+        $this->assign('id',$id);
         return $this->fetch();
     }
 

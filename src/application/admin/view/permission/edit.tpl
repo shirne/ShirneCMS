@@ -4,7 +4,7 @@
 <include file="public/bread" menu="permission_index" title="菜单配置" />
 
 <div id="page-wrapper">
-    <div class="page-header">修改菜单</div>
+    <div class="page-header">{$id>0?'修改':'添加'}菜单</div>
     <div id="page-content">
     <form method="post" action="">
         <div class="form-group">
@@ -33,7 +33,7 @@
         </div>
         <div class="form-group">
             <label for="page-name">菜单图标</label>
-            <input type="text" name="icon" class="form-control" value="{$perm.icon}" id="perm-icon" placeholder="图标类名,从font-awasome中查找">
+            <input type="text" name="icon" class="form-control" value="{$perm.icon}" id="perm-icon" placeholder="图标类名,从ionicons.com V4中查找">
         </div>
         <div class="form-group">
             <label for="p-content">排序</label>
