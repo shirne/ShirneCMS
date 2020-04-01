@@ -25,30 +25,20 @@
         <thead>
             <tr>
                 <th width="50">编号</th>
-                <th>LOGO</th>
+                <th>关键字</th>
                 <th>分组</th>
-                <th>标题</th>
                 <th>说明</th>
                 <th>热度</th>
                 <th width="160">&nbsp;</th>
             </tr>
         </thead>
         <tbody>
-            <php>$empty=list_empty(7);</php>
+            <php>$empty=list_empty(6);</php>
         <volist name="lists" id="v" empty="$empty">
             <tr>
                 <td>{$v.id}</td>
-                <td>
-                    <if condition="!empty($v['logo'])">
-                    <figure class="figure img-view" data-img="{$v.logo}" >
-                        <img src="{$v.logo}?w=100" class="figure-img img-fluid rounded" alt="image">
-                    </figure>
-                        <else/>
-                        -
-                    </if>
-                </td>
-                <td>{$v.group|default='无'}</td>
                 <td>{$v.title}</td>
+                <td>{$v.group|default='无'}</td>
                 <td>{$v.description} </td>
                 <td>{$v.hot}</td> 
                 <td class="operations">

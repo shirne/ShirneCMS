@@ -30,8 +30,8 @@
                 </div>
             </div>
             <div class="form-group col">
-                <label for="v_hot">热度</label>
-                <input type="text" name="v_hot" class="form-control" value="{$model.v_hot}" placeholder="越小越靠前" >
+                <label for="v_hot">虚拟热度</label>
+                <input type="text" name="v_hot" class="form-control" value="{$model.v_hot}" placeholder="越大越靠前" >
             </div>
         </div>
         <div class="form-group">
