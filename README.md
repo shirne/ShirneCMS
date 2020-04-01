@@ -3,8 +3,8 @@ ShirneCMS
 
 基于[ThinkPHP5.1](https://github.com/top-think/think/tree/5.1)+[bootstrap4.x](https://v4.bootcss.com/docs/4.0/getting-started/introduction/)开发的后台管理系统,集成会员管理，文章管理，产品管理，微信接入，第三方登录等功能
 
-> 运行环境要求PHP7.1.3以上，Mysql5.5以上<br />
-> PHP扩展：mbstring,gd,mysql,pdo,cURL,OpenSSL,SimpleXML,fileinfo,cli。
+> 运行环境要求PHP7.2以上，Mysql5.5以上<br />
+> PHP扩展：mbstring,gd,mysql,pdo,cURL,OpenSSL,SimpleXML,fileinfo,zip,cli。
 
 ## 相关项目
 
@@ -56,6 +56,11 @@ ShirneCMS
 - [x] 推荐位
 - [ ] 促销功能
 
+### 积分商城
+- [x] 无限级分类
+- [x] 积分商品
+- [x] 订单管理
+
 ### 其它功能
 - [x] 积分商城……测试中
 - [x] 会员签到
@@ -77,9 +82,11 @@ ShirneCMS
 - [x] 通用接口，批量接口
 - [x] 文章接口（含分类）
 - [x] 登录接口（账号密码登录，小程序授权登录）
-- [x] 产品接口
+- [x] 商品接口
 - [x] 购物车接口
 - [x] 订单及支付接口
+- [x] 积分商品接口
+- [x] 积分商城下单接口
 - [x] 会员资料
 - [x] 会员签到,签到排行
 - [x] 收货地址管理
@@ -112,9 +119,9 @@ ShirneCMS
 
 #### 服务器环境
 
->IIS7以上+UrlRewrite <br />
+>IIS7以上 + UrlRewrite <br />
 >Apache2.2以上 + mod_rewrite <br />
->Nginx
+>Nginx + php-fpm
 
 [Windows配置说明](doc/WINDOWS.md)
 

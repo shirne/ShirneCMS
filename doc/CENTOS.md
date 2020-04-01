@@ -17,6 +17,67 @@ systemctl enable httpd
 systemctl start httpd
 ```
 
+### nginx
+nginx+php-fpm环境
+
+php安装增加php-fpm
+```
+yum --enablerepo=remi-php72 install php-fpm
+```
+
+启动php-fpm及加入开机启动
+```
+# start/stop/status/restart
+systemctl start php-fpm
+
+systemctl enable php-fpm
+```
+
+安装nginx
+```
+yum install nginx
+```
+
+启动nginx及加入开机启动
+```
+systemctl start nginx
+
+systemctl enable nginx
+```
+
+nginx配置
+```
+server {
+        listen       80;
+        server_name  localhost; # 你的域名
+        index  index.html index.htm index.php;
+	    root   /path/to/ShirneCMS/src/public;
+
+    location / {
+        if (!-e $request_filename) {
+            rewrite  ^/(^static|uploads)(.*)$  /index.php/$1  last;
+            break;
+        }
+    }
+
+    location ~ \.php
+    {
+        #fastcgi_pass  unix:/tmp/php-cgi.sock;
+        fastcgi_pass  127.0.0.1:9001;
+        fastcgi_index index.php;
+        include   fastcgi_params;
+        set $real_script_name $fastcgi_script_name;
+        if ($fastcgi_script_name ~ "^(.+?\.php)(/.+)$") {
+            set $real_script_name $1;
+            set $path_info $2;
+        }
+        fastcgi_param SCRIPT_FILENAME $document_root$real_script_name;
+        fastcgi_param SCRIPT_NAME $real_script_name;
+        fastcgi_param PATH_INFO $path_info;
+    }
+}
+```
+
 ### mysql (mariadb)
 ```
 yum install mariadb mariadb-server
@@ -46,7 +107,7 @@ yum install yum-utils
 # 安装php
 yum --enablerepo=remi-php72 install php
 # 安装php模块
-yum --enablerepo=remi-php72 install php-xml php-soap php-xmlrpc php-mbstring php-json php-gd php-bcmath php-pdo php-cli php-ssl php-pecl-redis php-pecl-igbinary
+yum --enablerepo=remi-php72 install php-xml php-soap php-xmlrpc php-mbstring php-json php-gd php-bcmath php-pdo php-cli php-ssl php-pecl-redis
 ```
 
 ## 初始化操作
