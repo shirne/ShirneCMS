@@ -15,7 +15,7 @@ class Product extends BaseTabLib
         'relation'=>['attr'=>'var,category,id,limit,withsku,withimgs','close'=>0],
         'prev'=>['attr'=>'var,category,id','close'=>0],
         'next'=>['attr'=>'var,category,id','close'=>0],
-        'cates'=>['attr'=>'var,pid','close'=>0],
+        'cates'=>['attr'=>'var,pid,limit','close'=>0],
         'cate'=>['attr'=>'var,name','close'=>0],
     ];
 
@@ -72,6 +72,9 @@ class Product extends BaseTabLib
             $parseStr .= "->where('pid',".$pid.")";
         }
         $parseStr .= '->order("sort ASC, id ASC")';
+        if(!empty($tag['limit'])){
+            $parseStr .= '->limit('.intval($tag['limit']).')';
+        }
         $parseStr .= '->select();';
 
         $parseStr .= ' ?>';
