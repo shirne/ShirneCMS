@@ -87,6 +87,7 @@ class InvoiceController extends BaseController
     }
 
     public function invoices(){
+        
         return $this->fetch();
     }
 

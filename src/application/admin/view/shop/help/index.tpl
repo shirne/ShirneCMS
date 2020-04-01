@@ -36,7 +36,7 @@
 							<a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="cancel">撤销</a>
 							<a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="delete">{:lang('Delete')}</a>
 						</div>
-						<a href="{:url('shop.help/add')}" class="btn btn-outline-primary btn-sm mr-2"><i class="ion-md-add"></i> 添加帮助</a>
+						<a href="{:url('shop.help/add',['cid'=>$cate_id])}" class="btn btn-outline-primary btn-sm mr-2"><i class="ion-md-add"></i> 添加帮助</a>
 						<a href="javascript:" class="btn btn-outline-warning btn-sm action-btn" data-need-checks="false" data-action="setIncrement"><i class="ion-md-add"></i> 设置起始ID</a>
 					</div>
 				</div>
@@ -86,7 +86,7 @@
 								</if>
 							</td>
 							<td class="operations">
-							<a class="btn btn-outline-primary" title="编辑" href="{:url('shop.help/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> </a>
+							<a class="btn btn-outline-primary" title="编辑" href="{:url('shop.help/edit',array('id'=>$v['id'],'cid'=>$cate_id))}"><i class="ion-md-create"></i> </a>
 							<a class="btn btn-outline-danger link-confirm" title="{:lang('Delete')}" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('shop.help/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
 							</td>
 						</tr>

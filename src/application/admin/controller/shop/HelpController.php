@@ -81,7 +81,7 @@ class HelpController extends BaseController
                 if ($model->id) {
                     delete_image($delete_images);
                     user_log($this->mid,'addhelp',1,'添加帮助 '.$model->id ,'manager');
-                    $this->success(lang('Add success!'), url('shop.help/index'));
+                    $this->success(lang('Add success!'), url('shop.help/index',['cate_id'=>$cid]));
                 } else {
                     delete_image($data['cover']);
                     $this->error(lang('Add failed!'));
@@ -100,7 +100,7 @@ class HelpController extends BaseController
      * @param $id
      * @return mixed
      */
-    public function edit($id)
+    public function edit($id,$cid=0)
     {
         $id = intval($id);
 
@@ -131,7 +131,7 @@ class HelpController extends BaseController
                 if ($model->allowField(true)->save($data)) {
                     delete_image($delete_images);
                     user_log($this->mid, 'updatehelp', 1, '修改帮助 ' . $id, 'manager');
-                    $this->success("编辑成功", url('shop.help/index'));
+                    $this->success("编辑成功", url('shop.help/index',['cate_id'=>$cid]));
                 } else {
                     delete_image($data['image']);
                     $this->error("编辑失败");
