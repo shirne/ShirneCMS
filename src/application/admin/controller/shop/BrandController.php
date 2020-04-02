@@ -133,7 +133,7 @@ class BrandController extends BaseController
                         }
                     }
                 }catch(\Exception $err){
-                    $this->error(lang('Update failed:'.$err->getMessage()));
+                    $this->error(lang('Update failed: %',[$err->getMessage()]));
                 }
                 
                 $this->success(lang('Update success!'), url('shop.brand/index'));

@@ -155,14 +155,15 @@ class ArticleController extends BaseController
                 if(!empty($data['create_time']))$data['create_time']=strtotime($data['create_time']);
                 if(empty($data['create_time']))unset($data['create_time']);
                 $model=ArticleModel::get($id);
-                if ($model->allowField(true)->save($data)) {
+                try {
+                    $model->allowField(true)->save($data);
                     delete_image($delete_images);
                     user_log($this->mid, 'updatearticle', 1, '修改文章 ' . $id, 'manager');
-                    $this->success("编辑成功", url('Article/index'));
-                } else {
+                }catch(\Exception $err){
                     delete_image($data['cover']);
-                    $this->error("编辑失败");
+                    $this->error(lang('Update failed: %',[$err->getMessage()]));
                 }
+                $this->success(lang('Update success!'), url('Article/index'));
             }
         }else{
 

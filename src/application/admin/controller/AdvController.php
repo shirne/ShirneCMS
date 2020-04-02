@@ -95,12 +95,13 @@ class AdvController extends BaseController
                 $this->error($validate->getError());
             }else{
                 if(!isset($data['ext_set']))$data['ext_set']=[];
-                $updated=$model->allowField(true)->save($data);
-                if ($updated) {
-                    $this->success(lang('Update success!'), url('adv/index'));
-                } else {
-                    $this->error(lang('Update failed!'));
+                try{
+                    $model->allowField(true)->save($data);
+
+                }catch(\Exception $err){
+                    $this->error(lang('Update failed: %s',[$err->getMessage()]));
                 }
+                $this->success(lang('Update success!'), url('adv/index'));
             }
         }
 

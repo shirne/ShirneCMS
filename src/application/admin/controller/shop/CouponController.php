@@ -81,11 +81,13 @@ class CouponController extends BaseController
                 $this->error($validate->getError());
             }else{
 
-                if ($model->save($data)) {
-                    $this->success(lang('Update success!'), url('shop.coupon/index'));
-                } else {
-                    $this->error(lang('Update failed!'));
+                try{
+                    $model->save($data);
+                    
+                }catch(\Exception $err){
+                    $this->error(lang('Update failed: %',[$err->getMessage()]));
                 }
+                $this->success(lang('Update success!'), url('shop.coupon/index'));
             }
         }
 

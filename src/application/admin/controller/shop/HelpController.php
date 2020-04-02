@@ -128,26 +128,27 @@ class HelpController extends BaseController
                 if(!empty($data['create_time']))$data['create_time']=strtotime($data['create_time']);
                 if(empty($data['create_time']))unset($data['create_time']);
                 $model=HelpModel::get($id);
-                if ($model->allowField(true)->save($data)) {
+                try{
+                    $model->allowField(true)->save($data);
                     delete_image($delete_images);
                     user_log($this->mid, 'updatehelp', 1, '修改帮助 ' . $id, 'manager');
-                    $this->success("编辑成功", url('shop.help/index',['cate_id'=>$cid]));
-                } else {
+                }catch(\Exception $err){
                     delete_image($data['image']);
-                    $this->error("编辑失败");
+                    $this->error(lang('Update failed: %',[$err->getMessage()]));
                 }
+                
+                $this->success(lang('Update success!'), url('shop.help/index',['cate_id'=>$cid]));
             }
-        }else{
-
-            $model = HelpModel::get($id);
-            if(empty($model)){
-                $this->error('帮助不存在');
-            }
-            $this->assign("category",HelpCategoryFacade::getCategories());
-            $this->assign('article',$model);
-            $this->assign('id',$id);
-            return $this->fetch();
         }
+
+        $model = HelpModel::get($id);
+        if(empty($model)){
+            $this->error('帮助不存在');
+        }
+        $this->assign("category",HelpCategoryFacade::getCategories());
+        $this->assign('article',$model);
+        $this->assign('id',$id);
+        return $this->fetch();
     }
 
     /**

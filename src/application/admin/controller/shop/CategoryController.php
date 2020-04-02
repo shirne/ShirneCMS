@@ -105,28 +105,33 @@ class CategoryController extends BaseController
                 unset($data['delete_image']);
                 if(empty($data['specs']))$data['specs']=[];
 
-                ProductCategoryModel::update($data,['id'=>$id]);
+                try{
+                    ProductCategoryModel::update($data,['id'=>$id]);
 
-                delete_image($delete_images);
-                ProductCategoryFacade::clearCache();
+                    delete_image($delete_images);
+                    ProductCategoryFacade::clearCache();
+                }catch(\Exception $err){
+                    $this->error(lang('Update failed: %',[$err->getMessage()]));
+                }
                 $this->success(lang('Update success!'), url('shop.category/index'));
             }
-        }else{
-            $model = ProductCategoryModel::get($id);
-            if(empty($model) || empty($model['id'])){
-                $this->error('分类不存在');
-            }
-            $cate = ProductCategoryFacade::getCategories();
-            if(is_null($model->specs)){
-                $model->specs=[];
-            }
-
-            $this->assign('cate',$cate);
-            $this->assign('model',$model);
-            $this->assign('specs',SpecificationsModel::getList());
-            $this->assign('id',$id);
-            return $this->fetch();
         }
+
+        $model = ProductCategoryModel::get($id);
+        if(empty($model) || empty($model['id'])){
+            $this->error('分类不存在');
+        }
+        $cate = ProductCategoryFacade::getCategories();
+        if(is_null($model->specs)){
+            $model->specs=[];
+        }
+
+        $this->assign('cate',$cate);
+        $this->assign('model',$model);
+        $this->assign('specs',SpecificationsModel::getList());
+        $this->assign('id',$id);
+        return $this->fetch();
+        
     }
 
     /**
