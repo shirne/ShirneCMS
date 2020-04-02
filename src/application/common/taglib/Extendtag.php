@@ -14,6 +14,7 @@ class Extendtag extends BaseTabLib
         'keywords'=>['attr'=>'var,group,limit','close'=>0],
         'links'=>['attr'=>'var,group,limit','close'=>0],
         'advs'=>['attr'=>'var,flag,limit','close'=>0],
+        'booth'=>['attr'=>'var,flag','close'=>0],
         'notices'=>['attr'=>'var,limit','close'=>0],
         'notice'=>['attr'=>'var,name','close'=>0],
         'feedback'=>['attr'=>'var,limit,page','close'=>0]
@@ -53,6 +54,17 @@ class Extendtag extends BaseTabLib
             $parseStr .= '->limit('.intval($tag['limit']).')';
         }
         $parseStr .= '->select();';
+
+        $parseStr .= ' ?>';
+        return $parseStr;
+    }
+
+    public function tagBooth($tag){
+        $var  = isset($tag['var']) ? $tag['var'] : 'booth';
+
+        $parseStr='<?php ';
+
+        $parseStr.='$'.$var.'=\app\common\model\BoothModel::fetchBooth('.$this->parseArg($tag['flag']).', true);';
 
         $parseStr .= ' ?>';
         return $parseStr;

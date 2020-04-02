@@ -22,13 +22,16 @@ class BoothModel extends BaseModel
         'ad'=>'广告位',
     ];
     
-    public static function fetchBooth($flags){
+    public static function fetchBooth($flags,$single=false){
         if(!is_array($flags))$flags=explode(',',$flags);
         
         $booths = static::newInstance()->whereIn('flag',$flags)->select();
         $lists=[];
         foreach ($booths as $booth){
             $lists[$booth['flag']]=$booth->fetchData();
+        }
+        if($single){
+            return isset($lists[$flags[0]])?$lists[$flags[0]]:[];
         }
         return $lists;
     }
