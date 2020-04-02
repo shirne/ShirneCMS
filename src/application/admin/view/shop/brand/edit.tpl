@@ -37,6 +37,17 @@
             <input type="text" name="sort" class="form-control" value="{$model.sort}" placeholder="越小越靠前" >
         </div>
         <div class="form-group">
+            <label for="url">类目</label>
+            <div>
+                <volist name="cates" id="cate">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="cates[]" id="brand_cate{$cate.id}" {$cate['checked']?'checked':''} value="{$cate.id}">
+                        <label class="form-check-label" for="brand_cate{$cate.id}">{$cate.title}/{$cate.short}</label>
+                    </div>
+                </volist>
+            </div>
+        </div>
+        <div class="form-group">
             <input type="hidden" name="id" value="{$model.id}">
             <button type="submit" class="btn btn-primary">{$id>0?'保存':'添加'}</button>
         </div>

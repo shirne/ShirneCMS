@@ -14,6 +14,7 @@ use app\common\core\SimpleFacade;
  * @method array getCategoryId($idorname) static 查找分类ID
  * @method array getCategoryTree($idorname) static 获取当前分类所在的层级树
  * @method array getTopCategory($idorname) static 获取顶级分类
+ * @method array getBrandsCategories($brandid) static 获取指定品牌关联的类目
  * @method array getBrands($cateid = 0, $key = '') static 获取分类绑定的品牌(按顶级类获取)
  * @method array getTreedCategory($force=false) static 获取排序后的分类
  * @method array getSubCategory($pid=0) static 获取指定id的下级分类列表

@@ -62,7 +62,18 @@ class BrandController extends BaseController
                     $this->error($this->uploadErrorCode.':'.$this->uploadError);
                 }
 
-                if (Db::name('productBrand')->insert($data)) {
+                $cates = $data['cates'];
+                unset($data['cates']);
+                $insertid=Db::name('productBrand')->insert($data,false,true);
+                if ($insertid) {
+                    if(!empty($cates)){
+                        foreach($cates as $cid){
+                            Db::name('productCategoryBrand')->insert([
+                                'cate_id'=>$cid,
+                                'brand_id'=>$insertid
+                            ]);
+                        }
+                    }
                     $this->success(lang('Add success!'), url('shop.brand/index'));
                 } else {
                     $this->error(lang('Add failed!'));
@@ -71,6 +82,7 @@ class BrandController extends BaseController
         }
         $model=array('sort'=>99);
         $this->assign('model',$model);
+        $this->assign('cates',ProductCategoryFacade::getSubCategory(0));
         $this->assign('id',0);
         return $this->fetch('edit');
     }
@@ -100,13 +112,31 @@ class BrandController extends BaseController
                 }
                 unset($data['delete_image']);
 
+                $cates = $data['cates'];
+                unset($data['cates']);
                 $data['id']=$id;
-                if (Db::name('productBrand')->update($data)) {
+                try{
+                    Db::name('productBrand')->update($data);
                     delete_image($delete_images);
-                    $this->success(lang('Update success!'), url('shop.brand/index'));
-                } else {
-                    $this->error(lang('Update failed!'));
+                    $catecheckes = ProductCategoryFacade::getBrandsCategories($id);
+                    $deletes = array_diff($catecheckes,$cates);
+                    if(!empty($deletes)){
+                        Db::name('productCategoryBrand')->whereIn('cate_id',$deletes)->delete();
+                    }
+                    $newids=array_diff($cates,$catecheckes);
+                    if(!empty($newids)){
+                        foreach($newids as $cid){
+                            Db::name('productCategoryBrand')->insert([
+                                'cate_id'=>$cid,
+                                'brand_id'=>$id
+                            ]);
+                        }
+                    }
+                }catch(\Exception $err){
+                    $this->error(lang('Update failed:'.$err->getMessage()));
                 }
+                
+                $this->success(lang('Update success!'), url('shop.brand/index'));
             }
         }
 
@@ -114,7 +144,18 @@ class BrandController extends BaseController
         if(empty($model)){
             $this->error('品牌不存在');
         }
+        $catecheckes = ProductCategoryFacade::getBrandsCategories($id);
+        $cates=ProductCategoryFacade::getSubCategory(0);
+        foreach($cates as &$cate){
+            if(in_array($cate['id'],$catecheckes)){
+                $cate['checked']=1;
+            }else{
+                $cate['checked']=0;
+            }
+        }
+
         $this->assign('model',$model);
+        $this->assign('cates',$cates);
         $this->assign('id',$id);
         return $this->fetch();
     }
