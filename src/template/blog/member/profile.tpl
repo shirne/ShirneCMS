@@ -1,5 +1,5 @@
-<extend name="public:base" />
-<block name="body">
+{extend name="public:base" /}
+{block name="body"}
     <include file="member/side" />
     <div class="container">
         <div class="page-header">
@@ -73,4 +73,4 @@
     <script src="__STATIC__/moment/min/moment.min.js"></script>
     <script src="__STATIC__/moment/locale/zh-cn.js"></script>
     <script src="__STATIC__/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
-</block>
+{/block}

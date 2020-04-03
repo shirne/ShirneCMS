@@ -44,8 +44,8 @@
             <div class="text-muted mt-3"><a href="javascript:location.reload()" class="float-right">刷新</a>环境检测</div>
             <hr class="mb-4">
             <ul class="list-group">
-                <volist name="envs" id="item">
-                    <if condition="is_null($item['pass'])">
+                {volist name="envs" id="item"}
+                    {if is_null($item['pass']) }
                         <li class="list-group-item">
                             <div class="float-right">未检测 <i class="ion-md-help-circle-outline"></i></div>
                             <div>
@@ -53,7 +53,7 @@
                                 <div class="text-muted">Require: {$item['require']}</div>
                             </div>
                         </li>
-                    <elseif condition="$item['pass']"/>
+                    {elseif $item['pass'] /}
                         <li class="list-group-item text-success">
                             <div class="float-right">{$item['current']} <i class="ion-md-checkmark-circle-outline"></i></div>
                             <div>
@@ -61,7 +61,7 @@
                                 <div class="text-muted">Require: {$item['require']}</div>
                             </div>
                         </li>
-                    <else/>
+                    {else /}
                         <li class="list-group-item text-danger">
                             <div class="float-right">{$item['current']} <i class="ion-md-close-circle-outline"></i></div>
                             <div>
@@ -69,8 +69,8 @@
                                 <div class="text-muted">Require: {$item['require']}</div>
                             </div>
                         </li>
-                    </if>
-                </volist>
+                    {/if}
+                {/volist}
             </ul>
         </div>
 

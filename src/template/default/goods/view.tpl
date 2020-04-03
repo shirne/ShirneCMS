@@ -1,6 +1,6 @@
-<extend name="public:base"/>
+{extend name="public:base"/}
 
-<block name="body">
+{block name="body"}
     <div class="main">
         <div class="subbanner">
             <div class="inner" style="height: 300px;background-image:url({$goods.image|media})"></div>
@@ -27,9 +27,9 @@
             </div>
         </div>
     </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/javascript">
         window.share_imgurl = '{$goods.image|local_media}';
     </script>
-</block>
+{/block}

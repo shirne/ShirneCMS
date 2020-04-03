@@ -1,6 +1,6 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
     <include file="public/bread" menu="shop_order_index" title="订单列表" />
 
@@ -74,11 +74,11 @@
             </thead>
             <tbody>
             <php>$empty=list_empty(7);</php>
-            <volist name="lists" id="v" empty="$empty">
+            {volist name="lists" id="v" empty="$empty"}
                 <tr>
                     <td><input type="checkbox" name="id" value="{$v.order_id}" /><br />{$v.order_id}</td>
                     <td>
-                        <volist name="v['products']" id="p">
+                        {volist name="v['products']" id="p"}
                         <div class="media">
                             <img class="media-object mr-2 rounded" width="50" src="{$p['product_image']|default='/static/images/nopic.png'}" alt="{$p['product_title']}">
                             <div class="media-body">
@@ -86,21 +86,21 @@
                                 <div>￥{$p['product_price']} &times; {$p['count']}件</div>
                             </div>
                         </div>
-                        </volist>
+                        {/volist}
                     </td>
                     <td>{$v.order_no}<br /><span class="text-muted">{$v.create_time|showdate}</span></td>
                     <td>
                         <div class="media">
-                            <if condition="!empty($v['avatar'])">
+                            {if !empty($v['avatar'])}
                                 <img src="{$v.avatar}" class="mr-2 rounded" width="30"/>
-                            </if>
+                            {/if}
                             <div class="media-body">
                                 <h5 class="mt-0 mb-1" style="font-size:13px;">
-                                    <if condition="!empty($v['nickname'])">
+                                    {if !empty($v['nickname'])}
                                         {$v.nickname}
-                                        <else/>
+                                        {else/}
                                         {$v.username}
-                                    </if>
+                                    {/if}
                                 </h5>
                                 <div style="font-size:12px;">
                                     [{$v.member_id} {$levels[$v['level_id']]['level_name']}]
@@ -109,52 +109,52 @@
                         </div>
                     </td>
                     <td>
-                        {$v.payamount} <if condition="$v['status'] EQ 0"><a href="javascript:" class="reprice" data-id="{$v.order_id}" data-price="{$v['payamount']}" title="改价"><i class="ion-md-create"></i> </a> </if><br />
+                        {$v.payamount} {if $v['status'] EQ 0}<a href="javascript:" class="reprice" data-id="{$v.order_id}" data-price="{$v['payamount']}" title="改价"><i class="ion-md-create"></i> </a> {/if}<br />
                         {$v.rebate_total}
                     </td>
                     <td>
                         {$v.status|order_status|raw}
-                        <if condition="$v['isaudit'] EQ 0">
+                        {if $v['isaudit'] EQ 0}
                             <span class="badge badge-warning">待审核</span>
-                        </if>
-                        <if condition="$v['rebated'] EQ 1">
+                        {/if}
+                        {if $v['rebated'] EQ 1}
                             <span class="badge badge-success">已返奖</span>
-                            <else/>
+                            {else/}
                             <span class="badge badge-warning">未返奖</span>
-                        </if>
+                        {/if}
                     </td>
                     <td class="operations">
                         <a class="btn btn-outline-primary" title="详情" href="{:url('shop.order/detail',array('id'=>$v['order_id']))}"><i class="ion-md-document"></i> </a>
                         
-                        <if condition="$v['status'] EQ 0">
+                        {if $v['status'] EQ 0}
                             <a class="btn btn-outline-danger btn-status" title="取消订单" href="javascript:" data-id="{$v.order_id}"  data-status="-1" ><i class="ion-md-close-circle-outline"></i> </a>
                             <a class="btn btn-outline-warning btn-status" title="设置支付状态" href="javascript:" data-id="{$v.order_id}"  data-status="1" ><i class="ion-md-wallet"></i> </a>
-                        <elseif condition="$v['status'] EQ 1" />
+                        {elseif $v['status'] EQ 1 /}
                             <a class="btn btn-outline-info btn-status" title="发货" href="javascript:" data-id="{$v.order_id}"  data-status="2" data-express="{$v.express_code}/{$v.express_no}"><i class="ion-md-train"></i> </a>
-                        <elseif condition="$v['status'] EQ 2" />
+                        {elseif $v['status'] EQ 2 /}
                             <a class="btn btn-outline-secondary btn-status" title="修改发货信息" href="javascript:" data-id="{$v.order_id}"  data-status="2" data-express="{$v.express_code}/{$v.express_no}"><i class="ion-md-subway"></i> </a>
                             <a class="btn btn-outline-success btn-status" title="收货" href="javascript:" data-id="{$v.order_id}"  data-status="3" ><i class="ion-md-exit"></i> </a>
-                        <elseif condition="$v['status'] EQ 3" />
+                        {elseif $v['status'] EQ 3 /}
                             <a class="btn btn-outline-success btn-status" title="完成" href="javascript:" data-id="{$v.order_id}"  data-status="4" ><i class="ion-md-checkbox-outline"></i> </a>
-                        </if>
+                        {/if}
 
-                        <if condition="$v['rebated'] NEQ 1">
-                            <if condition="$v['isaudit'] EQ 1">
+                        {if $v['rebated'] NEQ 1}
+                            {if $v['isaudit'] EQ 1}
                                 <a class="btn btn-outline-warning btn-audit" title="取消审核" href="javascript:" data-id="{$v.order_id}"  data-status="0"><i class="ion-md-remove-circle"></i> </a>
-                                <else/>
+                                {else/}
                                 <a class="btn btn-outline-success btn-audit" title="审核" href="javascript:" data-id="{$v.order_id}"  data-status="1"><i class="ion-md-checkmark-circle"></i> </a>
-                            </if>
-                        </if>
+                            {/if}
+                        {/if}
                         <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('shop.order/delete',array('id'=>$v['order_id']))}"><i class="ion-md-trash"></i> </a>
                     </td>
                 </tr>
-            </volist>
+            {/volist}
             </tbody>
         </table>
         {$page|raw}
     </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
         <include file="shop/order/_status_tpl" />
     <script type="text/javascript">
     (function(w){
@@ -247,4 +247,4 @@
         });
     </script>
 
-</block>
+{/block}

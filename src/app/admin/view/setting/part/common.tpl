@@ -25,13 +25,13 @@
                 <label class="custom-file-label" for="upload_site-weblogo">选择文件</label>
             </div>
         </div>
-        <if condition="$setting['site-weblogo']['value']">
+        {if $setting['site-weblogo']['value']}
             <figure class="figure">
                 <img src="{$setting['site-weblogo']['value']}" class="figure-img img-fluid rounded" alt="image">
                 <figcaption class="figure-caption text-center">{$setting['site-weblogo']['value']}</figcaption>
             </figure>
             <input type="hidden" name="delete_site-weblogo" value="{$setting['site-weblogo']['value']}"/>
-        </if>
+        {/if}
     </div>
 </div>
 
@@ -44,13 +44,13 @@
                 <label class="custom-file-label" for="upload_site-shareimg">选择文件</label>
             </div>
         </div>
-        <if condition="$setting['site-shareimg']['value']">
+        {if $setting['site-shareimg']['value']}
             <figure class="figure">
                 <img src="{$setting['site-shareimg']['value']}" class="figure-img img-fluid rounded" alt="image">
                 <figcaption class="figure-caption text-center">{$setting['site-shareimg']['value']}</figcaption>
             </figure>
             <input type="hidden" name="delete_site-shareimg" value="{$setting['site-shareimg']['value']}"/>
-        </if>
+        {/if}
     </div>
 </div>
 <div class="form-row form-group">

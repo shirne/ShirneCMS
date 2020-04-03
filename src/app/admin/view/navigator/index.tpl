@@ -1,6 +1,6 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
     <include file="public/bread" menu="navigator_index" title="" />
 
@@ -21,7 +21,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <foreach name="navigator" item="item">
+                    {foreach name="navigator" item="item"}
                         <tr class="navrow row-{$key}" data-key="{$key}">
                             <td><i class="ion-md-apps"></i> </td>
                             <td>
@@ -40,33 +40,33 @@
                             <td>
                                 <div class="input-group">
 
-                                    <if condition="is_array($item['url'])">
+                                    {if is_array($item['url'])}
                                         <select class="form-control typepicker" name="navs[{$key}][urltype]" style="width: 80px;max-width: 80px;">
                                             <option value="url" >网址</option>
                                             <option value="module" selected>模块</option>
                                         </select>
                                         <select class="form-control modulepicker modulefield" name="navs[{$key}][module]">
-                                            <foreach name="modules" item="v" key="k">
+                                            {foreach name="modules" item="v" key="k"}
                                                 <option value="{$k}" rwq="{$item['url'][2]}" {$k==$item['url'][2]?'selected':''}>{$v}</option>
-                                            </foreach>
+                                            {/foreach}
                                         </select>
                                         <select class="form-control modulecate modulefield" data-value="{$item['url']|json_encode}" name="navs[{$key}][cate_name]">
                                         </select>
                                         <input type="text" class="form-control urlfield" name="navs[{$key}][url]" value=""/>
-                                        <else/>
+                                        {else/}
                                         <select class="form-control typepicker" name="navs[{$key}][urltype]" style="width: 80px;max-width: 80px;">
                                             <option value="url" selected>网址</option>
                                             <option value="module">模块</option>
                                         </select>
                                         <select class="form-control modulepicker modulefield" name="navs[{$key}][module]">
-                                            <foreach name="modules" item="v" key="k">
+                                            {foreach name="modules" item="v" key="k"}
                                                 <option value="{$k}">{$v}</option>
-                                            </foreach>
+                                            {/foreach}
                                         </select>
                                         <select class="form-control modulecate modulefield" name="navs[{$key}][cate_name]">
                                         </select>
                                         <input type="text" class="form-control urlfield" name="navs[{$key}][url]" value="{$item.url}"/>
-                                    </if>
+                                    {/if}
                                 </div>
                             </td>
                             <td>
@@ -82,8 +82,8 @@
                                 <a href="javascript:" class="btn btn-outline-danger rowdelete" title="删除"><i class="ion-md-trash"></i> </a>
                             </td>
                         </tr>
-                        <if condition="$item['subnavtype'] EQ 'customer' && !empty($item['subnav'])">
-                            <foreach name="item['subnav']" item="subnav" key="index">
+                        {if $item['subnavtype'] EQ 'customer' && !empty($item['subnav'])}
+                            {foreach name="item['subnav']" item="subnav" key="index"}
                                 <tr class="subrow row-{$key}-{$index}" data-key="{$key}" data-index="{$index}">
                                     <td><i class="ion-md-apps"></i> </td>
                                     <td>
@@ -113,9 +113,9 @@
                                         <a href="javascript:" class="btn btn-outline-danger rowdelete" title="删除"><i class="ion-md-trash"></i> </a>
                                     </td>
                                 </tr>
-                            </foreach>
-                        </if>
-                    </foreach>
+                            {/foreach}
+                        {/if}
+                    {/foreach}
                     </tbody>
                     <tfoot>
                     <tr>
@@ -133,8 +133,8 @@
             </form>
         </div>
     </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/plain" id="rowTemplate">
         <tr class="navrow row-{@key}" data-key="{@key}">
             <td><i class="ion-md-apps"></i> </td>
@@ -158,9 +158,9 @@
                         <option value="module" selected>模块</option>
                     </select>
                     <select class="form-control modulepicker modulefield" name="navs[{@key}][module]">
-                        <foreach name="modules" item="v" key="k">
+                        {foreach name="modules" item="v" key="k"}
                             <option value="{$k}">{$v}</option>
-                        </foreach>
+                        {/foreach}
                     </select>
                     <select class="form-control modulecate modulefield" name="navs[{@key}][cate_name]">
                     </select>
@@ -510,4 +510,4 @@
         });
     </script>
 
-</block>
+{/block}

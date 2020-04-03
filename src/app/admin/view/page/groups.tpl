@@ -1,6 +1,6 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
     <include file="public/bread" menu="page_index" title="页面分组" />
 
@@ -25,10 +25,10 @@
             </tr>
             </thead>
             <tbody>
-            <foreach name="lists" item="v">
+            {foreach name="lists" item="v"}
                 <tr>
                     <td>{$v.id}</td>
-                    <td>{$v.group}<if condition="$v.use_template EQ 1">&nbsp;<span class="badge badge-warning">独立模板</span></if></td>
+                    <td>{$v.group}{if $v.use_template EQ 1}&nbsp;<span class="badge badge-warning">独立模板</span>{/if}</td>
                     <td>{$v.group_name}</td>
                     <td>{$v.sort}</td>
                     <td class="operations">
@@ -36,10 +36,10 @@
                         <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('page/groupdelete',array('id'=>$v['id']))}"><i class="ion-md-trash"></i> </a>
                     </td>
                 </tr>
-            </foreach>
+            {/foreach}
             </tbody>
         </table>
         {$page|raw}
     </div>
 
-</block>
+{/block}

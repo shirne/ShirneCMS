@@ -1,6 +1,6 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
     <include file="public/bread" menu="credit_promotion_index" title="积分策略" />
 
@@ -61,12 +61,12 @@
     </form>
         </div>
 </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
 <script type="text/javascript">
     jQuery(function ($) {
 
 
     });
 </script>
-</block>
+{/block}

@@ -163,7 +163,7 @@ class BaseController extends Controller {
                 $this->viewData[$name] = $value;
             }
         }else{
-            $this->view->assign($name, $value);
+            parent::assign($name, $value);
         }
 
         return $this;
@@ -183,7 +183,7 @@ class BaseController extends Controller {
             $this->result($this->viewData,1);
         }
 
-        return $this->view->fetch($template, $vars, $config);
+        return parent::fetch($template, $vars, $config);
     }
 
 }

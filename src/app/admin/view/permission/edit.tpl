@@ -1,6 +1,6 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 <include file="public/bread" menu="permission_index" title="菜单配置" />
 
 <div id="page-wrapper">
@@ -11,12 +11,12 @@
             <label for="page-title">所属菜单</label>
             <select name="parent_id" class="form-control">
                 <option value="0">顶级菜单</option>
-                <foreach name="menus[0]" item="m">
+                {foreach name="menus[0]" item="m"}
                     <option value="{$m['id']}" {$m['id']==$perm['id']?'disabled':''} {$m['id']==$perm['parent_id']?'selected':''}>{$m['name']}</option>
-                    <foreach name="menus[$m['id']]" item="sm">
+                    {foreach name="menus[$m['id']]" item="sm"}
                         <option value="{$sm['id']}" <?php echo ($sm['id']==$perm['id']||$m['id']==$perm['id'])?'disabled':'';?> {$sm['id']==$perm['parent_id']?'selected':''}>┣{$sm['name']}</option>
-                    </foreach>
-                </foreach>
+                    {/foreach}
+                {/foreach}
             </select>
         </div>
         <div class="form-group">
@@ -59,8 +59,8 @@
     </form>
         </div>
 </div>
-    </block>
-<block name="script">
+    {/block}
+{block name="script"}
 <script type="text/javascript">
 </script>
-</block>
+{/block}

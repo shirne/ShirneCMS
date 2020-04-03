@@ -1,6 +1,6 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
 <include file="public/bread" menu="credit_category_index" title="" />
 
@@ -32,10 +32,10 @@
             </tr>
         </thead>
         <tbody>
-        <foreach name="model" item="v">
+        {foreach name="model" item="v"}
             <tr>
                 <td>{$v.id}</td>
-                <td>{$v.html} {$v.title}&nbsp;<span class="badge badge-info">{$v.short}</span><if condition="$v.use_template EQ 1">&nbsp;<span class="badge badge-warning">独立模板</span></if></td>
+                <td>{$v.html} {$v.title}&nbsp;<span class="badge badge-info">{$v.short}</span>{if $v.use_template EQ 1}&nbsp;<span class="badge badge-warning">独立模板</span>{/if}</td>
                 <td>{$v.name}</td>
                 <td>{$v.sort}</td>
                 <td>
@@ -47,9 +47,9 @@
                     </div>
                 </td>
             </tr>
-        </foreach>
+        {/foreach}
         </tbody>
     </table>
 </div>
 
-</block>
+{/block}

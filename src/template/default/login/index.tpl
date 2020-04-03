@@ -1,5 +1,5 @@
-<extend name="public:base" />
-<block name="body">
+{extend name="public:base" /}
+{block name="body"}
 	<div class="main">
 		<div class="container loginbox">
 			<div class="row justify-content-center">
@@ -9,7 +9,7 @@
 				<div class="card-body">
 
 					<form class="form-horizontal" role="form" method="post" action="{:url('index/login/index')}">
-						<if condition="!empty($wechatUser)">
+						{if !empty($wechatUser)}
 							<div class="form-group">
 								<div class="row">
 								<div class="col" style="max-width: 65px;">
@@ -21,7 +21,7 @@
 								</div>
 								</div>
 							</div>
-						</if>
+						{/if}
 						<div class="form-group">
 							<div class="input-group">
 								<div class="input-group-prepend">
@@ -65,8 +65,8 @@
 			</div>
 		</div>
 	</div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
 	<script type="text/javascript">
 		jQuery(function($){
 			var verifyurl='{:url('index/login/verify')}';
@@ -78,4 +78,4 @@
 		});
 	</script>
 
-</block>
+{/block}

@@ -1,6 +1,6 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 <include file="public/bread" menu="shop_help_index" title="帮助列表" />
 <div id="page-wrapper">
 	<div class="row">
@@ -12,13 +12,13 @@
 				</div>
 				<ul class="list-group list-group-flush">
 					<li class="list-group-item"><a class="list-cate-item" href="{:url('index',['key'=>$keyword,'cate_id'=>0])}" data-value="0">不限分类</a></li>
-				<foreach name="category" item="v">
+				{foreach name="category" item="v"}
 					<li class="list-group-item{$cate_id == $v['id']?' active':''}">
 						<a href="javascript:" data-pid="{$v['id']}" title="添加子类" class="float-right ml-2 addcate"><i class="ion-md-add"></i></a>
 						<a href="javascript:" data-id="{$v['id']}" title="编辑分类" data-title="{$v['title']}" data-short="{$v['short']}" data-name="{$v['name']}" data-sort="{$v['sort']}" data-pid="{$v['pid']}" class="float-right addcate"><i class="ion-md-create"></i></a>
 						<a class="list-cate-item" href="{:url('index',['key'=>$keyword,'cate_id'=>$v['id']])}" data-value="{$v.id}" >{$v.html} {$v.title}</a>
 					</li>
-				</foreach>
+				{/foreach}
 				
 				</ul>
 			</div>
@@ -68,7 +68,7 @@
 				</thead>
 				<tbody>
 					<empty name="lists">{:list_empty(8)}</empty>
-					<volist name="lists" id="v" >
+					{volist name="lists" id="v" }
 						<tr>
 							<td><input type="checkbox" name="id" value="{$v.id}" /></td>
 							<td><a href="{:url('index/help/view',['id'=>$v['id']])}" target="_blank">{$v.title}</a> </td>
@@ -79,18 +79,18 @@
 							<td>{$v.username}</td>
 							<td>{$v.category_title}</td>
 							<td data-url="{:url('status')}" data-id="{$v.id}">
-								<if condition="$v['status'] EQ 1">
+								{if $v['status'] EQ 1}
 									<span class="chgstatus" data-status="0" title="点击隐藏">已发布</span>
-									<else/>
+									{else/}
 									<span class="chgstatus off" data-status="1" title="点击发布">未发布</span>
-								</if>
+								{/if}
 							</td>
 							<td class="operations">
 							<a class="btn btn-outline-primary" title="编辑" href="{:url('shop.help/edit',array('id'=>$v['id'],'cid'=>$cate_id))}"><i class="ion-md-create"></i> </a>
 							<a class="btn btn-outline-danger link-confirm" title="{:lang('Delete')}" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('shop.help/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
 							</td>
 						</tr>
-					</volist>
+					{/volist}
 				</tbody>
 			</table>
 			<div class="clearfix"></div>
@@ -101,8 +101,8 @@
 	
 
 </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
 	<script type="text/html" id="cate-template">
 		<div class="form-vertical">
 			<div class="form-group">
@@ -117,9 +117,9 @@
 			<div class="form-group">
 				<div class="input-group"><span class="input-group-prepend"><span class="input-group-text">上级分类</span></span><select class="form-control" name="pid">
 					<option value="0">顶级分类</option>
-						<foreach name="category" item="v">
+						{foreach name="category" item="v"}
 							<option value="{$v.id}" >{$v.html} {$v.title}</option>
-						</foreach>
+						{/foreach}
 					</select>
 				</div>
 			</div>
@@ -234,4 +234,4 @@
 			})
 		})
 	</script>
-</block>
+{/block}

@@ -6,7 +6,7 @@ use think\facade\Route;
 
 function parseNavigator(&$config,$module){
     $navigators=cache($module.'_navigator');
-    if(empty($navigators)){
+    if(empty($navigators) && !empty($config)){
         $navigators=array();
         foreach ($config as $item){
             if(empty($item['url']))continue;

@@ -8,7 +8,7 @@
 
 return [
     'static_version'=>'20181109',
-    'view_path'=>Env::get('root_path').'template'.DIRECTORY_SEPARATOR.'blog'.DIRECTORY_SEPARATOR,
+    'view_path'=>app()->getRootPath().'/template/blog/',
     'independence'=>false,
     'taglib_pre_load'=>'app\common\taglib\Article,app\common\taglib\Product,app\common\taglib\Goods,app\common\taglib\Extendtag'
 ];

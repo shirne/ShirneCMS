@@ -50,12 +50,12 @@
                                placeholder="密码">
                     </div>
                 </div>
-                <if condition="$config['captcha_mode'] EQ 1">
+                {if $config['captcha_mode'] EQ 1}
                 <div class="form-group">
                     <p id="wait" class="text-muted">验证码加载中...</p>
                     <div id="captchabox" class="m-auto"></div>
                 </div>
-                <else/>
+                {else/}
                 <div class="form-group">
                     <div class="input-group">
                         <div class="input-group-prepend">
@@ -70,7 +70,7 @@
                         <figcaption class="figure-caption">看不清？点击图片刷新</figcaption>
                     </figure>
                 </div>
-                </if>
+                {/if}
                 <button type="submit" class="btn btn-block btn-primary">登陆</button>
                 <div class="alert fade show" role="alert">
                     <span class="alert-content"></span>
@@ -110,9 +110,9 @@
     </div>
 </div>
 <script src="__STATIC__/jquery/jquery.min.js"></script>
-<if condition="$config['captcha_mode'] EQ 1">
+{if $config['captcha_mode'] EQ 1}
 <script type="text/javascript" src="/static/js/gt.js"></script>
-</if>
+{/if}
 <script>
     jQuery(function ($) {
         //浏览器功能检测

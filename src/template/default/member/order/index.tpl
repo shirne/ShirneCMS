@@ -1,31 +1,31 @@
-<extend name="public:base" />
-<block name="body">
+{extend name="public:base" /}
+{block name="body"}
     <div class="container">
         <div class="page-header"><h1>我的订单</h1></div>
         <div class="list-group">
-            <php>$empty='<span class="col-12 empty">您还没有下单哦</span>';</php>
-            <foreach name="orders" empty="$empty" item="v">
+            {php}$empty='<span class="col-12 empty">您还没有下单哦</span>';{/php}
+            {foreach name="orders" empty="$empty" item="v"}
             <div class="list-group-item" >
                 <div style="margin-bottom:10px;">{$v.order_no}
                     <div class="float-right">
-                        <if condition="$v['status'] EQ 0">
+                        {if $v['status'] EQ 0}
                             <span class="badge badge-warning">未支付</span>
-                            <elseif condition="$v['status'] EQ 4"/>
+                            {elseif $v['status'] EQ 4/}
                             <span class="badge badge-success">已完成</span>
-                            <elseif condition="$v['status'] GT 0"/>
-                            <if condition="$v['isaudit'] EQ 1">
+                            {elseif $v['status'] GT 0/}
+                            {if $v['isaudit'] EQ 1}
                                 <a class="btn btn-default btn-confirm" href="javascript:" data-id="{$v.apply_id}">确认完成</a>
-                                <else/>
+                                {else/}
                                 <span class="badge badge-warning">待审核</span>
-                            </if>
-                            <else/>
+                            {/if}
+                            {else/}
                             <span class="badge badge-default">订单已作废</span>
-                        </if>
+                        {/if}
                     </div>
                 </div>
                 <div >
                     <a href="{:aurl('index/member.order/detail',['id'=>$v['order_id']])}" class="d-block clearfix">
-                    <volist name="v.products" id="prod">
+                    {volist name="v.products" id="prod"}
                     <div class="media">
                         <div class="media-left">
                             <img class="media-object" width="50" height="50" src="{$prod['product_image']}" alt="...">
@@ -35,7 +35,7 @@
                             <div><i class="fa fa-circle-o"></i> {$prod['product_price']}</div>
                         </div>
                     </div>
-                    </volist>
+                    {/volist}
 
                     <div class="float-right mt-2">
                         订单总计： <span class="text-danger">￥{$v.payamount}</span>
@@ -43,23 +43,23 @@
                     </a>
                 </div>
                 <div class="order-btns text-right">
-                    <if condition="$v['status'] EQ 0">
+                    {if $v['status'] EQ 0}
                         <a href="javascript:" class="btn btn-secondary btn-cancel" data-id="{$v.order_id}">取消订单</a>
                         <a href="javascript:" class="btn btn-danger btn-pay" data-id="{$v.order_id}">重新支付</a>
-                        <elseif condition="$v['status'] EQ 3"/>
-                        <elseif condition="$v['status'] GT 0"/>
-                        <if condition="$v['isaudit'] EQ 1">
+                        {elseif $v['status'] EQ 3/}
+                        {elseif $v['status'] GT 0/}
+                        {if $v['isaudit'] EQ 1}
                             <a class="btn btn-secondary btn-confirm" href="javascript:" data-id="{$v.order_id}">确认完成</a>
-                        </if>
-                    </if>
+                        {/if}
+                    {/if}
                 </div>
             </div>
-            </foreach>
+            {/foreach}
         </div>
         {$page|raw}
     </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/javascript">
         jQuery(function($){
             $('.btn-confirm').click(function() {
@@ -97,4 +97,4 @@
             });
         })
     </script>
-</block>
+{/block}

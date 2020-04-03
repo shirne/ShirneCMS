@@ -3,17 +3,17 @@
     <label for="v-sign_open" class="col-3 col-md-2 text-right align-middle">开启签到</label>
     <div class="col-9 col-md-8 col-lg-6">
         <div class="btn-group btn-group-toggle" data-toggle="buttons">
-            <foreach name="setting.sign_open.data" item="value" key="k">
-                <if condition="$k==$setting['sign_open']['value']">
+            {foreach name="setting.sign_open.data" item="value" key="k"}
+                {if $k==$setting['sign_open']['value']}
                     <label class="btn btn-outline-secondary active">
                         <input type="radio" name="v-sign_open" value="{$k}" autocomplete="off" checked> {$value}
                     </label>
-                    <else />
+                    {else /}
                     <label class="btn btn-outline-secondary">
                         <input type="radio" name="v-sign_open" value="{$k}" autocomplete="off"> {$value}
                     </label>
-                </if>
-            </foreach>
+                {/if}
+            {/foreach}
         </div>
     </div>
 </div>
@@ -22,17 +22,17 @@
     <label for="v-sup_sign_open" class="col-3 col-md-2 text-right align-middle">开启补签</label>
     <div class="col-9 col-md-8 col-lg-6">
         <div class="btn-group btn-group-toggle" data-toggle="buttons">
-            <foreach name="setting.sup_sign_open.data" item="value" key="k">
-                <if condition="$k==$setting['sup_sign_open']['value']">
+            {foreach name="setting.sup_sign_open.data" item="value" key="k"}
+                {if $k==$setting['sup_sign_open']['value']}
                     <label class="btn btn-outline-secondary active">
                         <input type="radio" name="v-sup_sign_open" value="{$k}" autocomplete="off" checked> {$value}
                     </label>
-                    <else />
+                    {else /}
                     <label class="btn btn-outline-secondary">
                         <input type="radio" name="v-sup_sign_open" value="{$k}" autocomplete="off"> {$value}
                     </label>
-                </if>
-            </foreach>
+                {/if}
+            {/foreach}
         </div>
     </div>
 </div>
@@ -53,17 +53,17 @@
     <label for="v-sign_cycle" class="col-3 col-md-2 text-right align-middle">签到周期</label>
     <div class="col-9 col-md-8 col-lg-6">
         <div class="btn-group btn-group-toggle" data-toggle="buttons">
-            <foreach name="setting.sign_cycle.data" item="value" key="k">
-                <if condition="$k==$setting['sign_cycle']['value']">
+            {foreach name="setting.sign_cycle.data" item="value" key="k"}
+                {if $k==$setting['sign_cycle']['value']}
                     <label class="btn btn-outline-secondary active">
                         <input type="radio" name="v-sign_cycle" value="{$k}" autocomplete="off" checked> {$value}
                     </label>
-                    <else />
+                    {else /}
                     <label class="btn btn-outline-secondary">
                         <input type="radio" name="v-sign_cycle" value="{$k}" autocomplete="off"> {$value}
                     </label>
-                </if>
-            </foreach>
+                {/if}
+            {/foreach}
         </div>
     </div>
 </div>
@@ -82,7 +82,7 @@
 <div class="form-row form-group">
     <label for="v-sign_keep_award" class="col-3 col-md-2 text-right align-middle">连续奖励</label>
     <div class="col-9 col-md-8 col-lg-6 keepawdrows">
-        <foreach name="setting.sign_keep_award.value" key="key" item="keep_day">
+        {foreach name="setting.sign_keep_award.value" key="key" item="keep_day"}
             <div class="input-group mb-2" data-key="{$key}">
                 <span class="input-group-prepend"><span class="input-group-text">连续签到</span></span>
                 <input type="text" class="form-control" name="v-sign_keep_award[{$key}][day]" value="{$keep_day['day']}" placeholder="">
@@ -92,7 +92,7 @@
                 <a class="btn btn-outline-secondary delkeepbtn" href="javascript:">移除</a>
                 </div>
             </div>
-        </foreach>
+        {/foreach}
         <a href="javascript:" class="btn btn-primary addkeepbtn">添加奖励</a>
     </div>
 </div>

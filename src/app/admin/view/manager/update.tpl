@@ -1,6 +1,6 @@
-<extend name="public:base"/>
+{extend name="public:base"/}
 
-<block name="body">
+{block name="body"}
 
     <include file="public/bread" menu="manager_index" title="管理员信息"/>
 
@@ -25,12 +25,12 @@
                     <label>邮箱</label>
                     <input class="form-control" type="text" name="email" value="{$model.email}">
                 </div>
-                <if condition="$model.id GT 0">
+                {if $model.id GT 0}
                     <div class="form-group">
                         <label>新密码</label>
                         <input class="form-control" type="password" name="password" placeholder="不填写则不更改">
                     </div>
-                    <else/>
+                    {else/}
                     <div class="form-group">
                         <label>密码</label>
                         <input class="form-control" type="password" name="password" placeholder="password">
@@ -39,16 +39,16 @@
                         <label>确认密码</label>
                         <input class="form-control" type="password" name="repassword" placeholder="repassword">
                     </div>
-                </if>
+                {/if}
                 <div class="form-row">
                     <label class="col-2 col-md-1">用户角色</label>
                     <div class="form-group col">
                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                            <foreach name="roles" id="role">
+                            {foreach name="roles" id="role"}
                                 <label class="btn btn-outline-secondary{$model['type']==$role['type']?' active':''}">
                                     <input type="radio" name="type" value="{$role['type']}" autocomplete="off" {$model['type']==$role['type']?' checked':''}> {$role['role_name']}
                                 </label>
-                            </foreach>
+                            {/foreach}
                         </div>
 
                         <div class="text-muted">更改角色后将重置管理员的权限为对应角色的权限</div>
@@ -77,4 +77,4 @@
         </div>
     </div>
 
-</block>
+{/block}

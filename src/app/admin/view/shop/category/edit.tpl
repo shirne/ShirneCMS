@@ -1,6 +1,6 @@
-<extend name="public:base"/>
+{extend name="public:base"/}
 
-<block name="body">
+{block name="body"}
 
     <include file="public/bread" menu="shop_category_index" title="分类信息"/>
 
@@ -34,11 +34,11 @@
                         </div>
                     <select name="pid" class="form-control">
                         <option value="">顶级分类</option>
-                        <foreach name="cate" item="v">
+                        {foreach name="cate" item="v"}
                             <option value="{$v.id}"
                             <?php if($model['pid'] == $v['id']) {echo 'selected="selected"' ;}?>
                             >{$v.html} {$v.title}</option>
-                        </foreach>
+                        {/foreach}
                     </select>
                     </div>
                 </div>
@@ -62,13 +62,13 @@
                             <label class="custom-file-label" for="upload_icon">选择文件</label>
                         </div>
                     </div>
-                    <if condition="$model['icon']">
+                    {if $model['icon']}
                         <figure class="figure">
                             <img src="{$model.icon}" class="figure-img img-fluid rounded" alt="icon">
                             <figcaption class="figure-caption text-center">{$model.icon}</figcaption>
                         </figure>
                         <input type="hidden" name="delete_icon" value="{$model.icon}"/>
-                    </if>
+                    {/if}
                 </div>
                 <div class="form-group col">
                     <div class="input-group">
@@ -80,13 +80,13 @@
                             <label class="custom-file-label" for="upload_image">选择文件</label>
                         </div>
                     </div>
-                    <if condition="$model['image']">
+                    {if $model['image']}
                         <figure class="figure">
                             <img src="{$model.image}" class="figure-img img-fluid rounded" alt="image">
                             <figcaption class="figure-caption text-center">{$model.image}</figcaption>
                         </figure>
                         <input type="hidden" name="delete_image" value="{$model.image}"/>
-                    </if>
+                    {/if}
                 </div>
                 </div>
                 <div class="form-group">
@@ -112,18 +112,18 @@
                         <input type="text" class="taginput" value="{$model.props|implode_cmp}" placeholder="填写多个值以,分割"  />
                     </div>
                 </div>
-                <if condition="!empty($specs)">
+                {if !empty($specs)}
                 <div class="form-group">
                     <label for="description">绑定规格</label>
                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                        <volist name="specs" id="val" key="k">
+                        {volist name="specs" id="val" key="k"}
                             <label class="btn btn-outline-secondary{:fix_in_array($k,$model['specs'])?' active':''}">
                                 <input type="checkbox" name="specs[]" value="{$k}" autocomplete="off" {:fix_in_array($k,$model['specs'])?' checked':''}>{$val}
                             </label>
-                        </volist>
+                        {/volist}
                     </div>
                 </div>
-                </if>
+                {/if}
                 <div class="form-group">
                     <label for="description">描述信息</label>
                     <textarea name="description" cols="30" rows="10" class="form-control"
@@ -134,11 +134,11 @@
             </form>
         </div>
     </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/javascript">
         jQuery(function($){
             $('.taginput').tags('props[]');
         })
     </script>
-</block>
+{/block}

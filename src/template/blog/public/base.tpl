@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="__STATIC__/css/blog.css?v={:config('template.static_version')}">
 
     <script src="__STATIC__/jquery/jquery.min.js"></script>
-    <block name="header" ></block>
+    {block name="header" }{/block}
     <!--[if lt IE 9]>
     <script src="http://cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
@@ -24,7 +24,7 @@
 <body>
 <include file="public:header" />
 
-<block name="body" ></block>
+{block name="body" }{/block}
 
 <include file="public:footer" />
 <script src="__STATIC__/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -47,10 +47,10 @@
         });
     })
 </script>
-<block name="script" ></block>
+{block name="script" }{/block}
 </body>
 
-<if condition="$isWechat">
+{if $isWechat}
 <script type="text/javascript" src="{$protocol}://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
 <script>
     var imageUrl='__STATIC__/images/logo.png';
@@ -90,6 +90,6 @@
         });
     });
 </script>
-</if>
+{/if}
 
 </html>

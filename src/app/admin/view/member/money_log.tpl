@@ -1,6 +1,6 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
     <include file="public/bread" menu="member_money_log" title="" />
 
     <div id="page-wrapper">
@@ -12,9 +12,9 @@
                             余额类型:  {$fields[$field]} <span class="caret"></span>
                         </button>
                         <div class="dropdown-menu">
-                            <foreach name="fields" item="t" key="k">
+                            {foreach name="fields" item="t" key="k"}
                                 <a class="dropdown-item" href="{:url('money_log',searchKey('field',$k))}">{$t}</a>
-                            </foreach>
+                            {/foreach}
                         </div>
                     </div>
                     <div class="input-group date-range ml-3">
@@ -26,7 +26,7 @@
                           <button class="btn btn-outline-dark" type="submit"><i class="ion-md-search"></i></button>
                         </div>
                     </div>
-                    <if condition="$id">
+                    {if $id}
                         <div class="btn-group ml-3">
                             <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">会员: {$member.username}<span class="caret"></span>
                             </button>
@@ -34,8 +34,8 @@
                                 <a class="dropdown-item" href="{:url('money_log',searchKey('id',0))}">不限会员</a>
                             </div>
                         </div>
-                    </if>
-                    <if condition="$from_id">
+                    {/if}
+                    {if $from_id}
                         <div class="btn-group ml-3">
                             <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">来源: {$from_member.username}<span class="caret"></span>
                             </button>
@@ -43,15 +43,15 @@
                                 <a class="dropdown-item" href="{:url('money_log',searchKey('from_id',0))}">不限来源</a>
                             </div>
                         </div>
-                    </if>
+                    {/if}
                     <div class="btn-group ml-3">
                         <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             日志类型:  {$types[$type]} <span class="caret"></span>
                         </button>
                         <div class="dropdown-menu">
-                            <foreach name="types" item="t" key="k">
+                            {foreach name="types" item="t" key="k"}
                                 <a class="dropdown-item" href="{:url('money_log',searchKey('type',$k))}">{$t}</a>
-                            </foreach>
+                            {/foreach}
                         </div>
                     </div>
                 </form>
@@ -61,27 +61,27 @@
             <thead>
             <tr>
                 <th class="text-center">\</th>
-                <foreach name="types" item="t" key="k">
-                    <if condition="$k NEQ 'all'">
+                {foreach name="types" item="t" key="k"}
+                    {if $k NEQ 'all'}
                     <th>{$t}</th>
-                    </if>
-                </foreach>
+                    {/if}
+                {/foreach}
                 <th>合计</th>
             </tr>
             <tbody>
-                <foreach name="fields" item="f" key="fk">
-                    <if condition="$fk NEQ 'all'">
+                {foreach name="fields" item="f" key="fk"}
+                    {if $fk NEQ 'all'}
                     <tr>
                         <th>{$f}</th>
-                        <foreach name="types" item="t" key="tk">
-                            <if condition="$tk NEQ 'all'">
+                        {foreach name="types" item="t" key="tk"}
+                            {if $tk NEQ 'all'}
                             <td>{$statics[$fk][$tk]|showmoney}</td>
-                            </if>
-                        </foreach>
+                            {/if}
+                        {/foreach}
                         <td>{$statics[$fk]['sum']|showmoney}</td>
                     </tr>
-                    </if>
-                </foreach>
+                    {/if}
+                {/foreach}
             </tbody>
             </thead>
         </table>
@@ -98,55 +98,55 @@
             </tr>
             </thead>
             <tbody>
-            <foreach name="logs" item="v">
+            {foreach name="logs" item="v"}
                 <tr>
                     <td>{$v.id}</td>
                     <td>
-                        <if condition="$v['member_id']">
+                        {if $v['member_id']}
                             <a href="{:url('money_log',array('id'=>$v['member_id'],'fromdate'=>$fromdate,'todate'=>$todate,'from_id'=>$from_id,'type'=>$type))}" class="media">
-                                <if condition="!empty($v['avatar'])">
+                                {if !empty($v['avatar'])}
                                     <img src="{$v.avatar}" class="mr-2 rounded" width="30"/>
-                                </if>
+                                {/if}
                                 <div class="media-body">
                                     <h5 class="mt-0 mb-1" style="font-size:13px;">
-                                        <if condition="!empty($v['nickname'])">
+                                        {if !empty($v['nickname'])}
                                             {$v.nickname}
-                                            <else/>
+                                            {else/}
                                             {$v.username}
-                                        </if>
+                                        {/if}
                                     </h5>
                                     <div style="font-size:12px;">
                                         [{$v.member_id} {$levels[$v['level_id']]['level_name']}]
                                     </div>
                                 </div>
                             </a>
-                            <else/>
+                            {else/}
                             -
-                        </if>
+                        {/if}
                     </td>
                     <td class="{$v['amount']>0?'text-success':'text-danger'}">{$v.field|money_type|raw}&nbsp;{$v.amount|showmoney}</td>
                     <td>
-                        <if condition="$v['from_member_id']">
+                        {if $v['from_member_id']}
                             <a href="{:url('money_log',array('id'=>$id,'fromdate'=>$fromdate,'todate'=>$todate,'from_id'=>$v['from_member_id'],'type'=>$type))}" class="media">
-                                <if condition="!empty($v['from_avatar'])">
+                                {if !empty($v['from_avatar'])}
                                     <img src="{$v.from_avatar}" class="mr-2 rounded" width="30"/>
-                                </if>
+                                {/if}
                                 <div class="media-body">
                                     <h5 class="mt-0 mb-1" style="font-size:13px;">
-                                        <if condition="!empty($v['from_nickname'])">
+                                        {if !empty($v['from_nickname'])}
                                             {$v.from_nickname}
-                                            <else/>
+                                            {else/}
                                             {$v.from_username}
-                                        </if>
+                                        {/if}
                                     </h5>
                                     <div style="font-size:12px;">
                                         [{$v.from_member_id} {$levels[$v['from_level_id']]['level_name']}]
                                     </div>
                                 </div>
                             </a>
-                            <else/>
+                            {else/}
                             -
-                        </if>
+                        {/if}
                     </td>
                     <td>{$v.create_time|showdate}</td>
                     <td>{$v.reson}</td>
@@ -154,10 +154,10 @@
 
                     </td>
                 </tr>
-            </foreach>
+            {/foreach}
             </tbody>
         </table>
         {$page|raw}
     </div>
 
-</block>
+{/block}

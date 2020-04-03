@@ -15,9 +15,9 @@
     <tr>
         <th>充值方式</th>
         <td>{$paytype[$v['paytype_id']]['title']}
-            <if condition="$paytype['type'] EQ 'unioncard'">
+            {if $paytype['type'] EQ 'unioncard'}
                 <br />{$v.cardname}<br />{$v.cardno}
-            </if>
+            {/if}
         </td>
     </tr>
     <tr>

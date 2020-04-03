@@ -11,7 +11,7 @@ return [
     // 模板目录名
     'view_dir_name' => 'view',
     // 模板后缀
-    'view_suffix'   => 'html',
+    'view_suffix'   => 'tpl',
     // 模板文件名分隔符
     'view_depr'     => DIRECTORY_SEPARATOR,
     // 模板引擎普通标签开始标记
@@ -22,4 +22,8 @@ return [
     'taglib_begin'  => '{',
     // 标签库标签结束标记
     'taglib_end'    => '}',
+
+    'tpl_replace_string'  =>  [
+        '__STATIC__'=>'/static'
+    ]
 ];

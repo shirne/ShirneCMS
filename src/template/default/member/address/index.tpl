@@ -1,5 +1,5 @@
-<extend name="public:base" />
-<block name="body">
+{extend name="public:base" /}
+{block name="body"}
     <div class="container">
         <div class="page-header">
             <div class="row">
@@ -8,10 +8,10 @@
             </div>
         </div>
         <ul class="list-group">
-            <foreach name="addresses" item="v">
+            {foreach name="addresses" item="v"}
                 <li class="list-group-item">
                     <div>
-                        <if condition="$v.is_default"><span class="float-right badge badge-info">默认</span></if>
+                        {if $v.is_default}<span class="float-right badge badge-info">默认</span>{/if}
                         <span class="text-dark">{$v.recive_name}</span>  /  <span class="text-secondary">{$v.mobile}</span>
                     </div>
                     <div>
@@ -21,7 +21,7 @@
                         <a class="btn btn-outline-secondary btn-confirm"  href="{:aurl('index/member.address/add',array('id'=>$v['address_id']))}">编辑</a>
                     </div>
                 </li>
-            </foreach>
+            {/foreach}
         </ul>
     </div>
-</block>
+{/block}

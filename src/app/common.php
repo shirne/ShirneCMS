@@ -665,7 +665,7 @@ function user_log($uid, $action, $result, $remark = '', $tbl = 'member')
     }else {
         $datas[] = $data;
     }
-    return \think\Db::name($tbl . 'Log')->insertAll($datas);
+    return \think\facade\Db::name($tbl . 'Log')->insertAll($datas);
 }
 
 /**
@@ -702,11 +702,11 @@ function money_log($uid, $money, $reson, $type='',$from_id=0,$field='money')
     }
 
     $logs=[];
-    $members=\think\Db::name('member')->field('id,username,'.$field)
+    $members=\think\facade\Db::name('member')->field('id,username,'.$field)
         ->whereIn('id' , $uid)->select();
     $time=time();
     if($money>0) {
-        $result=\think\Db::name('member')->whereIn('id' , $uid)
+        $result=\think\facade\Db::name('member')->whereIn('id' , $uid)
             ->inc($field,$money);
         foreach ($members as $member){
             $logs[]=[
@@ -723,7 +723,7 @@ function money_log($uid, $money, $reson, $type='',$from_id=0,$field='money')
         }
     }else{
         $decMoney=abs($money);
-        $result=\think\Db::name('member')->whereIn('id' , $uid)
+        $result=\think\facade\Db::name('member')->whereIn('id' , $uid)
             ->where($field,'>=',$decMoney)
             ->dec($field,$decMoney);
         foreach ($members as $member){
@@ -744,7 +744,7 @@ function money_log($uid, $money, $reson, $type='',$from_id=0,$field='money')
 
     }
     if($result) {
-        \think\Db::name('memberMoneyLog')->insertAll($logs);
+        \think\facade\Db::name('memberMoneyLog')->insertAll($logs);
         return array_column($logs,'member_id');
     }else{
         return false;
@@ -761,11 +761,11 @@ function money_force_log($uid, $money, $reson, $type='',$from_id=0,$field='money
         throw new Exception('This method do not support batch uid');
     }
 
-    $member=\think\Db::name('member')->field('id,username,'.$field)
+    $member=\think\facade\Db::name('member')->field('id,username,'.$field)
         ->where('id' , $uid)->find();
     $time=time();
     if($money>0) {
-        $result=\think\Db::name('member')->where('id' , $uid)
+        $result=\think\facade\Db::name('member')->where('id' , $uid)
             ->inc($field,$money);
         $log=[
             'create_time' => $time,
@@ -780,7 +780,7 @@ function money_force_log($uid, $money, $reson, $type='',$from_id=0,$field='money
         ];
     }else{
         $decMoney=abs($money);
-        $result=\think\Db::name('member')->where('id' , $uid)
+        $result=\think\facade\Db::name('member')->where('id' , $uid)
             ->dec($field,$decMoney);
         $log = [
             'create_time' => time(),
@@ -796,7 +796,7 @@ function money_force_log($uid, $money, $reson, $type='',$from_id=0,$field='money
 
     }
     if($result) {
-        return \think\Db::name('memberMoneyLog')->insert($log,false,true);
+        return \think\facade\Db::name('memberMoneyLog')->insert($log,false,true);
     }else{
         return false;
     }
@@ -805,7 +805,7 @@ function money_force_log($uid, $money, $reson, $type='',$from_id=0,$field='money
 function getPaytypes($type = '')
 {
 
-    $model=\think\Db::name('Paytype');
+    $model=\think\facade\Db::name('Paytype');
     if(!empty($type)){
         $model->where('type',$type);
     }
@@ -824,7 +824,7 @@ function getMemberSons($userid,$level=1,$getid=true){
 function getPageGroups($force=false){
     $groups=cache('page_group');
     if(empty($groups) || $force==true){
-        $groups=\think\Db::name('PageGroup')->order('sort ASC,id ASC')->select();
+        $groups=\think\facade\Db::name('PageGroup')->order('sort ASC,id ASC')->select();
         cache('page_group',$groups);
     }
     return $groups;
@@ -848,7 +848,7 @@ function getSetting($key){
     else return null;
 }
 function setSetting($key,$v){
-    \think\Db::name('setting')->where('key',$key)->update(array('value'=>$v));
+    \think\facade\Db::name('setting')->where('key',$key)->update(array('value'=>$v));
     \app\common\model\SettingModel::clearCache();
 }
 

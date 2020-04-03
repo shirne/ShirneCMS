@@ -1,6 +1,6 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 <include file="public/bread" menu="manager_index" title="管理员列表" />
 
 <div id="page-wrapper">
@@ -34,7 +34,7 @@
             </tr>
         </thead>
         <tbody>
-        <foreach name="lists" item="v">
+        {foreach name="lists" item="v"}
             <tr>
                 <td>{$v.id}</td>
                 <td>{$v.username}</td>
@@ -43,28 +43,28 @@
                 <td style="font-size: 12px">{$v.login_ip}<br />{$v.logintime|showdate}</td>
                 <td>
 
-                    <if condition="isset($roles[$v['type']])">
+                    {if isset($roles[$v['type']])}
                         <span class="badge badge-{$roles[$v['type']]['label_type']}">{$roles[$v['type']]['role_name']}</span>
-                    <else/>
+                    {else/}
                         <span class="badge badge-secondary"> - </span>
-                    </if>
+                    {/if}
                 </td> 
-                <td><if condition="$v.status eq 1">正常<else/><span style="color:red">禁用</span></if></td>
+                <td>{if $v.status eq 1}正常{else/}<span style="color:red">禁用</span>{/if}</td>
                 <td class="operations">
                     <a class="btn btn-outline-primary" title="编辑" href="{:url('manager/update',array('id'=>$v['id']))}"><i class="ion-md-create"></i> </a>
-                <if condition="$v.type neq 1">
+                {if $v.type neq 1}
                     <a class="btn btn-outline-primary" title="权限" href="{:url('manager/permision',array('id'=>$v['id']))}"><i class="ion-md-key"></i> </a>
-                </if>
-                <if condition="$v.status eq 1">	
+                {/if}
+                {if $v.status eq 1}	
                     <a class="btn btn-outline-danger link-confirm" title="禁用" data-confirm="禁用后用户将不能登陆后台!\n请确认!!!" href="{:url('manager/status',array('id'=>$v['id'],'status'=>0))}" ><i class="ion-md-close"></i> </a>
-            	<else/>
+            	{else/}
                     <a class="btn btn-outline-success" title="启用" href="{:url('manager/status',array('id'=>$v['id'],'status'=>1))}" ><i class="ion-md-checkmark-circle"></i> </a>
-            	</if>
+            	{/if}
                 </td>
             </tr>
-        </foreach>
+        {/foreach}
         </tbody>
     </table>
 </div>
 
-</block>
+{/block}

@@ -1,6 +1,6 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
 <include file="public/bread" menu="adv_index" title="广告资料" />
 
@@ -20,21 +20,21 @@
                     <label class="custom-file-label" for="upload_image">选择文件</label>
                 </div>
             </div>
-            <if condition="$model['image']">
+            {if $model['image']}
                 <figure class="figure">
                     <img src="{$model.image}" class="figure-img img-fluid rounded" alt="image">
                     <figcaption class="figure-caption text-center">{$model.image}</figcaption>
                 </figure>
                 <input type="hidden" name="delete_image" value="{$model.image}"/>
-            </if>
+            {/if}
         </div>
         <div class="form-row">
-            <foreach name="group['ext_set']['key']" item="ikey">
+            {foreach name="group['ext_set']['key']" item="ikey"}
                 <div class="col-6 form-group">
                     <label for="image">{$group['ext_set']['value'][$key]}</label>
                     <input type="text" name="ext[{$ikey}]" class="form-control" value="{$model['ext'][$ikey]}" />
                 </div>
-            </foreach>
+            {/foreach}
         </div>
         <div class="form-group">
             <label for="image">有效期</label>
@@ -68,10 +68,10 @@
         <div class="form-group">
             <label for="cc">状态</label>
             <label class="radio-inline">
-                <input type="radio" name="status" value="1" <if condition="$model['status'] eq 1">checked="checked"</if> >显示
+                <input type="radio" name="status" value="1" {if $model['status'] eq 1}checked="checked"{/if} >显示
             </label>
             <label class="radio-inline">
-                <input type="radio" name="status" value="0" <if condition="$model['status'] eq 0">checked="checked"</if>>隐藏
+                <input type="radio" name="status" value="0" {if $model['status'] eq 0}checked="checked"{/if}>隐藏
             </label>
         </div>
         <div class="form-group submit-btn">
@@ -81,4 +81,4 @@
     </form>
     </div>
 </div>
-</block>
+{/block}

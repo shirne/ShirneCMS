@@ -1,6 +1,6 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
     <include file="public/bread" menu="wechat_index" title="公众号菜单" />
 
     <div id="page-wrapper">
@@ -110,8 +110,8 @@
             </form>
         </div>
     </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/javascript">
         if(!JSON){
             dialog.alert('您的浏览器版本太低，不支持本页面功能，建议使用edge,chrome,firefox等现代浏览器！');
@@ -278,4 +278,4 @@
         showMenu(menuData);
         $('[name=menu]').val(menuStr);
     </script>
-</block>
+{/block}

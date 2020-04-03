@@ -26,10 +26,11 @@ class SettingModel extends BaseModel
             self::$settings = cache(self::$cacheKey);
             if (empty(self::$settings)) {
                 self::$settings = Db::name('setting')->order('sort ASC,id ASC')->select();
-                foreach (self::$settings as $k=>$v){
+                foreach (self::$settings as &$v){
                     if($v['type']=='bool' && empty($v['data']))$v['data']="1:Yes\n0:No";
-                    self::$settings[$k]['data']=self::parse_data($v['data']);
+                    $v['data']=self::parse_data($v['data']);
                 }
+                unset($v);
                 cache(self::$cacheKey, self::$settings);
             }
         }

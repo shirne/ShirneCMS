@@ -1,6 +1,6 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
     <include file="public/bread" menu="credit_order_index" title="订单列表" />
 
@@ -57,11 +57,11 @@
             </tr>
             </thead>
             <tbody>
-            <volist name="lists" id="v">
+            {volist name="lists" id="v"}
                 <tr>
                     <td>{$v.order_id}</td>
                     <td>
-                        <volist name="v['goodss']" id="p">
+                        {volist name="v['goodss']" id="p"}
                         <div class="media">
                             <div class="media-left">
                                 <img class="media-object" src="{$p['goods_image']}" alt="{$p['goods_title']}">
@@ -71,13 +71,13 @@
                                 <div>￥{$p['goods_price']} &times; {$p['count']}件</div>
                             </div>
                         </div>
-                        </volist>
+                        {/volist}
                     </td>
                     <td>
                         [{$v.member_id}]{$v['username']}
                     </td>
                     <td>积分：{$v.paycredit}<br />
-                        现金：{$v.payamount}<if condition="$v['status'] EQ 0"><a href="javascript:" class="reprice" data-id="{$v.order_id}" data-price="{$v['payamount']}" title="改价"><i class="ion-md-create"></i> </a> </if>
+                        现金：{$v.payamount}{if $v['status'] EQ 0}<a href="javascript:" class="reprice" data-id="{$v.order_id}" data-price="{$v['payamount']}" title="改价"><i class="ion-md-create"></i> </a> {/if}
                     </td>
                     <td>{$v.create_time|showdate}</td>
                     <td>
@@ -86,27 +86,27 @@
                     <td class="operations">
                         <a class="btn btn-outline-primary" title="详情" href="{:url('credit.order/detail',array('id'=>$v['order_id']))}"><i class="ion-md-document"></i> </a>
                         
-                        <if condition="$v['status'] EQ 0">
+                        {if $v['status'] EQ 0}
                             <a class="btn btn-outline-danger btn-status" title="取消订单" href="javascript:" data-id="{$v.order_id}"  data-status="-1" ><i class="ion-md-close-circle-outline"></i> </a>
                             <a class="btn btn-outline-warning btn-status" title="设置支付状态" href="javascript:" data-id="{$v.order_id}"  data-status="1" ><i class="ion-md-wallet"></i> </a>
-                        <elseif condition="$v['status'] EQ 1" />
+                        {elseif $v['status'] EQ 1 /}
                             <a class="btn btn-outline-info btn-status" title="发货" href="javascript:" data-id="{$v.order_id}"  data-status="2" data-express="{$v.express_code}/{$v.express_no}"><i class="ion-md-train"></i> </a>
-                        <elseif condition="$v['status'] EQ 2" />
+                        {elseif $v['status'] EQ 2 /}
                             <a class="btn btn-outline-secondary btn-status" title="修改发货信息" href="javascript:" data-id="{$v.order_id}"  data-status="2" data-express="{$v.express_code}/{$v.express_no}"><i class="ion-md-subway"></i> </a>
                             <a class="btn btn-outline-success btn-status" title="收货" href="javascript:" data-id="{$v.order_id}"  data-status="3" ><i class="ion-md-exit"></i> </a>
-                        <elseif condition="$v['status'] EQ 3" />
+                        {elseif $v['status'] EQ 3 /}
                             <a class="btn btn-outline-success btn-status" title="完成" href="javascript:" data-id="{$v.order_id}"  data-status="4" ><i class="ion-md-checkbox-outline"></i> </a>
-                        </if>
+                        {/if}
                         <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('credit.order/delete',array('id'=>$v['order_id']))}"><i class="ion-md-trash"></i> </a>
                     </td>
                 </tr>
-            </volist>
+            {/volist}
             </tbody>
         </table>
         {$page|raw}
     </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
         <include file="credit/order/_status_tpl" />
     <script type="text/javascript">
         jQuery(function(){
@@ -140,4 +140,4 @@
         });
     </script>
 
-</block>
+{/block}

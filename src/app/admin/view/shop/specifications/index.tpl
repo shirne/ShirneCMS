@@ -1,6 +1,6 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
     <include file="public/bread" menu="shop_category_index" title="规格管理" />
 
@@ -24,26 +24,26 @@
             </tr>
             </thead>
             <tbody>
-            <volist name="lists" id="v" empty="$empty">
+            {volist name="lists" id="v" empty="$empty"}
                 <tr>
                     <td>{$v.id}</td>
                     <td>{$v.title}</td>
                     <td>
-                        <volist name="v['data']" id="val">
+                        {volist name="v['data']" id="val"}
                             <span class="badge badge-info">{$val}</span>
-                        </volist>
+                        {/volist}
                     </td>
                     <td class="operations">
                         <a class="btn btn-outline-primary btn-edit" title="编辑" href="javascript:" data-id="{$v.id}"><i class="ion-md-create"></i> </a>
                         <a class="btn btn-outline-danger" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('shop.specifications/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
                     </td>
                 </tr>
-            </volist>
+            {/volist}
             </tbody>
         </table>
     </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/plain" id="editTpl">
         <form>
         <div class="form-group">
@@ -104,4 +104,4 @@
             }
         })
     </script>
-</block>
+{/block}

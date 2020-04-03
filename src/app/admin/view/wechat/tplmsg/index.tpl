@@ -1,6 +1,6 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
     <include file="public/bread" menu="wechat_index" title="模板消息" />
 
@@ -29,8 +29,8 @@
             </thead>
             <tbody>
             <php>$empty=list_empty(6);</php>
-            <volist name="msgs" id="v" empty="$empty">
-                <if condition="isset($tpls[$key])">
+            {volist name="msgs" id="v" empty="$empty"}
+                {if isset($tpls[$key])}
                     <tr>
                         <td>{$tpls[$key]['id']}</td>
                         <td><input type="text" class="form-control" name="tpls[{$key}][title]" readonly value="{$tpls[$key]['title']}" /></td>
@@ -41,7 +41,7 @@
                             <a class="btn btn-outline-danger delbtn" href="{:url('del',['id'=>$tpls[$key]['id']])}" title="删除模板"><i class="ion-md-trash"></i></a>
                         </td>
                     </tr>
-                    <else/>
+                    {else/}
                     <tr>
                         <td>-</td>
                         <td><input type="text" class="form-control" name="tpls[{$key}][title]" readonly value="{$v['title']}" /></td>
@@ -52,8 +52,8 @@
                             <a class="btn btn-outline-primary addbtn" href="{:url('add',['id'=>$v['title_id']])}" title="添加模板"><i class="ion-md-add"></i></a>
                         </td>
                     </tr>
-                </if>
-            </volist>
+                {/if}
+            {/volist}
             </tbody>
             <tfoot>
             <tr>
@@ -65,8 +65,8 @@
         </table>
         </form>
     </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script>
         jQuery(function ($) {
             $('.btnsync').click(function (e) {
@@ -129,4 +129,4 @@
             })
         })
     </script>
-</block>
+{/block}

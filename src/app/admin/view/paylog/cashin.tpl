@@ -1,6 +1,6 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
 <include file="public/bread" menu="paylog_cashin" title="" />
 
@@ -56,21 +56,21 @@
         </thead>
         <tbody>
         <php>$empty=list_empty(9);</php>
-        <volist name="lists" id="v" empty="$empty">
+        {volist name="lists" id="v" empty="$empty"}
             <tr>
                 <td>{$v.id}</td>
                 <td>
                     <div class="media">
-                        <if condition="!empty($v['avatar'])">
+                        {if !empty($v['avatar'])}
                             <img src="{$v.avatar}" class="mr-2 rounded" width="30"/>
-                        </if>
+                        {/if}
                         <div class="media-body">
                             <h5 class="mt-0 mb-1" >
-                                <if condition="!empty($v['nickname'])">
+                                {if !empty($v['nickname'])}
                                     {$v.nickname}
-                                    <else/>
+                                    {else/}
                                     {$v.username}
-                                </if>
+                                {/if}
                             </h5>
                             <p>[{$v.member_id}]</p>
                         </div>
@@ -80,34 +80,34 @@
                 <td>{$v.real_amount|showmoney}</td>
                 <td>{$v.cashtype|showcashtype}</td>
                 <td>
-                    <if condition="$v.cashtype EQ 'wechat'">
+                    {if $v.cashtype EQ 'wechat'}
                         {$v.card_name}
-                        <elseif condition="$v.cashtype EQ 'alipay'"/>
+                        {elseif $v.cashtype EQ 'alipay'/}
                         {$v.card_name}
-                        <else/>
+                        {else/}
                         {$v.bank}<span class="text-muted"> / </span>{$v.bank_name}<br />
                         {$v.card_name}<span class="text-muted"> / </span>{$v.cardno|fmtCardno}
-                    </if>
+                    {/if}
                 </td>
                 <td>{$v.create_time|showdate='Y-m-d H:i:s'}</td>
                 <td>{$v.status|audit_status|raw}</td>
                 <td class="operations">
-                    <if condition="$v['status'] EQ 0">
+                    {if $v['status'] EQ 0}
                     <a class="btn btn-outline-success pay-confirm" title="确认" data-id="{$v.id}" data-amount="{$v.real_amount}" data-cashtype="{$v.cashtype}"  href="javascript:"><i class="ion-md-checkmark-circle"></i> </a>
                     <a class="btn btn-outline-danger link-confirm" title="无效" data-confirm="您真的确定要作废吗？\n此操作将取消申请并将全部金额退回到会员的提现账户" href="{:url('Paylog/cashdelete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
-                        <else/>
+                        {else/}
                         -
-                    </if>
+                    {/if}
                 </td>
             </tr>
-        </volist>
+        {/volist}
         </tbody>
     </table>
     {$page|raw}
 </div>
 
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/javascript">
         jQuery(function($){
             var cashtypes="{:implode(',',getSetting('cash_types'))}".split(',')
@@ -185,4 +185,4 @@
             })
         })
     </script>
-</block>
+{/block}

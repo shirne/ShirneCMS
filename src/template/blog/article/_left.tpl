@@ -1,16 +1,16 @@
 <div class="col-lg-3 sidecolumn">
-    <php>
+    {php}
         $catelist=$categories[$topCategory['id']];
-    </php>
+    {/php}
     <div class="card">
         <div class="card-header">
             {$topCategory.title}
         </div>
         <div class="card-body">
             <div class="list-group">
-                <Volist name="catelist" id="c">
+                {volist name="catelist" id="c"}
                     <a class="list-group-item {$c['id']==$category['id']?'active':''}" title="{$c.title}" href="{:url('index/article/index',['name'=>$c['name']])}">{$c.title}</a>
-                </Volist>
+                {/volist}
             </div>
         </div>
     </div>

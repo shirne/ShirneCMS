@@ -1,6 +1,6 @@
-<extend name="public:base"/>
+{extend name="public:base"/}
 
-<block name="body">
+{block name="body"}
     <include file="public/bread" menu="page_index" title="单页详情"/>
 
     <div id="page-wrapper">
@@ -31,9 +31,9 @@
                         <input type="text" name="group" class="form-control" value="{$page.group}" placeholder="从右侧选择或填写一个新的分组" >
                             <select class="form-control" onchange="var val=$(this).val();if(val)this.form.group.value=val;">
                                 <option value="">选择分组</option>
-                                <volist name="groups" id="group">
+                                {volist name="groups" id="group"}
                                     <option value="{$group.group}">{$group.group_name}</option>
-                                </volist>
+                                {/volist}
                             </select>
                         </div>
                     </div>
@@ -47,13 +47,13 @@
                             <label class="custom-file-label" for="upload_icon">选择文件</label>
                         </div>
                     </div>
-                    <if condition="$page['icon']">
+                    {if $page['icon']}
                         <figure class="figure">
                             <img src="{$page.icon}" class="figure-img img-fluid rounded" alt="image">
                             <figcaption class="figure-caption text-center">{$page.icon}</figcaption>
                         </figure>
                         <input type="hidden" name="delete_icon" value="{$page.icon}"/>
-                    </if>
+                    {/if}
                 </div>
                 <div class="col form-group">
                     <label for="page-title">排序</label>
@@ -100,8 +100,8 @@
             </form>
         </div>
     </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <!-- 配置文件 -->
     <script type="text/javascript" src="__STATIC__/ueditor/ueditor.config.js"></script>
     <!-- 编辑器源码文件 -->
@@ -114,4 +114,4 @@
             zIndex: 100
         });
     </script>
-</block>
+{/block}

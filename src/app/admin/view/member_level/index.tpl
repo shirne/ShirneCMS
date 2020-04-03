@@ -1,6 +1,6 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
     <include file="public/bread" menu="member_level_index" title="会员组列表" />
 
@@ -27,10 +27,10 @@
             </tr>
             </thead>
             <tbody>
-            <foreach name="lists" item="v">
+            {foreach name="lists" item="v"}
                 <tr>
                     <td>{$v.level_id}</td>
-                    <td>{$v.level_name}[{$v.short_name}]<if condition="$v['is_default']"><span class="badge badge-info">默认</span> </if></td>
+                    <td>{$v.level_name}[{$v.short_name}]{if $v['is_default']}<span class="badge badge-info">默认</span> {/if}</td>
                     <td>{$v.sort}</td>
                     <td>{$v['discount']>=100?'无':(round($v['discount']/100,1).'折')}</td>
                     <td>{$v.level_price}</td>
@@ -40,8 +40,8 @@
                         <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('memberLevel/delete',array('id'=>$v['level_id']))}" ><i class="ion-md-trash"></i> </a>
                     </td>
                 </tr>
-            </foreach>
+            {/foreach}
             </tbody>
         </table>
     </div>
-</block>
+{/block}

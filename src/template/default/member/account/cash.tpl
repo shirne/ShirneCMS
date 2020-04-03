@@ -1,5 +1,5 @@
-<extend name="public:base" />
-<block name="body">
+{extend name="public:base" /}
+{block name="body"}
     <div class="container">
         <div class="page-header"><h1>我要提现</h1></div>
         <div class="container">
@@ -16,7 +16,7 @@
                     </div>
                     <div class="help-block text-muted" id="helpContent"></div>
                 </div>
-                <if condition="empty($cards)">
+                {if empty($cards)}
                     <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-prepend">
@@ -26,9 +26,9 @@
                             <div class="input-group-middle"><span class="input-group-text">快速填写</span></div>
                             <select id="cardlist" class="form-control" onchange="if(this.value)this.form.bank.value=this.value;">
                                 <option value="">从列表中选择自动填写</option>
-                                <foreach name="banklist" item="v">
+                                {foreach name="banklist" item="v"}
                                     <option value="{$v}" >{$v}</option>
-                                </foreach>
+                                {/foreach}
                             </select>
                         </div>
                     </div>
@@ -56,13 +56,13 @@
                         <input type="text" name="cardno" class="form-control" placeholder="请填写卡号">
                         </div>
                     </div>
-                    <else/>
+                    {else/}
                     <ul class="list-group">
-                        <foreach name="cards" item="card">
+                        {foreach name="cards" item="card"}
                             <li class="list-group-item"><label><input type="radio" name="card_id" value="{$card.id}" {$card['is_default']?'checked':''}/> {$card.bank}&nbsp;{$card.cardno|showcardno}</label></li>
-                        </foreach>
+                        {/foreach}
                     </ul>
-                </if>
+                {/if}
                 <div class="form-group">
                     <div class="input-group">
                         <div class="input-group-prepend">
@@ -75,8 +75,8 @@
             </form>
         </div>
     </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/javascript">
         var cash_fee=parseInt('{$config.cash_fee}');
         var cash_limit=parseInt('{$config.cash_limit}');
@@ -115,4 +115,4 @@
             return true;
         }
     </script>
-</block>
+{/block}

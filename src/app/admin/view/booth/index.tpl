@@ -1,6 +1,6 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
 <include file="public/bread" menu="booth_index" title="展位管理" />
 
@@ -32,7 +32,7 @@
             </tr>
         </thead>
         <tbody>
-        <volist name="lists" id="v" >
+        {volist name="lists" id="v" }
             <tr>
                 <td>{$v.id}</td>
                 <td>{$v.title}</td>
@@ -40,17 +40,17 @@
                 <td>{$v.type}</td>
                 <td class="operations">
                     <a class="btn btn-outline-primary" title="编辑" href="{:url('booth/update',array('id'=>$v['id']))}"><i class="ion-md-create"></i></a>
-                    <if condition="$v['locked']">
+                    {if $v['locked']}
                         <a class="btn btn-outline-primary" title="解锁" href="{:url('booth/unlock',array('id'=>$v['id']))}"><i class="ion-md-unlock"></i></a>
-                        <else/>
+                        {else/}
                         <a class="btn btn-outline-primary" title="锁定" href="{:url('booth/lock',array('id'=>$v['id']))}"><i class="ion-md-lock"></i></a>
                     <a class="btn btn-outline-danger link-confirm" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" title="删除" href="{:url('booth/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i></a>
-                    </if>
+                    {/if}
                 </td>
             </tr>
-        </volist>
+        {/volist}
         </tbody>
     </table>
     {$page|raw}
 </div>
-</block>
+{/block}

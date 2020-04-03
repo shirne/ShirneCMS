@@ -1,13 +1,13 @@
-<extend name="public:base"/>
+{extend name="public:base"/}
 
-<block name="body">
+{block name="body"}
     <div class="page__hd">
         <h1 class="page__title">Signin</h1>
         <p class="page__desc">会员注册</p>
     </div>
     <form class="registerForm" method="post" action="{:url('index/login/register')}">
     <div class="weui-cells weui-cells_form">
-        <if condition="!empty($wechatUser)">
+        {if !empty($wechatUser)}
             <div class="weui-cell">
                 <div class="weui-cell__hd" style="position: relative;margin-right: 10px;">
                     <img src="{$wechatUser['avatar']}" style="width: 50px;display: block;border-radius: 1000px;">
@@ -17,7 +17,7 @@
                     <p style="font-size: 13px;color: #888888;">注册成功后将与微信账号绑定</p>
                 </div>
             </div>
-        </if>
+        {/if}
         <div class="weui-cell">
             <div class="weui-cell__hd"><label class="weui-label">用户名</label></div>
             <div class="weui-cell__bd">
@@ -40,7 +40,7 @@
                 <input class="weui-input" type="password" name="repassword" placeholder="请再次确认您输入的密码">
             </div>
         </div>
-        <if condition="0">
+        {if 0}
             <div class="weui-cell weui-cell_vcode">
                 <div class="weui-cell__hd">
                     <label class="weui-label">手机号</label>
@@ -60,7 +60,7 @@
                     <input class="weui-input" type="number" name="mobilecheck" placeholder="请输入手机号">
                 </div>
             </div>
-            <else/>
+            {else/}
             <div class="weui-cell">
                 <div class="weui-cell__hd">
                     <label class="weui-label">手机号</label>
@@ -69,9 +69,9 @@
                     <input class="weui-input" type="text" name="mobile" placeholder="请输入手机号">
                 </div>
             </div>
-        </if>
-        <if condition="$nocode">
-            <else/>
+        {/if}
+        {if $nocode}
+            {else/}
             <div class="weui-cell">
                 <div class="weui-cell__hd">
                     <label class="weui-label">激活码</label>
@@ -80,7 +80,7 @@
                     <input class="weui-input" type="text" name="invite_code" placeholder="您的推荐人提供给你的激活码">
                 </div>
             </div>
-        </if>
+        {/if}
     </div>
         <label for="weuiAgree" class="weui-agree">
             <input id="weuiAgree" type="checkbox" class="weui-agree__checkbox">
@@ -95,8 +95,8 @@
             </div>
         </div>
     </form>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/javascript">
         jQuery(function($){
             $('.registerForm').submit(function(e) {
@@ -271,4 +271,4 @@
             }
         });
     </script>
-</block>
+{/block}

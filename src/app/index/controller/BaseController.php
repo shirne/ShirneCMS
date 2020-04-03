@@ -64,13 +64,13 @@ class BaseController extends Controller
         $this->assign('config',$this->config);
 
         // POST请求自动检查操作频率
-        if((config('app.auto_check_submit_rate') || $this->config['auto_check_submit_rate'])
+        if((config('app.auto_check_submit_rate') || (isset($this->config['auto_check_submit_rate']) && $this->config['auto_check_submit_rate']))
             && $this->request->isPost()){
             $this->checkSubmitRate($this->config['submit_rate']?:2);
         }
 
         $navigation=config('navigator.');
-        $navigation=parseNavigator($navigation,$this->request->module());
+        $navigation=parseNavigator($navigation,app('http')->getName());
         $this->assign('navigator',$navigation);
         $this->assign('navmodel','index');
 

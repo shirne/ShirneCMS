@@ -1,6 +1,6 @@
-<extend name="public:base"/>
+{extend name="public:base"/}
 
-<block name="body">
+{block name="body"}
     <div class="main">
         <div class="container">
             <ol class="breadcrumb">
@@ -30,4 +30,4 @@
             </div>
         </div>
     </div>
-</block>
+{/block}

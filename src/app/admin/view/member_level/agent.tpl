@@ -1,6 +1,6 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
     <include file="public/bread" menu="member_level_index" title="会员组列表" />
 
@@ -27,7 +27,7 @@
             </tr>
             </thead>
             <tbody>
-            <foreach name="lists" item="v">
+            {foreach name="lists" item="v"}
                 <tr>
                     <td>{$v.id}</td>
                     <td><input type="text" class="form-control" name="agents[{$v.id}][name]" value="{$v.name}"></td>
@@ -62,7 +62,7 @@
                         </div>
                     </td>
                 </tr>
-            </foreach>
+            {/foreach}
             </tbody>
             <tfoot>
                 <tr>
@@ -74,4 +74,4 @@
         </table>
         </form>
     </div>
-</block>
+{/block}

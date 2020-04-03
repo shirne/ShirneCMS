@@ -1,5 +1,5 @@
-<extend name="public:base" />
-<block name="body">
+{extend name="public:base" /}
+{block name="body"}
     <div class="container user-index">
         <div class="text-center user-header">
             <a href="javascript:">
@@ -17,4 +17,4 @@
             <a class="list-group-item" href="{:aurl('index/member/logout')}"><i class="ion-md-log-out"></i> 退出登录</a>
         </div>
     </div>
-</block>
+{/block}

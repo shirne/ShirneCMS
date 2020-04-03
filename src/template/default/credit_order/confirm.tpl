@@ -1,5 +1,5 @@
-<extend name="public:base" />
-<block name="body">
+{extend name="public:base" /}
+{block name="body"}
     <div class="container order-body">
         <form method="post" name="orderForm" onsubmit="return checkForm(this)" action="" >
 
@@ -7,7 +7,7 @@
                 <div class="card-header">兑换产品</div>
                 <div class="card-body">
                     <ul class="list-group prod-list">
-                        <volist name="goodss" id="prod">
+                        {volist name="goodss" id="prod"}
                         <li class="list-group-item">
                             <label>
                             <input type="radio" name="goods_id" value="{$prod.id}" checked/>
@@ -21,7 +21,7 @@
                                 <p class="text-muted">{$prod.goods_no}</p>
                             </div>
                         </li>
-                        </volist>
+                        {/volist}
                     </ul>
                     <div class="form-group price-row">
                         <label >订单总额</label>
@@ -33,14 +33,14 @@
                 <div class="card-header">收货地址</div>
                 <div class="card-body">
                     <ul class="list-group address_box">
-                        <foreach name="addresses" item="add">
+                        {foreach name="addresses" item="add"}
                             <li class="list-group-item" data-province="{$add.province}" data-city="{$add.city}" data-area="{$add.area}">
                                 <label>
                                     <input type="radio" name="address_id" value="{$add.address_id}" {$add.is_default?'checked':''}/> <span>{$add.recive_name} / {$add.mobile}</span>
                                     <div class="text-muted">{$add.province}&nbsp;{$add.city}&nbsp;{$add.area}&nbsp;{$add.address}</div>
                                 </label>
                             </li>
-                        </foreach>
+                        {/foreach}
                     </ul>
 
                     <a href="javascript:" class="btn btn-block btn-outline-secondary mt-3 add-address">添加收货地址</a>
@@ -77,19 +77,19 @@
                                 <div class="float-right">￥ {$user.money|showmoney}</div>
                                 <label ><input type="radio" name="pay_type" value="balance" checked />余额支付</label>
                             </li>
-                            <if condition="$isWechat AND !empty($config['mch_id'])">
+                            {if $isWechat AND !empty($config['mch_id'])}
                                 <li class="list-group-item">
                                     <label ><input type="radio" name="pay_type" value="wechat" checked />微信支付</label>
                                 </li>
-                            </if>
+                            {/if}
                         </ul>
                     </div>
-                    <if condition="USE_SEC_PASSWORD">
+                    {if USE_SEC_PASSWORD}
                     <div class="form-group sec_password d-none">
                         <label for="sec_password">安全密码</label>
                         <input type="password" class="form-control" name="sec_password" />
                     </div>
-                    </if>
+                    {/if}
                     <div class="form-group">
                         <button type="submit" class="btn btn-block btn-primary">提交订单</button>
                     </div>
@@ -97,8 +97,8 @@
             </div>
         </form>
     </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/plain" id="addressTpl">
         <form>
         <div class="form-group">
@@ -234,4 +234,4 @@
             }
         }
     </script>
-</block>
+{/block}

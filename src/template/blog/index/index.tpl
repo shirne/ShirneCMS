@@ -1,21 +1,21 @@
-<extend name="public:base"/>
+{extend name="public:base"/}
 
-<block name="body">
+{block name="body"}
 
-    <extendtag:advs var="banners" flag="banner"/>
+    {extendtag:advs var="banners" flag="banner" /}
     <div id="carouselBannerControls" class="carousel slide" data-ride="carousel">
         <ol class="carousel-indicators">
-            <volist name="banners" id="item" key="k">
+            {volist name="banners" id="item" key="k"}
                 <li data-target="#carouselBannerControls" {$k==1?'class="active"':''} data-slide-to="{$k-1}"></li>
-            </volist>
+            {/volist}
         </ol>
         <div class="carousel-inner">
-            <volist name="banners" id="item" key="k">
+            {volist name="banners" id="item" key="k"}
                 <div class="carousel-item{$k==1?' active':''}" style="background-image:url({$item.image})">
                     <img src="{$item.image}" alt="{$image.title}">
                     <p>{$item.title}</p>
                 </div>
-            </volist>
+            {/volist}
         </div>
         <a class="carousel-control-prev" href="#carouselBannerControls" role="button" data-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -30,14 +30,14 @@
     <div class="row">
         <div class="col-lg-9">
             <ul class="list-group article-list">
-                <article:list var="articles" order="create_time DESC" />
-                <volist name="articles" id="art">
+                {article:list var="articles" order="create_time DESC"  /}
+                {volist name="articles" id="art"}
                 <li class="list-group-item">
-                    <if condition="!empty($art['cover'])">
+                    {if !empty($art['cover'])}
                     <a class="list-img" href="{:url('index/article/view',['id'=>$art['id']])}" style="background-image:url({$art.cover})">
                         <img class="card-img-top" src="{$art.cover}" alt="Card image cap">
                     </a>
-                    </if>
+                    {/if}
                     <div class="art-view">
                         <h3><a href="{:url('index/article/view',['id'=>$art['id']])}">{$art.title}</a></h3>
                         <div class="desc">
@@ -51,7 +51,7 @@
                         </div>
                     </div>
                 </li>
-                </volist>
+                {/volist}
             </ul>
         </div>
         <div class="col-lg-3 sidecolumn">
@@ -64,20 +64,20 @@
             <div class="card">
                 <div class="card-header">推荐阅读</div>
                 <div class="card-body">
-                    <article:list var="articles" order="views DESC" />
+                    {article:list var="articles" order="views DESC"  /}
                     <div class="list-side">
-                    <volist name="articles" id="art">
+                    {volist name="articles" id="art"}
                         <a href="{:url('index/article/view',['id'=>$art['id']])}">{$art.title}</a>
-                    </volist>
+                    {/volist}
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/javascript">
 
     </script>
-</block>
+{/block}

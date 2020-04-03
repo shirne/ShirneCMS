@@ -1,6 +1,6 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
 <include file="public/bread" menu="shop_coupon_index" title="优惠券领取列表" />
 
@@ -34,7 +34,7 @@
             </tr>
         </thead>
         <tbody>
-        <foreach name="lists" item="v">
+        {foreach name="lists" item="v"}
             <tr>
                 <td>{$v.id}</td>
                 <td><figure class="figure" >
@@ -49,9 +49,9 @@
                     <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n\n删除后将不能恢复!" href="{:url('shop.coupon/itemdelete',array('id'=>$v['id'],'gid'=>$gid))}" ><i class="ion-md-trash"></i> </a>
                 </td>
             </tr>
-        </foreach>
+        {/foreach}
         </tbody>
     </table>
     {$page|raw}
 </div>
-</block>
+{/block}

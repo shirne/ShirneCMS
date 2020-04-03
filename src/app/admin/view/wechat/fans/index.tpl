@@ -1,15 +1,15 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
     <include file="public/bread" menu="wechat_index" title=""/>
 
     <div id="page-wrapper">
         <div class="row list-header">
             <div class="col col-6">
                 <div class="btn-toolbar list-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-                    <if condition="$support_sync">
+                    {if $support_sync}
                     <a href="{:url('wechat.fans/sync',['wid'=>$wid])}" class="btn btn-outline-info btn-sm mr-2"><i class="ion-md-sync"></i> 同步粉丝</a>
-                    </if>
+                    {/if}
                 </div>
             </div>
             <div class="col col-6">
@@ -41,16 +41,16 @@
             </thead>
             <tbody>
             <php>$empty=list_empty(6);</php>
-            <volist name="lists" id="v" empty="$empty">
+            {volist name="lists" id="v" empty="$empty"}
                 <tr>
                     <td><input type="checkbox" name="id" value="{$v.id}" /></td>
                     <td>
-                        <if condition="!empty($v['avatar'])">
+                        {if !empty($v['avatar'])}
                             <div class="avatar float-left rounded-circle" style="width: 50px;height: 50px;background-image:url({$v.avatar});background-size:100%;"></div>
-                        </if>
+                        {/if}
                         <div class="float-left pl-2" style="white-space: nowrap">
                             {$v.nickname}
-                            <if condition="$v['gender'] EQ 2"><i class="ion-md-female text-danger" ></i><else/><i class="ion-md-male text-success" ></i></if><br />
+                            {if $v['gender'] EQ 2}<i class="ion-md-female text-danger" ></i>{else/}<i class="ion-md-male text-success" ></i>{/if}<br />
                             {$v.openid}
                         </div>
                     </td>
@@ -60,22 +60,22 @@
                         <span class="badge badge-{$levels[$v['level_id']]['style']}">{$levels[$v['level_id']]['level_name']}</span>
                     </td>
                     <td class="operations">
-                        <if condition="$support_message">
+                        {if $support_message}
                         <a class="btn btn-outline-primary sendmsg" title="发消息" href="javascript:" data-openid="{$v.openid}"><i class="ion-md-text"></i> </a>
-                        </if>
-                        <if condition="$support_sync">
+                        {/if}
+                        {if $support_sync}
                         <a class="btn btn-outline-primary" title="同步" href="{:url('wechat.fans/sync',array('openid'=>$v['openid'],'single'=>1))}"><i class="ion-md-sync"></i> </a>
-                        </if>
+                        {/if}
                     </td>
                 </tr>
-            </volist>
+            {/volist}
             </tbody>
         </table>
         {$page|raw}
     </div>
 
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/javascript">
         jQuery(function ($) {
             $('.sendmsg').click(function (e) {
@@ -150,4 +150,4 @@
 
         })
     </script>
-</block>
+{/block}

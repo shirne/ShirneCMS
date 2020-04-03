@@ -1,6 +1,6 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
 <include file="public/bread" menu="subscribe_index" title="订阅列表" />
 
@@ -33,7 +33,7 @@
         </thead>
         <tbody>
             <php>$empty=list_empty(5);</php>
-        <volist name="lists" id="v" empty="$empty">
+        {volist name="lists" id="v" empty="$empty"}
             <tr>
                 <td>{$v.id}</td>
                 <td>{$v.title}</td>
@@ -44,9 +44,9 @@
                     <a class="btn btn-outline-danger link-confirm" title="删除" data-configm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('subscribe/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
                 </td>
             </tr>
-        </volist>
+        {/volist}
         </tbody>
     </table>
     {$page|raw}
 </div>
-</block>
+{/block}

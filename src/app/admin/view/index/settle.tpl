@@ -1,6 +1,6 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
     <include file="public/bread" menu="Board" section="主面板" title="账务统计"/>
     <div id="page-wrapper">
@@ -40,4 +40,4 @@
 
     </div>
 
-</block>
+{/block}

@@ -1,6 +1,6 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
     <div class="page msg_warn js_show">
 
         <div class="weui-msg">
@@ -13,4 +13,4 @@
             </div>
         </div>
     </div>
-</block>
+{/block}

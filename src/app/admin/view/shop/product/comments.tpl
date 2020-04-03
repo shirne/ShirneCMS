@@ -1,6 +1,6 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
     <include file="public/bread" menu="shop_product_index" title="文章列表" />
     <div id="page-wrapper">
 
@@ -27,9 +27,9 @@
                             </div>
                             <select name="cate_id" class="form-control">
                                 <option value="0">不限分类</option>
-                                <foreach name="category" item="v">
+                                {foreach name="category" item="v"}
                                     <option value="{$v.id}" {$cate_id == $v['id']?'selected="selected"':""}>{$v.html} {$v.title}</option>
-                                </foreach>
+                                {/foreach}
                             </select>
                         </div>
                         <div class="col input-group input-group-sm">
@@ -55,7 +55,7 @@
             </tr>
             </thead>
             <tbody>
-            <foreach name="lists" item="v">
+            {foreach name="lists" item="v"}
                 <tr>
                     <td><input type="checkbox" name="id" value="{$v.id}" /></td>
                     <td>[{$v.category_title}]{$v.title}</td>
@@ -63,11 +63,11 @@
                     <td>{$v.username}</td>
                     <td>{$v.content|cutstr=20}</td>
                     <td>
-                        <if condition="$v.status eq 1">
+                        {if $v.status eq 1}
                             <span class="badge badge-success">已审核</span>
-                            <else/>
+                            {else/}
                             <span class="badge badge-warning">未审核</span>
-                        </if>
+                        {/if}
                     </td>
 
                     <td>
@@ -75,15 +75,15 @@
                         <a class="btn btn-outline-dark btn-sm" href="{:url('shop.product/commentdelete',array('id'=>$v['id']))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
                     </td>
                 </tr>
-            </foreach>
+            {/foreach}
             </tbody>
         </table>
         <div class="clearfix"></div>
         {$page|raw}
 
     </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/javascript">
         (function(w){
             w.actionAudit=function(ids){
@@ -142,4 +142,4 @@
             };
         })(window)
     </script>
-</block>
+{/block}

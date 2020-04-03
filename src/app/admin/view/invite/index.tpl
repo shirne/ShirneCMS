@@ -1,6 +1,6 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
 <include file="public/bread" menu="invite_index" title="邀请码列表" />
 
@@ -37,36 +37,36 @@
         </thead>
         <tbody>
         <php>$empty=list_empty(10);</php>
-        <volist name="lists" id="v" empty="$empty">
+        {volist name="lists" id="v" empty="$empty"}
             <tr>
                 <td>{$v.id}</td>
                 <td>{$v.code}</td>
                 <td>[{$v.member_id}]{$v.username}</td>
                 <td>
-                    <if condition="$v['level_id'] GT 0">
+                    {if $v['level_id'] GT 0}
                         {$levels[$v['level_id']]['level_name']}
-                        <else/>
+                        {else/}
                         -
-                    </if>
+                    {/if}
                 </td>
                 <td>{$v.create_time|showdate}</td>
                 <td>[{$v.member_use}]{$v.use_username}</td>
                 <td>{$v.use_at|showdate}</td>
                 <td>{$v.valid_at|showdate}</td>
-                <td><if condition="$v.status eq 1"><span class="badge badge-danger">锁定</span><else/><span class="badge badge-secondary">正常</span></if></td>
+                <td>{if $v.status eq 1}<span class="badge badge-danger">锁定</span>{else/}<span class="badge badge-secondary">正常</span>{/if}</td>
                 <td class="operations">
                     <a class="btn btn-outline-primary" title="转赠" href="{:url('Invite/update',array('id'=>$v['id']))}"><i class="ion-md-repeat"></i> </a>
-                    <if condition="$v.status eq 0">
+                    {if $v.status eq 0}
                         <a class="btn btn-outline-danger link-confirm" title="锁定" data-confirm="锁定后将不能使用此激活码注册!\n请确认!!!" href="{:url('Invite/lock',array('id'=>$v['id']))}" ><i class="ion-md-close"></i> </a>
-                    <else/>
+                    {else/}
                         <a class="btn btn-outline-success link-confirm" title="解锁" href="{:url('Invite/unlock',array('id'=>$v['id']))}" style="color:#50AD1E;"><i class="ion-md-check"></i> </a>
-                    </if>
+                    {/if}
                 </td>
             </tr>
-        </volist>
+        {/volist}
         </tbody>
     </table>
     {$page|raw}
 </div>
 
-</block>
+{/block}

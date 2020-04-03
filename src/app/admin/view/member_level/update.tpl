@@ -1,6 +1,6 @@
-<extend name="public:base"/>
+{extend name="public:base"/}
 
-<block name="body">
+{block name="body"}
     <include file="public/bread" menu="member_level_index" title="会员组配置"/>
 
     <div id="page-wrapper">
@@ -43,11 +43,11 @@
                                         </div>
                                         <select name="style" class="form-control text-{$model.style}"
                                                 onchange="$(this).attr('class','form-control text-'+$(this).val())">
-                                            <foreach name="styles" id="style">
+                                            {foreach name="styles" id="style"}
                                                 <option value="{$style}" {$model['style']==$style?'selected':''}
                                                         class="text-{$style}">██████████
                                                 </option>
-                                            </foreach>
+                                            {/foreach}
                                         </select>
                                     </div>
                                 </div>
@@ -217,4 +217,4 @@
             </form>
         </div>
     </div>
-</block>
+{/block}

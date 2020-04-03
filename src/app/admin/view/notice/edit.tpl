@@ -1,6 +1,6 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 <include file="public/bread" menu="notice_index" title="公告详情" />
 
 <div id="page-wrapper">
@@ -23,10 +23,10 @@
         <div class="form-group">
             <label for="status1">公告状态</label>
             <label class="radio-inline">
-                <input type="radio" name="status" id="status1" value="1" <if condition="$model.status eq 1">checked="checked"</if> >显示
+                <input type="radio" name="status" id="status1" value="1" {if $model.status eq 1}checked="checked"{/if} >显示
             </label>
             <label class="radio-inline">
-                <input type="radio" name="status" id="status0" value="0" <if condition="$model.status eq 0">checked="checked"</if>>隐藏
+                <input type="radio" name="status" id="status0" value="0" {if $model.status eq 0}checked="checked"{/if}>隐藏
             </label>
         </div>
         <div class="form-group">
@@ -44,8 +44,8 @@
     </form>
     </div>
 </div>
-    </block>
-<block name="script">
+    {/block}
+{block name="script"}
 <!-- 配置文件 -->
 <script type="text/javascript" src="__STATIC__/ueditor/ueditor.config.js"></script>
 <!-- 编辑器源码文件 -->
@@ -58,4 +58,4 @@
         zIndex:100
     });
 </script>
-</block>
+{/block}

@@ -1,6 +1,6 @@
-<extend name="public:base"/>
+{extend name="public:base"/}
 
-<block name="body">
+{block name="body"}
     <div class="page panel">
         <div class="page__hd">
             <h3 class="page__title text-center"><img src="__STATIC__/images/wechatpay.png" style="margin:20px 0;" /> </h3>
@@ -13,8 +13,8 @@
             </div>
         </div>
     </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/javascript">
         $('#btngopay').click(onBridgeReady);
         function onBridgeReady(){
@@ -49,4 +49,4 @@
             onBridgeReady();
         }
     </script>
-</block>
+{/block}

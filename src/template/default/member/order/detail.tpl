@@ -1,5 +1,5 @@
-<extend name="public:base" />
-<block name="body">
+{extend name="public:base" /}
+{block name="body"}
     <div class="container">
         <div class="page-header"><h1>订单详情</h1></div>
         <div class="card">
@@ -7,7 +7,7 @@
                 <div class="float-right">{$order.status|order_status|raw}</div>
             </div>
             <div class="card-body">
-                <volist name="products" id="prod">
+                {volist name="products" id="prod"}
                     <div class="media">
                         <div class="media-left">
                             <a href="{:url('index/product/view',array('id'=>$prod['product_id']))}">
@@ -19,7 +19,7 @@
                             <div><i class="fa fa-circle-o"></i> {$prod['product_price']}&times;{$prod.count}</div>
                         </div>
                     </div>
-                </volist>
+                {/volist}
                 <div class="float-right mt-2">
                     订单总计： <span class="text-danger">￥{$order.payamount}</span>
                 </div>
@@ -28,29 +28,29 @@
                 <div>{$order.recive_name}&nbsp;/&nbsp;{$order.mobile}</div>
                 <div>{$order.province}&nbsp;/&nbsp;{$order.city}&nbsp;/&nbsp;{$order.area}</div>
                 <div>{$order.address}</div>
-                <if condition="$order['express_no']">
+                {if $order['express_no']}
                     {$order['express_code']}：{$order['express_no']}
-                </if>
+                {/if}
             </div>
             <div class="card-body">
                 <p>下单时间：{$order.create_time|showdate}</p>
             </div>
             <div class="card-footer order-btns text-right">
 
-                <if condition="$order['status'] EQ 0">
+                {if $order['status'] EQ 0}
                     <a href="javascript:" class="btn btn-secondary btn-cancel">取消订单</a>
                     <a href="javascript:" class="btn btn-danger btn-pay">重新支付</a>
-                    <elseif condition="$order['status'] EQ 3"/>
-                    <elseif condition="$order['status'] GT 0"/>
-                    <if condition="$order['isaudit'] EQ 1">
+                    {elseif $order['status'] EQ 3/}
+                    {elseif $order['status'] GT 0/}
+                    {if $order['isaudit'] EQ 1}
                         <a class="btn btn-secondary btn-confirm" href="javascript:" data-id="{$order.order_id}">确认完成</a>
-                    </if>
-                </if>
+                    {/if}
+                {/if}
             </div>
         </div>
     </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/javascript">
         jQuery(function($){
             $('.btn-confirm').click(function() {
@@ -88,4 +88,4 @@
             });
         })
     </script>
-</block>
+{/block}

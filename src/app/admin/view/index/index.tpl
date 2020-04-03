@@ -1,17 +1,17 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
 <include file="public/bread" menu="Board" section="主面板" title=""/>
 <div id="page-wrapper">
-    <foreach name="notices" item="notice">
+    {foreach name="notices" item="notice"}
         <div class="alert alert-{$notice.type|default='warning'} alert-dismissible fade show" role="alert">
             {$notice.message|raw}
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>
         </div>
-    </foreach>
+    {/foreach}
     <div class="row">
         <div class="col-lg-3 col-md-6 mb-3">
             <div class="card border-info">
@@ -153,4 +153,4 @@
 
 </div>
 
-</block>
+{/block}

@@ -1,6 +1,6 @@
-<extend name="public:base"/>
+{extend name="public:base"/}
 
-<block name="body">
+{block name="body"}
     <include file="public/bread" menu="page_index" title="编辑页面分组"/>
 
     <div id="page-wrapper">
@@ -44,4 +44,4 @@
             </form>
         </div>
     </div>
-</block>
+{/block}

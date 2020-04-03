@@ -1,6 +1,6 @@
-<extend name="public:base"/>
+{extend name="public:base"/}
 
-<block name="body">
+{block name="body"}
 
     <include file="public/bread" menu="invite_index" title="邀请码生成"/>
 
@@ -23,12 +23,12 @@
                         <div class="input-group-prepend"><span class="input-group-text">绑定会员组</span></div>
                         <select name="level_id" class="form-control">
                             <option value="0">无</option>
-                            <volist name="levels" id="lv">
+                            {volist name="levels" id="lv"}
                                 <option value="{$lv['level_id']}" {$lv['is_default']==1?'selected':''}>
                                     {$lv['level_name']} ￥{$lv['level_price']}
-                                    <if condition="$lv['is_default'] EQ 1">[默认]</if>
+                                    {if $lv['is_default'] EQ 1}[默认]{/if}
                                 </option>
-                            </volist>
+                            {/volist}
                         </select>
                     </div>
                     <div class="form-text text-muted">绑定会员组后会员注册成功时将成为该会员组的成员</div>
@@ -61,4 +61,4 @@
         </div>
     </div>
 
-</block>
+{/block}

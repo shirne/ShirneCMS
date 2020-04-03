@@ -6,11 +6,17 @@ namespace think;
 
 define('DOC_ROOT',__DIR__.'/public');
 
-require __DIR__ . '/thinkphp/base.php';
-
 ini_set('memory_limit','2048M');
 
-// 支持事先使用静态方法设置Request对象和Config对象
+// 命令行入口文件
+// 加载基础文件
+require __DIR__ . '/vendor/autoload.php';
 
 // 执行应用并响应
-Container::get('app')->path(__DIR__ . '/application/')->bind('task/Util/daily')->run()->send();
+$http = (new App())->http;
+
+$response = $http->path(__DIR__ . '/app/')->bind('task/Util/daily')->run();
+
+$response->send();
+
+$http->end($response);

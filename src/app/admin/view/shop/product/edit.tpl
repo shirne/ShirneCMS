@@ -1,6 +1,6 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 <include file="public/bread" menu="shop_product_index" title="商品详情" />
 <div id="page-wrapper">
     <div class="page-header">{$id>0?'编辑':'添加'}商品</div>
@@ -30,9 +30,9 @@
                     <div class="input-group">
                         <div class="input-group-prepend"><span class="input-group-text">商品分类</span> </div>
                         <select name="cate_id" id="product-cate" class="form-control">
-                            <foreach name="category" item="v">
+                            {foreach name="category" item="v"}
                                 <option value="{$v.id}" data-pid="{$v['pid']}" data-props="{$v['props']}" data-specs="{$v['specs']}" {$product['cate_id'] == $v['id']?'selected="selected"':""}>{$v.html} {$v.title}</option>
-                            </foreach>
+                            {/foreach}
                         </select>
                     </div>
                 </div>
@@ -41,9 +41,9 @@
                         <div class="input-group-prepend"><span class="input-group-text">商品品牌</span> </div>
                         <select name="brand_id" id="product-brand" class="form-control">
                             <option value="0" >--无--</option>
-                            <foreach name="brands" item="v">
+                            {foreach name="brands" item="v"}
                                 <option value="{$v.id}" {$product['brand_id'] == $v['id']?'selected="selected"':""}>{$v.title}</option>
-                            </foreach>
+                            {/foreach}
                         </select>
                     </div>
                 </div>
@@ -57,13 +57,13 @@
                             <label class="custom-file-label" for="upload_image">选择文件</label>
                         </div>
                     </div>
-                    <if condition="$product['image']">
+                    {if $product['image']}
                         <figure class="figure">
                             <img src="{$product.image}" class="figure-img img-fluid rounded" alt="image">
                             <figcaption class="figure-caption text-center">{$product.image}</figcaption>
                         </figure>
                         <input type="hidden" name="delete_image" value="{$product.image}"/>
-                    </if>
+                    {/if}
                 </div>
             </div>
             <div class="col-5">
@@ -97,11 +97,11 @@
                             <label style="width: 80px;">商品类型</label>
                             <div class="form-group col">
                                 <div class="btn-group btn-group-toggle btn-group-sm type-groups" data-toggle="buttons">
-                                    <foreach name="types" id="type" key="k">
+                                    {foreach name="types" id="type" key="k"}
                                         <label class="btn btn-outline-secondary{$k==$product['type']?' active':''}">
                                             <input type="radio" name="type" value="{$k}" autocomplete="off" {$k==$product['type']?'checked':''}>{$type}
                                         </label>
-                                    </foreach>
+                                    {/foreach}
                                 </div>
                             </div>
                         </div>
@@ -109,11 +109,11 @@
                             <label style="width: 80px;">&nbsp;</label>
                             <div class="form-group col">
                                 <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
-                                    <volist name="levels" id="lv" key="k">
+                                    {volist name="levels" id="lv" key="k"}
                                         <label class="btn btn-outline-secondary{$k==$product['level_id']?' active':''}">
                                             <input type="radio" name="level_id" value="{$k}" autocomplete="off" {$k==$product['level_id']?'checked':''}>{$lv.level_name}
                                         </label>
-                                    </volist>
+                                    {/volist}
                                 </div>
                             </div>
                         </div>
@@ -187,7 +187,7 @@
                         </div>
                         <div class="form-row commission_box cbox4">
                             <div class="form-group mb-0 col">
-                                <volist name="levels" id="lv" key="k">
+                                {volist name="levels" id="lv" key="k"}
                                 <div class="input-group input-group-sm mb-2 col">
                                     <div class="input-group-prepend">
                                         <span class="input-group-text">{$lv.level_name}</span>
@@ -201,7 +201,7 @@
                                             </div>
                                     </for>
                                 </div>
-                                </volist>
+                                {/volist}
                             </div>
                         </div>
                         <div class="commission_desc mb-2 text-muted">此处佣金层级按会员组设置的最大层级，不需要分佣的层级填写0即可，如需增加分级，先在会员组中设置一个最大值</div>
@@ -209,11 +209,11 @@
                             <label style="width: 80px;">购买限制</label>
                             <div class="form-group mb-1 col">
                                 <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
-                                    <volist name="levels" id="lv" key="k">
+                                    {volist name="levels" id="lv" key="k"}
                                         <label class="btn btn-outline-secondary{:fix_in_array($k,$product['levels'])?' active':''}">
                                             <input type="checkbox" name="levels[]" value="{$k}" autocomplete="off" {:fix_in_array($k,$product['levels'])?'checked':''}>{$lv.level_name}
                                         </label>
-                                    </volist>
+                                    {/volist}
                                 </div>
                             </div>
                         </div>
@@ -228,7 +228,7 @@
                             <div class="form-group col">
                                 <select class="form-control form-control-sm" name="postage_id" >
                                     <option value="0">免运费</option>
-                                    <volist name="postages" id="pos" key="k">
+                                    {volist name="postages" id="pos" key="k"}
                                         <php>
                                             $selected='';
                                             if(($product['id']==0 && $pos['is_default']) || $product['postage_id']==$pos['id']){
@@ -236,7 +236,7 @@
                                             }
                                         </php>
                                         <option value="{$pos.id}" {$selected}>{$pos.title}{$pos['is_default']?'(默认)':''}</option>
-                                    </volist>
+                                    {/volist}
                                 </select>
                             </div>
                         </div>
@@ -248,13 +248,13 @@
             <label class="col-2" style="max-width: 80px;">自定义属性</label>
             <div class="form-group col">
                 <div class="prop-groups">
-                    <foreach name="product['prop_data']" item="prop" key="k">
+                    {foreach name="product['prop_data']" item="prop" key="k"}
                         <div class="input-group mb-2" >
                             <input type="text" class="form-control" style="max-width:120px;" name="prop_data[keys][]" value="{$k}"/>
                             <input type="text" class="form-control" name="prop_data[values][]" value="{$prop}"/>
                             <div class="input-group-append delete"><a href="javascript:" class="btn btn-outline-secondary"><i class="ion-md-trash"></i> </a> </div>
                         </div>
-                    </foreach>
+                    {/foreach}
                 </div>
                 <a href="javascript:" class="btn btn-outline-dark btn-sm addpropbtn"><i class="ion-md-add"></i> 添加属性</a>
             </div>
@@ -263,14 +263,14 @@
             <label class="col-2" style="max-width: 80px;">商品规格</label>
             <div class="form-group col">
                 <div class="spec-groups">
-                    <foreach name="product['spec_data']" item="spec" key="k">
+                    {foreach name="product['spec_data']" item="spec" key="k"}
                     <div class="d-flex spec-row spec-{$k}" data-specid="{$k}">
                         <input type="hidden" name="spec_data[{$k}][title]" value="{$spec['title']}"/>
                         <label>{$spec.title}</label>
                         <div class="form-control col"><input type="text" class="taginput" data-spec_id="{$k}" value="{:implode(',',$spec['data'])}" ></div>
                         <div class="delete"><a href="javascript:" class="btn btn-outline-secondary"><i class="ion-md-trash"></i> </a> </div>
                     </div>
-                    </foreach>
+                    {/foreach}
                 </div>
                 <a href="javascript:" class="btn btn-outline-dark btn-sm addspecbtn"><i class="ion-md-add"></i> 添加规格</a>
             </div>
@@ -279,9 +279,9 @@
             <table class="table table-hover spec-table">
                 <thead>
                 <tr>
-                    <foreach name="product['spec_data']" item="spec" key="k">
+                    {foreach name="product['spec_data']" item="spec" key="k"}
                         <th class="specth">{$spec['title']}</th>
-                    </foreach>
+                    {/foreach}
                     <th class="first" scope="col">规格货号&nbsp;<a class="batch-set" title="批量设置" href="javascript:" data-field="goods_no"><i class="ion-md-create"></i> </a> </th>
                     <th scope="col">规格图片</th>
                     <th scope="col">重量(克)&nbsp;<a class="batch-set" title="批量设置" href="javascript:" data-field="weight"><i class="ion-md-create"></i> </a> </th>
@@ -294,11 +294,11 @@
                 </tr>
                 </thead>
                 <tbody>
-                    <foreach name="skus" item="sku" key="k">
+                    {foreach name="skus" item="sku" key="k"}
                     <tr data-idx="{$k}">
-                        <foreach name="product['spec_data']" item="spec" key="sk">
+                        {foreach name="product['spec_data']" item="spec" key="sk"}
                             <td><input type="hidden" class="spec-val" data-specid="{$sk}" name="skus[{$k}][specs][{$sk}]" value="{$sku['specs'][$sk]}" />{$sku['specs'][$sk]}</td>
-                        </foreach>
+                        {/foreach}
                         <td>
                             <input type="hidden" class="field-sku_id" name="skus[{$k}][sku_id]" value="{$sku.sku_id}"/>
                             <input type="text" class="form-control field-goods_no" name="skus[{$k}][goods_no]" value="{$sku.goods_no}">
@@ -307,20 +307,20 @@
                         <td><input type="text" class="form-control field-weight" name="skus[{$k}][weight]" value="{$sku.weight}"> </td>
                         <td><input type="text" class="form-control field-price" name="skus[{$k}][price]" value="{$sku.price}"> </td>
                         <td>
-                            <if condition="!empty($price_levels)">
-                                <foreach name="price_levels" id="plv">
+                            {if !empty($price_levels)}
+                                {foreach name="price_levels" id="plv"}
                                     <div class="input-group input-group-sm"><span class="input-group-prepend"><span class="input-group-text">{$plv.level_name}</span></span><input type="text" class="form-control field-ext_price" data-level_id="{$plv.level_id}" name="skus[{$k}][ext_price][{$plv.level_id}]" value="{$sku['ext_price'][$plv['level_id']]?:''}"></div>
-                                </foreach>
-                                <else/>
+                                {/foreach}
+                                {else/}
                                 -
-                            </if>
+                            {/if}
                         </td>
                         <td><input type="text" class="form-control field-market_price" name="skus[{$k}][market_price]" value="{$sku.market_price}"> </td>
                         <td><input type="text" class="form-control field-cost_price" name="skus[{$k}][cost_price]" value="{$sku.cost_price}"> </td>
                         <td><input type="text" class="form-control field-storage" name="skus[{$k}][storage]" value="{$sku.storage}"> </td>
                         <td><a href="javascript:" class="btn btn-outline-secondary delete-btn"><i class="ion-md-trash"></i> </a> </td>
                     </tr>
-                    </foreach>
+                    {/foreach}
                 </tbody>
             </table>
         </div>
@@ -336,8 +336,8 @@
     </form>
         </div>
 </div>
-    </block>
-<block name="script">
+    {/block}
+{block name="script"}
 <!-- 配置文件 -->
 <script type="text/javascript" src="__STATIC__/ueditor/ueditor.config.js"></script>
 <!-- 编辑器源码文件 -->
@@ -763,4 +763,4 @@
         isready=true;
     });
 </script>
-</block>
+{/block}

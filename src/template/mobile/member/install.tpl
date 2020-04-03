@@ -1,6 +1,6 @@
-<extend name="public:base"/>
+{extend name="public:base"/}
 
-<block name="body">
+{block name="body"}
     <div class="weui-cells weui-cells_form">
         <div class="weui-cell">
             <div class="weui-cell__hd">
@@ -31,7 +31,7 @@
 
         <div class="weui-cells__title">安装地址</div>
         <div class="weui-cells weui-cells_checkbox">
-            <volist name="addresses" id="address">
+            {volist name="addresses" id="address"}
             <label class="weui-cell weui-check__label" for="s11">
                 <div class="weui-cell__hd">
                     <input type="checkbox" class="weui-check" name="address_id" checked="checked">
@@ -41,7 +41,7 @@
                     <p>{$address.username}</p>
                 </div>
             </label>
-            </volist>
+            {/volist}
             <a href="{:aurl('index/member.address')}" class="weui-cell weui-cell_link">
                 <div class="weui-cell__bd">添加新地址</div>
             </a>
@@ -69,8 +69,8 @@
         <div class="weui-btn-area">
             <a class="weui-btn weui-btn_primary" href="javascript:" id="showTooltips">确定</a>
         </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/javascript">
         var uploadCount = 0;
         weui.uploader('#uploader', {
@@ -139,4 +139,4 @@
             }
         });
     </script>
-</block>
+{/block}

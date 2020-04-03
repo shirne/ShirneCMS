@@ -1,14 +1,14 @@
-<extend name="public:base" />
-<block name="body">
+{extend name="public:base" /}
+{block name="body"}
     <div class="container">
         <div class="page-header"><h1>我要充值</h1></div>
         <div class="page-content">
-            <article:notice var="notice" name="member_recharge" />
-            <if condition="!empty($notice)">
+            {article:notice var="notice" name="member_recharge"  /}
+            {if !empty($notice)}
                 <div class="alert alert-secondary" role="alert">
                     {$notice.summary}
                 </div>
-            </if>
+            {/if}
             <form action="" method="post" onsubmit="return checkMoney(this)" class="form-horizontal" enctype="multipart/form-data">
                 <div class="form-group">
                     <div class="input-group">
@@ -24,12 +24,12 @@
                         <div class="input-group-prepend"><span class="input-group-text">充值方式</span></div>
                         <select name="type_id" class="form-control" >
                             <option value="">请选择充值方式</option>
-                            <if condition="!empty($config['appid'])">
+                            {if !empty($config['appid'])}
                                 <option value="wechat">微信支付(在线支付)</option>
-                            </if>
-                            <foreach name="types" item="v">
+                            {/if}
+                            {foreach name="types" item="v"}
                                 <option value="{$v.id}" data-paydata="{$v|json_encode}" >{$v.title}</option>
-                            </foreach>
+                            {/foreach}
                         </select>
                     </div>
                     <div class="help-block text-muted" id="cardContent"></div>
@@ -57,8 +57,8 @@
             </form>
         </div>
     </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/javascript">
         if('{$hasRecharge}'>0){
             dialog.alert('您有充值申请正在处理中，请等待处理完成再进行充值');
@@ -132,4 +132,4 @@
             }
         })
     </script>
-</block>
+{/block}
