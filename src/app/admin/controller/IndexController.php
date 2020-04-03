@@ -32,7 +32,7 @@ class IndexController extends BaseController{
         //统计
         $m['total']=Db::name('member')->count();
         $m['avail']=Db::name('member')->where('status',1)->count();
-        $m['agent']=Db::name('member')->where('is_agent','>',0)->count(0);
+        $m['agent']=Db::name('member')->where('is_agent','>',0)->count();
         $this->assign('mem',$m);
 
         //资金
