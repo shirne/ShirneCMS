@@ -1,5 +1,5 @@
-<extend name="public:base" />
-<block name="body">
+{extend name="public:base" /}
+{block name="body"}
     <div class="container">
         <div class="page-header">
             <h1>收货地址</h1>
@@ -55,8 +55,8 @@
             </div>
         </form>
     </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/javascript" src="__STATIC__/js/location.min.js"></script>
     <script type="text/javascript">
         jQuery(function($){
@@ -68,4 +68,4 @@
             });
         })
     </script>
-</block>
+{/block}

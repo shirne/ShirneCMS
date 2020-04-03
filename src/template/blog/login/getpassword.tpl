@@ -1,5 +1,5 @@
-<extend name="public:base" />
-<block name="body">
+{extend name="public:base" /}
+{block name="body"}
     <div class="main">
         <div class="container loginbox">
             <div class="row justify-content-center">
@@ -83,8 +83,8 @@
             </div>
         </div>
     </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/javascript">
         jQuery(function($){
             var step=1;
@@ -140,4 +140,4 @@
         });
     </script>
 
-</block>
+{/block}

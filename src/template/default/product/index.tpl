@@ -1,6 +1,6 @@
-<extend name="public:base"/>
+{extend name="public:base"/}
 
-<block name="body">
+{block name="body"}
     <div class="main">
         <div class="subbanner">
             <div class="inner" style="background-image:url({:getAdImage('product')})"></div>
@@ -9,8 +9,8 @@
         <div class="container">
             <div class="product-list">
                 <div class="row">
-                    <php>$empty='<span class="col-12 empty">暂时没有内容</span>';</php>
-                    <Volist name="lists" id="prod" empty="$empty">
+                    {php}$empty='<span class="col-12 empty">暂时没有内容</span>';{/php}
+                    {volist name="lists" id="prod" empty="$empty"}
                         <a class="col-6" href="{:url('index/product/view',['id'=>$prod['id']])}">
                             <div class="card">
                                 <img class="card-img-top" src="{$prod.image}" alt="Card image cap">
@@ -23,10 +23,10 @@
                                 </div>
                             </div>
                         </a>
-                    </Volist>
+                    {/volist}
                 </div>
                 {$page|raw}
             </div>
         </div>
     </div>
-</block>
+{/block}

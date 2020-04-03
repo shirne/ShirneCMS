@@ -5,12 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>{$title}</title>
-    <if condition="!empty($keywords)">
+    {if !empty($keywords)}
     <meta name="keywords" content="{$keywords}" />
-    </if>
-    <if condition="!empty($description)">
+    {/if}
+    {if !empty($description)}
     <meta name="description" content="{$description}" />
-    </if>
+    {/if}
     <link href="__STATIC__/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="__STATIC__/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
     <link href="__STATIC__/ionicons/css/ionicons.min.css" rel="stylesheet">
@@ -25,11 +25,11 @@
 
 </head>
 <body>
-<include file="public:header" />
+{include  file="public:header"  /}
 
-<block name="body" ></block>
+{block name="body" }{/block}
 
-<include file="public:footer" />
+{include  file="public:footer"  /}
 <script src="__STATIC__/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="__STATIC__/js/init.min.js"></script>
 <script type="text/javascript">
@@ -37,10 +37,10 @@
         setNav('{$navmodel}');
     })
 </script>
-<block name="script" ></block>
+{block name="script" }{/block}
 </body>
 
-<if condition="$isWechat">
+{if $isWechat}
 <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
 <script>
     wx.config({$signPackage|raw});
@@ -120,6 +120,6 @@
         });
     });
 </script>
-</if>
+{/if}
 
 </html>

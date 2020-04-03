@@ -1,13 +1,13 @@
-<extend name="public:base"/>
+{extend name="public:base"/}
 
-<block name="body">
+{block name="body"}
     <div class="main">
         <div class="container">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item icon"><a href="/">首页</a></li>
-                <volist name="categotyTree" id="cate">
+                {volist name="categotyTree" id="cate"}
                     <li class="breadcrumb-item"><a href="{:url("index/article/index",['name'=>$cate['name']])}">{$cate['title']}</a></li>
-                </volist>
+                {/volist}
                 <li class="breadcrumb-item active"><a href="{:url('index/article/index')}">{$article.title}</a></li>
             </ol>
         </div>
@@ -28,4 +28,4 @@
             </div>
         </div>
     </div>
-</block>
+{/block}

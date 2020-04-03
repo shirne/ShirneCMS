@@ -1,5 +1,5 @@
-<extend name="public:base" />
-<block name="body">
+{extend name="public:base" /}
+{block name="body"}
     <div class="container">
         <div class="page-header">
             <h1>银行卡</h1>
@@ -12,9 +12,9 @@
                     <span class="input-group-text">快速填写</span>
                     <select id="cardlist" class="form-control" onchange="if(this.value)this.form.bank.value=this.value;">
                         <option value="">从列表中选择自动填写</option>
-                        <foreach name="banklist" item="v">
+                        {foreach name="banklist" item="v"}
                             <option value="{$v}" >{$v}</option>
-                        </foreach>
+                        {/foreach}
                     </select>
                 </div>
             </div>
@@ -43,6 +43,6 @@
             </div>
         </form>
     </div>
-</block>
-<block name="script">
-</block>
+{/block}
+{block name="script"}
+{/block}

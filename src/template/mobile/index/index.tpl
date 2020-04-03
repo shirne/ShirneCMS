@@ -1,10 +1,10 @@
-<extend name="public:base"/>
+{extend name="public:base"/}
 
-<block name="body">
+{block name="body"}
     首页
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/javascript">
 
     </script>
-</block>
+{/block}

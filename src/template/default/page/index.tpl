@@ -1,6 +1,6 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 	<div class="main">
 		<div class="subbanner">
 			<div class="inner" style="background-image:url({:getAdImage($page['group'])})"></div>
@@ -9,9 +9,9 @@
 		<div class="nav-row">
 			<div class="container">
 				<div class="row">
-					<Volist name="lists" id="p">
+					{volist name="lists" id="p"}
 						<a class="col row-item {$p['name']==$page['name']?'active':''}" href="{:url('index/page/index',['group'=>$p['group'],'name'=>$p['name']])}">{$p.title}</a>
-					</Volist>
+					{/volist}
 				</div>
 			</div>
 		</div>
@@ -23,4 +23,4 @@
 			</div>
 		</div>
 	</div>
-</block>
+{/block}

@@ -1,6 +1,6 @@
 extend name="public:base"/>
 
-<block name="body">
+{block name="body"}
     <div class="main">
         <div class="container">
             <ol class="breadcrumb">
@@ -12,7 +12,7 @@ extend name="public:base"/>
         <div class="container">
             <div class="row">
                 <div class="col-lg-3">
-                    <include file="article/_left"/>
+                    {include  file="article/_left" /}
                 </div>
                 <div class="col">
                     <div class="card main_right news_list">
@@ -30,4 +30,4 @@ extend name="public:base"/>
             </div>
         </div>
     </div>
-</block>
+{/block}

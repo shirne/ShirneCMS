@@ -1,5 +1,5 @@
-<extend name="public:base" />
-<block name="body">
+{extend name="public:base" /}
+{block name="body"}
     <div class="page">
         <div class="page__hd">
             <h1>收货地址</h1>
@@ -61,8 +61,8 @@
             </form>
         </div>
     </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/javascript" src="__STATIC__/js/location.js"></script>
     <script type="text/javascript" src="__STATIC__/js/ChinaArea.js"></script>
     <script type="text/javascript">
@@ -75,4 +75,4 @@
             });
         })
     </script>
-</block>
+{/block}

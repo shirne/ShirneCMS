@@ -1,8 +1,8 @@
-<extend name="public:base" />
-<block name="header">
+{extend name="public:base" /}
+{block name="header"}
     <link href="__STATIC__/ueditor/third-party/SyntaxHighlighter/shCoreDefault.css" rel="stylesheet">
-</block>
-<block name="body">
+{/block}
+{block name="body"}
     <div class="main">
         <div class="container view-body">
             <div class="row">
@@ -15,17 +15,17 @@
                             <span class="ml-2"><i class="ion-md-paper-plane"></i> {$article.views}</span>
                             <span class="ml-2"><i class="ion-md-text"></i> {$article.comment}</span>
                         </div>
-                        <if condition="!empty($images)">
+                        {if !empty($images)}
                             <div class="article-slides">
                                 <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
                                     <ol class="carousel-indicators">
-                                        <volist name="images" id="img">
+                                        {volist name="images" id="img"}
                                         <li data-target="#carouselExampleCaptions" data-slide-to="{$i-1}">
                                         </li>
-                                        </volist>
+                                        {/volist}
                                     </ol>
                                     <div class="carousel-inner">
-                                        <volist name="images" id="img">
+                                        {volist name="images" id="img"}
                                             <div class="carousel-item" style="background-image:url({$img.image})">
                                                 <img src="{$img.image}" alt="{$img.title}">
                                                 <div class="carousel-caption d-none d-md-block">
@@ -33,11 +33,11 @@
                                                     <p>{$img.title}</p>
                                                 </div>
                                             </div>
-                                        </volist>
+                                        {/volist}
                                     </div>
                                 </div>
                             </div>
-                        </if>
+                        {/if}
                         <div class="article-content">
                             <div>
                                 {$article.content|raw}
@@ -50,34 +50,34 @@
                             评论
                         </div>
                         <div class="card-body">
-                            <if condition="$article['close_comment']">
+                            {if $article['close_comment']}
                                 <div class="empty">评论已关闭</div>
-                            <else/>
+                            {else/}
                                 <form class="comment-form" name="commentForm" action="{:url('index/article/comment',['id'=>$article['id']])}" method="POST">
                                 <div class="media comment-form mt-2">
                                     <img src="{$member.avatar|default='/static/images/avatar-default.png'}" class="avatar mr-3 rounded" alt="{$member.nickname}">
                                     <div class="media-body">
                                         <input type="hidden" name="reply_id" value="0">
-                                        <if condition="$isLogin">
+                                        {if $isLogin}
                                             <textarea name="content" placeholder="说点什么..." class="form-control"></textarea>
                                             <div class="d-flex mt-2">
                                                 <div class="flex-fill text-muted">支持除链接外的Markdown语法</div>
                                                 <input type="submit" class="btn btn-info" value="提交评论">
                                             </div>
-                                        <elseif condition="$config['anonymous_comment']" />
+                                        {elseif $config['anonymous_comment'] /}
                                             <textarea name="content" placeholder="说点什么..." class="form-control"></textarea>
                                             <div class="d-flex mt-2">
                                                 <div class="w-25"><input type="text" name="email" class="form-control float-left" placeholder="填写邮箱"/> </div>
                                                 <div class="flex-fill text-muted pl-2" style="line-height:38px;"> 或<a class="pl-1 pr-1 text-info" href="{:url('index/login/index')}">登录</a>后评论</div>
                                                 <input type="submit" class="btn btn-info" value="提交评论">
                                             </div>
-                                        <else/>
+                                        {else/}
                                             <textarea name="content" readonly class="form-control"></textarea>
                                             <div class="d-flex mt-2">
                                                 <div class="flex-fill text-muted">请<a class="pl-1 pr-1 text-info" href="{:url('index/login/index')}">登录</a>后评论</div>
                                                 <input type="submit" class="btn btn-info" disabled value="提交评论">
                                             </div>
-                                        </if>
+                                        {/if}
                                     </div>
                                 </form>
                                 </div>
@@ -86,16 +86,16 @@
 
                                 </div>
                                 <div class="comment_action"></div>
-                            </if>
+                            {/if}
                         </div>
                     </div>
                 </div>
-                <include file="article:_left" />
+                {include  file="article:_left"  /}
             </div>
         </div>
     </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/html" id="comment_tpl">
         <div class="media mt-2">
             <img src="{@avatar|default=/static/images/avatar-default.png}" class="avatar mr-3 rounded" alt="{@nickname}">
@@ -207,4 +207,4 @@
         })
         
     </script>
-</block>
+{/block}
