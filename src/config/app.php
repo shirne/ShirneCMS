@@ -13,10 +13,6 @@
 // | 应用设置
 // +----------------------------------------------------------------------
 
-//tp 多语言初始化问题，暂时用这种方法解决
-\think\facade\Lang::setLangCookieVar('cms_lang');
-\think\facade\Lang::setAllowLangList(['zh-cn','en-us']);
-
 return [
     // 应用名称
     'app_name'               => 'shirnecms',
