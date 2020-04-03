@@ -2,7 +2,7 @@
 
 {block name="body"}
 
-    <include file="public/bread" menu="wechat_index" title="公众号信息" />
+    {include  file="public/bread" menu="wechat_index" title="公众号信息"  /}
 
     <div id="page-wrapper">
         <div class="page-header">{$id>0?'编辑':'添加'}公众号</div>

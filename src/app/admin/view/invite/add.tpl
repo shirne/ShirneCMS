@@ -2,7 +2,7 @@
 
 {block name="body"}
 
-    <include file="public/bread" menu="invite_index" title="邀请码生成"/>
+    {include  file="public/bread" menu="invite_index" title="邀请码生成" /}
 
     <div id="page-wrapper">
         <div class="page-header">生成邀请码</div>

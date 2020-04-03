@@ -2,7 +2,7 @@
 
 {block name="body"}
 
-<include file="public/bread" menu="page_index" title="单页列表" />
+{include  file="public/bread" menu="page_index" title="单页列表"  /}
 
 <div id="page-wrapper">
     
@@ -57,7 +57,7 @@
             </tr>
         </thead>
         <tbody>
-        <php>$empty=list_empty(7);</php>
+        {php}$empty=list_empty(7);{/php}
         {volist name="lists" id="v" empty="$empty"}
             <tr>
                 <td><input type="checkbox" name="id" value="{$v.id}" /></td>

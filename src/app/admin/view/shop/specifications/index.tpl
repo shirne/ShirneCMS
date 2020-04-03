@@ -2,7 +2,7 @@
 
 {block name="body"}
 
-    <include file="public/bread" menu="shop_category_index" title="规格管理" />
+    {include  file="public/bread" menu="shop_category_index" title="规格管理"  /}
 
     <div id="page-wrapper">
 

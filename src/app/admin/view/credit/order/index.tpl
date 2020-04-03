@@ -2,7 +2,7 @@
 
 {block name="body"}
 
-    <include file="public/bread" menu="credit_order_index" title="订单列表" />
+    {include  file="public/bread" menu="credit_order_index" title="订单列表"  /}
 
     <div id="page-wrapper">
 
@@ -107,7 +107,7 @@
     </div>
 {/block}
 {block name="script"}
-        <include file="credit/order/_status_tpl" />
+        {include  file="credit/order/_status_tpl"  /}
     <script type="text/javascript">
         jQuery(function(){
             

@@ -2,7 +2,7 @@
 
 {block name="body"}
 
-<include file="public/bread" menu="booth_index" title="展位管理" />
+{include  file="public/bread" menu="booth_index" title="展位管理"  /}
 
 <div id="page-wrapper">
     

@@ -2,7 +2,7 @@
 
 {block name="body"}
 
-<include file="public/bread" menu="subscribe_index" title="订阅列表" />
+{include  file="public/bread" menu="subscribe_index" title="订阅列表"  /}
 
 <div id="page-wrapper">
     
@@ -32,7 +32,7 @@
             </tr>
         </thead>
         <tbody>
-            <php>$empty=list_empty(5);</php>
+            {php}$empty=list_empty(5);{/php}
         {volist name="lists" id="v" empty="$empty"}
             <tr>
                 <td>{$v.id}</td>

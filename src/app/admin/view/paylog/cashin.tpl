@@ -2,7 +2,7 @@
 
 {block name="body"}
 
-<include file="public/bread" menu="paylog_cashin" title="" />
+{include  file="public/bread" menu="paylog_cashin" title=""  /}
 
 <div id="page-wrapper">
 
@@ -55,7 +55,7 @@
         </tr>
         </thead>
         <tbody>
-        <php>$empty=list_empty(9);</php>
+        {php}$empty=list_empty(9);{/php}
         {volist name="lists" id="v" empty="$empty"}
             <tr>
                 <td>{$v.id}</td>

@@ -1,7 +1,7 @@
 {extend name="public:base" /}
 
 {block name="body"}
-<include file="public/bread" menu="shop_help_index" title="帮助列表" />
+{include  file="public/bread" menu="shop_help_index" title="帮助列表"  /}
 <div id="page-wrapper">
 	<div class="row">
 		<div class="col" style="width: 240px;flex-basis:240px;flex-grow: 0;">

@@ -2,7 +2,7 @@
 
 {block name="body"}
 
-<include file="public/bread" menu="article_index" title="图集列表" />
+{include  file="public/bread" menu="article_index" title="图集列表"  /}
 
 <div id="page-wrapper">
     

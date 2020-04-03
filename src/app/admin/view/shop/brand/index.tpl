@@ -2,7 +2,7 @@
 
 {block name="body"}
 
-<include file="public/bread" menu="shop_brand_index" title="品牌列表" />
+{include  file="public/bread" menu="shop_brand_index" title="品牌列表"  /}
 
 <div id="page-wrapper">
     
@@ -33,7 +33,7 @@
             </tr>
         </thead>
         <tbody>
-        <php>$empty=list_empty(6);</php>
+        {php}$empty=list_empty(6);{/php}
         {volist name="lists" id="v" empty="$empty"}
             <tr>
                 <td>{$v.id}</td>

@@ -1,7 +1,7 @@
 {extend name="public:base" /}
 
 {block name="body"}
-    <include file="public/bread" menu="paylog_index" title="" />
+    {include  file="public/bread" menu="paylog_index" title=""  /}
 
     <div id="page-wrapper">
         <div class="row list-header">

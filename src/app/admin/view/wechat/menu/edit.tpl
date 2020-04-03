@@ -1,7 +1,7 @@
 {extend name="public:base" /}
 
 {block name="body"}
-    <include file="public/bread" menu="wechat_index" title="公众号菜单" />
+    {include  file="public/bread" menu="wechat_index" title="公众号菜单"  /}
 
     <div id="page-wrapper">
         <div class="page-header">

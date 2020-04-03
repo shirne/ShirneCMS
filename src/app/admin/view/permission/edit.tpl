@@ -1,7 +1,7 @@
 {extend name="public:base" /}
 
 {block name="body"}
-<include file="public/bread" menu="permission_index" title="菜单配置" />
+{include  file="public/bread" menu="permission_index" title="菜单配置"  /}
 
 <div id="page-wrapper">
     <div class="page-header">{$id>0?'修改':'添加'}菜单</div>

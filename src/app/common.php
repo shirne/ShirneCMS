@@ -10,7 +10,6 @@
 // +----------------------------------------------------------------------
 
 // 应用公共文件
-error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
 define('ART_TYPE_NORMAL',1);
 define('ART_TYPE_TOP',2);
@@ -1167,10 +1166,10 @@ function random_str($length = 6, $type = 'string', $convert = 0)
  * @param  string $pre [description]
  * @return array
  */
-function getSortedCategory(&$data, $pid = 0, $pre = "")
+function getSortedCategory($data, $pid = 0, $pre = "")
 {
     $temp = array();
-    $curdata=array_filter($data,function($item) use ($pid){
+    $curdata=array_filter($data instanceof \think\Collection?$data->all():$data,function($item) use ($pid){
         return $item['pid']==$pid;
     });
 

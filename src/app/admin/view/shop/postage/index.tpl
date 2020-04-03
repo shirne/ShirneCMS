@@ -2,7 +2,7 @@
 
 {block name="body"}
 
-    <include file="public/bread" menu="shop_postage_index" title="运费模板列表" />
+    {include  file="public/bread" menu="shop_postage_index" title="运费模板列表"  /}
 
     <div id="page-wrapper">
 

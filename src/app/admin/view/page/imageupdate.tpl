@@ -2,7 +2,7 @@
 
 {block name="body"}
 
-<include file="public/bread" menu="page_index" title="页面图集" />
+{include  file="public/bread" menu="page_index" title="页面图集"  /}
 
 <div id="page-wrapper">
     <div class="page-header">{$id>0?'编辑':'添加'}图片</div>

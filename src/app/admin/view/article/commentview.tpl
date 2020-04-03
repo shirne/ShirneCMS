@@ -2,7 +2,7 @@
 
 {block name="body"}
 
-    <include file="public/bread" menu="article_comments" title="查看评论" />
+    {include  file="public/bread" menu="article_comments" title="查看评论"  /}
 
     <div id="page-wrapper">
         <div class="page-header">查看评论</div>

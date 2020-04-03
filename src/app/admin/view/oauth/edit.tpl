@@ -2,7 +2,7 @@
 
 {block name="body"}
 
-<include file="public/bread" menu="setting_index" title="接口信息" />
+{include  file="public/bread" menu="setting_index" title="接口信息"  /}
 
 <div id="page-wrapper">
     <div class="page-header">{$id>0?'编辑':'添加'}接口</div>

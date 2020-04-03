@@ -2,7 +2,7 @@
 
 {block name="body"}
 
-<include file="public/bread" menu="permission_index" title="菜单列表" />
+{include  file="public/bread" menu="permission_index" title="菜单列表"  /}
 
 <div id="page-wrapper">
     
@@ -45,7 +45,7 @@
                     <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('permission/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
                 </td>
             </tr>
-            <php>$soncount=empty($model[$v['id']])?0:count($model[$v['id']]);</php>
+            {php}$soncount=empty($model[$v['id']])?0:count($model[$v['id']]);{/php}
             {foreach name="model[$v['id']]" item="sv"}
                 <tr>
                     <td>{$sv.id}</td>

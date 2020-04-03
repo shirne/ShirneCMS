@@ -2,7 +2,7 @@
 
 {block name="body"}
 
-<include file="public/bread" menu="shop_brand_index" title="品牌资料" />
+{include  file="public/bread" menu="shop_brand_index" title="品牌资料"  /}
 
 <div id="page-wrapper">
     <div class="page-header">{$id>0?'编辑':'添加'}品牌</div>

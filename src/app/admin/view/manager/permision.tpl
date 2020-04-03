@@ -9,7 +9,7 @@
 {/block}
 {block name="body"}
 
-<include file="public/bread" menu="manager_index" title="管理员权限" />
+{include  file="public/bread" menu="manager_index" title="管理员权限"  /}
 
 <div id="page-wrapper">
 	<div class="page-header">管理员权限</div>

@@ -1,7 +1,7 @@
 {extend name="public:base" /}
 
 {block name="body"}
-    <include file="public/bread" menu="shop_order_index" section="项目" title="订单管理" />
+    {include  file="public/bread" menu="shop_order_index" section="项目" title="订单管理"  /}
 
     <div id="page-wrapper" class="page-form">
         <div class="panel panel-default">
@@ -157,7 +157,7 @@
                     <tbody>
                     <tr>
                         <td>快递公司</td>
-                        <td>{if !empty($model['express_code'])}[{$model.express_code}]<php>$expresses=config('express.');</php>{$expresses[$model['express_code']]}{else/}无需物流{/if}</td>
+                        <td>{if !empty($model['express_code'])}[{$model.express_code}]{php}$expresses=config('express.');{/php}{$expresses[$model['express_code']]}{else/}无需物流{/if}</td>
                         <td>快递单号</td>
                         <td>{$model.express_no}</td>
                     </tr>
@@ -205,7 +205,7 @@
     </div>
 {/block}
 {block name="script"}
-        <include file="shop/order/_status_tpl" />
+        {include  file="shop/order/_status_tpl"  /}
     <script type="text/javascript">
         jQuery(function($){
             

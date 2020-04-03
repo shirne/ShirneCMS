@@ -1,7 +1,7 @@
 {extend name="public:base" /}
 
 {block name="body"}
-<include file="public/bread" menu="shop_product_index" title="商品详情" />
+{include  file="public/bread" menu="shop_product_index" title="商品详情"  /}
 <div id="page-wrapper">
     <div class="page-header">{$id>0?'编辑':'添加'}商品</div>
     <div id="page-content">
@@ -153,7 +153,7 @@
                             </div>
                         </div>
 
-                        <php>$layercounts = array_column($levels,'commission_layer');$layercount = max($layercounts);</php>
+                        {php}$layercounts = array_column($levels,'commission_layer');$layercount = max($layercounts);{/php}
                         <div class="form-row commission_box cbox2">
                             <div class="form-group mb-0 col">
                                 <for start="0" end="$layercount">
@@ -229,12 +229,12 @@
                                 <select class="form-control form-control-sm" name="postage_id" >
                                     <option value="0">免运费</option>
                                     {volist name="postages" id="pos" key="k"}
-                                        <php>
+                                        {php}
                                             $selected='';
                                             if(($product['id']==0 && $pos['is_default']) || $product['postage_id']==$pos['id']){
                                                 $selected='selected';
                                             }
-                                        </php>
+                                        {/php}
                                         <option value="{$pos.id}" {$selected}>{$pos.title}{$pos['is_default']?'(默认)':''}</option>
                                     {/volist}
                                 </select>

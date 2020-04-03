@@ -6,7 +6,7 @@
 {/block}
 {block name="body"}
 
-    <include file="public/bread" menu="test_rand_bouns" title="随机金额测试" />
+    {include  file="public/bread" menu="test_rand_bouns" title="随机金额测试"  /}
 
     <div id="page-wrapper">
         <div class="list-header">

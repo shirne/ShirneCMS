@@ -1,7 +1,7 @@
 {extend name="public:base" /}
 
 {block name="body"}
-<include file="public/bread" menu="article_index" title="文章详情" />
+{include  file="public/bread" menu="article_index" title="文章详情"  /}
 <div id="page-wrapper">
     <div class="page-header">{$id>0?'编辑':'添加'}文章</div>
     <div id="page-content">

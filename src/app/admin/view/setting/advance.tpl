@@ -2,7 +2,7 @@
 
 {block name="body"}
 
-<include file="public/bread" menu="setting_index" title="高级模式" />
+{include  file="public/bread" menu="setting_index" title="高级模式"  /}
 
 <div id="page-wrapper">
 

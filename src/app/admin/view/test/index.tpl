@@ -2,7 +2,7 @@
 
 {block name="body"}
 
-    <include file="public/bread" menu="test_index" title="测试列表" />
+    {include  file="public/bread" menu="test_index" title="测试列表"  /}
 
     <div id="page-wrapper">
 

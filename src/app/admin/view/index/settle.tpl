@@ -2,7 +2,7 @@
 
 {block name="body"}
 
-    <include file="public/bread" menu="Board" section="主面板" title="账务统计"/>
+    {include  file="public/bread" menu="Board" section="主面板" title="账务统计" /}
     <div id="page-wrapper">
         <div class="card border-default">
             <div class="card-header">

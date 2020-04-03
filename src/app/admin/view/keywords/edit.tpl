@@ -2,7 +2,7 @@
 
 {block name="body"}
 
-<include file="public/bread" menu="keywords_index" title="关键字信息" />
+{include  file="public/bread" menu="keywords_index" title="关键字信息"  /}
 
 <div id="page-wrapper">
     <div class="page-header">{$id>0?'编辑':'添加'}关键字</div>

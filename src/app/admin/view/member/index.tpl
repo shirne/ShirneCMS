@@ -1,7 +1,7 @@
 {extend name="public:base" /}
 
 {block name="body"}
-<include file="public/bread" menu="member_index" title=""/>
+{include  file="public/bread" menu="member_index" title="" /}
 
 <div id="page-wrapper">
     <div class="row list-header">
@@ -56,7 +56,7 @@
             </tr>
         </thead>
         <tbody>
-        <php>$empty=list_empty(10);</php>
+        {php}$empty=list_empty(10);{/php}
         {volist name="lists" id="v" empty="$empty"}
             <tr>
                 <td><input type="checkbox" name="id" value="{$v.id}" /></td>

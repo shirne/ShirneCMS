@@ -2,7 +2,7 @@
 
 {block name="body"}
 
-<include file="public/bread" menu="shop_coupon_index" title="优惠券领取列表" />
+{include  file="public/bread" menu="shop_coupon_index" title="优惠券领取列表"  /}
 
 <div id="page-wrapper">
     

@@ -2,7 +2,7 @@
 
 {block name="body"}
 
-    <include file="public/bread" menu="member_level_index" title="会员组列表" />
+    {include  file="public/bread" menu="member_level_index" title="会员组列表"  /}
 
     <div id="page-wrapper">
 

@@ -2,7 +2,7 @@
 
 {block name="body"}
 
-    <include file="public/bread" menu="manager_index" title="管理员信息"/>
+    {include  file="public/bread" menu="manager_index" title="管理员信息" /}
 
     <div id="page-wrapper">
         <div class="page-header">{$model['id']>0?'编辑':'添加'}管理员</div>

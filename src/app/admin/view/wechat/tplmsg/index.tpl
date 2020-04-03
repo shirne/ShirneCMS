@@ -2,7 +2,7 @@
 
 {block name="body"}
 
-    <include file="public/bread" menu="wechat_index" title="模板消息" />
+    {include  file="public/bread" menu="wechat_index" title="模板消息"  /}
 
     <div id="page-wrapper">
 
@@ -28,7 +28,7 @@
             </tr>
             </thead>
             <tbody>
-            <php>$empty=list_empty(6);</php>
+            {php}$empty=list_empty(6);{/php}
             {volist name="msgs" id="v" empty="$empty"}
                 {if isset($tpls[$key])}
                     <tr>

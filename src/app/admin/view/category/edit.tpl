@@ -2,7 +2,7 @@
 
 {block name="body"}
 
-    <include file="public/bread" menu="category_index" title="{:lang('Category update')}"/>
+    {include  file="public/bread" menu="category_index" title="{:lang('Category update')}" /}
 
     <div id="page-wrapper">
         <div class="page-header">{:lang($id>0?'Edit':'Add')}{:lang('Category')}</div>

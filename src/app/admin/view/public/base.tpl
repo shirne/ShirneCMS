@@ -61,7 +61,7 @@
 
         <div class="collapse navbar-collapse justify-content-end navbar-ex1-collapse" id="navbarSupportedContent">
 
-            <include file="public/sidebar" />
+            {include file="public/sidebar" /}
 
             <div class="nav navbar-nav navbar-user">
                 <li class="dropdown user-dropdown">

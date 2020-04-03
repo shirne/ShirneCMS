@@ -2,7 +2,7 @@
 
 {block name="body"}
 
-<include file="public/bread" menu="setting_index" title="授权登录接口" />
+{include  file="public/bread" menu="setting_index" title="授权登录接口"  /}
 
 <div id="page-wrapper">
     

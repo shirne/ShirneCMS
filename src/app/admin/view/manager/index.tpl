@@ -1,7 +1,7 @@
 {extend name="public:base" /}
 
 {block name="body"}
-<include file="public/bread" menu="manager_index" title="管理员列表" />
+{include  file="public/bread" menu="manager_index" title="管理员列表"  /}
 
 <div id="page-wrapper">
     <div class="row list-header">

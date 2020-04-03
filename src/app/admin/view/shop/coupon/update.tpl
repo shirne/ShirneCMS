@@ -2,7 +2,7 @@
 
 {block name="body"}
 
-<include file="public/bread" menu="shop_coupon_index" title="优惠券设置" />
+{include  file="public/bread" menu="shop_coupon_index" title="优惠券设置"  /}
 
 <div id="page-wrapper">
     <div class="page-header">{$id>0?'编辑':'添加'}优惠券</div>

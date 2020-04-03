@@ -2,7 +2,7 @@
 
 {block name="body"}
 
-    <include file="public/bread" menu="shop_order_index" title="订单列表" />
+    {include  file="public/bread" menu="shop_order_index" title="订单列表"  /}
 
     <div id="page-wrapper">
 
@@ -73,7 +73,7 @@
             </tr>
             </thead>
             <tbody>
-            <php>$empty=list_empty(7);</php>
+            {php}$empty=list_empty(7);{/php}
             {volist name="lists" id="v" empty="$empty"}
                 <tr>
                     <td><input type="checkbox" name="id" value="{$v.order_id}" /><br />{$v.order_id}</td>
@@ -155,7 +155,7 @@
     </div>
 {/block}
 {block name="script"}
-        <include file="shop/order/_status_tpl" />
+        {include  file="shop/order/_status_tpl"  /}
     <script type="text/javascript">
     (function(w){
         w.actionSetStatus=function(ids){

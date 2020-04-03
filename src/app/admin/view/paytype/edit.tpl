@@ -2,7 +2,7 @@
 
 {block name="body"}
 
-<include file="public/bread" menu="paytype_index" title="付款方式配置" />
+{include  file="public/bread" menu="paytype_index" title="付款方式配置"  /}
 
 <div id="page-wrapper">
     <div class="page-header">修改付款方式</div>

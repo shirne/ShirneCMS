@@ -6,7 +6,7 @@
 {/block}
 {block name="body"}
 
-    <include file="public/bread" menu="shop_order_statics_index" title="订单统计" />
+    {include  file="public/bread" menu="shop_order_statics_index" title="订单统计"  /}
 
     <div id="page-wrapper">
         <div class="list-header">

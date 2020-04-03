@@ -2,7 +2,7 @@
 
 {block name="body"}
 
-    <include file="public/bread" menu="page_index" title="页面分组" />
+    {include  file="public/bread" menu="page_index" title="页面分组"  /}
 
     <div id="page-wrapper">
 

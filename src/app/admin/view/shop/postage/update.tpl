@@ -1,7 +1,7 @@
 {extend name="public:base"/}
 
 {block name="body"}
-    <include file="public/bread" menu="shop_postage_index" title="运费设置"/>
+    {include  file="public/bread" menu="shop_postage_index" title="运费设置" /}
 
     <div id="page-wrapper">
         <div class="page-header">{$model.id>0?'编辑':'添加'}运费模板</div>

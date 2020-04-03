@@ -2,7 +2,7 @@
 
 {block name="body"}
 
-<include file="public/bread" menu="adv_index" title="广告位" />
+{include  file="public/bread" menu="adv_index" title="广告位"  /}
 
 <div id="page-wrapper">
     

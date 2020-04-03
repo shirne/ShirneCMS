@@ -1,7 +1,7 @@
 {extend name="public:base" /}
 
 {block name="body"}
-<include file="public/bread" menu="credit_goods_index" title="商品列表" />
+{include  file="public/bread" menu="credit_goods_index" title="商品列表"  /}
 <div id="page-wrapper">
 
 	<div class="row list-header">

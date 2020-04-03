@@ -2,7 +2,7 @@
 
 {block name="body"}
 
-<include file="public/bread" menu="booth_index" title="展位设置" />
+{include  file="public/bread" menu="booth_index" title="展位设置"  /}
 
 <div id="page-wrapper">
     <div class="page-header">{$id>0?'编辑':'添加'}展位</div>
