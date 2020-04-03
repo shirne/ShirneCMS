@@ -7,7 +7,7 @@ use app\common\model\WechatModel;
 use EasyWeChat\Factory;
 use extcore\traits\Email;
 use shirne\sdk\OAuthFactory;
-use app\common\core\BaseController as Controller;
+use app\BaseController as Controller;
 use think\facade\Db;
 use think\Exception;
 use think\facade\Env;

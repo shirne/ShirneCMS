@@ -3,7 +3,7 @@
 namespace app\admin\controller;
 
 use extcore\traits\Upload;
-use app\common\core\BaseController as Controller;
+use app\BaseController as Controller;
 use think\facade\Db;
 use think\Exception;
 
