@@ -2,9 +2,9 @@
 
 namespace app\api\controller;
 
+use think\App;
 use app\api\facade\MemberTokenFacade;
 use app\api\middleware\AccessMiddleware;
-use app\BaseController as Controller;
 use think\facade\Db;
 
 
@@ -13,14 +13,40 @@ use think\facade\Db;
  * Class BaseController
  * @package app\api\controller
  */
-class BaseController extends Controller
+class BaseController
 {
+    /**
+     * Request实例
+     * @var \think\Request
+     */
+    protected $request;
+
+    /**
+     * 应用实例
+     * @var \think\App
+     */
+    protected $app;
+
     protected $token;
     protected $isLogin=false;
     protected $user;
     protected $input=array();
     protected $config=array();
     
+    /**
+     * 构造方法
+     * @access public
+     * @param  App  $app  应用对象
+     */
+    public function __construct(App $app)
+    {
+        $this->app     = $app;
+        $this->request = $this->app->request;
+
+        // 控制器初始化
+        $this->initialize();
+    }
+
     /**
      * API初始化
      * @throws \think\db\exception\DataNotFoundException

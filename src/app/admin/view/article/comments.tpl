@@ -91,7 +91,7 @@
             w.actionAudit=function(ids){
                 dialog.confirm('确定将选中的评论设为已审核？',function() {
                     $.ajax({
-                        url:'{:url('article/commentstatus',['id'=>'__id__','type'=>1])}'.replace('__id__',ids.join(',')),
+                        url:"{:url('article/commentstatus',['id'=>'__id__','type'=>1])}".replace('__id__',ids.join(',')),
                         type:'GET',
                         dataType:'JSON',
                         success:function(json){
@@ -109,7 +109,7 @@
             w.actionHidden=function(ids){
                 dialog.confirm('确定将选中的评论隐藏？',function() {
                     $.ajax({
-                        url:'{:url('article/commentstatus',['id'=>'__id__','type'=>2])}'.replace('__id__',ids.join(',')),
+                        url:"{:url('article/commentstatus',['id'=>'__id__','type'=>2])}".replace('__id__',ids.join(',')),
                         type:'GET',
                         dataType:'JSON',
                         success:function(json){
@@ -127,7 +127,7 @@
             w.actionDelete=function(ids){
                 dialog.confirm('确定删除选中的评论？',function() {
                     $.ajax({
-                        url:'{:url('article/commentdelete',['id'=>'__id__'])}'.replace('__id__',ids.join(',')),
+                        url:"{:url('article/commentdelete',['id'=>'__id__'])}".replace('__id__',ids.join(',')),
                         type:'GET',
                         dataType:'JSON',
                         success:function(json){

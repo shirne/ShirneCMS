@@ -90,7 +90,7 @@
             w.actionShow=function(ids){
                 dialog.confirm('确定将选中页面显示？',function() {
                     $.ajax({
-                        url:'{:url('page/status',['id'=>'__id__','status'=>1])}'.replace('__id__',ids.join(',')),
+                        url:"{:url('page/status',['id'=>'__id__','status'=>1])}".replace('__id__',ids.join(',')),
                         type:'GET',
                         dataType:'JSON',
                         success:function(json){
@@ -108,7 +108,7 @@
             w.actionHide=function(ids){
                 dialog.confirm('确定将选中页面隐藏？',function() {
                     $.ajax({
-                        url:'{:url('page/status',['id'=>'__id__','status'=>0])}'.replace('__id__',ids.join(',')),
+                        url:"{:url('page/status',['id'=>'__id__','status'=>0])}".replace('__id__',ids.join(',')),
                         type:'GET',
                         dataType:'JSON',
                         success:function(json){
@@ -126,7 +126,7 @@
             w.actionDelete=function(ids){
                 dialog.confirm('确定删除选中的页面？',function() {
                     $.ajax({
-                        url:'{:url('page/delete',['id'=>'__id__'])}'.replace('__id__',ids.join(',')),
+                        url:"{:url('page/delete',['id'=>'__id__'])}".replace('__id__',ids.join(',')),
                         type:'GET',
                         dataType:'JSON',
                         success:function(json){

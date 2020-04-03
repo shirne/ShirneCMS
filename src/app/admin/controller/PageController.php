@@ -70,7 +70,7 @@ class PageController extends BaseController
                 }
             }
         }
-        $model=array('status'=>1);
+        $model=array('use_template'=>0,'status'=>1);
         $this->assign('page', $model);
         $this->assign('groups', getPageGroups());
         $this->assign('id', 0);
@@ -154,7 +154,7 @@ class PageController extends BaseController
      * @param $aid
      * @return mixed
      */
-    public function imagelist($aid){
+    public function imagelist($aid,$key=''){
         $model = Db::name('PageImages');
         $page=Db::name('Page')->find($aid);
         if(empty($page)){
@@ -240,17 +240,16 @@ class PageController extends BaseController
                     $this->error(lang('Update failed!'));
                 }
             }
-        }else{
-            $model = Db::name('PageImages')->where('id', $id)->find();
-            if(empty($model)){
-                $this->error('图片不存在');
-            }
-
-            $this->assign('model',$model);
-            $this->assign('aid',$model['page_id']);
-            $this->assign('id',$id);
-            return $this->fetch();
         }
+        $model = Db::name('PageImages')->where('id', $id)->find();
+        if(empty($model)){
+            $this->error('图片不存在');
+        }
+
+        $this->assign('model',$model);
+        $this->assign('aid',$model['page_id']);
+        $this->assign('id',$id);
+        return $this->fetch();
     }
 
     /**
