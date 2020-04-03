@@ -11,7 +11,7 @@ use app\common\model\WechatModel;
 use EasyWeChat\BasicService\Application;
 use EasyWeChat\Factory;
 use think\Controller;
-use think\Db;
+use think\facade\Db;
 use think\facade\Log;
 
 /**
@@ -106,7 +106,7 @@ class WechatController extends Controller{
         $response = $app->handleRefundedNotify(function ($message, $reqInfo, $fail){
             Log::record(var_export($message,TRUE),'refund');
             
-            $order = PayOrderRefundModel::where(['refund_no'=>$message['out_refund_no']])->find();
+            $order = PayOrderRefundModel::where('refund_no',$message['out_refund_no'])->find();
 
             if (empty($order) || $order['pay_time']>0) {
                 return true;
@@ -161,7 +161,7 @@ class WechatController extends Controller{
             /**
              * @var $order PayOrderModel
              */
-            $order = PayOrderModel::where(['order_no'=>$message['out_trade_no']])->find();
+            $order = PayOrderModel::where('order_no',$message['out_trade_no'])->find();
 
             if (empty($order) || $order['pay_time']>0) {
                 return true;

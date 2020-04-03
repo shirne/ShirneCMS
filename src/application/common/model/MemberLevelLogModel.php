@@ -5,7 +5,7 @@ namespace app\common\model;
 
 use app\common\core\BaseModel;
 use shirne\third\KdExpress;
-use think\Db;
+use think\facade\Db;
 
 define('UPGRADE_STATUS_REFUND',-2);
 define('UPGRADE_STATUS_CANCEL',-1);
@@ -17,11 +17,6 @@ class MemberLevelLogModel extends BaseModel
     protected $pk='order_id';
     protected $type = [];
 
-
-    public static function init()
-    {
-        parent::init();
-    }
     
     protected function triggerStatus($item, $status, $newData=[])
     {

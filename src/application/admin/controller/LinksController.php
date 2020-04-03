@@ -2,7 +2,7 @@
 namespace app\admin\controller;
 
 use app\admin\validate\LinksValidate;
-use think\Db;
+use think\facade\Db;
 
 /**
  * 链接管理
@@ -113,7 +113,7 @@ class LinksController extends BaseController
     }
 
     private function getGroups(){
-        $groups = Db::name('Links')->where('group','neq','')->distinct('group')->field('group')->select();
+        $groups = Db::name('Links')->where('group','<>','')->distinct('group')->field('group')->select();
 
         if(!empty($groups)){
             return array_column($groups,'group');

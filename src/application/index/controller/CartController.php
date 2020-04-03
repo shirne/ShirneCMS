@@ -4,7 +4,7 @@ namespace app\index\controller;
 
 
 use app\common\facade\MemberCartFacade;
-use think\Db;
+use think\facade\Db;
 
 /**
  * Class CartController

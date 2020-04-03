@@ -4,7 +4,7 @@ namespace app\admin\controller;
 
 use app\admin\model\ManagerRoleModel;
 use app\admin\validate\ManagerRoleValidate;
-use think\Db;
+use think\facade\Db;
 
 /**
  * 角色管理

@@ -12,7 +12,7 @@ use EasyWeChat\Kernel\Messages\Message;
 use EasyWeChat\Kernel\Messages\News;
 use EasyWeChat\Kernel\Messages\NewsItem;
 use EasyWeChat\Kernel\ServiceContainer;
-use think\Db;
+use think\facade\Db;
 use think\facade\Log;
 
 class BaseHandler

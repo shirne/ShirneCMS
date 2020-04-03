@@ -6,7 +6,7 @@ namespace app\api\controller\member;
 
 use app\api\controller\AuthedController;
 use app\common\model\MemberSignModel;
-use think\Db;
+use think\facade\Db;
 
 class SignController extends AuthedController
 {

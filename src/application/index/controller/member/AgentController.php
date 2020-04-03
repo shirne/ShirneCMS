@@ -5,7 +5,7 @@ namespace app\index\controller\member;
 
 use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\QrCode;
-use think\Db;
+use think\facade\Db;
 
 /**
  * 代理控制器

@@ -19,7 +19,7 @@ use app\common\model\ProductModel;
 use app\common\model\WechatModel;
 use app\common\validate\OrderValidate;
 use EasyWeChat\Factory;
-use think\Db;
+use think\facade\Db;
 
 class OrderController extends AuthedController
 {

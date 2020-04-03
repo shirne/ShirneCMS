@@ -5,7 +5,7 @@ namespace app\admin\controller\shop;
 use app\admin\controller\BaseController;
 use app\admin\model\SpecificationsModel;
 use app\admin\validate\SpecificationsValidate;
-use think\Db;
+use think\facade\Db;
 
 /**
  * 商品规格管理

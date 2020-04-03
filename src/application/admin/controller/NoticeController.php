@@ -5,7 +5,7 @@ namespace app\admin\controller;
 
 use app\common\model\NoticeModel;
 use app\admin\validate\NoticeValidate;
-use think\Db;
+use think\facade\Db;
 
 /**
  * 公告管理

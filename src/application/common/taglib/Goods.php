@@ -29,7 +29,7 @@ class Goods extends BaseTabLib
         $parseStr .= '->where("Goods.status",1)';
         if(!empty($category)){
             if($recursive=='true'){
-                $parseStr .= '->where("Goods.cate_id", "IN", \app\common\facade\GoodsCategoryFacade::getSubCateIds(' . $category . '))';
+                $parseStr .= '->whereIn("Goods.cate_id", \app\common\facade\GoodsCategoryFacade::getSubCateIds(' . $category . '))';
             }else {
                 $parseStr .= '->where("Goods.cate_id",' . $category . ')';
             }
@@ -63,9 +63,9 @@ class Goods extends BaseTabLib
         $parseStr.='$'.$var.'=\think\Db::view("Goods","*")';
         $parseStr .= '->view("GoodsCategory",["title"=>"category_title","name"=>"category_name","short"=>"category_short","icon"=>"category_icon","image"=>"category_image"],"Goods.cate_id=GoodsCategory.id","LEFT")';
         $parseStr .= '->where("Goods.status",1)';
-        $parseStr .= '->where("Goods.id", "NEQ", ' . $id . ')';
+        $parseStr .= '->where("Goods.id", "<>", ' . $id . ')';
         if(!empty($category)){
-            $parseStr .= '->where("Goods.cate_id", "IN", \app\common\facade\GoodsCategoryFacade::getSubCateIds(' . $category . '))';
+            $parseStr .= '->whereIn("Goods.cate_id", \app\common\facade\GoodsCategoryFacade::getSubCateIds(' . $category . '))';
         }
         if(empty($tag['limit'])){
             $tag['limit']=10;

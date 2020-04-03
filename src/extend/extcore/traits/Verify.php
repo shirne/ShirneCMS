@@ -2,7 +2,7 @@
 
 namespace extcore\traits;
 
-use shirne\captcha\Captcha;
+use think\captcha\facade\Captcha;
 use shirne\third\GeetestLib;
 
 trait Verify{
@@ -23,18 +23,11 @@ trait Verify{
     }
 
     protected function verify_code($scene){
-        $verify = new Captcha();
-        //$Verify->codeSet = '0123456789';
-        $verify->seKey=config('session.sec_key');
-        $verify->fontSize = 28;
-        $verify->length = 4;
-        return $verify->entry($scene);
+        return Captcha::create();
     }
 
     protected function check_verify_code($scene,$code){
-        $verify = new Captcha();
-        $verify->seKey=config('session.sec_key');
-        return $verify->check($code,$scene);
+        return Captcha::check($code);
     }
 
     protected function verify_geetest($scene, $setting){

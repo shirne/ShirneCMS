@@ -3,7 +3,7 @@
 namespace app\admin\controller;
 
 use app\admin\validate\OauthValidate;
-use think\Db;
+use think\facade\Db;
 
 
 /**

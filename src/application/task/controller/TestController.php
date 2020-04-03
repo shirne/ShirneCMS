@@ -6,7 +6,7 @@ use app\common\model\OrderModel;
 use app\common\model\PayOrderModel;
 use app\common\model\PostageModel;
 use shirne\common\Image;
-use think\Db;
+use think\facade\Db;
 use think\facade\Log;
 
 

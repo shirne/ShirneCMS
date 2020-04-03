@@ -5,7 +5,7 @@ namespace app\api\controller\member;
 
 use app\api\controller\AuthedController;
 use app\common\validate\MemberAddressValidate;
-use think\Db;
+use think\facade\Db;
 
 class AddressController extends AuthedController
 {
@@ -75,7 +75,7 @@ class AddressController extends AuthedController
         if($updated){
             Db::name('memberAddress')
                 ->where('member_id',$this->user['id'])
-                ->where('address_id','NEQ',$id)
+                ->where('address_id','<>',$id)
                 ->update(['is_default'=>0]);
             $this->success('设置成功');
         }else{

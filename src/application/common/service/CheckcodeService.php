@@ -2,7 +2,7 @@
 
 namespace app\common\service;
 use extcore\traits\Email;
-use think\Db;
+use think\facade\Db;
 use shirne\third\UmsHttp;
 
 /**
@@ -87,7 +87,7 @@ class CheckcodeService
                     ]);
                 }else{
                     Db::name('checkcodeLimit')->where('type', 'ip')->where('key', $ip)
-                        ->setInc('count', 1);
+                        ->inc('count', 1);
                 }
 
                 if (empty($phonecount)) {
@@ -99,7 +99,7 @@ class CheckcodeService
                     ]);
                 }else{
                     Db::name('checkcodeLimit')->where('type', $type)->where('key', $sendto)
-                        ->setInc('count', 1);
+                        ->inc('count', 1);
                 }
             }
             return true;

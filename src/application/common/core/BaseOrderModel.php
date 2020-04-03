@@ -2,7 +2,7 @@
 
 namespace app\common\core;
 
-use think\Db;
+use think\facade\Db;
 use shirne\third\KdExpress;
 
 class BaseOrderModel extends BaseModel

@@ -4,7 +4,7 @@ namespace app\index\controller\member;
 
 
 use app\common\validate\MemberInvoiceValidate;
-use think\Db;
+use think\facade\Db;
 
 /**
  * 发票资料控制器

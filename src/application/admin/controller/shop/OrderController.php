@@ -7,7 +7,7 @@ use app\common\model\OrderModel;
 use app\common\model\PayOrderModel;
 use shirne\excel\Excel;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
-use think\Db;
+use think\facade\Db;
 use think\Exception;
 
 /**
@@ -46,7 +46,7 @@ class OrderController extends BaseController
         $lists=$model->where('order.delete_time',0)->order(Db::raw('if(order.status>-1,order.status,3) ASC,order.create_time DESC'))->paginate(15);
         if(!$lists->isEmpty()) {
             $orderids = array_column($lists->items(), 'order_id');
-            $prodata = Db::name('OrderProduct')->where('order_id', 'in', $orderids)->select();
+            $prodata = Db::name('OrderProduct')->whereIn('order_id', $orderids)->select();
             $products=array_index($prodata,'order_id',true);
             $lists->each(function($item) use ($products){
                 if(isset($products[$item['order_id']])){

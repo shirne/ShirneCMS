@@ -7,7 +7,7 @@ use app\admin\controller\BaseController;
 use app\common\model\WechatModel;
 use EasyWeChat\Kernel\Exceptions\HttpException;
 use EasyWeChat\Kernel\ServiceContainer;
-use think\Db;
+use think\facade\Db;
 
 /**
  * 公众号控制器基类

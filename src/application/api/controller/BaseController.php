@@ -4,8 +4,8 @@ namespace app\api\controller;
 
 use app\api\facade\MemberTokenFacade;
 use app\api\middleware\AccessMiddleware;
-use think\Controller;
-use think\Db;
+use app\common\core\BaseController as Controller;
+use think\facade\Db;
 
 
 /**

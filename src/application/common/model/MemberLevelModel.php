@@ -3,7 +3,7 @@
 namespace app\common\model;
 
 use app\common\core\CacheableModel;
-use think\Db;
+use think\facade\Db;
 
 /**
  * 会员组
@@ -16,15 +16,12 @@ class MemberLevelModel extends CacheableModel
 
     protected $type = ['commission_percent'=>'array'];
 
-    public static function init()
+    public function onAfterWrite($userLevel)
     {
-        parent::init();
-        self::event('after_write',function($userLevel){
-            if($userLevel->is_default) {
-                Db::name('MemberLevel')->where('level_id','NEQ', $userLevel->level_id)
-                    ->update(array('is_default' => 0));
-            }
-        });
+        if($userLevel->is_default) {
+            Db::name('MemberLevel')->where('level_id','<>', $userLevel->level_id)
+                ->update(array('is_default' => 0));
+        }
     }
     
     protected function get_cache_data()

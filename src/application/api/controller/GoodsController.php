@@ -4,7 +4,7 @@ namespace app\api\controller;
 
 use app\common\facade\GoodsCategoryFacade;
 use app\common\model\GoodsModel;
-use think\Db;
+use think\facade\Db;
 
 /**
  * 产品操作接口

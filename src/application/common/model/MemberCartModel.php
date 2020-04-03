@@ -4,7 +4,7 @@
 namespace app\common\model;
 
 use app\common\core\BaseModel;
-use think\Db;
+use think\facade\Db;
 
 /**
  * Class MemberCartModel

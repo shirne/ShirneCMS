@@ -3,7 +3,7 @@
 namespace app\common\model;
 
 use app\common\core\CacheableModel;
-use think\Db;
+use think\facade\Db;
 
 /**
  * 会员组
@@ -14,16 +14,12 @@ class MemberAgentModel extends CacheableModel
 {
     protected $pk="id";
 
-
-    public static function init()
+    public function onAfterWrite($userAgent)
     {
-        parent::init();
-        self::event('after_write',function($userAgent){
-            if($userAgent->is_default) {
-                Db::name('MemberAgent')->where('id','NEQ', $userAgent->id)
-                    ->update(array('is_default' => 0));
-            }
-        });
+        if($userAgent->is_default) {
+            Db::name('MemberAgent')->where('id','NEQ', $userAgent->id)
+                ->update(array('is_default' => 0));
+        }
     }
     
     protected function get_cache_data()

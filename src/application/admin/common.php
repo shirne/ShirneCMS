@@ -1,6 +1,6 @@
 <?php
 
-use think\Db;
+use think\facade\Db;
 use think\facade\Request;
 
 define('SESSKEY_ADMIN_ID','adminId');

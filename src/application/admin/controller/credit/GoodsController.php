@@ -13,7 +13,7 @@ use app\common\model\GoodsModel;
 use app\admin\validate\GoodsValidate;
 use app\admin\validate\ImagesValidate;
 use app\common\facade\GoodsCategoryFacade;
-use think\Db;
+use think\facade\Db;
 
 class GoodsController extends BaseController
 {
@@ -158,10 +158,10 @@ class GoodsController extends BaseController
     public function delete($id)
     {
         $model = Db::name('goods');
-        $result = $model->where('id','in',idArr($id))->delete();
+        $result = $model->whereIn('id',idArr($id))->delete();
         if($result){
 
-            Db::name('goodsImages')->where('goods_id','in',idArr($id))->delete();
+            Db::name('goodsImages')->whereIn('goods_id',idArr($id))->delete();
             user_log($this->mid,'deletegoods',1,'删除商品 '.$id ,'manager');
             $this->success("删除成功", url('credit.goods/index'));
         }else{
@@ -172,7 +172,7 @@ class GoodsController extends BaseController
     {
         $data['status'] = $type==1?1:0;
 
-        $result = Db::name('goods')->where('id','in',idArr($id))->update($data);
+        $result = Db::name('goods')->whereIn('id',idArr($id))->update($data);
         if ($result && $data['status'] === 1) {
             user_log($this->mid,'pushgoods',1,'上架商品 '.$id ,'manager');
             $this -> success("上架成功", url('credit.goods/index'));

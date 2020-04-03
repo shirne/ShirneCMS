@@ -4,7 +4,7 @@ namespace app\admin\controller;
 
 
 use app\admin\validate\PermissionValidate;
-use think\Db;
+use think\facade\Db;
 
 /**
  * 菜单管理

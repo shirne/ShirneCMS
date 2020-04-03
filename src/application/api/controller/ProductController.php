@@ -9,7 +9,7 @@ use app\common\model\ProductModel;
 use app\common\model\WechatModel;
 use app\common\model\ProductSkuModel;
 use shirne\common\Poster;
-use think\Db;
+use think\facade\Db;
 use think\facade\Log;
 
 /**

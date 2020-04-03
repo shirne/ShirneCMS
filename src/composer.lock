@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "aadf5883d06652dd15eff99b4ac6c64b",
+    "content-hash": "0cde91dcf8ca0e4caf472eb6416612c0",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -1001,6 +1001,65 @@
             ],
             "description": "An adapter decorator to enable meta-data caching.",
             "time": "2018-07-09T20:51:04+00:00"
+        },
+        {
+            "name": "liliuwei/thinkphp-jump",
+            "version": "1.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/liliuwei/thinkphp-jump.git",
+                "reference": "481d41b922095f08230609919be5d19354c50540"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/liliuwei/thinkphp-jump/zipball/481d41b922095f08230609919be5d19354c50540",
+                "reference": "481d41b922095f08230609919be5d19354c50540",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "php": ">=7.1.0",
+                "topthink/framework": "^6.0",
+                "topthink/think-view": "^1.0"
+            },
+            "type": "think-extend",
+            "extra": {
+                "think": {
+                    "config": {
+                        "jump": "src/config/jump.php"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "liliuwei\\think\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "liliuwei",
+                    "email": "974829947@qq.com"
+                }
+            ],
+            "description": "适用于thinkphp6.0的跳转扩展",
+            "keywords": [
+                "error",
+                "redirect",
+                "result",
+                "success",
+                "think-jump",
+                "thinkphp"
+            ],
+            "time": "2020-03-20T15:11:56+00:00"
         },
         {
             "name": "markbaker/complex",
@@ -3243,6 +3302,61 @@
             "time": "2020-01-13T05:48:05+00:00"
         },
         {
+            "name": "topthink/think-captcha",
+            "version": "v3.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/top-think/think-captcha.git",
+                "reference": "0b4305da19e118cefd934007875a8112f9352f01"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/top-think/think-captcha/zipball/0b4305da19e118cefd934007875a8112f9352f01",
+                "reference": "0b4305da19e118cefd934007875a8112f9352f01",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "topthink/framework": "^6.0.0"
+            },
+            "type": "library",
+            "extra": {
+                "think": {
+                    "services": [
+                        "think\\captcha\\CaptchaService"
+                    ],
+                    "config": {
+                        "captcha": "src/config.php"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "think\\captcha\\": "src/"
+                },
+                "files": [
+                    "src/helper.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "yunwuxin",
+                    "email": "448901948@qq.com"
+                }
+            ],
+            "description": "captcha package for thinkphp",
+            "time": "2019-10-03T07:45:11+00:00"
+        },
+        {
             "name": "topthink/think-helper",
             "version": "v3.1.4",
             "source": {
@@ -3286,6 +3400,56 @@
             ],
             "description": "The ThinkPHP6 Helper Package",
             "time": "2019-11-08T08:01:10+00:00"
+        },
+        {
+            "name": "topthink/think-multi-app",
+            "version": "v1.0.12",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/top-think/think-multi-app.git",
+                "reference": "3c1914d2adc08c8753c7f67228885ca47fb9b3bf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/top-think/think-multi-app/zipball/3c1914d2adc08c8753c7f67228885ca47fb9b3bf",
+                "reference": "3c1914d2adc08c8753c7f67228885ca47fb9b3bf",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "php": ">=7.1.0",
+                "topthink/framework": "^6.0.0"
+            },
+            "type": "library",
+            "extra": {
+                "think": {
+                    "services": [
+                        "think\\app\\Service"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "think\\app\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "liu21st",
+                    "email": "liu21st@gmail.com"
+                }
+            ],
+            "description": "thinkphp6 multi app support",
+            "time": "2020-03-01T13:29:35+00:00"
         },
         {
             "name": "topthink/think-orm",
@@ -3337,6 +3501,92 @@
                 "orm"
             ],
             "time": "2020-01-07T10:05:10+00:00"
+        },
+        {
+            "name": "topthink/think-template",
+            "version": "v2.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/top-think/think-template.git",
+                "reference": "e98bdbb4a4c94b442f17dfceba81e0134d4fbd19"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/top-think/think-template/zipball/e98bdbb4a4c94b442f17dfceba81e0134d4fbd19",
+                "reference": "e98bdbb4a4c94b442f17dfceba81e0134d4fbd19",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "php": ">=7.1.0",
+                "psr/simple-cache": "^1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "think\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "liu21st",
+                    "email": "liu21st@gmail.com"
+                }
+            ],
+            "description": "the php template engine",
+            "time": "2019-09-20T15:31:04+00:00"
+        },
+        {
+            "name": "topthink/think-view",
+            "version": "v1.0.14",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/top-think/think-view.git",
+                "reference": "edce0ae2c9551ab65f9e94a222604b0dead3576d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/top-think/think-view/zipball/edce0ae2c9551ab65f9e94a222604b0dead3576d",
+                "reference": "edce0ae2c9551ab65f9e94a222604b0dead3576d",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "php": ">=7.1.0",
+                "topthink/think-template": "^2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "think\\view\\driver\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "liu21st",
+                    "email": "liu21st@gmail.com"
+                }
+            ],
+            "description": "thinkphp template driver",
+            "time": "2019-11-06T11:40:13+00:00"
         }
     ],
     "packages-dev": [

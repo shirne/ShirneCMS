@@ -6,7 +6,7 @@ use app\admin\validate\ArticleValidate;
 use app\admin\validate\ImagesValidate;
 use app\common\facade\CategoryFacade;
 use app\common\model\ArticleCommentModel;
-use think\Db;
+use think\facade\Db;
 use think\Exception;
 use think\Response;
 

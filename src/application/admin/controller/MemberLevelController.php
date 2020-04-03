@@ -5,7 +5,7 @@ namespace app\admin\controller;
 use app\common\model\MemberLevelModel;
 use app\common\model\MemberAgentModel;
 use app\admin\validate\MemberLevelValidate;
-use think\Db;
+use think\facade\Db;
 
 /**
  * 会员组管理

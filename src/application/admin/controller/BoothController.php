@@ -6,7 +6,7 @@ namespace app\admin\controller;
 
 use app\admin\validate\BoothValidate;
 use app\common\model\BoothModel;
-use think\Db;
+use think\facade\Db;
 
 class BoothController extends BaseController
 {

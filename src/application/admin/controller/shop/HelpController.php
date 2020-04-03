@@ -7,7 +7,7 @@ use app\common\model\HelpModel;
 use app\admin\validate\HelpValidate;
 use app\admin\validate\CategoryValidate;
 use app\common\facade\HelpCategoryFacade;
-use think\Db;
+use think\facade\Db;
 
 class HelpController extends BaseController
 {

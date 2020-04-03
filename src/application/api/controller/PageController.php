@@ -2,7 +2,7 @@
 
 namespace app\api\controller;
 
-use think\Db;
+use think\facade\Db;
 
 /**
  * 单页数据接口

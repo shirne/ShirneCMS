@@ -6,7 +6,7 @@ namespace app\admin\controller\shop;
 use app\admin\controller\BaseController;
 use app\admin\validate\PostageValidate;
 use app\common\model\PostageModel;
-use think\Db;
+use think\facade\Db;
 
 class PostageController extends BaseController
 {

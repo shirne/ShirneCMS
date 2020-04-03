@@ -2,7 +2,7 @@
 
 namespace app\common\core;
 
-use think\Db;
+use think\facade\Db;
 use think\Model;
 use think\Paginator;
 
@@ -288,11 +288,11 @@ class ContentModel extends BaseModel
             if(isset($attrs['recursive']) && $attrs['recursive']===false){
                 $model->where($this->model.".cate_id",$cate_id);
             }else{
-                $model->where($this->model.".cate_id", "IN", $this->cateFacade->getSubCateIds($cate_id));
+                $model->whereIn($this->model.".cate_id", $this->cateFacade->getSubCateIds($cate_id));
             }
         }
         if(!empty($attrs['id'])){
-            $model->where($this->model.".id", "NEQ",  $attrs['id'] );
+            $model->where($this->model.".id", "<>",  $attrs['id'] );
         }
         if(empty($attrs['order'])){
             $attrs['order']=$this->model.'.'.$this->defaultOrder;
@@ -331,11 +331,11 @@ class ContentModel extends BaseModel
             if(isset($attrs['recursive']) && $attrs['recursive']===false){
                 $model->where($this->model.".cate_id",$cate_id);
             }else{
-                $model->where($this->model.".cate_id", "IN", $this->cateFacade->getSubCateIds($cate_id));
+                $model->whereIn($this->model.".cate_id", $this->cateFacade->getSubCateIds($cate_id));
             }
         }
         if(!empty($attrs['id'])){
-            $model->where($this->model.".id", "LT",  $attrs['id'] );
+            $model->where($this->model.".id", '<',  $attrs['id'] );
         }
 
         $model->order($this->model.'.'.$this->getPk().' DESC');
@@ -356,11 +356,11 @@ class ContentModel extends BaseModel
             if(isset($attrs['recursive']) && $attrs['recursive']===false){
                 $model->where($this->model.".cate_id",$cate_id);
             }else{
-                $model->where($this->model.".cate_id", "IN", $this->cateFacade->getSubCateIds($cate_id));
+                $model->whereIn($this->model.".cate_id", $this->cateFacade->getSubCateIds($cate_id));
             }
         }
         if(!empty($attrs['id'])){
-            $model->where($this->model.".id", "GT",  $attrs['id'] );
+            $model->where($this->model.".id", ">",  $attrs['id'] );
         }
 
         $model->order($this->model.'.'.$this->getPk().' ASC');

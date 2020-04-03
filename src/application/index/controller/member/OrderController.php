@@ -4,7 +4,7 @@ namespace app\index\controller\member;
 
 
 use app\common\model\OrderModel;
-use think\Db;
+use think\facade\Db;
 use think\Response;
 
 /**

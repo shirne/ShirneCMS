@@ -8,7 +8,7 @@ use app\common\facade\ProductCategoryFacade;
 use app\common\model\ProductCommentModel;
 use app\common\model\ProductSkuModel;
 use app\common\validate\ProductCommentValidate;
-use think\Db;
+use think\facade\Db;
 
 /**
  * 产品控制器

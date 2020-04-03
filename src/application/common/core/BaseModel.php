@@ -2,7 +2,7 @@
 
 namespace app\common\core;
 
-use think\Db;
+use think\facade\Db;
 use think\Exception;
 use think\facade\Log;
 use think\Model;

@@ -5,7 +5,7 @@ namespace app\api\controller;
 
 use app\common\facade\CreditOrderFacade;
 use app\common\validate\OrderValidate;
-use think\Db;
+use think\facade\Db;
 
 
 /**

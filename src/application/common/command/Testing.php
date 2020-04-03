@@ -11,7 +11,7 @@ use think\console\Input;
 use think\console\input\Argument;
 use think\console\input\Option;
 use think\console\Output;
-use think\Db;
+use think\facade\Db;
 
 /**
  * 测试用例
@@ -57,17 +57,17 @@ class Testing extends Command
      */
     protected function actionResetrcount(Input $input, Output $output)
     {
-        Db::name('member')->where('id','GT',0)->update(['recom_count'=>0,'team_count'=>0]);
+        Db::name('member')->where('id','>',0)->update(['recom_count'=>0,'team_count'=>0]);
         $members=Db::name('member')->field('id,referer')
-            ->where('is_agent','GT',0)
-            ->where('referer','GT',0)
+            ->where('is_agent','>',0)
+            ->where('referer','>',0)
             ->select();
         $layer=getSetting('performance_layer');
         foreach ($members as $member){
             $parents=getMemberParents($member['id'],$layer);
             if(!empty($parents)) {
-                Db::name('member')->where('id', $parents[0])->setInc('recom_count', 1);
-                Db::name('member')->whereIn('id', $parents)->setInc('team_count', 1);
+                Db::name('member')->where('id', $parents[0])->inc('recom_count', 1);
+                Db::name('member')->whereIn('id', $parents)->inc('team_count', 1);
                 $output->writeln('user '.$member['id'].'\'s parents recommend count updated');
             }else{
                 $output->error('user '.$member['id'].'\'s parent '.$member['referer'].' not found');
@@ -95,7 +95,7 @@ class Testing extends Command
                 break;
             }
 
-            $member=Db::name('member')->where('is_agent','GT',0)->order(Db::raw('rand()'))->find();
+            $member=Db::name('member')->where('is_agent','>',0)->order(Db::raw('rand()'))->find();
 
             $output->writeln('用户 '.$member['username'].'['.$member['id'].'] 推荐了新会员:');
 

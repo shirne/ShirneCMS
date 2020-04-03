@@ -4,7 +4,7 @@ namespace app\admin\controller;
 
 use app\common\facade\CategoryFacade;
 use app\common\facade\ProductCategoryFacade;
-use think\Db;
+use think\facade\Db;
 use think\facade\Env;
 
 /**

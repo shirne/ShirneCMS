@@ -3,7 +3,7 @@
 namespace app\common\model;
 
 
-use think\Db;
+use think\facade\Db;
 
 class GoodsCategoryModel extends CategoryModel
 {

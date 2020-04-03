@@ -7,7 +7,7 @@ use think\Console;
 use think\console\Input;
 use think\console\Output;
 use think\Controller;
-use think\Db;
+use think\facade\Db;
 use think\facade\Env;
 use think\facade\Log;
 use think\Response;

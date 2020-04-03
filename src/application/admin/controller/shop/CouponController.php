@@ -6,7 +6,7 @@ use app\admin\controller\BaseController;
 use app\admin\validate\ProductCouponValidate;
 use app\common\facade\ProductCategoryFacade;
 use app\common\model\ProductCouponModel;
-use think\Db;
+use think\facade\Db;
 
 /**
  * 优惠券管理
@@ -158,11 +158,11 @@ class CouponController extends BaseController
         if(empty($group)){
             $this->error('优惠券不存在');
         }
-        $where=array('coupon_id'=>$gid);
+        $model->where('coupon_id',$gid);
         if(!empty($key)){
-            $where[] = array('title|url','like',"%$key%");
+            $model->whereLike('title|url',"%$key%");
         }
-        $lists=$model->where($where)->order('sort ASC,id DESC')->paginate(15);
+        $lists=$model->order('sort ASC,id DESC')->paginate(15);
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
         $this->assign('gid',$gid);

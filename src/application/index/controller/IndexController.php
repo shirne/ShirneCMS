@@ -3,7 +3,7 @@ namespace app\index\controller;
 
 use app\common\model\AdvGroupModel;
 use app\common\model\ArticleModel;
-use think\Db;
+use think\facade\Db;
 
 class IndexController extends BaseController
 {

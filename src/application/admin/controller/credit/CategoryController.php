@@ -13,7 +13,7 @@ use app\admin\model\SpecificationsModel;
 use app\admin\validate\GoodsCategoryValidate;
 use app\common\facade\GoodsCategoryFacade;
 use app\common\model\GoodsCategoryModel;
-use think\Db;
+use think\facade\Db;
 
 class CategoryController extends BaseController
 {
@@ -112,17 +112,17 @@ class CategoryController extends BaseController
     {
         $id = idArr($id);
         //查询属于这个分类的文章
-        $posts = Db::name('Goods')->where('cate_id','in',$id)->count();
+        $posts = Db::name('Goods')->whereIn('cate_id',$id)->count();
         if($posts){
             $this->error("禁止删除含有产品的分类");
         }
         //禁止删除含有子分类的分类
-        $hasChild = Db::name('GoodsCategory')->where('pid','in',$id)->count();
+        $hasChild = Db::name('GoodsCategory')->whereIn('pid',$id)->count();
         if($hasChild){
             $this->error("禁止删除含有子分类的分类");
         }
         //验证通过
-        $result = Db::name('GoodsCategory')->where('id','in',$id)->delete();
+        $result = Db::name('GoodsCategory')->whereIn('id',$id)->delete();
         if($result){
             GoodsCategoryFacade::clearCache();
             $this->success("分类删除成功", url('credit.category/index'));

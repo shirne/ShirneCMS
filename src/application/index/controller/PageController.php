@@ -3,7 +3,7 @@
 namespace app\index\controller;
 
 
-use think\Db;
+use think\facade\Db;
 
 class PageController extends BaseController{
 

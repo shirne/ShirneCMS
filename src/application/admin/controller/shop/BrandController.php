@@ -5,7 +5,7 @@ namespace app\admin\controller\shop;
 use app\admin\controller\BaseController;
 use app\admin\validate\ProductBrandValidate;
 use app\common\facade\ProductCategoryFacade;
-use think\Db;
+use think\facade\Db;
 
 /**
  * 商品品牌管理
@@ -32,11 +32,10 @@ class BrandController extends BaseController
         }
         $key=empty($key)?"":base64_decode($key);
         $model = Db::name('productBrand');
-        $where=array();
         if(!empty($key)){
-            $where[] = array('title|url','like',"%$key%");
+            $model->whereLike('title|url',"%$key%")
         }
-        $lists=$model->where($where)->order('ID DESC')->paginate(15);
+        $lists=$model->order('ID DESC')->paginate(15);
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
         return $this->fetch();

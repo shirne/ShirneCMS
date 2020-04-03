@@ -3,7 +3,7 @@
 namespace app\index\controller\member;
 
 use app\common\validate\MemberCardValidate;
-use think\Db;
+use think\facade\Db;
 
 /**
  * 账户控制器
@@ -40,7 +40,7 @@ class AccountController extends BaseController
                     $id = Db::name('MemberCard')->insert($card,false,true);
                 }
                 if ($card['is_default']) {
-                    Db::name('MemberCard')->where('id' , 'NEQ', $id)
+                    Db::name('MemberCard')->where('id' , '<>', $id)
                         ->where( 'member_id' , $this->userid)
                         ->update(array('is_default' => 0));
                 }
@@ -197,7 +197,7 @@ class AccountController extends BaseController
             $addid=Db::name('memberCashin')->insert($data);
             if($addid) {
                 money_log($this->userid,-$data['amount'],'提现申请扣除','cash',0,'reward');
-                Db::name('member')->where('id',$this->userid)->setInc('froze_money',$data['amount']);
+                Db::name('member')->where('id',$this->userid)->inc('froze_money',$data['amount']);
                 $this->success('提现申请已提交',aurl('index/member.account/cashList'));
             }else{
                 $this->error('申请失败');

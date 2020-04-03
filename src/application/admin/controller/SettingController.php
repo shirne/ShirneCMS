@@ -4,7 +4,7 @@ namespace app\admin\controller;
 
 use app\common\model\SettingModel;
 use app\admin\validate\SettingValidate;
-use think\Db;
+use think\facade\Db;
 
 /**
  * 配置管理

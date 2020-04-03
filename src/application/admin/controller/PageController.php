@@ -5,7 +5,7 @@ use app\admin\model\PageModel;
 use app\admin\validate\PageGroupValidate;
 use app\admin\validate\PageValidate;
 use app\admin\validate\ImagesValidate;
-use think\Db;
+use think\facade\Db;
 
 /**
  * 单页管理

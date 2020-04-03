@@ -12,7 +12,7 @@ use EasyWeChat\Factory;
 use EasyWeChat\OfficialAccount\Application;
 use shirne\captcha\Captcha;
 use shirne\common\ValidateHelper;
-use think\Db;
+use think\facade\Db;
 use think\facade\Cache;
 use think\facade\Env;
 use think\facade\Log;
@@ -101,7 +101,7 @@ class AuthController extends BaseController
         if($agent){
             $agentMember = Db('member')->where('agentcode',$agent)
                 ->where('status',1)
-                ->where('is_agent','gt',0)->find();
+                ->where('is_agent','>',0)->find();
             if(!empty($agentMember)){
                 $this->accessSession['agent'] = $agentMember['id'];
             }
@@ -350,7 +350,7 @@ class AuthController extends BaseController
     private function getAgentId($agent){
         $referid=0;
         if(!empty($agent)){
-            $amem=Db::name('Member')->where('is_agent','GT',0)
+            $amem=Db::name('Member')->where('is_agent','>',0)
                 ->where('agentcode',$agent)
                 ->where('status',1)->find();
             if(!empty($amem)){
@@ -591,7 +591,7 @@ class AuthController extends BaseController
             if($agent){
                 $agentMember = Db('member')->where('agentcode',$agent)
                     ->where('status',1)
-                    ->where('is_agent','gt',0)->find();
+                    ->where('is_agent','>',0)->find();
                 if(!empty($agentMember)){
                     $agentid = $agentMember['id'];
                 }

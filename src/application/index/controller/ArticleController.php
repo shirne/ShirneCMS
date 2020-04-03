@@ -69,7 +69,7 @@ class ArticleController extends BaseController{
         $this->seo($article['title']);
         $this->category($article['cate_id']);
 
-        $article->setInc('views',1);
+        $article->inc('views',1);
         $article['views']+=$article['v_views'];
         $article['digg']+=$article['v_digg'];
 

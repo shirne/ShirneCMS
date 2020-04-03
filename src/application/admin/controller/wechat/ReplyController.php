@@ -3,7 +3,7 @@
 namespace app\admin\controller\wechat;
 use app\admin\validate\WechatReplyValidate;
 use app\common\model\WechatReplyModel;
-use think\Db;
+use think\facade\Db;
 
 /**
  * 回复管理
@@ -193,7 +193,7 @@ class ReplyController extends WechatBaseController
     public function delete($id,$wid)
     {
         $model = Db::name('wechatReply');
-        $result = $model->where('id','in',idArr($id))->delete();
+        $result = $model->whereIn('id',idArr($id))->delete();
         if($result){
             user_log($this->mid,'deletewechatreply',1,'删除回复消息 '.$id ,'manager');
             $this->success("删除成功", url('wechat/reply',['wid'=>$wid]));

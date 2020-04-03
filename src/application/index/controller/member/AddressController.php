@@ -4,7 +4,7 @@ namespace app\index\controller\member;
 
 
 use app\common\validate\MemberAddressValidate;
-use think\Db;
+use think\facade\Db;
 
 /**
  * 地址控制器

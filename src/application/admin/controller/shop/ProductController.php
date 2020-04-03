@@ -12,7 +12,7 @@ use app\admin\validate\ProductValidate;
 use app\admin\validate\ImagesValidate;
 use app\common\facade\ProductCategoryFacade;
 use app\common\model\WechatModel;
-use think\Db;
+use think\facade\Db;
 use think\Exception;
 
 /**
@@ -55,7 +55,7 @@ class ProductController extends BaseController
         $model=Db::name('product')
             ->where('status',1);
         if(!empty($key)){
-            $model->where('id|title','like',"%$key%");
+            $model->whereLike('id|title',"%$key%");
         }
         if($cate>0){
             $model->whereIn('cate_id',ProductCategoryFacade::getSubCateIds($cate));
@@ -370,11 +370,11 @@ class ProductController extends BaseController
     public function delete($id)
     {
         $model = Db::name('product');
-        $result = $model->where('id','in',idArr($id))->delete();
+        $result = $model->whereIn('id',idArr($id))->delete();
         if($result){
-            Db::name('productSku')->where('product_id','in',idArr($id))->delete();
-            Db::name('productImages')->where('product_id','in',idArr($id))->delete();
-            Db::name('productComment')->where('product_id','in',idArr($id))->delete();
+            Db::name('productSku')->whereIn('product_id',idArr($id))->delete();
+            Db::name('productImages')->whereIn('product_id',idArr($id))->delete();
+            Db::name('productComment')->whereIn('product_id',idArr($id))->delete();
             user_log($this->mid,'deleteproduct',1,'删除商品 '.$id ,'manager');
             $this->success(lang('Delete success!'), url('shop.product/index'));
         }else{
@@ -594,7 +594,7 @@ class ProductController extends BaseController
     {
         $data['status'] = $type==1?1:2;
 
-        $result = Db::name('productComment')->where('id','in',idArr($id))->update($data);
+        $result = Db::name('productComment')->whereIn('id',idArr($id))->update($data);
         if ($result && $data['status'] === 1) {
             user_log($this->mid,'auditproductcomment',1,'审核评论 '.$id ,'manager');
             $this -> success("审核成功", url('shop.product/comments'));

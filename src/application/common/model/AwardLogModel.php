@@ -4,7 +4,7 @@ namespace app\common\model;
 
 
 use app\common\core\BaseModel;
-use think\Db;
+use think\facade\Db;
 
 /**
  * Class AwardLogModel
@@ -83,11 +83,11 @@ class AwardLogModel extends BaseModel
     }
     
     public static function ranks($mode='month'){
-        $model = Db::name('awardLog')->where('status','gt',-1);
+        $model = Db::name('awardLog')->where('status','>',-1);
         if($mode=='month'){
-            $model->where('create_time','gt',strtotime(date('Y-m-01')));
+            $model->where('create_time','>',strtotime(date('Y-m-01')));
         }elseif($mode=='year'){
-            $model->where('create_time','gt',strtotime(date('Y-01-01')));
+            $model->where('create_time','>',strtotime(date('Y-01-01')));
         }
         $list = $model->field('member_id, sum(amount) as total_amount')->group('member_id')
             ->order('total_amount DESC')

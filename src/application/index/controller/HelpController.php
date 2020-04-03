@@ -3,7 +3,7 @@
 namespace app\index\controller;
 
 use app\common\facade\HelpCategoryFacade;
-use think\Db;
+use think\facade\Db;
 
 class HelpController extends BaseController{
 

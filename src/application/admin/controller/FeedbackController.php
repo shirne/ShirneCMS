@@ -3,7 +3,7 @@ namespace app\admin\controller;
 
 use app\common\model\FeedbackModel;
 use app\admin\validate\FeedbackValidate;
-use think\Db;
+use think\facade\Db;
 
 /**
  * 留言管理

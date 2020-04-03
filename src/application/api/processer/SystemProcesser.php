@@ -6,7 +6,7 @@ use app\common\model\ArticleModel;
 use app\common\model\ProductModel;
 use EasyWeChat\Kernel\Messages\News;
 use EasyWeChat\Kernel\Messages\NewsItem;
-use think\Db;
+use think\facade\Db;
 
 class SystemProcesser extends BaseProcesser
 {

@@ -7,7 +7,7 @@ namespace app\common\model;
 use app\common\core\BaseModel;
 use app\common\facade\CategoryFacade;
 use app\common\facade\ProductCategoryFacade;
-use think\Db;
+use think\facade\Db;
 
 class BoothModel extends BaseModel
 {

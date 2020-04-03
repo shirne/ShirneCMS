@@ -8,7 +8,7 @@ use app\admin\validate\WechatReplyValidate;
 use app\admin\validate\WechatValidate;
 use app\common\model\MemberOauthModel;
 use EasyWeChat\Factory;
-use think\Db;
+use think\facade\Db;
 
 /**
  * 公众号管理
@@ -55,7 +55,7 @@ class WechatController extends BaseController
 
     private function createHash($id=0){
         $hash=random_str(rand(6,10));
-        $exists=Db::name('wechat')->where('hash',$hash)->where('id','NEQ',$id)->find();
+        $exists=Db::name('wechat')->where('hash',$hash)->where('id','<>',$id)->find();
         if(!empty($exists)){
             return $this->createHash($id);
         }

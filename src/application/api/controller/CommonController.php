@@ -8,7 +8,7 @@ use app\common\model\LinksModel;
 use app\common\model\MemberAgentModel;
 use app\common\model\MemberSignModel;
 use app\common\model\NoticeModel;
-use think\Db;
+use think\facade\Db;
 use think\facade\Log;
 use think\Response;
 
@@ -156,7 +156,7 @@ class CommonController extends BaseController
             if(count($parts)>1){
                 $table->whereBetween('price',[intval($parts[0]),intval($parts[1])]);
             }else{
-                $table->where('price','gt',intval($price));
+                $table->where('price','>',intval($price));
             }
         }
         if(!empty($model)){

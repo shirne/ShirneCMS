@@ -4,7 +4,7 @@ namespace app\admin\controller;
 use app\common\model\MemberAgentModel;
 use app\common\model\MemberModel;
 use app\common\validate\MemberValidate;
-use think\Db;
+use think\facade\Db;
 use think\Exception;
 
 /**
@@ -236,11 +236,11 @@ class MemberController extends BaseController
             if(!empty($totime)){
                 $model->whereBetween('mlog.create_time',array($fromtime,$totime));
             }else{
-                $model->where('mlog.create_time','EGT',$fromtime);
+                $model->where('mlog.create_time','>=',$fromtime);
             }
         }else{
             if(!empty($totime)){
-                $model->where('mlog.create_time','ELT',$totime);
+                $model->where('mlog.create_time','<=',$totime);
             }
         }
         
@@ -322,11 +322,11 @@ class MemberController extends BaseController
             if(!empty($totime)){
                 $model->whereBetween('mlog.create_time',array($fromtime,$totime));
             }else{
-                $model->where('mlog.create_time','EGT',$fromtime);
+                $model->where('mlog.create_time','>=',$fromtime);
             }
         }else{
             if(!empty($totime)){
-                $model->where('mlog.create_time','ELT',$totime);
+                $model->where('mlog.create_time','<=',$totime);
             }
         }
 
@@ -421,7 +421,7 @@ class MemberController extends BaseController
 
         $model=Db::name('MemberLog');
 
-        $model->where('create_time','ELT',$d)->delete();
+        $model->where('create_time','<=',$d)->delete();
 
         user_log($this->mid,'clearmemberlog',1,'清除会员日志' ,'manager');
         $this->success("清除完成");
@@ -599,11 +599,11 @@ class MemberController extends BaseController
             if(!empty($end_date)){
                 $model->whereBetween('create_time',[strtotime($start_date),strtotime($end_date.' 23:59:59')]);
             }else{
-                $model->where('create_time','GT',strtotime($start_date));
+                $model->where('create_time','>',strtotime($start_date));
             }
         }else{
             if(!empty($end_date)){
-                $model->where('create_time','LT',strtotime($end_date.' 23:59:59'));
+                $model->where('create_time','<',strtotime($end_date.' 23:59:59'));
             }
         }
 

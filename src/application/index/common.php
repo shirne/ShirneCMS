@@ -1,6 +1,6 @@
 <?php
 
-use think\Db;
+use think\facade\Db;
 use think\facade\Route;
 
 

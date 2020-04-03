@@ -4,7 +4,7 @@ namespace app\common\model;
 
 
 use app\common\core\BaseOrderModel;
-use think\Db;
+use think\facade\Db;
 use think\Exception;
 use think\facade\Log;
 
@@ -24,26 +24,22 @@ class OrderModel extends BaseOrderModel
 {
     protected $pk='order_id';
 
-    public static function init()
+    public function onAfterWrite($model)
     {
-        parent::init();
-        self::afterWrite(function ( $model)
-        {
-            $where=$model->getWhere();if(empty($where))return;
-            $orders=$model->where($where)->select();
-            if(!empty($orders)) {
-                foreach ($orders as $order) {
-                    if ($order['status'] > 0 && $order['isaudit'] == 1) {
-                        self::setLevel($order);
-                        $rebated=self::doRebate($order);
-                        if($rebated){
-                            Db::name('Order')->where('order_id',$order['order_id'])
-                                ->update(['rebated'=>1,'rebate_time'=>time()]);
-                        }
+        $where=$model->getWhere();if(empty($where))return;
+        $orders=$model->where($where)->select();
+        if(!empty($orders)) {
+            foreach ($orders as $order) {
+                if ($order['status'] > 0 && $order['isaudit'] == 1) {
+                    self::setLevel($order);
+                    $rebated=self::doRebate($order);
+                    if($rebated){
+                        Db::name('Order')->where('order_id',$order['order_id'])
+                            ->update(['rebated'=>1,'rebate_time'=>time()]);
                     }
                 }
             }
-        });
+        }
     }
     
     public static function getCounts($member_id=0){
@@ -606,8 +602,8 @@ class OrderModel extends BaseOrderModel
             
             if (!empty($parents)) {
                 $pids = array_column($parents, 'id');
-                Db::name('Member')->where('id', $member['referer'])->setInc('recom_performance', $order['payamount'] * 100);
-                Db::name('Member')->whereIn('id', $pids)->setInc('total_performance', $order['payamount'] * 100);
+                Db::name('Member')->where('id', $member['referer'])->inc('recom_performance', $order['payamount'] * 100);
+                Db::name('Member')->whereIn('id', $pids)->inc('total_performance', $order['payamount'] * 100);
     
                 $specials = force_json_decode($order['commission_special']);
     

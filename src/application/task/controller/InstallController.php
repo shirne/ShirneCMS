@@ -11,7 +11,7 @@ use think\Controller;
 use think\Exception;
 use think\facade\Config;
 use think\facade\Env;
-use think\Db;
+use think\facade\Db;
 use think\facade\Log;
 
 define('MYSQL_MIN_VERSION','5.5.3');

@@ -9,7 +9,7 @@ use app\common\model\MemberAgentModel;
 use app\common\model\MemberLevelLogModel;
 use app\common\model\MemberLevelModel;
 use extcore\traits\Upload;
-use think\Db;
+use think\facade\Db;
 use think\Loader;
 
 /**

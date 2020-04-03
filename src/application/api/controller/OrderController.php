@@ -13,7 +13,7 @@ use app\common\model\WechatModel;
 use app\common\validate\OrderValidate;
 use EasyWeChat\Factory;
 use think\facade\Log;
-use think\Db;
+use think\facade\Db;
 
 /**
  * 订单操作

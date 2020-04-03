@@ -7,7 +7,7 @@ use app\common\model\AwardLogModel;
 use app\common\model\OrderModel;
 use app\common\model\WechatModel;
 use shirne\common\Poster;
-use think\Db;
+use think\facade\Db;
 
 class AgentController extends AuthedController
 {
@@ -23,7 +23,7 @@ class AgentController extends AuthedController
         $data=[];
         $data['order_count']=Db::name('awardLog')->where('member_id',$this->user['id'])
             ->where('create_time','gt',strtotime('today -7 days'))
-            ->where('status','gt',-1)
+            ->where('status','>',-1)
             ->distinct(true)->field('order_id')->count();
         $data['amount_future']=Db::name('awardLog')->where('member_id',$this->user['id'])
             ->where('status',0)->sum('amount');
@@ -234,7 +234,7 @@ class AgentController extends AuthedController
             $uids = array_column($users->items(), 'id');
             $soncounts = [];
             if (!empty($uids)) {
-                $sondata = Db::name('Member')->where('referer', 'in', $uids)
+                $sondata = Db::name('Member')->whereIn('referer', $uids)
                     ->group('referer')->field('referer,COUNT(id) as count_member')->select();
                 $soncounts = [];
                 foreach ($sondata as $row) {

@@ -3,7 +3,7 @@
 namespace app\api\controller;
 
 use app\common\facade\MemberCartFacade;
-use think\Db;
+use think\facade\Db;
 
 /**
  * 购物车操作接口

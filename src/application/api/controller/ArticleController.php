@@ -8,7 +8,7 @@ use app\common\model\ArticleCommentModel;
 use app\common\model\ArticleModel;
 use app\common\validate\ArticleCommentValidate;
 use shirne\third\Aliyun;
-use think\Db;
+use think\facade\Db;
 
 /**
  * 文章操作接口
@@ -78,7 +78,7 @@ class ArticleController extends BaseController
         if(empty($article)){
             $this->error('文章不存在',0);
         }
-        $article->setInc('views',1);
+        $article->inc('views',1);
         $article['views']+=$article['v_views'];
         $article['digg']+=$article['v_digg'];
         $images=Db::name('ArticleImages')->where('article_id',$article['id'])->select();
@@ -114,7 +114,7 @@ class ArticleController extends BaseController
             ->find();
         if(empty($digg)){
             if($type=='up') {
-                $article->setInc('digg', 1);
+                $article->inc('digg', 1);
                 Db::name('articleDigg')->insert([
                     'article_id'=>$id,
                     'member_id'=>$this->user['id'],
@@ -127,7 +127,7 @@ class ArticleController extends BaseController
             }
         }else{
             if($type!=='up'){
-                $article->setDec('digg',1);
+                $article->dec('digg',1);
                 Db::name('articleDigg')->where('id',$digg['id'])->delete();
             }else{
                 $this->error('您已经点过赞啦',0);

@@ -5,7 +5,7 @@ namespace app\api\controller\member;
 
 use app\api\controller\AuthedController;
 use app\common\model\OrderModel;
-use think\Db;
+use think\facade\Db;
 
 class OrderController extends AuthedController
 {

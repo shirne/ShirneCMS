@@ -4,23 +4,19 @@ namespace app\common\model;
 
 
 use app\common\core\CacheableModel;
-use think\Db;
+use think\facade\Db;
 
 class CreditPromotionModel extends CacheableModel
 {
-    public static function init()
+    public function onAfterWrite($model)
     {
-        parent::init();
-
-        self::afterWrite(function ( $model) {
-            if ($model['is_default']) {
-                $current = Db::name('creditPromotion')->where($model->getWhere())->find();
-                if($current) {
-                    Db::name('creditPromotion')->where('id', 'NEQ', $current['id'])->update(['is_default' => 0]);
-                }
+        if ($model['is_default']) {
+            $current = Db::name('creditPromotion')->where($model->getWhere())->find();
+            if($current) {
+                Db::name('creditPromotion')->where('id', '<>', $current['id'])->update(['is_default' => 0]);
             }
-            self::clearCacheData();
-        });
+        }
+        self::clearCacheData();
     }
     
     protected function get_cache_data()

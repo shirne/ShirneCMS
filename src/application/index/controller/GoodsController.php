@@ -4,7 +4,7 @@ namespace app\index\controller;
 
 use app\common\model\GoodsModel;
 use app\common\facade\GoodsCategoryFacade;
-use think\Db;
+use think\facade\Db;
 
 class GoodsController extends BaseController
 {

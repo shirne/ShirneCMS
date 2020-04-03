@@ -11,7 +11,7 @@ use app\common\model\WechatModel;
 use EasyWeChat\Factory;
 use shirne\excel\Excel;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
-use think\Db;
+use think\facade\Db;
 use think\facade\Log;
 
 /**
@@ -32,7 +32,7 @@ class PaylogController extends BaseController
             $this->assign('member',Db::name('member')->find($id));
         }
         if(!$showall){
-            $model->where('po.status','gt',0);
+            $model->where('po.status','>',0);
         }
         
         if(!empty($type) && $type!='all'){
@@ -58,11 +58,11 @@ class PaylogController extends BaseController
             if(!empty($totime)){
                 $model->whereBetween('po.create_time',array($fromtime,$totime));
             }else{
-                $model->where('po.create_time','EGT',$fromtime);
+                $model->where('po.create_time','>=',$fromtime);
             }
         }else{
             if(!empty($totime)){
-                $model->where('po.create_time','ELT',$totime);
+                $model->where('po.create_time','<=',$totime);
             }
         }
 
@@ -185,7 +185,7 @@ class PaylogController extends BaseController
         $data['audit_time']=time();
 
         $recharge->updateStatus($data);
-        Db::name('member')->where('id',$recharge['member_id'])->setInc('total_recharge',$recharge['amount']);
+        Db::name('member')->where('id',$recharge['member_id'])->inc('total_recharge',$recharge['amount']);
         user_log($this->mid,'rechargeaudit',1,'审核充值单 '.$id ,'manager');
         $this->success('处理成功！');
     }
@@ -210,7 +210,7 @@ class PaylogController extends BaseController
             $data['status']=0;
             $data['audit_time']=time();
             Db::name('member_recharge')->where('id',$recharge['id'])->update($data);
-            Db::name('member')->where('id',$recharge['member_id'])->setDec('total_recharge',$recharge['amount']);
+            Db::name('member')->where('id',$recharge['member_id'])->dec('total_recharge',$recharge['amount']);
             user_log($this->mid,'rechargecancel',1,'撤销充值单 '.$id ,'manager');
             $this->success('处理成功！');
         }else{
@@ -264,7 +264,7 @@ class PaylogController extends BaseController
 
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
-        $total=Db::name('MemberCashin')->where('status','gt',0)->sum('amount');
+        $total=Db::name('MemberCashin')->where('status','>',0)->sum('amount');
         $this->assign('total',$total);
         $this->assign('status',$status);
         $this->assign('keyword',$key);

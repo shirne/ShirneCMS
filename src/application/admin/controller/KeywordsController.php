@@ -2,7 +2,7 @@
 namespace app\admin\controller;
 
 use app\admin\validate\KeywordsValidate;
-use think\Db;
+use think\facade\Db;
 
 /**
  * 关键字管理
@@ -101,7 +101,7 @@ class KeywordsController extends BaseController
     }
 
     private function getGroups(){
-        $groups = Db::name('keywords')->where('group','neq','')->distinct('group')->field('group')->select();
+        $groups = Db::name('keywords')->where('group','<>','')->distinct('group')->field('group')->select();
 
         if(!empty($groups)){
             return array_column($groups,'group');

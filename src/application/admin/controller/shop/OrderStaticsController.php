@@ -4,7 +4,7 @@
 namespace app\admin\controller\shop;
 
 use app\admin\controller\BaseController;
-use think\Db;
+use think\facade\Db;
 
 /**
  * 订单统计
@@ -50,15 +50,15 @@ class OrderStaticsController extends BaseController
             if(!empty($end_date)){
                 $model->whereBetween('create_time',[strtotime($start_date),strtotime($end_date.' 23:59:59')]);
             }else{
-                $model->where('create_time','GT',strtotime($start_date));
+                $model->where('create_time','>',strtotime($start_date));
             }
         }else{
             if(!empty($end_date)){
-                $model->where('create_time','LT',strtotime($end_date.' 23:59:59'));
+                $model->where('create_time','<',strtotime($end_date.' 23:59:59'));
             }
         }
 
-        $statics=$model->where('status','GT',0)->group('awdate')->select();
+        $statics=$model->where('status','>',0)->group('awdate')->select();
 
         $this->assign('statics',$statics);
         $this->assign('static_type',$type);

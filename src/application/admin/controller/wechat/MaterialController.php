@@ -2,7 +2,7 @@
 
 namespace app\admin\controller\wechat;
 use EasyWeChat\OfficialAccount\Application;
-use think\Db;
+use think\facade\Db;
 
 /**
  * 素材管理
@@ -14,7 +14,7 @@ class MaterialController extends WechatBaseController
     public function search($key='',$type=''){
         $model=Db::name('wechatMaterial');
         if(!empty($key)){
-            $model->where('id|media_id|keyword|title','like',"%$key%");
+            $model->whereLike('id|media_id|keyword|title',"%$key%");
         }
         if(!empty($type)){
             $model->where('type',$type);

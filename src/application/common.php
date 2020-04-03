@@ -707,7 +707,7 @@ function money_log($uid, $money, $reson, $type='',$from_id=0,$field='money')
     $time=time();
     if($money>0) {
         $result=\think\Db::name('member')->whereIn('id' , $uid)
-            ->setInc($field,$money);
+            ->inc($field,$money);
         foreach ($members as $member){
             $logs[]=[
                 'create_time' => $time,
@@ -725,7 +725,7 @@ function money_log($uid, $money, $reson, $type='',$from_id=0,$field='money')
         $decMoney=abs($money);
         $result=\think\Db::name('member')->whereIn('id' , $uid)
             ->where($field,'>=',$decMoney)
-            ->setDec($field,$decMoney);
+            ->dec($field,$decMoney);
         foreach ($members as $member){
             if($member[$field]>=$decMoney) {
                 $logs[] = [
@@ -766,7 +766,7 @@ function money_force_log($uid, $money, $reson, $type='',$from_id=0,$field='money
     $time=time();
     if($money>0) {
         $result=\think\Db::name('member')->where('id' , $uid)
-            ->setInc($field,$money);
+            ->inc($field,$money);
         $log=[
             'create_time' => $time,
             'member_id' => $member['id'],
@@ -781,7 +781,7 @@ function money_force_log($uid, $money, $reson, $type='',$from_id=0,$field='money
     }else{
         $decMoney=abs($money);
         $result=\think\Db::name('member')->where('id' , $uid)
-            ->setDec($field,$decMoney);
+            ->dec($field,$decMoney);
         $log = [
             'create_time' => time(),
             'member_id' => $member['id'],

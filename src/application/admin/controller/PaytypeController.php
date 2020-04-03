@@ -4,7 +4,7 @@ namespace app\admin\controller;
 
 
 use app\admin\validate\PaytypeValidate;
-use think\Db;
+use think\facade\Db;
 
 /**
  * 充值方式管理
@@ -30,12 +30,12 @@ class PaytypeController extends BaseController
     public function index($type='')
     {
         $model = Db::name('Paytype');
-        $where=array();
+        
         if(!empty($type )){
-            $where['type'] = $type;
+            $model->where('type',$type)
         }
 
-        $lists=$model->where($where)->order('ID DESC')->paginate(15);
+        $lists=$model->order('ID DESC')->paginate(15);
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
         return $this->fetch();

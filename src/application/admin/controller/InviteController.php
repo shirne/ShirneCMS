@@ -1,7 +1,7 @@
 <?php
 namespace app\admin\controller;
 
-use think\Db;
+use think\facade\Db;
 
 /**
  * 邀请码管理

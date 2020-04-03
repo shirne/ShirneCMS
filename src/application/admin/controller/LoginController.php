@@ -2,7 +2,7 @@
 namespace app\admin\controller;
 
 use extcore\traits\Verify;
-use think\Db;
+use think\facade\Db;
 use think\Exception;
 
 /**

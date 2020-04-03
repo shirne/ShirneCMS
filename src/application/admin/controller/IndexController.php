@@ -4,7 +4,7 @@ namespace app\admin\controller;
 
 use app\common\facade\CategoryFacade;
 use app\common\facade\ProductCategoryFacade;
-use think\Db;
+use think\facade\Db;
 use think\facade\Cache;
 use think\facade\Log;
 
@@ -32,7 +32,7 @@ class IndexController extends BaseController{
         //统计
         $m['total']=Db::name('member')->count();
         $m['avail']=Db::name('member')->where('status',1)->count();
-        $m['agent']=Db::name('member')->where('is_agent','GT',0)->count(0);
+        $m['agent']=Db::name('member')->where('is_agent','>',0)->count(0);
         $this->assign('mem',$m);
 
         //资金
@@ -42,7 +42,7 @@ class IndexController extends BaseController{
 
         $a['total_reward']=Db::name('member')->sum('reward');
         $a['system_charge']=Db::name('member_money_log')->where('type','system')
-            ->where('amount','GT',0)->sum('amount');
+            ->where('amount','>',0)->sum('amount');
         $a['total_award']=Db::name('award_log')->sum('amount');
 
         $this->assign('money',$a);
@@ -76,17 +76,17 @@ class IndexController extends BaseController{
 
             $day_start = strtotime(date('Y-m-d'));
             $inout['day_in'] = Db::name('member_money_log')->where('type', 'consume')
-                ->where('create_time', 'GT', $day_start)->sum('amount');
+                ->where('create_time', '>', $day_start)->sum('amount');
             $inout['day_in'] = abs($inout['day_in']);
             $inout['day_out'] = Db::name('award_log')
-                ->where('create_time', 'GT', $day_start)->sum('amount');
+                ->where('create_time', '>', $day_start)->sum('amount');
 
             $month_start = strtotime(date('Y-m-01'));
             $inout['month_in'] = Db::name('member_money_log')->where('type', 'consume')
-                ->where('create_time', 'GT', $month_start)->sum('amount');
+                ->where('create_time', '>', $month_start)->sum('amount');
             $inout['month_in'] = abs($inout['month_in']);
             $inout['month_out'] = Db::name('award_log')
-                ->where('create_time', 'GT', $month_start)->sum('amount');
+                ->where('create_time', '>', $month_start)->sum('amount');
 
             cache('settle_inout',$inout,['expire'=>600]);
         }
@@ -142,7 +142,7 @@ class IndexController extends BaseController{
         $result=[];
         $count=0;
         while(array_sum($result)==0) {
-            $result['newMemberCount'] = Db::name('Member')->where('create_time', 'GT', $this->manager['last_view_member'])->count();
+            $result['newMemberCount'] = Db::name('Member')->where('create_time', '>', $this->manager['last_view_member'])->count();
             $result['newOrderCount'] = Db::name('Order')->where('status',0)->count();
             sleep(1);
             $count++;

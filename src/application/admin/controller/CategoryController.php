@@ -4,7 +4,7 @@ namespace app\admin\controller;
 
 use app\admin\validate\CategoryValidate;
 use app\common\facade\CategoryFacade;
-use think\Db;
+use think\facade\Db;
 
 /**
  * 文章分类管理

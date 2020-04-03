@@ -1,7 +1,7 @@
 <?php
 namespace app\admin\controller;
 
-use think\Db;
+use think\facade\Db;
 
 class SubscribeController extends BaseController
 {

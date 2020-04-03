@@ -5,7 +5,7 @@ use app\admin\model\ManagerModel;
 use app\admin\model\ManagerRoleModel;
 use app\admin\validate\ManagerValidate;
 use app\common\command\Manager;
-use think\Db;
+use think\facade\Db;
 
 
 /**
@@ -97,7 +97,7 @@ class ManagerController extends BaseController
             $d=strtotime('-7days');
         }
 
-        Db::name('ManagerLog')->where('create_time','ELT',$d)->delete();
+        Db::name('ManagerLog')->where('create_time','<=',$d)->delete();
         user_log($this->mid,'clearlog',1,'清除日志' ,'manager');
         $this->success("清除完成");
     }

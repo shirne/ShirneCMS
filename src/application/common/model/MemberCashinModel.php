@@ -5,28 +5,26 @@ namespace app\common\model;
 
 
 use app\common\core\BaseModel;
-use think\Db;
+use think\facade\Db;
 use think\facade\Log;
 
 class MemberCashinModel extends BaseModel
 {
     protected $autoWriteTimestamp = true;
     
-    public static function init()
+    public function onAfterInsert($order)
     {
-        self::event('after_insert', function ($order) {
-            Db::name('member')->where('id',$order['member_id'])->setInc('froze_reward',$order['amount']);
-            static::sendCashMessage($order['id'],'cash_apply');
-        });
+        Db::name('member')->where('id',$order['member_id'])->inc('froze_reward',$order['amount']);
+        static::sendCashMessage($order['id'],'cash_apply');
     }
     
     protected function triggerStatus($item,$status, $newData=[])
     {
         if($status<0){
-            Db::name('member')->where('id',$item['member_id'])->setDec('froze_reward',$item['amount']);
+            Db::name('member')->where('id',$item['member_id'])->dec('froze_reward',$item['amount']);
             static::sendCashMessage($item['id'],'cash_fail');
         }elseif($status == 1){
-            Db::name('member')->where('id',$item['member_id'])->setInc('total_cashin',$item['amount']);
+            Db::name('member')->where('id',$item['member_id'])->inc('total_cashin',$item['amount']);
             $waitsend=false;
             if($item['cashtype']=='wechat'){
                 //$waitsend=true;
@@ -40,7 +38,7 @@ class MemberCashinModel extends BaseModel
                 
             }
             if(!$waitsend){
-                Db::name('member')->where('id',$item['member_id'])->setDec('froze_reward',$item['amount']);
+                Db::name('member')->where('id',$item['member_id'])->dec('froze_reward',$item['amount']);
                 money_log($item['member_id'],-$item['amount'],'提现成功','cash',0,'reward');
             }
             static::sendCashMessage($item['id'],'cash_audit');

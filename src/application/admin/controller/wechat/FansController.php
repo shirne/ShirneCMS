@@ -8,7 +8,7 @@ use EasyWeChat\Kernel\Messages\News;
 use EasyWeChat\Kernel\Messages\NewsItem;
 use EasyWeChat\Kernel\Messages\Text;
 use EasyWeChat\OfficialAccount\Application;
-use think\Db;
+use think\facade\Db;
 
 /**
  * 粉丝管理

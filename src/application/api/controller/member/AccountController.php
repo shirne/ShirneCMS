@@ -11,7 +11,7 @@ use app\common\validate\MemberCardValidate;
 use app\common\model\WechatModel;
 use extcore\traits\Upload;
 use shirne\common\ValidateHelper;
-use think\Db;
+use think\facade\Db;
 
 class AccountController extends AuthedController
 {
@@ -64,7 +64,7 @@ class AccountController extends AuthedController
             $id = Db::name('MemberCard')->insert($card,false,true);
         }
         if ($card['is_default']) {
-            Db::name('MemberCard')->where('id' , 'NEQ', $id)
+            Db::name('MemberCard')->where('id' , '<>', $id)
                 ->where( 'member_id' , $this->user['id'])
                 ->update(array('is_default' => 0));
         }
@@ -313,7 +313,7 @@ class AccountController extends AuthedController
         $addid= MemberCashinModel::create($data);
         if($addid['id']) {
             //money_log($this->user['id'],-$data['amount'],'提现申请扣除','cash',0,'reward');
-            //Db::name('member')->where('id',$this->user['id'])->setInc('froze_money',$data['amount']);
+            //Db::name('member')->where('id',$this->user['id'])->inc('froze_money',$data['amount']);
             $this->success('提现申请已提交');
         }else{
             $this->error('申请失败');

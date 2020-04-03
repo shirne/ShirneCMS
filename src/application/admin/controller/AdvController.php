@@ -6,7 +6,7 @@ namespace app\admin\controller;
 use app\admin\validate\AdvGroupValidate;
 use app\admin\validate\AdvItemValidate;
 use app\common\model\AdvGroupModel;
-use think\Db;
+use think\facade\Db;
 use think\Exception;
 
 /**

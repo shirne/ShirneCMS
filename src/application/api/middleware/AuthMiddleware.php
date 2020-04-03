@@ -5,7 +5,7 @@ namespace app\api\middleware;
 
 
 use app\api\facade\MemberTokenFacade;
-use think\Db;
+use think\facade\Db;
 use think\Request;
 
 class AuthMiddleware
