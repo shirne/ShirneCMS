@@ -16,6 +16,7 @@ define('CREDIT_STATUS_FINISH',4);
 
 class CreditOrderModel extends BaseOrderModel
 {
+    protected $name = 'credit_order';
     protected $pk='order_id';
     protected $type = [];
 

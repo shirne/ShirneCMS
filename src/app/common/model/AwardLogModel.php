@@ -12,6 +12,7 @@ use think\facade\Db;
  */
 class AwardLogModel extends BaseModel
 {
+    protected $name = 'award_log';
     /**
      * 记录奖励
      * @param $uids int|array

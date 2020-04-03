@@ -14,6 +14,7 @@ define('UPGRADE_STATUS_PAIED',1);
 
 class MemberLevelLogModel extends BaseModel
 {
+    protected $name = 'member_level_log';
     protected $pk='order_id';
     protected $type = [];
 

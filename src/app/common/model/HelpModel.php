@@ -12,6 +12,7 @@ use think\Paginator;
  */
 class HelpModel extends ContentModel
 {
+    protected $name = 'help';
     protected $autoWriteTimestamp = true;
     protected $type = ['prop_data'=>'array'];
 

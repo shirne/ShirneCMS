@@ -11,6 +11,7 @@ use think\facade\Log;
  */
 class CategoryModel extends BaseModel
 {
+    protected $name = 'category';
     protected $precache='';
 
     protected $data;

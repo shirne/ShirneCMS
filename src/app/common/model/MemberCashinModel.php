@@ -10,6 +10,7 @@ use think\facade\Log;
 
 class MemberCashinModel extends BaseModel
 {
+    protected $name = 'member_cashin';
     protected $autoWriteTimestamp = true;
     
     public function onAfterInsert($order)

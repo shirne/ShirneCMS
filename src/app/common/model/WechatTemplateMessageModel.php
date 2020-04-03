@@ -10,6 +10,7 @@ use think\facade\Log;
 
 class WechatTemplateMessageModel extends BaseModel
 {
+    protected $name = 'wechat_template_message';
     protected $autoWriteTimestamp = true;
     
     protected static $tpls=[];

@@ -29,7 +29,7 @@ class OrderController extends BaseController
         }
         $orders =$model->order('status ASC,create_time DESC')->paginate();
         if(!empty($orders) && !$orders->isEmpty()) {
-            $order_ids = array_column($orders->items(), 'order_id');
+            $order_ids = array_column($orders->all(), 'order_id');
             $products = Db::view('OrderProduct', '*')
                 ->view('Product', ['id' => 'orig_product_id', 'update_time' => 'orig_product_update'], 'OrderProduct.product_id=Product.id', 'LEFT')
                 ->view('ProductSku', ['sku_id' => 'orig_sku_id', 'price' => 'orig_product_price'], 'ProductSku.sku_id=OrderProduct.sku_id', 'LEFT')

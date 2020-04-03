@@ -144,7 +144,7 @@ class AccountController extends AuthedController
         $recharges = $model->order('id DESC')->paginate(15);
         
         return $this->response([
-            'recharges'=>$recharges->items(),
+            'recharges'=>$recharges->all(),
             'total'=>$recharges->total(),
             'page'=>$recharges->currentPage(),
             'total_page'=>$recharges->lastPage()
@@ -199,7 +199,7 @@ class AccountController extends AuthedController
         
         return $this->response([
             'total'=>$cashes->total(),
-            'cashes'=>$cashes->items(),
+            'cashes'=>$cashes->all(),
             'page'=>$cashes->currentPage(),
             'total_page'=>$cashes->lastPage()
         ]);
@@ -334,7 +334,7 @@ class AccountController extends AuthedController
         $logs = $model->order('mlog.id DESC')->paginate(10);
         
         return $this->response([
-            'logs'=>$logs->items(),
+            'logs'=>$logs->all(),
             'total'=>$logs->total(),
             'page'=>$logs->currentPage()
         ]);

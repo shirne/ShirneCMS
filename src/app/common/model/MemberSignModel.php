@@ -8,6 +8,7 @@ use think\facade\Db;
 
 class MemberSignModel extends BaseModel
 {
+    protected $name = 'member_sign';
     protected $settings=[
         'open'=>0
     ];

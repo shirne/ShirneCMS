@@ -64,7 +64,7 @@ class ArticleController extends BaseController
         $category=CategoryFacade::findCategory($cate);
         
         return $this->response([
-            'lists'=>$lists->items(),
+            'lists'=>$lists->all(),
             'category'=>$category?:[],
             'page'=>$lists->currentPage(),
             'total'=>$lists->total(),
@@ -154,7 +154,7 @@ class ArticleController extends BaseController
         $comments=$model->order('articleComment.create_time desc')->paginate(10);
 
         return $this->response([
-            'lists'=>$comments->items(),
+            'lists'=>$comments->all(),
             'page'=>$comments->currentPage(),
             'total'=>$comments->total(),
             'total_page'=>$comments->lastPage(),

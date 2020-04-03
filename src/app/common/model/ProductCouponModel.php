@@ -8,6 +8,7 @@ use think\facade\Db;
 
 class ProductCouponModel extends BaseModel
 {
+    protected $name = 'product_coupon';
     protected $type = ['levels_limit'=>'array'];
     
     public static $coupon_types=[

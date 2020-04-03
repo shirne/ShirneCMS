@@ -12,6 +12,7 @@ use think\facade\Db;
  */
 class MemberLevelModel extends CacheableModel
 {
+    protected $name = 'member_level';
     protected $pk="level_id";
 
     protected $type = ['commission_percent'=>'array'];

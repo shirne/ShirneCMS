@@ -12,11 +12,12 @@ use think\facade\Db;
  */
 class AdvGroupModel extends BaseModel
 {
+    protected $name = 'adv_group';
     protected $type = ['ext_set'=>'array'];
     
     public static function getAdList($flag,$limit=10)
     {
-        $model=self::get(['flag'=>$flag]);
+        $model=self::where(['flag'=>$flag])->find();
         if(empty($model)){
             return [];
         }
@@ -34,7 +35,7 @@ class AdvGroupModel extends BaseModel
 
     public static function getAdItem($flag)
     {
-        $model=self::get(['flag'=>$flag]);
+        $model=self::where(['flag'=>$flag])->find();
         if(empty($model)){
             return [];
         }

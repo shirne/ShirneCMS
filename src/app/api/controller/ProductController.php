@@ -83,7 +83,7 @@ class ProductController extends BaseController
         }
 
         return $this->response([
-            'lists'=>$lists->items(),
+            'lists'=>$lists->all(),
             'page'=>$lists->currentPage(),
             'total'=>$lists->total(),
             'total_page'=>$lists->lastPage(),
@@ -216,7 +216,7 @@ class ProductController extends BaseController
             ->order('productComment.create_time desc')->paginate(10);
 
         return $this->response([
-            'lists'=>$comments->items(),
+            'lists'=>$comments->all(),
             'page'=>$comments->currentPage(),
             'total'=>$comments->total(),
             'total_page'=>$comments->lastPage(),

@@ -11,5 +11,6 @@ use app\common\core\BaseModel;
  */
 class FeedbackModel extends BaseModel
 {
+    protected $name = 'feedback';
     protected $autoWriteTimestamp = true;
 }

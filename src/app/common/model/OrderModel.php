@@ -22,6 +22,7 @@ define('ORDER_STATUS_FINISH',4);
  */
 class OrderModel extends BaseOrderModel
 {
+    protected $name = 'order';
     protected $pk='order_id';
 
     public function onAfterWrite($model)

@@ -13,6 +13,7 @@ use think\facade\Log;
  */
 class PayOrderModel extends BaseModel
 {
+    protected $name = 'pay_order';
     const PAY_TYPE_WECHAT='wechat';
     const PAY_TYPE_ALIPAY='alipay';
     protected $type = ['pay_data'=>'array'];

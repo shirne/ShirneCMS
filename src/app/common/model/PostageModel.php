@@ -9,6 +9,7 @@ use think\facade\Db;
 
 class PostageModel extends CacheableModel
 {
+    protected $name = 'postage';
     protected $type = ['specials'=>'array'];
     
     public function onAfterWrite($postage)

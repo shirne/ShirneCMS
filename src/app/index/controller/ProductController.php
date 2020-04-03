@@ -108,7 +108,7 @@ class ProductController extends BaseController
         
         if($this->request->isAjax()){
             $this->success('','',[
-                'comments'=>$comments->items(),
+                'comments'=>$comments->all(),
                 'page'=>$comments->currentPage(),
                 'total'=>$comments->total(),
                 'total_page'=>$comments->lastPage(),

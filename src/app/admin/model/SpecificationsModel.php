@@ -12,6 +12,7 @@ use think\facade\Db;
  */
 class SpecificationsModel extends BaseModel
 {
+    protected $name = 'specifications';
     protected $type = ['data'=>'array'];
 
     public static function getList(){

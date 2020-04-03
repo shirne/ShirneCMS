@@ -73,7 +73,7 @@ class AgentController extends BaseController
             $this->assign('paths',$paths);
         }
         $users=Db::name('Member')->where('referer',$pid)->paginate(10);
-        $uids=array_column($users->items(),'id');
+        $uids=array_column($users->all(),'id');
         $soncounts=[];
         if(!empty($uids)) {
             $sondata = Db::name('Member')->where('referer' ,'in', $uids)

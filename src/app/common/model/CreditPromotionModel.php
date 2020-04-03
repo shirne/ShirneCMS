@@ -8,6 +8,7 @@ use think\facade\Db;
 
 class CreditPromotionModel extends CacheableModel
 {
+    protected $name = 'credit_promotion';
     public function onAfterWrite($model)
     {
         if ($model['is_default']) {

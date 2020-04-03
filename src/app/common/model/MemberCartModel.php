@@ -12,6 +12,8 @@ use think\facade\Db;
  */
 class MemberCartModel extends BaseModel
 {
+    protected $name = 'member_cart';
+    
     private function getSort($member_id){
         $sort=Db::name('MemberCart')->where('member_id',$member_id)
             ->max('sort');

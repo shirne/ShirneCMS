@@ -12,6 +12,7 @@ use think\facade\Db;
  */
 class MemberAgentModel extends CacheableModel
 {
+    protected $name = 'member_agent';
     protected $pk="id";
 
     public function onAfterWrite($userAgent)

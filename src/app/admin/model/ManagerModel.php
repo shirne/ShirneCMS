@@ -11,6 +11,7 @@ use think\Exception;
  */
 class ManagerModel extends BaseModel
 {
+    protected $name = 'manager';
     protected $autoWriteTimestamp = true;
     
     public static function get_parents($id, $full=false){

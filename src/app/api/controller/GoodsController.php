@@ -58,7 +58,7 @@ class GoodsController extends BaseController
         $lists = GoodsModel::getInstance()->tagList($condition, true);
 
         return $this->response([
-            'lists'=>$lists->items(),
+            'lists'=>$lists->all(),
             'page'=>$lists->currentPage(),
             'count'=>$lists->total(),
             'total_page'=>$lists->lastPage(),

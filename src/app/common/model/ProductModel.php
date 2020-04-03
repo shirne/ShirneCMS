@@ -13,6 +13,7 @@ use think\Paginator;
  */
 class ProductModel extends ContentModel
 {
+    protected $name = 'product';
     protected $autoWriteTimestamp = true;
     protected $type = ['levels'=>'array','spec_data'=>'array','prop_data'=>'array','commission_percent'=>'array'];
 
@@ -50,7 +51,7 @@ class ProductModel extends ContentModel
      */
     protected function afterTagList($lists,$attrs){
         if(!empty($lists)){
-            $pids = array_column(is_array($lists)?$lists:$lists->items(),'id');
+            $pids = array_column(is_array($lists)?$lists:$lists->all(),'id');
             $append=[];
             if(!empty($attrs['withsku'])){
                 $skus=ProductSkuModel::whereIn('product_id',$pids)->select();

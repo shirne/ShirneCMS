@@ -14,6 +14,7 @@ use think\facade\Lang;
  */
 class TranslateModel extends BaseModel
 {
+    protected $name = 'translate';
     protected $data;
     protected $loaded=false;
     protected $loadedLang=[];

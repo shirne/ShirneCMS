@@ -12,6 +12,7 @@ use think\facade\Db;
  */
 class PayOrderRefundModel extends BaseModel
 {
+    protected $name = 'pay_order_refund';
     const PAY_TYPE_WECHAT='wechat';
     const PAY_TYPE_ALIPAY='alipay';
     

@@ -17,7 +17,7 @@ class CreditOrderController extends AuthedController
         }
         $orders =$model->order('status ASC,create_time DESC')->paginate($pagesize);
         if(!empty($orders) && !$orders->isEmpty()) {
-            $order_ids = array_column($orders->items(), 'order_id');
+            $order_ids = array_column($orders->all(), 'order_id');
             $goods = Db::view('creditOrderGoods', '*')
                 ->view('goods', ['id' => 'orig_goods_id', 'update_time' => 'orig_goods_update'], 'creditOrderGoods.goods_id=goods.id', 'LEFT')
                 ->whereIn('creditOrderGoods.order_id', $order_ids)
@@ -32,7 +32,7 @@ class CreditOrderController extends AuthedController
         
         $counts = CreditOrderModel::getCounts($this->user['id']);
         return $this->response([
-            'lists'=>$orders->items(),
+            'lists'=>$orders->all(),
             'page'=>$orders->currentPage(),
             'count'=>$orders->total(),
             'total_page'=>$orders->lastPage(),

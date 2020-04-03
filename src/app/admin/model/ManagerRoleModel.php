@@ -9,6 +9,7 @@ use think\facade\Db;
 
 class ManagerRoleModel extends BaseModel
 {
+    protected $name = 'manager_role';
     protected $autoWriteTimestamp = true;
     protected $type = ['global'=>'array','detail'=>'array'];
     

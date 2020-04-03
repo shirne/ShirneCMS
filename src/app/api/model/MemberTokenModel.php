@@ -11,6 +11,7 @@ use think\facade\Log;
  */
 class MemberTokenModel extends BaseModel
 {
+    protected $name = 'member_token';
     protected $pk='token_id';
     private $hash='sw4GomU4LXvYqcaLctXCLK43eRcob';
     private $expire=1800;

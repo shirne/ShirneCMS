@@ -12,7 +12,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-3">
-                    <include file="article/side"/>
+                    {include  file="article/side" /}
                 </div>
                 <div class="col">
                     <div class="card main_right news_list">

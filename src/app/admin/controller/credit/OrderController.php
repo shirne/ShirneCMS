@@ -32,7 +32,7 @@ class OrderController extends BaseController
 
         $lists=$model->where('creditOrder.delete_time',0)->order(Db::raw('if(creditOrder.status>-1,creditOrder.status,3) ASC,creditOrder.create_time DESC'))->paginate(15);
         if(!$lists->isEmpty()) {
-            $orderids = array_column($lists->items(), 'order_id');
+            $orderids = array_column($lists->all(), 'order_id');
             $prodata = Db::name('creditOrderGoods')->where('order_id', 'in', $orderids)->select();
             $goodss=array_index($prodata,'order_id',true);
             $lists->each(function($item) use ($goodss){

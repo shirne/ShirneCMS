@@ -1,6 +1,6 @@
 {extend name="public:base" /}
 {block name="body"}
-    <include file="member/side" />
+    {include  file="member/side"  /}
     <div class="container">
 
         <ul class="list-group">

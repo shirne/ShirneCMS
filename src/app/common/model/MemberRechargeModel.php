@@ -8,6 +8,7 @@ use app\common\core\BaseModel;
 class MemberRechargeModel extends BaseModel
 {
 
+    protected $name = 'member_recharge';
     protected function triggerStatus($item, $status, $newData=[])
     {
         parent::triggerStatus($item, $status, $newData);

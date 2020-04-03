@@ -12,6 +12,7 @@ use think\facade\Db;
  */
 class MemberOauthModel extends BaseModel
 {
+    protected $name = 'member_oauth';
     protected $autoWriteTimestamp = true;
 
     public static function checkUser($data, $account){

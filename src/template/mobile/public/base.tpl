@@ -23,10 +23,10 @@
             <div class="weui-tab">
                 <div class="weui-tab__panel">
                     {block name="body" }{/block}
-                    <include file="public:footer" />
+                    {include  file="public:footer"  /}
                 </div>
 
-                <include file="public:header" />
+                {include  file="public:header"  /}
             </div>
         </div>
     </div>

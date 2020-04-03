@@ -22,11 +22,11 @@
     <![endif]-->
 </head>
 <body>
-<include file="public:header" />
+{include  file="public:header"  /}
 
 {block name="body" }{/block}
 
-<include file="public:footer" />
+{include  file="public:footer"  /}
 <script src="__STATIC__/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="__STATIC__/js/init.min.js"></script>
 <script type="text/javascript">

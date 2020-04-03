@@ -11,6 +11,7 @@ use EasyWeChat\Factory;
  */
 class WechatModel extends BaseModel
 {
+    protected $name = 'wechat';
     protected $autoWriteTimestamp = true;
     
     public function setCertPathAttr($val, $data){

@@ -11,6 +11,7 @@ use think\facade\Db;
  */
 class ProductCategoryModel extends CategoryModel
 {
+    protected $name = 'product_category';
     protected $precache='product_';
 
     protected $type = ['specs'=>'array','props'=>'array'];

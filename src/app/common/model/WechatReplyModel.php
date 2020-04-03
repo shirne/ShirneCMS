@@ -10,5 +10,6 @@ use app\common\core\BaseModel;
  */
 class WechatReplyModel extends BaseModel
 {
+    protected $name = 'wechat_reply';
     protected $autoWriteTimestamp = true;
 }

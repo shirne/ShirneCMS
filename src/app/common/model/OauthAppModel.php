@@ -10,6 +10,7 @@ use think\Exception;
 
 class OauthAppModel extends BaseModel
 {
+    protected $name = 'oauth_app';
     /**
      * 验证签名
      * @param array $data 必须包含appid,timestamp和sign

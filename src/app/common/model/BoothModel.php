@@ -11,6 +11,7 @@ use think\facade\Db;
 
 class BoothModel extends BaseModel
 {
+    protected $name = 'booth';
     protected $autoWriteTimestamp = true;
     protected $type = ['data'=>'array'];
     

@@ -12,6 +12,7 @@ use think\Paginator;
  */
 class ArticleModel extends ContentModel
 {
+    protected $name = 'article';
     protected $autoWriteTimestamp = true;
     protected $type = ['prop_data'=>'array'];
 
@@ -32,7 +33,7 @@ class ArticleModel extends ContentModel
      */
     protected function afterTagList($lists,$attrs){
         if(!empty($lists)){
-            $pids = array_column(is_array($lists)?$lists:$lists->items(),'id');
+            $pids = array_column(is_array($lists)?$lists:$lists->all(),'id');
             if(!empty($attrs['withimgs'])){
                 $imgs=Db::name('articleImages')->whereIn('article_id',$pids)->select();
                 $imgs = array_index($imgs,'article_id',true);

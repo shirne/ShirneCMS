@@ -12,6 +12,7 @@ use think\facade\Db;
  */
 class LinksModel extends BaseModel
 {
+    protected $name = 'links';
     protected $autoWriteTimestamp = true;
     
     protected static $link_groups=[];

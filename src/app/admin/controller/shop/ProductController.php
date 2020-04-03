@@ -96,7 +96,7 @@ class ProductController extends BaseController
 
         $lists=$model->order('create_time ASC')->paginate(10);
         if(!$lists->isEmpty()){
-            $ids=array_column($lists->items(),'id');
+            $ids=array_column($lists->all(),'id');
             $skus=Db::name('productSku')->whereIn('product_id',$ids)->select();
             $skugroups=array_index($skus,'product_id',true);
             $lists->each(function($item) use ($skugroups){

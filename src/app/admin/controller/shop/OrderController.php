@@ -45,7 +45,7 @@ class OrderController extends BaseController
 
         $lists=$model->where('order.delete_time',0)->order(Db::raw('if(order.status>-1,order.status,3) ASC,order.create_time DESC'))->paginate(15);
         if(!$lists->isEmpty()) {
-            $orderids = array_column($lists->items(), 'order_id');
+            $orderids = array_column($lists->all(), 'order_id');
             $prodata = Db::name('OrderProduct')->whereIn('order_id', $orderids)->select();
             $products=array_index($prodata,'order_id',true);
             $lists->each(function($item) use ($products){

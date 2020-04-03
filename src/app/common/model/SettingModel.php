@@ -10,6 +10,7 @@ use think\facade\Db;
  */
 class SettingModel extends BaseModel
 {
+    protected $name = 'setting';
     private static $cacheKey='setting';
     private static $settings;
 

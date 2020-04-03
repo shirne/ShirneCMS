@@ -10,6 +10,7 @@ use think\facade\Db;
  */
 class PageModel extends BaseModel
 {
+    protected $name = 'page';
     protected $autoWriteTimestamp = true;
     
     public static function init(){

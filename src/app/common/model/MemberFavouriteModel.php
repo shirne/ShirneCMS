@@ -8,6 +8,7 @@ use think\facade\Db;
 
 class MemberFavouriteModel extends BaseModel
 {
+    protected $name = 'member_favourite';
     const TYPE_PRODUCT='product';
     const TYPE_ARTICLE='article';
 

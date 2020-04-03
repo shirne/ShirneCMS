@@ -11,6 +11,7 @@ use think\facade\Db;
  */
 class HelpCategoryModel extends CategoryModel
 {
+    protected $name = 'help_category';
     protected $precache='help_';
 
     protected $type = [];

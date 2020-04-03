@@ -8,6 +8,7 @@ use think\facade\Db;
 
 class ArticleCommentModel extends BaseModel
 {
+    protected $name = 'article_comment';
     protected $autoWriteTimestamp = true;
 
     protected $insert = ['status' ,'ip','device'];

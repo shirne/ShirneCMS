@@ -11,6 +11,7 @@ use app\common\core\BaseModel;
  */
 class ProductCommentModel extends BaseModel
 {
+    protected $name = 'product_comment';
     protected $autoWriteTimestamp = true;
 
     protected $insert = ['status' ,'ip','device'];

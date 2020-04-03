@@ -10,6 +10,7 @@ use app\common\core\ContentModel;
  */
 class GoodsModel extends ContentModel
 {
+    protected $name = 'goods';
     protected $autoWriteTimestamp = true;
     protected $type = ['prop_data'=>'array'];
 }

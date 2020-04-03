@@ -37,7 +37,7 @@
                 </ul>
                 {$page|raw}
             </div>
-            <include file="article:_left" />
+            {include  file="article:_left"  /}
             </div>
         </div>
     </div>

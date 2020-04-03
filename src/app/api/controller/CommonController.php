@@ -166,7 +166,7 @@ class CommonController extends BaseController
         $lists = $table->order('sale DESC,create_time DESC')->paginate(10);
 
         return $this->response([
-            'lists'=>$lists->items(),
+            'lists'=>$lists->all(),
             'page'=>$lists->currentPage(),
             'total'=>$lists->total(),
             'total_page'=>$lists->lastPage(),

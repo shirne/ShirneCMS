@@ -7,6 +7,7 @@ use think\facade\Db;
 
 class GoodsCategoryModel extends CategoryModel
 {
+    protected $name = 'goods_category';
     protected $precache='goods_';
 
     protected function _get_data(){

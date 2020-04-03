@@ -1,6 +1,6 @@
 {extend name="public:base" /}
 {block name="body"}
-    <include file="member/side" />
+    {include  file="member/side"  /}
     <div class="container">
         <div class="page-header">
             <h1>个人资料</h1>

@@ -128,7 +128,7 @@ class AgentController extends AuthedController
         $logs = $model->order('mlog.id DESC')->paginate(10);
         
         return $this->response([
-            'logs'=>$logs->items(),
+            'logs'=>$logs->all(),
             'total'=>$logs->total(),
             'page'=>$logs->currentPage()
         ]);
@@ -146,7 +146,7 @@ class AgentController extends AuthedController
         }
         $orders =$model->order('Order.status ASC,Order.create_time DESC')->paginate($pagesize);
         if(!empty($orders) && !$orders->isEmpty()) {
-            $order_ids = array_column($orders->items(), 'order_id');
+            $order_ids = array_column($orders->all(), 'order_id');
             $products = Db::view('OrderProduct', '*')
                 ->view('Product', ['id' => 'orig_product_id', 'update_time' => 'orig_product_update'], 'OrderProduct.product_id=Product.id', 'LEFT')
                 ->view('ProductSku', ['sku_id' => 'orig_sku_id', 'price' => 'orig_product_price'], 'ProductSku.sku_id=OrderProduct.sku_id', 'LEFT')
@@ -168,7 +168,7 @@ class AgentController extends AuthedController
         
         //$counts = OrderModel::getCounts($this->user['id']);
         return $this->response([
-            'lists'=>$orders->items(),
+            'lists'=>$orders->all(),
             'page'=>$orders->currentPage(),
             'total'=>$orders->total(),
             'total_page'=>$orders->lastPage(),
@@ -231,7 +231,7 @@ class AgentController extends AuthedController
             ->order('create_time DESC')->paginate(10);
         
         if(!empty($users) && !$users->isEmpty()) {
-            $uids = array_column($users->items(), 'id');
+            $uids = array_column($users->all(), 'id');
             $soncounts = [];
             if (!empty($uids)) {
                 $sondata = Db::name('Member')->whereIn('referer', $uids)
@@ -254,7 +254,7 @@ class AgentController extends AuthedController
         }
         
         return $this->response([
-            'users'=>$users->items(),
+            'users'=>$users->all(),
             'total'=>$users->total(),
             'page'=>$users->currentPage()
         ]);
