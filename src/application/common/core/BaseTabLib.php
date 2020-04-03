@@ -11,6 +11,23 @@ use think\template\TagLib;
  */
 class BaseTabLib extends TagLib
 {
+    protected function parseWhere($arg){
+        $matched = preg_match('/^(?:(EQ|NEQ|GT|LT|EGT|ELT)\s+)?(.*)$/',$arg,$condition);
+        if($matched && !empty($condition[1])){
+            $map = [
+                'EQ'=>'=',
+                'NEQ'=>'<>',
+                'GT'=>'>',
+                'LT'=>'<',
+                'EGT'=>'>=',
+                'ELT'=>'<='
+            ];
+            $compare=isset($map[$condition[1]])?$map[$condition[1]]:$condition[1];
+            return ["'$compare'",$this->parseArg($condition[2])];
+        }
+        return ["'='",$this->parseArg($arg)];
+    }
+    
     protected function parseArg($arg)
     {
         if(empty($arg)){

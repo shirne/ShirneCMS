@@ -6,6 +6,7 @@ use app\api\handler\WechatMiniHandler;
 use app\api\handler\WechatOfficialHandler;
 use app\api\handler\WechatPlatformHandler;
 use app\common\model\PayOrderModel;
+use app\common\model\PayOrderRefundModel;
 use app\common\model\WechatModel;
 use EasyWeChat\BasicService\Application;
 use EasyWeChat\Factory;
@@ -105,7 +106,41 @@ class WechatController extends Controller{
         $response = $app->handleRefundedNotify(function ($message, $reqInfo, $fail){
             Log::record(var_export($message,TRUE),'refund');
             
-            $fail('参数格式校验错误');
+            $order = PayOrderRefundModel::where(['refund_no'=>$message['out_refund_no']])->find();
+
+            if (empty($order) || $order['pay_time']>0) {
+                return true;
+            }
+
+            if ($message['return_code'] === 'SUCCESS') {
+                // 退款是否成功
+                if ($message['refund_status'] === 'SUCCESS') {
+                    $data = [
+                        'status'=>1,
+                        'refund_time'=>strtotime($message['success_time']),
+                        'refund_result'=>$message['refund_recv_accout'],
+                        'update_time'=>time(),
+                    ];
+
+                    // 退款失败
+                } else {
+                    $data = [
+                        'status'=>0,
+                        'refund_result'=>$message['refund_status']
+                    ];
+                }
+            } else {
+                return $fail('通信失败，请稍后再通知我');
+            }
+
+            if(!empty($data)){
+                try {
+                    $order->updateStatus($data);
+                }catch(\Exception $e){
+                    Log::record($e->getMessage());
+                    Log::record($e->getTraceAsString());
+                }
+            }
             
             return true;
         });

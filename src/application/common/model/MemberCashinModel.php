@@ -29,7 +29,7 @@ class MemberCashinModel extends BaseModel
             Db::name('member')->where('id',$item['member_id'])->setInc('total_cashin',$item['amount']);
             $waitsend=false;
             if($item['cashtype']=='wechat'){
-                $waitsend=true;
+                //$waitsend=true;
 
                 //todo 微信企业付款
                 

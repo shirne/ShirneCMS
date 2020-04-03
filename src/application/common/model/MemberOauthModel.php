@@ -71,6 +71,9 @@ class MemberOauthModel extends BaseModel
         $data['country'] =$userInfo['country'];
         $data['language'] =$userInfo['language'];
         $data['subscribe_time']=$userInfo['subscribe_time'];
+        if($data['subscribe_time']>0){
+            $data['is_follow']=1;
+        }
 
         return $data;
     }

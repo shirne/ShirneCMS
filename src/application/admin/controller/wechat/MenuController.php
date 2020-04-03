@@ -50,25 +50,29 @@ class MenuController extends WechatBaseController
         }
         $menuData=cache($cacheKey);
         if(empty($menuData) || $refresh){
-            $menuData=$app->menu->list();
-            if(empty($menuData) || $menuData['errcode']!=0){
-                $menuData=$app->menu->current();
-                if(!empty($menuData) && empty($menuData['errcode']) && !empty($menuData['selfmenu_info']['button'])){
-                    $menuData=$menuData['selfmenu_info']['button'];
-                    foreach ($menuData as $k=>$item){
-                        if(isset($item['sub_button'])){
-                            $menuData[$k]['sub_button']=$item['sub_button']['list'];
+            try{
+                $menuData=$app->menu->list();
+                if(empty($menuData) || $menuData['errcode']!=0){
+                    $menuData=$app->menu->current();
+                    if(!empty($menuData) && empty($menuData['errcode']) && !empty($menuData['selfmenu_info']['button'])){
+                        $menuData=$menuData['selfmenu_info']['button'];
+                        foreach ($menuData as $k=>$item){
+                            if(isset($item['sub_button'])){
+                                $menuData[$k]['sub_button']=$item['sub_button']['list'];
+                            }
                         }
+                    }else{
+                        $menuData=[];
                     }
                 }else{
-                    $menuData=[];
+                    $menuData=$menuData['menu']['button'];
                 }
-            }else{
-                $menuData=$menuData['menu']['button'];
-            }
 
-            if(empty($menuData))$menuData=[];
-            cache($cacheKey,$menuData);
+                if(empty($menuData))$menuData=[];
+                cache($cacheKey,$menuData);
+            }catch(\Exception $e){
+                $this->apiException($e);
+            }
         }
 
         $this->assign('model',$model);

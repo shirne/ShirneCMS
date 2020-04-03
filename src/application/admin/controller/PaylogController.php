@@ -6,11 +6,13 @@ namespace app\admin\controller;
 use app\common\model\MemberCashinModel;
 use app\common\model\MemberOauthModel;
 use app\common\model\MemberRechargeModel;
+use app\common\model\PayOrderModel;
 use app\common\model\WechatModel;
 use EasyWeChat\Factory;
 use shirne\excel\Excel;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use think\Db;
+use think\facade\Log;
 
 /**
  * 充值提现管理
@@ -19,6 +21,88 @@ use think\Db;
  */
 class PaylogController extends BaseController
 {
+    public function index($id=0,$fromdate='',$todate='',$ordertype='all',$type='all', $showall = 0){
+        $model=Db::view('payOrder po','*')
+        ->view('Member m',['username','nickname','avatar','level_id','mobile'],'m.id=po.member_id','LEFT');
+
+        $levels=getMemberLevels();
+
+        if($id>0){
+            $model->where('po.member_id',$id);
+            $this->assign('member',Db::name('member')->find($id));
+        }
+        if(!$showall){
+            $model->where('po.status','gt',0);
+        }
+        
+        if(!empty($type) && $type!='all'){
+            $model->where('po.pay_type',$type);
+        }else{
+            $type='all';
+        }
+        if(!empty($ordertype) && $ordertype!='all'){
+            $model->where('po.order_type',$ordertype);
+        }else{
+            $field='all';
+        }
+
+        if(!empty($todate)){
+            $totime=strtotime($todate.' 23:59:59');
+            if($totime===false)$todate='';
+        }
+        if(!empty($fromdate)) {
+            $fromtime = strtotime($fromdate);
+            if ($fromtime === false) $fromdate = '';
+        }
+        if(!empty($fromtime)){
+            if(!empty($totime)){
+                $model->whereBetween('po.create_time',array($fromtime,$totime));
+            }else{
+                $model->where('po.create_time','EGT',$fromtime);
+            }
+        }else{
+            if(!empty($totime)){
+                $model->where('po.create_time','ELT',$totime);
+            }
+        }
+
+        $logs = $model->order('ID DESC')->paginate(15);
+
+        $all = ['all'=> '全部'];
+        $orderTypes=array_merge($all, PayOrderModel::$orderTypes);
+        $payTypes=array_merge($all, PayOrderModel::$payTypes);
+
+        $orderDetails=[
+            'order'=>'order/detail',
+            'credit'=>'creditOrder/detail',
+            'groupbuy'=>'groupbuy.order/detail'
+        ];
+
+        $stacrows=$model->group('po.order_type,po.pay_type')->setOption('field',[])->setOption('order','po.order_type')->field('po.order_type,po.pay_type,sum(po.pay_amount) as total_amount')->select();
+        $statics=[];
+        foreach ($stacrows as $row){
+            $statics[$row['pay_type']][$row['order_type']]=$row['total_amount'];
+        }
+        foreach ($statics as $k=>$list){
+            $statics[$k]['sum']=array_sum($list);
+        }
+
+        $this->assign('id',$id);
+        $this->assign('fromdate',$fromdate);
+        $this->assign('todate',$todate);
+        $this->assign('type',$type);
+        $this->assign('ordertype',$ordertype);
+
+        $this->assign('orderTypes',$orderTypes);
+        $this->assign('orderDetails',$orderDetails);
+        $this->assign('payTypes',$payTypes);
+        $this->assign('levels',$levels);
+        $this->assign('statics', $statics);
+        $this->assign('logs', $logs);
+        $this->assign('page',$logs->render());
+        return $this->fetch();
+    }
+    
     /**
      * 充值管理
      * @param string $key
@@ -259,14 +343,15 @@ class PaylogController extends BaseController
             }else{
                 $wechats=WechatModel::where('account_type','service')->select();
             }
+            
             foreach($wechats as $wechat){
-                if(empty($wechat['cert_path']) || empty(empty($wechat['key_path'])))continue;
-                $payment=Factory::payment(WechatModel::to_pay_config($wechat));
+                if(empty($wechat['cert_path']) || empty($wechat['key_path']))continue;
+                $payment=Factory::payment(WechatModel::to_pay_config($wechat,'',true));
                 $paydata=[
                     'partner_trade_no' => 'CASH'.$cash['id'], // 商户订单号，需保持唯一性(只能是字母或者数字，不能包含有符号)
                     'openid' =>  $wechat['openid'],
                     'check_name' => 'NO_CHECK', // NO_CHECK：不校验真实姓名, FORCE_CHECK：强校验真实姓名
-                    're_user_name' => $cash['card_name'], // 如果 check_name 设置为FORCE_CHECK，则必填用户真实姓名
+                    //'re_user_name' => $cash['card_name'], // 如果 check_name 设置为FORCE_CHECK，则必填用户真实姓名
                     'amount' => $cash['real_amount'], // 企业付款金额，单位为分
                     'desc' => '提现', // 企业付款操作说明信息。必填
                 ];
@@ -281,13 +366,14 @@ class PaylogController extends BaseController
                 }
 
                 $result = $payment->transfer->toBalance($paydata);
+                break;
             }
         }elseif($paytype=='wechatpack'){
             $successed=false;
             $wechats=MemberOauthModel::getAccountsByMemberAndType($cash['member_id']);
             foreach($wechats as $wechat){
                 if(empty($wechat['cert_path']) || empty(empty($wechat['key_path'])))continue;
-                $payment=Factory::payment(WechatModel::to_pay_config($wechat));
+                $payment=Factory::payment(WechatModel::to_pay_config($wechat,'',true));
                 $redpackData = [
                     'mch_billno'   => 'CASH'.$cash['id'],
                     'send_name'    => getSetting('site-name'),
@@ -301,6 +387,7 @@ class PaylogController extends BaseController
                     // ...
                 ];
                 $result = $payment->redpack->sendNormal($redpackData);
+                break;
             }
         }elseif($paytype=='wechatminipack'){
             $successed=false;
@@ -314,11 +401,13 @@ class PaylogController extends BaseController
                     //$payment=Factory::payment(WechatModel::to_pay_config($wechat));
 
                     $this->error('暂不支持小程序红包');
+                    break;
                 }
             }
         }else{
             $paytype='handle';
         }
+        Log::record('提现:'.var_export($result,true));
         if(!empty($result)){
             if($result['return_code']!='SUCCESS'){
                 $this->error($result['return_msg']);

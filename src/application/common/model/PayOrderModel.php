@@ -5,6 +5,7 @@ namespace app\common\model;
 use EasyWeChat\Factory;
 use app\common\core\BaseModel;
 use think\Db;
+use think\facade\Log;
 
 /**
  * Class PayOrderModel
@@ -15,6 +16,17 @@ class PayOrderModel extends BaseModel
     const PAY_TYPE_WECHAT='wechat';
     const PAY_TYPE_ALIPAY='alipay';
     protected $type = ['pay_data'=>'array'];
+
+    public static $orderTypes = [
+        'order'=>'商城订单',
+        'groupbuy'=>'团购订单',
+        'credit'=>'积分订单',
+        'recharge'=>'充值订单'
+    ];
+    public static $payTypes = [
+        'wechat'=>'微信支付',
+        'alipay'=>'支付宝'
+    ];
 
     private static function create_no(){
         $maxid=Db::name('payOrder')->max('id');
@@ -37,6 +49,13 @@ class PayOrderModel extends BaseModel
             if(!empty($order)) {
                 $order['payamount'] = $order['amount'] * .01;
                 $order['order_no'] = 'CZ_' . str_pad($order['id'], 6, '0', STR_PAD_LEFT);
+                $orderid = $order['id'];
+            }
+        }elseif(strpos($orderno,'UL_')===0){
+            $ordertype = 'upgrade';
+            $orderno = intval(substr($orderno, 3));
+            $order = MemberLevelLogModel::get($orderno);
+            if(!empty($order)) {
                 $orderid = $order['id'];
             }
         }elseif(strpos($orderno,'PO_')===0){
@@ -105,27 +124,85 @@ class PayOrderModel extends BaseModel
         ]);
     }
 
+    /**
+     * 退款
+     */
+    public static function refund($orderid, $order_type, $reason){
+        $payorder = Db::name('payOrder')->where('order_type',$order_type)
+            ->where('status',1)
+            ->where('order_id',$orderid)
+            ->find();
+        
+        if(!empty($payorder)){
+            if($payorder['pay_type']=='wechat'){
+                static $apps=[];
+                $appid = $payorder['pay_id'];
+                if(!$appid){
+                    Log::record('订单 '.$order_type.' '.$orderid.'退款失败,退款配置错误');
+                    return false;
+                }
+                if(!isset($apps[$appid])){
+                    $apps[$appid] = WechatModel::createApp($appid,true, ['notify'=>url('api/wechat/refund',['hash'=>'__HASH__'],true,true),'use_cert'=>true]);
+                }
+                if($apps[$appid]){
+                    $refund_id = PayOrderRefundModel::createFromPayOrder($payorder, $reason);
+                    if($refund_id > 0){
+                        $refund = PayOrderRefundModel::get($refund_id);
+                        $result = $apps[$appid]->refund->byOutTradeNumber($payorder['order_no'], $refund['refund_no'], $payorder['pay_amount'], $refund['refund_fee']*100, [
+                            'refund_desc' => $reason,
+                        ]);
+                        if($result['return_code'] == 'SUCCESS'){
+                            if($result['result_code'] == 'SUCCESS'){
+                                Db::name('payOrder')->where('id',$orderid)->update(['is_refund'=>1,'refund_fee'=>['INC',$refund['refund_fee']]]);
+                                Db::name('payOrderRefund')->where('id',$refund_id)->update(['status'=>1,'refund_result'=>$result['refund_id']]);
+                                return true;
+                            }else{
+                                Db::name('payOrderRefund')->where('id',$refund_id)->update(['status'=>-1,'refund_result'=>$result['err_code'].':'.$result['err_code_des']]);
+                            }
+                        }else{
+                            Db::name('payOrderRefund')->where('id',$refund_id)->update(['status'=>-1,'refund_result'=>$result['return_msg']]);
+                        }
+                    }else{
+                        Log::record('订单 '.$order_type.' '.$orderid.'退款失败,退款单创建失败');
+                    }
+                }else{
+                    Log::record('订单 '.$order_type.' '.$orderid.'退款失败,退款配置错误');
+                    return false;
+                }
+            }else{
+                Log::record('订单 '.$order_type.' '.$orderid.'退款失败,暂不支持支付方式 '.$payorder['pay_type']);
+            }
+        }else{
+            Log::record('订单 '.$order_type.' '.$orderid.'退款失败,未找到支付单');
+        }
+        return false;
+    }
+
     protected function triggerStatus($item, $status, $newData=[])
     {
         parent::triggerStatus($item, $status, $newData);
         if($status==1 ){
+            $paytime = isset($newData['pay_time'])?$newData['pay_time']:0;
+            if(!$paytime)$paytime=time();
             switch ($item['order_type']){
                 case 'recharge':
                     MemberRechargeModel::getInstance()->updateStatus([
                         'status'=>1,
-                        'audit_time'=>$item['pay_time']
+                        'audit_time'=>$paytime
                     ],['id'=>$item['order_id']]);
                     break;
                 case 'credit':
                     CreditOrderModel::getInstance()->updateStatus([
                         'status'=>1,
-                        'pay_time'=>$item['pay_time']
+                        'pay_type'=>$item['pay_type'],
+                        'pay_time'=>$paytime
                     ],['order_id'=>$item['order_id']]);
                     break;
                 default:
                     OrderModel::getInstance()->updateStatus([
                         'status'=>1,
-                        'pay_time'=>$item['pay_time']
+                        'pay_type'=>$item['pay_type'],
+                        'pay_time'=>$paytime
                     ],['order_id'=>$item['order_id']]);
                     break;
             }

@@ -1,6 +1,7 @@
 <?php
 namespace app\admin\controller;
 
+use app\common\model\MemberAgentModel;
 use app\common\model\MemberModel;
 use app\common\validate\MemberValidate;
 use think\Db;
@@ -60,7 +61,7 @@ class MemberController extends BaseController
         $model = Db::view('__MEMBER__ m','*')
             ->view('__MEMBER__ rm',['username'=> 'refer_name','nickname'=> 'refer_nickname','realname'=> 'refer_realname','avatar'=> 'refer_avatar','is_agent'=> 'refer_agent'],'m.referer=rm.id','LEFT');
         if(!empty($keyword)){
-            $model->whereLike('m.username|m.email|m.realname',"%$keyword%");
+            $model->whereLike('m.username|m.nickname|m.email|m.realname',"%$keyword%");
         }
 
         if($referer !== ''){
@@ -85,6 +86,7 @@ class MemberController extends BaseController
         $this->assign('types',getMemberTypes());
         $this->assign('typestyles',['default','info','warning','danger']);
         $this->assign('levels',getMemberLevels());
+        $this->assign('agents',MemberAgentModel::getCacheData());
         $this->assign('type',$type);
         $this->assign('page',$lists->render());
         $this->assign('referer',$referer);
@@ -150,15 +152,15 @@ class MemberController extends BaseController
      * 设置代理
      * @param int $id
      */
-    public function set_agent($id=0){
+    public function set_agent($id=0, $agent_id=1){
         if(empty($id))$this->error('会员不存在');
         $member=Db::name('member')->find($id);
         if(empty($member))$this->error('会员不存在');
 
 
-        if($member['is_agent'])$this->success('设置成功');
+        if($member['is_agent'] == $agent_id)$this->success('设置成功');
 
-        $result=MemberModel::setAgent($id);
+        $result=MemberModel::setAgent($id, $agent_id, 'admin', '后台升级');
         if($result){
             user_log($this->mid,'setagent',1,'设置代理 '.$id ,'manager');
             $this->success('设置成功');
@@ -247,7 +249,7 @@ class MemberController extends BaseController
         $types=getLogTypes();
         $allstatus=['-1'=>'已取消','0'=>'待发放','1'=>'已发放'];
         
-        $stacrows=$model->group('mlog.status,mlog.type')->field('mlog.status,mlog.type,sum(mlog.amount) as total_amount')->select();
+        $stacrows=$model->group('mlog.status,mlog.type')->setOption('field',[])->setOption('order','mlog.field')->field('mlog.status,mlog.type,sum(mlog.amount) as total_amount')->select();
         $statics=[];
         foreach ($stacrows as $row){
             $statics[$row['status']][$row['type']]=$row['total_amount'];
@@ -333,7 +335,7 @@ class MemberController extends BaseController
         $types=getLogTypes();
         $fields=getMoneyFields();
 
-        $stacrows=$model->group('mlog.field,mlog.type')->field('mlog.field,mlog.type,sum(mlog.amount) as total_amount')->select();
+        $stacrows=$model->group('mlog.field,mlog.type')->setOption('field',[])->setOption('order','mlog.field')->field('mlog.field,mlog.type,sum(mlog.amount) as total_amount')->select();
         $statics=[];
         foreach ($stacrows as $row){
             $statics[$row['field']][$row['type']]=$row['total_amount'];
@@ -443,6 +445,9 @@ class MemberController extends BaseController
                 if(!isset($data['level_id'])){
                     $data['level_id']=getDefaultLevel();
                 }
+                if(isset($data['birth'])){
+                    $data['birth']=strtotime($data['birth']);
+                }
                 $member=MemberModel::create($data);
                 if ($member->id) {
                     user_log($this->mid,'adduser',1,'添加会员'.$member->id ,'manager');
@@ -479,6 +484,9 @@ class MemberController extends BaseController
                 }else{
                     unset($data['password']);
                 }
+                if(isset($data['birth'])){
+                    $data['birth']=strtotime($data['birth']);
+                }
 
                 //更新
                 $member=MemberModel::get($id);
@@ -507,12 +515,12 @@ class MemberController extends BaseController
         if(floatval($amount)!=$amount){
             $this->error('金额错误');
         }
-        if(!in_array($field,['money','credit'])){
+        if(!in_array($field,['money','credit','reward'])){
             $this->error('充值类型错误');
         }
 
         $atext=$amount>0?'充值':'扣款';
-        $logid=money_log($id,intval($amount*100),'系统扣款'.$atext.$reson,'system',0,$field);
+        $logid=money_log($id,intval($amount*100),'系统'.$atext.$reson,'system',0,$field);
         if($logid){
             user_log($this->mid,'recharge',1,'会员'.$atext.' '.$id.','.$amount ,'manager');
             $this->success($atext.'成功');

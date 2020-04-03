@@ -43,7 +43,11 @@ class FansController extends WechatBaseController
             $this->error('暂时不支持的消息');
         }
     
-        $result=$messager->to($openid)->send();
+        try{
+            $result=$messager->to($openid)->send();
+        }catch(\Exception $e){
+            $this->apiException($e);
+        }
         $this->success('消息已发送');
     }
 
@@ -58,19 +62,45 @@ class FansController extends WechatBaseController
 
         if($single) {
             if(strpos($openid,',')===false) {
-                $user = $app->user->get($openid);
+                try{
+                    $user = $app->user->get($openid);
+                }catch(\Exception $e){
+                    $this->apiException($e);
+                }
+                $userData = MemberOauthModel::mapUserInfo($user);
+                if(!empty($userData['unionid'])){
+                    $hasMember = Db::name('MemberOauth')->where('unionid',$userData['unionid'])->where('member_id','>',0)->find();
+                    if(!empty($hasMember['member_id'])){
+                        $userData['member_id']=$hasMember['member_id'];
+                    }
+                }
                 Db::name('MemberOauth')->where('openid',$openid)
-                    ->update(MemberOauthModel::mapUserInfo($user));
+                    ->update($userData);
             }else {
-                $users = $app->user->select(explode(',', $openid));
+                try{
+                    $users = $app->user->select(explode(',', $openid));
+                }catch(\Exception $e){
+                    $this->apiException($e);
+                }
                 foreach ($users['user_info_list'] as $user){
+                    $userData = MemberOauthModel::mapUserInfo($user);
+                    if(!empty($userData['unionid'])){
+                        $hasMember = Db::name('MemberOauth')->where('unionid',$userData['unionid'])->where('member_id','>',0)->find();
+                        if(!empty($hasMember['member_id'])){
+                            $userData['member_id']=$hasMember['member_id'];
+                        }
+                    }
                     Db::name('MemberOauth')->where('openid',$user['openid'])
-                        ->update(MemberOauthModel::mapUserInfo($user));
+                        ->update($userData);
                 }
             }
         }else{
-            $result=$app->user->list($openid);
-            $users = $app->user->select($result['data']['openid']);
+            try{
+                $result=$app->user->list($openid);
+                $users = $app->user->select($result['data']['openid']);
+            }catch(\Exception $e){
+                $this->apiException($e);
+            }
             $this->updateUsers($users['user_info_list'],$this->wid);
 
             $sesskey='fans_count_'.$wechat['appid'];
@@ -92,25 +122,31 @@ class FansController extends WechatBaseController
         $userauths=array_index($userauths,'openid');
         foreach ($userinfos as $user){
             $userData=MemberOauthModel::mapUserInfo($user);
+            $userData['type']=$this->currentWechat['account_type'];
+            $userData['type_id']=$wid;
             if(isset($userauths[$user['openid']])) {
                 if(!empty($user['unionid'])){
-                    Db::name('MemberOauth')->where('unionid', $user['unionid'])
-                        ->update($userData);
-                }else {
-                    Db::name('MemberOauth')->where('openid', $user['openid'])
-                        ->update($userData);
+                    if(!$userauths[$user['openid']]['member_id']){
+                        $hasMember = Db::name('MemberOauth')->where('unionid',$userData['unionid'])->where('member_id','>',0)->find();
+                        if(!empty($hasMember['member_id'])){
+                            $userData['member_id']=$hasMember['member_id'];
+                        }
+                    }
                 }
-            }else{
-                if(!empty($user['unionid'])){
-                    Db::name('MemberOauth')->where('unionid', $user['unionid'])
+                Db::name('MemberOauth')->where('openid', $user['openid'])
                         ->update($userData);
+                
+            }else{
+                $userData['member_id']=0;
+                if(!empty($user['unionid'])){
+                    $hasMember = Db::name('MemberOauth')->where('unionid',$userData['unionid'])->where('member_id','>',0)->find();
+                    if(!empty($hasMember['member_id'])){
+                        $userData['member_id']=$hasMember['member_id'];
+                    }
                 }
                 
                 $userData['email']='';
                 $userData['is_follow']=1;
-                $userData['member_id']=0;
-                $userData['type']='wechat';
-                $userData['type_id']=$wid;
                 Db::name('MemberOauth')->insert($userData);
                 
             }

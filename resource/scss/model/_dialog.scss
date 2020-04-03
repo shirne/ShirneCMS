@@ -1,0 +1,45 @@
+.dialog-message{
+    font-size:18px;line-height:22px;
+    position: relative;
+    i{
+      font-size:22px;
+    }
+    .closebtn{
+      font-size:20px;
+      position: absolute;
+      right:0;
+      top:0;
+      color:#fff;
+      text-shadow: 0 1px 0 #fff;
+      transition: all .5s;
+      &:hover{
+        transform: rotate(180deg);
+      }
+    }
+  }
+  
+.list-loading {
+    color: #999;
+    margin: 50px 0;
+    text-align: center;
+  }
+  
+  .list-group .list-group-item {
+    .badge{
+      margin-left:5px;
+    }
+    &.disabled{
+      .title{
+        color:#999;
+      }
+    }
+    &.active {
+      .title {
+        color : #fff;
+      }
+      .badge-secondary{
+        background-color : #f8f9fa;
+        color:#212529;
+      }
+    }
+  }

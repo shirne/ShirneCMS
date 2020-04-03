@@ -117,8 +117,12 @@ class BaseController extends Controller
         session($key, time());
     }
     
-    public function _empty($error='页面不存在',$description='', $redirect=null){
+    public function _empty(){
         
+        return $this->errorPage();
+    }
+
+    protected function errorPage($error='页面不存在',$description='', $redirect=null){
         $this->assign('error',$error);
         $this->assign('description',$description);
         if(empty($redirect))$redirect=url('index/index/index');

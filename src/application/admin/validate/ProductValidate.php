@@ -14,10 +14,12 @@ class ProductValidate extends BaseUniqueValidate
 {
     protected $rule=array(
         'title'=>'require',
+        'vice_title'=>'max:200',
         'goods_no'=>'require|unique:product,%id%',
     );
     protected $message=array(
         'title.require'=>'请填写商品名称',
+        'vice_title.max'=>'商品特性限制在200个字符以内',
         'goods_no.require'=>'请填写商品货号',
         'goods_no.unique'=>'商品货号已存在'
     );

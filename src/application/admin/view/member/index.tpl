@@ -50,7 +50,7 @@
                 <th>手机/邮箱</th>
                 <th>余额</th>
                 <th>推荐人</th>
-                <th width="90">代理</th>
+                <th width="120">代理</th>
                 <th width="120">级别</th>
                 <th width="200">&nbsp;</th>
             </tr>
@@ -121,17 +121,15 @@
                     </empty>
                 </td>
                 <td class="operations text-left">
-
                     <if condition="$v.is_agent neq 0">
                         <a class="btn btn-outline-primary" title="查看下线" href="{:url('member/index',array('referer'=>$v['id']))}"><i class="ion-md-people"></i> </a>
-                        <a class="btn btn-outline-danger link-confirm" data-confirm="取消代理不能更改已注册的用户!!!" title="取消代理" href="{:url('member/cancel_agent',array('id'=>$v['id']))}" ><i class="ion-md-log-out"></i> </a>
+                        <a class="btn btn-outline-danger link-confirm" data-confirm="取消代理不能更改已注册的用户!!!" title="取消代理" href="{:url('member/cancel_agent',array('id'=>$v['id']))}" ><i class="ion-md-log-out"></i> </a><br />
+                        <a class="btn btn-sm pl-1 pr-1 pt-0 pb-0 mt-2 btn-{$agents[$v['is_agent']]['style']} btn-setagent" title="更改级别" data-id="{$v.id}" data-agent="{$v.is_agent}" href="{:url('member/set_agent',array('id'=>$v['id']))}" >{$agents[$v['is_agent']]['name']}&nbsp;<i class="ion-md-create"></i></a>
                     <else/>
-                        <a class="btn btn-outline-primary {$v.refer_agent>2?'disabled':''}" title="设置代理" href="{:url('member/set_agent',array('id'=>$v['id']))}" ><i class="ion-md-check"></i> </a>
+                        <a class="btn btn-sm btn-outline-primary"  data-id="{$v.id}" data-agent="0" title="设置代理" href="{:url('member/set_agent',array('id'=>$v['id']))}" ><i class="ion-md-medal"></i> </a>
                     </if>
-
-                </td> 
+                </td>
                 <td>
-                    
                     <a href="javascript:" class="btn btn-sm has-tooltip pl-1 pr-1 pt-0 pb-0 btn-{$levels[$v['level_id']]['style']} btn-setlevel" data-id="{$v.id}" data-level="{$v.level_id}" title="点击修改">{$levels[$v['level_id']]['level_name']}&nbsp;<i class="ion-md-create"></i></a>
                 </td>
                 <td class="operations">
@@ -142,7 +140,7 @@
                     <if condition="$v.status eq 1">
                         <a class="btn btn-outline-warning link-confirm" title="禁用" data-confirm="禁用后用户将不能登陆!\n请确认!!!" href="{:url('member/status',array('id'=>$v['id'],'type'=>0))}" ><i class="ion-md-remove-circle-outline"></i> </a>
                         <else/>
-                        <a class="btn btn-outline-success" title="启用" href="{:url('member/status',array('id'=>$v['id'],'type'=>1))}" style="color:#50AD1E;"><i class="ion-md-check"></i> </a>
+                        <a class="btn btn-outline-success link-confirm" title="启用" data-confirm="确认启用用户?" href="{:url('member/status',array('id'=>$v['id'],'type'=>1))}" style="color:#50AD1E;"><i class="ion-md-checkmark-circle"></i> </a>
                     </if>
                     <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="警告：删除会员将清除所有与会员相关的资料并且无法恢复!\n请确认!!!" href="{:url('member/delete',array('id'=>$v['id']))}" ><i class="ion-md-close"></i> </a>
                 </td>
@@ -155,16 +153,26 @@
 
 </block>
 <block name="script">
-    <script type="text/plain" id="rechargeTpl">
+    <script type="text/html" id="rechargeTpl">
         <div class="row" style="margin:0 10%;">
-            <div class="col-12 form-group"><div class="input-group"><div ><span class="input-group-text">充值类型</span> </div><div class="col w-50 text-center" ><div class="btn-group btn-group-toggle" data-toggle="buttons">
-                <foreach name="moneyTypes" item="mt" key="k">
-                <label class="btn btn-outline-primary {$k=='money'?'active':''}"> <input type="radio" name="field" value="{$k}" autocomplete="off" {$k=='money'?'checked':''}> {$mt}</label>
-                </foreach>
-            </div></div> </div></div>
+            <div class="col-12 form-group">
+                <div class="input-group">
+                    <div ><span class="input-group-text">充值类型</span> </div>
+                    <div class="col w-50 text-center" >
+                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                        <foreach name="moneyTypes" item="mt" key="k">
+                        <label class="btn btn-outline-primary {$k=='money'?'active':''}"> <input type="radio" name="field" value="{$k}" autocomplete="off" {$k=='money'?'checked':''}> {$mt}</label>
+                        </foreach>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="col-12 form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">充值金额</span> </div><input type="text" name="amount" class="form-control" placeholder="请填写充值金额"/> </div></div>
             <div class="col-12 form-group"><div class="input-group"><div class="input-group-prepend"><span class="input-group-text">充值原因</span> </div><input type="text" name="reson" class="form-control" placeholder="请填写充值原因"/> </div> </div>
         </div>
+    </script>
+    <script type="text/plain" id="member_agent">
+        {$agents|array_values|json_encode|raw}
     </script>
     <script type="text/plain" id="member_level">
         {$levels|array_values|json_encode|raw}
@@ -174,7 +182,7 @@
             w.actionEnable=function(ids){
                 dialog.confirm('确定将选中会员设置为正常状态？',function() {
                     $.ajax({
-                        url:"{:url('member/delete',['id'=>'__id__','type'=>1])}".replace('__id__',ids.join(',')),
+                        url:"{:url('member/status',['id'=>'__id__','type'=>1])}".replace('__id__',ids.join(',')),
                         type:'GET',
                         dataType:'JSON',
                         success:function(json){
@@ -192,7 +200,7 @@
             w.actionDisable=function(ids){
                 dialog.confirm('确定禁用选中会员？',function() {
                     $.ajax({
-                        url:"{:url('member/delete',['id'=>'__id__','type'=>0])}".replace('__id__',ids.join(',')),
+                        url:"{:url('member/status',['id'=>'__id__','type'=>0])}".replace('__id__',ids.join(',')),
                         type:'GET',
                         dataType:'JSON',
                         success:function(json){
@@ -252,6 +260,7 @@
                             data:{
                                 id:id,
                                 amount:amount,
+                                field:body.find('input[name=field]:checked').val(),
                                 reson:body.find('input[name=reson]').val()
                             },
                             dataType:'JSON',
@@ -333,6 +342,40 @@
                         data:{
                             id:id,
                             level_id:level.level_id
+                        },
+                        success:function (json) {
+                            dialog.alert(json.msg,function () {
+                                if(json.code==1){
+                                    location.reload()
+                                }
+                            })
+                        }
+                    })
+                })
+            });
+
+            var agents=JSON.parse($('#member_agent').text());
+            $('.btn-setagent').click(function(e){
+                e.preventDefault();
+
+                var id=$(this).data('id')
+                var agent_id=$(this).data('agent')
+                dialog.pickList({
+                    isajax:false,
+                    list:agents,
+                    idkey:'id',
+                    rowTemplate:'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action" style="line-height:30px;">[{@id}]&nbsp;{@name} {@cost_credit}积分 {@total_award}收益  </a>'
+                },function(agent){
+                    if(agent.id==agent_id){
+                        dialog.warning('未修改')
+                        return false;
+                    }
+                    $.ajax({
+                        url:"{:url('set_agent')}",
+                        dataType:'json',
+                        data:{
+                            id:id,
+                            agent_id:agent.id
                         },
                         success:function (json) {
                             dialog.alert(json.msg,function () {

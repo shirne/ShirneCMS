@@ -117,5 +117,9 @@ return [
     'Update failed!'=>'保存失败！',
     'Delete failed!'=>'删除失败！',
     'Operation failed!'=>'操作失败！',
+    'Add failed: %s'=>'添加失败: %s',
+    'Update failed: %s'=>'保存失败: %s',
+    'Delete failed: %s'=>'删除失败: %s',
+    'Operation failed: %s'=>'操作失败: %s',
     'Operation success!'=>'操作成功！',
 ];

@@ -6,6 +6,7 @@ use app\common\facade\CategoryFacade;
 use app\common\model\ArticleCommentModel;
 use app\common\model\ArticleModel;
 use app\common\validate\ArticleCommentValidate;
+use shirne\third\Aliyun;
 use \think\Db;
 /**
  * 文章
@@ -63,7 +64,7 @@ class ArticleController extends BaseController{
     public function view($id){
         $article = ArticleModel::get($id);
         if(empty($article)){
-            return $this->_empty(lang('Article not exists!'));
+            return $this->errorPage(lang('Article not exists!'));
         }
         $this->seo($article['title']);
         $this->category($article['cate_id']);
@@ -97,7 +98,12 @@ class ArticleController extends BaseController{
             $this->error(lang('Arguments error!'));
         }
         if($this->request->isPost()){
-            $data=$this->request->only('article_id,email,is_anonymous,content,reply_id','POST');
+            $this->checkSubmitRate(2);
+            $data=$this->request->only('email,is_anonymous,content,reply_id','POST');
+            if($this->config['anonymous_comment']==0 && !$this->isLogin){
+                $this->error('请登陆后评论');
+            }
+            $data['article_id']=$id;
             $validate=new ArticleCommentValidate();
             if(!$validate->check($data)){
                 $this->error($validate->getError());
@@ -105,10 +111,19 @@ class ArticleController extends BaseController{
                 $data['member_id']=$this->userid;
                 if(!empty($data['member_id'])){
                     $data['email']=$this->user['email'];
+                    $data['nickname']=$this->user['nickname']?:$this->user['username'];
+
+                    //检测会员评论频率
+                    $check = ArticleCommentModel::checkSubmitByMember($id, $this->userid);
                 }else{
                     if(empty($data['email'])){
                         $this->error('请填写邮箱');
                     }
+
+                    $check = ArticleCommentModel::checkSubmitByIP($id);
+                }
+                if(!$check){
+                    $this->error('系统繁忙,请稍后再提交评论');
                 }
                 if(!empty($data['reply_id'])){
                     $reply=Db::name('ArticleComment')->find($data['reply_id']);
@@ -117,19 +132,52 @@ class ArticleController extends BaseController{
                     }
                     $data['group_id']=empty($reply['group_id'])?$reply['id']:$reply['group_id'];
                 }
+                $data['content']=preg_replace_callback('/\[([^\]]+)\]\([^\)]+\)/',function($matches){
+                    return $matches[0];
+                },$data['content']);
+
+                $aliyun = new Aliyun($this->config);
+                $detected = $aliyun->greenScan($data['content']);
+                if($detected < 0){
+                    $this->error('系统检测到您的评论含有非法或无意义内容,请重新组织内容');
+                }
+                $data['status']=$detected;
+                
                 $model=ArticleCommentModel::create($data);
                 if($model['id']){
-                    $this->success('评论成功');
+                    $this->success('评论成功'.($detected==0?',请等待管理员审核':''));
                 }else{
                     $this->error('评论失败');
                 }
             }
         }
+
+        $model=Db::view('articleComment','*')
+        ->view('member',['username','realname','avatar'],'member.id=articleComment.member_id','LEFT')
+        ->where('article_id',$id);
+
+        if($this->isLogin){
+            $model->where(function($query){
+                return $query->where('articleComment.status',1)
+                ->whereOr('articleComment.member_id',$this->userid);
+            });
+        }else{
+            $model->where('articleComment.status',1);
+        }
+
+        $comments=$model->order('articleComment.create_time desc')->paginate(10);
+
+        if($this->request->isAjax()){
+            $this->success('','',[
+                'comments'=>$comments->items(),
+                'page'=>$comments->currentPage(),
+                'total'=>$comments->total(),
+                'total_page'=>$comments->lastPage(),
+            ]);
+        }
+
         $this->seo($article['title']);
         $this->category($article['cate_id']);
-        $comments=Db::view('articleComment','*')
-        ->view('member',['username','realname'],'member.id=articleComment.member_id','LEFT')
-        ->where('article_id',$id)->paginate(10);
 
         $this->assign('article',$article);
         $this->assign('comments',$comments);

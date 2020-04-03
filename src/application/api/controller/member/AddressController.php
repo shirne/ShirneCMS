@@ -26,7 +26,7 @@ class AddressController extends AuthedController
     }
     
     public function save($id=0){
-        $data=$this->input['address'];
+        $data=$this->request->param('address');
         $data['is_default']=empty($data['is_default'])?0:1;
         $validate=new MemberAddressValidate();
         if(!$validate->check($data)){

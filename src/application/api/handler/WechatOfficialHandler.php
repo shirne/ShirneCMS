@@ -6,6 +6,7 @@ namespace app\api\handler;
 
 use EasyWeChat\Kernel\Contracts\EventHandlerInterface;
 use EasyWeChat\Kernel\Messages\Raw;
+use app\common\model\MemberOauthModel;
 use think\facade\Log;
 
 class WechatOfficialHandler extends BaseHandler implements EventHandlerInterface
@@ -16,15 +17,30 @@ class WechatOfficialHandler extends BaseHandler implements EventHandlerInterface
     public function handle($message = null)
     {
         Log::record('接收到消息:'.var_export($message,true),'Wechat');
+        if(empty($message) || !isset($message['MsgType'])){
+            return '';
+        }
+        
+        //非订阅事件自动处理会员
+        if($message['MsgType'] != 'event' || $message['Event']!= 'subscribe'){
+            $hasUser = MemberOauthModel::where('openid',$message['FromUserName'])->find();
+            if(empty($hasUser) || empty($hasUser['member_id'])){
+                $userinfo=$this->app->user->get($message['FromUserName']);
+                $this->user = MemberOauthModel::checkUser($userinfo, $this->account);
+            }else{
+                $this->user = $hasUser;
+            }
+        }
+
         switch ($message['MsgType']) {
             case 'event':
-                switch ($message['event']){
+                switch ($message['Event']){
                     case 'subscribe':
                         $userinfo=$this->app->user->get($message['FromUserName']);
                         if(!empty($message['EventKey'])){
-                            $this->onSubscribe($message, $userinfo);
+                            $subscribe = $this->onSubscribe($message, $userinfo);
                             $scene_id=substr($message['EventKey'],8);
-                            return $this->onScan($message,$scene_id);
+                            return $this->onScan($message,$scene_id)?:$subscribe;
                         }else {
                             return $this->onSubscribe($message, $userinfo);
                         }

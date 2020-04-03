@@ -17,7 +17,7 @@ class Article extends BaseTabLib
         'next'=>['attr'=>'var,category,id','close'=>0],
         'pages'=>['attr'=>'var,group,limit','close'=>0],
         'page'=>['attr'=>'var,name','close'=>0],
-        'cates'=>['attr'=>'var,pid','close'=>0],
+        'cates'=>['attr'=>'var,pid,limit','close'=>0],
         'cate'=>['attr'=>'var,name','close'=>0],
         'listwrap'=>['attr'=>'name,step,id']
     ];
@@ -112,6 +112,9 @@ class Article extends BaseTabLib
             $parseStr .= "->where('pid',".$pid.")";
         }
         $parseStr .= '->order("sort ASC, id ASC")';
+        if(!empty($tag['limit'])){
+            $parseStr .= '->limit('.intval($tag['limit']).')';
+        }
         $parseStr .= '->select();';
 
         $parseStr .= ' ?>';

@@ -364,6 +364,7 @@ function feedback_status($status,$wrap=true)
 function audit_status($status,$wrap=true)
 {
     $statusText = array(lang('Unaudited'), lang('Confirmed'), lang('Invalid'));
+    $statusText[-1]=lang('Invalid');
     return $wrap?wrap_label($statusText[$status],status_type($status)):$statusText[$status];
 }
 
@@ -376,10 +377,11 @@ function audit_status($status,$wrap=true)
 function show_status($status,$wrap=true)
 {
     $statusText = array(lang('Hidden'), lang('Shown'));
+    $statusText[-1]=lang('Invalid');
     return $wrap?wrap_label($statusText[$status],status_type($status)):$statusText[$status];
 }
 function status_type($status){
-    return ['warning','success','default'][$status];
+    return $status>=0?['warning','success','secondary'][$status]:'secondary';
 }
 
 /**
@@ -1130,7 +1132,7 @@ function compare_password($user,$password){
 }
 
 function compare_secpassword($user,$password){
-    return encode_password($password,md5($user['id']))===$user['secpassword'];
+    return encode_password($password,$user['secsalt'])===$user['secpassword'];
 }
 
 
@@ -1253,19 +1255,19 @@ function http_request($url, $params = false, $ispost = 0)
 }
 
 
-function gener_qrcode($text,$size=300,$pad=10,$errLevel='high'){
+function gener_qrcode($text,$size=300,$margin=10,$errLevel='high'){
     $qrCode = new \Endroid\QrCode\QrCode();
 
     $qrCode->setText($text)
         ->setSize($size)
-        ->setPadding($pad)
-        ->setErrorCorrection($errLevel)
+        ->setMargin($margin)
+        ->setErrorCorrectionLevel($errLevel)
         ->setForegroundColor(array('r' => 0, 'g' => 0, 'b' => 0, 'a' => 0))
         ->setBackgroundColor(array('r' => 255, 'g' => 255, 'b' => 255, 'a' => 0))
         //->setLabel('thinkphp.cn')
         //->setLabelFontSize(16)
-        ->setImageType(\Endroid\QrCode\QrCode::IMAGE_TYPE_PNG);
-    $qrCode->render();
+        ->setWriterByName('png');
+    return $qrCode->writeString();
 }
 
 function file_rule($file){

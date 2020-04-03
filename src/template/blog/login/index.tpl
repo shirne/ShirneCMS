@@ -3,8 +3,8 @@
 	<div class="main">
 		<div class="container loginbox">
 			<div class="row justify-content-center">
-				<div class="col-10 col-md-5">
-			<div class="card">
+				<div class="col-10 col-lg-5">
+			<div class="card my-card">
 				<div class="card-header">{:lang('User sign in')}</div>
 				<div class="card-body">
 
@@ -50,11 +50,11 @@
 							</div>
 						</div>
 						<div class="form-group submitline">
-							<button type="submit" class="btn btn-primary btn-block create">{:lang('Sign in')}</button>
+							<button type="submit" class="btn btn-info btn-block create">{:lang('Sign in')}</button>
 						</div>
 						<div class="form-group">
 							<div class="text-center">
-							{:lang('No account yet?')}<a href="{:url('index/login/register')}">{:lang('Create an account')}</a>
+							{:lang('No account yet?')}<a class="text-info pl-2" href="{:url('index/login/register')}">{:lang('Create an account')}</a>
 							</div>
 						</div>
 					</form>

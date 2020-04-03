@@ -84,9 +84,11 @@ class CreditOrderController extends AuthedController
                     ->where('address_id',$data['address_id'])->find();
                 $pay_credit=$total_price;
                 if($this->user['points']<$pay_credit*100){
-                    $pay_credit = $this->user['points'] * .01;
+                    $pay_credit = $this->user['points'] / 100;
                 }
-                $result=CreditOrderFacade::makeOrder($this->user,$goodss,$address,$pay_credit,$data['remark'],$balancepay,$ordertype);
+
+                $orderModel=new CreditOrderFacade();
+                $result=$orderModel->makeOrder($this->user,$goodss,$address,$pay_credit,$data['remark'],$balancepay,$ordertype);
                 if($result){
                     if($balancepay) {
                         $this->success('下单成功',url('index/member/order_detail',['id'=>$result]));
@@ -97,7 +99,7 @@ class CreditOrderController extends AuthedController
                         $this->success('下单成功，即将跳转到支付页面',url('index/order/'.$data['pay_type'].'pay',['order_id'=>'PO_'.$result]));
                     }
                 }else{
-                    $this->error('下单失败');
+                    $this->error($orderModel->getError()?:'下单失败');
                 }
             }
         }

@@ -97,4 +97,19 @@ class MemberTokenModel extends BaseModel
 
         return $this->findToken($data['token'],true);
     }
+
+    public function clearToken($token){
+        $token=$this->where('token',$token)->find();
+        if(empty($token)){
+            return false;
+        }
+
+        $data=array(
+            'token'=>'',
+            'expire_in'=>0
+        );
+        $data['refresh_token']='';
+
+        return static::update($data,['member_id'=>$token['member_id']]);
+    }
 }

@@ -7,7 +7,7 @@ use app\common\model\MemberOauthModel;
 use app\common\service\CheckcodeService;
 use app\common\validate\MemberValidate;
 use shirne\sdk\OAuthFactory;
-use think\captcha\Captcha;
+use shirne\captcha\Captcha;
 use think\Db;
 use think\Exception;
 use think\facade\Log;
@@ -33,6 +33,7 @@ class LoginController extends BaseController{
         //方式1：本地账号登陆
         if(empty($type)){
             if($this->request->isPost()){
+                $this->checkSubmitRate(2);
                 $code = $this->request->post('verify','','strtolower');
                 //验证验证码是否正确
                 if(!($this->check_verify($code))){
@@ -294,6 +295,7 @@ class LoginController extends BaseController{
 
 
         if($this->request->isPost()){
+            $this->checkSubmitRate(2);
             $data=$this->request->only('username,password,repassword,email,realname,mobile,mobilecheck','post');
 
             $validate=new MemberValidate();
@@ -311,7 +313,7 @@ class LoginController extends BaseController{
                 }
             }
 
-            if($this->config['sms_code'] ) {
+            if($this->config['sms_code'] == 1) {
                 if (empty($data['mobilecheck'])) {
                     $this->error(' 请填写手机验证码');
                 }

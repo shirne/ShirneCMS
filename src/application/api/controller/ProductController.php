@@ -6,8 +6,11 @@ use app\common\facade\MemberFavouriteFacade;
 use app\common\facade\ProductCategoryFacade;
 use app\common\model\PostageModel;
 use app\common\model\ProductModel;
+use app\common\model\WechatModel;
 use app\common\model\ProductSkuModel;
+use shirne\common\Poster;
 use think\Db;
+use think\facade\Log;
 
 /**
  * 产品操作接口
@@ -107,6 +110,100 @@ class ProductController extends BaseController
         ]);
     }
 
+    public function share($id, $type='url'){
+        $product = ProductModel::get($id);
+        if(empty($product)){
+            $this->error('商品不存在');
+        }
+        
+        $data=[
+            'avatar'=>'',
+            'nickname'=>'',
+            'image'=>'.'.$product['image'],
+            'title'=>$product['title'],
+            'vice_title'=>$product['vice_title'],
+            'price'=>$product['min_price'],
+            'qrcode'=>''
+        ];
+        if(strpos($data['title'],'【')==0 && strpos($data['title'],'】')>0){
+            $data['title'] = mb_substr($data['title'],mb_strpos($data['title'],'】')+1);
+        }
+
+        if(!in_array($type,['url','miniqr'])){
+            $this->error('分享图类型错误');
+        }
+        $params=['id'=>$id];
+        if($this->isLogin && $this->user['is_agent'] > 0){
+            $data['avatar']=$this->user['avatar'];
+            $data['nickname']=$this->user['nickname'];
+            $params['agent']=$this->user['agentcode'];
+            $qrurl = './uploads/pshare/'.$id.'/'.($this->user['id']%100).'/'.$this->user['agentcode'].'-'.$type.'-p'.$id.'-qrcode.jpg';
+            $sharepath = './uploads/pshare/'.$id.'/'.($this->user['id']%100).'/'.$this->user['agentcode'].'-'.$type.'-p'.$id.'.jpg';
+        }else{
+            $data['avatar']='.'.$this->config['site-weblogo'];
+            $data['nickname']=$this->config['site-name'];
+            $qrurl = './uploads/pshare/'.$id.'/share-qrcode-'.$type.'.png';
+            $sharepath = './uploads/pshare/'.$id.'/share-'.$type.'.png';
+        }
+        $imgurl = media(ltrim($sharepath,'.'));
+        $config=config('share.');
+        if(empty($config) || empty($config['background'])){
+            $this->error('请配置产品海报生成样式(config/share.php)');
+        }
+        if(!file_exists($sharepath) || 
+            filemtime($sharepath) < $product['update_time'] || 
+            filemtime($sharepath) < $this->user['update_time'] ||
+            filemtime($sharepath) < filemtime($config['background'] )){
+
+            if($type == 'url'){
+                $url = url('index/product/view',$params, true, true);
+                $content=gener_qrcode($url, 430);
+            }else{
+                $appid=$this->request->tokenData['appid'];
+                $wechat=WechatModel::where('appid',$appid)->find();
+                if(empty($wechat)){
+                    $this->error('分享图生成失败(wechat)');
+                }
+                $content = $this->miniprogramQrcode($wechat, ['path'=>'pages/product/detail', 'scene'=> $params], 430);
+            }
+            $dir = dirname($qrurl);
+            if(!is_dir($dir)){
+                mkdir($dir,0777,true);
+            }
+            file_put_contents($qrurl,$content);
+            $data['qrcode']=$qrurl;
+
+            $dir = dirname($sharepath);
+            if(!is_dir($dir)){
+                mkdir($dir,0777,true);
+            }
+
+            
+            $poster = new Poster($config);
+            $poster->generate($data);
+            $poster->save($sharepath);
+            $imgurl .= '?_t='.time();
+        }else{
+            $imgurl .= '?_t='.filemtime($sharepath);
+        }
+        
+        return $this->response(['share_url'=>$imgurl]);
+    }
+
+    private function miniprogramQrcode($wechatid, $params, $size){
+        $app = WechatModel::createApp($wechatid);
+        if(!$app){
+            $this->error('小程序账号错误');
+        }
+        $response = $app->app_code->getUnlimit(http_build_query($params['scene']), ['page'=>$params['path'],'width'=>$size]);
+        if ($response instanceof \EasyWeChat\Kernel\Http\StreamResponse) {
+            return $response->getBody()->getContents();
+        }
+        Log::record(var_export($response,true));
+        $this->error('小程序码生成失败');
+    }
+
+
     public function comments($id){
         $product = ProductModel::get($id);
         if(empty($product)){
@@ -114,7 +211,9 @@ class ProductController extends BaseController
         }
         $comments=Db::view('productComment','*')
             ->view('member',['username','realname','avatar'],'member.id=productComment.member_id','LEFT')
-            ->where('product_id',$id)->paginate(10);
+            ->where('productComment.status',1)
+            ->where('product_id',$id)
+            ->order('productComment.create_time desc')->paginate(10);
 
         return $this->response([
             'lists'=>$comments->items(),

@@ -19,6 +19,11 @@ class ProductCategoryModel extends CategoryModel
         return Db::name('ProductCategory')->order('pid ASC,sort ASC,id ASC')->select();
     }
 
+    public function getBrandsCategories($brandid){
+        $catebrand = Db::name('productCategoryBrand')->where('brand_id',$brandid)->select();
+        return array_column($catebrand,'cate_id');
+    }
+
     public function getBrands($cateid = 0, $key = ''){
         $model = Db::view('productBrand','*')
             ->view('productCategoryBrand','cate_id','productCategoryBrand.brand_id=productBrand.id','LEFT');

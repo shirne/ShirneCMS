@@ -64,7 +64,7 @@ class ProductController extends BaseController
     public function view($id){
         $product = ProductModel::get($id);
         if(empty($product)){
-            return $this->_empty('商品不存在');
+            return $this->errorPage('商品不存在');
         }
         $product['sale']+=$product['v_sale'];
         $this->seo($product['title']);
@@ -100,11 +100,23 @@ class ProductController extends BaseController
                 }
             }
         }
+        $comments=Db::view('productComment','*')
+            ->view('member',['username','realname','avatar'],'member.id=productComment.member_id','LEFT')
+            ->where('productComment.status',1)
+            ->where('product_id',$id)
+            ->order('productComment.create_time desc')->paginate(10);
+        
+        if($this->request->isAjax()){
+            $this->success('','',[
+                'comments'=>$comments->items(),
+                'page'=>$comments->currentPage(),
+                'total'=>$comments->total(),
+                'total_page'=>$comments->lastPage(),
+            ]);
+        }
+            
         $this->seo($product['title']);
         $this->category($product['cate_id']);
-        $comments=Db::view('productComment','*')
-            ->view('member',['username','realname'],'member.id=productComment.member_id','LEFT')
-            ->where('product_id',$id)->paginate(10);
 
         $this->assign('product',$product);
         $this->assign('comments',$comments);

@@ -73,6 +73,25 @@
         <div class="text-muted">邀请注册关闭后，所有通过分享关系进入的会员，将不再绑定。开启时有分享人则绑定。强制邀请注册时则只能从系统的邀请码注册</div>
     </div>
 </div>
+<div class="form-row form-group regsetrow">
+        <label for="v-anonymous_comment" class="col-3 col-md-2 text-right align-middle">匿名评论</label>
+        <div class="col-9 col-md-8 col-lg-6">
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <foreach name="setting.anonymous_comment.data" item="value" key="k">
+                    <if condition="$k==$setting['anonymous_comment']['value']">
+                        <label class="btn btn-outline-secondary active">
+                            <input type="radio" name="v-anonymous_comment" value="{$k}" autocomplete="off" checked> {$value}
+                        </label>
+                        <else />
+                        <label class="btn btn-outline-secondary">
+                            <input type="radio" name="v-anonymous_comment" value="{$k}" autocomplete="off"> {$value}
+                        </label>
+                    </if>
+                </foreach>
+            </div>
+            <div class="text-muted">文章评论是否需要会员登录</div>
+        </div>
+    </div>
 <div class="form-row form-group">
     <label for="v-m_checkcode" class="col-3 col-md-2 text-right align-middle">验证码</label>
     <div class="col-9 col-md-8 col-lg-6">

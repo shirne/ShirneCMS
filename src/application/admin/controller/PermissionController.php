@@ -90,6 +90,7 @@ class PermissionController extends BaseController
             $this->error('要编辑的项不存在');
         }
         $this->assign('perm',$model);
+        $this->assign('id',$id);
         return $this->fetch();
     }
 

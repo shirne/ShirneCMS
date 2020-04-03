@@ -10,7 +10,7 @@ class Goods extends BaseTabLib
     protected $tags =[
         'list'=>['attr'=>'var,category,type,ids,limit,image,recursive','close'=>0],
         'relation'=>['attr'=>'var,category,id,limit','close'=>0],
-        'cates'=>['attr'=>'var,pid','close'=>0],
+        'cates'=>['attr'=>'var,pid,limit','close'=>0],
         'cate'=>['attr'=>'var,name','close'=>0],
     ];
 
@@ -89,6 +89,9 @@ class Goods extends BaseTabLib
             $parseStr .= "->where('pid','.$pid.')";
         }
         $parseStr .= '->order("sort ASC, id ASC")';
+        if(!empty($tag['limit'])){
+            $parseStr .= '->limit('.intval($tag['limit']).')';
+        }
         $parseStr .= '->select();';
 
         $parseStr .= ' ?>';

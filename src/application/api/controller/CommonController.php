@@ -5,6 +5,7 @@ namespace app\api\controller;
 use app\common\model\AdvGroupModel;
 use app\common\model\BoothModel;
 use app\common\model\LinksModel;
+use app\common\model\MemberAgentModel;
 use app\common\model\MemberSignModel;
 use app\common\model\NoticeModel;
 use think\Db;
@@ -28,7 +29,7 @@ class CommonController extends BaseController
      * @return \think\response\Json
      */
     public function batch(){
-        $methods=$this->get_param('methods');
+        $methods=$this->request->param('methods');
         $data=[];
         if(!empty($methods)) {
             $methods = explode(',', $methods);
@@ -71,7 +72,15 @@ class CommonController extends BaseController
                 }else{
                     $m[0] = ucfirst($m[0]);
                 }
-                $controller = \container()->make('\\app\\api\\controller\\' . $m[0] . 'Controller');
+                if(in_array($m[0],['Base','Auth','Authed','Wechat'])){
+                    return null;
+                }
+                try{
+                    $controller = \container()->make('\\app\\api\\controller\\' . $m[0] . 'Controller');
+                }catch(\Exception $e){
+                    Log::record($e->getMessage(),'error');
+                    return null;
+                }
             }
             $m = $m[1];
         } else {
@@ -113,6 +122,55 @@ class CommonController extends BaseController
     
     public function booth($flags){
         return $this->response(BoothModel::fetchBooth($flags));
+    }
+
+    /**
+     * 全站搜索
+     */
+    public function search($keyword, $model='', $price=''){
+
+        $unionModel = Db::field('id,title,vice_title,cover as image,0 as price,status,0 sale,create_time,update_time,\'article\' as model')
+        ->name('article');
+        if(empty($model) || $model=='product'){
+            $unionModel->union(function($query){
+                $query->field('id,title,vice_title,image,min_price as price,status,sale,create_time,update_time,\'product\' as model')
+                ->name('product');
+            });
+        }
+        if(empty($model) || $model=='goods'){
+            $unionModel->union(function($query){
+                $query->field('id,title,vice_title,image,price,status,sale,create_time,update_time,\'goods\' as model')
+                ->name('goods');
+            });
+        }
+
+        $table=Db::table(
+            $unionModel->buildSql().' search_table')
+        ->where('status',1);
+
+        if(!empty($keyword)){
+            $table->whereLike('title|vice_title',"%$keyword%");
+        }
+        if(!empty($price)){
+            $parts = explode('-',$price);
+            if(count($parts)>1){
+                $table->whereBetween('price',[intval($parts[0]),intval($parts[1])]);
+            }else{
+                $table->where('price','gt',intval($price));
+            }
+        }
+        if(!empty($model)){
+            $table->where('model',$model);
+        }
+
+        $lists = $table->order('sale DESC,create_time DESC')->paginate(10);
+
+        return $this->response([
+            'lists'=>$lists->items(),
+            'page'=>$lists->currentPage(),
+            'total'=>$lists->total(),
+            'total_page'=>$lists->lastPage(),
+        ]);
     }
 
     /**
@@ -199,6 +257,30 @@ class CommonController extends BaseController
         }
         return $this->response($data);
     }
+
+    /**
+     * 获取配置
+     */
+    public function config($group){
+        if(!empty($group) && $group != 'third'){
+            $settings = getSettings(false,true);
+            if(strpos($group,',')===false){
+                return $this->response(isset($settings[$group])?$settings[$group]:new \stdClass());
+            }else{
+                $groups = explode(',',$group);
+                $rdata=[];
+                foreach($groups as $g){
+                    $g = trim(strtolower($g));
+                    if($g != 'third'){
+                        $rdata[$g] = isset($settings[$group])?$settings[$group]:new \stdClass();
+                    }
+                }
+
+                return $this->response($rdata);
+            }
+        }
+        return $this->response(new \stdClass());
+    }
     
     /**
      * 签到排名
@@ -229,6 +311,9 @@ class CommonController extends BaseController
         }
         if(in_array('levels',$keyarr)){
             $datas['levels']=getMemberLevels();
+        }
+        if(in_array('agents',$keyarr)){
+            $datas['agents']=MemberAgentModel::getCacheData();
         }
         
         return $this->response($datas);

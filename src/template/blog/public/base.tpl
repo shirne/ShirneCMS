@@ -36,8 +36,14 @@
             var target=$(e.target);
             if(target.is('a'))return;
             if(target.parents('a').length>0)return;
-            var link=$(this).find('a')[0]
-            link && link.click();
+            var link=$(this).find('a[href]')
+            if(link.length>0){
+                var anchor=target.data('anchor')
+                if(anchor){
+                    link.attr('href',link.attr('href')+'#'+anchor)
+                }
+                link[0].click();
+            }
         });
     })
 </script>

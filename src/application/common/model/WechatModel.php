@@ -86,32 +86,46 @@ class WechatModel extends BaseModel
         return self::to_config($this);
     }
     
-    public static function createApp($wechat){
-    
-        $options=self::to_config($wechat);
-    
-        switch ($wechat['account_type']) {
-            case 'wechat':
-            case 'subscribe':
-            case 'service':
-                return Factory::officialAccount($options);
-                break;
-            case 'miniprogram':
-            case 'minigame':
-                return Factory::miniProgram($options);
-                break;
-            case 'platform':
-                return Factory::openPlatform($options);
-                break;
-            case 'work':
-                return Factory::work($options);
-            case 'openwork':
-                return Factory::openWork($options);
-            case 'micromerchant':
-                return Factory::microMerchant($options);
-            default:
-                
-                break;
+    public static function createApp($wechat, $ispay=false, $payset=[]){
+        if(is_numeric($wechat)){
+            $wechat = static::get($wechat);
+        }
+        if(is_string($wechat)){
+            $wechat = static::where(['appid'=>$wechat])->find();
+        }
+        if(!empty($wechat)){
+            if($ispay){
+                $config=WechatModel::to_pay_config($wechat, $payset['notify']??'', $payset['use_cert']??false);
+                if(empty($config)){
+                    return false;
+                }
+                return Factory::payment($config);
+            }
+            $options=self::to_config($wechat);
+        
+            switch ($wechat['account_type']) {
+                case 'wechat':
+                case 'subscribe':
+                case 'service':
+                    return Factory::officialAccount($options);
+                    break;
+                case 'miniprogram':
+                case 'minigame':
+                    return Factory::miniProgram($options);
+                    break;
+                case 'platform':
+                    return Factory::openPlatform($options);
+                    break;
+                case 'work':
+                    return Factory::work($options);
+                case 'openwork':
+                    return Factory::openWork($options);
+                case 'micromerchant':
+                    return Factory::microMerchant($options);
+                default:
+                    
+                    break;
+            }
         }
         return null;
     }
@@ -127,11 +141,15 @@ class WechatModel extends BaseModel
 
         // 如需使用敏感接口（如退款、发送红包等）需要配置 API 证书路径(登录商户平台下载 API 证书)
         if($useCert){
+            if(empty($data['cert_path']) || empty($data['key_path'])){
+                return false;
+            }
             $config['cert_path'] = realpath(DOC_ROOT.$data['cert_path']);
             $config['key_path']  = realpath(DOC_ROOT.$data['key_path']);
         }
 
         if($notify){
+            $notify = str_replace('__HASH__',$data['hash'],$notify);
             $config['notify_url']=$notify;
         }
         return $config;

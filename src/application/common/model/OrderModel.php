@@ -3,30 +3,26 @@
 namespace app\common\model;
 
 
-use app\common\core\BaseModel;
+use app\common\core\BaseOrderModel;
 use think\Db;
-use shirne\third\KdExpress;
 use think\Exception;
 use think\facade\Log;
+
+define('ORDER_STATUS_REFUND',-2);
+define('ORDER_STATUS_CANCEL',-1);
+define('ORDER_STATUS_UNPAIED',0);
+define('ORDER_STATUS_PAIED',1);
+define('ORDER_STATUS_SHIPED',2);
+define('ORDER_STATUS_RECEIVED',3);
+define('ORDER_STATUS_FINISH',4);
 
 /**
  * Class OrderModel
  * @package app\common\model
  */
-class OrderModel extends BaseModel
+class OrderModel extends BaseOrderModel
 {
     protected $pk='order_id';
-    
-    private function create_no(){
-        $maxid=$this->field('max(order_id) as maxid')->find();
-        $maxid = $maxid['maxid'];
-        if(empty($maxid))$maxid=0;
-        return date('YmdHis').$this->pad_orderid($maxid+1,4);
-    }
-    private function pad_orderid($id,$len=4){
-        $strlen=strlen($id);
-        return $strlen<$len?str_pad($id,$len,'0',STR_PAD_LEFT):substr($id,$strlen-$len);
-    }
 
     public static function init()
     {
@@ -82,37 +78,6 @@ class OrderModel extends BaseModel
         }
     }
     
-    protected function beforeStatus($data)
-    {
-        $data = parent::beforeStatus($data);
-        if($data['status']==1){
-            if(!isset($data['pay_time'])){
-                $data['pay_time']=time();
-            }
-        }elseif($data['status']==2){
-            if(!isset($data['deliver_time'])){
-                $data['deliver_time']=time();
-            }
-        }elseif($data['status']==3){
-            if(!isset($data['confirm_time'])){
-                $data['confirm_time']=time();
-            }
-        }elseif($data['status']==4){
-            if(!isset($data['comment_time'])){
-                $data['comment_time']=time();
-            }
-        }elseif($data['status']<-2){
-            if(!isset($data['refund_time'])){
-                $data['refund_time']=time();
-            }
-        }elseif($data['status']<0){
-            if(!isset($data['cancel_time'])){
-                $data['cancel_time']=time();
-            }
-        }
-        return $data;
-    }
-    
     protected function triggerStatus($item, $status, $newData=[])
     {
         parent::triggerStatus($item, $status, $newData);
@@ -144,16 +109,16 @@ class OrderModel extends BaseModel
             }
             if($item['status'] < $status){
                 switch ($status){
-                    case 1:
+                    case ORDER_STATUS_PAIED:
                         $this->afterPay($item);
                         break;
-                    case 2:
+                    case ORDER_STATUS_SHIPED:
                         $this->afterDeliver($item);
                         break;
-                    case 3:
+                    case ORDER_STATUS_RECEIVED:
                         $this->afterReceive($item);
                         break;
-                    case 4:
+                    case ORDER_STATUS_FINISH:
                         $this->afterComplete($item);
                         break;
                 }
@@ -196,7 +161,7 @@ class OrderModel extends BaseModel
      * @return mixed
      */
 
-    public function makeOrder($member,$products,$address,$extdata,$balance_pay=1,$ordertype=1){
+    public function makeOrder($member, $products, $address, $extdata, $balance_pay=1, $ordertype=1){
         if(empty($member) || empty($member['id'])){
             $this->setError('指定的下单用户资料错误');
             return false;
@@ -317,11 +282,13 @@ class OrderModel extends BaseModel
             }elseif($product['is_commission'] == 3){
                 $comm_special[]=[
                     'type'=>3,
+                    'count'=>$product['count'],
                     'amounts'=>force_json_decode($product['commission_percent'])
                 ];
             }elseif($product['is_commission'] == 4){
                 $comm_special[]=[
                     'type'=>4,
+                    'count'=>$product['count'],
                     'level_amounts'=>force_json_decode($product['commission_percent'])
                 ];
             }
@@ -393,7 +360,7 @@ class OrderModel extends BaseModel
         
         if($balance_pay) {
             $debit = money_log($member['id'], -$total_price, "下单支付", 'consume',0,is_string($balance_pay)?$balance_pay:'money');
-            if ($debit) $status = 1;
+            if ($debit) $status = ORDER_STATUS_PAIED;
             else{
                 $this->rollback();
                 $this->setError("余额不足");
@@ -414,7 +381,7 @@ class OrderModel extends BaseModel
             'cost_amount'=>$total_cost_price*.01,
             'commission_amount'=>$commission_amount*.01,
             'commission_special'=>json_encode($comm_special),
-            'status'=>0,
+            'status'=> ORDER_STATUS_UNPAIED,
             'isaudit'=>getSetting('autoaudit')==1?1:0,
             //'remark'=>$remark,
             'address_id'=>$address['address_id'],
@@ -478,7 +445,7 @@ class OrderModel extends BaseModel
             }
             $this->commit();
             if($status>0 ){
-                self::getInstance()->updateStatus(['status'=>$status,'pay_time'=>time()],['order_id'=>$result]);
+                self::getInstance()->updateStatus(['status'=>$status,'pay_type'=>'balance','pay_time'=>time()],['order_id'=>$result]);
             }
         }else{
             $this->rollback();
@@ -582,31 +549,6 @@ class OrderModel extends BaseModel
         return false;
     }
     
-    protected static function transkey($keywords){
-        $maps=[
-            'order_no'=>['单号','订单号','订单编号','订单号码'],
-            'amount'=>['待付金额','订单金额'],
-            'goods'=>['商品详情','物品名称','商品名称','物品详情'],
-            'pay_notice'=>['支付提醒'],
-            'create_date'=>['下单时间','购买时间'],
-            'express'=>['快递公司'],
-            'deliver_date'=>['发货时间'],
-            'confirm_date'=>['确认时间'],
-            'reason'=>['取消原因']
-        ];
-        if(!is_array($keywords)){
-            $keywords = explode('、',$keywords);
-        }
-        foreach ($keywords as $idx=>$keyword){
-            foreach ($maps as $key=>$words){
-                if(in_array($keyword,$words)){
-                    $keywords[$idx]=$key;
-                    break;
-                }
-            }
-        }
-        return $keywords;
-    }
     
     /**
      * 根据设置或升级原则进行升级
@@ -684,9 +626,9 @@ class OrderModel extends BaseModel
                     foreach ($specials as $special) {
                         $amount = 0;
                         if ($special['type'] == 3) {
-                            $amount += $special['amounts'][$i] ?: 0;
+                            $amount += ($special['amounts'][$i] ?: 0) * $special['count'];
                         } elseif ($special['type'] == 4) {
-                            $amount += $special['level_amounts'][$parents[$i]['level_id']][$i] ?: 0;
+                            $amount += ($special['level_amounts'][$parents[$i]['level_id']][$i] ?: 0) * $special['count'];
                         } else {
                             if ($special['amount'] > 0 && !empty($special['percent'][$i])) {
                                 $curPercent = floatVal($special['percent'][$i]);
@@ -719,44 +661,19 @@ class OrderModel extends BaseModel
         return $results;
     }
 
-     /**
-     * @param bool $force
-     * @return array
-     */
-    public function fetchExpress($force=false)
-    {
-    
-        $data=[];
-        if(!empty($this->express_no) && !empty($this->express_code)) {
-            $cacheData = Db::name('expressCache')->where('express_code',$this->express_code)
-                ->where('express_no',$this->express_no)->find();
-            if(empty($cacheData) || $force || $cacheData['update_time']<time()-3600) {
-                $express = new KdExpress([
-                    'appid' => getSetting('kd_userid'),
-                    'appsecret' => getSetting('kd_apikey')
-                ]);
-                $data = $express->QueryExpressTraces($this->express_code, $this->express_no);
-                if(!empty($data)) {
-                    $newData = ['data' => json_encode($data, JSON_UNESCAPED_UNICODE)];
-                    if (empty($cacheData)) {
-                        $newData['express_code'] = $this->express_code;
-                        $newData['express_no'] = $this->express_no;
-                        $newData['create_time'] = $newData['update_time'] = time();
-                        Db::name('expressCache')->insert($newData);
-                    } else {
-                        $newData['update_time'] = time();
-                        Db::name('expressCache')->where('id', $cacheData['id'])->update($newData);
-                    }
-                }else{
-                    $data=[];
-                }
-            }elseif(!empty($cacheData['data'])){
-                $data = json_decode($cacheData['data'],true);
-                if(is_string($data)){
-                    $data = json_decode($data,true);
-                }
-            }
+    public function refund($order = null, $reason = '', $type = ''){
+        if(empty($order)){
+            $order = $this->getOrigin();
+            $reason = $order['reason']?:'订单取消';
+            $type = 'order-cancel';
         }
-        return $data;
+        if($order['pay_type'] == 'balance'){
+            return money_log($order['member_id'], $order['payamount'] * 100,$reason,$type);
+        }elseif($order['pay_type'] == 'offline'){
+            return true;
+        }else{
+            return PayOrderModel::refund($order['order_id'],'order',$reason);
+        }
     }
+
 }

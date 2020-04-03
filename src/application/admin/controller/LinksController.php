@@ -62,6 +62,7 @@ class LinksController extends BaseController
         }
         $model=array('sort'=>99);
         $this->assign('model',$model);
+        $this->assign('groups',$this->getGroups());
         $this->assign('id',0);
         return $this->fetch('edit');
     }
@@ -106,8 +107,18 @@ class LinksController extends BaseController
             $this->error('链接不存在');
         }
         $this->assign('model',$model);
+        $this->assign('groups',$this->getGroups());
         $this->assign('id',$id);
         return $this->fetch();
+    }
+
+    private function getGroups(){
+        $groups = Db::name('Links')->where('group','neq','')->distinct('group')->field('group')->select();
+
+        if(!empty($groups)){
+            return array_column($groups,'group');
+        }
+        return ['友情链接','合作伙伴'];
     }
 
     /**

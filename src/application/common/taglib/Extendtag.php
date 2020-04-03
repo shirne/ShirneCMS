@@ -11,24 +11,60 @@ use app\common\core\BaseTabLib;
 class Extendtag extends BaseTabLib
 {
     protected $tags =[
-        'links'=>['attr'=>'var,limit','close'=>0],
+        'keywords'=>['attr'=>'var,group,limit','close'=>0],
+        'links'=>['attr'=>'var,group,limit','close'=>0],
         'advs'=>['attr'=>'var,flag,limit','close'=>0],
+        'booth'=>['attr'=>'var,flag','close'=>0],
         'notices'=>['attr'=>'var,limit','close'=>0],
         'notice'=>['attr'=>'var,name','close'=>0],
         'feedback'=>['attr'=>'var,limit,page','close'=>0]
     ];
 
+    public function tagKeywords($tag){
+        $var  = isset($tag['var']) ? $tag['var'] : 'keywords';
+        $group = isset($tag['group']) ? $this->parseArg($tag['group']) : '';
+
+        $parseStr='<?php ';
+        if(empty($group)){
+            $group = "''";
+        }
+        $parseStr.='$'.$var.'=\app\common\model\KeywordsModel::getKeywords('.$group;
+        
+        if(!empty($tag['limit'])){
+            $parseStr .= ','.intval($tag['limit']);
+        }
+        $parseStr .= ');';
+
+        $parseStr .= ' ?>';
+        return $parseStr;
+    }
+
     public function tagLinks($tag){
         $var  = isset($tag['var']) ? $tag['var'] : 'links';
+        $group = isset($tag['group']) ? $this->parseArg($tag['group']) : '';
 
         $parseStr='<?php ';
 
         $parseStr.='$'.$var.'=\think\Db::name("Links")';
+        if(!empty($group)){
+            $parseStr .= '->where(\'group\','.$group.')';
+        }
         $parseStr .= '->order("sort ASC,id ASC")';
         if(!empty($tag['limit'])){
             $parseStr .= '->limit('.intval($tag['limit']).')';
         }
         $parseStr .= '->select();';
+
+        $parseStr .= ' ?>';
+        return $parseStr;
+    }
+
+    public function tagBooth($tag){
+        $var  = isset($tag['var']) ? $tag['var'] : 'booth';
+
+        $parseStr='<?php ';
+
+        $parseStr.='$'.$var.'=\app\common\model\BoothModel::fetchBooth('.$this->parseArg($tag['flag']).', true);';
 
         $parseStr .= ' ?>';
         return $parseStr;

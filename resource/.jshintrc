@@ -1,0 +1,11 @@
+{
+  "esversion": 6,
+  "asi":true,
+  "sub":true,
+  "elision":true,
+  "expr": true,
+  "evil": true,
+  "globals": {
+    "console": true
+  }
+}

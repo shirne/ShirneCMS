@@ -113,7 +113,7 @@ class MemberController extends AuthedController
     }
 
     public function feedback(){
-        $unreplyed=Db::name('feedback')->where(array('member_id'=>$this->userid,'reply_at'=>0))->count();
+        $unreplyed=Db::name('feedback')->where(array('member_id'=>$this->userid,'reply_time'=>0))->count();
         if($this->request->isPost()){
             if($unreplyed>0)$this->error('您的反馈尚未回复');
             $content=$this->request->post('content');
@@ -124,7 +124,7 @@ class MemberController extends AuthedController
             $data['create_time']=time();
             $data['ip']=$this->request->ip();
             $data['status']=0;
-            $data['reply_at']=0;
+            $data['reply_time']=0;
             $feedid=Db::name('feedback')->insert($data);
             if($feedid){
                 $this->success('反馈成功');

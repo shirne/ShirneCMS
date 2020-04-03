@@ -12,10 +12,8 @@ use app\common\model\ProductModel;
 use app\common\model\WechatModel;
 use app\common\validate\OrderValidate;
 use EasyWeChat\Factory;
-use think\Facade\Log;
+use think\facade\Log;
 use think\Db;
-
-use function GuzzleHttp\json_encode;
 
 /**
  * 订单操作
@@ -25,8 +23,8 @@ use function GuzzleHttp\json_encode;
 class OrderController extends AuthedController
 {
     public function prepare(){
-        $order_skus=$this->input['products'];
-        $address=$this->input['address'];
+        $order_skus=$this->request->param('products');
+        $address=$this->request->param('address');
         $skuids=array_column($order_skus,'sku_id');
         $products=Db::view('ProductSku','*')
             ->view('Product',['title'=>'product_title','image'=>'product_image','levels','is_discount','postage_id'],'ProductSku.product_id=Product.id','LEFT')
@@ -45,7 +43,7 @@ class OrderController extends AuthedController
     public function confirm($from='quick'){
         $this->check_submit_rate();
         
-        $order_skus=$this->input['products'];
+        $order_skus=$this->request->param('products');
         if(empty($order_skus))$this->error('未选择下单商品');
         $sku_ids=array_column($order_skus,'sku_id');
         if($from=='cart'){
@@ -75,7 +73,22 @@ class OrderController extends AuthedController
             $address=Db::name('MemberAddress')->where('member_id',$this->user['id'])
                 ->where('address_id',$data['address_id'])->find();
             $balancepay=0;
-            if(isset($data['pay_type']) && $data['pay_type']=='balance')$balancepay=1;
+            if(!empty($data['pay_type']) ){
+                if($data['pay_type']=='balance' || $data['pay_type']=='money')$balancepay=1;
+
+                if(!$balancepay){
+                    $this->error('支付方式错误');
+                }
+            }
+            if($balancepay){
+                $secpassword=$this->request->param('secpassword');
+                if(empty($secpassword)){
+                    $this->error('请填写安全密码');
+                }
+                if(!compare_secpassword($this->user,$secpassword)){
+                    $this->error('安全密码错误');
+                }
+            }
 
             $platform=$this->request->tokenData['platform']?:'';
             $appid=$this->request->tokenData['appid']?:'';
@@ -119,14 +132,20 @@ class OrderController extends AuthedController
         if($payid)$wechat=WechatModel::where('id|hash',$payid)->where('type','wechat')->find();
         if($trade_type == 'JSAPI' ) {
             if(empty($this->wechatUser) && !empty($wechat)){
-                $this->wechatUser = Db::name('memberOauth')->where('member_id',$this->user['id'])
-                ->where('type_id',$wechat['id'])->find();
+                $openid = $this->request->param('openid');
+                if($openid){
+                    $this->wechatUser = Db::name('memberOauth')->where('openid',$openid)
+                    ->where('type_id',$wechat['id'])->find();
+                }else{
+                    $this->wechatUser = Db::name('memberOauth')->where('member_id',$this->user['id'])
+                    ->where('type_id',$wechat['id'])->find();
+                }
             }
             if(!empty($this->wechatUser) && !$payid){
                 $payid = $this->wechatUser['type_id'];
             }
             if(empty($this->wechatUser)){
-                $this->error('未获取用户信息');
+                $this->error('用户未绑定微信号');
             }
         }
         if(empty($wechat) && $payid){
@@ -180,19 +199,29 @@ class OrderController extends AuthedController
             $data['payment']=$payorder->getSignedData($result,$config['key']);
         }
         if(!empty($result['prepay_id'])){
-            PayOrderModel::where('id',$payorder['id'])->update(['prepay_id'=>$result['prepay_id']]);
+            PayOrderModel::where('id',$payorder['id'])->update(['prepay_id'=>$result['prepay_id'],'appid'=>$wechat['appid']]);
         }
     
         return $this->response($data);
     }
-    public function balancepay($order_id){
+    public function balancepay($order_id, $type='money'){
+        if(!in_array($type,['money'])){
+            $this->error('支付方式错误!');
+        }
+        $secpassword=$this->request->param('secpassword');
+        if(empty($secpassword)){
+            $this->error('请填写安全密码');
+        }
+        if(!compare_secpassword($this->user,$secpassword)){
+            $this->error('安全密码错误');
+        }
         $order=OrderModel::get($order_id);
         if(empty($order)|| $order['status']!=0){
             $this->error('订单已支付或不存在!',0,['order_id'=>$order_id]);
         }
         $debit = money_log($order['member_id'], -$order['payamount']*100, "下单支付", 'consume',0,'money');
         if ($debit){
-            $order->save(['status'=>1,'pay_time'=>time()]);
+            $order->save(['status'=>1,'pay_type'=>$type,'pay_time'=>time()]);
             $this->success('支付成功!',1,['order_id'=>$order_id]);
         }
         $this->error('支付失败!',0,['order_id'=>$order_id]);

@@ -190,6 +190,51 @@
             </div>
         </div>
     </div>
+    <div class="col-12 col-lg-6">
+        <div class="card">
+            <div class="card-header">阿里云</div>
+            <div class="card-body">
+                <div class="form-row form-group">
+                    <label for="v-accesskey_id" class="col-3 col-md-2 text-right align-middle">账号ID</label>
+                    <div class="col">
+                        <input type="text" class="form-control" name="v-accesskey_id" value="{$setting['accesskey_id']['value']}" placeholder="">
+                    </div>
+                </div>
+                <div class="form-row form-group">
+                    <label for="v-accesskey_secret" class="col-3 col-md-2 text-right align-middle">账号密钥</label>
+                    <div class="col">
+                        <input type="text" class="form-control" name="v-accesskey_secret" value="{$setting['accesskey_secret']['value']}" placeholder="">
+                    </div>
+                </div>
+                <div class="form-row form-group">
+                    <label for="v-aliyun_oss" class="col-3 col-md-2 text-right align-middle">OSS Buket</label>
+                    <div class="col">
+                        <input type="text" class="form-control" name="v-aliyun_oss" value="{$setting['aliyun_oss']['value']}" placeholder="">
+                    </div>
+                </div>
+                <div class="form-row form-group">
+                    <label for="v-aliyun_oss_domain" class="col-3 col-md-2 text-right align-middle">OSS域名</label>
+                    <div class="col">
+                        <input type="text" class="form-control" name="v-aliyun_oss_domain" value="{$setting['aliyun_oss_domain']['value']}" placeholder="">
+                    </div>
+                    <div class="col-2">
+                        <input type="hidden" id="sslhidden" name="v-aliyun_oss_ssl" value="{$setting['aliyun_oss_domain']['value']}" />
+                        <label><input type="checkbox" {$setting['aliyun_oss_ssl']['value']==1?'checked':''} class="sslcheck" value="1"/> 是否SSL</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
-
+<script type="text/javascript">
+jQuery(function($){
+    $('.sslcheck').change(function(e){
+        if($(this).prop('checked')){
+            $('#sslhidden').val(1)
+        }else{
+            $('#sslhidden').val(0)
+        }
+    })
+})
+</script>
 

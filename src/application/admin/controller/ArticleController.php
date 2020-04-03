@@ -114,7 +114,7 @@ class ArticleController extends BaseController
                 }
             }
         }
-        $model=array('type'=>1,'cate_id'=>$cid);
+        $model=array('type'=>1,'cate_id'=>$cid,'digg'=>0,'views'=>0);
         $this->assign("category",CategoryFacade::getCategories());
         $this->assign('article',$model);
         $this->assign('types',getArticleTypes());
@@ -155,14 +155,15 @@ class ArticleController extends BaseController
                 if(!empty($data['create_time']))$data['create_time']=strtotime($data['create_time']);
                 if(empty($data['create_time']))unset($data['create_time']);
                 $model=ArticleModel::get($id);
-                if ($model->allowField(true)->save($data)) {
+                try {
+                    $model->allowField(true)->save($data);
                     delete_image($delete_images);
                     user_log($this->mid, 'updatearticle', 1, '修改文章 ' . $id, 'manager');
-                    $this->success("编辑成功", url('Article/index'));
-                } else {
+                }catch(\Exception $err){
                     delete_image($data['cover']);
-                    $this->error("编辑失败");
+                    $this->error(lang('Update failed: %',[$err->getMessage()]));
                 }
+                $this->success(lang('Update success!'), url('Article/index'));
             }
         }else{
 
@@ -361,7 +362,7 @@ class ArticleController extends BaseController
             $where[]=['article.title|category.title','like',"%$key%"];
         }
 
-        $lists=$model->where($where)->paginate(10);
+        $lists=$model->where($where)->order('articleComment.create_time desc')->paginate(10);
 
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());

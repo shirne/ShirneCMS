@@ -2,8 +2,6 @@
 
 
 namespace shirne\common;
-
-
 use think\facade\Log;
 
 class Poster
@@ -49,6 +47,7 @@ class Poster
         'align'=>'left',
         'x'=>0,
         'y'=>0,
+        'width'=>0,
         'color'=>0
         ];
     protected $defaultImageSet=[
@@ -66,64 +65,107 @@ class Poster
     }
     
     public function generate($data){
-        if(!$this->config['data'])return false;
+        if(!$this->config['data']){
+            Log::record('海报配置错误');
+            return false;
+        }
         $bgpath = $this->config['background'];
-        if(!file_exists($bgpath))return false;
-        $bg = imagecreatefrompng($bgpath);
+        if(!file_exists($bgpath)){
+            Log::record('海报背景设置错误:'.$bgpath);
+            return false;
+        }
+        $this->bg = imagecreatefrompng($bgpath);
         //imagealphablending()
-        if(!$bg)return false;
+        if(!$this->bg){
+            Log::record('海报背景读取失败:'.$bgpath);
+            return false;
+        }
         
-        $sizes=[];
         $fontpath=$this->config['font'];
-        foreach ($this->config['data'] as $k=>$set){
+        foreach ($this->config['data'] as $k=> &$set){
+            //Log::record($k);
+            if(isset($set['type']) && $set['type']=='background'){
+                //利用重复帖一遍背景图的方式生成圆角，一定要注意顺序
+                $vbg = imagecreatefrompng($bgpath);
+                imagecopyresampled($this->bg, $vbg, 0, 0, 0, 0,imagesx($this->bg), imagesy($this->bg), imagesx($vbg), imagesy($vbg));
+                imagedestroy($vbg);
+                continue;
+            }
             if(isset($data[$k])){
-                if($set['type'] == 'image') {
+                //相对位置计算
+                if(!empty($set['offset'])){
+                    if(!is_array($set['offset'])){
+                        $set['offset']=[
+                            'field'=>$set['offset'],
+                            'type'=>'lb'
+                        ];
+                    }
+                    if(!isset($this->config['data'][$set['offset']['field']])){
+                        Log::record('Poster: '.$k.' offset '.$set['offset']['field'].' not exists','error');
+                        continue;
+                    }
+                    
+                    $ofield=$set['offset']['field'];
+                    $box = $this->config['data'][$ofield];
+                    while(empty($box['width']) || empty($box['height'])){
+                        if(isset($box['offset'])){
+                            //代替上一个对象的位置
+                            $set['x']=$box['x'];
+                            $set['y']=$box['y'];
+
+                            $ofield=$box['offset']['field'];
+                            $box = $this->config['data'][$ofield];
+                        }else{
+                            Log::record('Poster: '.$k.' offset '.$ofield.' size error','error');
+                            continue;
+                        }
+                    }
+                    //Log::record('offset:'.json_encode($set));
+                    //Log::record('offset target:'.json_encode($box));
+                    switch (strtolower($set['offset']['type'])){
+                        case 'lt':
+                        case 'tl':
+                            $set['x'] += $box['x'];
+                            $set['y'] += $box['y'];
+                            break;
+                        case 'rt':
+                        case 'tr':
+                            $set['x'] += $box['x']+$box['width'];
+                            $set['y'] += $box['y'];
+                            break;
+                        case 'lb':
+                        case 'bl':
+                            $set['x'] += $box['x'];
+                            $set['y'] += $box['y']+$box['height'];
+                            break;
+                        case 'rb':
+                        case 'br':
+                            $set['x'] += $box['x']+$box['width'];
+                            $set['y'] += $box['y']+$box['height'];
+                            break;
+                    }
+                    //Log::record('offset result:'.json_encode($set));
+                }
+
+                if(isset($set['type']) && $set['type'] == 'image') {
                     $set = array_merge($this->defaultImageSet, $set);
-                    if ($set['width'] <= 0 || $set['height'] <= 0) continue;
+                    if ($set['width'] <= 0 || $set['height'] <= 0) {
+                        Log::record('Poster: '.$k.' size error','error');
+                        continue;
+                    }
                     if(strpos($data[$k],'http://')===false && strpos($data[$k],'https://')===false) {
-                        //$data[$k] = DOC_ROOT . ltrim($data[$k],'.');
-                        if (!file_exists($data[$k])) continue;
+                        
+                        if (!file_exists($data[$k])){
+                            Log::record('Poster: file '.$data[$k].' not exists','error');
+                            continue;
+                        }
                     }
                     //粘贴图片
-                    $sub = @imagecreatefromstring(file_get_contents($data[$k]));
-                    if ($sub) {
-                        $w = imagesx($sub);
-                        $h = imagesy($sub);
-                        $sx = 0;
-                        $sy = 0;
-                        if ($w / $h != $set['width'] / $set['height']) {
-                            if ($set['size'] == 'cover') {
-                                list($ox, $oy) = $this->computSize($w, $h, $set['width'], $set['height'], 0);
-                
-                                $sx -= $ox;
-                                $w += $ox * 2;
-                
-                                $sy -= $oy;
-                                $h += $oy * 2;
-                            } elseif ($set['size'] == 'contain') {
-                                list($ox, $oy) = $this->computSize($w, $h, $set['width'], $set['height'], 1);
-                
-                                $set['x'] += $ox;
-                                $set['width'] -= $ox * 2;
-                
-                                $set['y'] += $oy;
-                                $set['height'] -= $oy * 2;
-                            }
-                        }
-        
-                        //logging_simple('帖图:'.$card[$k].'-'.logging_implode([$set['x'],$set['y'],$sx,$sy,$set['width'],$set['height'],$w,$h]),'info');
-                        imagecopyresampled($bg, $sub, $set['x'], $set['y'], $sx, $sy, $set['width'], $set['height'], $w, $h);
-                        imagedestroy($sub);
-                    }
-                }elseif($set['type']=='background'){
-                    //利用重复帖一遍背景图的方式生成圆角，一定要注意顺序
-                    $vbg = imagecreatefrompng($bgpath);
-                    imagecopyresampled($bg, $vbg, 0, 0, 0, 0,imagesx($bg), imagesy($bg), imagesx($vbg), imagesy($vbg));
-                    imagedestroy($vbg);
+                    $this->paintImage($data[$k],$set);
                 }else{
                     $set = array_merge($this->defaultTextSet,$set);
                     
-                    //写文字
+                    //识别字体
                     if(file_exists($fontpath.$set['font'])) {
                         $set['font'] = $fontpath . $set['font'];
                     }elseif(in_array(strtolower($set['font']),['black','bold','medium','regular','demilight','light','thin'])){
@@ -133,37 +175,14 @@ class Poster
                     }else{
                         $set['font'] = $fontpath.$this->defaultTextSet['font'];
                     }
-                    
-                    if(!empty($set['offset']) && isset($sizes[$set['offset']['field']])){
-                        //logging_simple('文字相对坐标:'.$[$k].'-'.logging_implode([$set['x'],$set['y']]),'info');
-                        $box = $sizes[$set['offset']['field']];
-                        //logging_simple('相对对象:'.$set['offset']['field'].'-'.logging_implode($box),'info');
-                        switch (strtolower($set['offset']['type'])){
-                            case 'lt':
-                            case 'tl':
-                                $set['x'] += $box[0];
-                                $set['y'] += $box[1]-$box[3];
-                                break;
-                            case 'rt':
-                            case 'tr':
-                                $set['x'] += $box[0]+$box[2];
-                                $set['y'] += $box[1]-$box[3];
-                                break;
-                            case 'lb':
-                            case 'bl':
-                                $set['x'] += $box[0];
-                                $set['y'] += $box[1];
-                                break;
-                            case 'rb':
-                            case 'br':
-                                $set['x'] += $box[0]+$box[2];
-                                $set['y'] += $box[1];
-                                break;
-                        }
-                        //logging_simple('文字绝对坐标:'.$card[$k].'-'.logging_implode([$set['x'],$set['y']]),'info');
-                    }
+                    $set['font'] = realpath($set['font']);
                     
                     $text = $this->filter_emoji($data[$k]);
+                    if(empty($text) && empty($set['force'])){
+                        //文本为空不打印
+                        continue;
+                    }
+                    //文本限宽换行
                     if(isset($set['text'])){
                         $text = preg_replace_callback('/\{([\w\d]+)\}/',function ($matches)use($data, $k){
                             $key = $matches[1];
@@ -192,83 +211,191 @@ class Poster
                             $text .= $set['sufix'];
                         }
                     }
-                    
-                    $textbox = imagettfbbox($set['size'],$set['angle'],$set['font'],$text);
-                    //logging_simple('文字盒:'.$text.'-'.logging_implode($textbox),'info');
-                    //左下角偏移
-                    $set['x'] -= $textbox[0];
-                    $set['y'] -= $textbox[1];
-                    switch (strtolower($set['align'])){
-                        case 'left':
-                            $set['y'] += $textbox[1]-$textbox[5];
-                            break;
-                        case 'right':
-                            $set['x'] -= $textbox[2]-$textbox[0];
-                            $set['y'] += $textbox[1]-$textbox[5];
-                            break;
-                        case 'center':
-                            $set['x'] -= ($textbox[2]-$textbox[0])*.5;
-                            $set['y'] += ($textbox[1]-$textbox[5])*.5;
-                            break;
-                        default:
-                            break;
+                    //文本为空，说明是需要强制保留位置的
+                    if(empty($text)){
+                        $set['height']=$set['size'];
+                        $set['width']=$set['size'];
+                        continue;
                     }
-                    $sizes[$k]=[$set['x'],$set['y'],$textbox[2]-$textbox[0],$textbox[1]-$textbox[5]];
-                    $color = $this->transColor($set['color'],$bg);
                     
-                    //logging_simple('打字:'.$text.'-'.logging_implode([$set['size'],$set['angle'],$set['x'],$set['y'],$color,$set['font']]),'info');
-                    imagettftext($bg,$set['size'],$set['angle'],$set['x'],$set['y'],$color,$set['font'],$text);
-                    
-                    if($set['badge'] && is_array($set['badge']['images'])){
-                        $th = $textbox[1]-$textbox[5];
-                        $ypos = $set['y'] - $th;
-                        $space = $set['badge']['space']?:10;
-                        $start = $set['x'] + $textbox[2]-$textbox[0] + $space;
-                        if(!empty($set['badge']['offset-x'])){
-                            $start += $set['badge']['offset-x'];
+                    $color = $this->transColor($set['color'],$this->bg);
+
+                    //限制宽度
+                    if(!empty($set['width'])){
+                        $text = $this->autoWrap($text, $set['size'],$set['width']);
+                    }
+                    //是否多行打印
+                    if(mb_strpos($text,"\n")!==false){
+                        $textes=explode("\n",$text);
+                        if(!empty($set['maxline']) && count($textes)>$set['maxline']){
+                            $textes = array_slice($textes,0, $set['maxline']);
+                            $lasttext=$textes[$set['maxline']-1];
+                            $textes[$set['maxline']-1]=mb_substr($lasttext,0,mb_strlen($lasttext)-2).'...';
                         }
-                        if(!empty($set['badge']['offset-y'])){
-                            $ypos += $set['badge']['offset-y'];
-                        }
-                        foreach ($set['badge']['images'] as $image){
-                            if(!$image['image'])continue;
-                            $image['image'] = local_media($image['image']);
-                            if(!file_exists($image['image']))continue;
-                            
-                            if(!$image['if'] || $data[$image['if']]){
-                                $sub = imagecreatefromstring(file_get_contents($image['image']));
-                                if($sub) {
-                                    $bw = imagesx($sub);
-                                    $bh = imagesy($sub);
-                                    $width = isset($set['badge']['width'])?$set['badge']['width']:$bw;
-                                    $height = isset($set['badge']['height'])?$set['badge']['height']:$bh;
-                                    $y = $ypos + ($th-$height)*.5;
-                                    
-                                    //logging_simple('徽标:'.$image['image'].'-'.logging_implode([$start, $y, 0, 0, $width, $height, $bw, $bh]),'info');
-                                    imagecopyresampled($bg, $sub, $start, $y, 0, 0, $width, $height, $bw, $bh);
-                                    imagedestroy($sub);
-                                    $start += $width + $space;
-                                }else{
-                                    //logging_simple('徽标读取失败:'.$image['image'],'info');
-                                }
+                        $set['height']=0;
+                        if(!isset($set['linespace']))$set['linespace']=5;
+                        $start_y=$set['y'];
+                        $start_x=$set['x'];
+                        $lineSet=array_intersect_key($set,array_flip(['x','y','angle','align','size','font','width']));
+                        foreach($textes as $txt){
+                            $newset = $this->paintText($txt,$lineSet,$color);
+                            if($set['height']<=0){
+                                $set['x']=$newset['lt_x'];
+                                $set['y']=$newset['lt_y'];
+                            }else{
+                                $set['height']+= $set['linespace'];
                             }
+                            
+                            $set['width']=max($set['width'],$newset['width']);
+                            $set['height']+= $newset['height'];
+                            $lineSet['x'] = $start_x;
+                            $lineSet['y'] = $start_y+$set['height']+$set['linespace'];
                         }
+                    }else{
+                        $newset = $this->paintText($text,$set,$color);
+                        $set['x']=$newset['lt_x'];
+                        $set['y']=$newset['lt_y'];
+                        $set['width'] = max($set['width'],$newset['width']);
+                        $set['height'] = $newset['height'];
                     }
+                    
                 }
             }
         }
-        $this->bg=$bg;
+        
         return true;
+    }
+
+    private function paintImage($image, $set){
+        $sub = @imagecreatefromstring(file_get_contents($image));
+        if ($sub) {
+            $w = imagesx($sub);
+            $h = imagesy($sub);
+            $sx = 0;
+            $sy = 0;
+            if ($w / $h != $set['width'] / $set['height']) {
+                if ($set['size'] == 'cover') {
+                    list($ox, $oy) = $this->computSize($w, $h, $set['width'], $set['height'], 0);
+    
+                    $sx -= $ox;
+                    $w += $ox * 2;
+    
+                    $sy -= $oy;
+                    $h += $oy * 2;
+                } elseif ($set['size'] == 'contain') {
+                    list($ox, $oy) = $this->computSize($w, $h, $set['width'], $set['height'], 1);
+    
+                    $set['x'] += $ox;
+                    $set['width'] -= $ox * 2;
+    
+                    $set['y'] += $oy;
+                    $set['height'] -= $oy * 2;
+                }
+            }
+
+            //Log::record('帖图:'.$image.'-'.json_encode([$set['x'],$set['y'],$sx,$sy,$set['width'],$set['height'],$w,$h],JSON_UNESCAPED_UNICODE),'info');
+            imagecopyresampled($this->bg, $sub, $set['x'], $set['y'], $sx, $sy, $set['width'], $set['height'], $w, $h);
+            imagedestroy($sub);
+        }
+    }
+
+    private function paintText($text, $set, $color){
+        $textbox = imagettfbbox($set['size'],$set['angle'],$set['font'],$text);
+        //Log::record('文字盒:'.$text.'-'.json_encode($textbox,JSON_UNESCAPED_UNICODE),'info');
+        //左上角转换为左下角并计算偏移
+        $set['lt_x'] = $set['x'] -= $textbox[0];
+        $set['lt_y'] = $set['y'] - $textbox[1];
+        $set['y'] -= $textbox[5];
+        switch (strtolower($set['align'])){
+            case 'right':
+            case 'rt':
+            case 'tr':
+                $set['x'] -= $textbox[2]-$textbox[0];
+                break;
+            case 'rb':
+            case 'br':
+                $set['x'] -= $textbox[2]-$textbox[0];
+                $set['y'] -= $textbox[1]-$textbox[5];
+                break;
+            case 'lb':
+            case 'bl':
+                $set['y'] -= $textbox[1]-$textbox[5];
+                break;
+            case 'ct':
+                $set['x'] -= ($textbox[2]-$textbox[0])*.5;
+                break;
+            case 'cb':
+                $set['x'] -= ($textbox[2]-$textbox[0])*.5;
+                $set['y'] -= $textbox[1]-$textbox[5];
+                break;
+            case 'center':
+                $set['x'] -= ($textbox[2]-$textbox[0])*.5;
+                $set['y'] -= ($textbox[1]-$textbox[5])*.5;
+                break;
+            case 'left':
+            case 'lt':
+            case 'tl':
+            default:
+                break;
+        }
+
+        if(!isset($set['width']) || $set['width']<$textbox[2]-$textbox[0]){
+            $set['width']=$textbox[2]-$textbox[0];
+        }
+        $set['height']=$textbox[1]-$textbox[5];
+        
+        //Log::record('打字:'.$text.'-'.json_encode([$set['size'],$set['angle'],$set['x'],$set['y'],$color,$set['font']], JSON_UNESCAPED_UNICODE),'info');
+        imagettftext($this->bg,$set['size'],$set['angle'],$set['x'],$set['y'],$color,$set['font'],$text);
+        return $set;
     }
     
     public function save($path,$type='jpeg'){
         if(!$this->bg)return false;
-        imagejpeg($this->bg,$path,80);
+        switch(strtolower($type)){
+            case 'webp':
+                imagewebp($this->bg,$path);
+                break;
+            case 'gif':
+                imagegif($this->bg,$path);
+                break;
+            case 'png':
+                imagepng($this->bg,$path);
+                break;
+            case 'jpg':
+            case 'jpeg':
+            default:
+                imagejpeg($this->bg,$path,80);
+        }
         return true;
     }
+
+    protected function autoWrap($text, $textSize, $width){
+        if($width>0 && !empty($text)){
+            $rowwidth=0;
+            $strarr=preg_split('//u',$text);
+            $text='';
+            for($i=0;$i<count($strarr);$i++){
+                if(empty($strarr[$i]))continue;
+                $code = mb_ord($strarr[$i]);
+                if($code>255){
+                    $cwidth = $textSize;
+                }else{
+                    $cwidth = $textSize*.5;
+                }
+                if($rowwidth + $cwidth > $width){
+                    $rowwidth = $cwidth;
+                    $text .= "\n";
+                }else{
+                    $rowwidth += $cwidth;
+                }
+                
+                $text .= $strarr[$i];
+            }
+        }
+        return $text;
+    }
     
-    protected function filter_emoji($str)
-    {
+    protected function filter_emoji($str){
         $str = preg_replace_callback(    //执行一个正则表达式搜索并且使用一个回调进行替换
             '/./u',
             function (array $match) {

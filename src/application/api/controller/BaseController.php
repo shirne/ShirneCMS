@@ -3,6 +3,7 @@
 namespace app\api\controller;
 
 use app\api\facade\MemberTokenFacade;
+use app\api\middleware\AccessMiddleware;
 use think\Controller;
 use think\Db;
 
@@ -30,6 +31,9 @@ class BaseController extends Controller
         parent::initialize();
         $this->config=getSettings();
 
+        /**
+         * @deprecated DO NOT use this property
+         */
         $this->input=$this->request->put();
 
         $this->checkLogin();
@@ -96,19 +100,6 @@ class BaseController extends Controller
         $this->error('接口不存在');
     }
 
-    protected function get_param($key){
-        if(isset($this->input[$key])){
-            return $this->input[$key];
-        }
-        return $this->request->param($key);
-    }
-    protected function has_param($key){
-        if(!isset($this->input[$key])){
-            return $this->request->has($key);
-        }
-        return true;
-    }
-
     protected function error($msg = '', $code = 0, $data = '', $wait = 3, array $header = [])
     {
         $this->response($data,$code,$msg)->send();
@@ -139,6 +130,6 @@ class BaseController extends Controller
             'msg'  => $msg,
             'time' => time(),
             'data' => $data,
-        ]);
+        ], 200, AccessMiddleware::$acrossHeaders);
     }
 }

@@ -99,4 +99,36 @@ function wechat_is_official($type){
     }
     return false;
 }
+
+
+function save_setting( $data, $group=''){
+    $settings=getSettings(true,false,false);
+    $group = empty($group)?[]:explode(',',$group);
+    foreach ($data as $k=>$v){
+        if(substr($k,0,2)=='v-'){
+            $key=substr($k,2);
+            if(isset($settings[$key])) {
+                if(!empty($group) && !in_array($settings[$key]['group'],$group)){
+                    continue;
+                }
+                if (is_array($v)) {
+                    if(in_array($settings[$key]['type'],['json','array'])){
+                        if($settings[$key]['type'] == 'array'){
+                            $v = array_values($v);
+                        }
+                        $v = json_encode($v,JSON_UNESCAPED_UNICODE);
+                    }else {
+                        $v = serialize($v);
+                    }
+                }
+                
+                if ($settings[$key]['value'] != $v) {
+                    Db::name('setting')->where('key', $key)->update(array('value' => $v));
+                }
+            }
+        }
+    }
+    cache('setting',null);
+    return true;
+}
 //end file

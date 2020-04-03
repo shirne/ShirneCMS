@@ -10,20 +10,23 @@ VALUES
   (11,2,'分类管理','Category/index','category_index','ion-md-medical',0,0),
   (12,2,'文章管理','Article/index','article_index','ion-md-paper',3,0),
   (13,2,'单页管理','Page/index','page_index','ion-md-document',5,0),
+  (14,2,'评论管理','Article/comments','article_comments','ion-md-chatboxes',3,0),
   (70,7,'公告管理','Notice/index','notice_index','ion-md-megaphone',0,0),
   (71,7,'广告管理','Adv/index','adv_index','ion-md-aperture',3,0),
   (72,7,'链接管理','Links/index','links_index','ion-md-link',5,0),
   (73,7,'留言管理','Feedback/index','feedback_index','ion-md-chatbubbles',7,0),
   (74,7,'订阅管理','Subscribe/index','subscribe_index','ion-md-mail',9,0),
   (75,7,'展位管理','Booth/index','booth_index','ion-md-easel',9,0),
+  (76,7,'关键字管理','Keywords/index','keywords_index','ion-md-search',9,0),
   (80,8,'会员管理','Member/index','member_index','ion-md-person',0,0),
   (81,8,'邀请码','Invite/index','invite_index','ion-md-pricetags',3,0),
   (82,8,'会员组','MemberLevel/index','member_level_index','ion-md-people',5,0),
   (83,8,'佣金明细','Member/award_log','member_award_log','ion-md-paper',7,0),
   (84,8,'余额明细','Member/money_log','member_money_log','ion-md-paper',9,0),
-  (85,8,'充值记录','Paylog/recharge','paylog_recharge','ion-md-log-in',11,0),
-  (86,8,'提现记录','Paylog/cashin','paylog_cashin','ion-md-log-out',13,0),
-  (87,8,'操作日志','Member/log','member_log','ion-md-clipboard',15,0),
+  (85,8,'支付明细','Paylog/index','paylog_index','ion-md-wallet',11,0),
+  (86,8,'充值记录','Paylog/recharge','paylog_recharge','ion-md-log-in',11,0),
+  (87,8,'提现记录','Paylog/cashin','paylog_cashin','ion-md-log-out',13,0),
+  (88,8,'操作日志','Member/log','member_log','ion-md-clipboard',15,0),
   (91,9,'配置管理','Setting/index','setting_index','ion-md-options',0,0),
   (92,9,'管理员','Manager/index','manager_index','ion-md-person',3,0),
   (93,9,'菜单管理','Permission/index','permission_index','ion-md-code-working',5,0),
@@ -37,8 +40,8 @@ TRUNCATE TABLE `sa_manager_role`;
 INSERT INTO `sa_manager_role` (`id`,`type`, `role_name`,`global`, `detail`, `create_time`, `update_time`)
 VALUES
   (1,1,'系统管理员','','','1436679338','1436935104'),
-  (1,5,'网站管理员','','','1436679338','1436935104'),
-  (1,9,'网站编辑','','','1436679338','1436935104');
+  (2,5,'网站管理员','','','1436679338','1436935104'),
+  (3,9,'网站编辑','','','1436679338','1436935104');
 
 TRUNCATE TABLE `sa_manager`;
 
@@ -82,12 +85,18 @@ VALUES
   ( 'captcha_mode', '验证码模式', 'radio', 'third', '0',1, '0', '', '0:图形验证\r\n1:极验验证'),
   ( 'captcha_geeid', '极验ID', 'text', 'third', '0',1, '', '', ''),
   ( 'captcha_geekey', '极验密钥', 'text', 'third', '0',1, '', '', ''),
+  ( 'accesskey_id', '阿里云ID', 'text', 'third', '0',1, '', '', ''),
+  ( 'accesskey_secret', '阿里云Key', 'text', 'third', '0',1, '', '', ''),
+  ( 'aliyun_oss', 'OSS Buket', 'text', 'third', '0',1, '', '', ''),
+  ( 'aliyun_oss_ssl', '是否ssl', 'radio', 'third', '0',1, '1', '', '0:否\r\n1:是'),
+  ( 'aliyun_oss_domain', 'OSS 域名', 'text', 'third', '0',1, '', '', ''),
   ( 'kd_apikey', '快递鸟API Key', 'text', 'third', '0',1, '', '', ''),
   ( 'm_open', '会员系统', 'radio', 'member', '0',1, '1', '', '0:关闭\r\n1:启用'),
   ( 'm_register_open', '开启注册', 'radio', 'member', '0',1, '1', '', '0:关闭\r\n1:启用'),
   ( 'm_register', '强制注册', 'radio', 'member', '0',1, '1', '', '0:关闭\r\n1:启用'),
   ( 'm_invite', '邀请注册', 'radio', 'member', '0',1, '1', '', '0:关闭\r\n1:启用\r\n2:强制'),
   ( 'm_checkcode', '验证码', 'radio', 'member', '0',1, '1', '', '0:关闭\r\n1:启用'),
+  ( 'anonymous_comment', '匿名评论', 'radio', 'member', '0',1, '1', '', '0:关闭\r\n1:启用'),
   ( 'autoaudit', '订单自动审核', 'radio', 'member', '0',1, '1', '', '0:关闭\r\n1:启用'),
   ( 'commission_type', '佣金本金计算', 'radio', 'member', '0',1, '0', '', '0:购买价-成本价\r\n1:销售价-成本价\r\n2:购买价\r\n3:销售价'),
   ( 'agent_start', '分销员佣金', 'radio', 'member', '0',1, '0', '', '0:从上级起返\r\n1:从自己起返'),
@@ -107,16 +116,7 @@ TRUNCATE TABLE `sa_member_level`;
 
 INSERT INTO `sa_member_level`(`level_id`,`level_name`,`short_name`,`is_default`,`level_price`,`sort`,`commission_layer`,`commission_percent`) VALUES (1,'普通会员','普',1,0.00,0,3,'[\"0\",\"0\",\"0\"]');
 
+TRUNCATE TABLE `sa_oauth_app`;
 
-TRUNCATE TABLE `sa_category`;
+INSERT INTO `sa_oauth_app`(`platform`, `appid`, `appsecret`) VALUES ('web', 'web', '111111');;
 
-INSERT INTO `sa_category`(`id`,`pid`,`title`,`short`,`name`,`icon`,`image`,`sort`,`keywords`,`description`)VALUES
-(1,0,'新闻动态','新闻','news','','',0,'',''),
-(2,0,'案例中心','案例','cases','','',0,'',''),
-(3,1,'行业新闻','行业','industry','','',0,'',''),
-(4,1,'公司新闻','公司','company','','',0,'',''),
-(5,1,'常见问题','FAQ','faq','','',0,'',''),
-(6,2,'网站建设','网站','web','','',0,'',''),
-(7,2,'微信平台','微信','wechat','','',0,'',''),
-(8,2,'企业APP','APP','app','','',0,'',''),
-(9,2,'画册/LOGO','AI','design','','',0,'','');

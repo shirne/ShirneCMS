@@ -205,7 +205,7 @@
                         </div>
                     </div>
                     <div class="col-6 col-md-4 col-lg-3">
-                        <div class="card" @click="pickProductCate">
+                        <div class="card border-0" @click="pickProductCate">
                             <i class="ion-md-add border" style="font-size: 60px;line-height:1em;width:60px;text-align: center"></i>
                             <div class="card-body">
                             </div>

@@ -3,12 +3,15 @@ ShirneCMS
 
 基于[ThinkPHP5.1](https://github.com/top-think/think/tree/5.1)+[bootstrap4.x](https://v4.bootcss.com/docs/4.0/getting-started/introduction/)开发的后台管理系统,集成会员管理，文章管理，产品管理，微信接入，第三方登录等功能
 
-> 运行环境要求PHP7.1.3以上，Mysql5.5以上<br />
-> PHP扩展：gd,mysql,pdo,cURL,OpenSSL,SimpleXML,fileinfo,cli。
+> 运行环境要求PHP7.2以上，Mysql5.5以上<br />
+> PHP扩展：mbstring,gd,mysql,pdo,cURL,OpenSSL,SimpleXML,fileinfo,zip,cli。
 
 ## 相关项目
-[小程序企业官网](https://gitee.com/shirnecn/website_mapp)
-[小程序商城](https://gitee.com/shirnecn/shop_mapp)
+
+[小程序企业官网](https://gitee.com/shirnecn/website_mapp)<br />
+[小程序商城](https://gitee.com/shirnecn/shop_mapp)<br />
+[FlutterAPP](https://gitee.com/shirnecn/ShirneApp) -- 开发中<br />
+[VueShop](https://gitee.com/shirnecn/ShirneVueShop) -- 优化中<br />
 
 ## 功能特点
 
@@ -34,6 +37,7 @@ ShirneCMS
 ![功能结构图](screenshot/struct.png "功能结构图")
 
 ### 系统基础
+- [x] 系统安装
 - [x] 后台界面使用标签页(dev_tabs分支)
 - [x] 分类/文章模块
 - [x] 单页模块
@@ -47,10 +51,15 @@ ShirneCMS
 - [x] SKU管理
 - [x] 订单管理
 - [x] 商品品牌
-- [x] 优惠券
+- [x] 优惠券 ... 后台功能完成，待完善使用功能
 - [x] 邮费模板
-- [ ] 推荐位
+- [x] 推荐位
 - [ ] 促销功能
+
+### 积分商城
+- [x] 无限级分类
+- [x] 积分商品
+- [x] 订单管理
 
 ### 其它功能
 - [x] 积分商城……测试中
@@ -73,12 +82,20 @@ ShirneCMS
 - [x] 通用接口，批量接口
 - [x] 文章接口（含分类）
 - [x] 登录接口（账号密码登录，小程序授权登录）
-- [x] 产品接口
+- [x] 商品接口
 - [x] 购物车接口
 - [x] 订单及支付接口
-- [x] 会员相关功能接口
+- [x] 积分商品接口
+- [x] 积分商城下单接口
+- [x] 会员资料
+- [x] 会员签到,签到排行
+- [x] 收货地址管理
+- [x] 订单管理
+- [x] 账户管理(余额/积分明细,提现充值) ……在线充值接口待开发
+- [ ] 会员升级申请
 
-## 前端库引用
+## 感谢
+### 前端库
 
 [twbs/bootstrap 4.x](https://v4.bootcss.com/docs/4.0/getting-started/introduction/)<br />
 [components/jquery 3.3.1](http://api.jquery.com/)<br />
@@ -87,53 +104,54 @@ ShirneCMS
 [chartjs/Chart.js 2.7.2](https://chartjs.bootcss.com/docs/)<br />
 [swiper](http://www.swiper.com.cn/)
 
-## 后端库引用
+### 后端库
+[ThinkPHP](http://www.thinkphp.cn/)<br />
 [EasyWechat](https://www.easywechat.com/docs/3.x/zh-CN/index)<br />
 [phpoffice/phpspreadsheet](https://phpspreadsheet.readthedocs.io/en/develop/)<br />
 [phpmailer](https://github.com/PHPMailer/PHPMailer)<br />
 [endroid/qr-code](https://github.com/endroid/qr-code)
 
-## 开发说明
+### 字体(生成图片使用)
+[NotoSansCJKsc]
+[百度网盘](https://pan.baidu.com/s/1i5l0qblUhhendpIhOqu4Iw) 提取码：7cwl
 
-PHP库引用[Composer](https://getcomposer.org/download/)
-
->cd src<br />
->composer install
-
-Javascript/CSS构建[Gulp](https://www.gulpjs.com.cn/)
-
->cd src/resource<br />
-cnpm install<br />
-构建并监视文件：gulp<br />
-清理dest目录: gulp clean<br />
-只监视文件: gulp watch
-
-数据库
-
->scripts/struct.sql 数据表结构<br />
-scripts/init.sql 初始数据<br />
-scripts/update_shop.sql 商城模块<br />
-scripts/update_credit.sql 积分商城<br />
-scripts/update_wechat.sql 微信模块<br />
-scripts/update_sign.sql 会员签到
-
-项目目录
-
->src 项目根目录<br />
-src/public 网站根目录
-
-## 安装说明
+## 安装 及 开发说明
 
 #### 服务器环境
 
->IIS7以上+UrlRewrite <br />
+>IIS7以上 + UrlRewrite <br />
 >Apache2.2以上 + mod_rewrite <br />
->Nginx
+>Nginx + php-fpm
 
+[Windows配置说明](doc/WINDOWS.md)
 
-> 修改数据库配置文件 config/database.php<br />
-> 手动安装数据库脚本 或者 通过命令行(php think install)或网页安装( 域名/task/util/install )
+[CentOS配置说明](doc/CENTOS.md)
 
+[CMS安装说明](doc/INSTALL.md)
+
+[API接口说明](doc/api/index.md)
+
+## Docker
+配置参见Dockerfile
+注：仅初步配置成功环境参数，具体运行过程中还有一些文件权限和挂载问题未搞清楚
+
+```
+// 创建镜像
+cd ./docker-php-apache
+docker build -t shirnecms .
+
+// 运行
+docker run -itd -p 8080:80/tcp -v $PWD/src:/data/wwwroot/shirnecms:rw shirnecms --privileged=true
+
+// 需要在线导入sql，则把dbscript拷贝到容器中
+docker cp dbscript <容器ID>:/data/wwwroot/shirnecms/
+
+// macos中mysql使用宿主机的话主机填写
+docker.for.mac.host.internal
+
+```
+
+## 演示
 #### 后台默认登录账号 [演示网站](http://cms.qisoweb.com/admin)
 >test<br />
 密码：123456
@@ -144,33 +162,8 @@ src/public 网站根目录
 
 ## 常见问题
 
-#### SSL证书错误
-接入微信公众号后，进入公众号管理页面出现 curl: (60) SSL certificate problem: unable to get local issuer certificate 错误，需要在php.ini中配置
-```$ini
-curl.cainfo = /path/to/downloaded/cacert.pem
-```
-并重启相关服务器 （cacert.pem在htdocs/cert目录下，该文件为从微信平台下载）
+常见问题 [Dialog](doc/QA.md)
 
-#### 虚拟主机不支持在web根目录之外布署系统
-
-步骤较多，移步另一个说明[虚拟主机不支持web目录之外上传文件的解决办法](VIRTUAL.md)
-
-#### 小程序本地测试 xxx.test.com无法访问
-
-xxx.test.com 为本地测试目录，配置方法：
-1. 在hosts 中增加 指定域名，指向到 127.0.0.1
-2. 在本地服务器环境(IIS, Apache)中绑定该域名
-3. 浏览器中打开该域名，即可访问到本地测试站点
-
-## 模板说明
-
-分离模板目录配置 template.independence
-
-标签库 [product](TAGLIB.md#product),[article](TAGLIB.md#article) 和 [extendtag](TAGLIB.md#extendtag)
-
-弹出框组件说明 [Dialog](DIALOG.md)
-
-导航配置 navigator.php
 
 ## 后台功能截图
 |登录|主面板|

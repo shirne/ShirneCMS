@@ -4,6 +4,10 @@ namespace app\api\controller;
 
 use app\common\model\MemberModel;
 use app\common\validate\MemberValidate;
+use app\api\facade\MemberTokenFacade;
+use app\common\model\MemberAgentModel;
+use app\common\model\MemberLevelLogModel;
+use app\common\model\MemberLevelModel;
 use extcore\traits\Upload;
 use think\Db;
 use think\Loader;
@@ -28,16 +32,33 @@ class MemberController extends AuthedController
         }
         
         $levels = getMemberLevels();
-        $profile['level']=$levels[$profile['level_id']]?:[];
+        $profile['level']=$levels[$profile['level_id']] ?? new \stdClass();
+        $agents = MemberAgentModel::getCacheData();
+        $profile['agent'] = $agents[$profile['is_agent']] ?? new \stdClass();
         return $this->response($profile);
     }
 
     public function update_profile(){
-        $data=$this->request->only(['realname','email','mobile','gender','birth','qq','wechat','alipay'],'put');
-        if(!empty($data['birth']) && $data['birth']!='') {
+        $data=$this->request->only(['username','nickname','realname','email','mobile','gender','birth','qq','wechat','alipay','province','city','county','address'],'put');
+        if(isset($data['username'])){
+            if(strpos($this->user['username'],'#')===false){
+                $this->error('登录名不可修改');
+            }
+            if(empty($data['username'])){
+                $this->error('要修改的用户名不能为空');
+            }
+            if(!preg_match('/^[a-zA-Z][A-Za-z0-9\-\_]{5,19}$/',$data['username'])){
+                $this->error('用户名格式不正确');
+            }
+            $exists= Db::name('member')->where('username',$data['username'])->find();
+            if(!empty($exists)){
+                $this->error('用户名已存在');
+            }
+        }
+        if(!empty($data['birth'])) {
             $data['birth'] = strtotime($data['birth']);
         }else{
-            unset($data['birth']);
+            if(isset($data['birth'])) unset($data['birth']);
         }
         $validate=new MemberValidate();
         $validate->setId($this->user['id']);
@@ -46,7 +67,7 @@ class MemberController extends AuthedController
         }else{
             $data['id']=$this->user['id'];
             Db::name('Member')->update($data);
-            user_log($this->user['id'],'addressadd',1,'修改个人资料');
+            user_log($this->user['id'],'update_profile',1,'修改个人资料');
             $this->success('保存成功');
         }
     }
@@ -75,6 +96,37 @@ class MemberController extends AuthedController
             'url'=>$uploaded['url']
         ]);
     }
+
+    public function upgrade(){
+        $target = $this->request->post('level_id');
+        $balance_pay = $this->request->post('balance_pay') == '1';
+        $levels = MemberLevelModel::getCacheData();
+        if($target<=0 || !isset($levels[$target])){
+            $this->error('升级级别错误',0);
+        }
+
+        $curLevel = $this->user['level_id']?$levels[$this->user['level_id']]:null;
+        $level = $levels[$target];
+        if(!$curLevel || $curLevel['sort'] >= $level['sort']){
+            $this->error('升级级别错误',0);
+        }
+
+        if($level['upgrade_type'] == 0){
+            $this->error('该等级不可申请',0);
+        }
+
+        $model = new MemberLevelLogModel();
+        $insert_id = $model->makeOrder($this->user, $level, '', $balance_pay );
+
+        if($insert_id === false){
+            $this->error($model->getError());
+        }
+        if($balance_pay){
+            $this->success('开通成功');
+        }else{
+            $this->success('UL_'.$insert_id, 1, '申请已提交');
+        }
+    }
     
     public function change_password(){
         $password=$this->request->post('password');
@@ -91,12 +143,54 @@ class MemberController extends AuthedController
         Db::name('Member')->where('id',$this->user['id'])->update($data);
         $this->success('密码修改成功');
     }
-    
+
     public function sec_password(){
-    
+        $password=$this->request->post('password');
+        if(empty($this->user['secpassword'])){
+            if(!compare_password($this->user,$password)){
+                $this->error('当前密码输入错误',0);
+            }
+        }else{
+            if(!compare_secpassword($this->user,$password)){
+                $this->error('安全密码输入错误',0);
+            }
+        }
+        
+        $newpassword=$this->request->post('newpassword');
+        $salt=random_str(8);
+        $data=array(
+            'secpassword'=>encode_password($newpassword,$salt),
+            'secsalt'=>$salt
+        );
+        Db::name('Member')->where('id',$this->user['id'])->update($data);
+        $this->success('安全密码修改成功');
+    }
+
+    public function search($keyword){
+        if(empty($keyword)){
+            $this->error('请输入会员名或手机号');
+        }
+        $result = Db::name('member')->where('id|username|mobile',$keyword)->find();
+        if(empty($result)){
+            $this->error('未搜索到会员');
+        }
+        return $this->response([
+            'id'=>$result['id'],
+            'username'=>$result['username'],
+            'nickname'=>$result['username'],
+            'realname'=>$result['realname'],
+            'mobile'=>$result['mobile'],
+            'avatar'=>$result['avatar'],
+        ]);
     }
     
-    
+    public function quit(){
+        if($this->isLogin){
+            MemberTokenFacade::clearToken($this->token);
+        }
+        $this->success('退出成功');
+    }
+
     public function addresses(){
         return action('member.address/index');
     }

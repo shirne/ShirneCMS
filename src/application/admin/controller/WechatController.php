@@ -17,6 +17,21 @@ use think\Db;
  */
 class WechatController extends BaseController
 {
+
+    public function search($key='',$type=''){
+        $model=Db::name('wechat');
+        if(!empty($key)){
+            $model->where('id|title|appid|hash','like',"%$key%");
+        }
+        if(!empty($type)){
+            $model->where('account_type',$type);
+        }
+
+        $lists=$model->field('id,title,is_default,type,account_type,appid,hash,logo,qrcode,shareimg,create_time')
+            ->order('id ASC')->limit(10)->select();
+        return json(['data'=>$lists,'code'=>1]);
+    }
+
     /**
      * 公众号列表
      * @param string $key

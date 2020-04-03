@@ -74,7 +74,12 @@ return array(
             'detail'=>'订单详情',
             'delete'=>'订单删除',
             'audit'=>'订单审核',
-            'status'=>'订单状态',
+            'setstatus'=>'状态批量更新',
+            'setcancel'=>'取消订单',
+            'setpayed'=>'订单支付',
+            'setdelivery'=>'订单发货',
+            'setreceive'=>'订单收货',
+            'setcomplete'=>'订单完成'
         )
     ),
     'page'=>array(
@@ -134,7 +139,8 @@ return array(
             'logclear'=>'会员日志清除',
             'add'=>'会员添加',
             'update'=>'会员修改',
-            'delete'=>'会员禁用',
+            'status'=>'会员禁用',
+            'delete'=>'会员删除',
             'set_agent'=>'设置代理',
             'cancel_agent'=>'取消代理'
         )
@@ -150,6 +156,7 @@ return array(
     'paylog'=>array(
         'title'=>'财务相关',
         'items'=>array(
+            'index'=>'第三方支付明细',
             'recharge'=>'充值查看',
             'rechargeupdate'=>'充值确认',
             'rechargecancel'=>'充值撤销',
@@ -175,7 +182,8 @@ return array(
     'setting'=>array(
         'title'=>'系统配置',
         'items'=>array(
-            'index'=>'系统配置',
+            'index'=>'系统配置查看',
+            'update'=>'配置保存',
             'import'=>'配置导入',
             'export'=>'配置导出',
             'advance'=>'配置管理',

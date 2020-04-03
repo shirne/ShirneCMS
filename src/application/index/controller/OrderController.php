@@ -161,7 +161,7 @@ class OrderController extends AuthedController
         }
         $debit = money_log($order['member_id'], -$order['payamount']*100, "下单支付", 'consume',0,'money');
         if ($debit){
-            $order->save(['status'=>1,'pay_time'=>time()]);
+            $order->save(['status'=>1,'pay_type'=>'balance','pay_time'=>time()]);
             $this->success('支付成功!');
         }
         $this->error('支付失败!');

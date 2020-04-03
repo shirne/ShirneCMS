@@ -121,14 +121,36 @@ class MemberModel extends BaseModel
      * @param $member_id
      * @return int|string
      */
-    public static function setAgent($member_id){
+    public static function setAgent($member_id, $agent_id = 1, $type='system', $remark = ''){
+        $agents = MemberAgentModel::getCacheData();
+        $agent = isset($agents[$agent_id])?$agents[$agent_id]:[];
         $data=array();
-        $data['agentcode']=random_str(8);
-        while(Db::name('member')->where('agentcode',$data['agentcode'])->find()){
-            $data['agentcode']=random_str(8);
+        if(is_array($member_id)){
+            $member = $member_id;
+            $member_id = $member['id'];
+        }else{
+            $member = Db::name('member')->where('id',$member_id)->find();
+            if(empty($member))return false;
         }
-        $data['is_agent']=1;
-        return Db::name('member')->where('id',$member_id)->update($data);
+        if(empty($member['agentcode'])){
+            $data['agentcode']=random_str(8);
+            while(Db::name('member')->where('agentcode',$data['agentcode'])->count()>0){
+                $data['agentcode']=random_str(8);
+            }
+        }
+        $data['is_agent']=$agent_id;
+        $data['update_time']=time();
+        $result = Db::name('member')->where('id',$member_id)->update($data);
+        if($result){
+            Db::name('memberAgentLog')->insert([
+                'member_id'=>$member_id,
+                'agent_id'=>$agent_id,
+                'type'=>$type,
+                'remark'=>$remark,
+                'create_time'=>time(),
+            ]);
+        }
+        return $result;
     }
 
     /**
@@ -234,7 +256,7 @@ class MemberModel extends BaseModel
     public static function createFromOauth($data,$referer=0)
     {
         $data=[
-            'username' => $data['openid'],
+            'username' => '#'.$data['openid'],
             'nickname' => $data['nickname'],
             'password' => '',
             'salt'=>'',
@@ -249,5 +271,18 @@ class MemberModel extends BaseModel
             $member->setReferer($referer);
         }
         return $member;
+    }
+
+    public static function checkUpdata($data, $member){
+        $updata=array();
+        if(!empty($data)){
+            if(isset($data['gender']) && (!isset($member['gender']) || $member['gender']!=$data['gender']))$updata['gender']=$data['gender'];
+            if(empty($member['province']) && !empty($data['province']))$updata['province']=$data['province'];
+            if(empty($member['city']) && !empty($data['city']))$updata['city']=$data['city'];
+            //if(empty($member['county']) && !empty($data['county']))$updata['county']=$data['county'];
+            if(empty($member['nickname']))$updata['nickname']=$data['nickname'];
+            if(empty($member['avatar']) || is_wechat_avatar($member['avatar']))$updata['avatar']=$data['avatar'];
+        }
+        return $updata;
     }
 }

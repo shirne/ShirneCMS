@@ -8,7 +8,9 @@ use app\api\controller\AuthedController;
 use app\common\model\MemberCashinModel;
 use app\common\model\MemberOauthModel;
 use app\common\validate\MemberCardValidate;
+use app\common\model\WechatModel;
 use extcore\traits\Upload;
+use shirne\common\ValidateHelper;
 use think\Db;
 
 class AccountController extends AuthedController
@@ -144,7 +146,8 @@ class AccountController extends AuthedController
         return $this->response([
             'recharges'=>$recharges->items(),
             'total'=>$recharges->total(),
-            'page'=>$recharges->currentPage()
+            'page'=>$recharges->currentPage(),
+            'total_page'=>$recharges->lastPage()
         ]);
     }
     
@@ -158,6 +161,8 @@ class AccountController extends AuthedController
     }
     
     public function cash_config(){
+        $wechats=WechatModel::where('account_type','service')->select();
+        $user = $this->user;
         return $this->response([
             'types'=>$this->config['cash_types'],
             'limit'=>$this->config['cash_limit'],
@@ -166,6 +171,22 @@ class AccountController extends AuthedController
             'fee'=>$this->config['cash_fee'],
             'fee_min'=>$this->config['cash_fee_min'],
             'fee_max'=>$this->config['cash_fee_max'],
+            'wechats'=>array_map(function($item)use($user){
+                $followed = DB::name('member_oauth')->where('member_id',$user['id'])->where('type_id',$item['id'])->find();
+                return [
+                    'id'=>$item['id'],
+                    'type'=>$item['type'],
+                    'account_type'=>$item['account_type'],
+                    'hash'=>$item['hash'],
+                    'title'=>$item['title'],
+                    'qrcode'=>$item['qrcode'],
+                    'logo'=>$item['logo'],
+                    'openid'=>$followed['openid']??'',
+                    'avatar'=>$followed['avatar']??'',
+                    'nickname'=>$followed['nickname']??'',
+                    'is_follow'=>empty($followed) || empty($followed['is_follow'])?0:1
+                ];
+            },$wechats->toArray())
         ]);
     }
     
@@ -179,7 +200,8 @@ class AccountController extends AuthedController
         return $this->response([
             'total'=>$cashes->total(),
             'cashes'=>$cashes->items(),
-            'page'=>$cashes->currentPage()
+            'page'=>$cashes->currentPage(),
+            'total_page'=>$cashes->lastPage()
         ]);
     }
     public function cash(){
@@ -205,7 +227,13 @@ class AccountController extends AuthedController
         
         $platform=$this->request->tokenData['platform']?:'';
         $appid=$this->request->tokenData['appid']?:'';
-        $cash_fee=round($amount*$this->config['cash_fee']*.01);
+        $cash_fee=round($amount*$this->config['cash_fee']/100);
+        if($this->config['cash_fee_min']> 0 && $cash_fee < $this->config['cash_fee_min']*100){
+            $cash_fee=round($this->config['cash_fee_min']*100);
+        }
+        if($this->config['cash_fee_max']> 0 && $cash_fee > $this->config['cash_fee_max']*100){
+            $cash_fee=round($this->config['cash_fee_max']*100);
+        }
         $data=array(
             'member_id'=>$this->user['id'],
             'platform'=>$platform,
@@ -245,8 +273,8 @@ class AccountController extends AuthedController
             if(empty($openid) || empty($appid)){
                 $this->error('提现微信账户错误');
             }
-            $data['card_name']=$openid;
-            $data['cardno']=$this->request->param('realname');
+            $data['cardno']=$openid;
+            $data['card_name']=$this->request->param('realname');
             $data['bank_name']=$appid;
         }elseif($rdata['cashtype']=='alipay'){
             $data['card_name']=$this->request->param('alipay');
@@ -267,6 +295,9 @@ class AccountController extends AuthedController
                 }
                 if (empty($carddata['cardno'])) {
                     $this->error('请填写卡号');
+                }
+                if(ValidateHelper::isBankcard($carddata['cardno'])){
+                    $this->error('银行卡号错误');
                 }
                 $carddata['member_id'] = $this->user['id'];
                 $bank_id = Db::name('MemberCard')->insert($carddata, false, true);
