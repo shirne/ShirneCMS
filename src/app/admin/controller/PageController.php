@@ -91,7 +91,7 @@ class PageController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
-                $model=PageModel::get($id);
+                $model=PageModel::find($id);
                 $delete_images=[];
                 $uploaded = $this->upload('page', 'upload_icon');
                 if (!empty($uploaded)) {

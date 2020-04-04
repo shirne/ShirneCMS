@@ -62,7 +62,7 @@ class ProductController extends BaseController
     }
 
     public function view($id){
-        $product = ProductModel::get($id);
+        $product = ProductModel::find($id);
         if(empty($product)){
             return $this->errorPage('商品不存在');
         }
@@ -77,7 +77,7 @@ class ProductController extends BaseController
         return $this->fetch();
     }
     public function comment($id){
-        $product = ProductModel::get($id);
+        $product = ProductModel::find($id);
         if(empty($product)){
             $this->error('参数错误');
         }

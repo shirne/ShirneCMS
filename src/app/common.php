@@ -795,7 +795,7 @@ function money_force_log($uid, $money, $reson, $type='',$from_id=0,$field='money
 
     }
     if($result) {
-        return \think\facade\Db::name('memberMoneyLog')->insert($log,false,true);
+        return \think\facade\Db::name('memberMoneyLog')->insert($log,true);
     }else{
         return false;
     }

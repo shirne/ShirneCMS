@@ -63,7 +63,7 @@ class BrandController extends BaseController
 
                 $cates = $data['cates'];
                 unset($data['cates']);
-                $insertid=Db::name('productBrand')->insert($data,false,true);
+                $insertid=Db::name('productBrand')->insert($data,true);
                 if ($insertid) {
                     if(!empty($cates)){
                         foreach($cates as $cid){

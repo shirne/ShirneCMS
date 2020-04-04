@@ -81,7 +81,7 @@ class ManagerRoleController extends BaseController
     {
         $id=intval($id);
         if($id==0)$this->error('参数错误');
-        $model=ManagerRoleModel::get($id);
+        $model=ManagerRoleModel::find($id);
         if($this->manager['type']>$model['type']){
             $this->error('您没有权限查看该角色');
         }
@@ -125,7 +125,7 @@ class ManagerRoleController extends BaseController
             $this->error("不可删除!");
         }
         
-        $role = ManagerRoleModel::get($id);
+        $role = ManagerRoleModel::find($id);
         if ($this->manager['type']>=$role['type']) {
             $this->error('您不能删除该角色');
         }

@@ -103,7 +103,7 @@ class MemberController extends BaseController
         $id=intval($id);
         $level_id=intval($level_id);
 
-        $member = MemberModel::get($id);
+        $member = MemberModel::find($id);
         if(empty($member))$this->error('会员不存在');
         
         $result=$member->save(['level_id'=>$level_id]);
@@ -120,7 +120,7 @@ class MemberController extends BaseController
         $id=intval($id);
         $referer=intval($referer);
 
-        $member = MemberModel::get($id);
+        $member = MemberModel::find($id);
         if(empty($member))$this->error('会员不存在');
         
         $result=$member->setReferer($referer);
@@ -136,7 +136,7 @@ class MemberController extends BaseController
         if(empty($id) )$this->error('参数错误');
         $id=intval($id);
         
-        $member=MemberModel::get($id);
+        $member=MemberModel::find($id);
         if(empty($member))$this->error('会员不存在');
         
         $result=$member->clrReferer();
@@ -489,7 +489,7 @@ class MemberController extends BaseController
                 }
 
                 //更新
-                $member=MemberModel::get($id);
+                $member=MemberModel::find($id);
                 if ($member->allowField(true)->save($data)) {
                     user_log($this->mid,'updateuser',1,'修改会员资料'.$id ,'manager');
                     $this->success(lang('Update success!'), url('member/index'));

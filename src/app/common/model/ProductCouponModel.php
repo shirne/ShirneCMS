@@ -147,7 +147,7 @@ class ProductCouponModel extends BaseModel
         }
         if(empty($user))return false;
         if(!is_array($user)){
-            $user = MemberModel::get(intval($user));
+            $user = MemberModel::find(intval($user));
         }
         if(empty($user))return false;
         if(!empty($this['levels_limit'])){

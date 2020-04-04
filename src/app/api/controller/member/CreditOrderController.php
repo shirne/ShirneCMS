@@ -59,7 +59,7 @@ class CreditOrderController extends AuthedController
     }
     
     public function cancel($id, $reason=''){
-        $order=CreditOrderModel::get(intval($id));
+        $order=CreditOrderModel::find(intval($id));
         if(empty($order) || $order['delete_time']>0){
             $this->error('订单不存在或已删除',0);
         }
@@ -75,7 +75,7 @@ class CreditOrderController extends AuthedController
     }
     
     public function refund($id, $reason=''){
-        $order=CreditOrderModel::get(intval($id));
+        $order=CreditOrderModel::find(intval($id));
         if(empty($order) || $order['delete_time']>0){
             $this->error('订单不存在或已删除',0);
         }
@@ -94,7 +94,7 @@ class CreditOrderController extends AuthedController
     }
     
     public function express($id){
-        $order=CreditOrderModel::get(intval($id));
+        $order=CreditOrderModel::find(intval($id));
         if(empty($order) || $order['delete_time']>0){
             $this->error('订单不存在或已删除',0);
         }
@@ -139,7 +139,7 @@ class CreditOrderController extends AuthedController
     }
     
     public function confirm($id){
-        $order=CreditOrderModel::get(intval($id));
+        $order=CreditOrderModel::find(intval($id));
         if(empty($order) || $order['delete_time']>0){
             $this->error('订单不存在或已删除',0);
         }
@@ -155,7 +155,7 @@ class CreditOrderController extends AuthedController
     }
     
     public function delete($id){
-        $order=CreditOrderModel::get(intval($id));
+        $order=CreditOrderModel::find(intval($id));
         if(empty($order) || $order['delete_time']>0){
             $this->error('订单不存在或已删除',0);
         }

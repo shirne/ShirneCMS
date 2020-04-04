@@ -125,7 +125,7 @@ class ProductController extends BaseController
     }
 
     public function qrcode($id, $qrtype='url', $size=430, $miniprogram=0){
-        $product=ProductModel::get($id);
+        $product=ProductModel::find($id);
         if($qrtype=='url'){
             $url = url('index/shop.product/view',['id'=>$id], true, true);
             $content=gener_qrcode($url, $size);
@@ -288,7 +288,7 @@ class ProductController extends BaseController
                 }elseif($this->uploadErrorCode>102){
                     $this->error($this->uploadErrorCode.':'.$this->uploadError);
                 }
-                $model=ProductModel::get($id);
+                $model=ProductModel::find($id);
                 $skus=$data['skus'];
     
                 $data = $this->processData($data);
@@ -319,7 +319,7 @@ class ProductController extends BaseController
             }
         }
 
-        $model = ProductModel::get($id);
+        $model = ProductModel::find($id);
         if(empty($model)){
             $this->error('商品不存在');
         }

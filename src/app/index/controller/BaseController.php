@@ -251,7 +251,7 @@ class BaseController extends Controller
             if(!empty($openid)){
                 $wechatUser=Db::name('memberOauth')->where('openid',$openid)->find();
                 if($wechatUser['member_id']){
-                    $member=MemberModel::get($wechatUser['member_id']);
+                    $member=MemberModel::find($wechatUser['member_id']);
                     if(!empty($member)) {
                         $this->setLogin($member);
 
@@ -285,7 +285,7 @@ class BaseController extends Controller
             if(!empty($openid)){
                 $wechatUser=Db::name('memberOauth')->where('openid',$openid)->find();
                 if($wechatUser['member_id']){
-                    $member=MemberModel::get($wechatUser['member_id']);
+                    $member=MemberModel::find($wechatUser['member_id']);
                     if(!empty($member)) {
                         $this->setLogin($member);
 

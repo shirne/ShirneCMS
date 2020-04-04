@@ -117,7 +117,7 @@ class GoodsController extends BaseController
                 }elseif($this->uploadErrorCode>102){
                     $this->error($this->uploadErrorCode.':'.$this->uploadError);
                 }
-                $model=GoodsModel::get($id);
+                $model=GoodsModel::find($id);
                 //$skus=$data['skus'];
                 if(!empty($data['prop_data'])){
                     $data['prop_data']=array_combine($data['prop_data']['keys'],$data['prop_data']['values']);
@@ -140,7 +140,7 @@ class GoodsController extends BaseController
             }
         }
 
-        $model = GoodsModel::get($id);
+        $model = GoodsModel::find($id);
         if(empty($model)){
             $this->error('商品不存在');
         }

@@ -61,7 +61,7 @@ class OrderController extends AuthedController
     }
     
     public function cancel($id, $reason=''){
-        $order=OrderModel::get(intval($id));
+        $order=OrderModel::find(intval($id));
         if(empty($order) || $order['delete_time']>0){
             $this->error('订单不存在或已删除',0);
         }
@@ -77,7 +77,7 @@ class OrderController extends AuthedController
     }
     
     public function refund($id, $reason=''){
-        $order=OrderModel::get(intval($id));
+        $order=OrderModel::find(intval($id));
         if(empty($order) || $order['delete_time']>0){
             $this->error('订单不存在或已删除',0);
         }
@@ -96,7 +96,7 @@ class OrderController extends AuthedController
     }
     
     public function express($id){
-        $order=OrderModel::get(intval($id));
+        $order=OrderModel::find(intval($id));
         if(empty($order) || $order['delete_time']>0){
             $this->error('订单不存在或已删除',0);
         }
@@ -141,7 +141,7 @@ class OrderController extends AuthedController
     }
     
     public function confirm($id){
-        $order=OrderModel::get(intval($id));
+        $order=OrderModel::find(intval($id));
         if(empty($order) || $order['delete_time']>0){
             $this->error('订单不存在或已删除',0);
         }
@@ -157,7 +157,7 @@ class OrderController extends AuthedController
     }
     
     public function delete($id){
-        $order=OrderModel::get(intval($id));
+        $order=OrderModel::find(intval($id));
         if(empty($order) || $order['delete_time']>0){
             $this->error('订单不存在或已删除',0);
         }

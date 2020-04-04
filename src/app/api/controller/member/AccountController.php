@@ -61,7 +61,7 @@ class AccountController extends AuthedController
                 $this->error('只能添加20张银行卡信息');
             }
             $card['member_id'] = $this->user['id'];
-            $id = Db::name('MemberCard')->insert($card,false,true);
+            $id = Db::name('MemberCard')->insert($card,true);
         }
         if ($card['is_default']) {
             Db::name('MemberCard')->where('id' , '<>', $id)
@@ -127,7 +127,7 @@ class AccountController extends AuthedController
             $this->error('充值金额必需是'.$this->config['recharge_power'].'的倍数');
         }
         
-        $addid=Db::name('memberRecharge')->insert($data,false,true);
+        $addid=Db::name('memberRecharge')->insert($data,true);
         if($addid) {
             if($type=='wechat'){
                 $this->success(['order_id'=>'CZ_'.$addid],1,'订单已生成，请支付');
@@ -300,7 +300,7 @@ class AccountController extends AuthedController
                     $this->error('银行卡号错误');
                 }
                 $carddata['member_id'] = $this->user['id'];
-                $bank_id = Db::name('MemberCard')->insert($carddata, false, true);
+                $bank_id = Db::name('MemberCard')->insert($carddata, true);
             }
             $card = Db::name('MemberCard')->where(array('member_id' => $this->user['id'], 'id' => $bank_id))->find();
             $data['bank_id']=$bank_id;

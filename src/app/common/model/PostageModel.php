@@ -73,7 +73,7 @@ class PostageModel extends CacheableModel
         $nopostage_ids=[];
         foreach ($products as $postage_id=>$lists){
             if($postage_id>0) {
-                $postage = static::get($postage_id);
+                $postage = static::find($postage_id);
                 if(!empty($address['city']) && !empty($postage['specials'])){
                     if($postage['area_type']==1 && !in_array($address['city'],$postage['specials'])){
                         $nopostage_ids[]=$postage_id;
@@ -120,7 +120,7 @@ class PostageModel extends CacheableModel
     
     public static function getDesc($id){
         if($id>0){
-            $postage=static::get($id);
+            $postage=static::find($id);
             if(!empty($postage)){
                 $areas = $postage->getAreas();
                 if(!empty($areas)){

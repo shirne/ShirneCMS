@@ -91,7 +91,7 @@ class ProductController extends BaseController
     }
 
     public function view($id){
-        $product = ProductModel::get($id);
+        $product = ProductModel::find($id);
         if(empty($product)){
             $this->error('商品不存在');
         }
@@ -111,7 +111,7 @@ class ProductController extends BaseController
     }
 
     public function share($id, $type='url'){
-        $product = ProductModel::get($id);
+        $product = ProductModel::find($id);
         if(empty($product)){
             $this->error('商品不存在');
         }
@@ -205,7 +205,7 @@ class ProductController extends BaseController
 
 
     public function comments($id){
-        $product = ProductModel::get($id);
+        $product = ProductModel::find($id);
         if(empty($product)){
             $this->error('参数错误');
         }

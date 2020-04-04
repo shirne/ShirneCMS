@@ -126,7 +126,7 @@ class MemberLevelController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             }else{
-                $model=MemberLevelModel::get($id);
+                $model=MemberLevelModel::find($id);
                 if ($model->allowField(true)->save($data)) {
                     cache('levels', null);
                     user_log($this->mid,'updatelevel',1,'修改会员组'.$id ,'manager');
@@ -136,7 +136,7 @@ class MemberLevelController extends BaseController
                 }
             }
         }
-        $model = MemberLevelModel::get($id);
+        $model = MemberLevelModel::find($id);
         $this->assign('model',$model);
         $this->assign('styles',getTextStyles());
         return $this->fetch();

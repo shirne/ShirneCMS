@@ -125,7 +125,7 @@ class OrderController extends BaseController
     }
 
     public function setcancel($id){
-        $order = CreditOrderModel::get($id);
+        $order = CreditOrderModel::find($id);
         if(empty($id) || empty($order)){
             $this->error('订单不存在');
         }
@@ -137,7 +137,7 @@ class OrderController extends BaseController
         $this->success('操作成功');
     }
     public function setpayed($id){
-        $order = CreditOrderModel::get($id);
+        $order = CreditOrderModel::find($id);
         if(empty($id) || empty($order)){
             $this->error('订单不存在');
         }
@@ -161,7 +161,7 @@ class OrderController extends BaseController
         $this->success('操作成功');
     }
     public function setdelivery($id){
-        $order = CreditOrderModel::get($id);
+        $order = CreditOrderModel::find($id);
         if(empty($id) || empty($order)){
             $this->error('订单不存在');
         }
@@ -186,7 +186,7 @@ class OrderController extends BaseController
         $this->success('操作成功');
     }
     public function setreceive($id){
-        $order = CreditOrderModel::get($id);
+        $order = CreditOrderModel::find($id);
         if(empty($id) || empty($order)){
             $this->error('订单不存在');
         }
@@ -205,7 +205,7 @@ class OrderController extends BaseController
     }
 
     public function setcomplete($id){
-        $order = CreditOrderModel::get($id);
+        $order = CreditOrderModel::find($id);
         if(empty($id) || empty($order)){
             $this->error('订单不存在');
         }
@@ -238,7 +238,7 @@ class OrderController extends BaseController
      */
     public function reprice($id,$price)
     {
-        $order = CreditOrderModel::get($id);
+        $order = CreditOrderModel::find($id);
         if(empty($id) || empty($order)){
             $this->error('订单不存在');
         }
@@ -261,7 +261,7 @@ class OrderController extends BaseController
      * @param $id
      */
     public function paystatus($id){
-        $order = CreditOrderModel::get($id);
+        $order = CreditOrderModel::find($id);
         if(empty($id) || empty($order)){
             $this->error('订单不存在');
         }
@@ -281,7 +281,7 @@ class OrderController extends BaseController
      * @param $payid
      */
     public function payquery($payid){
-        $payorder = PayOrderModel::get($payid);
+        $payorder = PayOrderModel::find($payid);
         if(empty($payorder)){
             $this->error('支付订单不存在');
         }

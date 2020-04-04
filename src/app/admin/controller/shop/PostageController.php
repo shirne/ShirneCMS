@@ -68,7 +68,7 @@ class PostageController extends BaseController
     public function update($id)
     {
         $id = intval($id);
-        $model = PostageModel::get($id);
+        $model = PostageModel::find($id);
         if(empty($model)){
             $this->error('运费模板不存在');
         }

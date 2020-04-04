@@ -74,7 +74,7 @@ class ArticleController extends BaseController
 
     public function view($id){
         $id=intval($id);
-        $article = ArticleModel::get($id);
+        $article = ArticleModel::find($id);
         if(empty($article)){
             $this->error('文章不存在',0);
         }
@@ -101,7 +101,7 @@ class ArticleController extends BaseController
 
     public function digg($id,$type='up'){
         $id=intval($id);
-        $article = ArticleModel::get($id);
+        $article = ArticleModel::find($id);
         if(empty($article)){
             $this->error('文章不存在',0);
         }

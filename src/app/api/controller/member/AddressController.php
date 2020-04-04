@@ -43,7 +43,7 @@ class AddressController extends AuthedController
                 }
             }else{
                 $data['member_id']=$this->user['id'];
-                $id=Db::name('MemberAddress')->insert($data,false,true);
+                $id=Db::name('MemberAddress')->insert($data,true);
                 if($id){
                     user_log($this->user['id'],'addressadd',1,'添加收货地址:'.$id);
                     $this->success('添加成功');

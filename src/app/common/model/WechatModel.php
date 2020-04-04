@@ -89,7 +89,7 @@ class WechatModel extends BaseModel
     
     public static function createApp($wechat, $ispay=false, $payset=[]){
         if(is_numeric($wechat)){
-            $wechat = static::get($wechat);
+            $wechat = static::find($wechat);
         }
         if(is_string($wechat)){
             $wechat = static::where(['appid'=>$wechat])->find();

@@ -26,7 +26,7 @@ class AccountController extends BaseController
             $card=array();
         }
         if($this->request->isPost()){
-            $card=$this->request->only('cardno,bankname,cardname,bank,is_default','post');
+            $card=$this->request->post('cardno,bankname,cardname,bank,is_default');
             $card['is_default']=empty($card['is_default'])?0:1;
             $validate=new MemberCardValidate();
 
@@ -37,7 +37,7 @@ class AccountController extends BaseController
                     Db::name('MemberCard')->where('id' , $id)->update($card);
                 } else {
                     $card['member_id'] = $this->userid;
-                    $id = Db::name('MemberCard')->insert($card,false,true);
+                    $id = Db::name('MemberCard')->insert($card,true);
                 }
                 if ($card['is_default']) {
                     Db::name('MemberCard')->where('id' , '<>', $id)
@@ -100,7 +100,7 @@ class AccountController extends BaseController
                 $this->error('充值金额必需是'.$this->config['recharge_power'].'的倍数');
             }
 
-            $addid=Db::name('memberRecharge')->insert($data,false,true);
+            $addid=Db::name('memberRecharge')->insert($data,true);
             if($addid) {
                 if($type=='wechat'){
                     $this->success('充值订单提交成功，即将跳转到支付页面', url('index/order/wechatpay',['order_id'=>'CZ_'.$addid]));
@@ -155,7 +155,7 @@ class AccountController extends BaseController
             $amount=$this->request->post('amount')*100;
             $bank_id=$this->request->post('card_id/d');
             if(empty($bank_id)){
-                $carddata=$this->request->only('bank,bankname,cardname,cardno','post');
+                $carddata=$this->request->post('bank,bankname,cardname,cardno');
                 if(empty($carddata['bank'])){
                     $this->error('请填写银行名称');
                 }
@@ -169,7 +169,7 @@ class AccountController extends BaseController
                     $this->error('请填写卡号');
                 }
                 $carddata['member_id']=$this->userid;
-                $bank_id=Db::name('MemberCard')->insert($carddata,false,true);
+                $bank_id=Db::name('MemberCard')->insert($carddata,true);
             }
             $card=Db::name('MemberCard')->where(array('member_id'=>$this->userid,'id'=>$bank_id))->find();
             $data=array(

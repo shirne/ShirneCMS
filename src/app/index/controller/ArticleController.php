@@ -62,7 +62,7 @@ class ArticleController extends BaseController{
     }
 
     public function view($id){
-        $article = ArticleModel::get($id);
+        $article = ArticleModel::find($id);
         if(empty($article)){
             return $this->errorPage(lang('Article not exists!'));
         }

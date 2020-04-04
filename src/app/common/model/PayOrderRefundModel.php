@@ -38,7 +38,7 @@ class PayOrderRefundModel extends BaseModel
             'create_time'=>time(),
             'update_time'=>time()
         ];
-        return Db::name('payOrderRefund')->insert($refund,false,true);
+        return Db::name('payOrderRefund')->insert($refund,true);
     }
 
 

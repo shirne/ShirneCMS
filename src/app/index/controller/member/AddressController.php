@@ -32,14 +32,14 @@ class AddressController extends BaseController
 
     public function add(){
         if($this->request->isPost()){
-            $data=$this->request->only('recive_name,mobile,province,city,area,address,code,is_default','post');
+            $data=$this->request->post('recive_name,mobile,province,city,area,address,code,is_default');
             $data['is_default']=empty($data['is_default'])?0:1;
             $validate=new MemberAddressValidate();
             if(!$validate->check($data)){
                 $this->error($validate->getError());
             }else {
                 $data['member_id'] = $this->userid;
-                $id = Db::name('MemberAddress')->insert($data, false, true);
+                $id = Db::name('MemberAddress')->insert($data, true);
                 if ($id) {
                     user_log($this->userid, 'addressadd', 1, '添加收货地址:' . $id);
                     $this->success('添加成功', aurl('index/member.address/index'), Db::name('MemberAddress')->find($id));

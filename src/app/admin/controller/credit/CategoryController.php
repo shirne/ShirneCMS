@@ -88,7 +88,7 @@ class CategoryController extends BaseController
                 $this->success("保存成功", url('credit.category/index'));
             }
         }else{
-            $model = GoodsCategoryModel::get($id);
+            $model = GoodsCategoryModel::find($id);
             if(empty($model) || empty($model['id'])){
                 $this->error('分类不存在');
             }

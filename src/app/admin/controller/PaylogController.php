@@ -331,7 +331,7 @@ class PaylogController extends BaseController
     public function cashupdate($id='',$paytype=''){
         $id=intval($id);
         if($id==0)$this->error('参数错误 ');
-        $cash=MemberCashinModel::get($id);
+        $cash=MemberCashinModel::find($id);
         if(empty($cash))$this->error('提现单不存在');
         if($cash['status']!=0)$this->error('提现单已处理过了');
 
@@ -446,7 +446,7 @@ class PaylogController extends BaseController
     public function cashdelete($id=''){
         $id=intval($id);
         if($id==0)$this->error('参数错误 ');
-        $cash=MemberCashinModel::get($id);
+        $cash=MemberCashinModel::find($id);
         if(empty($cash))$this->error('提现单不存在');
         
         if($cash['status']!=0)$this->error('提现单已处理过了');
