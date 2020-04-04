@@ -10,7 +10,7 @@
     <form method="post" class="page-form" action="" enctype="multipart/form-data">
         <div class="form-group">
             <label for="title">名称</label>
-            <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="名称">
+            <input type="text" name="title" class="form-control" value="{$model.title|default=''}" placeholder="名称">
         </div>
         <div class="form-group">
             <label for="image">图片</label>
@@ -20,7 +20,7 @@
                     <label class="custom-file-label" for="upload_image">选择文件</label>
                 </div>
             </div>
-            {if $model['image']}
+            {if !empty($model['image'])}
                 <figure class="figure">
                     <img src="{$model.image}" class="figure-img img-fluid rounded" alt="image">
                     <figcaption class="figure-caption text-center">{$model.image}</figcaption>
@@ -28,6 +28,7 @@
                 <input type="hidden" name="delete_image" value="{$model.image}"/>
             {/if}
         </div>
+        {if !empty($group['ext_set'])}
         <div class="form-row">
             {foreach name="group['ext_set']['key']" item="ikey"}
                 <div class="col-6 form-group">
@@ -36,6 +37,7 @@
                 </div>
             {/foreach}
         </div>
+        {/if}
         <div class="form-group">
             <label for="image">有效期</label>
             <div class="form-row date-range">
@@ -43,13 +45,13 @@
                     <div class="input-group-prepend">
                     <span class="input-group-text">从</span>
                     </div>
-                    <input type="text" name="start_date" class="form-control fromdate" value="{$model.start_date|showdate=''}" />
+                    <input type="text" name="start_date" class="form-control fromdate" value="{$model.start_date|default=''|showdate=''}" />
                 </div>
                 <div class="input-group col">
                     <div class="input-group-prepend">
                     <span class="input-group-text">至</span>
                     </div>
-                    <input type="text" name="end_date" class="form-control todate" value="{$model.end_date|showdate=''}" />
+                    <input type="text" name="end_date" class="form-control todate" value="{$model.end_date|default=''|showdate=''}" />
                 </div>
             </div>
 
@@ -57,11 +59,11 @@
         <div class="form-row">
             <div class="col form-group">
                 <label for="url">链接</label>
-                <input type="text" name="url" class="form-control" value="{$model.url}" />
+                <input type="text" name="url" class="form-control" value="{$model.url|default=''}" />
             </div>
             <div class="col form-group">
                 <label for="image">排序</label>
-                <input type="text" name="sort" class="form-control" value="{$model.sort}" />
+                <input type="text" name="sort" class="form-control" value="{$model.sort|default=''}" />
             </div>
         </div>
 
