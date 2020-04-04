@@ -32,7 +32,7 @@ class AddressController extends BaseController
 
     public function add(){
         if($this->request->isPost()){
-            $data=$this->request->post('recive_name,mobile,province,city,area,address,code,is_default');
+            $data=$this->request->post(['recive_name','mobile','province','city','area','address','code','is_default']);
             $data['is_default']=empty($data['is_default'])?0:1;
             $validate=new MemberAddressValidate();
             if(!$validate->check($data)){

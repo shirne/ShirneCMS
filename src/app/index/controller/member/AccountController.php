@@ -26,7 +26,7 @@ class AccountController extends BaseController
             $card=array();
         }
         if($this->request->isPost()){
-            $card=$this->request->post('cardno,bankname,cardname,bank,is_default');
+            $card=$this->request->post(['cardno','bankname','cardname','bank','is_default']);
             $card['is_default']=empty($card['is_default'])?0:1;
             $validate=new MemberCardValidate();
 
@@ -155,7 +155,7 @@ class AccountController extends BaseController
             $amount=$this->request->post('amount')*100;
             $bank_id=$this->request->post('card_id/d');
             if(empty($bank_id)){
-                $carddata=$this->request->post('bank,bankname,cardname,cardno');
+                $carddata=$this->request->post(['bank','bankname','cardname','cardno']);
                 if(empty($carddata['bank'])){
                     $this->error('请填写银行名称');
                 }

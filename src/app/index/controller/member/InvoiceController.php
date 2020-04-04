@@ -32,7 +32,7 @@ class InvoiceController extends BaseController
 
     public function add(){
         if($this->request->isPost()){
-            $data=$this->request->post('title,type,tax_no,address,telephone,bank,caedno,is_default');
+            $data=$this->request->post(['title','type','tax_no','address','telephone','bank','caedno','is_default']);
             $data['is_default']=empty($data['is_default'])?0:1;
             $validate=new MemberInvoiceValidate();
             if(!$validate->check($data)){
