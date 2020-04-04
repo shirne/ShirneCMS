@@ -19,10 +19,10 @@ return array (
       0 => 'Article/index',
       1 => 
       array (
-        'name' => '新闻资讯',
+        'name' => 'news',
       ),
     ),
-    'subnav' => 'Article/新闻资讯',
+    'subnav' => 'Article/news',
   ),
   2 => 
   array (
@@ -33,10 +33,10 @@ return array (
       0 => 'Article/index',
       1 => 
       array (
-        'name' => '作品展示',
+        'name' => 'works',
       ),
     ),
-    'subnav' => 'Article/作品展示',
+    'subnav' => 'Article/works',
   ),
   3 => 
   array (

@@ -654,7 +654,7 @@ function user_log($uid, $action, $result, $remark = '', $tbl = 'member')
         'remark' => json_encode(is_array($remark)?$remark:[$remark],JSON_UNESCAPED_UNICODE)
     ];
     if($tbl==='member'){
-        $data['model']=request()->module();
+        $data['model']=app('http')->getName();
     }
     if(is_array($other_id)){
         foreach ($other_id as $id){

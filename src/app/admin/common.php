@@ -58,7 +58,7 @@ function check_password($password){
     }
 }
 
-function FU($url='',$vars=''){
+function FU($url='',$vars=[]){
 
     $link=url($url,$vars);
 

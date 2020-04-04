@@ -51,7 +51,7 @@ function parseModel($url){
 function parseNavUrl($url,$module){
     if(is_array($url)){
         $url[0]=$module.'/'.strtolower($url[0]);
-        return call_user_func_array('url',$url);
+        return call_user_func_array('url',$url)->build();
     }elseif(is_string($url)) {
         if (strpos($url, 'http://') === 0 ||
             strpos($url, 'https://') === 0 ||
@@ -59,7 +59,7 @@ function parseNavUrl($url,$module){
             return $url;
         } else {
             $url=$module.'/'.strtolower($url);
-            return url($url);
+            return url($url)->build();
         }
     }
     return $url;
@@ -76,7 +76,7 @@ function parseNavPage($group,$module){
     foreach ($pages as $page){
         $subs[]=array(
             'title'=>$page['title'],
-            'url'=>url($module.'/page/index',['name'=>$page['name'],'group'=>$page['group']])
+            'url'=>url($module.'/page/index',['name'=>$page['name'],'group'=>$page['group']])->build()
         );
     }
     return $subs;
@@ -97,7 +97,7 @@ function parseNavModel($cate,$module,$modelName='Article'){
             $subs[]=array(
                 'title'=>$c['title'],
                 'icon'=>$c['icon'],
-                'url'=>url($module.'/'.strtolower($modelName).'/index',['name'=>$c['name']])
+                'url'=>url($module.'/'.strtolower($modelName).'/index',['name'=>$c['name']])->build()
             );
         }
     }
@@ -129,7 +129,7 @@ function getAdImage($tag,$default=''){
  * @param string $vars
  * @param bool $suffix
  * @param bool $domain
- * @return string
+ * @return UrlBuild
  */
 function aurl($url = '', $vars = '', $suffix = true, $domain = false){
     $part=explode('/',$url);
