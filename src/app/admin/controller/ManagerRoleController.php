@@ -32,7 +32,7 @@ class ManagerRoleController extends BaseController
 
         $lists=$model->order('type ASC')->paginate(15);
         $counts = Db::name('manager')->group('type')->field('count(id) as total_count,type')->select();
-        $this->assign('counts',array_column($counts,'total_count','type'));
+        $this->assign('counts',array_column($counts->all(),'total_count','type'));
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
         return $this->fetch();

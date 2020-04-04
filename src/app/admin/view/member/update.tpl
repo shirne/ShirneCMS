@@ -16,26 +16,26 @@
                                     <label class="form-label">用户名</label>
                                     <div class="col">
                                         <input class="form-control" type="text" name="username"
-                                            value="{$model.username}" />
+                                            value="{$model.username|default=''}" />
                                     </div>
                                 </div>
                                 <div class="form-group form-row">
                                     <label class="form-label">真实姓名</label>
                                     <div class="col">
                                         <input class="form-control" type="text" name="realname"
-                                            value="{$model.realname}" />
+                                            value="{$model.realname|default=''}" />
                                     </div>
                                 </div>
                                 <div class="form-group form-row">
                                     <label class="form-label">邮箱</label>
                                     <div class="col">
-                                        <input class="form-control" type="text" name="email" value="{$model.email}" />
+                                        <input class="form-control" type="text" name="email" value="{$model.email|default=''}" />
                                     </div>
                                 </div>
                                 <div class="form-group form-row">
                                     <label class="form-label">手机号</label>
                                     <div class="col">
-                                        <input class="form-control" type="text" name="mobile" value="{$model.mobile}" />
+                                        <input class="form-control" type="text" name="mobile" value="{$model.mobile|default=''}" />
                                     </div>
                                 </div>
                                 {if $model.id GT 0}
@@ -68,9 +68,9 @@
                                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                             {volist name="types" id="type" key="k"}
                                                 <label
-                                                    class="btn btn-outline-secondary{$key==$model['type']?' active':''}">
+                                                    class="btn btn-outline-secondary{if isset($model['type']) && $key==$model['type']} active{/if}">
                                                     <input type="radio" name="type" value="{$key}" autocomplete="off"
-                                                        {$key==$model['type']?'checked':''}>{$type}
+                                                    {if isset($model['type']) && $key==$model['type']}checked{/if}>{$type}
                                                 </label>
                                             {/volist}
                                         </div>
@@ -108,7 +108,7 @@
                                     <label class="form-label">昵称</label>
                                     <div class="col">
                                         <input class="form-control" type="text" name="nickname"
-                                            value="{$model.nickname}" />
+                                            value="{$model.nickname|default=''}" />
                                     </div>
                                 </div>
                                 <div class="form-group form-row">
@@ -133,26 +133,26 @@
                                 <div class="form-group form-row">
                                     <label class="form-label">QQ</label>
                                     <div class="col">
-                                        <input class="form-control" type="text" name="qq" value="{$model.qq}" />
+                                        <input class="form-control" type="text" name="qq" value="{$model.qq|default=''}" />
                                     </div>
                                 </div>
                                 <div class="form-group form-row">
                                     <label class="form-label">微信号</label>
                                     <div class="col">
-                                        <input class="form-control" type="text" name="wechat" value="{$model.wechat}" />
+                                        <input class="form-control" type="text" name="wechat" value="{$model.wechat|default=''}" />
                                     </div>
                                 </div>
                                 <div class="form-group form-row">
                                     <label class="form-label">支付宝</label>
                                     <div class="col">
-                                        <input class="form-control" type="text" name="alipay" value="{$model.alipay}" />
+                                        <input class="form-control" type="text" name="alipay" value="{$model.alipay|default=''}" />
                                     </div>
                                 </div>
                                 <div class="form-group form-row">
                                     <label class="form-label">生日</label>
                                     <div class="col">
                                         <input class="form-control datepicker" type="text" name="birth"
-                                            value="{$model.birth|showdate}" />
+                                            value="{$model.birth|default=''|showdate}" />
                                     </div>
                                 </div>
                                 <div class="form-group form-row areabox">
@@ -174,7 +174,7 @@
                                     <label class="form-label">地址</label>
                                     <div class="col">
                                         <input class="form-control" type="text" name="address"
-                                            value="{$model.address}" />
+                                            value="{$model.address|default=''}" />
                                     </div>
                                 </div>
                             </div>
@@ -184,7 +184,7 @@
 
 
                 <div class="form-group">
-                    <input type="hidden" name="id" value="{$model.id}">
+                    <input type="hidden" name="id" value="{$model.id|default=''}">
                     <button class="btn btn-primary" type="submit">{$model['id']>0?'保存':'添加'}</button>
                 </div>
 
@@ -200,9 +200,9 @@
             var locobj = new Location()
             $(".areabox").jChinaArea({
                 aspnet: true,
-                s1:"{$model.province}",
-                s2:"{$model.city}",
-                s3:"{$model.area}"
+                s1:"{$model.province|default=''}",
+                s2:"{$model.city|default=''}",
+                s3:"{$model.area|default=''}"
             });
         })
     </script>

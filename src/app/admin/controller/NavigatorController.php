@@ -21,7 +21,7 @@ class NavigatorController extends BaseController
      */
     public function index($model='index')
     {
-        $path=Env::get('config_path').'/'.$model.'/navigator.php';
+        $path=$this->app->getRootPath().'/app/'.$model.'/config/navigator.php';
         $navigator=include($path);
         $modules=[
             'Index'=>'首页',
