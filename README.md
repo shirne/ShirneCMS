@@ -1,7 +1,7 @@
 ShirneCMS
 ===============
 
-基于[ThinkPHP5.1](https://github.com/top-think/think/tree/5.1)+[bootstrap4.x](https://v4.bootcss.com/docs/4.0/getting-started/introduction/)开发的后台管理系统,集成会员管理，文章管理，产品管理，微信接入，第三方登录等功能
+基于[ThinkPHP6.0](https://github.com/top-think/think/tree/6.0)+[bootstrap4.x](https://v4.bootcss.com/docs/4.0/getting-started/introduction/)开发的后台管理系统,集成会员管理，文章管理，产品管理，微信接入，第三方登录等功能
 
 > 运行环境要求PHP7.2以上，Mysql5.5以上<br />
 > PHP扩展：mbstring,gd,mysql,pdo,cURL,OpenSSL,SimpleXML,fileinfo,zip,cli。
@@ -117,11 +117,14 @@ ShirneCMS
 
 ## 安装 及 开发说明
 
-#### 服务器环境
+### 数据库配置
+> src/.env.example 文件重命名为.env 修改文件中的数据库连接资料
 
->IIS7以上 + UrlRewrite <br />
->Apache2.2以上 + mod_rewrite <br />
->Nginx + php-fpm
+### 服务器环境
+
+> IIS7以上 + UrlRewrite <br />
+> Apache2.2以上 + mod_rewrite <br />
+> Nginx + php-fpm
 
 [Windows配置说明](doc/WINDOWS.md)
 
