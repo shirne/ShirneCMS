@@ -168,7 +168,7 @@ class ArticleController extends BaseController
             $this->error(lang('Arguments error!'));
         }
         
-        $data=$this->request->only('email,is_anonymous,content,reply_id','put');
+        $data=$this->request->put(['email','is_anonymous','content','reply_id']);
         if($this->config['anonymous_comment']==0 && !$this->isLogin){
             $this->error('请登陆后评论');
         }

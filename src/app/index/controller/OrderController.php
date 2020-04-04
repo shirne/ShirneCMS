@@ -51,7 +51,7 @@ class OrderController extends AuthedController
         }
 
         if($this->request->isPost()){
-            $data=$this->request->only('address_id,remark,pay_type,total_price','post');
+            $data=$this->request->post(['address_id','remark','pay_type','total_price']);
             $validate=new OrderValidate();
             if(!$validate->check($data)){
                 $this->error($validate->getError());

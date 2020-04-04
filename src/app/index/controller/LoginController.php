@@ -296,7 +296,7 @@ class LoginController extends BaseController{
 
         if($this->request->isPost()){
             $this->checkSubmitRate(2);
-            $data=$this->request->only('username,password,repassword,email,realname,mobile,mobilecheck','post');
+            $data=$this->request->only(['username','password','repassword','email','realname','mobile','mobilecheck'],'post');
 
             $validate=new MemberValidate();
             $validate->setId();

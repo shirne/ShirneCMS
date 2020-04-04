@@ -33,7 +33,7 @@ class BrandController extends BaseController
         $key=empty($key)?"":base64_decode($key);
         $model = Db::name('productBrand');
         if(!empty($key)){
-            $model->whereLike('title|url',"%$key%")
+            $model->whereLike('title|url',"%$key%");
         }
         $lists=$model->order('ID DESC')->paginate(15);
         $this->assign('lists',$lists);

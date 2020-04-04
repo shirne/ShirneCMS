@@ -48,7 +48,7 @@ class AgentController extends AuthedController
     private function get_share_img($platform,$page){
     
         $sharepath = './uploads/share/'.($this->user['id']%100).'/'.$this->user['agentcode'].'-'.$platform.'.jpg';
-        $config=config('poster.');
+        $config=config('poster');
         if(empty($config) || empty($config['background'])){
             $this->error('请配置海报生成样式(config/poster.php)');
         }

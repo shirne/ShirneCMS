@@ -58,7 +58,7 @@ class PostageController extends BaseController
         $this->assign('areas',[
             ['id'=>0,'sort'=>0]
         ]);
-        $this->assign('express',config('express.'));
+        $this->assign('express',config('express'));
         return $this->fetch('update');
     }
     
@@ -92,7 +92,7 @@ class PostageController extends BaseController
         }
         $this->assign('model',$model);
         $this->assign('areas',$model->getAreas());
-        $this->assign('express',config('express.'));
+        $this->assign('express',config('express'));
         return $this->fetch();
     }
     

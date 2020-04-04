@@ -64,7 +64,7 @@ class OrderController extends AuthedController
         //todo 邮费模板
 
 
-        $data=$this->request->only('address_id,pay_type,remark,form_id,total_price,total_postage','put');
+        $data=$this->request->only(['address_id','pay_type','remark','form_id','total_price','total_postage'],'put');
 
         $validate=new OrderValidate();
         if(!$validate->check($data)){

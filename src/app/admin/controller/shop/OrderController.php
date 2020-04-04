@@ -62,7 +62,7 @@ class OrderController extends BaseController
         $this->assign('status',$status);
         $this->assign('orderids',empty($orderids)?0:implode(',',$orderids));
         $this->assign('audit',$audit);
-        $this->assign('expresscodes',config('express.'));
+        $this->assign('expresscodes',config('express'));
         $this->assign('lists',$lists);
         $this->assign('levels',getMemberLevels());
         $this->assign('page',$lists->render());
@@ -137,7 +137,7 @@ class OrderController extends BaseController
         $this->assign('member',$member);
         $this->assign('products',$products);
         $this->assign('payorders',$payorders);
-        $this->assign('expresscodes',config('express.'));
+        $this->assign('expresscodes',config('express'));
         return $this->fetch();
     }
 

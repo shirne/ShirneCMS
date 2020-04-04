@@ -49,7 +49,7 @@ class OrderController extends BaseController
         $this->assign('status',$status);
         $this->assign('audit',$audit);
         $this->assign('orderids',empty($orderids)?0:implode(',',$orderids));
-        $this->assign('expresscodes',config('express.'));
+        $this->assign('expresscodes',config('express'));
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
         return $this->fetch();

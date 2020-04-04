@@ -113,7 +113,7 @@ class OrderController extends AuthedController
             'express_no'=>$order->express_no
         ];
         if(!empty($returnData['express_code'])){
-            $companies=config('express.');
+            $companies=config('express');
             $returnData['express']=$companies[$returnData['express_code']]?:'其它';
         }
         

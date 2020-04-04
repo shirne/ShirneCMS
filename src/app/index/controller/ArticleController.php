@@ -7,7 +7,7 @@ use app\common\model\ArticleCommentModel;
 use app\common\model\ArticleModel;
 use app\common\validate\ArticleCommentValidate;
 use shirne\third\Aliyun;
-use \think\Db;
+use \think\facade\Db;
 /**
  * 文章
  */
@@ -99,7 +99,7 @@ class ArticleController extends BaseController{
         }
         if($this->request->isPost()){
             $this->checkSubmitRate(2);
-            $data=$this->request->only('email,is_anonymous,content,reply_id','POST');
+            $data=$this->request->post(['email','is_anonymous','content','reply_id']);
             if($this->config['anonymous_comment']==0 && !$this->isLogin){
                 $this->error('请登陆后评论');
             }

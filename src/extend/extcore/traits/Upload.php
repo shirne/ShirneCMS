@@ -37,7 +37,7 @@ trait Upload
     protected $uploadErrorCode;
 
     protected function setUploadDriver(){
-        $config=config('upload.');
+        $config=config('upload');
         $this->uploadConfig=array_merge($this->uploadConfig,$config);
         $uploadDriver = '\\extcore\\upload\\' . ucfirst($this->uploadConfig['driver'] ).'Driver';
         $this->uploader = new $uploadDriver($this->uploadConfig);

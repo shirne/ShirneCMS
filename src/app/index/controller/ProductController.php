@@ -82,7 +82,7 @@ class ProductController extends BaseController
             $this->error('参数错误');
         }
         if($this->request->isPost()){
-            $data=$this->request->only('product_id,email,is_anonymous,content','POST');
+            $data=$this->request->only(['product_id','email','is_anonymous','content'],'POST');
             $validate=new ProductCommentValidate();
             if(!$validate->check($data)){
                 $this->error($validate->getError());

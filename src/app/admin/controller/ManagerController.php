@@ -266,7 +266,7 @@ class ManagerController extends BaseController
         $model['global']=explode(',',$model['global']);
         $model['detail']=explode(',',$model['detail']);
         $this->assign('model',$model);
-        $this->assign('perms',config('permisions.'));
+        $this->assign('perms',config('permisions'));
         $this->assign('role',$role);
         return $this->fetch();
     }

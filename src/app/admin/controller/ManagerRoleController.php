@@ -67,7 +67,7 @@ class ManagerRoleController extends BaseController
         $maxtype=(int)Db::name('ManagerRole')->max('type');
         $model=array('type'=>$maxtype+1,'global'=>[],'detail'=>[]);
         $this->assign('model',$model);
-        $this->assign('perms',config('permisions.'));
+        $this->assign('perms',config('permisions'));
         $this->assign('styles',getTextStyles());
         return $this->fetch('update');
     }
@@ -109,7 +109,7 @@ class ManagerRoleController extends BaseController
         }
         
         $this->assign('model',$model);
-        $this->assign('perms',config('permisions.'));
+        $this->assign('perms',config('permisions'));
         $this->assign('styles',getTextStyles());
         return $this->fetch();
     }

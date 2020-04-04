@@ -6,13 +6,13 @@ use app\common\model\OrderModel;
 use think\Console;
 use think\console\Input;
 use think\console\Output;
-use think\Controller;
+use app\BaseController;
 use think\facade\Db;
 use think\facade\Env;
 use think\facade\Log;
 use think\Response;
 
-class UtilController extends Controller
+class UtilController extends BaseController
 {
     public function cropimage($img){
         Log::close();

@@ -146,7 +146,7 @@ class ProductController extends BaseController
             $sharepath = './uploads/pshare/'.$id.'/share-'.$type.'.png';
         }
         $imgurl = media(ltrim($sharepath,'.'));
-        $config=config('share.');
+        $config=config('share');
         if(empty($config) || empty($config['background'])){
             $this->error('请配置产品海报生成样式(config/share.php)');
         }

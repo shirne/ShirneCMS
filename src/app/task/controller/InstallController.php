@@ -7,7 +7,7 @@ namespace app\task\controller;
 use think\Console;
 use think\console\Input;
 use think\console\Output;
-use think\Controller;
+use app\BaseController;
 use think\Exception;
 use think\facade\Config;
 use think\facade\Env;
@@ -16,7 +16,7 @@ use think\facade\Log;
 
 define('MYSQL_MIN_VERSION','5.5.3');
 
-class InstallController extends Controller
+class InstallController extends BaseController
 {
     /**
      * @param $mode string|array
@@ -35,7 +35,7 @@ class InstallController extends Controller
             
             $db = $this->request->post('db');
             if(!empty($db) && !empty($db['hostname'])){
-                $dbconfig=config('database.');
+                $dbconfig=config('database');
                 $needupdate=false;
 
                 foreach($db as $k=>$v){
@@ -95,7 +95,7 @@ class InstallController extends Controller
         
         $envs=[];
         $mysqlenv=['title'=>'Mysql','require'=>MYSQL_MIN_VERSION,'current'=>'','pass'=>null];
-        $dbcfg=config('database.');
+        $dbcfg=config('database');
         try{
             if(!empty($dbcfg['hostname'])){
                 $version=Db::connect($dbcfg)->query('select version()');

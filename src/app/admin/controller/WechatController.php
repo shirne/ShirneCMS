@@ -107,7 +107,7 @@ class WechatController extends BaseController
                 }
             }
         }
-        $model=array();
+        $model=array('account_type'=>'','type'=>'');
         $this->assign('model',$model);
         $this->assign('id',0);
         return $this->fetch('edit');

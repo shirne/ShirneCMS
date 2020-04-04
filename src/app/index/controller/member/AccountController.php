@@ -248,7 +248,7 @@ class AccountController extends BaseController
             if(!compare_secpassword($this->user,$secpassword)){
                 $this->error('安全密码错误');
             }
-            $data=$this->request->only('action,field,member_id,amount','post');
+            $data=$this->request->only(['action','field','member_id','amount'],'post');
             $data['amount']=floatval($data['amount']);
             if($data['action']=='transout'){
                 if(!in_array($data['field'],['money','credit','awards'])){

@@ -15,7 +15,7 @@ class AddressController extends BaseController
 {
     public function index(){
         if($this->request->isPost()){
-            $data=$this->request->only('id','post');
+            $data=$this->request->only(['id'],'post');
             $result=Db::name('MemberAddress')->where('member_id',$this->userid)
                 ->whereIn('address_id',idArr($data['id']))->delete();
             if($result){
@@ -64,7 +64,7 @@ class AddressController extends BaseController
             $this->error('地址资料不存在');
         }
         if($this->request->isPost()){
-            $data=$this->request->only('recive_name,mobile,province,city,area,address,code,is_default','post');
+            $data=$this->request->only(['recive_name','mobile','province','city','area','address','code','is_default'],'post');
             $data['is_default']=empty($data['is_default'])?0:1;
             $validate=new MemberAddressValidate();
             if(!$validate->check($data)){

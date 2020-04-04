@@ -69,7 +69,7 @@ class CreditOrderController extends AuthedController
         }
 
         if($this->request->isPost()){
-            $data=$this->request->only('address_id,remark,need_pay,pay_type,sec_password','post');
+            $data=$this->request->only(['address_id','remark','need_pay','pay_type','sec_password'],'post');
             $balancepay=$data['pay_type']=='balance'?1:0;
             if($balancepay){
                 if(USE_SEC_PASSWORD && !compare_secpassword($this->user,$data['sec_password'])){

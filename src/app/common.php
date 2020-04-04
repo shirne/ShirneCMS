@@ -21,7 +21,7 @@ define('PRO_TYPE_UPGRADE',2);
 define('PRO_TYPE_BIND',4);
 
 function writelog($message,$type=\think\Log::INFO){
-    if(config('app_debug')==true){
+    if(config('app.app_debug')==true){
         \think\facade\Log::record($message,$type);
     }
 }

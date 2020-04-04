@@ -10,7 +10,7 @@ use app\common\model\WechatModel;
 use app\common\validate\MemberValidate;
 use EasyWeChat\Factory;
 use EasyWeChat\OfficialAccount\Application;
-use shirne\captcha\Captcha;
+use think\captcha\Captcha;
 use shirne\common\ValidateHelper;
 use think\facade\Db;
 use think\facade\Cache;
@@ -538,7 +538,7 @@ class AuthController extends BaseController
             }
         }
 
-        $data=$this->request->only('username,password,repassword,email,realname,mobile,mobilecheck','post');
+        $data=$this->request->only(['username','password','repassword','email','realname','mobile','mobilecheck']);
 
         $validate=new MemberValidate();
         $validate->setId();
@@ -589,7 +589,7 @@ class AuthController extends BaseController
         }else{
             $agentid = isset($this->accessSession['agent'])?intval($this->accessSession['agent']):0;
             if($agent){
-                $agentMember = Db('member')->where('agentcode',$agent)
+                $agentMember = Db::name('member')->where('agentcode',$agent)
                     ->where('status',1)
                     ->where('is_agent','>',0)->find();
                 if(!empty($agentMember)){
