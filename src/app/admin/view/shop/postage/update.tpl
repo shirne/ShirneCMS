@@ -4,7 +4,7 @@
     {include  file="public/bread" menu="shop_postage_index" title="运费设置" /}
 
     <div id="page-wrapper">
-        <div class="page-header">{$model.id>0?'编辑':'添加'}运费模板</div>
+        <div class="page-header">{$model['id']??0>0?'编辑':'添加'}运费模板</div>
         <div class="page-content">
             <form method="post">
                 <div class="row">

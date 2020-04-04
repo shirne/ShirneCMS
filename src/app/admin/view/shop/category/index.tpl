@@ -36,7 +36,7 @@
         {volist name="model" id="v" empty="$empty"}
             <tr>
                 <td>{$v.id}</td>
-                <td>{$v.html|raw} {$v.title}&nbsp;<span class="badge badge-info">{$v.short}</span>{if $v.use_template EQ 1}&nbsp;<span class="badge badge-warning">独立模板</span>{/if}</td>
+                <td>{$v.html|raw} {$v.title}&nbsp;<span class="badge badge-info">{$v.short}</span></td>
                 <td>{$v.name}</td>
                 <td>{$v.sort}</td>
                 <td class="operations">

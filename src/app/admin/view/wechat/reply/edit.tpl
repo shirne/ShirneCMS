@@ -11,19 +11,19 @@
                 <div class="form-row">
                     <div class="col lform-group">
                         <label for="title">名称</label>
-                        <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="名称">
+                        <input type="text" name="title" class="form-control" value="{$model.title|default=''}" placeholder="名称">
                     </div>
                     <div class="col form-group">
                         <label for="image">优先级</label>
-                        <input type="text" name="sort" class="form-control" value="{$model.sort}" />
+                        <input type="text" name="sort" class="form-control" value="{$model.sort|default=''}" />
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="text">类型</label>
                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
                         {foreach name="types" id="type" key="key"}
-                        <label class="btn btn-outline-secondary {$key==$model['type']?'active':''}">
-                            <input type="radio" name="type" value="{$key}" autocomplete="off" {$key==$model['type']?'checked':''}> {$type}
+                        <label class="btn btn-outline-secondary {if isset($model['type']) && $key==$model['type']}active{/if}">
+                            <input type="radio" name="type" value="{$key}" autocomplete="off" {if isset($model['type']) && $key==$model['type']}checked{/if}> {$type}
                         </label>
                         {/foreach}
                     </div>
@@ -31,14 +31,14 @@
                 </div>
                 <div class="form-group keyword-row">
                     <label for="text">关键字</label>
-                    <input type="text" name="keyword" class="form-control" value="{$model.keyword}" placeholder="关键字">
+                    <input type="text" name="keyword" class="form-control" value="{$model.keyword|default=''}" placeholder="关键字">
                 </div>
                 <div class="form-group">
                     <label for="text">回复类型</label>
                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
                         {foreach name="reply_types" id="type" key="key"}
-                            <label class="btn btn-outline-secondary {$key==$model['reply_type']?'active':''}">
-                                <input type="radio" name="reply_type" value="{$key}" autocomplete="off" {$key==$model['reply_type']?'checked':''}> {$type}
+                            <label class="btn btn-outline-secondary {if isset($model['reply_type']) && $key==$model['reply_type']}active{/if}">
+                                <input type="radio" name="reply_type" value="{$key}" autocomplete="off" {if isset($model['reply_type']) && $key==$model['reply_type']}checked{/if}> {$type}
                             </label>
                         {/foreach}
                     </div>
@@ -46,7 +46,7 @@
                 <div class="form-group rtype-row rtype-text">
                     <label for="text">回复内容</label>
                     <div>
-                        <textarea class="form-control" name="content">{$model.content|raw}</textarea>
+                        <textarea class="form-control" name="content">{$model.content|default=''|raw}</textarea>
                     </div>
                 </div>
                 <div class="form-group rtype-row rtype-news">
@@ -97,7 +97,7 @@
                                 <label class="custom-file-label" for="upload_image">选择文件</label>
                             </div>
                         </div>
-                        {if $model['data']['image']}
+                        {if !empty($model['data']['image'])}
                             <figure class="figure">
                                 <img src="{$model['data']['image']}" class="figure-img img-fluid rounded" alt="image">
                                 <figcaption class="figure-caption text-center">{$model['data']['image']}</figcaption>
@@ -107,7 +107,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <input type="hidden" name="wechat_id" value="{$model.wechat_id}">
+                    <input type="hidden" name="wechat_id" value="{$model.wechat_id|default=''}">
                     <button type="submit" class="btn btn-primary">{$model['id']>0?'保存':'添加'}</button>
                 </div>
             </form>
