@@ -183,7 +183,7 @@ class AccountController extends BaseController
                 'card_name'=>$card['cardname'],
                 'cardno'=>$card['cardno'],
                 'status'=>0,
-                'remark'=>$_POST['remark']
+                'remark'=>$this->request->post('remark')
             );
             if(empty($data['amount']) || $data['amount']<$this->config['cash_limit']){
                 $this->error('提现金额填写错误');

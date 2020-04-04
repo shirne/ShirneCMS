@@ -4,7 +4,7 @@
 namespace app\task\controller;
 
 
-use think\Console;
+use think\facade\Console;
 use think\console\Input;
 use think\console\Output;
 use app\BaseController;

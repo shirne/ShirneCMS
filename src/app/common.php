@@ -907,6 +907,9 @@ function weight_random($array, $wfield='weight',$order=true){
 
     $row=[];
     if(empty($array))return $row;
+    if($array instanceof \think\Collection){
+        $array = $array->all();
+    }
     if(!$order){
         $max = max(array_column($array,$wfield));
         $pow = pow(10,ceil(log10($max)));
@@ -1112,11 +1115,17 @@ function fix_in_array($val,$arr){
 
 function array_max($arr,$column){
     if(empty($arr))return 0;
+    if($arr instanceof \think\Collection){
+        $arr = $arr->all();
+    }
     $data=array_column($arr,$column);
     return max($data);
 }
 function array_min($arr,$column){
     if(empty($arr))return 0;
+    if($arr instanceof \think\Collection){
+        $arr = $arr->all();
+    }
     $data=array_column($arr,$column);
     return min($data);
 }

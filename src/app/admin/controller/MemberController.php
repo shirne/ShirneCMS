@@ -558,7 +558,7 @@ class MemberController extends BaseController
     
             foreach ($tables as $row){
                 $columns=Db::query('show columns in '.$row[$field]);
-                $fields=array_column($columns,'Field');
+                $fields=array_column($columns->all(),'Field');
                 if(in_array('member_id',$fields)){
                     Db::table($row[$field])->whereIn('member_id',$id)->delete();
                 }

@@ -322,7 +322,7 @@ class PageController extends BaseController
         $id = idArr($id);
         $groups=Db::name('PageGroup')->where('id','in',$id)->select();
         if(!empty($groups)) {
-            $groups=array_column($groups,'group');
+            $groups=array_column($groups->all(),'group');
             $exists = Db::name('page')->where('group', 'in', $groups)->count();
             if ($exists > 0) {
                 $this->error("选中的页面组还有内容");

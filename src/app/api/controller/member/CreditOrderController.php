@@ -53,7 +53,7 @@ class CreditOrderController extends AuthedController
         $order['goods']=Db::view('creditOrderGoods', '*')
             ->view('goods', ['id' => 'orig_goods_id', 'update_time' => 'orig_goods_update','vice_title','unit'], 'creditOrderGoods.goods_id=goods.id', 'LEFT')
             ->where('creditOrderGoods.order_id', $order['order_id'])
-            ->select();
+            ->select()->all();
         $order['goods_count']=empty($order['goods'])?0:array_sum(array_column($order['goods'],'count'));
         return $this->response($order);
     }
@@ -115,7 +115,7 @@ class CreditOrderController extends AuthedController
             $returnData['express']=$companies[$returnData['express_code']]?:'其它';
         }
         
-        $products=Db::name('creditOrderGoods')->where('order_id', $order['order_id'])->select();
+        $products=Db::name('creditOrderGoods')->where('order_id', $order['order_id'])->select()->all();
         
         if(!empty($products)) {
             $product = current($products);

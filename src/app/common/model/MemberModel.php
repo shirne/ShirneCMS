@@ -207,7 +207,7 @@ class MemberModel extends BaseModel
     public static function getSons($userid,$level=1,$getid=true)
     {
         $sons=[];
-        $users=Db::name('Member')->where('referer',$userid)->field('id,level_id,username,referer')->select();
+        $users=Db::name('Member')->where('referer',$userid)->field('id,level_id,username,referer')->select()->all();
         $layer=0;
         while(!empty($users)){
             $layer++;
@@ -218,7 +218,7 @@ class MemberModel extends BaseModel
             }
             $sons = array_merge($sons, $getid?$userids:$users);
             if($level>0 && $layer>=$level)break;
-            $users=Db::name('Member')->whereIn('referer',$userids)->field('id,level_id,username,referer')->select();
+            $users=Db::name('Member')->whereIn('referer',$userids)->field('id,level_id,username,referer')->select()->all();
         }
         return $sons;
     }

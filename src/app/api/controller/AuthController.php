@@ -7,10 +7,11 @@ use app\common\model\MemberModel;
 use app\common\model\MemberOauthModel;
 use app\common\model\OauthAppModel;
 use app\common\model\WechatModel;
+use app\common\service\CheckcodeService;
 use app\common\validate\MemberValidate;
 use EasyWeChat\Factory;
 use EasyWeChat\OfficialAccount\Application;
-use think\captcha\Captcha;
+use think\captcha\facade\Captcha;
 use shirne\common\ValidateHelper;
 use think\facade\Db;
 use think\facade\Cache;
@@ -99,7 +100,7 @@ class AuthController extends BaseController
         $this->accessSession['appid']=$appid;
 
         if($agent){
-            $agentMember = Db('member')->where('agentcode',$agent)
+            $agentMember = Db::name('member')->where('agentcode',$agent)
                 ->where('status',1)
                 ->where('is_agent','>',0)->find();
             if(!empty($agentMember)){
@@ -142,9 +143,7 @@ class AuthController extends BaseController
             if(empty($data['verify'])){
                 $this->error('请填写验证码',ERROR_NEED_VERIFY);
             }
-            $verify = new Captcha(array('seKey'=>config('session.sec_key')), Cache::instance());
-            $checked = $verify->check($data['verify'],'_api_'.$this->accessToken);
-            if(!$checked){
+            if(!Captcha::check($data['verify'])){
                 $this->error('验证码错误',ERROR_NEED_VERIFY);
             }
         }
@@ -419,12 +418,7 @@ class AuthController extends BaseController
     }
 
     public function captcha(){
-
-        $verify = new Captcha(array('seKey'=>config('session.sec_key')), Cache::instance());
-
-        $verify->fontSize = 16;
-        $verify->length = 4;
-        return $verify->entry('_api_'.$this->accessToken);
+        return Captcha::create();
     }
 
     public function quit(){
@@ -531,9 +525,7 @@ class AuthController extends BaseController
             if(empty($verifycode)){
                 $this->error('请填写验证码',ERROR_NEED_VERIFY);
             }
-            $verify = new Captcha(array('seKey'=>config('session.sec_key')), Cache::instance());
-            $checked = $verify->check($verifycode,'_api_'.$this->accessToken);
-            if(!$checked){
+            if(!Captcha::check($verifycode)){
                 $this->error('验证码错误',ERROR_NEED_VERIFY);
             }
         }

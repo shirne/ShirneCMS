@@ -92,7 +92,7 @@ class AwardLogModel extends BaseModel
         }
         $list = $model->field('member_id, sum(amount) as total_amount')->group('member_id')
             ->order('total_amount DESC')
-            ->limit(10)->select();
+            ->limit(10)->select()->all();
         if(!empty($list)){
             $list = array_filter($list,function($item){
                 return $item['total_amount']>0;

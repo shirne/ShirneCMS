@@ -55,7 +55,7 @@ class OrderController extends AuthedController
             ->view('Product', ['id' => 'orig_product_id', 'update_time' => 'orig_product_update'], 'OrderProduct.product_id=Product.id', 'LEFT')
             ->view('ProductSku', ['sku_id' => 'orig_sku_id', 'price' => 'orig_product_price'], 'ProductSku.sku_id=OrderProduct.sku_id', 'LEFT')
             ->where('OrderProduct.order_id', $order['order_id'])
-            ->select();
+            ->select()->all();
         $order['product_count']=empty($order['products'])?0:array_sum(array_column($order['products'],'count'));
         return $this->response($order);
     }
@@ -117,7 +117,7 @@ class OrderController extends AuthedController
             $returnData['express']=$companies[$returnData['express_code']]?:'其它';
         }
         
-        $products=Db::name('OrderProduct')->where('order_id', $order['order_id'])->select();
+        $products=Db::name('OrderProduct')->where('order_id', $order['order_id'])->select()->all();
         
         if(!empty($products)) {
             $product = current($products);

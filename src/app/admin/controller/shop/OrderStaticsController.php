@@ -60,7 +60,7 @@ class OrderStaticsController extends BaseController
 
         $statics=$model->where('status','>',0)->group('awdate')->select();
 
-        $this->assign('statics',$statics);
+        $this->assign('statics',$statics->all());
         $this->assign('static_type',$type);
         $this->assign('start_date',$start_date);
         $this->assign('end_date',$end_date);

@@ -27,7 +27,7 @@ class PostageModel extends CacheableModel
     }
     
     public static function updateAreas($newareas, $id){
-        $exists = Db::name('postageArea')->where('postage_id',$id)->select();
+        $exists = Db::name('postageArea')->where('postage_id',$id)->select()->all();
         $exists = array_column($exists,NULL,'id');
         $sort=0;
         foreach ($newareas as $area_id=>$area){
@@ -59,7 +59,7 @@ class PostageModel extends CacheableModel
     public static function getAreaList($areaids){
         $lists = Db::view('postageArea','*')
             ->view('postage',['calc_type'],'postage.id=postageArea.postage_id','LEFT')
-            ->whereIn('postageArea.id',$areaids)->order('postageArea.sort ASC,postageArea.id ASC')->select();
+            ->whereIn('postageArea.id',$areaids)->order('postageArea.sort ASC,postageArea.id ASC')->select()->all();
         foreach ($lists as &$item){
             $item['expresses']=force_json_decode($item['expresses']);
             $item['areas']=force_json_decode($item['areas']);

@@ -14,14 +14,11 @@ class ManagerRoleModel extends BaseModel
     protected $type = ['global'=>'array','detail'=>'array'];
     
     protected static $roles;
-    protected static $roles_cache_key;
-    public static function init()
+    protected static $roles_cache_key = 'manager_role';
+
+    public function onAfterWrite($model)
     {
-        parent::init();
-    
-        self::event('after_write', function ($role) {
-            cache(self::$roles_cache_key,null);
-        });
+        cache(self::$roles_cache_key,null);
     }
     
     public static function getRoles($force=false){

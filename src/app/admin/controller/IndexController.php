@@ -110,7 +110,7 @@ class IndexController extends BaseController{
 
         foreach ($tables as $row){
             $columns=Db::query('show columns in '.$row[$field]);
-            $fields=array_column($columns,'Field');
+            $fields=array_column($columns->all(),'Field');
             if(in_array('member_id',$fields)
             || in_array('order_id',$fields)){
                 Db::execute('TRUNCATE TABLE `'.$row[$field].'`');

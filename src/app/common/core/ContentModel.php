@@ -259,7 +259,7 @@ class ContentModel extends BaseModel
             }
             $model->limit($attrs['limit']);
     
-            $list = $model->select();
+            $list = $model->select()->all();
             
             if(!empty($sortids) && count($sortids)>1){
                 $newlist=[];

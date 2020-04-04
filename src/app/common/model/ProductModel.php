@@ -79,25 +79,27 @@ class ProductModel extends ContentModel
             ->view('Product',['title'=>'product_title','spec_data','image'=>'product_image','status','levels','is_discount','postage_id','is_commission','commission_percent','type','level_id'],'ProductSku.product_id=Product.id','LEFT')
             ->whereIn('ProductSku.sku_id',idArr($sku_ids))
             ->select();
-    
-        foreach ($products as $k=>&$item){
-            $item['product_price']=$item['price'];
-            $item['product_cost_price']=$item['cost_price'];
-        
-            if(!empty($item['image']))$item['product_image']=$item['image'];
-            if(isset($skucounts[$item['sku_id']])){
-                $item['count']=$skucounts[$item['sku_id']];
-            }else{
-                $item['count']=1;
-            }
-            $item['commission_percent']=force_json_decode($item['commission_percent']);
-            $item['spec_data'] = force_json_decode($item['spec_data']);
-            $item['specs'] = force_json_decode($item['specs']);
-            $item['levels']=force_json_decode($item['levels']);
-            $item['ext_price']=force_json_decode($item['ext_price']);
+        if(!empty($products)){
+            $products=$products->all();
+            foreach ($products as $k=>&$item){
+                $item['product_price']=$item['price'];
+                $item['product_cost_price']=$item['cost_price'];
             
+                if(!empty($item['image']))$item['product_image']=$item['image'];
+                if(isset($skucounts[$item['sku_id']])){
+                    $item['count']=$skucounts[$item['sku_id']];
+                }else{
+                    $item['count']=1;
+                }
+                $item['commission_percent']=force_json_decode($item['commission_percent']);
+                $item['spec_data'] = force_json_decode($item['spec_data']);
+                $item['specs'] = force_json_decode($item['specs']);
+                $item['levels']=force_json_decode($item['levels']);
+                $item['ext_price']=force_json_decode($item['ext_price']);
+                
+            }
+            unset($item);
         }
-        unset($item);
         return $products;
     }
     
