@@ -50,6 +50,7 @@ DROP TABLE IF EXISTS `sa_manager_role`;
 CREATE TABLE `sa_manager_role` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `type` TINYINT NOT NULL DEFAULT 0,
+  `label_type` VARCHAR(20) NOT NULL DEFAULT '',
   `role_name` VARCHAR(50) NOT NULL DEFAULT '',
   `global` VARCHAR(200) NULL DEFAULT '',
   `detail` TEXT NULL,
