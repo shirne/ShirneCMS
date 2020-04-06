@@ -4,6 +4,7 @@ namespace app\api\controller\member;
 
 use app\api\controller\AuthedController;
 use app\common\model\AwardLogModel;
+use app\common\model\MemberAuthenModel;
 use app\common\model\OrderModel;
 use app\common\model\WechatModel;
 use shirne\common\Poster;
@@ -31,6 +32,34 @@ class AgentController extends AuthedController
         $data['total_award']=Db::name('awardLog')->where('member_id',$this->user['id'])
             ->where('status',1)->sum('amount');
         return $this->response($data);
+    }
+
+    public function upgrade($level_id=2){
+        $authen= MemberAuthenModel::where('level_id',$level_id)
+            ->where('member_id',$this->user['id'])
+            ->find();
+        if($this->request->isPost()){
+            if($authen['status'] == 1){
+                $this->error('申请已审核通过,不能修改');
+            }
+            $data = $this->request->only(['realname','mobile','province','city']);
+            try{
+                $data['status']=-1;
+                if(empty($authen)){
+                    $data['member_id']=$this->user['id'];
+                    $data['level_id']=$level_id;
+                    MemberAuthenModel::insert($data);
+                }else{
+                    $authen->save($data);
+                }
+            }catch(\Exception $err){
+                $this->error('保存失败: %s',[$err->getMessage()]);
+            }
+            $this->error('申请已提交');
+        }
+        return $this->response([
+            'authen'=>$authen
+        ]);
     }
     
     public function poster($page = 'pages/index/index'){
