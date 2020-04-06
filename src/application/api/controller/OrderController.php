@@ -22,14 +22,16 @@ use think\Db;
  */
 class OrderController extends AuthedController
 {
-    public function prepare(){
+    public function prepare($from='quick'){
         $order_skus=$this->request->param('products');
         $address=$this->request->param('address');
         $skuids=array_column($order_skus,'sku_id');
-        $products=Db::view('ProductSku','*')
-            ->view('Product',['title'=>'product_title','image'=>'product_image','levels','is_discount','postage_id'],'ProductSku.product_id=Product.id','LEFT')
-            ->whereIn('ProductSku.sku_id',idArr($skuids))
-            ->select();
+        if($from == 'quick'){
+            $skucounts = array_column($order_skus,'count','sku_id');
+            $products = ProductModel::getForOrder($skucounts);
+        }else{
+            $products=MemberCartFacade::getCart($this->user['id'],$skuids);
+        }
         
         $result=['products'=>$products];
         if(empty($address)){

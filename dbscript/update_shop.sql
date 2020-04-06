@@ -147,6 +147,7 @@ CREATE TABLE `sa_product` (
   `brand_id` int(11) DEFAULT NULL COMMENT '商品品牌',
   `title` varchar(150) DEFAULT NULL COMMENT '商品名称',
   `vice_title` varchar(200) DEFAULT NULL,
+  `unit` varchar(10) DEFAULT NULL,
   `goods_no` varchar(50) DEFAULT NULL,
   `image` varchar(150) DEFAULT NULL,
   `spec_data` text COMMENT '规格数据',

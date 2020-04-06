@@ -12,3 +12,6 @@ CREATE TABLE `sa_keywords` (
   `update_time` int(11) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+ALTER TABLE `sa_product` 
+ ADD `unit` varchar(10) DEFAULT NULL AFTER `vice_title`;

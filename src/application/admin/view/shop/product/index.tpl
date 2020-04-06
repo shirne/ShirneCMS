@@ -70,6 +70,7 @@
 					<td>
 						<if condition="$v['type'] GT 1"><span class="badge badge-warning">{$types[$v['type']]}</span></if>
 						<a href="{:url('index/product/view',['id'=>$v['id']])}" target="_blank">{$v.title}</a>
+						<if condition="!empty($v['unit'])"><span class="badge badge-info">{$v.unit}</span></if>
 					</td>
 					<td>
 						<foreach name="v['skus']" item="sku">
