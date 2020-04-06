@@ -380,6 +380,26 @@ CREATE TABLE `sa_member` (
   KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+DROP TABLE IF EXISTS `sa_member_authen`;
+
+CREATE TABLE `sa_member_authen` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NOT NULL DEFAULT 0,
+  `level_id` int(4) NOT NULL DEFAULT 0,
+  `realname` VARCHAR(20) NOT NULL,
+  `mobile` VARCHAR(20) NOT NULL,
+  `province` VARCHAR(20) NOT NULL,
+  `city` VARCHAR(20) NOT NULL,
+  `id_no` VARCHAR(50) NOT NULL,
+  `image` VARCHAR(150) NOT NULL,
+  `validate_time` int(11) NOT NULL DEFAULT 0,
+  `create_time` int(11) NOT NULL DEFAULT 0,
+  `update_time` int(11) NOT NULL DEFAULT 0,
+  `authen_time` int(11) NOT NULL DEFAULT 0,
+  `status` TINYINT NULL DEFAULT 0,
+  `reason` VARCHAR(50) NOT NULL,
+  PRIMARY KEY (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `sa_pay_order`;
 CREATE TABLE `sa_pay_order` (
