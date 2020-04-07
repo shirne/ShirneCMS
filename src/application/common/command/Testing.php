@@ -29,6 +29,7 @@ class Testing extends Command
             ->addOption('password', 's', Option::VALUE_OPTIONAL, 'password of all user, default 123456')
             ->addOption('parent', 'p', Option::VALUE_OPTIONAL, 'reference of the users.')
             ->addOption('buyproduct', 'b', Option::VALUE_OPTIONAL, 'auto recharge and buy the specified product.')
+            ->addOption('type', 't', Option::VALUE_OPTIONAL, 'type of product for member upgrade, default 4')
             ->setDescription('Testing command');
     }
 
@@ -83,29 +84,42 @@ class Testing extends Command
     protected function actionRandom(Input $input, Output $output)
     {
         $pid=0;
+        $ptype=4;
         if($input->hasOption('buyproduct')){
             $pid=$input->getOption('buyproduct');
+        }
+        if($input->hasOption('type')){
+            $ptype=$input->getOption('type');
         }
 
         $count=$input->getOption('count');
         while($count--){
-            $product=$this->getProduct($pid);
+            $isnew = rand(0,99)>50;
+            if($isnew){
+                $product=$this->getProduct($pid, $ptype);
+            }else{
+                $product=$this->getProduct($pid, 1);
+            }
             if(empty($product)){
                 $output->writeln('没有合适的产品');
                 break;
             }
 
             $member=Db::name('member')->where('is_agent','GT',0)->order(Db::raw('rand()'))->find();
+            if($isnew){
+                $output->writeln('用户 '.$member['username'].'['.$member['id'].'] 推荐了新会员:');
 
-            $output->writeln('用户 '.$member['username'].'['.$member['id'].'] 推荐了新会员:');
-
-            $newname='u'.random_str(mt_rand(5,8));
-            while(Db::name('member')->where('username',$newname)->count()){
                 $newname='u'.random_str(mt_rand(5,8));
+                while(Db::name('member')->where('username',$newname)->count()){
+                    $newname='u'.random_str(mt_rand(5,8));
+                }
+
+                $this->createUser($output,$newname,'123456',$member['id'],$product);
+            }else{
+                $output->writeln('用户 '.$member['username'].'['.$member['id'].'] 购买产品:');
+
+                $this->makeOrder($output,$member,$product);
             }
-
-            $this->createUser($output,$newname,'123456',$member['id'],$product);
-
             sleep(1);
         }
 
@@ -246,10 +260,10 @@ class Testing extends Command
      * @param int $id
      * @return array|null|\PDOStatement|string|\think\Model
      */
-    private function getProduct($id=0)
+    private function getProduct($id=0, $type=2)
     {
         if(!$id){
-            $aprods = Db::name('product')->where('type',2)->where('status',1)->field('id,min_price')->select();
+            $aprods = Db::name('product')->where('type',$type)->where('status',1)->field('id,min_price')->select();
             $aprod = weight_random($aprods,'min_price', false);
             $id=$aprod['id'];
         }
