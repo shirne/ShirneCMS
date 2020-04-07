@@ -12,8 +12,13 @@ use think\facade\Log;
 class MemberModel extends BaseModel
 {
 
-    protected $insert = ['is_agent' => 0,'type'=>1,'status'=>1,'referer'=>0];
+    protected $insert = ['is_agent' => 0,'type'=>1,'status'=>1,'referer'];
     protected $autoWriteTimestamp = true;
+
+    protected function setRefererAttr($value=0)
+    {
+        return intval($value);
+    }
 
     public static function init()
     {
@@ -72,7 +77,10 @@ class MemberModel extends BaseModel
             $this->setError('推荐人关系冲突');
             return false;
         }
-
+        if($this['referer']>0){
+            Db::name('member')->where('id',$this['referer'])->setDec('referer',1);
+        }
+        Db::name('member')->where('id',$this['referer'])->setInc('referer',1);
         $this->save(['referer'=>$rmember['id']]);
         return true;
     }

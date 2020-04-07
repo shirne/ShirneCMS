@@ -37,6 +37,9 @@ class OrderController extends AuthedController
         if(empty($address)){
             $address = Db::name('MemberAddress')->where('member_id',$this->user['id'])->order('is_default DESC')->find();
             $result['address']=$address;
+        }elseif(!is_array($address)){
+            $address = Db::name('MemberAddress')->where('member_id',$this->user['id'])->where('address_id',$address)->order('is_default DESC')->find();
+            $result['address']=$address;
         }
         $result['express'] = PostageModel::calcolate($products,$address);
         return $this->response($result);
