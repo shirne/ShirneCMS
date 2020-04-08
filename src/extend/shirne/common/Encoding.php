@@ -55,8 +55,8 @@ class Encoding
 
         //移除utf8-bom
         $string=trim($string);
-        if(strpos($string,UTF8_BOM)===0){
-            $string = substr($string,strlen(UTF8_BOM));
+        if(strpos($string,self::UTF8_BOM)===0){
+            $string = substr($string,strlen(self::UTF8_BOM));
         }
 
         return $string;
