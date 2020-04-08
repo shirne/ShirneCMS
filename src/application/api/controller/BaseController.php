@@ -4,6 +4,7 @@ namespace app\api\controller;
 
 use app\api\facade\MemberTokenFacade;
 use app\api\middleware\AccessMiddleware;
+use shirne\common\ValidateHelper;
 use think\Controller;
 use think\Db;
 
@@ -74,6 +75,27 @@ class BaseController extends Controller
         }else{
             $this->error('操作过于频繁');
         }
+    }
+
+    protected function mobile_verify_limit($mobile){
+        if(!ValidateHelper::isMobile($mobile)){
+            $this->error('手机号码格式错误');
+            return false;
+        }
+        $sended = cache('mobile_limit_'.$mobile);
+        if($sended){
+            return false;
+        }
+        $count = cache('mobile_limit_hour_'.$mobile);
+        if($count >= 5){
+            return false;
+        }
+        return true;
+    }
+    protected function mobile_verify_add($mobile){
+        cache('mobile_limit_'.$mobile,1,['expire'=>50]);
+        $counted = max(0,cache('mobile_limit_hour_'.$mobile));
+        cache('mobile_limit_hour_'.$mobile,$counted+1,['expire'=>60*60]);
     }
     
     /**
