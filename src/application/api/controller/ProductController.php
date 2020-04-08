@@ -23,7 +23,7 @@ class ProductController extends BaseController
         return $this->response(ProductCategoryFacade::getTreedCategory());
     }
 
-    public function get_cates($pid=0, $goods_count=0, $withsku=0){
+    public function get_cates($pid=0, $goods_count=0, $withsku=0, $filters=[]){
         if($pid!=0 && preg_match('/^[a-zA-Z]\w+/',$pid)){
             $current=ProductCategoryFacade::findCategory($pid);
             if(empty($current)){
@@ -34,13 +34,16 @@ class ProductController extends BaseController
         $cates = ProductCategoryFacade::getSubCategory($pid);
         if($goods_count > 0){
             $product = ProductModel::getInstance();
+            $filters['limit']=$goods_count;
+            if(!isset($filters['recursive'])){
+                $filters['recursive']=1;
+            }
+            if($withsku){
+                $filters['withsku']=$withsku;
+            }
             foreach($cates as &$cate){
-                $cate['products']=$product->tagList([
-                    'category'=>$cate['id'],
-                    'recursive'=>1,
-                    'limit'=>$goods_count,
-                    'withsku'=>$withsku
-                ]);
+                $filters['category']=$cate['id'];
+                $cate['products']=$product->tagList($filters);
             }
             unset($cate);
         }
@@ -180,9 +183,12 @@ class ProductController extends BaseController
 
             
             $poster = new Poster($config);
-            $poster->generate($data);
-            $poster->save($sharepath);
-            $imgurl .= '?_t='.time();
+            if($poster->generate($data)){
+                $poster->save($sharepath);
+                $imgurl .= '?_t='.time();
+            }else{
+                $this->error('分享图生成失败');
+            }
         }else{
             $imgurl .= '?_t='.filemtime($sharepath);
         }

@@ -94,7 +94,7 @@ VALUES
   ( 'kd_apikey', '快递鸟API Key', 'text', 'third', '0',1, '', '', ''),
   ( 'm_open', '会员系统', 'radio', 'member', '0',1, '1', '', '0:关闭\r\n1:启用'),
   ( 'm_register_open', '开启注册', 'radio', 'member', '0',1, '1', '', '0:关闭\r\n1:启用'),
-  ( 'm_register', '强制注册', 'radio', 'member', '0',1, '1', '', '0:关闭\r\n1:启用'),
+  ( 'm_register', '强制注册', 'radio', 'member', '0',1, '0', '', '0:关闭\r\n1:启用'),
   ( 'm_invite', '邀请注册', 'radio', 'member', '0',1, '1', '', '0:关闭\r\n1:启用\r\n2:强制'),
   ( 'm_checkcode', '验证码', 'radio', 'member', '0',1, '1', '', '0:关闭\r\n1:启用'),
   ( 'anonymous_comment', '匿名评论', 'radio', 'member', '0',1, '1', '', '0:关闭\r\n1:启用'),
