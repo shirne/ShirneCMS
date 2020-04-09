@@ -897,6 +897,16 @@ function current_domain(){
     return rtrim(url('/','',false,true),'/');
 }
 
+function is_controller($controller, $except_methods=[]){
+    if(is_string($except_methods)){
+        $except_methods=explode(',',$except_methods);
+    }
+    return strcasecmp(request()->controller(), $controller) == 0 && !in_array(request()->action(),$except_methods);
+}
+function is_action($controller,$action){
+    return strcasecmp(request()->controller().'/'.request()->action(), $controller.'/'.$action) == 0;
+}
+
 /**
  * 带权重的数组随机
  * @param $array
