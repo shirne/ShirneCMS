@@ -60,10 +60,10 @@ resource 前端开发目录
 
 >cd resource<br />
 cnpm install<br />
-构建并监视文件：gulp4<br />
-清理dest目录: gulp4 clean<br />
-只构建文件: gulp4 build<br />
-只监视文件: gulp4 watch
+构建并监视文件：gulp<br />
+清理dest目录: gulp clean<br />
+只构建文件: gulp build<br />
+只监视文件: gulp watch
 
 
 ### 模板说明
