@@ -897,14 +897,31 @@ function current_domain(){
     return rtrim(url('/','',false,true),'/');
 }
 
-function is_controller($controller, $except_methods=[]){
-    if(is_string($except_methods)){
-        $except_methods=explode(',',$except_methods);
+/**
+ * 判断当前是否在某控制器内,并且不是某些action
+ * @param string $controller 
+ * @param array|string $except_methods 
+ * @return bool 
+ */
+function is_controller($controller, $except_actions=[]){
+    if(is_string($except_actions)){
+        $except_actions=explode(',',$except_actions);
     }
-    return strcasecmp(request()->controller(), $controller) == 0 && !in_array(request()->action(),$except_methods);
+    return strcasecmp(request()->controller(), $controller) == 0 && !in_array(request()->action(),$except_actions);
 }
-function is_action($controller,$action){
-    return strcasecmp(request()->controller().'/'.request()->action(), $controller.'/'.$action) == 0;
+
+/**
+ * 判断当前是否在某个控制器内的某些action
+ * @param string $controller 
+ * @param array|string $actions 
+ * @return bool 
+ */
+function is_action($controller,$actions){
+    if(is_string($actions)){
+        $actions = explode(',', $actions);
+    }
+    return strcasecmp(request()->controller(), $controller) == 0 &&
+        in_array(request()->action(),$actions);
 }
 
 /**
