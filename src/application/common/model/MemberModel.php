@@ -190,7 +190,7 @@ class MemberModel extends BaseModel
         $parents=[];
         $ids=[];
         $currentid=$userid;
-        $user=Db::name('Member')->where('id',$currentid)->field('id,level_id,username,referer')->find();
+        $user=Db::name('Member')->where('id',$currentid)->field('id,level_id,is_agent,username,referer')->find();
         $layer=0;
         while(!empty($user)){
             $layer++;
@@ -201,7 +201,7 @@ class MemberModel extends BaseModel
                 Log::record('会员 '.$userid.' 在查找上级时在第 '.$layer.' 层出现递归',\think\Log::ERROR);
                 break;
             }
-            $user=Db::name('Member')->where('id',$currentid)->field('id,level_id,username,referer')->find();
+            $user=Db::name('Member')->where('id',$currentid)->field('id,level_id,is_agent,username,referer')->find();
             $parents[] = $getid?$currentid:$user;
             if($level>0 && $layer>=$level)break;
         }
@@ -218,7 +218,7 @@ class MemberModel extends BaseModel
     public static function getSons($userid,$level=1,$getid=true)
     {
         $sons=[];
-        $users=Db::name('Member')->where('referer',$userid)->field('id,level_id,username,referer')->select();
+        $users=Db::name('Member')->where('referer',$userid)->field('id,level_id,is_agent,username,referer')->select();
         $layer=0;
         while(!empty($users)){
             $layer++;
@@ -229,7 +229,7 @@ class MemberModel extends BaseModel
             }
             $sons = array_merge($sons, $getid?$userids:$users);
             if($level>0 && $layer>=$level)break;
-            $users=Db::name('Member')->whereIn('referer',$userids)->field('id,level_id,username,referer')->select();
+            $users=Db::name('Member')->whereIn('referer',$userids)->field('id,level_id,is_agent,username,referer')->select();
         }
         return $sons;
     }
