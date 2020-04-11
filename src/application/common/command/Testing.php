@@ -3,8 +3,8 @@
 namespace app\common\command;
 
 
-use app\common\facade\OrderFacade;
 use app\common\model\MemberModel;
+use app\common\model\OrderModel;
 use app\common\model\ProductModel;
 use think\console\Command;
 use think\console\Input;
@@ -101,13 +101,12 @@ class Testing extends Command
                 $product=$this->getProduct($pid, 1);
             }
             if(empty($product)){
-                $output->writeln('没有合适的产品');
+                $output->writeln('No suitable goods.');
                 break;
             }
-
             $member=Db::name('member')->where('is_agent','GT',0)->order(Db::raw('rand()'))->find();
             if($isnew){
-                $output->writeln('用户 '.$member['username'].'['.$member['id'].'] 推荐了新会员:');
+                $output->writeln('User '.$member['username'].'['.$member['id'].'] recommended new member: ');
 
                 $newname='u'.random_str(mt_rand(5,8));
                 while(Db::name('member')->where('username',$newname)->count()){
@@ -116,10 +115,11 @@ class Testing extends Command
 
                 $this->createUser($output,$newname,'123456',$member['id'],$product);
             }else{
-                $output->writeln('用户 '.$member['username'].'['.$member['id'].'] 购买产品:');
+                $output->writeln('User '.$member['username'].'['.$member['id'].'] buy goods:');
 
                 $this->makeOrder($output,$member,$product);
             }
+
             sleep(1);
         }
 
@@ -245,10 +245,11 @@ class Testing extends Command
         $data['level_id']=getDefaultLevel();
         $model=MemberModel::create($data);
         if(empty($model['id'])){
-            $output->error('创建用户 '.$username.' 失败！');
+            $output->error('Create user '.$username.' failed!');
             return false;
         }
-        $output->writeln('成功添加用户 '.$username.'['.$model['id'].']');
+        //$model->setReferer($parent);
+        $output->writeln('Create user '.$username.'['.$model['id'].','.$parent.'] successed!');
         if(!empty($product)){
             $this->makeOrder($output,$model,$product);
         }
@@ -282,7 +283,7 @@ class Testing extends Command
      */
     private function makeOrder(Output $output,$user,$product){
 
-        money_log($user['id'],$product['product_price']*100,'测试程序自动充值','system');
+        money_log($user['id'],$product['product_price']*100,'Testing recharge','system');
 
         $address=Db::name('MemberAddress')
             ->where('member_id',$user['id'])
@@ -293,11 +294,12 @@ class Testing extends Command
                 ->where('member_id',$user['id'])
                 ->order('is_default DESC')->find();
         }
-        $result=OrderFacade::makeOrder($user,[$product],$address,'测试程序自动下单',1);
+        $model = new OrderModel();
+        $result=$model->makeOrder($user,[$product],$address,'Testing order',1);
         if($result){
-            $output->writeln('用户 '.$user['username'].'['.$user['id'].'] 下单成功');
+            $output->writeln('User '.$user['username'].'['.$user['id'].'] order successed!');
         }else{
-            $output->error('用户 '.$user['username'].'['.$user['id'].'] 下单失败:'.OrderFacade::getError());
+            $output->error('User '.$user['username'].'['.$user['id'].'] order failed:'.$model->getError());
         }
     }
 }
