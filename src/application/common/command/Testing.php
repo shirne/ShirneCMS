@@ -210,17 +210,23 @@ class Testing extends Command
         $address=Db::name('MemberAddress')->where('member_id',$user['referer'])->find();
         if(empty($address)){
             $address=[
-                'recive_name'=>$user['username'],
-                'mobile'=>'13866888866',
-                'province'=>'广东省',
-                'city'=>'中山市',
-                'area'=>'市区',
-                'address'=>'测试地址',
+                'recive_name'=>$user['nickname']?:$user['username'],
+                'mobile'=>$user['mobile']?:'13866888866',
+                'province'=>$user['province']?:'广东省',
+                'city'=>$user['city']?:'中山市',
+                'area'=>$user['area']?:'市区',
+                'address'=>$user['address']?:'测试地址',
                 'code'=>'000000',
                 'is_default'=>1
             ];
         }else{
             $address['is_default']=1;
+            $address['recive_name']=$user['nickname']?:$user['username'];
+            if(!empty($user['mobile']))$address['mobile']=$user['mobile'];
+            if(!empty($user['province']))$address['province']=$user['province'];
+            if(!empty($user['city']))$address['city']=$user['city'];
+            if(!empty($user['area']))$address['area']=$user['area'];
+            if(!empty($user['address']))$address['address']=$user['address'];
             unset($address['address_id']);
         }
         $address['member_id'] = $user['id'];
