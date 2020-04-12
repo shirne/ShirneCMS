@@ -116,6 +116,10 @@ ShirneCMS
 ### 字体(生成图片使用)
 [NotoSansCJKsc]
 [百度网盘](https://pan.baidu.com/s/1i5l0qblUhhendpIhOqu4Iw) 提取码：7cwl
+```
+# 字体文件目录
+\src\public\static\fonts\NotoSansCJKsc
+```
 
 ## 安装 及 开发说明
 
