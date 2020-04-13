@@ -76,6 +76,33 @@ class ProductController extends BaseController
         $this->assign('images',Db::name('ProductImages')->where('product_id',$product['id'])->select());
         return $this->fetch();
     }
+
+    public function flash($id, $date){
+        $flash = ProductModel::getFlash($id,$date);
+        if(empty($flash)){
+            return $this->errorPage('商品快照不存在');
+        }
+        $product = json_decode($flash['product'],true);
+
+        $product['sale']+=$product['v_sale'];
+        $this->seo($product['title']);
+        $this->category($product['cate_id']);
+
+        $images= json_decode($flash['images'],true);
+        if(empty($images)){
+            $images = [
+                ['image'=>$product['image']]
+            ];
+        }
+        $this->assign('product', $product);
+        $this->assign('brand', json_decode($flash['brand'],true));
+        $this->assign('skus', json_decode($flash['images'],true));
+        $this->assign('images',$images);
+        $this->assign('isFlash',1);
+        $this->assign('flashDate',$flash['timestamp']);
+        return $this->fetch('product/view');
+    }
+    
     public function comment($id){
         $product = ProductModel::get($id);
         if(empty($product)){

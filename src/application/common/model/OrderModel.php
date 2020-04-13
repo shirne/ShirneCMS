@@ -418,6 +418,7 @@ class OrderModel extends BaseOrderModel
             $i=0;
             foreach ($products as $product){
                 $product['order_id']=$result;
+                ProductModel::setFlash($product['id'],$time);
                 Db::name('orderProduct')->insert([
                     'order_id'=>$result,
                     'product_id'=>$product['product_id'],

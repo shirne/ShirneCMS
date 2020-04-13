@@ -174,6 +174,21 @@ CREATE TABLE `sa_product` (
   KEY `cate_id` (`cate_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `sa_product_flash`;
+
+CREATE TABLE `sa_product_flash`(
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `product_id` int(11) DEFAULT NULL,
+  `timestamp` int(11) DEFAULT NULL,
+  `title` varchar(150) DEFAULT NULL,
+  `product` TEXT,
+  `brand` TEXT,
+  `skus` TEXT,
+  `images` TEXT,
+  PRIMARY KEY (`id`),
+  KEY `product_id` (`product_id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 DROP TABLE IF EXISTS `sa_product_sku`;
 
 CREATE TABLE `sa_product_sku` (

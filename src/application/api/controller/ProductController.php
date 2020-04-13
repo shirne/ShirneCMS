@@ -113,6 +113,24 @@ class ProductController extends BaseController
         ]);
     }
 
+    public function flash($id, $date){
+        $flash = ProductModel::getFlash($id,$date);
+        if(empty($flash)){
+            return $this->error('商品快照不存在');
+        }
+        $product = json_decode($flash['product'],true);
+
+        $skus=json_decode($flash['skus'],true);
+        $images=json_decode($flash['images'],true);
+
+        return $this->response([
+            'product'=>$product,
+            'skus'=>$skus,
+            'images'=>$images,
+            'flashDate'=>$flash['timestamp']
+        ]);
+    }
+
     public function share($id, $type='url'){
         $product = ProductModel::get($id);
         if(empty($product)){
