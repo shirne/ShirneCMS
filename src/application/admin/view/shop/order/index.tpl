@@ -24,11 +24,10 @@
                         <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
                             <a class="dropdown-item" href="{:url('shop.order/export',['order_ids'=>$orderids])}" target="_blank" >导出本页</a>
                             <a class="dropdown-item" href="{:url('shop.order/export',['status'=>1])}" target="_blank">导出未处理</a>
-                            <a class="dropdown-item" href="{:url('shop.order/export',['status'=>$status,'audit'=>$audit,'key'=>base64_encode($key)])}" target="_blank">导出筛选结果</a>
+                            <a class="dropdown-item" href="{:url('shop.order/export',['status'=>$status,'start_date'=>$start_date,'end_date'=>$end_date,'audit'=>$audit,'keyword'=>base64_encode($keyword)])}" target="_blank">导出筛选结果</a>
                         </div>
                     </div>
                 </div>
-                
             </div>
             <div class="col-7">
                 <form action="{:url('shop.order/index')}" method="post">

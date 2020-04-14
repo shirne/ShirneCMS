@@ -87,24 +87,38 @@ class OrderController extends BaseController
     /**
      * 导出订单
      * @param $order_ids
-     * @param string $key
+     * @param string $keyword
+     * @param string $start_date
+     * @param string $end_date
      * @param string $status
      * @param string $audit
      */
-    public function export($order_ids='',$key='',$status='',$audit=''){
-        $key=empty($key)?"":base64_decode($key);
+    public function export($order_ids='',$keyword='',$start_date='',$end_date='',$status='',$audit=''){
+        $keyword=empty($keyword)?"":base64_decode($keyword);
         $model=Db::view('order','*')
             ->view('member',['username','realname','avatar','level_id'],'member.id=order.member_id','LEFT')
             ->where('order.delete_time',0);
         if(empty($order_ids)){
-            if(!empty($key)){
-                $model->whereLike('order.order_no|member.username|member.realname|order.recive_name|order.mobile',"%$key%");
+            if(!empty($keyword)){
+                $model->whereLike('order.order_no|member.username|member.realname|order.recive_name|order.mobile',"%$keyword%");
             }
             if($status!==''){
                 $model->where('order.status',$status);
             }
             if($audit!==''){
                 $model->where('order.isaudit',$audit);
+            }
+
+            if($start_date !== ''){
+                if($end_date !== ''){
+                    $model->whereBetween('order.create_time',[strtotime($start_date),strtotime($end_date.' 23:59:59')]);
+                }else{
+                    $model->where('order.create_time','GT',strtotime($start_date));
+                }
+            }else{
+                if($end_date !== ''){
+                    $model->where('order.create_time','LT',strtotime($end_date.' 23:59:59'));
+                }
             }
         }elseif($order_ids=='status') {
             $model->where('status',1);
