@@ -5,6 +5,7 @@ namespace app\index\controller;
 use app\common\model\PostageModel;
 use app\common\model\ProductModel;
 use app\common\facade\ProductCategoryFacade;
+use app\common\model\MemberFavouriteModel;
 use app\common\model\ProductCommentModel;
 use app\common\model\ProductSkuModel;
 use app\common\validate\ProductCommentValidate;
@@ -74,7 +75,25 @@ class ProductController extends BaseController
         $this->assign('postage',PostageModel::getDesc($product['postage_id']));
         $this->assign('skus', ProductSkuModel::where('product_id',$product['id'])->select());
         $this->assign('images',Db::name('ProductImages')->where('product_id',$product['id'])->select());
+        $this->assign('isFavourite',(new MemberFavouriteModel())->isFavourite($this->userid, 'product', $id));
         return $this->fetch();
+    }
+
+    public function favourite($id, $cancel = 0){
+        if(!$this->isLogin){
+            $this->error('请先登录');
+        }
+        $model=new MemberFavouriteModel();
+        if($cancel){
+            if($model->removeFavourite($this->user['id'],'product',$id)){
+                $this->success('已取消收藏');
+            }else{
+                $this->error('未收藏该产品');
+            }
+        }elseif($model->addFavourite($this->user['id'],'product',$id)){
+            $this->success('已添加收藏');
+        }
+        $this->error($model->getError());
     }
 
     public function flash($id, $date){
