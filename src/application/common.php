@@ -1179,7 +1179,7 @@ function random_str($length = 6, $type = 'string', $convert = 0)
     $code = '';
     $strlen = strlen($string) - 1;
     for ($i = 0; $i < $length; $i++) {
-        $code .= $string{mt_rand(0, $strlen)};
+        $code .= $string[mt_rand(0, $strlen)];
     }
     if (!empty($convert)) {
         $code = ($convert > 0) ? strtoupper($code) : strtolower($code);
