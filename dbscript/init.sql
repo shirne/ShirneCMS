@@ -119,5 +119,5 @@ INSERT INTO `sa_member_level`(`level_id`,`level_name`,`short_name`,`is_default`,
 
 TRUNCATE TABLE `sa_oauth_app`;
 
-INSERT INTO `sa_oauth_app`(`platform`, `appid`, `appsecret`) VALUES ('web', 'web', '111111');;
+INSERT INTO `sa_oauth_app`(`platform`, `appid`, `appsecret`) VALUES ('web', 'web', '111111');
 

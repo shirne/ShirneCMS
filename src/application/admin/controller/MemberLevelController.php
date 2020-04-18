@@ -34,7 +34,7 @@ class MemberLevelController extends BaseController
 
         $names=['普通','初级','中级','高级'];
         $snames=['普','初','中','高'];
-        $styles=['secondary','info','warning','danger'];
+        $styles=['info','success','warning','danger'];
 
         if($this->request->isPost()){
             $agents=$this->request->post('agents');
@@ -45,7 +45,7 @@ class MemberLevelController extends BaseController
                 }else{
                     $data['is_default']=0;
                 }
-                $data['style']=$styles[$id-1];
+                if(!isset($data['style']))$data['style']=$styles[$id-1];
                 Db::name('memberAgent')->where('id',$id)->update($data);
             }
             MemberAgentModel::clearCacheData();
