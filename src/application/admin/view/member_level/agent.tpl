@@ -34,7 +34,7 @@
                     <td><input type="text" class="form-control" name="agents[{$v.id}][name]" value="{$v.name}"></td>
                     <td><input type="text" class="form-control" name="agents[{$v.id}][short_name]" value="{$v.short_name}"></td>
                     <td>
-                        <select name="style" class="form-control text-{$v.style}"
+                        <select name="agents[{$v.id}][style]" class="form-control text-{$v.style}"
                                 onchange="$(this).attr('class','form-control text-'+$(this).val())">
                             <foreach name="styles" id="style">
                                 <option value="{$style}" {$v['style']==$style?'selected':''}
