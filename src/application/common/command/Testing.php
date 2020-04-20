@@ -229,6 +229,7 @@ class Testing extends Command
             if(!empty($user['address']))$address['address']=$user['address'];
             unset($address['address_id']);
         }
+        $address['recive_name'] = filter_emoji($address['recive_name']);
         $address['member_id'] = $user['id'];
         Db::name('MemberAddress')->insert($address);
     }

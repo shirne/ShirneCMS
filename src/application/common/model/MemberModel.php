@@ -178,6 +178,43 @@ class MemberModel extends BaseModel
         return $count;
     }
 
+    protected $memberLevel;
+    public function getLevel(){
+        if(!$this->memberLevel && $this->level_id){
+            $levels = MemberLevelModel::getCacheData();
+            $this->memberLevel = $levels[$this->level_id];
+        }
+        if(empty($this->memberLevel)){
+            $this->memberLevel=[
+                'level_id'=>0,
+                'level_name'=>'默认会员'
+            ];
+        }
+        return $this->memberLevel;
+    }
+    public function getLevelName(){
+        $this->getLevel();
+        return $this->memberLevel['level_name'];
+    }
+    protected $memberAgent;
+    public function getAgent(){
+        if(!$this->memberAgent && $this->is_agent){
+            $agents = MemberAgentModel::getCacheData();
+            $this->memberAgent = $agents[$this->is_agent];
+        }
+        if(empty($this->memberAgent)){
+            $this->memberAgent=[
+                'id'=>0,
+                'name'=>''
+            ];
+        }
+        return $this->memberAgent;
+    }
+    public function getAgentName(){
+        $this->getAgent();
+        return $this->memberAgent['name'];
+    }
+
     /**
      * 获取指定层数的会员上级
      * @param $userid int 当前会员id
