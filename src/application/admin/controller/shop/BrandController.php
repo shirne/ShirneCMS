@@ -112,7 +112,7 @@ class BrandController extends BaseController
                 }
                 unset($data['delete_logo']);
 
-                $cates = $data['cates'];
+                $cates = empty($data['cates'])?[]:$data['cates'];
                 unset($data['cates']);
                 $data['id']=$id;
                 try{
