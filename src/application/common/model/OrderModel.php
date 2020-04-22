@@ -504,7 +504,7 @@ class OrderModel extends BaseOrderModel
                 $msgdata['create_date'] = date('Y-m-d H:i:s',$order['create_time']);
                 $msgdata['pay_date'] = date('Y-m-d H:i:s',$order['pay_time']);
                 $msgdata['confirm_date'] = date('Y-m-d H:i:s',$order['confirm_time']);
-                
+                $msgdata['status']=order_status($order['status'],false);
                 if($order['status']<1){
                     $msgdata['pay_notice'] = '请在'.date('Y-m-d H:i:s',$order['create_time']+30*60).'前付款';
                 }
@@ -517,10 +517,11 @@ class OrderModel extends BaseOrderModel
                         $msgdata['express'] = '无';
                     }else {
                         $msgdata['express'] = $express['name'];
+                        $msgdata['express_no']=$order['express_no'];
                     }
                 }
                 $msgdata['page']='/pages/member/order-detail?id='.$order['order_id'];
-                
+                //$msgdata['url'] = url('/','',true,true).'?path=/member/order/detail?id='.$order['order_id'];
             }
             
             //小程序下如果未获得form_id，需要从支付信息中获取 prepay_id
