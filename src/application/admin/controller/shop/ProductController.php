@@ -127,11 +127,11 @@ class ProductController extends BaseController
     public function qrcode($id, $qrtype='url', $size=430, $miniprogram=0){
         $product=ProductModel::get($id);
         if($qrtype=='url'){
-            $url = url('index/shop.product/view',['id'=>$id], true, true);
+            $url = url('index/product/view',['id'=>$id], true, true);
             $content=gener_qrcode($url, $size);
         }else{
             if($size>1280)$size=1280;
-            $content = $this->miniprogramQrcode($miniprogram, ['path'=>'pages/shop.product/detail?id='.$id], $qrtype, $size);
+            $content = $this->miniprogramQrcode($miniprogram, ['path'=>'pages/product/detail?id='.$id], $qrtype, $size);
         }
         return download($content,$product['title'].'-qrcode.png',true);
     }

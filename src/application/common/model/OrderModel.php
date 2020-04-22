@@ -488,6 +488,9 @@ class OrderModel extends BaseOrderModel
                 $products=Db::name('orderProduct')->where('order_id',$order['order_id'])->select();
             }
             if(empty($msgdata)){
+                if(!empty($order['appid'])){
+                    $msgdata['appid']=$order['appid'];
+                }
                 $msgdata['order_no']=$order['order_no'];
                 $msgdata['amount']=$order['payamount'];
                 $goods=[];

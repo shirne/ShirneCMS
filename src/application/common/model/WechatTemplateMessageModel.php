@@ -80,11 +80,23 @@ class WechatTemplateMessageModel extends BaseModel
             'template_id'=>$tplset['template_id'],
             'data'=>$data
         ];
-        if(isset($msgdata['page'])){
-            $tplargs['page']=$msgdata['page'];
-        }
-        if(isset($msgdata['form_id'])){
-            $tplargs['form_id']=$msgdata['form_id'];
+        if($wechat['account_type'] == 'miniprogram' || $wechat['account_type'] == 'minigame'){
+            if( isset($msgdata['page']) ){
+                $tplargs['page']=$msgdata['page'];
+            }
+            if(isset($msgdata['form_id'])){
+                $tplargs['form_id']=$msgdata['form_id'];
+            }
+        }else{
+            if(!empty($msgdata['appid']) && isset($msgdata['page'])){
+                $tplargs['miniprogram']=[
+                    'pagepath'=>$msgdata['page'],
+                    'appid'=>$msgdata['appid']
+                ];
+            }
+            if(isset($msgdata['url'])){
+                $tplargs['url']=$msgdata['url'];
+            }
         }
         try {
             $result = $app->template_message->send($tplargs);

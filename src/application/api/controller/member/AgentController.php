@@ -92,10 +92,38 @@ class AgentController extends AuthedController
                 return media(ltrim($sharepath,'.'));
             }
         }
-        $this->create_share_img($config,$sharepath,$page);
+        if(in_array($platform, ['wechat-miniprogram','wechat-minigame'])){
+            $this->create_appcode_img($config,$sharepath,$page);
+        }else{
+            $this->create_share_img($config,$sharepath,$page);
+        }
+        
         return media(ltrim($sharepath,'.'));
     }
     private function create_share_img($config,$sharepath,$page){
+        $qrpath=dirname($sharepath);
+        $qrfile = $this->user['agentcode'].'-qrcode.png';
+        $filename=$qrpath.'/'.$qrfile;
+
+        if(!file_exists($filename)) {
+            $content=gener_qrcode($page, 430);
+            file_put_contents($filename,$content);
+            if(!file_exists($filename)){
+                $this->error('二维码生成失败');
+            }
+        }
+        
+        //$config['background']=$bgpath;
+        $poster = new Poster($config);
+        $poster->generate([
+            'qrcode'=>$filename,
+            'avatar'=>$this->user['avatar'],
+            'bg'=>1,
+            'nickname'=>$this->user['nickname']
+        ]);
+        $poster->save($sharepath);
+    }
+    private function create_appcode_img($config,$sharepath,$page){
         $appid=$this->request->tokenData['appid'];
         $wechat=WechatModel::where('appid',$appid)->find();
         if(empty($wechat)){
