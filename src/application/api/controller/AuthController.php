@@ -172,6 +172,10 @@ class AuthController extends BaseController
             }
             if($member['status']==1) {
                 if (compare_password($member, $password)) {
+                    $agentid = isset($this->accessSession['agent'])?intval($this->accessSession['agent']):0;
+                    if($agentid > 0 && !$member['referer']) {
+                        MemberModel::autoBindAgent($member,$agentid);
+                    }
                     $token = MemberTokenFacade::createToken($member['id'], $app['platform'], $app['appid']);
                     if (!empty($token)) {
                         cache($this->getIpKey(),NULL);
@@ -379,9 +383,7 @@ class AuthController extends BaseController
             if(!empty($updata)){
                 MemberModel::update($updata,array('id'=>$member['id']));
             }
-            if(empty($member['referer']) && !empty($agent) && $member['agentcode']!=$agent){
-                $member->setReferer($agent);
-            }
+            MemberModel::autoBindAgent($member,$agent);
         }
         
         if(empty($oauth)){
@@ -481,6 +483,11 @@ class AuthController extends BaseController
         if(!empty($refresh_token)){
             $token=MemberTokenFacade::refreshToken($refresh_token);
             if(!empty($token)) {
+                $agent = $this->request->param('agent');
+                if(!empty($agent)){
+                    $member = Db::name('member')->where('id',$token['member_id'])->find();
+                    MemberModel::autoBindAgent($member,$agent);
+                }
                 return $this->response($token);
             }
         }

@@ -272,6 +272,9 @@ class MemberModel extends BaseModel
     }
     
     public static function autoBindAgent($member,$agent){
+        if(empty($agent) || empty($member)){
+            return false;
+        }
         if(!is_array($member) && is_numeric($member)){
             $member = static::where('id',$member)->find();
             if(empty($member))return false;
