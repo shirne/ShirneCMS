@@ -103,58 +103,62 @@
                     <div class="card mt-3">
                         <div class="card-header">消费设置</div>
                         <div class="card-body">
-                            <div class="form-group form-row">
-                                <label for="is_default">升级方式</label>
-                                <div class="col">
-                                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                        <label class="btn btn-outline-primary {$model['upgrade_type']=='1'?"active":""}">
-                                            <input type="radio" name="upgrade_type" value="1"
-                                                   autocomplete="off" {$model['upgrade_type']=='1'?"checked":""}> 自动升级
-                                        </label>
-                                        <label class="btn btn-outline-secondary {$model['upgrade_type']==0?"active":""}">
-                                            <input type="radio" name="upgrade_type" value="0"
-                                                   autocomplete="off" {$model['upgrade_type']==0?"checked":""}> 手动或绑定
-                                        </label>
+                            <div class="row">
+                                <div class="col form-group form-row">
+                                    <label for="is_default">升级方式</label>
+                                    <div class="col">
+                                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                            <label class="btn btn-outline-primary {$model['upgrade_type']=='1'?"active":""}">
+                                                <input type="radio" name="upgrade_type" value="1"
+                                                    autocomplete="off" {$model['upgrade_type']=='1'?"checked":""}> 自动升级
+                                            </label>
+                                            <label class="btn btn-outline-secondary {$model['upgrade_type']==0?"active":""}">
+                                                <input type="radio" name="upgrade_type" value="0"
+                                                    autocomplete="off" {$model['upgrade_type']==0?"checked":""}> 手动或绑定
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">消费额度</span>
+                                <div class="col form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">消费额度</span>
+                                        </div>
+                                        <input type="text" name="level_price" class="form-control"
+                                            value="{$model.level_price}"
+                                            placeholder="输入消费额度">
                                     </div>
-                                    <input type="text" name="level_price" class="form-control"
-                                           value="{$model.level_price}"
-                                           placeholder="输入消费额度">
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="text-muted">自动升级的会员组，在累积消费达到指定额度时自动升级。否则，会员升级只能是购买绑定了等级的商品或后台手动升级</div>
                             </div>
-                            <div class="form-group  form-row">
-                                <label for="is_default">自定义价格</label>
-                                <div class="col">
-                                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                        <label class="btn btn-outline-primary {$model['diy_price']=='1'?"active":""}">
-                                            <input type="radio" name="diy_price" value="1"
-                                                   autocomplete="off" {$model['diy_price']=='1'?"checked":""}> 是
-                                        </label>
-                                        <label class="btn btn-outline-secondary {$model['diy_price']==0?"active":""}">
-                                            <input type="radio" name="diy_price" value="0"
-                                                   autocomplete="off" {$model['diy_price']==0?"checked":""}> 否
-                                        </label>
+                            <div class="row">
+                                <div class="col form-group form-row">
+                                    <label for="is_default">自定义价格</label>
+                                    <div class="col">
+                                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                            <label class="btn btn-outline-primary {$model['diy_price']=='1'?"active":""}">
+                                                <input type="radio" name="diy_price" value="1"
+                                                    autocomplete="off" {$model['diy_price']=='1'?"checked":""}> 是
+                                            </label>
+                                            <label class="btn btn-outline-secondary {$model['diy_price']==0?"active":""}">
+                                                <input type="radio" name="diy_price" value="0"
+                                                    autocomplete="off" {$model['diy_price']==0?"checked":""}> 否
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text">会员折扣</span>
-                                    </div>
-                                    <input type="text" name="discount" class="form-control" value="{$model.discount}"
-                                           placeholder="百分比折扣">
-                                    <div class="input-group-append">
-                                        <span class="input-group-text">%</span>
+                                <div class="col form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">会员折扣</span>
+                                        </div>
+                                        <input type="text" name="discount" class="form-control" value="{$model.discount}"
+                                            placeholder="百分比折扣">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text">%</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -168,12 +172,12 @@
                 </div>
 
                 <div class="card mt-3">
-                    <div class="card-header">消费返佣</div>
+                    <div class="card-header">奖励设置</div>
                     <div class="card-body">
                         <div class="form-group">
                             <div class="input-group">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text">代数</span>
+                                    <span class="input-group-text">推荐代数</span>
                                 </div>
                                 <input type="text" name="commission_layer" class="form-control"
                                        value="{$model.commission_layer}"
@@ -190,7 +194,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="cc">比例</label>
+                            <label for="cc">推荐比例</label>
                             <div class="row">
                                 <for start="0" end="$model['commission_layer']">
                                     <div class="input-group col">
