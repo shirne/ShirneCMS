@@ -99,14 +99,18 @@ class BaseOrderModel extends BaseModel
     {
     
         $data=[];
+        $expsetting=[
+            'appid' => getSetting('kd_userid'),
+            'appsecret' => getSetting('kd_apikey')
+        ];
+        if(empty($expsetting['appid']) || empty($expsetting['appsecret'])){
+            return $data;
+        }
         if(!empty($this->express_no) && !empty($this->express_code)) {
             $cacheData = Db::name('expressCache')->where('express_code',$this->express_code)
                 ->where('express_no',$this->express_no)->find();
             if(empty($cacheData) || $force || $cacheData['update_time']<time()-3600) {
-                $express = new KdExpress([
-                    'appid' => getSetting('kd_userid'),
-                    'appsecret' => getSetting('kd_apikey')
-                ]);
+                $express = new KdExpress($expsetting);
                 $data = $express->QueryExpressTraces($this->express_code, $this->express_no);
                 if(!empty($data)) {
                     $newData = ['data' => json_encode($data, JSON_UNESCAPED_UNICODE)];
