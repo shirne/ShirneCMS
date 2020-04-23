@@ -141,9 +141,9 @@ class MemberModel extends BaseModel
             if(empty($member))return false;
         }
         if(empty($member['agentcode'])){
-            $data['agentcode']=random_str(8);
+            $data['agentcode']=random_str(8,'string',1);
             while(Db::name('member')->where('agentcode',$data['agentcode'])->count()>0){
-                $data['agentcode']=random_str(8);
+                $data['agentcode']=random_str(8,'string',1);
             }
         }
         $data['is_agent']=$agent_id;

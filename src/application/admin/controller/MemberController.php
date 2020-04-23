@@ -608,23 +608,43 @@ class MemberController extends BaseController
         }
 
         $model=Db::name('member')->field('count(id) as member_count,date_format(from_unixtime(create_time),' . $format . ') as awdate');
+        $logModel = Db::name('memberAgentLog')->where('agent_id',1)->field('count(id) as agent_count,date_format(from_unixtime(create_time),' . $format . ') as awdate');
+
         $start_date=format_date($start_date,'Y-m-d');
         $end_date=format_date($end_date,'Y-m-d');
         if(!empty($start_date)){
             if(!empty($end_date)){
                 $model->whereBetween('create_time',[strtotime($start_date),strtotime($end_date.' 23:59:59')]);
+                $logModel->whereBetween('create_time',[strtotime($start_date),strtotime($end_date.' 23:59:59')]);
             }else{
                 $model->where('create_time','GT',strtotime($start_date));
+                $logModel->where('create_time','GT',strtotime($start_date));
             }
         }else{
             if(!empty($end_date)){
                 $model->where('create_time','LT',strtotime($end_date.' 23:59:59'));
+                $logModel->where('create_time','LT',strtotime($end_date.' 23:59:59'));
             }
         }
 
         $statics=$model->group('awdate')->select();
+        $logStatics=$logModel->group('awdate')->select();
+        $dates = array_merge(array_column($statics,'awdate'),array_column($logStatics,'awdate'));
+        $dates = array_unique($dates);
 
-        $this->assign('statics',$statics);
+        $statics = array_column($statics,'member_count','awdate');
+        $logStatics = array_column($logStatics,'agent_count','awdate');
+
+        $newStatics = [];
+        foreach($dates as $date){
+            $newStatics[]=[
+                'awdate'=>$date,
+                'member_count'=>isset($statics[$date])?$statics[$date]:0,
+                'agent_count'=> isset($logStatics[$date])?$logStatics[$date]:0
+            ];
+        }
+
+        $this->assign('statics',$newStatics);
         $this->assign('static_type',$type);
         $this->assign('start_date',$start_date);
         $this->assign('end_date',$end_date);

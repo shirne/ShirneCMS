@@ -10,10 +10,10 @@
 
     <div id="page-wrapper">
         <div class="list-header">
-            <form class="noajax" action="{:url('shop.orderStatics/index')}" method="post">
+            <form class="noajax" action="{:url('shop.orderStatics/region')}" method="post">
                 <div class="form-row">
                     <div class="col-1">
-                        <a href="{:url('shop.orderStatics/region')}" class="btn btn-sm btn-primary">地区统计</a>
+                        <a href="{:url('shop.orderStatics/index')}" class="btn btn-sm btn-primary">周期统计</a>
                     </div>
                     <div class="form-group col input-group input-group-sm date-range">
                         <div class="input-group-prepend">
@@ -25,14 +25,11 @@
                     </div>
                     <div class="form-group col">
                         <div class="btn-group btn-group-sm btn-group-toggle" data-toggle="buttons">
-                            <label class="btn btn-outline-secondary {$static_type=='date'?'active':''}">
-                                <input type="radio" name="type" id="option1" value="date" autocomplete="off" checked> 按日
+                            <label class="btn btn-outline-secondary {$static_type=='city'?'active':''}">
+                                <input type="radio" name="type" id="option1" value="city" autocomplete="off" checked> 按城市
                             </label>
-                            <label class="btn btn-outline-secondary {$static_type=='month'?'active':''}">
-                                <input type="radio" name="type" id="option2" value="month" autocomplete="off"> 按月
-                            </label>
-                            <label class="btn btn-outline-secondary {$static_type=='year'?'active':''}">
-                                <input type="radio" name="type" id="option3" value="year" autocomplete="off"> 按年
+                            <label class="btn btn-outline-secondary {$static_type=='province'?'active':''}">
+                                <input type="radio" name="type" id="option2" value="province" autocomplete="off"> 按省份
                             </label>
                         </div>
                         <input type="submit" class="btn btn-primary btn-sm btn-submit ml-2" value="确定"/>
@@ -48,7 +45,7 @@
             <table class="table table-hover table-striped">
                 <thead>
                 <tr>
-                    <th width="50">日期</th>
+                    <th width="50">地区</th>
                     <th>单量</th>
                     <th>金额</th>
                     <th>成本</th>
@@ -58,7 +55,7 @@
                 <tbody>
                     <foreach name="statics" id="item">
                         <tr>
-                            <th>{$item['awdate']}</th>
+                            <th>{$item['region']}</th>
                             <td>{$item['order_count']}</td>
                             <td>{$item['order_amount']}</td>
                             <td>{$item['total_cost_amount']}</td>
@@ -93,9 +90,9 @@
             'rgba(255, 159, 64, 1)'
         ];
         var myChart = new Chart(ctx, {
-            type: 'line',
+            type: 'bar',
             data: {
-                labels: JSON.parse('{:json_encode(array_column($statics,"awdate"))}'),
+                labels: JSON.parse('{:json_encode(array_column($statics,"region"))}'),
                 datasets: [{
                     label: '会员下单量',
                     data: JSON.parse('{:json_encode(array_column($statics,"order_count"))}'),
