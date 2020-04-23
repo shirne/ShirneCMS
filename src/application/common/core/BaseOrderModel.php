@@ -67,14 +67,14 @@ class BaseOrderModel extends BaseModel
         $maps=[
             'order_no'=>['单号','订单号','订单编号','订单号码'],
             'amount'=>['待付金额','订单金额','订单总价'],
-            'goods'=>['商品详情','物品名称','商品名','商品名称','物品详情'],
+            'goods'=>['商品详情','物品名称','商品名','商品名称','物品详情','订单详情'],
             'pay_notice'=>['支付提醒'],
             'status'=>['订单状态','状态'],
             'create_date'=>['下单时间','购买时间'],
             'express'=>['快递公司','物流公司'],
             'express_no'=>['快递单号'],
             'deliver_date'=>['发货时间'],
-            'confirm_date'=>['确认时间'],
+            'confirm_date'=>['确认时间','完成时间'],
             'reason'=>['取消原因']
         ];
         if(!is_array($keywords)){
