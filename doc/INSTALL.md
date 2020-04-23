@@ -45,7 +45,7 @@ php think install
 
 安装完成后就可以访问了
 > 后台地址: 域名/admin<br />
-> 默认账号: admin/123456
+> 默认账号: administrator/123456
 
 
 ## 开发说明
