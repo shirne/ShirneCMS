@@ -72,7 +72,8 @@ class AgentController extends AuthedController
             $this->error($e->getMessage());
         }
         
-        return $this->response(['poster_url'=>$url]);
+        $qrurl = str_replace('-'.$platform.'.jpg','-qrcode.png',$url);
+        return $this->response(['poster_url'=>$url,'qr_url'=>$qrurl]);
     }
     private function get_share_img($platform,$page){
     
@@ -107,6 +108,9 @@ class AgentController extends AuthedController
 
         if(!file_exists($filename)) {
             $content=gener_qrcode($page, 430);
+            if(!is_dir($qrpath)){
+                mkdir($qrpath,0777,true);
+            }
             file_put_contents($filename,$content);
             if(!file_exists($filename)){
                 $this->error('二维码生成失败');
