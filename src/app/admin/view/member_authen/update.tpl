@@ -1,7 +1,7 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
-    <include file="public/bread" menu="member_authen_index" title="升级申请" />
+{block name="body"}
+    {include file="public/bread" menu="member_authen_index" title="升级申请" /}
 
     <div id="page-wrapper" class="page-form">
         <div class="panel panel-default">
@@ -14,22 +14,22 @@
                     <tr>
                         <td colspan="4">
                             <div class="media">
-                                <if condition="!empty($member['avatar'])">
+                                {if !empty($member['avatar'])}
                                     <img src="{$member.avatar}" class="mr-2 rounded" width="60"/>
-                                </if>
+                                {/if}
                                 <div class="media-body">
                                     <h5 class="text-nowrap mt-0 mb-1">
                                         [{$member.id}]
-                                        <if condition="!empty($member['nickname'])">
+                                        {if !empty($member['nickname'])}
                                             {$member.nickname}
-                                            <else/>
+                                            {else/}
                                             {$member.username}
-                                        </if>
+                                        {/if}
                                     </h5>
                                     <div style="font-size:12px;">
-                                    <if condition="!empty($member['realname'])">真实姓名：{$member.realname}</if>
+                                    {if !empty($member['realname'])}真实姓名：{$member.realname}{/if}
                                     注册时间：{$member.create_time|showdate}<br/>
-                                        上次登陆：{$member.logintime|showdate} <if condition="!empty($member['login_ip'])">[{$member.login_ip}]</if>
+                                        上次登陆：{$member.logintime|showdate} {if !empty($member['login_ip'])}[{$member.login_ip}]{/if}
                                     </div>
                                 </div>
                             </div>
@@ -89,9 +89,9 @@
                                     <input type="radio" name="status" value="0"
                                            autocomplete="off" {$model['status']?"":"checked"}> 驳回
                                 </label>
-                                <label class="btn btn-outline-warning {$model['status']==-1?"":"active"}">
+                                <label class="btn btn-outline-warning {$model['status']==-1?"active":""}">
                                     <input type="radio" name="status" value="-1"
-                                           autocomplete="off" {$model['status']==-1?"":"checked"}> 审核中
+                                           autocomplete="off" {$model['status']==-1?"checked":""}> 审核中
                                 </label>
                             </div>
                         </th>
@@ -119,12 +119,12 @@
             </div>
         </div>
     </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/javascript">
         jQuery(function($){
             
 
         })
     </script>
-</block>
+{/block}

@@ -3,6 +3,17 @@
 use think\facade\Db;
 use think\facade\Route;
 
+function delete_image($images){
+    if(is_array($images)){
+        foreach ($images as $image){
+            delete_image($image);
+        }
+    }else{
+        if(!empty($images) && strpos($images,'/uploads/')===0){
+            @unlink('.'.$images);
+        }
+    }
+}
 
 function parseNavigator(&$config,$module){
     $navigators=cache($module.'_navigator');
@@ -129,7 +140,7 @@ function getAdImage($tag,$default=''){
  * @param string $vars
  * @param bool $suffix
  * @param bool $domain
- * @return UrlBuild
+ * @return string
  */
 function aurl($url = '', $vars = '', $suffix = true, $domain = false){
     $part=explode('/',$url);
@@ -137,7 +148,7 @@ function aurl($url = '', $vars = '', $suffix = true, $domain = false){
     if(!is_array($vars))$vars=[];
     $vars['action']=$part[2];
     $part[2]=':action';
-    return url(implode('/',$part),$vars,$suffix,$domain);
+    return url(implode('/',$part),$vars,$suffix,$domain)->build();
 }
 
 //end file

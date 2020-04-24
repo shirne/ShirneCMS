@@ -6,7 +6,7 @@ use app\common\model\MemberAgentModel;
 use app\common\model\MemberAuthenModel;
 use app\common\model\MemberLevelModel;
 use app\common\model\MemberModel;
-use think\Db;
+use think\facade\Db;
 
 /**
  * 会员认证管理
