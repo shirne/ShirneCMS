@@ -8,6 +8,7 @@ use app\common\model\LinksModel;
 use app\common\model\MemberAgentModel;
 use app\common\model\MemberSignModel;
 use app\common\model\NoticeModel;
+use think\Container;
 use think\facade\Db;
 use think\facade\Log;
 use think\Response;
@@ -76,7 +77,7 @@ class CommonController extends BaseController
                     return null;
                 }
                 try{
-                    $controller = \container()->make('\\app\\api\\controller\\' . $m[0] . 'Controller');
+                    $controller = Container::getInstance()->make('\\app\\api\\controller\\' . $m[0] . 'Controller');
                 }catch(\Exception $e){
                     Log::record($e->getMessage(),'error');
                     return null;

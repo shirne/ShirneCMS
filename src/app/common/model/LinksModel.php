@@ -19,7 +19,7 @@ class LinksModel extends BaseModel
     public static function getGroups(){
         if(is_null(self::$link_groups)){
             $group = Db::name('Links')->where('group','<>','')->distinct(true)->field('group')->select();
-            self::$link_groups = array_column($group,'group');
+            self::$link_groups = array_column($group->all(),'group');
         }
         return self::$link_groups;
     }

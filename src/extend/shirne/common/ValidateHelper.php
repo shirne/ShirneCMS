@@ -99,6 +99,13 @@ class ValidateHelper{
         
         return false;
     }
+
+    public static function isEmail($email){
+        if (preg_match('/^[\w]+@[\w+](.[\w]+)+$/', $email)) {
+            return true;
+        }
+        return false;
+    }
     
     public static function isMobile($mobile){
         if (preg_match('/^1[3-9][0-9]{9}$/', $mobile)) {

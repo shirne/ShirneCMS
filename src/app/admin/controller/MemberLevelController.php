@@ -34,7 +34,7 @@ class MemberLevelController extends BaseController
 
         $names=['普通','初级','中级','高级'];
         $snames=['普','初','中','高'];
-        $styles=['secondary','info','warning','danger'];
+        $styles=['info','success','warning','danger'];
 
         if($this->request->isPost()){
             $agents=$this->request->post('agents');
@@ -45,7 +45,7 @@ class MemberLevelController extends BaseController
                 }else{
                     $data['is_default']=0;
                 }
-                $data['style']=$styles[$id-1];
+                if(!isset($data['style']))$data['style']=$styles[$id-1];
                 Db::name('memberAgent')->where('id',$id)->update($data);
             }
             MemberAgentModel::clearCacheData();
@@ -126,7 +126,7 @@ class MemberLevelController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             }else{
-                $model=MemberLevelModel::get($id);
+                $model=MemberLevelModel::find($id);
                 if ($model->allowField(true)->save($data)) {
                     cache('levels', null);
                     user_log($this->mid,'updatelevel',1,'修改会员组'.$id ,'manager');
@@ -136,7 +136,7 @@ class MemberLevelController extends BaseController
                 }
             }
         }
-        $model = MemberLevelModel::get($id);
+        $model = MemberLevelModel::find($id);
         $this->assign('model',$model);
         $this->assign('styles',getTextStyles());
         return $this->fetch();

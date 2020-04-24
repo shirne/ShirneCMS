@@ -10,7 +10,7 @@ use app\common\model\PayOrderRefundModel;
 use app\common\model\WechatModel;
 use EasyWeChat\BasicService\Application;
 use EasyWeChat\Factory;
-use think\Controller;
+use think\App;
 use think\facade\Db;
 use think\facade\Log;
 
@@ -19,13 +19,35 @@ use think\facade\Log;
  * Class WeChatController
  * @package app\api\controller
  */
-class WechatController extends Controller{
+class WechatController{
+
+    /**
+     * Request实例
+     * @var \think\Request
+     */
+    protected $request;
+
+    /**
+     * 应用实例
+     * @var \think\App
+     */
+    protected $app;
 
     protected $config=array();
 
     /**
-     * @var Application
+     * 构造方法
+     * @access public
+     * @param  App  $app  应用对象
      */
+    public function __construct(App $app)
+    {
+        $this->app     = $app;
+        $this->request = $this->app->request;
+
+        // 控制器初始化
+        $this->initialize();
+    }
 
     public function initialize(){
         parent::initialize();

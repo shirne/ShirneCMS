@@ -58,7 +58,7 @@ class PostageController extends BaseController
         $this->assign('areas',[
             ['id'=>0,'sort'=>0]
         ]);
-        $this->assign('express',config('express.'));
+        $this->assign('express',config('express'));
         return $this->fetch('update');
     }
     
@@ -68,7 +68,7 @@ class PostageController extends BaseController
     public function update($id)
     {
         $id = intval($id);
-        $model = PostageModel::get($id);
+        $model = PostageModel::find($id);
         if(empty($model)){
             $this->error('运费模板不存在');
         }
@@ -92,7 +92,7 @@ class PostageController extends BaseController
         }
         $this->assign('model',$model);
         $this->assign('areas',$model->getAreas());
-        $this->assign('express',config('express.'));
+        $this->assign('express',config('express'));
         return $this->fetch();
     }
     

@@ -157,7 +157,7 @@
                     <tbody>
                     <tr>
                         <td>快递公司</td>
-                        <td>{if !empty($model['express_code'])}[{$model.express_code}]{php}$expresses=config('express.');{/php}{$expresses[$model['express_code']]}{else/}无需物流{/if}</td>
+                        <td>{if !empty($model['express_code'])}[{$model.express_code}]{php}$expresses=config('express');{/php}{$expresses[$model['express_code']]}{else/}无需物流{/if}</td>
                         <td>快递单号</td>
                         <td>{$model.express_no}</td>
                     </tr>

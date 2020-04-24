@@ -23,7 +23,7 @@ class MemberController extends AuthedController
 
     public function profile($agent=''){
         $profile=Db::name('member')
-            ->hidden('password,salt,sec_password,sec_salt,delete_time')
+            ->hidden(explode(',','password,salt,sec_password,sec_salt,delete_time'))
             ->where('id',$this->user['id'])
             ->find();
         
@@ -191,40 +191,4 @@ class MemberController extends AuthedController
         $this->success('退出成功');
     }
 
-    public function addresses(){
-        return action('member.address/index');
-    }
-
-    public function get_address($id){
-        return action('member.address/view',['id'=>$id]);
-    }
-    public function edit_address($id=0){
-        return action('member.address/save',['id'=>$id]);
-    }
-    public function del_address($id){
-        return action('member.address/delete',['id'=>$id]);
-    }
-    public function set_default_address($id){
-        return action('member.address/set_default',['id'=>$id]);
-    }
-
-    public function orders($status=''){
-        return action('member.order/index',['status'=>$status]);
-    }
-
-    public function order_view($id){
-        return action('member.order/view',['id'=>$id]);
-    }
-
-    public function favourite($type){
-        return action('member.favourite/index',['type'=>$type]);
-    }
-
-    public function add_favourite($type,$id){
-        return action('member.favourite/add',['type'=>$type,'id'=>$id]);
-    }
-
-    public function del_favourite($type,$ids){
-        return action('member.favourite/remove',['type'=>$type,'ids'=>$ids]);
-    }
 }

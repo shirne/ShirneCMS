@@ -2,7 +2,7 @@
 
 {block name="body"}
 	<div class="main">
-		{php}$adimg=getAdImage($page['group']);{/php}
+		{php}$adimg=getAdImage($page['group']??'about');{/php}
 		{if !empty($adimg)}
 			<div class="subbanner">
 				<div class="inner" style="background-image:url({$adimg})"></div>

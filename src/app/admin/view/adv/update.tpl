@@ -10,11 +10,11 @@
     <form method="post" class="page-form" action="">
         <div class="form-group">
             <label for="title">位置名称</label>
-            <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="位置名称">
+            <input type="text" name="title" class="form-control" value="{$model.title|default=''}" placeholder="位置名称">
         </div>
         <div class="form-group">
             <label for="flag">调用标识</label>
-            <input type="text" name="flag" class="form-control" value="{$model.flag}" placeholder="调用标识">
+            <input type="text" name="flag" class="form-control" value="{$model.flag|default=''}" placeholder="调用标识">
         </div>
         <div class="form-group">
             <label >自定义字段</label>
@@ -47,7 +47,7 @@
             </label>
         </div>
         <div class="form-group submit-btn">
-            <input type="hidden" name="id" value="{$model.id}">
+            <input type="hidden" name="id" value="{$model.id|default=''}">
             <button type="submit" class="btn btn-primary">{$id>0?'保存':'添加'}</button>
         </div>
     </form>

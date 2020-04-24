@@ -116,7 +116,7 @@ class LinksController extends BaseController
         $groups = Db::name('Links')->where('group','<>','')->distinct('group')->field('group')->select();
 
         if(!empty($groups)){
-            return array_column($groups,'group');
+            return array_column($groups->all(),'group');
         }
         return ['友情链接','合作伙伴'];
     }

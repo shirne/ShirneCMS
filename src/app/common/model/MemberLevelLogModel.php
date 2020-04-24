@@ -86,7 +86,7 @@ class MemberLevelLogModel extends BaseModel
             'remark'=>$remark
         );
 
-        $result= $this->insert($orderdata,false,true);
+        $result= $this->insert($orderdata,true);
 
         if($result){
             $this->commit();

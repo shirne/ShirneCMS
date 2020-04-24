@@ -71,7 +71,7 @@ class CouponController extends BaseController
     public function update($id)
     {
         $id = intval($id);
-        $model = ProductCouponModel::get($id);
+        $model = ProductCouponModel::find($id);
 
         if ($this->request->isPost()) {
             $data=$this->request->post();

@@ -15,7 +15,7 @@ class InvoiceController extends BaseController
 {
     public function index(){
         if($this->request->isPost()){
-            $data=$this->request->only('id','post');
+            $data=$this->request->only(['id'],'post');
             $result=Db::name('MemberInvoice')->where('member_id',$this->userid)
                 ->whereIn('id',idArr($data['id']))->delete();
             if($result){
@@ -32,14 +32,14 @@ class InvoiceController extends BaseController
 
     public function add(){
         if($this->request->isPost()){
-            $data=$this->request->only('title,type,tax_no,address,telephone,bank,caedno,is_default','post');
+            $data=$this->request->post(['title','type','tax_no','address','telephone','bank','caedno','is_default']);
             $data['is_default']=empty($data['is_default'])?0:1;
             $validate=new MemberInvoiceValidate();
             if(!$validate->check($data)){
                 $this->error($validate->getError());
             }else {
                 $data['member_id'] = $this->userid;
-                $id = Db::name('MemberInvoice')->insert($data, false, true);
+                $id = Db::name('MemberInvoice')->insert($data, true);
                 if ($id) {
                     user_log($this->userid, 'invoiceadd', 1, '添加发票资料:' . $id);
                     $this->success('添加成功', aurl('index/member.invoice/index'), Db::name('MemberInvoice')->find($id));
@@ -64,7 +64,7 @@ class InvoiceController extends BaseController
             $this->error('发票资料不存在');
         }
         if($this->request->isPost()){
-            $data=$this->request->only('title,type,tax_no,address,telephone,bank,caedno,is_default','post');
+            $data=$this->request->only(['title','type','tax_no','address','telephone','bank','cardno','is_default'],'post');
             $data['is_default']=empty($data['is_default'])?0:1;
             $validate=new MemberInvoiceValidate();
             if(!$validate->check($data)){

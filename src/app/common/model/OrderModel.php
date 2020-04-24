@@ -405,7 +405,7 @@ class OrderModel extends BaseOrderModel
         }
         try{
             Log::record("创建订单：".var_export($orderdata,true));
-            $result= $this->insert($orderdata,false,true);
+            $result= $this->insert($orderdata,true);
         }catch(\Exception $e){
             $this->rollback();
             $this->setError($e->getMessage());
@@ -415,6 +415,7 @@ class OrderModel extends BaseOrderModel
             $i=0;
             foreach ($products as $product){
                 $product['order_id']=$result;
+                ProductModel::setFlash($product['id'],$time);
                 Db::name('orderProduct')->insert([
                     'order_id'=>$result,
                     'product_id'=>$product['product_id'],
@@ -484,6 +485,9 @@ class OrderModel extends BaseOrderModel
                 $products=Db::name('orderProduct')->where('order_id',$order['order_id'])->select();
             }
             if(empty($msgdata)){
+                if(!empty($order['appid'])){
+                    $msgdata['appid']=$order['appid'];
+                }
                 $msgdata['order_no']=$order['order_no'];
                 $msgdata['amount']=$order['payamount'];
                 $goods=[];
@@ -500,7 +504,7 @@ class OrderModel extends BaseOrderModel
                 $msgdata['create_date'] = date('Y-m-d H:i:s',$order['create_time']);
                 $msgdata['pay_date'] = date('Y-m-d H:i:s',$order['pay_time']);
                 $msgdata['confirm_date'] = date('Y-m-d H:i:s',$order['confirm_time']);
-                
+                $msgdata['status']=order_status($order['status'],false);
                 if($order['status']<1){
                     $msgdata['pay_notice'] = '请在'.date('Y-m-d H:i:s',$order['create_time']+30*60).'前付款';
                 }
@@ -513,10 +517,11 @@ class OrderModel extends BaseOrderModel
                         $msgdata['express'] = '无';
                     }else {
                         $msgdata['express'] = $express['name'];
+                        $msgdata['express_no']=$order['express_no'];
                     }
                 }
                 $msgdata['page']='/pages/member/order-detail?id='.$order['order_id'];
-                
+                //$msgdata['url'] = url('/','',true,true).'?path=/member/order/detail?id='.$order['order_id'];
             }
             
             //小程序下如果未获得form_id，需要从支付信息中获取 prepay_id

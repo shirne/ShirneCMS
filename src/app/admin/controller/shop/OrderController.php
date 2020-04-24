@@ -19,28 +19,41 @@ class OrderController extends BaseController
 {
     /**
      * 订单列表
-     * @param string $key
+     * @param string $keyword
+     * @param string $start_date
+     * @param string $end_date
      * @param string $status
      * @param string $audit
      * @return mixed|\think\response\Redirect
      */
-    public function index($key='',$status='',$audit=''){
+    public function index($keyword='',$start_date='',$end_date='',$status='',$audit=''){
         if($this->request->isPost()){
-            return redirect(url('',['status'=>$status,'audit'=>$audit,'key'=>base64_encode($key)]));
+            return redirect(url('',['status'=>$status,'start_date'=>$start_date,'end_date'=>$end_date,'audit'=>$audit,'keyword'=>base64_encode($keyword)]));
         }
-        $key=empty($key)?"":base64_decode($key);
+        $keyword=empty($keyword)?"":base64_decode($keyword);
         $model=Db::view('order','*')
             ->view('member',['username','realname','nickname','avatar','level_id'],'member.id=order.member_id','LEFT')
             ->where('order.delete_time',0);
 
-        if(!empty($key)){
-            $model->whereLike('order.order_no|member.username|member.nickname|member.realname|order.recive_name|order.mobile',"%$key%");
+        if(!empty($keyword)){
+            $model->whereLike('order.order_no|member.username|member.nickname|member.realname|order.recive_name|order.mobile',"%$keyword%");
         }
         if($status!==''){
             $model->where('order.status',$status);
         }
         if($audit!==''){
             $model->where('order.isaudit',$audit);
+        }
+        if($start_date !== ''){
+            if($end_date !== ''){
+                $model->whereBetween('order.create_time',[strtotime($start_date),strtotime($end_date.' 23:59:59')]);
+            }else{
+                $model->where('order.create_time','GT',strtotime($start_date));
+            }
+        }else{
+            if($end_date !== ''){
+                $model->where('order.create_time','LT',strtotime($end_date.' 23:59:59'));
+            }
         }
 
         $lists=$model->where('order.delete_time',0)->order(Db::raw('if(order.status>-1,order.status,3) ASC,order.create_time DESC'))->paginate(15);
@@ -58,11 +71,13 @@ class OrderController extends BaseController
             });
         }
 
-        $this->assign('keyword',$key);
+        $this->assign('keyword',$keyword);
+        $this->assign('start_date',$start_date);
+        $this->assign('end_date',$end_date);
         $this->assign('status',$status);
         $this->assign('orderids',empty($orderids)?0:implode(',',$orderids));
         $this->assign('audit',$audit);
-        $this->assign('expresscodes',config('express.'));
+        $this->assign('expresscodes',config('express'));
         $this->assign('lists',$lists);
         $this->assign('levels',getMemberLevels());
         $this->assign('page',$lists->render());
@@ -72,24 +87,38 @@ class OrderController extends BaseController
     /**
      * 导出订单
      * @param $order_ids
-     * @param string $key
+     * @param string $keyword
+     * @param string $start_date
+     * @param string $end_date
      * @param string $status
      * @param string $audit
      */
-    public function export($order_ids='',$key='',$status='',$audit=''){
-        $key=empty($key)?"":base64_decode($key);
+    public function export($order_ids='',$keyword='',$start_date='',$end_date='',$status='',$audit=''){
+        $keyword=empty($keyword)?"":base64_decode($keyword);
         $model=Db::view('order','*')
             ->view('member',['username','realname','avatar','level_id'],'member.id=order.member_id','LEFT')
             ->where('order.delete_time',0);
         if(empty($order_ids)){
-            if(!empty($key)){
-                $model->whereLike('order.order_no|member.username|member.realname|order.recive_name|order.mobile',"%$key%");
+            if(!empty($keyword)){
+                $model->whereLike('order.order_no|member.username|member.realname|order.recive_name|order.mobile',"%$keyword%");
             }
             if($status!==''){
                 $model->where('order.status',$status);
             }
             if($audit!==''){
                 $model->where('order.isaudit',$audit);
+            }
+
+            if($start_date !== ''){
+                if($end_date !== ''){
+                    $model->whereBetween('order.create_time',[strtotime($start_date),strtotime($end_date.' 23:59:59')]);
+                }else{
+                    $model->where('order.create_time','GT',strtotime($start_date));
+                }
+            }else{
+                if($end_date !== ''){
+                    $model->where('order.create_time','LT',strtotime($end_date.' 23:59:59'));
+                }
             }
         }elseif($order_ids=='status') {
             $model->where('status',1);
@@ -137,7 +166,7 @@ class OrderController extends BaseController
         $this->assign('member',$member);
         $this->assign('products',$products);
         $this->assign('payorders',$payorders);
-        $this->assign('expresscodes',config('express.'));
+        $this->assign('expresscodes',config('express'));
         return $this->fetch();
     }
 
@@ -166,7 +195,7 @@ class OrderController extends BaseController
     }
 
     public function setcancel($id){
-        $order = OrderModel::get($id);
+        $order = OrderModel::find($id);
         if(empty($id) || empty($order)){
             $this->error('订单不存在');
         }
@@ -178,7 +207,7 @@ class OrderController extends BaseController
         $this->success('操作成功');
     }
     public function setpayed($id){
-        $order = OrderModel::get($id);
+        $order = OrderModel::find($id);
         if(empty($id) || empty($order)){
             $this->error('订单不存在');
         }
@@ -202,7 +231,7 @@ class OrderController extends BaseController
         $this->success('操作成功');
     }
     public function setdelivery($id){
-        $order = OrderModel::get($id);
+        $order = OrderModel::find($id);
         if(empty($id) || empty($order)){
             $this->error('订单不存在');
         }
@@ -227,7 +256,7 @@ class OrderController extends BaseController
         $this->success('操作成功');
     }
     public function setreceive($id){
-        $order = OrderModel::get($id);
+        $order = OrderModel::find($id);
         if(empty($id) || empty($order)){
             $this->error('订单不存在');
         }
@@ -246,7 +275,7 @@ class OrderController extends BaseController
     }
 
     public function setcomplete($id){
-        $order = OrderModel::get($id);
+        $order = OrderModel::find($id);
         if(empty($id) || empty($order)){
             $this->error('订单不存在');
         }
@@ -282,7 +311,7 @@ class OrderController extends BaseController
      */
     public function reprice($id,$price)
     {
-        $order = OrderModel::get($id);
+        $order = OrderModel::find($id);
         if(empty($id) || empty($order)){
             $this->error('订单不存在');
         }
@@ -305,7 +334,7 @@ class OrderController extends BaseController
      * @param $id
      */
     public function paystatus($id){
-        $order = OrderModel::get($id);
+        $order = OrderModel::find($id);
         if(empty($id) || empty($order)){
             $this->error('订单不存在');
         }
@@ -325,7 +354,7 @@ class OrderController extends BaseController
      * @param $payid
      */
     public function payquery($payid){
-        $payorder = PayOrderModel::get($payid);
+        $payorder = PayOrderModel::find($payid);
         if(empty($payorder)){
             $this->error('支付订单不存在');
         }
@@ -346,7 +375,7 @@ class OrderController extends BaseController
      * @param $id
      */
     public function audit($id){
-        $order = OrderModel::get($id);
+        $order = OrderModel::find($id);
         if(empty($id) || empty($order)){
             $this->error('订单不存在');
         }

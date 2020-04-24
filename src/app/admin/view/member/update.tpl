@@ -4,7 +4,7 @@
     {include  file="public/bread" menu="member_index" title="会员信息"  /}
 
     <div id="page-wrapper">
-        <div class="page-header">{$model['id']>0?'编辑':'添加'}会员</div>
+        <div class="page-header">{if empty($model['id'])}添加{else/}编辑{/if}会员</div>
         <div id="page-content">
             <form action="" method="post">
                 <div class="row">
@@ -16,29 +16,29 @@
                                     <label class="form-label">用户名</label>
                                     <div class="col">
                                         <input class="form-control" type="text" name="username"
-                                            value="{$model.username}" />
+                                            value="{$model.username|default=''}" />
                                     </div>
                                 </div>
                                 <div class="form-group form-row">
                                     <label class="form-label">真实姓名</label>
                                     <div class="col">
                                         <input class="form-control" type="text" name="realname"
-                                            value="{$model.realname}" />
+                                            value="{$model.realname|default=''}" />
                                     </div>
                                 </div>
                                 <div class="form-group form-row">
                                     <label class="form-label">邮箱</label>
                                     <div class="col">
-                                        <input class="form-control" type="text" name="email" value="{$model.email}" />
+                                        <input class="form-control" type="text" name="email" value="{$model.email|default=''}" />
                                     </div>
                                 </div>
                                 <div class="form-group form-row">
                                     <label class="form-label">手机号</label>
                                     <div class="col">
-                                        <input class="form-control" type="text" name="mobile" value="{$model.mobile}" />
+                                        <input class="form-control" type="text" name="mobile" value="{$model.mobile|default=''}" />
                                     </div>
                                 </div>
-                                {if $model.id GT 0}
+                                {if !empty($model['id'])}
                                     <div class="form-group form-row">
                                         <label class="form-label">新密码</label>
                                         <div class="col">
@@ -68,9 +68,9 @@
                                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                             {volist name="types" id="type" key="k"}
                                                 <label
-                                                    class="btn btn-outline-secondary{$key==$model['type']?' active':''}">
+                                                    class="btn btn-outline-secondary{if isset($model['type']) && $key==$model['type']} active{/if}">
                                                     <input type="radio" name="type" value="{$key}" autocomplete="off"
-                                                        {$key==$model['type']?'checked':''}>{$type}
+                                                    {if isset($model['type']) && $key==$model['type']}checked{/if}>{$type}
                                                 </label>
                                             {/volist}
                                         </div>
@@ -108,24 +108,24 @@
                                     <label class="form-label">昵称</label>
                                     <div class="col">
                                         <input class="form-control" type="text" name="nickname"
-                                            value="{$model.nickname}" />
+                                            value="{$model.nickname|default=''}" />
                                     </div>
                                 </div>
                                 <div class="form-group form-row">
                                     <label class="form-label">性别</label>
                                     <div class="col">
                                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                            <label class="btn btn-outline-secondary {$model.gender==1?'active':''}">
+                                            <label class="btn btn-outline-secondary {if !empty($model['gender']) && $model['gender']==1}active{/if}">
                                                 <input type="radio" name="gender" value="1" autocomplete="off"
-                                                    {$model.gender==1?'checked':''}> 男士
+                                                {if !empty($model['gender']) && $model['gender']==1}checked':''}> 男士
                                             </label>
-                                            <label class="btn btn-outline-secondary {$model.gender==2?'active':''}">
+                                            <label class="btn btn-outline-secondary {if !empty($model['gender']) && $model['gender']==2}active{/if}">
                                                 <input type="radio" name="gender" value="2" autocomplete="off"
-                                                    {$model.gender==2?'checked':''}> 女士
+                                                {if !empty($model['gender']) && $model['gender']==2}checked{/if}> 女士
                                             </label>
-                                            <label class="btn btn-outline-secondary {$model.gender==0?'active':''}">
+                                            <label class="btn btn-outline-secondary {if empty($model['gender'])}active{/if}">
                                                 <input type="radio" name="gender" value="0" autocomplete="off"
-                                                    {$model.gender==0?'checked':''}> 其它
+                                                {if empty($model['gender'])}checked{/if}> 其它
                                             </label>
                                         </div>
                                     </div>
@@ -133,26 +133,26 @@
                                 <div class="form-group form-row">
                                     <label class="form-label">QQ</label>
                                     <div class="col">
-                                        <input class="form-control" type="text" name="qq" value="{$model.qq}" />
+                                        <input class="form-control" type="text" name="qq" value="{$model.qq|default=''}" />
                                     </div>
                                 </div>
                                 <div class="form-group form-row">
                                     <label class="form-label">微信号</label>
                                     <div class="col">
-                                        <input class="form-control" type="text" name="wechat" value="{$model.wechat}" />
+                                        <input class="form-control" type="text" name="wechat" value="{$model.wechat|default=''}" />
                                     </div>
                                 </div>
                                 <div class="form-group form-row">
                                     <label class="form-label">支付宝</label>
                                     <div class="col">
-                                        <input class="form-control" type="text" name="alipay" value="{$model.alipay}" />
+                                        <input class="form-control" type="text" name="alipay" value="{$model.alipay|default=''}" />
                                     </div>
                                 </div>
                                 <div class="form-group form-row">
                                     <label class="form-label">生日</label>
                                     <div class="col">
                                         <input class="form-control datepicker" type="text" name="birth"
-                                            value="{$model.birth|showdate}" />
+                                            value="{$model.birth|default=''|showdate}" />
                                     </div>
                                 </div>
                                 <div class="form-group form-row areabox">
@@ -174,7 +174,7 @@
                                     <label class="form-label">地址</label>
                                     <div class="col">
                                         <input class="form-control" type="text" name="address"
-                                            value="{$model.address}" />
+                                            value="{$model.address|default=''}" />
                                     </div>
                                 </div>
                             </div>
@@ -184,8 +184,8 @@
 
 
                 <div class="form-group">
-                    <input type="hidden" name="id" value="{$model.id}">
-                    <button class="btn btn-primary" type="submit">{$model['id']>0?'保存':'添加'}</button>
+                    <input type="hidden" name="id" value="{$model.id|default=''}">
+                    <button class="btn btn-primary" type="submit">{if empty($model['id'])}添加{else/}保存{/if}</button>
                 </div>
 
 
@@ -200,9 +200,9 @@
             var locobj = new Location()
             $(".areabox").jChinaArea({
                 aspnet: true,
-                s1:"{$model.province}",
-                s2:"{$model.city}",
-                s3:"{$model.area}"
+                s1:"{$model.province|default=''}",
+                s2:"{$model.city|default=''}",
+                s3:"{$model.area|default=''}"
             });
         })
     </script>

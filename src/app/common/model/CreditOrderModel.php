@@ -159,7 +159,7 @@ class CreditOrderModel extends BaseOrderModel
             'express_code'=>''
         );
 
-        $result= $this->insert($orderdata,false,true);
+        $result= $this->insert($orderdata,true);
 
         if($result){
             $i=0;

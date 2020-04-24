@@ -49,9 +49,9 @@ class BaseController extends Controller
         parent::initialize();
 
         //初始化语言
-        $this->lang_switch=config('lang_switch_on');
+        $this->lang_switch=config('lang.switch_on',false);
         if($this->lang_switch){
-            $cookie_var=config('lang_cookie_var');
+            $cookie_var=config('lang.cookie_var');
 
             $this->lang=Lang::range();
 
@@ -69,7 +69,7 @@ class BaseController extends Controller
             $this->checkSubmitRate($this->config['submit_rate']?:2);
         }
 
-        $navigation=config('navigator.');
+        $navigation=config('navigator');
         $navigation=parseNavigator($navigation,app('http')->getName());
         $this->assign('navigator',$navigation);
         $this->assign('navmodel','index');
@@ -251,7 +251,7 @@ class BaseController extends Controller
             if(!empty($openid)){
                 $wechatUser=Db::name('memberOauth')->where('openid',$openid)->find();
                 if($wechatUser['member_id']){
-                    $member=MemberModel::get($wechatUser['member_id']);
+                    $member=MemberModel::find($wechatUser['member_id']);
                     if(!empty($member)) {
                         $this->setLogin($member);
 
@@ -285,7 +285,7 @@ class BaseController extends Controller
             if(!empty($openid)){
                 $wechatUser=Db::name('memberOauth')->where('openid',$openid)->find();
                 if($wechatUser['member_id']){
-                    $member=MemberModel::get($wechatUser['member_id']);
+                    $member=MemberModel::find($wechatUser['member_id']);
                     if(!empty($member)) {
                         $this->setLogin($member);
 
@@ -366,7 +366,7 @@ class BaseController extends Controller
         if(!isset($this->currentWechats[$type]) || $force) {
             $this->currentWechats[$type] = cache('default_' . $type);
             if (empty($wechat) || $force == true) {
-                $wechat = \think\Db::name('Wechat')->where('type', $type)
+                $wechat = \think\facade\Db::name('Wechat')->where('type', $type)
                     ->where('account_type', 'service')
                     ->order('is_default DESC')->find();
                 cache('default_' . $type, $wechat,['expire'=>60*60*12]);

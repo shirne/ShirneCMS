@@ -72,7 +72,7 @@ class NoticeController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
-                $model=NoticeModel::get($id);
+                $model=NoticeModel::find($id);
 
                 if ($model->allowField(true)->save($data)) {
                     $this->success(lang('Update success!'), url('Notice/index'));

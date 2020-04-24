@@ -104,7 +104,7 @@ class KeywordsController extends BaseController
         $groups = Db::name('keywords')->where('group','<>','')->distinct('group')->field('group')->select();
 
         if(!empty($groups)){
-            return array_column($groups,'group');
+            return array_column($groups->all(),'group');
         }
         return ['global','product','article'];
     }

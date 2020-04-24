@@ -5,7 +5,7 @@ namespace app\admin\controller\shop;
 use app\admin\controller\BaseController;
 use app\common\model\HelpModel;
 use app\admin\validate\HelpValidate;
-use app\admin\validate\CategoryValidate;
+use app\admin\validate\HelpCategoryValidate;
 use app\common\facade\HelpCategoryFacade;
 use think\facade\Db;
 
@@ -127,7 +127,7 @@ class HelpController extends BaseController
                 if(empty($data['description']))$data['description']=cutstr($data['content'],240);
                 if(!empty($data['create_time']))$data['create_time']=strtotime($data['create_time']);
                 if(empty($data['create_time']))unset($data['create_time']);
-                $model=HelpModel::get($id);
+                $model=HelpModel::find($id);
                 try{
                     $model->allowField(true)->save($data);
                     delete_image($delete_images);
@@ -141,7 +141,7 @@ class HelpController extends BaseController
             }
         }
 
-        $model = HelpModel::get($id);
+        $model = HelpModel::find($id);
         if(empty($model)){
             $this->error('帮助不存在');
         }
@@ -192,7 +192,7 @@ class HelpController extends BaseController
 
         if($this->request->isPost()){
             $data=$this->request->post();
-            $validate=new CategoryValidate();
+            $validate=new HelpCategoryValidate();
             $validate->setId($id);
 
             if (!$validate->check($data)) {

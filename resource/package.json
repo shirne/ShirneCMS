@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "gulp4"
+    "build": "gulp"
   },
   "author": "shirne",
   "license": "ISC",
@@ -14,6 +14,7 @@
     "autoprefixer": "^9.4.4",
     "copy": "^0.3.2",
     "del": "^3.0.0",
+    "gulp": "^4.0.2",
     "gulp-autoprefixer": "^7.0.1",
     "gulp-babel": "^8.0.0",
     "gulp-concat": "^2.6.1",
@@ -21,7 +22,6 @@
     "gulp-sass": "^4.0.2",
     "gulp-sourcemaps": "^2.6.5",
     "gulp-uglify": "^3.0.2",
-    "gulp-watch": "^5.0.1",
-    "gulp4": "^4.0.0"
+    "gulp-watch": "^5.0.1"
   }
 }

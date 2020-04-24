@@ -58,7 +58,7 @@
 			</tr>
 		</thead>
 		<tbody>
-		<empty name="lists">{:list_empty(8)}</empty>
+		{empty name="lists"}{:list_empty(8)}{/empty}
 			{volist name="lists" id="v" }
 				<tr>
 					<td><input type="checkbox" name="id" value="{$v.id}" /></td>
@@ -70,6 +70,7 @@
 					<td>
 						{if $v['type'] GT 1}<span class="badge badge-warning">{$types[$v['type']]}</span>{/if}
 						<a href="{:url('index/product/view',['id'=>$v['id']])}" target="_blank">{$v.title}</a>
+						<if condition="!empty($v['unit'])"><span class="badge badge-info">{$v.unit}</span></if>
 					</td>
 					<td>
 						{foreach name="v['skus']" item="sku"}

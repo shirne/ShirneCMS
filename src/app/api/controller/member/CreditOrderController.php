@@ -53,13 +53,13 @@ class CreditOrderController extends AuthedController
         $order['goods']=Db::view('creditOrderGoods', '*')
             ->view('goods', ['id' => 'orig_goods_id', 'update_time' => 'orig_goods_update','vice_title','unit'], 'creditOrderGoods.goods_id=goods.id', 'LEFT')
             ->where('creditOrderGoods.order_id', $order['order_id'])
-            ->select();
+            ->select()->all();
         $order['goods_count']=empty($order['goods'])?0:array_sum(array_column($order['goods'],'count'));
         return $this->response($order);
     }
     
     public function cancel($id, $reason=''){
-        $order=CreditOrderModel::get(intval($id));
+        $order=CreditOrderModel::find(intval($id));
         if(empty($order) || $order['delete_time']>0){
             $this->error('订单不存在或已删除',0);
         }
@@ -75,7 +75,7 @@ class CreditOrderController extends AuthedController
     }
     
     public function refund($id, $reason=''){
-        $order=CreditOrderModel::get(intval($id));
+        $order=CreditOrderModel::find(intval($id));
         if(empty($order) || $order['delete_time']>0){
             $this->error('订单不存在或已删除',0);
         }
@@ -94,7 +94,7 @@ class CreditOrderController extends AuthedController
     }
     
     public function express($id){
-        $order=CreditOrderModel::get(intval($id));
+        $order=CreditOrderModel::find(intval($id));
         if(empty($order) || $order['delete_time']>0){
             $this->error('订单不存在或已删除',0);
         }
@@ -111,11 +111,11 @@ class CreditOrderController extends AuthedController
             'express_no'=>$order->express_no
         ];
         if(!empty($returnData['express_code'])){
-            $companies=config('express.');
+            $companies=config('express');
             $returnData['express']=$companies[$returnData['express_code']]?:'其它';
         }
         
-        $products=Db::name('creditOrderGoods')->where('order_id', $order['order_id'])->select();
+        $products=Db::name('creditOrderGoods')->where('order_id', $order['order_id'])->select()->all();
         
         if(!empty($products)) {
             $product = current($products);
@@ -139,7 +139,7 @@ class CreditOrderController extends AuthedController
     }
     
     public function confirm($id){
-        $order=CreditOrderModel::get(intval($id));
+        $order=CreditOrderModel::find(intval($id));
         if(empty($order) || $order['delete_time']>0){
             $this->error('订单不存在或已删除',0);
         }
@@ -155,7 +155,7 @@ class CreditOrderController extends AuthedController
     }
     
     public function delete($id){
-        $order=CreditOrderModel::get(intval($id));
+        $order=CreditOrderModel::find(intval($id));
         if(empty($order) || $order['delete_time']>0){
             $this->error('订单不存在或已删除',0);
         }

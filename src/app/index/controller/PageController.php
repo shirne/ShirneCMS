@@ -29,7 +29,7 @@ class PageController extends BaseController{
             $groupset=Db::name('PageGroup')->where('group',$group)->find();
             $this->assign('navmodel','page-'.$group);
         }
-        $lists=$model->field('id,name,group,icon,title,vice_title')->where('status',1)->order('sort ASC,id ASC')->select();
+        $lists=$model->field('id,name,group,icon,title,vice_title')->where('status',1)->order('sort ASC,id ASC')->select()->all();
         if(empty($lists))$this->error('页面不存在');
         if(empty($page)){
             $page=Db::name('page')->where('status',1)->where('id|name' , $lists[0]['name'])->find();;

@@ -107,7 +107,7 @@ class WechatController extends BaseController
                 }
             }
         }
-        $model=array();
+        $model=array('account_type'=>'','type'=>'');
         $this->assign('model',$model);
         $this->assign('id',0);
         return $this->fetch('edit');
@@ -147,7 +147,7 @@ class WechatController extends BaseController
                 }/*else{
                     $data['is_default']=0;
                 }*/
-                $model=WechatModel::get($id);
+                $model=WechatModel::find($id);
                 if(empty($model['hash'])){
                     $data['hash']=$this->createHash();
                 }

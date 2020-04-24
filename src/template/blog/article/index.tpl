@@ -2,7 +2,7 @@
 
 {block name="body"}
     <div class="main">
-        {php}$adimg=getAdImage($topCategory['name']);{/php}
+        {php}$adimg=getAdImage($topCategory['name']??'article');{/php}
         {if !empty($adimg)}
             <div class="subbanner">
                 <div class="inner" style="background-image:url({$adimg})"></div>

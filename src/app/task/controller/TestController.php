@@ -36,10 +36,13 @@ class TestController
     }
     
     public function model(){
+        $cates=Db::name('category')->select()->all();
+        var_dump($cates);
+        exit;
         $parents=getMemberParents(request()->param('id'),0,false);
         var_dump($parents);
         exit;
-        $paymodel = PayOrderModel::get(10);
+        $paymodel = PayOrderModel::find(10);
         $paymodel->save(['status'=>0]);
         $data = [
             'status'=>1,

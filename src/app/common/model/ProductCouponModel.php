@@ -71,7 +71,7 @@ class ProductCouponModel extends BaseModel
         }
         $user_counts=[];
         if($this['count_limit']>0){
-            $user_gets=Db::name('memberCoupon')->whereIn('member_id',$user_ids)->where('coupon_id',$this['id'])->field('member_id,sum(id) as coupon_counts')->group('member_id')->select();
+            $user_gets=Db::name('memberCoupon')->whereIn('member_id',$user_ids)->where('coupon_id',$this['id'])->field('member_id,sum(id) as coupon_counts')->group('member_id')->select()->all();
             $user_counts = array_column($user_gets,'coupon_counts','member_id');
         }
         
@@ -147,7 +147,7 @@ class ProductCouponModel extends BaseModel
         }
         if(empty($user))return false;
         if(!is_array($user)){
-            $user = MemberModel::get(intval($user));
+            $user = MemberModel::find(intval($user));
         }
         if(empty($user))return false;
         if(!empty($this['levels_limit'])){

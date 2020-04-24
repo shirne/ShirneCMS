@@ -125,13 +125,13 @@ class ProductController extends BaseController
     }
 
     public function qrcode($id, $qrtype='url', $size=430, $miniprogram=0){
-        $product=ProductModel::get($id);
+        $product=ProductModel::find($id);
         if($qrtype=='url'){
-            $url = url('index/shop.product/view',['id'=>$id], true, true);
+            $url = url('index/product/view',['id'=>$id], true, true);
             $content=gener_qrcode($url, $size);
         }else{
             if($size>1280)$size=1280;
-            $content = $this->miniprogramQrcode($miniprogram, ['path'=>'pages/shop.product/detail?id='.$id], $qrtype, $size);
+            $content = $this->miniprogramQrcode($miniprogram, ['path'=>'pages/product/detail?id='.$id], $qrtype, $size);
         }
         return download($content,$product['title'].'-qrcode.png',true);
     }
@@ -155,7 +155,7 @@ class ProductController extends BaseController
         $data['max_price']=array_max($skus,'price');
         $data['min_price']=array_min($skus,'price');
         $data['market_price']=array_max($skus,'market_price');
-        $data['storage']=array_sum(array_column($skus,'storage'));
+        $data['storage']=array_sum(array_column($skus->all(),'storage'));
         if(!empty($data['prop_data'])){
             $data['prop_data']=array_combine($data['prop_data']['keys'],$data['prop_data']['values']);
         }else{
@@ -231,7 +231,7 @@ class ProductController extends BaseController
                 }
             }
         }
-        $model=array('type'=>1,'status'=>1,'cate_id'=>$cid,'is_discount'=>1,'is_commission'=>1,'sale'=>0);
+        $model=array('type'=>1,'status'=>1,'cate_id'=>$cid,'is_discount'=>1,'is_commission'=>1,'commission_percent'=>[],'sale'=>0);
         
         $levels=getMemberLevels();
         $this->assign("category",ProductCategoryFacade::getCategories());
@@ -288,7 +288,7 @@ class ProductController extends BaseController
                 }elseif($this->uploadErrorCode>102){
                     $this->error($this->uploadErrorCode.':'.$this->uploadError);
                 }
-                $model=ProductModel::get($id);
+                $model=ProductModel::find($id);
                 $skus=$data['skus'];
     
                 $data = $this->processData($data);
@@ -319,7 +319,7 @@ class ProductController extends BaseController
             }
         }
 
-        $model = ProductModel::get($id);
+        $model = ProductModel::find($id);
         if(empty($model)){
             $this->error('商品不存在');
         }

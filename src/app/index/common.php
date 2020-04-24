@@ -3,6 +3,17 @@
 use think\facade\Db;
 use think\facade\Route;
 
+function delete_image($images){
+    if(is_array($images)){
+        foreach ($images as $image){
+            delete_image($image);
+        }
+    }else{
+        if(!empty($images) && strpos($images,'/uploads/')===0){
+            @unlink('.'.$images);
+        }
+    }
+}
 
 function parseNavigator(&$config,$module){
     $navigators=cache($module.'_navigator');
@@ -51,7 +62,7 @@ function parseModel($url){
 function parseNavUrl($url,$module){
     if(is_array($url)){
         $url[0]=$module.'/'.strtolower($url[0]);
-        return call_user_func_array('url',$url);
+        return call_user_func_array('url',$url)->build();
     }elseif(is_string($url)) {
         if (strpos($url, 'http://') === 0 ||
             strpos($url, 'https://') === 0 ||
@@ -59,7 +70,7 @@ function parseNavUrl($url,$module){
             return $url;
         } else {
             $url=$module.'/'.strtolower($url);
-            return url($url);
+            return url($url)->build();
         }
     }
     return $url;
@@ -76,7 +87,7 @@ function parseNavPage($group,$module){
     foreach ($pages as $page){
         $subs[]=array(
             'title'=>$page['title'],
-            'url'=>url($module.'/page/index',['name'=>$page['name'],'group'=>$page['group']])
+            'url'=>url($module.'/page/index',['name'=>$page['name'],'group'=>$page['group']])->build()
         );
     }
     return $subs;
@@ -97,7 +108,7 @@ function parseNavModel($cate,$module,$modelName='Article'){
             $subs[]=array(
                 'title'=>$c['title'],
                 'icon'=>$c['icon'],
-                'url'=>url($module.'/'.strtolower($modelName).'/index',['name'=>$c['name']])
+                'url'=>url($module.'/'.strtolower($modelName).'/index',['name'=>$c['name']])->build()
             );
         }
     }
@@ -137,7 +148,7 @@ function aurl($url = '', $vars = '', $suffix = true, $domain = false){
     if(!is_array($vars))$vars=[];
     $vars['action']=$part[2];
     $part[2]=':action';
-    return url(implode('/',$part),$vars,$suffix,$domain);
+    return url(implode('/',$part),$vars,$suffix,$domain)->build();
 }
 
 //end file

@@ -61,7 +61,7 @@ class AccountController extends AuthedController
                 $this->error('只能添加20张银行卡信息');
             }
             $card['member_id'] = $this->user['id'];
-            $id = Db::name('MemberCard')->insert($card,false,true);
+            $id = Db::name('MemberCard')->insert($card,true);
         }
         if ($card['is_default']) {
             Db::name('MemberCard')->where('id' , '<>', $id)
@@ -89,7 +89,7 @@ class AccountController extends AuthedController
         if($hasRecharge>0){
             $this->error('您有充值申请正在处理中');
         }
-        $data = $this->request->only('amount,type_id');
+        $data = $this->request->only(['amount','type_id']);
         $amount=$data['amount']*100;
         $type=$data['type_id'];
         $pay_bill='';
@@ -127,7 +127,7 @@ class AccountController extends AuthedController
             $this->error('充值金额必需是'.$this->config['recharge_power'].'的倍数');
         }
         
-        $addid=Db::name('memberRecharge')->insert($data,false,true);
+        $addid=Db::name('memberRecharge')->insert($data,true);
         if($addid) {
             if($type=='wechat'){
                 $this->success(['order_id'=>'CZ_'.$addid],1,'订单已生成，请支付');
@@ -211,7 +211,7 @@ class AccountController extends AuthedController
             $this->error('您有提现申请正在处理中');
         }
         
-        $rdata=$this->request->only('amount,card_id,remark,cashtype,form_id');
+        $rdata=$this->request->only(['amount','card_id','remark','cashtype','form_id']);
         $amount=$rdata['amount']*100;
         $remark = $rdata['remark'];
         
@@ -283,7 +283,7 @@ class AccountController extends AuthedController
             $bank_id=intval($rdata['card_id']);
             
             if (empty($bank_id)) {
-                $carddata = $this->request->only('bank,bankname,cardname,cardno');
+                $carddata = $this->request->only(['bank','bankname','cardname','cardno']);
                 if (empty($carddata['bank'])) {
                     $this->error('请填写银行名称');
                 }
@@ -300,7 +300,7 @@ class AccountController extends AuthedController
                     $this->error('银行卡号错误');
                 }
                 $carddata['member_id'] = $this->user['id'];
-                $bank_id = Db::name('MemberCard')->insert($carddata, false, true);
+                $bank_id = Db::name('MemberCard')->insert($carddata, true);
             }
             $card = Db::name('MemberCard')->where(array('member_id' => $this->user['id'], 'id' => $bank_id))->find();
             $data['bank_id']=$bank_id;
@@ -351,7 +351,7 @@ class AccountController extends AuthedController
         if(!compare_secpassword($this->user,$secpassword)){
             $this->error('安全密码错误');
         }
-        $data=$this->request->only('action,field,member_id,amount');
+        $data=$this->request->only(['action','field','member_id','amount']);
         $data['amount']=floatval($data['amount']);
         if($action=='transout'){
             if(!in_array($data['field'],['money','credit','awards'])){

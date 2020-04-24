@@ -27,7 +27,7 @@ class PostageModel extends CacheableModel
     }
     
     public static function updateAreas($newareas, $id){
-        $exists = Db::name('postageArea')->where('postage_id',$id)->select();
+        $exists = Db::name('postageArea')->where('postage_id',$id)->select()->all();
         $exists = array_column($exists,NULL,'id');
         $sort=0;
         foreach ($newareas as $area_id=>$area){
@@ -59,7 +59,7 @@ class PostageModel extends CacheableModel
     public static function getAreaList($areaids){
         $lists = Db::view('postageArea','*')
             ->view('postage',['calc_type'],'postage.id=postageArea.postage_id','LEFT')
-            ->whereIn('postageArea.id',$areaids)->order('postageArea.sort ASC,postageArea.id ASC')->select();
+            ->whereIn('postageArea.id',$areaids)->order('postageArea.sort ASC,postageArea.id ASC')->select()->all();
         foreach ($lists as &$item){
             $item['expresses']=force_json_decode($item['expresses']);
             $item['areas']=force_json_decode($item['areas']);
@@ -73,7 +73,7 @@ class PostageModel extends CacheableModel
         $nopostage_ids=[];
         foreach ($products as $postage_id=>$lists){
             if($postage_id>0) {
-                $postage = static::get($postage_id);
+                $postage = static::find($postage_id);
                 if(!empty($address['city']) && !empty($postage['specials'])){
                     if($postage['area_type']==1 && !in_array($address['city'],$postage['specials'])){
                         $nopostage_ids[]=$postage_id;
@@ -120,7 +120,7 @@ class PostageModel extends CacheableModel
     
     public static function getDesc($id){
         if($id>0){
-            $postage=static::get($id);
+            $postage=static::find($id);
             if(!empty($postage)){
                 $areas = $postage->getAreas();
                 if(!empty($areas)){

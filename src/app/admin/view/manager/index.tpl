@@ -42,9 +42,8 @@
                 <td style="font-size: 12px">{$v.create_time|showdate}<br />{$v.update_time|showdate}</td>
                 <td style="font-size: 12px">{$v.login_ip}<br />{$v.logintime|showdate}</td>
                 <td>
-
                     {if isset($roles[$v['type']])}
-                        <span class="badge badge-{$roles[$v['type']]['label_type']}">{$roles[$v['type']]['role_name']}</span>
+                        <span class="badge badge-{$roles[$v['type']]['label_type']|default='secondary'}">{$roles[$v['type']]['role_name']}</span>
                     {else/}
                         <span class="badge badge-secondary"> - </span>
                     {/if}

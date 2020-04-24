@@ -15,7 +15,7 @@ class MemberOauthModel extends BaseModel
     protected $name = 'member_oauth';
     protected $autoWriteTimestamp = true;
 
-    public static function checkUser($data, $account){
+    public static function checkUser($data, $account, $agent = ''){
         $user=static::where('openid',$data['openid'])->find();
         if(empty($data['data'])) {
             $data = MemberOauthModel::mapUserInfo($data);
@@ -32,13 +32,13 @@ class MemberOauthModel extends BaseModel
         if(empty($user)){
             if(!isset($data['member_id']))$data['member_id']=0;
             
-            $data = static::create($data);
-            $data['is_new']=1;
+            $user = static::create($data);
+            $user['is_new']=1;
         }else{
             $user->save($data);
         }
         if($user['member_id']==0 && getSetting('m_register') != '1'){
-            $member = MemberModel::createFromOauth($user,session('agent'));
+            $member = MemberModel::createFromOauth($user, $agent);
             $user->save(['member_id' => $member['id']]);
         }
         
