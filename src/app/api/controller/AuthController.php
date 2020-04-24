@@ -11,7 +11,7 @@ use app\common\service\CheckcodeService;
 use app\common\validate\MemberValidate;
 use EasyWeChat\Factory;
 use EasyWeChat\OfficialAccount\Application;
-use think\captcha\facade\Captcha;
+use think\captcha\Captcha;
 use shirne\common\ValidateHelper;
 use shirne\sdk\OAuthFactory;
 use shirne\third\Aliyun;
@@ -145,7 +145,7 @@ class AuthController extends BaseController
             if(empty($data['verify'])){
                 $this->error('请填写验证码',ERROR_NEED_VERIFY);
             }
-            if(!Captcha::check($data['verify'])){
+            if(!api_captcha('_api_'.$this->accessToken)->check($data['verify'])){
                 $this->error('验证码错误',ERROR_NEED_VERIFY);
             }
         }
@@ -153,7 +153,7 @@ class AuthController extends BaseController
         if(empty($username) || empty($password)){
             $this->error('请填写登录账号及密码',ERROR_LOGIN_FAILED);
         }
-        $errcount = $this->accessSession['error_count'];
+        $errcount = $this->accessSession['error_count']??0;
         if($errcount > 4){
             $this->error('登录尝试次数过多',ERROR_LOGIN_FAILED);
         }
@@ -493,7 +493,7 @@ class AuthController extends BaseController
     }
 
     public function captcha(){
-        return Captcha::create();
+        return api_captcha('_api_'.$this->accessToken)->create();
     }
 
     protected function smsverify($mobile, $type, $code)
@@ -529,7 +529,7 @@ class AuthController extends BaseController
             if(empty($captcha)){
                 $this->error('请填写图形验证码',ERROR_NEED_VERIFY);
             }
-            $verify = new Captcha(array('seKey'=>config('session.sec_key')), Cache::instance());
+            $verify = api_captcha('_api_'.$this->accessToken);
             $checked = $verify->check($captcha,'_api_'.$this->accessToken);
             if(!$checked){
                 $this->error('验证码错误',ERROR_NEED_VERIFY);
@@ -682,7 +682,7 @@ class AuthController extends BaseController
             if(empty($verifycode)){
                 $this->error('请填写验证码',ERROR_NEED_VERIFY);
             }
-            if(!Captcha::check($verifycode)){
+            if(!api_captcha('_api_'.$this->accessToken)->check($verifycode)){
                 $this->error('验证码错误',ERROR_NEED_VERIFY);
             }
         }

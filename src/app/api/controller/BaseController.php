@@ -43,7 +43,7 @@ class BaseController
     {
         $this->app     = $app;
         $this->request = $this->app->request;
-
+       
         // 控制器初始化
         $this->initialize();
     }
@@ -55,14 +55,13 @@ class BaseController
      * @throws \think\exception\DbException
      */
     public function initialize(){
-        parent::initialize();
         $this->config=getSettings();
-
+        
         /**
          * @deprecated DO NOT use this property
          */
         $this->input=$this->request->put();
-
+        
         $this->checkLogin();
     }
     

@@ -35,9 +35,7 @@ class AccessMiddleware
      * @return Response
      */
     public static function allowAcrossDomain($response){
-        foreach(static::$acrossHeaders as $key=>$value){
-            $response->header($key, $value);
-        }
+        $response->header(static::$acrossHeaders);
         return $response;
     }
 }

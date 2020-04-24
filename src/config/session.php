@@ -16,5 +16,6 @@ return [
     'expire'         => 1440,
     // 前缀
     'prefix'         => '',
+    
     'sec_key'        => '5Jtr3l2z',
 ];
