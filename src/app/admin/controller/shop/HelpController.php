@@ -5,7 +5,7 @@ namespace app\admin\controller\shop;
 use app\admin\controller\BaseController;
 use app\common\model\HelpModel;
 use app\admin\validate\HelpValidate;
-use app\admin\validate\CategoryValidate;
+use app\admin\validate\HelpCategoryValidate;
 use app\common\facade\HelpCategoryFacade;
 use think\facade\Db;
 
@@ -192,7 +192,7 @@ class HelpController extends BaseController
 
         if($this->request->isPost()){
             $data=$this->request->post();
-            $validate=new CategoryValidate();
+            $validate=new HelpCategoryValidate();
             $validate->setId($id);
 
             if (!$validate->check($data)) {

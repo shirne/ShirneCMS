@@ -109,9 +109,9 @@ class BrandController extends BaseController
                 }elseif($this->uploadErrorCode>102){
                     $this->error($this->uploadErrorCode.':'.$this->uploadError);
                 }
-                unset($data['delete_image']);
+                unset($data['delete_logo']);
 
-                $cates = $data['cates'];
+                $cates = empty($data['cates'])?[]:$data['cates'];
                 unset($data['cates']);
                 $data['id']=$id;
                 try{

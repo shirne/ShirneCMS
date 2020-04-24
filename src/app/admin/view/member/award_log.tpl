@@ -103,7 +103,7 @@
                     <td>{$v.id}</td>
                     <td>
                         {if $v['member_id']}
-                            <a href="{:url('money_log',array('id'=>$v['member_id'],'fromdate'=>$fromdate,'todate'=>$todate,'from_id'=>$from_id,'type'=>$type))}" class="media">
+                            <a href="{:url('award_log',array('id'=>$v['member_id'],'fromdate'=>$fromdate,'todate'=>$todate,'from_id'=>$from_id,'type'=>$type))}" class="media">
                                 {if !empty($v['avatar'])}
                                     <img src="{$v.avatar}" class="mr-2 rounded" width="30"/>
                                 {/if}
@@ -127,7 +127,7 @@
                     <td class="{$v['amount']>0?'text-success':'text-danger'}">{$v.status|award_status|raw}&nbsp;{$v.amount|showmoney}</td>
                     <td>
                         {if $v['from_member_id']}
-                            <a href="{:url('money_log',array('id'=>$id,'fromdate'=>$fromdate,'todate'=>$todate,'from_id'=>$v['from_member_id'],'type'=>$type))}" class="media">
+                            <a href="{:url('award_log',array('id'=>$id,'fromdate'=>$fromdate,'todate'=>$todate,'from_id'=>$v['from_member_id'],'type'=>$type))}" class="media">
                                 {if !empty($v['from_avatar'])}
                                     <img src="{$v.from_avatar}" class="mr-2 rounded" width="30"/>
                                 {/if}

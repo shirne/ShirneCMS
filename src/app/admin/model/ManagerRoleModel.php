@@ -27,6 +27,7 @@ class ManagerRoleModel extends BaseModel
             if(empty(self::$roles) || $force){
                 $roles = static::order('type ASC')->select();
                 self::$roles = array_column($roles->toArray(),NULL,'type');
+                cache(self::$roles_cache_key,self::$roles);
             }
         }
         return self::$roles;

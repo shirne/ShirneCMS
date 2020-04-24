@@ -48,14 +48,16 @@ class MemberController extends BaseController
     /**
      * 会员列表
      * @param int $type
+     * @param string $start_date
+     * @param string $end_date
      * @param string $keyword
      * @param string $referer
      * @return mixed|\think\response\Redirect
      */
-    public function index($type=0,$keyword='',$referer='')
+    public function index($type=0,$start_date='',$end_date='',$keyword='',$referer='')
     {
         if($this->request->isPost()){
-            return redirect(url('',['referer'=>$referer,'type'=>$type,'keyword'=>base64_encode($keyword)]));
+            return redirect(url('',['referer'=>$referer,'start_date'=>$start_date,'end_date'=>$end_date,'type'=>$type,'keyword'=>base64_encode($keyword)]));
         }
         $keyword=empty($keyword)?"":base64_decode($keyword);
         $model = Db::view('__MEMBER__ m','*')
@@ -78,6 +80,17 @@ class MemberController extends BaseController
         if($type>0){
             $model->where('m.type',intval($type)-1);
         }
+        if($start_date !== ''){
+            if($end_date !== ''){
+                $model->whereBetween('m.create_time',[strtotime($start_date),strtotime($end_date.' 23:59:59')]);
+            }else{
+                $model->where('m.create_time','GT',strtotime($start_date));
+            }
+        }else{
+            if($end_date !== ''){
+                $model->where('m.create_time','LT',strtotime($end_date.' 23:59:59'));
+            }
+        }
 
         $lists=$model->order('m.id desc')->paginate(15);
 
@@ -90,6 +103,8 @@ class MemberController extends BaseController
         $this->assign('type',$type);
         $this->assign('page',$lists->render());
         $this->assign('referer',$referer);
+        $this->assign('start_date',$start_date);
+        $this->assign('end_date',$end_date);
         $this->assign('keyword',$keyword);
         return $this->fetch();
     }
@@ -593,23 +608,43 @@ class MemberController extends BaseController
         }
 
         $model=Db::name('member')->field('count(id) as member_count,date_format(from_unixtime(create_time),' . $format . ') as awdate');
+        $logModel = Db::name('memberAgentLog')->where('agent_id',1)->field('count(id) as agent_count,date_format(from_unixtime(create_time),' . $format . ') as awdate');
+
         $start_date=format_date($start_date,'Y-m-d');
         $end_date=format_date($end_date,'Y-m-d');
         if(!empty($start_date)){
             if(!empty($end_date)){
                 $model->whereBetween('create_time',[strtotime($start_date),strtotime($end_date.' 23:59:59')]);
+                $logModel->whereBetween('create_time',[strtotime($start_date),strtotime($end_date.' 23:59:59')]);
             }else{
-                $model->where('create_time','>',strtotime($start_date));
+                $model->where('create_time','>=',strtotime($start_date));
+                $logModel->where('create_time','>=',strtotime($start_date));
             }
         }else{
             if(!empty($end_date)){
-                $model->where('create_time','<',strtotime($end_date.' 23:59:59'));
+                $model->where('create_time','<=',strtotime($end_date.' 23:59:59'));
+                $logModel->where('create_time','<=',strtotime($end_date.' 23:59:59'));
             }
         }
 
         $statics=$model->group('awdate')->select();
+        $logStatics=$logModel->group('awdate')->select();
+        $dates = array_merge(array_column($statics,'awdate'),array_column($logStatics,'awdate'));
+        $dates = array_unique($dates);
 
-        $this->assign('statics',$statics);
+        $statics = array_column($statics,'member_count','awdate');
+        $logStatics = array_column($logStatics,'agent_count','awdate');
+
+        $newStatics = [];
+        foreach($dates as $date){
+            $newStatics[]=[
+                'awdate'=>$date,
+                'member_count'=>isset($statics[$date])?$statics[$date]:0,
+                'agent_count'=> isset($logStatics[$date])?$logStatics[$date]:0
+            ];
+        }
+
+        $this->assign('statics',$newStatics);
         $this->assign('static_type',$type);
         $this->assign('start_date',$start_date);
         $this->assign('end_date',$end_date);

@@ -25,15 +25,13 @@ class FeedbackController extends BaseController
         }
         $key=empty($key)?"":base64_decode($key);
         $model=Db::view('Feedback','*')
-            ->view('Member',['username','realname'],'Feedback.member_id=Member.id','LEFT')
+            ->view('Member',['username','realname','nickname','avatar'],'Feedback.member_id=Member.id','LEFT')
             ->view('Manager',['username'=>'manager_username','realname'=>'manager_realname'],'Feedback.manager_id=Manager.id','LEFT');
-        $where=array();
+            
         if(!empty($key)){
-            $where['feedback.email'] = array('like',"%$key%");
-            $where['feedback.content'] = array('like',"%$key%");
-            $where['_logic'] = 'or';
+            $model->whereLike('feedback.email|feedback.content|member.nickname|member.username',"%$key%");
         }
-        $lists=$model->where($where)->paginate(15);
+        $lists=$model->order('Feedback.id desc')->paginate(15);
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
         return $this->fetch();

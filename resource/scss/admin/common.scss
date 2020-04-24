@@ -103,7 +103,13 @@ h6 {
       margin-bottom : 0;
     }
     &.form-label{
-      width:70px;
+      width:80px;
+    }
+    &.w-100px{
+      width:100px;
+    }
+    &.w-160px{
+      width:160px;
     }
   }
 }

@@ -118,4 +118,30 @@ class ProductModel extends ContentModel
         }
         return $transed;
     }
+
+    public static function setFlash($id, $date){
+        $product = Db::name('product')->where('id',$id)->find();
+        if(empty($product)){
+            return false;
+        }
+        $hasFlash = static::getFlash($id, $date);
+        if(!empty($hasFlash)){
+            return true;
+        }
+        $flashData=[
+            'product_id'=>$id,
+            'title'=>$product['title'],
+            'product'=>json_encode($product,JSON_UNESCAPED_UNICODE),
+            'brand'=>json_encode(Db::name('productBrand')->where('id',$product['brand_id'])->find(),JSON_UNESCAPED_UNICODE),
+            'skus'=>json_encode(Db::name('productSkus')->where('product_id',$id)->select(),JSON_UNESCAPED_UNICODE),
+            'images'=>json_encode(Db::name('productImages')->where('product_id',$id)->select(),JSON_UNESCAPED_UNICODE),
+        ];
+        Db::name('productFlash')->insert($flashData);
+        return true;
+    }
+
+    public static function getFlash($id, $date){
+        return Db::name('productFlash')->where('product_id',$id)
+            ->where('timestamp',$date)->find();
+    }
 }

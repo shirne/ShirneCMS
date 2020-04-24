@@ -26,11 +26,11 @@ class ProductCategoryModel extends CategoryModel
     }
 
     public function getBrands($cateid = 0, $key = ''){
-        $model = Db::view('productBrand','*')
-            ->view('productCategoryBrand','cate_id','productCategoryBrand.brand_id=productBrand.id','LEFT');
+        $model = Db::view('productBrand','*');
         if($cateid!=0){
             $topCate = $this->getTopCategory($cateid);
             if(!empty($topCate)){
+                $model->view('productCategoryBrand','cate_id','productCategoryBrand.brand_id=productBrand.id','LEFT');
                 $model->where('cate_id',$topCate['id']);
             }else {
                 return [];

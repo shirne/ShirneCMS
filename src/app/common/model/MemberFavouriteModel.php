@@ -36,6 +36,13 @@ class MemberFavouriteModel extends BaseModel
             ->where('fav_id',$id)
             ->count();
     }
+    public function removeFavourite($member_id,$type,$id){
+        return Db::name('memberFavourite')
+            ->where('member_id',$member_id)
+            ->where('fav_type',$type)
+            ->where('fav_id',$id)
+            ->delete();
+    }
     public function addFavourite($member_id,$type,$id){
         $exist=Db::name('memberFavourite')
             ->where('member_id',$member_id)

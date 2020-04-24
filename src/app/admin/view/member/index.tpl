@@ -5,7 +5,7 @@
 
 <div id="page-wrapper">
     <div class="row list-header">
-        <div class="col col-6">
+        <div class="col col-5">
             <div class="btn-toolbar list-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                 <div class="btn-group btn-group-sm mr-2" role="group" aria-label="check action group">
                     <a href="javascript:" class="btn btn-outline-secondary checkall-btn" data-toggle="button" aria-pressed="false">全选</a>
@@ -20,7 +20,7 @@
                 <a href="javascript:" class="btn btn-outline-warning btn-sm action-btn" data-need-checks="false" data-action="increment"><i class="ion-md-add"></i> 设置起始ID</a>
             </div>
         </div>
-        <div class="col col-6">
+        <div class="col col-7">
             <form action="{:url('member/index')}" method="post">
                 <div class="form-row">
                     <div class="form-group col input-group input-group-sm">
@@ -28,6 +28,14 @@
                         <span class="input-group-text">上级</span>
                         </div>
                         <input type="text" class="form-control" name="referer" placeholder="填写id或会员名" value="{$referer}">
+                    </div>
+                    <div class="form-group col input-group input-group-sm date-range">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">注册时间</span>
+                        </div>
+                        <input type="text" class="form-control fromdate" name="start_date" placeholder="选择开始日期" value="{$start_date}">
+                        <div class="input-group-middle"><span class="input-group-text">-</span></div>
+                        <input type="text" class="form-control todate" name="end_date" placeholder="选择结束日期" value="{$end_date}">
                     </div>
                     <div class="form-group col input-group input-group-sm">
                         <div class="input-group-prepend">
