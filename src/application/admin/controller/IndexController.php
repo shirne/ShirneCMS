@@ -145,13 +145,15 @@ class IndexController extends BaseController{
         $result=[];
         $count=0;
         while(array_sum($result)==0) {
-            $result['newMemberCount'] = Db::name('Member')->where('create_time', 'GT', $this->manager['last_view_member'])->count();
-            $result['newOrderCount'] = Db::name('Order')->where('status',0)->count();
+            $result['newMemberCount'] = Db::name('Member')->where('create_time', '>', $this->manager['last_view_member'])->count();
+            //$result['newOrderCount'] = Db::name('Order')->where('status',1)->count();
+            //$result['newMemberAuthen'] = Db::name('memberAuthen')->where('status',-1)->count();
+            $result['newMemberCashin'] = Db::name('memberCashin')->where('status',0)->count();
             sleep(1);
             $count++;
             if($count>10)break;
         }
-
+        $result['total']=array_sum($result);
         return json($result);
     }
 

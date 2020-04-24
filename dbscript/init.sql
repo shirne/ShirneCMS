@@ -19,14 +19,15 @@ VALUES
   (75,7,'展位管理','Booth/index','booth_index','ion-md-easel',9,0),
   (76,7,'关键字管理','Keywords/index','keywords_index','ion-md-search',9,0),
   (80,8,'会员管理','Member/index','member_index','ion-md-person',0,0),
-  (81,8,'邀请码','Invite/index','invite_index','ion-md-pricetags',3,0),
-  (82,8,'会员组','MemberLevel/index','member_level_index','ion-md-people',5,0),
-  (83,8,'佣金明细','Member/award_log','member_award_log','ion-md-paper',7,0),
-  (84,8,'余额明细','Member/money_log','member_money_log','ion-md-paper',9,0),
-  (85,8,'支付明细','Paylog/index','paylog_index','ion-md-wallet',11,0),
-  (86,8,'充值记录','Paylog/recharge','paylog_recharge','ion-md-log-in',11,0),
-  (87,8,'提现记录','Paylog/cashin','paylog_cashin','ion-md-log-out',13,0),
-  (88,8,'操作日志','Member/log','member_log','ion-md-clipboard',15,0),
+  (81,8,'升级申请','MemberAuthen/index','member_authen_index','ion-md-ribbon',2,0),
+  (82,8,'邀请码','Invite/index','invite_index','ion-md-pricetags',3,0),
+  (83,8,'会员组','MemberLevel/index','member_level_index','ion-md-people',5,0),
+  (84,8,'佣金明细','Member/award_log','member_award_log','ion-md-paper',7,0),
+  (85,8,'余额明细','Member/money_log','member_money_log','ion-md-paper',9,0),
+  (86,8,'支付明细','Paylog/index','paylog_index','ion-md-wallet',11,0),
+  (87,8,'充值记录','Paylog/recharge','paylog_recharge','ion-md-log-in',11,0),
+  (88,8,'提现记录','Paylog/cashin','paylog_cashin','ion-md-log-out',13,0),
+  (89,8,'操作日志','Member/log','member_log','ion-md-clipboard',15,0),
   (91,9,'配置管理','Setting/index','setting_index','ion-md-options',0,0),
   (92,9,'管理员','Manager/index','manager_index','ion-md-person',3,0),
   (93,9,'菜单管理','Permission/index','permission_index','ion-md-code-working',5,0),
@@ -93,7 +94,7 @@ VALUES
   ( 'kd_apikey', '快递鸟API Key', 'text', 'third', '0',1, '', '', ''),
   ( 'm_open', '会员系统', 'radio', 'member', '0',1, '1', '', '0:关闭\r\n1:启用'),
   ( 'm_register_open', '开启注册', 'radio', 'member', '0',1, '1', '', '0:关闭\r\n1:启用'),
-  ( 'm_register', '强制注册', 'radio', 'member', '0',1, '1', '', '0:关闭\r\n1:启用'),
+  ( 'm_register', '强制注册', 'radio', 'member', '0',1, '0', '', '0:关闭\r\n1:启用'),
   ( 'm_invite', '邀请注册', 'radio', 'member', '0',1, '1', '', '0:关闭\r\n1:启用\r\n2:强制'),
   ( 'm_checkcode', '验证码', 'radio', 'member', '0',1, '1', '', '0:关闭\r\n1:启用'),
   ( 'anonymous_comment', '匿名评论', 'radio', 'member', '0',1, '1', '', '0:关闭\r\n1:启用'),
@@ -118,5 +119,5 @@ INSERT INTO `sa_member_level`(`level_id`,`level_name`,`short_name`,`is_default`,
 
 TRUNCATE TABLE `sa_oauth_app`;
 
-INSERT INTO `sa_oauth_app`(`platform`, `appid`, `appsecret`) VALUES ('web', 'web', '111111');;
+INSERT INTO `sa_oauth_app`(`platform`, `appid`, `appsecret`) VALUES ('web', 'web', '111111');
 

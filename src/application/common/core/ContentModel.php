@@ -39,7 +39,9 @@ class ContentModel extends BaseModel
     protected function tagBase($hidden=null)
     {
         $this->model=ucfirst($this->name);
-        $this->cateModel=($this->model=='Article'?'':$this->model).'Category';
+        if(empty($this->cateModel)){
+            $this->cateModel=($this->model=='Article'?'':$this->model).'Category';
+        }
         if(is_null($hidden )){
             $hidden = $this->hiddenFields;
         }

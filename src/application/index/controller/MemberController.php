@@ -4,6 +4,8 @@ namespace app\index\controller;
 
 
 use app\common\validate\MemberValidate;
+use shirne\common\ValidateHelper;
+use shirne\third\Aliyun;
 use think\Db;
 
 /**
@@ -103,6 +105,92 @@ class MemberController extends AuthedController
      */
     public function security(){
         return $this->fetch();
+    }
+
+    public function sendcode($password, $mobile='', $email=''){
+        if(empty($mobile) && empty($email)){
+            $this->error('参数错误');
+        }
+        if(empty($password)){
+            $this->error('请填写当前密码');
+        }
+        if(encode_password($password,$this->user['salt']) !== $this->user['password']){
+            $this->error('密码验证失败');
+        }
+        $mcktimes = (int)cache('verify_code_times');
+        if($mcktimes > 5){
+            $this->error('系统繁忙');
+        }
+        // 发送随机验证码
+        $randcode = random_str(6,'number');
+        if(!empty($email)){
+            if(!ValidateHelper::isEmail($email)){
+                $this->error('邮箱格式错误');
+            }
+            session('email_code',$randcode);
+            session('bind_email',$email);
+            $result = $this->sendEmail($email,'绑定邮箱','您正在进行邮箱绑定操作，本次验证码 ['.$randcode.'] , 如非本人操作请忽略');
+            cache('verify_code_times',++$mcktimes);
+            if($result){
+                $this->success('验证码已发送');
+            }else{
+                $this->error('验证码发送失败');
+            }
+        }else{
+            if(!ValidateHelper::isMobile($mobile)){
+                $this->error('手机号码格式错误');
+            }
+            session('mobile_code',$randcode);
+            session('bind_mobile',$mobile);
+            $tplCode = getSetting('aliyun_dysms_verify');
+            if(empty($tplCode)){
+                $this->error('验证码发送失败');
+            }
+            $aliyun = new Aliyun($this->config);
+            $result = $aliyun->sendSms($mobile, $randcode, $tplCode, getSetting('aliyun_dysms_sign'));
+            cache('verify_code_times',++$mcktimes);
+            if($result){
+                $this->success('验证码已发送');
+            }else{
+                $this->error('验证码发送失败');
+            }
+        }
+    }
+
+    public function bind($verifycode, $type='mobile') {
+        if(empty($verifycode)){
+            $this->error('请填写验证码');
+        }
+        if($type == 'mobile'){
+            $code = session('mobile_code');
+            $mobile = session('bind_mobile');
+            if(empty($code) || empty($mobile)){
+                $this->error('验证码已失效');
+            }
+            if($verifycode !== $code){
+                $this->error('验证码错误');
+            }
+            Db::name('member')->where('id',$this->userid)->update([
+                'mobile'=>$mobile,
+                'mobile_bind'=>1
+            ]);
+            $this->success('绑定成功');
+        }elseif($type == 'email'){
+            $code = session('email_code');
+            $email = session('bind_email');
+            if(empty($code) || empty($email)){
+                $this->error('验证码已失效');
+            }
+            if($verifycode !== $code){
+                $this->error('验证码错误');
+            }
+            Db::name('member')->where('id',$this->userid)->update([
+                'email'=>$email,
+                'email_bind'=>1
+            ]);
+            $this->success('绑定成功');
+        }
+        $this->error('操作失败');
     }
 
     public function notice(){

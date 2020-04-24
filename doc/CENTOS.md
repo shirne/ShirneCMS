@@ -1,6 +1,18 @@
 本系统所需环境 php7.1^+Mysql5.6^+apache/nginx+ redis(可选)
-## 集成环境 (宝塔面板等)
-集成环境中都有相应软件版本的设置,按需求设置即可, 不再讲解
+## 集成环境 (以宝塔面板等为例)
+```
+站点设置
+    # 注意,网站目录设置到src 才可以开启防跨站攻击
+    网站目录 /path/to/shirnecms/src
+    运行目录 /public
+
+    伪静态 选择thinkphp 保存即可
+
+    PHP版本 7.2以上 点击切换
+
+    域名管理及其它根据需要设置
+```
+
 
 ## 手动安装(yum)
 apache和mysql 在centos7以上的版本中, 系统默认的版本可满足需求, 不需要自行编译或改源
@@ -55,7 +67,7 @@ server {
 
     location / {
         if (!-e $request_filename) {
-            rewrite  ^/(^static|uploads)(.*)$  /index.php/$1  last;
+            rewrite  ^/(.*)$  /index.php/$1  last;
             break;
         }
     }

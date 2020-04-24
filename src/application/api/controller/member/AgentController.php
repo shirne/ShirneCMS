@@ -4,6 +4,7 @@ namespace app\api\controller\member;
 
 use app\api\controller\AuthedController;
 use app\common\model\AwardLogModel;
+use app\common\model\MemberAuthenModel;
 use app\common\model\OrderModel;
 use app\common\model\WechatModel;
 use shirne\common\Poster;
@@ -32,6 +33,34 @@ class AgentController extends AuthedController
             ->where('status',1)->sum('amount');
         return $this->response($data);
     }
+
+    public function upgrade($level_id=2){
+        $authen= MemberAuthenModel::where('level_id',$level_id)
+            ->where('member_id',$this->user['id'])
+            ->find();
+        if($this->request->isPost()){
+            if($authen['status'] == 1){
+                $this->error('申请已审核通过,不能修改');
+            }
+            $data = $this->request->only(['realname','mobile','province','city']);
+            try{
+                $data['status']=-1;
+                if(empty($authen)){
+                    $data['member_id']=$this->user['id'];
+                    $data['level_id']=$level_id;
+                    MemberAuthenModel::insert($data);
+                }else{
+                    $authen->save($data);
+                }
+            }catch(\Exception $err){
+                $this->error('保存失败: %s',[$err->getMessage()]);
+            }
+            $this->error('申请已提交');
+        }
+        return $this->response([
+            'authen'=>$authen
+        ]);
+    }
     
     public function poster($page = 'pages/index/index'){
     
@@ -43,7 +72,8 @@ class AgentController extends AuthedController
             $this->error($e->getMessage());
         }
         
-        return $this->response(['poster_url'=>$url]);
+        $qrurl = str_replace('-'.$platform.'.jpg','-qrcode.png',$url);
+        return $this->response(['poster_url'=>$url,'qr_url'=>$qrurl]);
     }
     private function get_share_img($platform,$page){
     
@@ -63,10 +93,41 @@ class AgentController extends AuthedController
                 return media(ltrim($sharepath,'.'));
             }
         }
-        $this->create_share_img($config,$sharepath,$page);
+        if(in_array($platform, ['wechat-miniprogram','wechat-minigame'])){
+            $this->create_appcode_img($config,$sharepath,$page);
+        }else{
+            $this->create_share_img($config,$sharepath,$page);
+        }
+        
         return media(ltrim($sharepath,'.'));
     }
     private function create_share_img($config,$sharepath,$page){
+        $qrpath=dirname($sharepath);
+        $qrfile = $this->user['agentcode'].'-qrcode.png';
+        $filename=$qrpath.'/'.$qrfile;
+
+        if(!file_exists($filename)) {
+            $content=gener_qrcode($page, 430);
+            if(!is_dir($qrpath)){
+                mkdir($qrpath,0777,true);
+            }
+            file_put_contents($filename,$content);
+            if(!file_exists($filename)){
+                $this->error('二维码生成失败');
+            }
+        }
+        
+        //$config['background']=$bgpath;
+        $poster = new Poster($config);
+        $poster->generate([
+            'qrcode'=>$filename,
+            'avatar'=>$this->user['avatar'],
+            'bg'=>1,
+            'nickname'=>$this->user['nickname']
+        ]);
+        $poster->save($sharepath);
+    }
+    private function create_appcode_img($config,$sharepath,$page){
         $appid=$this->request->tokenData['appid'];
         $wechat=WechatModel::where('appid',$appid)->find();
         if(empty($wechat)){

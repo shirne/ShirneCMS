@@ -17,7 +17,7 @@ class GoodsController extends BaseController
         return $this->response(GoodsCategoryFacade::getTreedCategory());
     }
 
-    public function get_cates($pid=0, $goods_count=0){
+    public function get_cates($pid=0, $goods_count=0, $filters=[]){
         if($pid!=0 && preg_match('/^[a-zA-Z]\w+/',$pid)){
             $current=GoodsCategoryFacade::findCategory($pid);
             if(empty($current)){
@@ -28,12 +28,13 @@ class GoodsController extends BaseController
         $cates = GoodsCategoryFacade::getSubCategory($pid);
         if($goods_count > 0){
             $goods = GoodsModel::getInstance();
+            $filters['limit']=$goods_count;
+            if(!isset($filters['recursive'])){
+                $filters['recursive']=1;
+            }
             foreach($cates as &$cate){
-                $cate['goods']=$goods->tagList([
-                    'category'=>$cate['id'],
-                    'recursive'=>1,
-                    'limit'=>$goods_count
-                ]);
+                $filters['category']=$cate['id'];
+                $cate['goods']=$goods->tagList($filters);
             }
             unset($cate);
         }

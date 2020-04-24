@@ -12,8 +12,13 @@ use think\facade\Log;
 class MemberModel extends BaseModel
 {
 
-    protected $insert = ['is_agent' => 0,'type'=>1,'status'=>1,'referer'=>0];
+    protected $insert = ['is_agent' => 0,'type'=>1,'status'=>1,'referer'];
     protected $autoWriteTimestamp = true;
+
+    protected function setRefererAttr($value=0)
+    {
+        return intval($value);
+    }
 
     public static function init()
     {
@@ -72,7 +77,10 @@ class MemberModel extends BaseModel
             $this->setError('推荐人关系冲突');
             return false;
         }
-
+        if($this['referer']>0){
+            Db::name('member')->where('id',$this['referer'])->setDec('referer',1);
+        }
+        Db::name('member')->where('id',$this['referer'])->setInc('referer',1);
         $this->save(['referer'=>$rmember['id']]);
         return true;
     }
@@ -133,9 +141,9 @@ class MemberModel extends BaseModel
             if(empty($member))return false;
         }
         if(empty($member['agentcode'])){
-            $data['agentcode']=random_str(8);
+            $data['agentcode']=random_str(8,'string',1);
             while(Db::name('member')->where('agentcode',$data['agentcode'])->count()>0){
-                $data['agentcode']=random_str(8);
+                $data['agentcode']=random_str(8,'string',1);
             }
         }
         $data['is_agent']=$agent_id;
@@ -170,6 +178,43 @@ class MemberModel extends BaseModel
         return $count;
     }
 
+    protected $memberLevel;
+    public function getLevel(){
+        if(!$this->memberLevel && $this->level_id){
+            $levels = MemberLevelModel::getCacheData();
+            $this->memberLevel = $levels[$this->level_id];
+        }
+        if(empty($this->memberLevel)){
+            $this->memberLevel=[
+                'level_id'=>0,
+                'level_name'=>'默认会员'
+            ];
+        }
+        return $this->memberLevel;
+    }
+    public function getLevelName(){
+        $this->getLevel();
+        return $this->memberLevel['level_name'];
+    }
+    protected $memberAgent;
+    public function getAgent(){
+        if(!$this->memberAgent && $this->is_agent){
+            $agents = MemberAgentModel::getCacheData();
+            $this->memberAgent = $agents[$this->is_agent];
+        }
+        if(empty($this->memberAgent)){
+            $this->memberAgent=[
+                'id'=>0,
+                'name'=>''
+            ];
+        }
+        return $this->memberAgent;
+    }
+    public function getAgentName(){
+        $this->getAgent();
+        return $this->memberAgent['name'];
+    }
+
     /**
      * 获取指定层数的会员上级
      * @param $userid int 当前会员id
@@ -182,7 +227,7 @@ class MemberModel extends BaseModel
         $parents=[];
         $ids=[];
         $currentid=$userid;
-        $user=Db::name('Member')->where('id',$currentid)->field('id,level_id,username,referer')->find();
+        $user=Db::name('Member')->where('id',$currentid)->field('id,level_id,is_agent,username,referer')->find();
         $layer=0;
         while(!empty($user)){
             $layer++;
@@ -193,7 +238,7 @@ class MemberModel extends BaseModel
                 Log::record('会员 '.$userid.' 在查找上级时在第 '.$layer.' 层出现递归',\think\Log::ERROR);
                 break;
             }
-            $user=Db::name('Member')->where('id',$currentid)->field('id,level_id,username,referer')->find();
+            $user=Db::name('Member')->where('id',$currentid)->field('id,level_id,is_agent,username,referer')->find();
             $parents[] = $getid?$currentid:$user;
             if($level>0 && $layer>=$level)break;
         }
@@ -210,7 +255,7 @@ class MemberModel extends BaseModel
     public static function getSons($userid,$level=1,$getid=true)
     {
         $sons=[];
-        $users=Db::name('Member')->where('referer',$userid)->field('id,level_id,username,referer')->select();
+        $users=Db::name('Member')->where('referer',$userid)->field('id,level_id,is_agent,username,referer')->select();
         $layer=0;
         while(!empty($users)){
             $layer++;
@@ -221,12 +266,15 @@ class MemberModel extends BaseModel
             }
             $sons = array_merge($sons, $getid?$userids:$users);
             if($level>0 && $layer>=$level)break;
-            $users=Db::name('Member')->whereIn('referer',$userids)->field('id,level_id,username,referer')->select();
+            $users=Db::name('Member')->whereIn('referer',$userids)->field('id,level_id,is_agent,username,referer')->select();
         }
         return $sons;
     }
     
     public static function autoBindAgent($member,$agent){
+        if(empty($agent) || empty($member)){
+            return false;
+        }
         if(!is_array($member) && is_numeric($member)){
             $member = static::where('id',$member)->find();
             if(empty($member))return false;

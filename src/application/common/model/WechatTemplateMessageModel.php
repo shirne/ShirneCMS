@@ -48,7 +48,7 @@ class WechatTemplateMessageModel extends BaseModel
             'order_need_pay'=>['title'=>'订单待付款提醒','title_id'=>'OPENTM412548551','keywords'=>'商户名称、订单金额、订单编号、订单日期'],
             'order_payed'=>['title'=>'订单支付成功提醒','title_id'=>'OPENTM416836000','keywords'=>'订单编号、商品名称、订单总价、订单状态、下单时间'],
             'order_deliver'=>['title'=>'发货提醒','title_id'=>'OPENTM414274800','keywords'=>'商品名、状态、物流公司、快递单号'],
-            'order_complete'=>['title'=>'订单完成通知','title_id'=>'OPENTM410586294','keywords'=>'订单编号、订单金额、订单详情、完成时间'],
+            'order_complete'=>['title'=>'订单完成通知','title_id'=>'OPENTM410586294','keywords'=>'订单编号、订单详情、订单金额、完成时间'],
             'order_cancel'=>['title'=>'订单取消通知','title_id'=>'TM00850','keywords'=>'订单金额、商品详情、收货信息、订单编号'],
             
             'order_commission'=>['title'=>'分销成功提醒','title_id'=>'OPENTM402027183','keywords'=>'商品信息、商品单价、商品佣金、分销时间'],
@@ -80,11 +80,23 @@ class WechatTemplateMessageModel extends BaseModel
             'template_id'=>$tplset['template_id'],
             'data'=>$data
         ];
-        if(isset($msgdata['page'])){
-            $tplargs['page']=$msgdata['page'];
-        }
-        if(isset($msgdata['form_id'])){
-            $tplargs['form_id']=$msgdata['form_id'];
+        if($wechat['account_type'] == 'miniprogram' || $wechat['account_type'] == 'minigame'){
+            if( isset($msgdata['page']) ){
+                $tplargs['page']=$msgdata['page'];
+            }
+            if(isset($msgdata['form_id'])){
+                $tplargs['form_id']=$msgdata['form_id'];
+            }
+        }else{
+            if(!empty($msgdata['appid']) && isset($msgdata['page'])){
+                $tplargs['miniprogram']=[
+                    'pagepath'=>$msgdata['page'],
+                    'appid'=>$msgdata['appid']
+                ];
+            }
+            if(isset($msgdata['url'])){
+                $tplargs['url']=$msgdata['url'];
+            }
         }
         try {
             $result = $app->template_message->send($tplargs);

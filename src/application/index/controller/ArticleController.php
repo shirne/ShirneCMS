@@ -5,6 +5,7 @@ namespace app\index\controller;
 use app\common\facade\CategoryFacade;
 use app\common\model\ArticleCommentModel;
 use app\common\model\ArticleModel;
+use app\common\model\MemberFavouriteModel;
 use app\common\validate\ArticleCommentValidate;
 use shirne\third\Aliyun;
 use \think\Db;
@@ -83,6 +84,22 @@ class ArticleController extends BaseController{
             }
         }
         return $this->fetch();
+    }
+    public function favourite($id, $cancel = 0){
+        if(!$this->isLogin){
+            $this->error('请先登录');
+        }
+        $model=new MemberFavouriteModel();
+        if($cancel){
+            if($model->removeFavourite($this->user['id'],'article',$id)){
+                $this->success('已取消收藏');
+            }else{
+                $this->error('未收藏该产品');
+            }
+        }elseif($model->addFavourite($this->user['id'],'article',$id)){
+            $this->success('已添加收藏');
+        }
+        $this->error($model->getError());
     }
     public function notice($id){
         $article = Db::name('notice')->find($id);

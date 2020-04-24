@@ -20,7 +20,7 @@
                     </div>
                     <div class="form-group col">
                         <label>标签颜色</label>
-                        <select name="style" class="form-control text-{$model.label_type}" onchange="$(this).attr('class','form-control text-'+$(this).val())">
+                        <select name="label_type" class="form-control text-{$model.label_type}" onchange="$(this).attr('class','form-control text-'+$(this).val())">
                             <foreach name="styles" id="style">
                                 <option value="{$style}" {$model['label_type']==$style?'selected':''} class="text-{$style}">██████████</option>
                             </foreach>

@@ -25,12 +25,14 @@ Route::get('share/:agent', 'index/index/share');
 Route::group('article',[
     ':id'=>'index/article/view',
     'comment/:id'=>'index/article/comment',
+    'favourite'=>'index/article/favourite',
     '[:name]'=>'index/article/index'
 ])->method('GET|POST');
 
 Route::group('product',[
     ':id'=>'index/product/view',
     'comment/:id'=>'index/product/comment',
+    'favourite'=>'index/product/favourite',
     '[:name]'=>'index/product/index'
 ])->method('GET|POST');
 
