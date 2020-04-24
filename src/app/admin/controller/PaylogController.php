@@ -78,7 +78,7 @@ class PaylogController extends BaseController
             'groupbuy'=>'groupbuy.order/detail'
         ];
 
-        $stacrows=$model->group('po.order_type,po.pay_type')->setOption('field',[])->setOption('order','po.order_type')->field('po.order_type,po.pay_type,sum(po.pay_amount) as total_amount')->select();
+        $stacrows=$model->group('po.order_type,po.pay_type')->setOption('field',[])->setOption('order',['po.order_type'])->field('po.order_type,po.pay_type,sum(po.pay_amount) as total_amount')->select();
         $statics=[];
         foreach ($stacrows as $row){
             $statics[$row['pay_type']][$row['order_type']]=$row['total_amount'];
@@ -110,7 +110,7 @@ class PaylogController extends BaseController
      * @return mixed
      */
     public function recharge($key='',$status=0){
-        $model=Db::view('__MEMBER_RECHARGE__ mr','*');
+        $model=Db::view('memberRecharge mr','*');
         $where=array();
         if($status>0){
             switch ($status){
@@ -136,8 +136,8 @@ class PaylogController extends BaseController
             $where[]=array('m.username','LIKE',"%$key%");
         }
 
-        $lists=$model->view('__MEMBER__ m',['username','realname'],'mr.member_id=m.id','LEFT')
-            ->view('__PAYTYPE__ p',['type','cardname','bank','cardno'],'mr.paytype_id=p.id','LEFT')
+        $lists=$model->view('member m',['username','realname'],'mr.member_id=m.id','LEFT')
+            ->view('paytype p',['type','cardname','bank','cardno'],'mr.paytype_id=p.id','LEFT')
             ->order('mr.id DESC')->paginate(15);
 
         $this->assign('lists',$lists);
@@ -250,7 +250,7 @@ class PaylogController extends BaseController
             return redirect(url('',['status'=>$status,'key'=>base64_encode($key)]));
         }
         $key=empty($key)?'':base64_decode($key);
-        $model=Db::view('__MEMBER_CASHIN__ mc','*')->view('__MEMBER__ m',['username','nickname','avatar','realname'],'mc.member_id=m.id','LEFT');
+        $model=Db::view('memberCashin mc','*')->view('member m',['username','nickname','avatar','realname'],'mc.member_id=m.id','LEFT');
         
         if(!empty($key)){
             $model->where('m.username|m.nickname|m.realname|mc.card_name','LIKE',"%$key%");
@@ -266,6 +266,8 @@ class PaylogController extends BaseController
         $this->assign('page',$lists->render());
         $total=Db::name('MemberCashin')->where('status','>',0)->sum('amount');
         $this->assign('total',$total);
+        $orderids = array_column($lists->all(), 'order_id');
+        $this->assign('orderids',empty($orderids)?0:implode(',',$orderids));
         $this->assign('status',$status);
         $this->assign('keyword',$key);
         return $this->fetch();
@@ -278,7 +280,7 @@ class PaylogController extends BaseController
      * @param string $key
      */
     public function export($ids='',$status='',$key=''){
-        $model=Db::view('__MEMBER_CASHIN__ mc','*')->view('__MEMBER__ m',['username','realname'],'mc.member_id=m.id','LEFT');
+        $model=Db::view('memberCashin mc','*')->view('member m',['username','realname'],'mc.member_id=m.id','LEFT');
         if(empty($ids)){
             if(!empty($key)){
                 $key=base64_decode($key);

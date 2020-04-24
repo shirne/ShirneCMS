@@ -9,7 +9,7 @@
                 <form action="{:url('member/award_log',searchKey('fromdate,todate',''))}" class="form-inline" method="post">
                     <div class="btn-group">
                         <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {$fields[$field]} <span class="caret"></span>
+                            {$allstatus[$status]|default='全部'} <span class="caret"></span>
                         </button>
                         <div class="dropdown-menu">
                             {foreach name="allstatus" item="t" key="k"}
@@ -75,10 +75,10 @@
                         <th>{$f}</th>
                         {foreach name="types" item="t" key="tk"}
                             {if $tk NEQ 'all'}
-                            <td>{$statics[$fk][$tk]|showmoney}</td>
+                            <td>{$statics[$fk][$tk]|default=0|showmoney}</td>
                             {/if}
                         {/foreach}
-                        <td>{$statics[$fk]['sum']|showmoney}</td>
+                        <td>{$statics[$fk]['sum']|default=0|showmoney}</td>
                     </tr>
                     {/if}
                 {/foreach}

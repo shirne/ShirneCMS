@@ -60,8 +60,8 @@ class MemberController extends BaseController
             return redirect(url('',['referer'=>$referer,'start_date'=>$start_date,'end_date'=>$end_date,'type'=>$type,'keyword'=>base64_encode($keyword)]));
         }
         $keyword=empty($keyword)?"":base64_decode($keyword);
-        $model = Db::view('__MEMBER__ m','*')
-            ->view('__MEMBER__ rm',['username'=> 'refer_name','nickname'=> 'refer_nickname','realname'=> 'refer_realname','avatar'=> 'refer_avatar','is_agent'=> 'refer_agent'],'m.referer=rm.id','LEFT');
+        $model = Db::view('member m','*')
+            ->view('member rm',['username'=> 'refer_name','nickname'=> 'refer_nickname','realname'=> 'refer_realname','avatar'=> 'refer_avatar','is_agent'=> 'refer_agent'],'m.referer=rm.id','LEFT');
         if(!empty($keyword)){
             $model->whereLike('m.username|m.nickname|m.email|m.realname',"%$keyword%");
         }
@@ -264,7 +264,7 @@ class MemberController extends BaseController
         $types=getLogTypes();
         $allstatus=['-1'=>'已取消','0'=>'待发放','1'=>'已发放'];
         
-        $stacrows=$model->group('mlog.status,mlog.type')->setOption('field',[])->setOption('order','mlog.field')->field('mlog.status,mlog.type,sum(mlog.amount) as total_amount')->select();
+        $stacrows=$model->group('mlog.status,mlog.type')->setOption('field',[])->setOption('order',['mlog.field'])->field('mlog.status,mlog.type,sum(mlog.amount) as total_amount')->select()->all();
         $statics=[];
         foreach ($stacrows as $row){
             $statics[$row['status']][$row['type']]=$row['total_amount'];
@@ -350,7 +350,7 @@ class MemberController extends BaseController
         $types=getLogTypes();
         $fields=getMoneyFields();
 
-        $stacrows=$model->group('mlog.field,mlog.type')->setOption('field',[])->setOption('order','mlog.field')->field('mlog.field,mlog.type,sum(mlog.amount) as total_amount')->select();
+        $stacrows=$model->group('mlog.field,mlog.type')->setOption('field',[])->setOption('order',['mlog.field'])->field('mlog.field,mlog.type,sum(mlog.amount) as total_amount')->select();
         $statics=[];
         foreach ($stacrows as $row){
             $statics[$row['field']][$row['type']]=$row['total_amount'];

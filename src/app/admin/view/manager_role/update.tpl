@@ -5,24 +5,24 @@
     {include  file="public/bread" menu="manager_index" title="角色信息" /}
 
     <div id="page-wrapper">
-        <div class="page-header">{$model['id']>0?'编辑':'添加'}角色</div>
+        <div class="page-header">{if empty($model['id'])}添加{else /}编辑{/if}角色</div>
         <div id="page-content">
 
             <form action="" method="post">
                 <div class="form-row">
                     <div class="form-group col">
                         <label>角色名</label>
-                        <input class="form-control" type="text" name="role_name" value="{$model.role_name}" />
+                        <input class="form-control" type="text" name="role_name" value="{$model.role_name|default=''}" />
                     </div>
                     <div class="form-group col">
                         <label>角色等级</label>
-                        <input class="form-control" type="text" {$model['type']==1?'readonly':''} name="type" value="{$model.type}"/>
+                        <input class="form-control" type="text" {$model['type']==1?'readonly':''} name="type" value="{$model.type|default=''}"/>
                     </div>
                     <div class="form-group col">
                         <label>标签颜色</label>
-                        <select name="label_type" class="form-control text-{$model.label_type}" onchange="$(this).attr('class','form-control text-'+$(this).val())">
+                        <select name="label_type" class="form-control text-{$model.label_type|default='secondary'}" onchange="$(this).attr('class','form-control text-'+$(this).val())">
                             {foreach name="styles" id="style"}
-                                <option value="{$style}" {$model['label_type']==$style?'selected':''} class="text-{$style}">██████████</option>
+                                <option value="{$style}" {if !empty($model['label_type']) && $model['label_type']==$style}selected{/if} class="text-{$style}">██████████</option>
                             {/foreach}
                         </select>
                     </div>
@@ -63,8 +63,8 @@
 
                 {/if}
                 <div class="form-group mt-2">
-                    <input type="hidden" name="id" value="{$model.id}">
-                    <button class="btn btn-primary" type="submit">{$model['id']>0?'保存':'添加'}</button>
+                    <input type="hidden" name="id" value="{$model.id|default=''}">
+                    <button class="btn btn-primary" type="submit">{if empty($model['id'])}添加{else/}保存{/if}</button>
                 </div>
 
 

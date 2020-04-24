@@ -104,7 +104,7 @@
                     {/foreach}
                 </td>
                 <td>
-                    <empty name="v.refer_name">
+                    {empty name="v.refer_name"}
                         <a href="javascript:" data-id="{$v.id}" class="bindreferer">设置</a>
                         {else/}
                         <div class="media">
@@ -126,7 +126,7 @@
                                 </div>
                             </div>
                         </div>
-                    </empty>
+                    {/empty}
                 </td>
                 <td class="operations text-left">
                     {if $v.is_agent neq 0}

@@ -32,7 +32,7 @@ class PaytypeController extends BaseController
         $model = Db::name('Paytype');
         
         if(!empty($type )){
-            $model->where('type',$type)
+            $model->where('type',$type);
         }
 
         $lists=$model->order('ID DESC')->paginate(15);

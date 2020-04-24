@@ -4,7 +4,7 @@
     {include  file="public/bread" menu="member_index" title="会员信息"  /}
 
     <div id="page-wrapper">
-        <div class="page-header">{$model['id']>0?'编辑':'添加'}会员</div>
+        <div class="page-header">{if empty($model['id'])}添加{else/}编辑{/if}会员</div>
         <div id="page-content">
             <form action="" method="post">
                 <div class="row">
@@ -38,7 +38,7 @@
                                         <input class="form-control" type="text" name="mobile" value="{$model.mobile|default=''}" />
                                     </div>
                                 </div>
-                                {if $model.id GT 0}
+                                {if !empty($model['id'])}
                                     <div class="form-group form-row">
                                         <label class="form-label">新密码</label>
                                         <div class="col">
@@ -115,17 +115,17 @@
                                     <label class="form-label">性别</label>
                                     <div class="col">
                                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                            <label class="btn btn-outline-secondary {$model.gender==1?'active':''}">
+                                            <label class="btn btn-outline-secondary {if !empty($model['gender']) && $model['gender']==1}active{/if}">
                                                 <input type="radio" name="gender" value="1" autocomplete="off"
-                                                    {$model.gender==1?'checked':''}> 男士
+                                                {if !empty($model['gender']) && $model['gender']==1}checked':''}> 男士
                                             </label>
-                                            <label class="btn btn-outline-secondary {$model.gender==2?'active':''}">
+                                            <label class="btn btn-outline-secondary {if !empty($model['gender']) && $model['gender']==2}active{/if}">
                                                 <input type="radio" name="gender" value="2" autocomplete="off"
-                                                    {$model.gender==2?'checked':''}> 女士
+                                                {if !empty($model['gender']) && $model['gender']==2}checked{/if}> 女士
                                             </label>
-                                            <label class="btn btn-outline-secondary {$model.gender==0?'active':''}">
+                                            <label class="btn btn-outline-secondary {if empty($model['gender'])}active{/if}">
                                                 <input type="radio" name="gender" value="0" autocomplete="off"
-                                                    {$model.gender==0?'checked':''}> 其它
+                                                {if empty($model['gender'])}checked{/if}> 其它
                                             </label>
                                         </div>
                                     </div>
@@ -185,7 +185,7 @@
 
                 <div class="form-group">
                     <input type="hidden" name="id" value="{$model.id|default=''}">
-                    <button class="btn btn-primary" type="submit">{$model['id']>0?'保存':'添加'}</button>
+                    <button class="btn btn-primary" type="submit">{if empty($model['id'])}添加{else/}保存{/if}</button>
                 </div>
 
 
