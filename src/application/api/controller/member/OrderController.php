@@ -48,7 +48,7 @@ class OrderController extends AuthedController
 
     public function view($id){
         $order=Db::name('Order')->where('order_id',intval($id))->find();
-        if(empty($order) || $order['member_id']!=$this->userid || $order['delete_time']>0){
+        if(empty($order) || $order['member_id']!=$this->user['id'] || $order['delete_time']>0){
             $this->error('订单不存在或已删除',0);
         }
         $order['products']=Db::view('OrderProduct', '*')
@@ -62,7 +62,7 @@ class OrderController extends AuthedController
     
     public function cancel($id, $reason=''){
         $order=OrderModel::get(intval($id));
-        if(empty($order) || $order['member_id']!=$this->userid || $order['delete_time']>0){
+        if(empty($order) || $order['member_id']!=$this->user['id'] || $order['delete_time']>0){
             $this->error('订单不存在或已删除',0);
         }
         if($order['status'] != 0){
@@ -78,7 +78,7 @@ class OrderController extends AuthedController
     
     public function refund($id, $reason=''){
         $order=OrderModel::get(intval($id));
-        if(empty($order) || $order['member_id']!=$this->userid || $order['delete_time']>0){
+        if(empty($order) || $order['member_id']!=$this->user['id'] || $order['delete_time']>0){
             $this->error('订单不存在或已删除',0);
         }
         if($order['status'] < 1){
@@ -97,7 +97,7 @@ class OrderController extends AuthedController
     
     public function express($id){
         $order=OrderModel::get(intval($id));
-        if(empty($order) || $order['member_id']!=$this->userid || $order['delete_time']>0){
+        if(empty($order) || $order['member_id']!=$this->user['id'] || $order['delete_time']>0){
             $this->error('订单不存在或已删除',0);
         }
         
@@ -142,7 +142,7 @@ class OrderController extends AuthedController
     
     public function confirm($id){
         $order=OrderModel::get(intval($id));
-        if(empty($order) || $order['member_id']!=$this->userid || $order['delete_time']>0){
+        if(empty($order) || $order['member_id']!=$this->user['id'] || $order['delete_time']>0){
             $this->error('订单不存在或已删除',0);
         }
         if($order['status'] < 1){
@@ -158,7 +158,7 @@ class OrderController extends AuthedController
     
     public function delete($id){
         $order=OrderModel::get(intval($id));
-        if(empty($order) || $order['member_id']!=$this->userid || $order['delete_time']>0){
+        if(empty($order) || $order['member_id']!=$this->user['id'] || $order['delete_time']>0){
             $this->error('订单不存在或已删除',0);
         }
         if($order['status'] >-1 || $order['status']<-2){
