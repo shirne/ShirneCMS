@@ -14,9 +14,9 @@ VALUES
 
 INSERT INTO `sa_setting` ( `key`,`title`,`type`,`group`,`sort`,`is_sys`, `value`, `description`,`data`)
 VALUES
-  ( 'shop_pagetitle', 'SEO标题', 'text', 'shop', '0', 1 , '0', '', ''),
-  ( 'shop_keyword', 'SEO关键字', 'text', 'shop', '0', 1 , '0', '', ''),
-  ( 'shop_description', 'SEO简介', 'text', 'shop', '0', 1 , '0', '', '');
+  ( 'shop_pagetitle', '商城', 'text', 'shop', '0', 1 , '0', '', ''),
+  ( 'shop_keyword', '商城', 'text', 'shop', '0', 1 , '0', '', ''),
+  ( 'shop_description', '商城简介', 'text', 'shop', '0', 1 , '0', '', '');
 
 DROP TABLE IF EXISTS `sa_member_cart`;
 
@@ -296,6 +296,53 @@ CREATE TABLE `sa_order` (
   INDEX `memberid_index` (`member_id` ASC)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `sa_order_product`;
+CREATE TABLE `sa_order_product` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_id` INT(11) DEFAULT '0',
+  `member_id` INT NULL,
+  `product_id` INT(11) DEFAULT '0',
+  `sku_id` INT(11) DEFAULT '0',
+  `sku_specs` text,
+  `product_title` varchar(100) DEFAULT '',
+  `product_image` varchar(150) DEFAULT '',
+  `product_orig_price` DECIMAL(10,2) DEFAULT 0,
+  `product_price` DECIMAL(10,2) DEFAULT 0,
+  `product_cost_price` DECIMAL(10,2) DEFAULT 0,
+  `product_weight` INT(11) DEFAULT 0,
+  `count` int(11) DEFAULT 0,
+  `sort` INT(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `product_id` (`product_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `sa_order_refund`;
+CREATE TABLE `sa_order_refund` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_id` INT(11) DEFAULT '0',
+  `member_id` INT NULL,
+  `type` varchar(20) DEFAULT '',
+  `reason` varchar(200) DEFAULT '',
+  `product` text,
+  `address` text,
+  `express` text,
+  `status` TINYINT NULL DEFAULT 0,
+  `create_time` INT(11) DEFAULT '0',
+  `update_time` INT(11) DEFAULT '0',
+  PRIMARY KEY (`id`),
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `sa_order_log`;
+CREATE TABLE `sa_order_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_id` INT(11) DEFAULT '0',
+  `member_id` INT NULL,
+  `type` varchar(20) DEFAULT '',
+  `remark` varchar(255) DEFAULT '',
+  `create_time` INT(11) DEFAULT '0',
+  `update_time` INT(11) DEFAULT '0',
+  PRIMARY KEY (`id`),
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `sa_help_category`;
 CREATE TABLE `sa_help_category` (
@@ -361,27 +408,6 @@ CREATE TABLE `sa_express_cache` (
   PRIMARY KEY (`id`),
   KEY `express_no` (`express_no`),
   KEY `express_code` (`express_code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-DROP TABLE IF EXISTS `sa_order_product`;
-
-CREATE TABLE `sa_order_product` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `order_id` INT(11) DEFAULT '0',
-  `member_id` INT NULL,
-  `product_id` INT(11) DEFAULT '0',
-  `sku_id` INT(11) DEFAULT '0',
-  `sku_specs` text,
-  `product_title` varchar(100) DEFAULT '',
-  `product_image` varchar(150) DEFAULT '',
-  `product_orig_price` DECIMAL(10,2) DEFAULT 0,
-  `product_price` DECIMAL(10,2) DEFAULT 0,
-  `product_cost_price` DECIMAL(10,2) DEFAULT 0,
-  `product_weight` INT(11) DEFAULT 0,
-  `count` int(11) DEFAULT 0,
-  `sort` INT(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `product_id` (`product_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `sa_postage`;

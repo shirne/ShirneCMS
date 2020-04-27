@@ -9,9 +9,9 @@ VALUES
 
 INSERT INTO `sa_setting` ( `key`,`title`,`type`,`group`,`sort`,`is_sys`, `value`, `description`,`data`)
 VALUES
-  ( 'credit_pagetitle', 'SEO标题', 'text', 'credit', '0', 1 , '0', '', ''),
-  ( 'credit_keyword', 'SEO关键字', 'text', 'credit', '0', 1 , '0', '', ''),
-  ( 'credit_description', 'SEO简介', 'text', 'credit', '0', 1 , '0', '', ''),
+  ( 'credit_pagetitle', '积分商城', 'text', 'credit', '0', 1 , '0', '', ''),
+  ( 'credit_keyword', '积分商城', 'text', 'credit', '0', 1 , '0', '', ''),
+  ( 'credit_description', '积分商城简介', 'text', 'credit', '0', 1 , '0', '', ''),
   ( 'credit_rate', '下单赠送积分', 'text', 'credit', '0', 1 , '0', '', '');
 
 

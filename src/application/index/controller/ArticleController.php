@@ -34,7 +34,7 @@ class ArticleController extends BaseController{
 
         $model->where('article.status',1);
         if(!empty($this->category)){
-            $this->seo($this->category['title']);
+            $this->seo($this->category['title'],$this->category['keywords'],$this->category['description']);
             $model->whereIn('article.cate_id',CategoryFacade::getSubCateIds($this->category['id']));
         }else{
             $this->seo(lang('News'));
