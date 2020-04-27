@@ -174,21 +174,66 @@ class AgentController extends AuthedController
     }
     
     
-    
-    public function award_log($type='',$status=''){
+    public function award_log($type='',$status='',$daterange=''){
         $model=Db::view('awardLog mlog','*')
             ->view('Member m',['username','level_id','nickname','avatar'],'m.id=mlog.from_member_id','LEFT')
             ->where('mlog.member_id',$this->user['id']);
+        
+        $static=Db::name('awardLog')->where('member_id',$this->user['id']);
         if(!empty($type) && $type!='all'){
             $model->where('mlog.type',$type);
+            $static->where('type',$type);
         }
         if($status!==''){
             $model->where('mlog.status',$status);
+            $static->where('status',$status);
+        }
+        if($daterange != ''){
+            $end_date = 0;
+            if($daterange == 'week'){
+                $start_date = strtotime('last Monday');
+            }elseif($daterange == 'month'){
+                $start_date = strtotime('first day of this month midnight');
+            }elseif(preg_match('/^(\d{4})\-(\d{1,2})$/',$daterange,$matches)){
+                $start_date = strtotime($daterange);
+                $month = $matches[2]+1;
+                $year = $matches[1];
+                if($month>12){
+                    $month = 1;
+                    $year += 1;
+                }
+                $end_date = strtotime($year.'-'.$month)-1;
+            }else{
+                $dateranges = explode('~',$daterange);
+                $start_date = strtotime($dateranges[0]);
+                if(isset($dateranges[1]))$end_date = strtotime($dateranges[1]);
+            }
+            if($start_date > 0){
+                if($end_date > 0){
+                    $static->whereBetween('create_time',[$start_date,$end_date]);
+                    $model->whereBetween('mlog.create_time',[$start_date,$end_date]);
+                }else{
+                    $static->where('create_time','>=',$start_date);
+                    $model->where('mlog.create_time','>=',$start_date);
+                }
+            }
         }
         
         $logs = $model->order('mlog.id DESC')->paginate(10);
+        $static_data=$static->field('count(distinct order_id) as order_count, sum(amount) as total_amount')->find();
         
+        $types = getLogTypes(false, 'award');
+        $level = $this->userLevel();
+        if($level['partner_sale_award'] <= 0){
+            unset($types['partner_sale']);
+        }
+        if($level['partner_new_award'] <= 0){
+            unset($types['partner_share']);
+        }
+
         return $this->response([
+            'types'=>$types,
+            'static_data'=>$static_data,
             'logs'=>$logs->items(),
             'total'=>$logs->total(),
             'total_page'=>$logs->lastPage(),
