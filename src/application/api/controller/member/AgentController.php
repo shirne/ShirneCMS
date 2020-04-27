@@ -191,6 +191,7 @@ class AgentController extends AuthedController
         return $this->response([
             'logs'=>$logs->items(),
             'total'=>$logs->total(),
+            'total_page'=>$logs->lastPage(),
             'page'=>$logs->currentPage()
         ]);
     }
