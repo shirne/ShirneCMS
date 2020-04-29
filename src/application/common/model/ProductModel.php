@@ -127,10 +127,11 @@ class ProductModel extends ContentModel
         }
         $flashData=[
             'product_id'=>$id,
+            'timestamp'=>$date,
             'title'=>$product['title'],
             'product'=>json_encode($product,JSON_UNESCAPED_UNICODE),
             'brand'=>json_encode(Db::name('productBrand')->where('id',$product['brand_id'])->find(),JSON_UNESCAPED_UNICODE),
-            'skus'=>json_encode(Db::name('productSkus')->where('product_id',$id)->select(),JSON_UNESCAPED_UNICODE),
+            'skus'=>json_encode(Db::name('productSku')->where('product_id',$id)->select(),JSON_UNESCAPED_UNICODE),
             'images'=>json_encode(Db::name('productImages')->where('product_id',$id)->select(),JSON_UNESCAPED_UNICODE),
         ];
         Db::name('productFlash')->insert($flashData);
