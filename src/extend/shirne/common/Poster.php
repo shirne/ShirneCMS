@@ -61,6 +61,10 @@ class Poster
     protected $bg;
     public function __construct($config=[])
     {
+        $this->setConfig($config);
+    }
+
+    public function setConfig($config){
         $this->config=array_merge($this->defaultConfig,$config);
     }
     
@@ -90,6 +94,10 @@ class Poster
                 imagecopyresampled($this->bg, $vbg, 0, 0, 0, 0,imagesx($this->bg), imagesy($this->bg), imagesx($vbg), imagesy($vbg));
                 imagedestroy($vbg);
                 continue;
+            }
+            //默认值
+            if(!isset($data[$k]) && isset($set['value'])){
+                $data[$k] = $set['value'];
             }
             if(isset($data[$k])){
                 //相对位置计算
@@ -149,6 +157,9 @@ class Poster
 
                 if(isset($set['type']) && $set['type'] == 'image') {
                     $set = array_merge($this->defaultImageSet, $set);
+                    if($set['height'] == 0){
+                        $set['height'] = $set['width'];
+                    }
                     if ($set['width'] <= 0 || $set['height'] <= 0) {
                         Log::record('Poster: '.$k.' size error','error');
                         continue;

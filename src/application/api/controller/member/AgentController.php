@@ -75,10 +75,27 @@ class AgentController extends AuthedController
         $qrurl = str_replace('-'.$platform.'.jpg','-qrcode.png',$url);
         return $this->response(['poster_url'=>$url,'qr_url'=>$qrurl]);
     }
+
+    private function get_poster_config(){
+        $config = [];
+        $sysconfig=getSettings(false,true);
+        $posterConfig=$sysconfig['poster'];
+
+        $config['background']='.'.$posterConfig['poster_background'];
+        $config['data']['avatar']=$posterConfig['poster_avatar'];
+        $config['data']['avatar']['type']='image';
+        $config['data']['nickname']=$posterConfig['poster_nickname'];
+        $config['data']['qrcode']=$posterConfig['poster_qrcode'];
+        $config['data']['qrcode']['type']='image';
+        $config['data']['qrlogo']=$posterConfig['poster_qrcode'];
+        $config['data']['qrlogo']['type']='image';
+        $config['data']['qrlogo']['value']='.'.$posterConfig['poster_qrlogo'];
+        return $config;
+    }
     private function get_share_img($platform,$page){
     
         $sharepath = './uploads/share/'.($this->user['id']%100).'/'.$this->user['agentcode'].'-'.$platform.'.jpg';
-        $config=config('poster.');
+        $config=$this->get_poster_config();
         if(empty($config) || empty($config['background'])){
             $this->error('请配置海报生成样式(config/poster.php)');
         }

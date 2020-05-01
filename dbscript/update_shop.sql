@@ -16,7 +16,19 @@ INSERT INTO `sa_setting` ( `key`,`title`,`type`,`group`,`sort`,`is_sys`, `value`
 VALUES
   ( 'shop_pagetitle', '商城', 'text', 'shop', '0', 1 , '0', '', ''),
   ( 'shop_keyword', '商城', 'text', 'shop', '0', 1 , '0', '', ''),
-  ( 'shop_description', '商城简介', 'text', 'shop', '0', 1 , '0', '', '');
+  ( 'shop_description', '商城简介', 'text', 'shop', '0', 1 , '0', '', ''),
+  ( 'shop_order_pay_limit', '订单支付超时', 'text', 'shop', '0', 1 , '', '', ''),
+  ( 'shop_order_refund_limit', '订单退款限时', 'text', 'shop', '0', 1 , '', '', ''),
+  ( 'shop_order_receive_limit', '订单默认收货', 'text', 'shop', '0', 1 , '', '', ''),
+  ( 'shop_order_notice', '下单说明', 'text', 'shop', '0', 1 , '', '', '');
+
+INSERT INTO `sa_setting` ( `key`,`title`,`type`,`group`,`sort`,`is_sys`, `value`, `description`,`data`)
+VALUES
+  ( 'poster_background', '分享图背景', 'image', 'poster', '0', 1 , '', '建议尺寸 1080px x 1920px', ''),
+  ( 'poster_avatar', '用户头像', 'json', 'poster', '0', 1 , '', '', ''),
+  ( 'poster_nickname', '用户昵称', 'json', 'poster', '0', 1 , '', '', ''),
+  ( 'poster_qrcode', '二维码位置', 'json', 'poster', '0', 1 , '', '', ''),
+  ( 'poster_qrlogo', '二维码LOGO', 'image', 'poster', '0', 1 , '', '', '');
 
 DROP TABLE IF EXISTS `sa_member_cart`;
 
