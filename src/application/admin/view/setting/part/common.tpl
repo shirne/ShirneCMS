@@ -36,6 +36,34 @@
 </div>
 
 <div class="form-row form-group">
+    <label for="v-site-close" class="col-3 col-md-2 text-right align-middle">关闭站点</label>
+    <div class="col-5">
+        <div class="btn-group btn-group-toggle mregopengroup" data-toggle="buttons">
+            <foreach name="setting['site-close']['data']" item="value" key="k">
+                <if condition="$k==$setting['site-close']['value']">
+                    <label class="btn btn-outline-secondary active">
+                        <input type="radio" name="v-site-close" value="{$k}" autocomplete="off" checked> {$value}
+                    </label>
+                    <else />
+                    <label class="btn btn-outline-secondary">
+                        <input type="radio" name="v-site-close" value="{$k}" autocomplete="off"> {$value}
+                    </label>
+                </if>
+            </foreach>
+        </div>
+    </div>
+    <div class="col-4">
+        <a href="{:FU('/')}?forcec=1" target="_blank" class="btn btn-link">强制访问</a>
+    </div>
+</div>
+<div class="form-row form-group">
+    <label for="v-site-close-desc" class="col-3 col-md-2 text-right align-middle">关闭说明</label>
+    <div class="col-9 col-md-8 col-lg-6">
+        <input type="text" class="form-control" name="v-site-close-desc" value="{$setting['site-close-desc']['value']}" >
+    </div>
+</div>
+
+<div class="form-row form-group">
     <label for="v-site-shareimg" class="col-3 col-md-2 text-right align-middle">默认分享图</label>
     <div class="col-9 col-md-8 col-lg-6">
         <div class="input-group">

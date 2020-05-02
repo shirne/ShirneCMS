@@ -59,6 +59,8 @@ VALUES
   ('site-keywords','关键词','text','common',0,1,'关键词1,关键词2','关键词',''),
   ('site-description','站点描述','text','common',0,1,'站点描述信息','站点描述',''),
   ('site-weblogo','站点logo','image','common',0,1,'','站点logo',''),
+  ('site-close','关闭站点','radio','common',0,1,'0','是否关闭站点','0:开启\r\n1:关闭'),
+  ('site-close-desc','关闭说明','text','common',0,1,'系统维护中','关闭站点的说明',''),
   ('site-shareimg','默认分享图','image','common',0,1,'','默认分享图',''),
   ('site-tongji','统计代码','textarea','common',0,1,'','统计代码',''),
   ('site-icp','ICP备案号','text','common',0,1,'','ICP备案号',''),
