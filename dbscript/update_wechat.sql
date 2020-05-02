@@ -12,6 +12,7 @@ CREATE TABLE `sa_wechat` (
   `logo` varchar(150) DEFAULT '',
   `qrcode` varchar(150) DEFAULT '',
   `shareimg` varchar(150) DEFAULT '',
+  `share_poster_url` VARCHAR(150) DEFAULT '',
   `account` varchar(100) DEFAULT '',
   `original` varchar(50) DEFAULT '',
   `appid` varchar(50) DEFAULT '',

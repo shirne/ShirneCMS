@@ -2,6 +2,7 @@
 namespace app\common\model;
 
 use app\common\core\BaseModel;
+use shirne\common\Poster;
 use think\Db;
 use think\facade\Log;
 
@@ -332,5 +333,137 @@ class MemberModel extends BaseModel
             if(empty($member['avatar']) || is_wechat_avatar($member['avatar']))$updata['avatar']=$data['avatar'];
         }
         return $updata;
+    }
+
+    
+
+    public function getSharePoster($platform, $page, $force=false){
+        if(!$this->isExists()){
+            $this->setError('会员资料未初始化');
+            return false;
+        }
+        if(empty($this['agentcode'])){
+            $this->setError('会员不是代理');
+            return false;
+        }
+        $sharepath = './uploads/share/'.($this['id']%100).'/'.$this['agentcode'].'-'.$platform.'.jpg';
+        
+        $config=$this->get_poster_config();
+        if(empty($config) || empty($config['background'])){
+            $this->setError('请配置海报生成样式');
+            return false;
+        }
+        if(!file_exists($config['background'])){
+            $this->setError('请设置海报背景图');
+            return false;
+        }
+        if(file_exists($sharepath) && !$force){
+            $fileatime=filemtime($sharepath);
+            if($this['update_time'] < $fileatime &&
+                filemtime($config['background']) < $fileatime
+            ){
+                return media(ltrim($sharepath,'.'));
+            }
+        }
+        if(in_array($platform, ['wechat-miniprogram','wechat-minigame'])){
+            $created = $this->create_appcode_img($config,$sharepath,$page);
+        }else{
+            $created = $this->create_share_img($config,$sharepath,$page);
+        }
+        if(!$created)return $created;
+        return media(ltrim($sharepath,'.'));
+    }
+
+    private function get_poster_config(){
+        $config = [];
+        $sysconfig=getSettings(false,true);
+        $posterConfig=$sysconfig['poster'];
+        if(empty($posterConfig) || empty($posterConfig['poster_background'])){
+            return false;
+        }
+
+        $config['background']='.'.$posterConfig['poster_background'];
+        $config['data']['avatar']=$posterConfig['poster_avatar'];
+        $config['data']['avatar']['type']='image';
+        $config['data']['nickname']=$posterConfig['poster_nickname'];
+        $config['data']['qrcode']=$posterConfig['poster_qrcode'];
+        $config['data']['qrcode']['type']='image';
+        if(!empty($posterConfig['poster_qrlogo'])){
+            $config['data']['qrlogo']=$posterConfig['poster_qrcode'];
+            $config['data']['qrlogo']['type']='image';
+            $config['data']['qrlogo']['value']='.'.$posterConfig['poster_qrlogo'];
+        }
+        return $config;
+    }
+
+    private function create_share_img($config,$sharepath,$page){
+        $qrpath=dirname($sharepath);
+        $qrfile = $this['agentcode'].'-qrcode.png';
+        $filename=$qrpath.'/'.$qrfile;
+
+        if(!file_exists($filename)) {
+            $content=gener_qrcode($page, 430);
+            if(!is_dir($qrpath)){
+                mkdir($qrpath,0777,true);
+            }
+            file_put_contents($filename,$content);
+            if(!file_exists($filename)){
+                $this->setError('二维码生成失败');
+                return false;
+            }
+        }
+        
+        //$config['background']=$bgpath;
+        $poster = new Poster($config);
+        $poster->generate([
+            'qrcode'=>$filename,
+            'avatar'=>$this['avatar'],
+            'bg'=>1,
+            'nickname'=>$this['nickname']
+        ]);
+        $poster->save($sharepath);
+        return true;
+    }
+    private function create_appcode_img($config,$sharepath,$page){
+        $appid=$this->request->tokenData['appid'];
+        $wechat=WechatModel::where('appid',$appid)->find();
+        if(empty($wechat)){
+            $this->setError('分享图生成失败(wechat)');
+            return false;
+        }
+    
+        $qrpath=dirname($sharepath);
+        $qrfile = $this['agentcode'].'-appcode.png';
+        $filename=$qrpath.'/'.$qrfile;
+        if(!file_exists($filename)) {
+            $app = WechatModel::createApp($wechat);
+            if (empty($app)) {
+                $this->setError('分享图生成失败(app)');
+                return false;
+            }
+    
+            $response = $app->app_code->getUnlimit('agent=' . $this['agentcode'], [
+                'page' => $page,
+                'width' => 520
+            ]);
+            if ($response instanceof \EasyWeChat\Kernel\Http\StreamResponse) {
+                $genername = $response->saveAs($qrpath, $qrfile);
+            }
+            if(empty($genername)){
+                $this->setError('小程序码生成失败');
+                return false;
+            }
+        }
+        
+        //$config['background']=$bgpath;
+        $poster = new Poster($config);
+        $poster->generate([
+            'appcode'=>$filename,
+            'avatar'=>$this['avatar'],
+            'bg'=>1,
+            'nickname'=>$this['nickname']
+        ]);
+        $poster->save($sharepath);
+        return true;
     }
 }
