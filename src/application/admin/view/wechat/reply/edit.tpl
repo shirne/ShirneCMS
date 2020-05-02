@@ -47,6 +47,7 @@
                     <label for="text">回复内容</label>
                     <div>
                         <textarea class="form-control" name="content">{$model.content|raw}</textarea>
+                        <div class="text-muted">可用标签：昵称:[nickname], 性别:[sex]</div>
                     </div>
                 </div>
                 <div class="form-group rtype-row rtype-news">

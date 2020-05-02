@@ -103,11 +103,24 @@ class BaseHandler
         return $this->getReply($result);
     }
 
+    protected function replace_user_info($matches){
+        $key = $matches[1];
+        if(isset($this->user[$key])){
+            if($key == 'sex'){
+                return $this->user['gender']==1?'先生':($this->user['gender']==2?'女士':'');
+            }
+            return $this->user[$key];
+        }
+        return '';
+    }
+
     protected function getReply($reply)
     {
         switch ($reply['reply_type']) {
             case 'text':
-                return $reply['content'];
+                $content = $reply['content'];
+                $content = preg_replace_callback('/\[(\w+)\]/',array($this, 'replace_user_info'),$content);
+                return $content;
                 break;
             case 'news':
                 $news = json_decode($reply['content'], TRUE);
