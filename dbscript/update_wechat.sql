@@ -57,6 +57,7 @@ CREATE TABLE `sa_wechat_material` (
   `title` VARCHAR(60) NULL,
   `keyword` VARCHAR(50) NULL,
   `description` VARCHAR(200) NULL,
+  `url` VARCHAR(300) NULL,
   `create_time` INT NULL,
   `update_time` INT NULL,
   PRIMARY KEY (`id`)
