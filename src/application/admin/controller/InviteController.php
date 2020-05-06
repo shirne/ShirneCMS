@@ -88,10 +88,9 @@ class InviteController extends BaseController
             }
             user_log($this->mid,'addinvite',1,'生成邀请码['.$mem_id.','.$level_id.']'.$number.'个','manager');
             $this->success("生成成功", url('Invite/index'));
-        }else{
-            $this->assign('levels',getMemberLevels());
-            return $this->fetch();
         }
+        $this->assign('levels',getMemberLevels());
+        return $this->fetch();
     }
 
     /**
