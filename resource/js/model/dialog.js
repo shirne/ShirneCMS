@@ -647,18 +647,28 @@
             }).show(contentTpl,config.title);
             return dlg;
         },
-        pickUser:function(callback,filter){
+        pickUser:function(callback,title,filter){
+            if(typeof title=='object' && !filter){
+                filter = title;
+                title = null;
+            }
             return this.pickList({
-                'url':window.get_search_url('member'),
-                'name':'会员',
-                'searchHolder':'根据会员id或名称，电话来搜索',
-                'rowTemplate':'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action" style="line-height:30px;">{if @avatar}<img src="{@avatar}" style="width:30px;height:30px;border-radius: 100%;margin-right:10px;" />{else}<i class="ion-md-person"></i>{/if} [{@id}]&nbsp;{if @nickname}{@nickname}{else}{@username}{/if}&nbsp;&nbsp;&nbsp;{if @mobile}<small><i class="ion-md-phone-portrait"></i> {@mobile}</small>{/if}</a>'
+                url:window.get_search_url('member'),
+                title:title,
+                name:'会员',
+                searchHolder:'根据会员id或名称，电话来搜索',
+                rowTemplate:'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action" style="line-height:30px;">{if @avatar}<img src="{@avatar}" style="width:30px;height:30px;border-radius: 100%;margin-right:10px;" />{else}<i class="ion-md-person"></i>{/if} [{@id}]&nbsp;{if @nickname}{@nickname}{else}{@username}{/if}&nbsp;&nbsp;&nbsp;{if @mobile}<small><i class="ion-md-phone-portrait"></i> {@mobile}</small>{/if}</a>'
             },callback,filter);
         },
-        pickArticle:function(callback,filter){
+        pickArticle:function(callback,title,filter){
+            if(typeof title=='object' && !filter){
+                filter = title;
+                title = null;
+            }
             return this.pickList({
-                'url':window.get_search_url('article'),
+                url:window.get_search_url('article'),
                 rowTemplate:'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action">{if @cover}<div style="background-image:url({@cover})" class="imgview" ></div>{/if}<div class="text-block">[{@id}]&nbsp;{@title}&nbsp;<br />{@description}</div></a>',
+                title:title,
                 name:'文章',
                 idkey:'id',
                 extend:{
@@ -670,13 +680,18 @@
                 'searchHolder':'根据文章标题搜索'
             },callback,filter);
         },
-        pickProduct:function(callback,filter){
+        pickProduct:function(callback,title,filter){
+            if(typeof title=='object' && !filter){
+                filter = title;
+                title = null;
+            }
             var issku = filter && filter['searchtype'];
             var titletpl='<div class="text-block">[{@id}]&nbsp;{@title}&nbsp;<br />{@min_price}{if @max_price>@min_price}~{@max_price}{/if}</div>';
             if(issku)titletpl='<div class="text-block">[{@id}]&nbsp;{@title}&nbsp;<br />[{@sku_goods_no}]&nbsp;{@price}</div>';
             return this.pickList({
-                'url':window.get_search_url('product'),
+                url:window.get_search_url('product'),
                 rowTemplate:'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action">{if @image}<div style="background-image:url({@image})" class="imgview" ></div>{/if}'+titletpl+'</a>',
+                title:title,
                 name:'产品',
                 idkey:'id',
                 extend:{
