@@ -332,16 +332,18 @@ DROP TABLE IF EXISTS `sa_order_refund`;
 CREATE TABLE `sa_order_refund` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` INT(11) DEFAULT '0',
-  `member_id` INT NULL,
+  `member_id` INT(11) DEFAULT '0',
   `type` varchar(20) DEFAULT '',
   `reason` varchar(200) DEFAULT '',
+  `remark` varchar(200) DEFAULT '',
+  `image` text,
   `product` text,
   `address` text,
   `express` text,
   `status` TINYINT NULL DEFAULT 0,
   `create_time` INT(11) DEFAULT '0',
   `update_time` INT(11) DEFAULT '0',
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `sa_order_log`;
@@ -353,7 +355,7 @@ CREATE TABLE `sa_order_log` (
   `remark` varchar(255) DEFAULT '',
   `create_time` INT(11) DEFAULT '0',
   `update_time` INT(11) DEFAULT '0',
-  PRIMARY KEY (`id`),
+  PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `sa_help_category`;
