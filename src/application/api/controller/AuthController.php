@@ -335,6 +335,7 @@ class AuthController extends BaseController
                 }
             }
         }
+        
         if(empty($userinfo)){
             $this->error('登录授权失败',ERROR_LOGIN_FAILED);
         }
@@ -372,6 +373,8 @@ class AuthController extends BaseController
                 if($member['id']){
                     $data['member_id']=$member['id'];
                 }
+            }else{
+                $this->error('请注册账号',ERROR_NEED_REGISTER, ['openid'=>$session['openid']]);
             }
             
         }else{
@@ -396,7 +399,7 @@ class AuthController extends BaseController
         if($this->isLogin){
             return $this->response(['openid'=>$session['openid']]);
         }
-
+        
         if(!empty($member)){
 
             if($member['status'] != 1){
