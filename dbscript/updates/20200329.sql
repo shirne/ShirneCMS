@@ -1,4 +1,4 @@
-ALTER TABLE `sa_award_log` ADD `field` varchar(20) DEFAULT AFTER `type`;
+ALTER TABLE `sa_award_log` ADD `field` varchar(20) DEFAULT '' AFTER `type`;
 
 CREATE TABLE `sa_keywords` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
