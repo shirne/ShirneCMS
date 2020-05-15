@@ -49,7 +49,10 @@ Route::group('order',[
     'wechatpay'=>'index/order/wechatpay'
 ])->method('GET|POST');
 
-Route::get('page/:group/[:name]','index/page/index');
+Route::group('page',[
+    '[:group]'=>'index/page/index',
+    ':group/[:name]'=>'index/page/index'
+])->method('GET|POST');
 
 Route::get('notice/:id', 'index/article/notice');
 
