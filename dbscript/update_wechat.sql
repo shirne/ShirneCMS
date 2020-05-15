@@ -1,4 +1,6 @@
-
+INSERT INTO `sa_permission` (`parent_id`,`name`, `url`,`key`, `icon`, `sort_id`, `disable`)
+VALUES
+  (9,'公众号管理','Wechat/index','wechat_index','ion-md-chatboxes',13,0);
 
 DROP TABLE IF EXISTS `sa_wechat`;
 CREATE TABLE `sa_wechat` (

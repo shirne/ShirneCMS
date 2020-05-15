@@ -27,7 +27,7 @@ return array(
             'commentdelete'=>'评论删除'
         )
     ),
-    'productcategory'=>array(
+    'credit.category'=>array(
         'title'=>'产品分类',
         'items'=>array(
             'index'=>'分类查看',
@@ -36,7 +36,62 @@ return array(
             'delete'=>'分类删除'
         )
     ),
-    'product'=>array(
+    'credit.goods'=>array(
+        'title'=>'产品管理',
+        'items'=>array(
+            'index'=>'产品查看',
+            'add'=>'产品添加',
+            'edit'=>'产品修改',
+            'delete'=>'产品删除',
+            'push'=>'产品上下架',
+            'get_specs'=>'规格数据',
+            'imagelist'=>'文章图集',
+            'imageadd'=>'添加图片',
+            'imageupdate'=>'修改图片',
+            'imagedelete'=>'删除图片'
+        )
+    ),
+    'credit.order'=>array(
+        'title'=>'订单管理',
+        'items'=>array(
+            'index'=>'订单列表',
+            'export'=>'订单导出',
+            'detail'=>'订单详情',
+            'delete'=>'订单删除',
+            'audit'=>'订单审核',
+            'setstatus'=>'状态批量更新',
+            'setcancel'=>'取消订单',
+            'setpayed'=>'订单支付',
+            'setdelivery'=>'订单发货',
+            'setreceive'=>'订单收货',
+            'setcomplete'=>'订单完成'
+        )
+    ),
+    'credit.promotion'=>array(
+        'title'=>'积分商城配置',
+        'items'=>array(
+            'index'=>'管理配置'
+        )
+    ),
+    'shop.category'=>array(
+        'title'=>'产品分类',
+        'items'=>array(
+            'index'=>'分类查看',
+            'add'=>'分类添加',
+            'edit'=>'分类修改',
+            'delete'=>'分类删除'
+        )
+    ),
+    'shop.brand'=>array(
+        'title'=>'品牌管理',
+        'items'=>array(
+            'index'=>'品牌列表',
+            'add'=>'品牌添加',
+            'edit'=>'品牌修改',
+            'delete'=>'品牌删除'
+        )
+    ),
+    'shop.product'=>array(
         'title'=>'产品管理',
         'items'=>array(
             'index'=>'产品查看',
@@ -55,7 +110,7 @@ return array(
             'commentdelete'=>'评论删除'
         )
     ),
-    'productcoupon'=>array(
+    'shop.coupon'=>array(
         'title'=>'优惠券管理',
         'items'=>array(
             'index'=>'优惠券管理',
@@ -66,7 +121,7 @@ return array(
             'itemdelete'=>'删除已领优惠券'
         ),
     ),
-    'order'=>array(
+    'shop.order'=>array(
         'title'=>'订单管理',
         'items'=>array(
             'index'=>'订单列表',
@@ -82,13 +137,44 @@ return array(
             'setcomplete'=>'订单完成'
         )
     ),
-    'page'=>array(
-        'title'=>'页面管理',
+    'shop.orderstatics'=>array(
+        'title'=>'订单统计',
         'items'=>array(
-            'index'=>'页面查看',
-            'add'=>'页面添加',
-            'edit'=>'页面修改',
-            'delete'=>'页面删除'
+            'index'=>'订单统计',
+            'region'=>'地区统计'
+        )
+    ),
+    'shop.orderstatics'=>array(
+        'title'=>'订单统计',
+        'items'=>array(
+            'index'=>'订单统计',
+            'region'=>'地区统计'
+        )
+    ),
+    'shop.postage'=>array(
+        'title'=>'运费模板',
+        'items'=>array(
+            'index'=>'运费模板管理',
+            'add'=>'添加运费',
+            'update'=>'修改运费',
+            'delete'=>'删除运费'
+        )
+    ),
+    'shop.help'=>array(
+        'title'=>'帮助中心',
+        'items'=>array(
+            'index'=>'帮助列表',
+            'category'=>'帮助类目',
+            'add'=>'添加帮助',
+            'edit'=>'修改帮助',
+            'delete'=>'删除帮助'
+        )
+    ),
+    'shop.promotion'=>array(
+        'title'=>'商城配置',
+        'items'=>array(
+            'index'=>'管理配置',
+            'poster'=>'海报配置',
         )
     ),
     'notice'=>array(
@@ -106,6 +192,8 @@ return array(
             'index'=>'广告位置查看',
             'add'=>'广告位置添加',
             'update'=>'广告位置修改',
+            'lock'=>'锁定广告位',
+            'unlock'=>'解锁广告位',
             'delete'=>'广告位置删除',
             'itemlist'=>'广告查看',
             'itemadd'=>'广告添加',
@@ -128,6 +216,23 @@ return array(
             'add'=>'友链添加',
             'edit'=>'友链修改',
             'delete'=>'友链删除'
+        )
+    ),
+    'subscribe'=>array(
+        'title'=>'订阅管理',
+        'items'=>array(
+            'index'=>'订阅查看',
+        )
+    ),
+    'booth'=>array(
+        'title'=>'展位管理',
+        'items'=>array(
+            'index'=>'展位列表',
+            'add'=>'添加展位',
+            'update'=>'修改展位',
+            'lock'=>'锁定展位',
+            'unlock'=>'解锁展位',
+            'delete'=>'删除展位'
         )
     ),
     'member'=>array(
@@ -190,6 +295,12 @@ return array(
             'add'=>'配置添加',
             'edit'=>'配置修改',
             'delete'=>'配置删除'
+        )
+    ),
+    'navigator'=>array(
+        'title'=>'导航管理',
+        'items'=>array(
+            'index'=>'导航管理',
         )
     ),
     'paytype'=>array(
