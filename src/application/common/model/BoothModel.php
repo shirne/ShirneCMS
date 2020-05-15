@@ -47,6 +47,20 @@ class BoothModel extends BaseModel
         }
         return $this->listData;
     }
+
+    private function sort($list, $ids){
+        $newlist = [];
+        if(!empty($list) && is_array($list)){
+            $mapped = array_column($list, NULL, 'id');
+            foreach($ids as $id){
+                if(isset($mapped[$id])){
+                    $newlist[]=$mapped[$id];
+                }
+            }
+        }
+        
+        return $newlist;
+    }
     
     private function fetch_category($args){
         //手动选择
@@ -74,6 +88,7 @@ class BoothModel extends BaseModel
                 $list = ArticleModel::getInstance()->tagList([
                     'ids' => $args['article_ids']
                 ]);
+                $list = $this->sort($list,$args['article_ids']);
             }
         }else{
             $tagargs=[];
@@ -116,6 +131,7 @@ class BoothModel extends BaseModel
                 $list = ProductModel::getInstance()->tagList([
                     'ids' => $args['product_ids']
                 ]);
+                $list = $this->sort($list,$args['product_ids']);
             }
         }else{
             $tagargs=[];

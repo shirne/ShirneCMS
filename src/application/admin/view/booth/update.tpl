@@ -6,6 +6,12 @@
             right: 10px;
             top: 5px;
         }
+        .card .swap{
+            position: absolute;
+            left: 10px;
+            right: auto;
+            top: 5px;
+        }
     </style>
 </block>
 <block name="body">
@@ -84,11 +90,14 @@
                         </div>
                     </div>
                     <div v-show="model.data.type==1" class="form-row">
-                        <div v-for="item in list_category"  class="col-6 col-md-4 col-lg-3">
+                        <div v-for="(item, index) in list_category"  class="col-6 col-md-4 col-lg-3">
                             <input type="hidden" name="data[category_ids][]" :value="item.id" />
                             <div class="card mb-2">
-                                <button type="button" class="close" aria-label="关闭" @click.stop="removeThis">
+                                <button type="button" class="close" aria-label="移除" @click.stop="removeThis(index)">
                                     <span aria-hidden="true">&times;</span>
+                                </button>
+                                <button type="button" class="close swap" aria-label="交换" @click.stop="swapThis(index)">
+                                    <i aria-hidden="true" class="ion-md-swap"></i>
                                 </button>
                                 <img v-if="item.icon" :src="item.icon" class="card-img-top" :alt="item.title">
                                 <div class="card-body">
@@ -153,11 +162,14 @@
                         </div>
                     </div>
                     <div v-show="model.data.type==1" class="form-row">
-                        <div v-for="item in list_article"  class="col-6 col-md-4 col-lg-3">
+                        <div v-for="(item, index) in list_article"  class="col-6 col-md-4 col-lg-3">
                             <input type="hidden" name="data[article_ids][]" :value="item.id" />
                             <div class="card mb-2">
-                                <button type="button" class="close" aria-label="关闭" @click.stop="removeThis">
+                                <button type="button" class="close" aria-label="移除" @click.stop="removeThis(index)">
                                     <span aria-hidden="true">&times;</span>
+                                </button>
+                                <button type="button" class="close swap" aria-label="交换" @click.stop="swapThis(index)">
+                                    <i aria-hidden="true" class="ion-md-swap"></i>
                                 </button>
                                 <img v-if="item.cover" :src="item.cover" class="card-img-top" :alt="item.title">
                                 <div class="card-body">
@@ -208,11 +220,14 @@
                         </div>
                     </div>
                     <div v-show="model.data.type==1" class="form-row">
-                        <div v-for="item in list_product_category"  class="col-6 col-md-4 col-lg-3">
+                        <div v-for="(item, index) in list_product_category"  class="col-6 col-md-4 col-lg-3">
                             <input type="hidden" name="data[product_category_ids][]" :value="item.id" />
                             <div class="card  mb-2">
-                                <button type="button" class="close" aria-label="关闭" @click.stop="removeThis">
+                                <button type="button" class="close" aria-label="移除" @click.stop="removeThis(index)">
                                     <span aria-hidden="true">&times;</span>
+                                </button>
+                                <button type="button" class="close swap" aria-label="交换" @click.stop="swapThis(index)">
+                                    <i aria-hidden="true" class="ion-md-swap"></i>
                                 </button>
                                 <img v-if="item.icon" :src="item.icon" class="card-img-top" :alt="item.title">
                                 <div class="card-body">
@@ -263,11 +278,14 @@
                         </div>
                     </div>
                     <div v-show="model.data.type==1" class="form-row">
-                        <div v-for="item in list_product"  class="col-6 col-md-4 col-lg-3">
+                        <div v-for="(item, index) in list_product"  class="col-6 col-md-4 col-lg-3">
                             <input type="hidden" name="data[product_ids][]" :value="item.id" />
                             <div class="card mb-2">
-                                <button type="button" class="close" aria-label="关闭" @click.stop="removeThis">
+                                <button type="button" class="close" aria-label="移除" @click.stop="removeThis(index)">
                                     <span aria-hidden="true">&times;</span>
+                                </button>
+                                <button type="button" class="close swap" aria-label="交换" @click.stop="swapThis(index)">
+                                    <i aria-hidden="true" class="ion-md-swap"></i>
                                 </button>
                                 <img v-if="item.image" :src="item.image" class="card-img-top" :alt="item.title">
                                 <div class="card-body">
@@ -417,12 +435,32 @@
                         Vue.set(self.model.data,'ad_flag',adv.flag)
                     })
                 },
-                removeThis:function(e){
-                    var obj = e.target;
+                removeThis:function(idx){
+                    var self = this;
                     dialog.confirm('移除这块数据？',function(){
-                        var block = $(obj).closest('.card').parent()
-                        block.remove()
+                        if (self.model.type == 'article') {
+                            self.list_article.splice(idx, 1)
+                        }else if (self.model.type == 'category') {
+                            self.list_category.splice(idx, 1)
+                        }else if (self.model.type == 'product') {
+                            self.list_product.splice(idx, 1)
+                        }else if (self.model.type == 'product_category') {
+                            self.list_product_category.splice(idx, 1)
+                        }
                     })
+                },
+                swapThis:function(idx){
+                    var self = this;
+                    if(idx == 0)idx += 1;
+                    if(idx > 0 && this['list_'+this.model.type].length>1){
+                        var tempList = this['list_'+this.model.type];
+                        console.log(tempList)
+                        var temp = tempList[idx];
+                        tempList[idx] = tempList[idx-1];
+                        tempList[idx-1] = temp;
+                        Vue.set(this, 'list_'+this.model.type, tempList)
+                        this.$forceUpdate()
+                    }
                 }
             }
         });
