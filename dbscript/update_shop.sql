@@ -14,9 +14,9 @@ VALUES
 
 INSERT INTO `sa_setting` ( `key`,`title`,`type`,`group`,`sort`,`is_sys`, `value`, `description`,`data`)
 VALUES
-  ( 'shop_pagetitle', '商城', 'text', 'shop', '0', 1 , '0', '', ''),
-  ( 'shop_keyword', '商城', 'text', 'shop', '0', 1 , '0', '', ''),
-  ( 'shop_description', '商城简介', 'text', 'shop', '0', 1 , '0', '', ''),
+  ( 'shop_pagetitle', '商城标题', 'text', 'shop', '0', 1 , '商城', '', ''),
+  ( 'shop_keyword', '商城关键字', 'text', 'shop', '0', 1 , '商城', '', ''),
+  ( 'shop_description', '商城简介', 'text', 'shop', '0', 1 , '', '', ''),
   ( 'shop_order_pay_limit', '订单支付超时', 'text', 'shop', '0', 1 , '', '', ''),
   ( 'shop_order_refund_limit', '订单退款限时', 'text', 'shop', '0', 1 , '', '', ''),
   ( 'shop_order_receive_limit', '订单默认收货', 'text', 'shop', '0', 1 , '', '', ''),

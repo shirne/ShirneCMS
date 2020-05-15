@@ -9,10 +9,10 @@ VALUES
 
 INSERT INTO `sa_setting` ( `key`,`title`,`type`,`group`,`sort`,`is_sys`, `value`, `description`,`data`)
 VALUES
-  ( 'credit_pagetitle', '积分商城', 'text', 'credit', '0', 1 , '0', '', ''),
-  ( 'credit_keyword', '积分商城', 'text', 'credit', '0', 1 , '0', '', ''),
-  ( 'credit_description', '积分商城简介', 'text', 'credit', '0', 1 , '0', '', ''),
-  ( 'credit_rate', '下单赠送积分', 'text', 'credit', '0', 1 , '0', '', '');
+  ( 'credit_pagetitle', '商城标题', 'text', 'credit', '0', 1 , '积分商城', '', ''),
+  ( 'credit_keyword', '关键字', 'text', 'credit', '0', 1 , '', '积分商城', ''),
+  ( 'credit_description', '积分商城简介', 'text', 'credit', '0', 1 , '', '', ''),
+  ( 'credit_rate', '下单赠送积分', 'text', 'credit', '0', 1 , '100', '', '');
 
 
 DROP TABLE IF EXISTS `sa_goods_category`;
