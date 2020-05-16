@@ -47,7 +47,7 @@ TRUNCATE TABLE `sa_manager`;
 
 INSERT INTO `sa_manager` (`id`,`pid`, `username`,`realname`, `email`, `password`, `salt`, `avatar`, `create_time`, `update_time`, `login_ip`, `status`, `type`)
 VALUES
-  (1,0,'admin','','79099818@qq.com','60271966bbad6ead5faa991772a9277f', 'z5La7s0P',NULL,'1436679338','1436935104','0.0.0.0',1,1);
+  (1,0,'administrator','','79099818@qq.com','60271966bbad6ead5faa991772a9277f', 'z5La7s0P',NULL,'1436679338','1436935104','0.0.0.0',1,1);
 
 
 TRUNCATE TABLE `sa_setting`;
@@ -80,10 +80,10 @@ VALUES
   ( 'sms_password', '登录密码', 'text', 'third', '0',1, '', '', ''),
   ( 'kd_userid', '快递鸟用户ID', 'text', 'third', '0',1, '', '', ''),
   ( 'kd_apikey', '快递鸟API Key', 'text', 'third', '0',1, '', '', ''),
-  ( 'mapkey_baidu', '百度地图密钥', 'text', 'third', '0',1, 'rO9tOdEWFfvyGgDkiWqFjxK6', '', ''),
-  ( 'mapkey_google', '谷哥地图密钥y', 'text', 'third', '0',1, 'AIzaSyB8lorvl6EtqIWz67bjWBruOhm9NYS1e24', '', ''),
-  ( 'mapkey_tencent', '腾讯地图密钥', 'text', 'third', '0',1, '7I5BZ-QUE6R-JXLWV-WTVAA-CJMYF-7PBBI', '', ''),
-  ( 'mapkey_gaode', '高德地图密钥', 'text', 'third', '0',1, '3ec311b5db0d597e79422eeb9a6d4449', '', ''),
+  ( 'mapkey_baidu', '百度地图密钥', 'text', 'third', '0',1, '', '', ''),
+  ( 'mapkey_google', '谷哥地图密钥y', 'text', 'third', '0',1, '', '', ''),
+  ( 'mapkey_tencent', '腾讯地图密钥', 'text', 'third', '0',1, '', '', ''),
+  ( 'mapkey_gaode', '高德地图密钥', 'text', 'third', '0',1, '', '', ''),
   ( 'captcha_mode', '验证码模式', 'radio', 'third', '0',1, '0', '', '0:图形验证\r\n1:极验验证'),
   ( 'captcha_geeid', '极验ID', 'text', 'third', '0',1, '', '', ''),
   ( 'captcha_geekey', '极验密钥', 'text', 'third', '0',1, '', '', ''),
