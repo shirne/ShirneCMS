@@ -55,7 +55,8 @@ class Poster
         'y'=>0,
         'width'=>0,
         'height'=>0,
-        'type'=>''
+        'type'=>'',
+        'mask'=>0
         ];
     
     protected $bg;
@@ -66,6 +67,14 @@ class Poster
 
     public function setConfig($config){
         $this->config=array_merge($this->defaultConfig,$config);
+    }
+
+    private $vmask;
+    public function getBackground(){
+        if(is_null($this->vmask)){
+            $this->vmask = imagecreatefrompng($this->config['background']);
+        }
+        return $this->vmask;
     }
     
     public function generate($data){
@@ -90,9 +99,9 @@ class Poster
             //Log::record($k);
             if(isset($set['type']) && $set['type']=='background'){
                 //利用重复帖一遍背景图的方式生成圆角，一定要注意顺序
-                $vbg = imagecreatefrompng($bgpath);
-                imagecopyresampled($this->bg, $vbg, 0, 0, 0, 0,imagesx($this->bg), imagesy($this->bg), imagesx($vbg), imagesy($vbg));
-                imagedestroy($vbg);
+                imagecopy($this->bg, $this->getBackground(), 0, 0, 0, 0,imagesx($this->bg), imagesy($this->bg));
+                //imagecopyresampled($this->bg, $vbg, 0, 0, 0, 0,imagesx($this->bg), imagesy($this->bg), imagesx($vbg), imagesy($vbg));
+                //imagedestroy($vbg);
                 continue;
             }
             //默认值
@@ -307,6 +316,10 @@ class Poster
             //Log::record('帖图:'.$image.'-'.json_encode([$set['x'],$set['y'],$sx,$sy,$set['width'],$set['height'],$w,$h],JSON_UNESCAPED_UNICODE),'info');
             imagecopyresampled($this->bg, $sub, $set['x'], $set['y'], $sx, $sy, $set['width'], $set['height'], $w, $h);
             imagedestroy($sub);
+
+            if($set['mask']){
+                imagecopy($this->bg, $this->getBackground(), $set['x'], $set['y'], $set['x'], $set['y'], $set['width'], $set['height']);
+            }
         }
     }
 
