@@ -19,6 +19,14 @@ class IndexController extends Controller
         }
 
         $this->assign('config',$this->config);
+        
+        $version = $this->request->param('v');
+        if(empty($version)){
+            $version = config('template.version');
+        }
+        if(!empty($version)){
+            return $this->fetch('index/index_'.$version);
+        }
         return $this->fetch();
     }
 }

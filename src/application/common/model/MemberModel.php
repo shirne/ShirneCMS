@@ -280,8 +280,7 @@ class MemberModel extends BaseModel
             $member = static::where('id',$member)->find();
             if(empty($member))return false;
         }
-        if($member['is_agent'] || $member['referer'] ||
-            $member['agentcode']==$agent|| $member['id']==$agent){
+        if($member['is_agent'] || $member['agentcode']==$agent|| $member['id']==$agent){
             return false;
         }
         
@@ -359,7 +358,7 @@ class MemberModel extends BaseModel
         }
         if(file_exists($sharepath) && !$force){
             $fileatime=filemtime($sharepath);
-            if($this['update_time'] < $fileatime &&
+            if($this['update_time'] - $fileatime < 7*24*60*60 &&
                 filemtime($config['background']) < $fileatime
             ){
                 return media(ltrim($sharepath,'.'));
