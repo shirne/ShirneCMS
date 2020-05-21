@@ -7,11 +7,13 @@ use EasyWeChat\Kernel\Exceptions\InvalidArgumentException;
 use EasyWeChat\Kernel\Exceptions\InvalidConfigException;
 use EasyWeChat\Kernel\Exceptions\RuntimeException;
 use EasyWeChat\Kernel\Messages\Text;
+use think\Db;
 use think\Exception;
 use think\facade\Log;
 
 class MessageService{
 
+    protected $wechat;
     protected $wechatApp = null;
 
     protected static function initWechat(){
@@ -21,9 +23,21 @@ class MessageService{
                 Log::record('未设置默认微信公众号');
                 $this->wechatApp = false;
             }
+            $this->wechat = WechatModel::getLastWechat();
         }
         return $this->wechatApp;
     }
+
+    protected static function uid2openid($uid){
+        if(is_numeric($uid)){
+            $fans = Db::name('memberOauth')->where('member_id',$uid)->where('type_id',$this->wechat['id'])->find();
+            if(!empty($fans)){
+                return $fans['openid'];
+            }
+        }
+        return $uid;
+    }
+
 
     /**
      * 发送文本消息或其它类型消息
@@ -37,6 +51,10 @@ class MessageService{
     public static function sendWechatMessage($openid, $message, $link = ''){
         $app = $this->initWechat();
         if(!$app) return false;
+
+        $openid = self::uid2openid($openid);
+        if(empty($openid))return false;
+
         if(is_string($message)){
             if(!empty($link)){
                 $message .= "【<a href='$link'>查看详情</a>】";
@@ -61,6 +79,10 @@ class MessageService{
     public static function sendWechatTplMessage($openid, $tplid, $data, $link = '', $miniprogram = null){
         $app = $this->initWechat();
         if(!$app) return false;
+
+        $openid = self::uid2openid($openid);
+        if(empty($openid))return false;
+        
         return $app->template_message->send([
             'touser' => $openid,
             'template_id' => $tplid,
