@@ -439,6 +439,7 @@
             var contentHtml='<div class="form-group">{@input}</div>';
             var title='请输入信息';
             var is_multi=false;
+            var is_textarea=false;
             var multiset={};
             if(typeof message=='string'){
                 title=message;
@@ -451,8 +452,14 @@
                     is_multi=true;
                     multiset=message.multi;
                 }
+                if(message.is_textarea){
+                    is_textarea=true;
+                }
             }
             var inputHtml='<input type="text" name="confirm_input" class="form-control" />';
+            if(is_textarea){
+                inputHtml='<textarea name="confirm_input" class="form-control" ></textarea>';
+            }
             if(is_multi){
                 inputHtml='';
                 for(var i in multiset){
@@ -751,20 +758,20 @@
         }
     };
 
-    //监控按键
+    // 监控按键
     $(document).on('keydown', function(e){
         if(!Dialog.instance)return;
         var dlg=Dialog.instance;
         if (e.keyCode == 13) {
             dlg.box.find('.modal-footer .btn[default]').trigger('click');
         }
-        //默认已监听关闭
+        // 默认已监听关闭
         /*if (e.keyCode == 27) {
          self.hide();
          }*/
     });
 
-    //暴露接口
+    // 暴露接口
     window.Dialog=$.Dialog=Dialog;
     window.dialog=$.dialog=dialog;
 })(window,jQuery||Zepto);

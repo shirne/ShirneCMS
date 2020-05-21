@@ -2,6 +2,7 @@
 namespace app\common\model;
 
 use app\common\core\BaseModel;
+use app\common\service\MessageService;
 use shirne\common\Poster;
 use think\Db;
 use think\facade\Log;
@@ -121,7 +122,31 @@ class MemberModel extends BaseModel
             Db::name('member')->whereIn('id',$parents)->setInc('team_count',1);
 
             //代理等级自动升级
+            self::autoCheckUpgrade($parents);
 
+        }
+    }
+    
+    public function autoCheckUpgrade($parents){
+        $agents = MemberAgentModel::getCacheData();
+        $needUpdates=Db::name('member')->whereIn('id',$parents)
+            ->field('id,level_id,is_agent,team_count,recom_count,recom_total,recom_performance,total_performance,agentcode,referer')
+            ->select();
+        foreach($needUpdates as $parent){
+            if(!$parent['is_agent']){
+                continue;
+            }
+            foreach($agents as $agent){
+                if($parent['is_agent'] < $agent['id'] &&
+                    $parent['team_count']>=$agent['team_count'] &&
+                    $parent['recom_count']>=$agent['recom_count'] &&
+                    $parent['recom_performance']>=$agent['recom_performance'] &&
+                    $parent['total_performance']>=$agent['total_performance']){
+                    
+                    self::setAgent($parent,$agent['id'],'auto');
+                    break;
+                }
+            }
         }
     }
 
@@ -146,6 +171,8 @@ class MemberModel extends BaseModel
             while(Db::name('member')->where('agentcode',$data['agentcode'])->count()>0){
                 $data['agentcode']=random_str(8,'string',1);
             }
+        }elseif($member['is_agent'] == $agent_id){
+            return true;
         }
         $data['is_agent']=$agent_id;
         $data['update_time']=time();
@@ -158,6 +185,12 @@ class MemberModel extends BaseModel
                 'remark'=>$remark,
                 'create_time'=>time(),
             ]);
+
+            if($member['is_agent'] < 1){
+                self::sendBecomeAgentMessage($member);
+            }elseif($member['is_agent'] > 0){
+                self::sendUpgradeAgentMessage($member, $agent);
+            }
         }
         return $result;
     }
@@ -292,7 +325,68 @@ class MemberModel extends BaseModel
         }
         
         static::update(['referer'=>$agentMember['id']],array('id'=>$member['id']));
+
+        static::sendBindAgentMessage($member, $agentMember);
+
         return true;
+    }
+
+    public static function showname($member){
+        if(!empty($member['nickname'])){
+            return $member['nickname'];
+        }
+        if(!empty($member['username'])){
+            return $member['username'];
+        }
+        if(!empty($member['mobile'])){
+            return $member['mobile'];
+        }
+        return '[匿名]';
+    }
+
+    public static function sendBindAgentMessage($member, $agent){
+        $message = getSetting('message_bind_agent');
+        if(!empty($message)){
+            foreach([
+                'username'=>static::showname($member['nickname']),
+                'agent'=>static::showname($agent['nickname']),
+                'userid'=>$member['id'],
+                'agentid'=>$agent['id']
+            ] as $k=>$v){
+                $message = str_replace("[$k]", $v, $message);
+            }
+
+            MessageService::sendWechatMessage($agent['id'],$message);
+        }
+    }
+
+    public static function sendBecomeAgentMessage($member){
+        $message = getSetting('message_become_agent');
+        if(!empty($message)){
+            foreach([
+                'username'=>static::showname($member['nickname']),
+                'userid'=>$member['id'],
+            ] as $k=>$v){
+                $message = str_replace("[$k]", $v, $message);
+            }
+
+            MessageService::sendWechatMessage($member['id'],$message);
+        }
+    }
+
+    public static function sendUpgradeAgentMessage($member, $agent){
+        $message = getSetting('message_upgrade_agent');
+        if(!empty($message)){
+            foreach([
+                'username'=>static::showname($member['nickname']),
+                'userid'=>$member['id'],
+                'agent'=>$agent['name']
+            ] as $k=>$v){
+                $message = str_replace("[$k]", $v, $message);
+            }
+
+            MessageService::sendWechatMessage($member['id'],$message);
+        }
     }
 
     /**

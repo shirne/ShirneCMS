@@ -91,7 +91,7 @@
                     '发送素材'
                 ],function (type) {
                     if(type==0){
-                        dialog.prompt('请填写发送内容',function (text) {
+                        dialog.prompt({title:'请填写发送内容',is_textarea:true},function (text) {
                             if(text){
                                 sendMessage(openid,'text',text)
                             }
