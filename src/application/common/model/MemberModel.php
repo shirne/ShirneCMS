@@ -68,10 +68,16 @@ class MemberModel extends BaseModel
             $this->setError('不能将会员设为自己的推荐人');
             return false;
         }
+        if($this['referer'] == $referer){
+            return true;
+        }
         $rmember=Db::name('member')->where('id|agentcode',$referer)->find();
         if(empty($rmember) || !$rmember['is_agent']){
             $this->setError('设置的推荐人不是代理');
             return false;
+        }
+        if($this['referer'] == $rmember['id']){
+            return true;
         }
         
         $parents = MemberModel::getParents($rmember['id'], 0);
@@ -84,6 +90,9 @@ class MemberModel extends BaseModel
         }
         Db::name('member')->where('id',$this['referer'])->setInc('referer',1);
         $this->save(['referer'=>$rmember['id']]);
+
+        static::sendBindAgentMessage($this, $rmember);
+
         return true;
     }
 
@@ -316,12 +325,18 @@ class MemberModel extends BaseModel
         if($member['is_agent'] || $member['agentcode']==$agent|| $member['id']==$agent){
             return false;
         }
+        if($member['referer'] == $agent){
+            return true;
+        }
         
         $agentMember=static::where('agentcode|id',$agent)
             ->where('is_agent','GT',0)
             ->where('status',1)->find();
         if(empty($agentMember) || $agentMember['id']==$member['id'] || !$agentMember['is_agent']){
             return false;
+        }
+        if($member['referer'] == $agentMember['id']){
+            return true;
         }
         
         static::update(['referer'=>$agentMember['id']],array('id'=>$member['id']));
