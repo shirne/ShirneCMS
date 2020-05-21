@@ -176,6 +176,9 @@
             }
         });
         this.box.on('shown.bs.modal',function(){
+            if(self.box && self.closed){
+                return self.box.modal('hide');
+            }
             if(self.options.onshown){
                 self.options.onshown(body,self.box);
             }
