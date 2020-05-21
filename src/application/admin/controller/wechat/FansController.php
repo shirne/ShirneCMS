@@ -55,6 +55,9 @@ class FansController extends WechatBaseController
         }catch(\Exception $e){
             $this->apiException($e);
         }
+        if(isset($result['errcode']) && $result['errcode']!=0){
+            $this->error($result['errmsg']);
+        }
         $this->success('消息已发送');
     }
 
