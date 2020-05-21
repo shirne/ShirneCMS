@@ -334,7 +334,7 @@ CREATE TABLE `sa_order_refund` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` INT(11) DEFAULT '0',
   `member_id` INT(11) DEFAULT '0',
-  `type` TINYINT(4) DEFAULT '',
+  `type` TINYINT(4) DEFAULT '0',
   `reason` varchar(30) DEFAULT '',
   `remark` varchar(200) DEFAULT '',
   `amount` decimal(10,2) DEFAULT '0',
