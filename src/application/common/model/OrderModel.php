@@ -681,4 +681,22 @@ class OrderModel extends BaseOrderModel
         }
     }
 
+    public function comment($data, $order = null){
+        if(empty($order)){
+            $order = $this->getOrigin();
+        }
+        if(empty($order['order_id'])){
+            throw new \Exception('order error');
+        }
+        
+        foreach($data as $row){
+            $row['order_id']=$order['order_id'];
+            ProductCommentModel::create($row);
+        }
+
+        $this->updateStatus(['status'=>ORDER_STATUS_FINISH],['order_id'=>$order['order_id']]);
+
+        return true;
+    }
+
 }
