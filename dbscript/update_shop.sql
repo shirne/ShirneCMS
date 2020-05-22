@@ -30,6 +30,12 @@ VALUES
   ( 'poster_qrcode', '二维码位置', 'json', 'poster', '0', 1 , '', '', ''),
   ( 'poster_qrlogo', '二维码LOGO', 'image', 'poster', '0', 1 , '', '', '');
 
+INSERT INTO `sa_setting` ( `key`,`title`,`type`,`group`,`sort`,`is_sys`, `value`, `description`,`data`)
+VALUES
+  ( 'message_bind_agent', '绑定推荐人', 'text', 'message', '0', 1 , '', '可用变量 用户昵称:[username] 代理昵称:[agent] 用户ID:[userid] 代理ID:[agentid]', ''),
+  ( 'message_become_agent', '成为代理', 'text', 'message', '0', 1 , '', '可用变量 用户昵称:[username] 用户ID:[userid]', ''),
+  ( 'message_upgrade_agent', '升级代理', 'text', 'message', '0', 1 , '', '可用变量 用户昵称:[username] 用户ID:[userid] 代理等级:[agent]', '');
+
 DROP TABLE IF EXISTS `sa_member_cart`;
 
 CREATE TABLE `sa_member_cart` (

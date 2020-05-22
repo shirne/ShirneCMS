@@ -13,24 +13,24 @@ use think\facade\Log;
 
 class MessageService{
 
-    protected $wechat;
-    protected $wechatApp = null;
+    protected static $wechat;
+    protected static $wechatApp = null;
 
     protected static function initWechat(){
-        if(is_null($this->wechatApp)){
-            $this->wechatApp = WechatModel::createApp();
-            if(!$this->wechatApp){
+        if(is_null(static::$wechatApp)){
+            static::$wechatApp = WechatModel::createApp();
+            if(!static::$wechatApp){
                 Log::record('未设置默认微信公众号');
-                $this->wechatApp = false;
+                static::$wechatApp = false;
             }
-            $this->wechat = WechatModel::getLastWechat();
+            static::$wechat = WechatModel::getLastWechat();
         }
-        return $this->wechatApp;
+        return static::$wechatApp;
     }
 
     protected static function uid2openid($uid){
         if(is_numeric($uid)){
-            $fans = Db::name('memberOauth')->where('member_id',$uid)->where('type_id',$this->wechat['id'])->find();
+            $fans = Db::name('memberOauth')->where('member_id',$uid)->where('type_id',static::$wechat['id'])->find();
             if(!empty($fans)){
                 return $fans['openid'];
             }
@@ -49,7 +49,7 @@ class MessageService{
      * @throws RuntimeException 
      */
     public static function sendWechatMessage($openid, $message, $link = ''){
-        $app = $this->initWechat();
+        $app = static::initWechat();
         if(!$app) return false;
 
         $openid = self::uid2openid($openid);
@@ -77,7 +77,7 @@ class MessageService{
      * @throws InvalidConfigException 
      */
     public static function sendWechatTplMessage($openid, $tplid, $data, $link = '', $miniprogram = null){
-        $app = $this->initWechat();
+        $app = static::initWechat();
         if(!$app) return false;
 
         $openid = self::uid2openid($openid);

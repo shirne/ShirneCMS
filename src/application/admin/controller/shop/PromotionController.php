@@ -22,6 +22,21 @@ class PromotionController extends BaseController
         $this->assign('setting',$setting['shop']);
         return $this->fetch();
     }
+
+    public function message()
+    {
+        $setting = getSettings(true,true);
+        if($this->request->isPost()){
+
+            $data=$this->request->post();
+            $result = save_setting($data,'message');
+            user_log($this->mid,'messageconfig',1,'修改消息配置' ,'manager');
+            $this->success('配置已更新',url('shop.promotion/message'));
+        }
+        $this->assign('setting',$setting['message']);
+        return $this->fetch();
+    }
+
     public function poster()
     {
         $setting = getSettings(true,true);
