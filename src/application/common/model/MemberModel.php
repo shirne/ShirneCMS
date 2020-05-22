@@ -363,8 +363,8 @@ class MemberModel extends BaseModel
         $message = getSetting('message_bind_agent');
         if(!empty($message)){
             foreach([
-                'username'=>static::showname($member['nickname']),
-                'agent'=>static::showname($agent['nickname']),
+                'username'=>static::showname($member),
+                'agent'=>static::showname($agent),
                 'userid'=>$member['id'],
                 'agentid'=>$agent['id']
             ] as $k=>$v){
@@ -379,7 +379,7 @@ class MemberModel extends BaseModel
         $message = getSetting('message_become_agent');
         if(!empty($message)){
             foreach([
-                'username'=>static::showname($member['nickname']),
+                'username'=>static::showname($member),
                 'userid'=>$member['id'],
             ] as $k=>$v){
                 $message = str_replace("[$k]", $v, $message);
@@ -393,7 +393,7 @@ class MemberModel extends BaseModel
         $message = getSetting('message_upgrade_agent');
         if(!empty($message)){
             foreach([
-                'username'=>static::showname($member['nickname']),
+                'username'=>static::showname($member),
                 'userid'=>$member['id'],
                 'agent'=>$agent['name']
             ] as $k=>$v){
