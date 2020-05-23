@@ -64,11 +64,11 @@ class MemberModel extends BaseModel
             $this->setError('推荐人不存在');
             return false;
         }
-        if($this['id'] == $referer || $this['agentcode']==$referer){
+        if(strcmp($this['id'], $referer)===0 || strcmp($this['agentcode'],$referer)===0){
             $this->setError('不能将会员设为自己的推荐人');
             return false;
         }
-        if($this['referer'] == $referer){
+        if(strcmp($this['referer'], $referer) === 0){
             return true;
         }
         $rmember=Db::name('member')->where('id|agentcode',$referer)->find();
@@ -322,10 +322,10 @@ class MemberModel extends BaseModel
             $member = static::where('id',$member)->find();
             if(empty($member))return false;
         }
-        if($member['is_agent'] || $member['agentcode']==$agent|| $member['id']==$agent){
+        if($member['is_agent'] || strcmp($member['agentcode'],$agent)===0 || strcmp($member['id'], $agent)===0 ){
             return false;
         }
-        if($member['referer'] == $agent){
+        if(strcmp($member['referer'], $agent) === 0){
             return true;
         }
         
@@ -335,7 +335,7 @@ class MemberModel extends BaseModel
         if(empty($agentMember) || $agentMember['id']==$member['id'] || !$agentMember['is_agent']){
             return false;
         }
-        if($member['referer'] == $agentMember['id']){
+        if(strcmp($member['referer'], $agentMember['id']) === 0){
             return true;
         }
         

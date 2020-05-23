@@ -4,6 +4,7 @@ namespace app\api\controller\member;
 
 use app\api\controller\AuthedController;
 use app\common\model\AwardLogModel;
+use app\common\model\MemberAgentModel;
 use app\common\model\MemberAuthenModel;
 use app\common\model\MemberModel;
 use app\common\model\OrderModel;
@@ -264,13 +265,23 @@ class AgentController extends AuthedController
                 }
             }
             
-            $users->each(function ($item) use ($soncounts,$levels) {
+            $agents = MemberAgentModel::getCacheData();
+            
+            $users->each(function ($item) use ($soncounts, $levels, $agents) {
                 if(isset($soncounts[$item['id']])) {
                     $item['soncount'] = $soncounts[$item['id']];
                 }else{
                     $item['soncount'] = 0;
                 }
-                $item['level_name']=$levels[$item['level_id']]['level_name']?:'-';
+                if(isset($levels[$item['level_id']])){
+                    $item['level_name']=$levels[$item['level_id']]['level_name']?:'-';
+                    $item['level_style']=$levels[$item['level_id']]['style']?:'-';
+                }
+                if(isset($agents[$item['is_agent']])){
+                    $item['agent_name']=$agents[$item['is_agent']]['name']?:'-';
+                    $item['agent_short_name']=$agents[$item['is_agent']]['short_name']?:'-';
+                    $item['agent_style']=$agents[$item['is_agent']]['style']?:'-';
+                }
                 return $item;
             });
         }
