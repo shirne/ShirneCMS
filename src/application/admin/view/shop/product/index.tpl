@@ -275,7 +275,7 @@
 						return false;
 					}
 					$.ajax({
-						url:"{:url('product/editsku')}",
+						url:"{:url('shop.product/editsku')}",
 						dataType:'json',
 						type:'POST',
 						data:{
