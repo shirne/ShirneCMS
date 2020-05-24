@@ -179,10 +179,11 @@ class MemberController extends BaseController
         if($member['is_agent'] == $agent_id)$this->success('设置成功');
 
         $result=MemberModel::setAgent($id, $agent_id, 'admin', '后台升级');
-        if($member['is_agent'] < 1){
-            MemberModel::updateRecommend($member['referer']);
-        }
+        
         if($result){
+            if($member['is_agent'] < 1){
+                MemberModel::updateRecommend($member['referer']);
+            }
             user_log($this->mid,'setagent',1,'设置代理 '.$id ,'manager');
             $this->success('设置成功');
             exit;
