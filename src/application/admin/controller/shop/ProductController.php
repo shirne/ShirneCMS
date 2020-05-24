@@ -405,6 +405,29 @@ class ProductController extends BaseController
     }
 
     /**
+     * 更新价格表
+     */
+    public function editsku($sku_id){
+        $sku=Db::name('ProductSku')->where('sku_id',$sku_id)->find();
+        if(empty($sku)){
+            $this->error('价格表不存在');
+        }
+        $price = $this->request->param('price');
+        $storage = $this->request->param('storage');
+
+        Db::name('ProductSku')->where('sku_id',$sku_id)->update([
+            'price'=>$price,
+            'storage'=>$storage
+        ]);
+        $product = Db::name('Product')->where('id',$sku['product_id'])->find();
+        if(!empty($product)){
+            $skutotal = Db::name('ProductSku')->where('product_id',$sku['product_id'])->field('min(price) as min_price,max(price) as max_price,sum(storage) as storage')->find();
+            Db::name('Product')->where('id',$sku['product_id'])->update($skutotal);
+        }
+        $this->success("更新成功");
+    }
+
+    /**
      * 图集
      * @param $aid
      * @param $key

@@ -99,6 +99,7 @@ return array(
             'edit'=>'产品修改',
             'delete'=>'产品删除',
             'push'=>'产品上下架',
+            'editsku'=>'编辑价格',
             'get_specs'=>'规格数据',
             'imagelist'=>'文章图集',
             'imageadd'=>'添加图片',

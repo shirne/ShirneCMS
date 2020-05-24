@@ -463,7 +463,17 @@
             if(is_multi){
                 inputHtml='';
                 for(var i in multiset){
-                    inputHtml+= '<div class="input-group mt-1"><div class="input-group-prepend"><span class="input-group-text">'+multiset[i]+'</span></div><input type="text" data-key="'+i+'" name="confirm_input" class="form-control" /></div>';
+                    var label = multiset[i], value = '', sub_is_textarea=false;
+                    if(typeof label === 'object'){
+                        value = label.value?label.value:''
+                        sub_is_textarea = label.is_textarea?label.is_textarea:is_textarea;
+                        label = label.label?label.label:(label.title?label.title:i)
+                    }
+                    if(sub_is_textarea){
+                        inputHtml+= '<div class="input-group mt-2"><div class="input-group-prepend"><span class="input-group-text">'+label+'</span></div><textarea name="confirm_input" data-key="'+i+'" class="form-control" >'+value+'</textarea></div>';
+                    }else{
+                        inputHtml+= '<div class="input-group mt-2"><div class="input-group-prepend"><span class="input-group-text">'+label+'</span></div><input type="text" data-key="'+i+'" name="confirm_input" value="'+value+'" class="form-control" /></div>';
+                    }
                 }
             }
             return new Dialog({
@@ -474,7 +484,7 @@
                     }
                 },
                 'onshown':function(body){
-                    body.find('[name=confirm_input]').focus();
+                    body.find('[name=confirm_input]').eq(0).select();
                     if(message && message.onshown){
                         message.onshown(body);
                     }
