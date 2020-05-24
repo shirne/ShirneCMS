@@ -76,20 +76,26 @@ class MemberModel extends BaseModel
             $this->setError('设置的推荐人不是代理');
             return false;
         }
-        if($this['referer'] == $rmember['id']){
+        if(strcmp($this['referer'], $rmember['id'])===0){
             return true;
         }
         
-        $parents = MemberModel::getParents($rmember['id'], 0);
+        $parents = static::getParents($rmember['id'], 0);
         if(in_array($this['id'], $parents)){
             $this->setError('推荐人关系冲突');
             return false;
         }
-        if($this['referer']>0){
-            Db::name('member')->where('id',$this['referer'])->setDec('referer',1);
+        if($this['referer']>0 && $this['is_agent']){
+            Db::name('member')->where('id',$this['referer'])->setDec('recom_count',1);
+            $mparents=static::getParents($this['referer'],0);
+            $mparents = array_unshift($mparents, $this['referer']);
+            Db::name('member')->whereIn('id',$mparents)->setDec('team_count',1);
         }
-        Db::name('member')->where('id',$this['referer'])->setInc('referer',1);
         $this->save(['referer'=>$rmember['id']]);
+
+        if($this['is_agent']){
+            static::updateRecommend($this['referer']);
+        }
 
         static::sendBindAgentMessage($this, $rmember);
 
@@ -104,10 +110,12 @@ class MemberModel extends BaseModel
         $referer = $this['referer'];
         if($referer){
             $this->save(['referer'=>0]);
-            Db::name('member')->where('id',$referer)->setDec('recom_count',1);
-            $parents=static::getParents($referer,0);
-            array_unshift($parents,$referer);
-            Db::name('member')->whereIn('id',$parents)->setDec('team_count',1);
+            if($this['is_agent']){
+                Db::name('member')->where('id',$referer)->setDec('recom_count',1);
+                $parents=static::getParents($referer,0);
+                array_unshift($parents,$referer);
+                Db::name('member')->whereIn('id',$parents)->setDec('team_count',1);
+            }
         }
         return true;
     }
@@ -215,8 +223,10 @@ class MemberModel extends BaseModel
         $count= Db::name('member')->where('id',$member_id)->update($data);
         if($count){
             $parents=getMemberParents($member_id,0);
-            Db::name('member')->where('id',$parents[0])->setDec('recom_count',1);
-            Db::name('member')->whereIn('id',$parents)->setDec('team_count',1);
+            if(!empty($parents)){
+                Db::name('member')->where('id',$parents[0])->setDec('recom_count',1);
+                Db::name('member')->whereIn('id',$parents)->setDec('team_count',1);
+            }
         }
         return $count;
     }
