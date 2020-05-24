@@ -186,7 +186,6 @@ class MemberController extends BaseController
             }
             user_log($this->mid,'setagent',1,'设置代理 '.$id ,'manager');
             $this->success('设置成功');
-            exit;
         }else{
             $this->error('设置失败');
         }
