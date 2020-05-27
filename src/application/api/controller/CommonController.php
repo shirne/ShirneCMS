@@ -281,8 +281,8 @@ class CommonController extends BaseController
                     $g = trim(strtolower($g));
                     if($g == 'wechat'){
                         $rdata[$g] = $this->getDefaultWechat();
-                    }elseif($g != 'third' && isset($settings[$group])){
-                        $rdata[$g] = $settings[$group];
+                    }elseif($g != 'third' && isset($settings[$g])){
+                        $rdata[$g] = $settings[$g];
                     }else{
                         $rdata[$g] = new \stdClass();
                     }
