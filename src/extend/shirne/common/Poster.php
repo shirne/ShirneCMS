@@ -287,7 +287,7 @@ class Poster
     }
 
     private function paintImage($image, $set){
-        $sub = @imagecreatefromstring(file_get_contents($image));
+        $sub = @imagecreatefromstring($this->get_contents($image));
         if ($sub) {
             $w = imagesx($sub);
             $h = imagesy($sub);
@@ -391,6 +391,13 @@ class Poster
                 imagejpeg($this->bg,$path,80);
         }
         return true;
+    }
+
+    private function get_contents($file){
+        if(strpos($file,'http://') === 0 || strpos($file,'https://') === 0){
+            return curl_file_get_contents($file);
+        }
+        return file_get_contents($file);
     }
 
     protected function autoWrap($text, $textSize, $width){

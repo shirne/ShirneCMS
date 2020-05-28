@@ -1238,6 +1238,23 @@ function number_empty($val){
 }
 
 /**
+ * curl下载文件
+ * @param mixed $durl 
+ * @return string|bool 
+ */
+function curl_file_get_contents($durl, $timeout = 3, $referer = ''){
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $durl);
+    curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36');
+    curl_setopt($ch, CURLOPT_REFERER,$referer);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    $r = curl_exec($ch);
+    curl_close($ch);
+    return $r;
+}
+
+/**
  * 请求接口返回内容
  * @param $url string  [请求的URL地址]
  * @param $params string|bool [请求的参数]
