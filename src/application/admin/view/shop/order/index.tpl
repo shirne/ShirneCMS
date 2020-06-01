@@ -45,7 +45,7 @@
                                 <option value="1"{$status==='1'?' selected':''}>待发货</option>
                                 <option value="2"{$status==='2'?' selected':''}>待收货</option>
                                 <option value="3"{$status==='3'?' selected':''}>待评价</option>
-                                <option value="3"{$status==='4'?' selected':''}>已完成</option>
+                                <option value="4"{$status==='4'?' selected':''}>已完成</option>
                                 <option value="-1"{$status==='-1'?' selected':''}>已失效</option>
                             </select>
                         </div>

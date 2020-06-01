@@ -467,9 +467,9 @@ class AuthController extends BaseController
         if(isset($userinfo['sex'])){
             $gender = $userinfo['sex'];
         }
-        return array(
+        $data = [
             'data'=>$rowData,
-            'is_follow'=>0,
+            //'is_follow'=>0,
             'nickname'=>$nickname,
             'gender'=>$gender,
             //'unionid'=>isset($userinfo['unionid'])?$userinfo['unionid']:'',
@@ -478,7 +478,16 @@ class AuthController extends BaseController
             'province'=>$userinfo['province'],
             'country'=>isset($userinfo['country'])?$userinfo['country']:'',
             'language'=>isset($userinfo['language'])?$userinfo['language']:''
-        );
+        ];
+        if(isset($userinfo['is_follow'])){
+            $data['is_follow'] = $userinfo['is_follow'];
+        }elseif(!empty($userinfo['subscribe_time'])){
+            $data['is_follow'] = 1;
+        }
+        if(isset($userinfo['unionid'])){
+            $data['unionid'] = $userinfo['unionid'];
+        }
+        return $data;
     }
 
     public function refresh($refresh_token){
