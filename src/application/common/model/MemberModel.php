@@ -149,7 +149,7 @@ class MemberModel extends BaseModel
         }
     }
     
-    public function autoCheckUpgrade($parents){
+    private static function autoCheckUpgrade($parents){
         $agents = MemberAgentModel::getCacheData();
         $needUpdates=Db::name('member')->whereIn('id',$parents)
             ->field('id,level_id,is_agent,team_count,recom_count,recom_total,recom_performance,total_performance,agentcode,referer')
