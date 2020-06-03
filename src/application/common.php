@@ -925,6 +925,25 @@ function is_action($controller,$actions){
 }
 
 /**
+ * 用于url的base64编码和解码功能
+ * @param mixed $text 
+ * @return string 
+ */
+function base64url_encode($text) {
+    if(empty($text))return '';
+    $base64 = base64_encode($text);
+    $base64url = strtr($base64, '+/=', '-_,');
+    return $base64url;
+}
+
+function base64url_decode($text) {
+    if(empty($text))return '';
+    $base64url = strtr($text, '-_,', '+/=');
+    $base64 = base64_decode($base64url);
+    return $base64;
+}
+
+/**
  * 带权重的数组随机
  * @param $array
  * @param string $wfield

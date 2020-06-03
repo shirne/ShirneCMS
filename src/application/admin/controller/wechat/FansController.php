@@ -19,9 +19,9 @@ class FansController extends WechatBaseController
 {
     public function index($keyword = ''){
         if($this->request->isPost()){
-            return redirect(url('',['keyword'=>base64_encode($keyword)]));
+            return redirect(url('',['keyword'=>base64url_encode($keyword)]));
         }
-        $keyword=empty($keyword)?"":base64_decode($keyword);
+        $keyword=empty($keyword)?"":base64url_decode($keyword);
         $model=Db::name('MemberOauth')->where('type_id',$this->wid);
         if(!empty($keyword)){
             $model->whereLike('openid|nickname',"%$keyword%");

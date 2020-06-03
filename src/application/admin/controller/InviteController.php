@@ -19,9 +19,9 @@ class InviteController extends BaseController
     public function index($keyword='',$accurate=0)
     {
         if($this->request->isPost()){
-            return redirect(url('',['keyword'=>base64_encode($keyword),'accurate'=>$accurate]));
+            return redirect(url('',['keyword'=>base64url_encode($keyword),'accurate'=>$accurate]));
         }
-        $keyword=empty($keyword)?'':trim(base64_decode($keyword));
+        $keyword=empty($keyword)?'':trim(base64url_decode($keyword));
         $model = Db::view('inviteCode','*')
         ->view('member',['username','nickname','avatar','level_id'],'member.id=inviteCode.member_id','LEFT')
         ->view('member memberUse',['username'=>'use_username','nickname'=>'use_nickname','avatar'=>'use_avatar','level_id'=>'use_level_id'],'memberUse.id=inviteCode.member_use','LEFT');

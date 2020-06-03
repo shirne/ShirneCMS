@@ -36,12 +36,12 @@ class MaterialController extends WechatBaseController
      */
     public function index($key='',$type=''){
         if($this->request->isPost()){
-            return redirect(url('',['wid'=>$this->wid,'key'=>base64_encode($key),'type'=>$type]));
+            return redirect(url('',['wid'=>$this->wid,'key'=>base64url_encode($key),'type'=>$type]));
         }
         if(!$this->wechatApp instanceof Application){
             $this->error('该类型账号不支持素材管理功能');
         }
-        $key=empty($key)?"":base64_decode($key);
+        $key=empty($key)?"":base64url_decode($key);
         $model = Db::name('wechatMaterial');
         
         if(!empty($key)){

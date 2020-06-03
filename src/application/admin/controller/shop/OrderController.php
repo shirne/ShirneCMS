@@ -28,9 +28,9 @@ class OrderController extends BaseController
      */
     public function index($keyword='',$start_date='',$end_date='',$status='',$audit=''){
         if($this->request->isPost()){
-            return redirect(url('',['status'=>$status,'start_date'=>$start_date,'end_date'=>$end_date,'audit'=>$audit,'keyword'=>base64_encode($keyword)]));
+            return redirect(url('',['status'=>$status,'start_date'=>$start_date,'end_date'=>$end_date,'audit'=>$audit,'keyword'=>base64url_encode($keyword)]));
         }
-        $keyword=empty($keyword)?"":base64_decode($keyword);
+        $keyword=empty($keyword)?"":base64url_decode($keyword);
         $model=Db::view('order','*')
             ->view('member',['username','realname','nickname','avatar','level_id'],'member.id=order.member_id','LEFT')
             ->where('order.delete_time',0);

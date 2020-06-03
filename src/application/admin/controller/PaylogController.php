@@ -247,9 +247,9 @@ class PaylogController extends BaseController
      */
     public function cashin($key='',$status=''){
         if($this->request->isPost()){
-            return redirect(url('',['status'=>$status,'key'=>base64_encode($key)]));
+            return redirect(url('',['status'=>$status,'key'=>base64url_encode($key)]));
         }
-        $key=empty($key)?'':base64_decode($key);
+        $key=empty($key)?'':base64url_decode($key);
         $model=Db::view('__MEMBER_CASHIN__ mc','*')->view('__MEMBER__ m',['username','nickname','avatar','realname'],'mc.member_id=m.id','LEFT');
         
         if(!empty($key)){
