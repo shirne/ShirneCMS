@@ -96,7 +96,7 @@ class OrderController extends BaseController
     public function export($order_ids='',$keyword='',$start_date='',$end_date='',$status='',$audit=''){
         $keyword=empty($keyword)?"":base64_decode($keyword);
         $model=Db::view('order','*')
-            ->view('member',['username','realname','avatar','level_id'],'member.id=order.member_id','LEFT')
+            ->view('member',['username','realname','nickname','avatar','level_id'],'member.id=order.member_id','LEFT')
             ->where('order.delete_time',0);
         if(empty($order_ids)){
             if(!empty($keyword)){
@@ -142,8 +142,12 @@ class OrderController extends BaseController
 
         foreach ($rows as $row){
             $prodata = Db::name('OrderProduct')->where('order_id', $row['order_id'])->find();
+            $username = $row['username'];
+            if(strpos($username,'#') === 0){
+                $username = $row['nickname'];
+            }
             $excel->addRow(array(
-                $row['order_id'],order_status($row['status'],false),date('Y/m/d H:i:s',$row['create_time']),$row['member_id'],$row['username'],
+                $row['order_no'],order_status($row['status'],false),date('Y/m/d H:i:s',$row['create_time']),$row['member_id'],$username,
                 $prodata['product_title'],$row['payamount'],$row['recive_name'],$row['mobile'],$row['province'],$row['city'],$row['area'],$row['address']
             ));
         }
