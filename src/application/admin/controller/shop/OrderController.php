@@ -144,7 +144,7 @@ class OrderController extends BaseController
             $prodata = Db::name('OrderProduct')->where('order_id', $row['order_id'])->find();
             $username = $row['username'];
             if(strpos($username,'#') === 0){
-                $username = $row['nickname'];
+                $username = filter_emoji($row['nickname'], '?');
             }
             $excel->addRow(array(
                 $row['order_no'],order_status($row['status'],false),date('Y/m/d H:i:s',$row['create_time']),$row['member_id'],$username,

@@ -501,13 +501,14 @@ function getWeek($d){
 /**
  * 过滤emoji字符
  * @param $str
+ * @param $replace
  * @return mixed
  */
-function filter_emoji($str)
+function filter_emoji($str, $replace = '')
 {
     $str = preg_replace_callback( '/./u',
-        function (array $match) {
-            return strlen($match[0]) >= 4 ? '' : $match[0];
+        function (array $match) use ($replace) {
+            return strlen($match[0]) >= 4 ? $replace : $match[0];
         },
         $str);
     return $str;
