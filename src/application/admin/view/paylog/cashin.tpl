@@ -76,7 +76,7 @@
                         </div>
                     </div>
                 </td>
-                <td>{$v.amount|showmoney}</td>
+                <td>{$v.amount|showmoney}<br /><span class="text-muted">手续费:{$v.cash_fee|showmoney}</span></td>
                 <td>{$v.real_amount|showmoney}</td>
                 <td>{$v.cashtype|showcashtype}</td>
                 <td>
