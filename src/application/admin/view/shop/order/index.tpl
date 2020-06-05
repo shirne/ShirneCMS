@@ -17,7 +17,7 @@
                         <a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="setStatus">设置状态</a>
                         <a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="delete">{:lang('Delete')}</a>
                     </div>
-                    <div class="btn-group btn-group-sm" role="group" aria-label="Button group with nested dropdown">
+                    <div class="btn-group btn-group-sm mr-2" role="group" aria-label="Button group with nested dropdown">
                         <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             导出订单
                         </button>
@@ -26,6 +26,17 @@
                             <a class="dropdown-item" href="{:url('shop.order/export',['order_ids'=>$orderids])}" target="_blank" >导出本页</a>
                             <a class="dropdown-item" href="{:url('shop.order/export',['status'=>1])}" target="_blank">导出未处理</a>
                             <a class="dropdown-item" href="{:url('shop.order/export',['status'=>$status,'start_date'=>$start_date,'end_date'=>$end_date,'audit'=>$audit,'keyword'=>base64_encode($keyword)])}" target="_blank">导出筛选结果</a>
+                        </div>
+                    </div>
+                    <div class="btn-group btn-group-sm" role="group" aria-label="Button group with nested dropdown">
+                        <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            导出发货单
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                            <a class="dropdown-item action-btn" data-action="export" data-mode="express" href="javascript:" target="_blank" >导出选中项</a>
+                            <a class="dropdown-item" href="{:url('shop.order/export',['order_ids'=>$orderids,'mode'=>'express'])}" target="_blank" >导出本页</a>
+                            <a class="dropdown-item" href="{:url('shop.order/export',['status'=>1,'mode'=>'express'])}" target="_blank">导出未处理</a>
+                            <a class="dropdown-item" href="{:url('shop.order/export',['status'=>$status,'start_date'=>$start_date,'end_date'=>$end_date,'audit'=>$audit,'keyword'=>base64_encode($keyword),'region'=>base64_encode($region),'mode'=>'express'])}" target="_blank">导出筛选结果</a>
                         </div>
                     </div>
                 </div>
@@ -196,9 +207,10 @@
             });
         }
         w.actionExport = function(ids){
-            var baseUrl = "{:url('shop.order/export',['order_ids'=>'__IDS__'])}";
+            var baseUrl = "{:url('shop.order/export',['order_ids'=>'__IDS__','mode'=>'__MODE__'])}";
             var idstr = ids.join(',')
-            location.href = baseUrl.replace('__IDS__',idstr)
+            var mode = $(this).data('mode')
+            location.href = baseUrl.replace('__IDS__',idstr).replace('__MODE__',mode?mode:'')
         }
     })(window);
         jQuery(function(){

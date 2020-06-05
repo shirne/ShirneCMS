@@ -107,10 +107,10 @@ jQuery(function ($) {
                 for (var i = 0; i < ids.length; i++) {
                     idchecks.push(ids.eq(i).val());
                 }
-                window[action](idchecks);
+                window[action].call(this, idchecks);
             }
         } else {
-            window[action]();
+            window[action].call(this);
         }
     });
 
