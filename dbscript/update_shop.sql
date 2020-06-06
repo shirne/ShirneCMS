@@ -14,9 +14,27 @@ VALUES
 
 INSERT INTO `sa_setting` ( `key`,`title`,`type`,`group`,`sort`,`is_sys`, `value`, `description`,`data`)
 VALUES
-  ( 'shop_pagetitle', 'SEO标题', 'text', 'shop', '0', 1 , '0', '', ''),
-  ( 'shop_keyword', 'SEO关键字', 'text', 'shop', '0', 1 , '0', '', ''),
-  ( 'shop_description', 'SEO简介', 'text', 'shop', '0', 1 , '0', '', '');
+  ( 'shop_pagetitle', '商城标题', 'text', 'shop', '0', 1 , '商城', '', ''),
+  ( 'shop_keyword', '商城关键字', 'text', 'shop', '0', 1 , '商城', '', ''),
+  ( 'shop_description', '商城简介', 'text', 'shop', '0', 1 , '', '', ''),
+  ( 'shop_order_pay_limit', '订单支付超时', 'text', 'shop', '0', 1 , '', '', ''),
+  ( 'shop_order_refund_limit', '订单退款限时', 'text', 'shop', '0', 1 , '', '', ''),
+  ( 'shop_order_receive_limit', '订单默认收货', 'text', 'shop', '0', 1 , '', '', ''),
+  ( 'shop_order_notice', '下单说明', 'text', 'shop', '0', 1 , '', '', '');
+
+INSERT INTO `sa_setting` ( `key`,`title`,`type`,`group`,`sort`,`is_sys`, `value`, `description`,`data`)
+VALUES
+  ( 'poster_background', '分享图背景', 'image', 'poster', '0', 1 , '', '建议尺寸 1080px x 1920px', ''),
+  ( 'poster_avatar', '用户头像', 'json', 'poster', '0', 1 , '', '', ''),
+  ( 'poster_nickname', '用户昵称', 'json', 'poster', '0', 1 , '', '', ''),
+  ( 'poster_qrcode', '二维码位置', 'json', 'poster', '0', 1 , '', '', ''),
+  ( 'poster_qrlogo', '二维码LOGO', 'image', 'poster', '0', 1 , '', '', '');
+
+INSERT INTO `sa_setting` ( `key`,`title`,`type`,`group`,`sort`,`is_sys`, `value`, `description`,`data`)
+VALUES
+  ( 'message_bind_agent', '绑定推荐人', 'text', 'message', '0', 1 , '', '可用变量 用户昵称:[username] 代理昵称:[agent] 用户ID:[userid] 代理ID:[agentid]', ''),
+  ( 'message_become_agent', '成为代理', 'text', 'message', '0', 1 , '', '可用变量 用户昵称:[username] 用户ID:[userid]', ''),
+  ( 'message_upgrade_agent', '升级代理', 'text', 'message', '0', 1 , '', '可用变量 用户昵称:[username] 用户ID:[userid] 代理等级:[agent]', '');
 
 DROP TABLE IF EXISTS `sa_member_cart`;
 
@@ -163,6 +181,7 @@ CREATE TABLE `sa_product` (
   `postage` DECIMAL(10,2) DEFAULT '0' COMMENT '固定邮费',
   `sale` int(11) DEFAULT '0' COMMENT '总销量',
   `v_sale` int(11) DEFAULT '0' COMMENT '虚拟销量',
+  `comment` int(11) DEFAULT '0' COMMENT '评论数量',
   `type` tinyint(4) DEFAULT '0' COMMENT '商品类型,参见后台编辑页',
   `is_commission` tinyint(4) DEFAULT '1' COMMENT '是否启用分佣',
   `commission_percent`  text COMMENT '独立的分佣设置',
@@ -296,6 +315,56 @@ CREATE TABLE `sa_order` (
   INDEX `memberid_index` (`member_id` ASC)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `sa_order_product`;
+CREATE TABLE `sa_order_product` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_id` INT(11) DEFAULT '0',
+  `member_id` INT NULL,
+  `product_id` INT(11) DEFAULT '0',
+  `sku_id` INT(11) DEFAULT '0',
+  `sku_specs` text,
+  `product_title` varchar(100) DEFAULT '',
+  `product_image` varchar(150) DEFAULT '',
+  `product_orig_price` DECIMAL(10,2) DEFAULT 0,
+  `product_price` DECIMAL(10,2) DEFAULT 0,
+  `product_cost_price` DECIMAL(10,2) DEFAULT 0,
+  `product_weight` INT(11) DEFAULT 0,
+  `count` int(11) DEFAULT 0,
+  `sort` INT(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `product_id` (`product_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `sa_order_refund`;
+CREATE TABLE `sa_order_refund` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_id` INT(11) DEFAULT '0',
+  `member_id` INT(11) DEFAULT '0',
+  `type` TINYINT(4) DEFAULT '0',
+  `reason` varchar(30) DEFAULT '',
+  `remark` varchar(200) DEFAULT '',
+  `amount` decimal(10,2) DEFAULT '0',
+  `image` text,
+  `product` text,
+  `address` text,
+  `express` text,
+  `status` TINYINT(4) NULL DEFAULT 0,
+  `create_time` INT(11) DEFAULT '0',
+  `update_time` INT(11) DEFAULT '0',
+  PRIMARY KEY (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `sa_order_log`;
+CREATE TABLE `sa_order_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_id` INT(11) DEFAULT '0',
+  `member_id` INT NULL,
+  `type` varchar(20) DEFAULT '',
+  `remark` varchar(255) DEFAULT '',
+  `create_time` INT(11) DEFAULT '0',
+  `update_time` INT(11) DEFAULT '0',
+  PRIMARY KEY (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `sa_help_category`;
 CREATE TABLE `sa_help_category` (
@@ -361,27 +430,6 @@ CREATE TABLE `sa_express_cache` (
   PRIMARY KEY (`id`),
   KEY `express_no` (`express_no`),
   KEY `express_code` (`express_code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-DROP TABLE IF EXISTS `sa_order_product`;
-
-CREATE TABLE `sa_order_product` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `order_id` INT(11) DEFAULT '0',
-  `member_id` INT NULL,
-  `product_id` INT(11) DEFAULT '0',
-  `sku_id` INT(11) DEFAULT '0',
-  `sku_specs` text,
-  `product_title` varchar(100) DEFAULT '',
-  `product_image` varchar(150) DEFAULT '',
-  `product_orig_price` DECIMAL(10,2) DEFAULT 0,
-  `product_price` DECIMAL(10,2) DEFAULT 0,
-  `product_cost_price` DECIMAL(10,2) DEFAULT 0,
-  `product_weight` INT(11) DEFAULT 0,
-  `count` int(11) DEFAULT 0,
-  `sort` INT(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `product_id` (`product_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `sa_postage`;

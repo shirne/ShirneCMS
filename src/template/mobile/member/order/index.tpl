@@ -85,13 +85,13 @@
                             if(balance<payamount){
                                 weui.alert('您的余额不足以支付');
                             }else{
-                                location.href='{:url('index/order/balancepay',['order_id'=>'__order_id__'])}'.replace('__order_id__',order_id);
+                                location.href="{:url('index/order/balancepay',['order_id'=>'__order_id__'])}".replace('__order_id__',order_id);
                             }
                         }
                     }, {
                         label: '微信支付',
                         onClick: function () {
-                            location.href='{:url('index/order/wechatpay',['order_id'=>'__order_id__'])}'.replace('__order_id__',order_id);
+                            location.href="{:url('index/order/wechatpay',['order_id'=>'__order_id__'])}".replace('__order_id__',order_id);
                         }
                     }
                 ], [

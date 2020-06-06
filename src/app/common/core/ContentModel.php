@@ -256,10 +256,12 @@ class ContentModel extends BaseModel
             $list = $model->paginate($pagesize,false,['page'=>$page]);
             
         }else {
-            if (empty($attrs['limit'])) {
+            if (empty($attrs['limit']) && empty($attrs['ids'])) {
                 $attrs['limit'] = 10;
             }
-            $model->limit($attrs['limit']);
+            if(!empty($attrs['limit'])){
+                $model->limit($attrs['limit']);
+            }
     
             $list = $model->select()->all();
             

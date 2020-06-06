@@ -47,6 +47,9 @@ class CouponController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             }else{
+                if(!empty($data['expiry_time']))$data['expiry_time']=strtotime($data['expiry_time']);
+                if(!empty($data['start_time']))$data['start_time']=strtotime($data['start_time']);
+                if(!empty($data['end_time']))$data['end_time']=strtotime($data['end_time']);
                 $model=ProductCouponModel::create($data);
                 if ($model['id']) {
                     $this->success(lang('Add success!'), url('shop.coupon/index'));
@@ -82,6 +85,9 @@ class CouponController extends BaseController
             }else{
 
                 try{
+                    if(!empty($data['expiry_time']))$data['expiry_time']=strtotime($data['expiry_time']);
+                    if(!empty($data['start_time']))$data['start_time']=strtotime($data['start_time']);
+                    if(!empty($data['end_time']))$data['end_time']=strtotime($data['end_time']);
                     $model->save($data);
                     
                 }catch(\Exception $err){

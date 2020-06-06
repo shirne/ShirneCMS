@@ -35,6 +35,12 @@ class CartController extends AuthedController
         if(empty($product)){
             $this->error('产品已下架');
         }
+        if(!empty($product['levels'])){
+            $levels=@json_decode($product['levels'],true);
+            if (!empty($levels) && !in_array($this->user['level_id'], $levels)) {
+                $this->error('您当前会员组不允许购买商品[' . $product['title'] . ']');
+            }
+        }
         MemberCartFacade::addCart($product,$sku,$count,$this->user['id']);
         $this->success('成功添加到购物车');
     }

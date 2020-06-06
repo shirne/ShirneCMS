@@ -1,6 +1,7 @@
 <?php
 
 namespace app\common\service;
+
 use extcore\traits\Email;
 use think\facade\Db;
 use shirne\third\UmsHttp;

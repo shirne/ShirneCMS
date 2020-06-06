@@ -62,7 +62,7 @@ function local_media($src){
     if(empty($src))return $src;
     $src = ltrim($src,'.');
     if(strpos($src,'/')===0 || strpos($src,'://')===false){
-        return url('/','',false,true).$src;
+        return url('/', [], false, true).$src;
     }
     return $src;
 }
@@ -500,13 +500,14 @@ function getWeek($d){
 /**
  * 过滤emoji字符
  * @param $str
+ * @param $replace
  * @return mixed
  */
-function filter_emoji($str)
+function filter_emoji($str, $replace = '')
 {
     $str = preg_replace_callback( '/./u',
-        function (array $match) {
-            return strlen($match[0]) >= 4 ? '' : $match[0];
+        function (array $match) use ($replace) {
+            return strlen($match[0]) >= 4 ? $replace : $match[0];
         },
         $str);
     return $str;
@@ -893,7 +894,7 @@ function current_url($withqry=true){
 }
 
 function current_domain(){
-    return rtrim(url('/','',false,true),'/');
+    return rtrim(url('/', [], false, true)->build(), '/');
 }
 
 /**
@@ -921,6 +922,25 @@ function is_action($controller,$actions){
     }
     return strcasecmp(request()->controller(), $controller) == 0 &&
         in_array(request()->action(),$actions);
+}
+
+/**
+ * 用于url的base64编码和解码功能
+ * @param mixed $text 
+ * @return string 
+ */
+function base64url_encode($text) {
+    if(empty($text))return '';
+    $base64 = base64_encode($text);
+    $base64url = strtr($base64, '+/=', '-_,');
+    return $base64url;
+}
+
+function base64url_decode($text) {
+    if(empty($text))return '';
+    $base64url = strtr($text, '-_,', '+/=');
+    $base64 = base64_decode($base64url);
+    return $base64;
 }
 
 /**
@@ -1243,6 +1263,23 @@ function format_date($date_str, $format){
 function number_empty($val){
     $tval = floatval($val);
     return empty($tval)?'':$val;
+}
+
+/**
+ * curl下载文件
+ * @param mixed $durl 
+ * @return string|bool 
+ */
+function curl_file_get_contents($durl, $timeout = 3, $referer = ''){
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $durl);
+    curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36');
+    curl_setopt($ch, CURLOPT_REFERER,$referer);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    $r = curl_exec($ch);
+    curl_close($ch);
+    return $r;
 }
 
 /**

@@ -32,7 +32,13 @@ class OrderController extends AuthedController
         }else{
             $products=MemberCartFacade::getCart($this->user['id'],$skuids);
         }
-        
+        foreach($products as $product){
+            if(!empty($product['levels'])){
+                if (!in_array($this->user['level_id'], $product['levels'])) {
+                    $this->error('您当前会员组不允许购买商品[' . $product['product_title'] . ']');
+                }
+            }
+        }
         $result=['products'=>$products];
         if(empty($address)){
             $address = Db::name('MemberAddress')->where('member_id',$this->user['id'])->order('is_default DESC')->find();
