@@ -3,7 +3,11 @@
 <block name="body">
 <include file="public/bread" menu="shop_promotion_index" title="商城配置" />
 <div id="page-wrapper">
-    <div class="page-header">商城配置</div>
+    <div class="page-header">
+        <a href="{:url('admin/shop.promotion/poster')}" class="float-right btn btn-sm btn-outline-primary">分享图配置</a>
+        <a href="{:url('admin/shop.promotion/message')}" class="float-right btn btn-sm btn-outline-primary mr-1">消息配置</a>
+        商城配置
+    </div>
     <div id="page-content">
     <form method="post" action="" enctype="multipart/form-data">
         

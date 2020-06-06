@@ -17,6 +17,7 @@ class GoodsController extends BaseController
     {
         parent::initialize();
         $this->assign('navmodel','goods');
+        $this->seo($this->config['credit_pagetitle'],$this->config['credit_keyword'],$this->config['credit_description']);
     }
 
     public function index($name=""){
@@ -25,13 +26,11 @@ class GoodsController extends BaseController
             ->view('goodsCategory',['name'=>'category_name','title'=>'category_title'],'goods.cate_id=goodsCategory.id','LEFT')->where('status',1);
 
         if(!empty($this->category)){
-            $this->seo($this->category['title']);
+            $this->seo($this->category['title'],$this->category['keywords'],$this->category['description']);
             $model->whereIn('goods.cate_id',GoodsCategoryFacade::getSubCateIds($this->category['id']));
 
-        }else{
-            $this->seo("积分商城");
         }
-
+        
         $model=$model->order('goods.sort DESC,goods.id DESC')->paginate($this->pagesize);
 
         $model->each(function($item){

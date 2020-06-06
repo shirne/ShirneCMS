@@ -5,6 +5,7 @@ namespace app\api\controller\member;
 
 use app\api\controller\AuthedController;
 use app\common\model\OrderModel;
+use app\common\model\OrderRefundModel;
 use think\Db;
 
 class OrderController extends AuthedController
@@ -48,7 +49,7 @@ class OrderController extends AuthedController
 
     public function view($id){
         $order=Db::name('Order')->where('order_id',intval($id))->find();
-        if(empty($order) || $order['delete_time']>0){
+        if(empty($order) || $order['member_id']!=$this->user['id'] || $order['delete_time']>0){
             $this->error('订单不存在或已删除',0);
         }
         $order['products']=Db::view('OrderProduct', '*')
@@ -62,7 +63,7 @@ class OrderController extends AuthedController
     
     public function cancel($id, $reason=''){
         $order=OrderModel::get(intval($id));
-        if(empty($order) || $order['delete_time']>0){
+        if(empty($order) || $order['member_id']!=$this->user['id'] || $order['delete_time']>0){
             $this->error('订单不存在或已删除',0);
         }
         if($order['status'] != 0){
@@ -76,7 +77,7 @@ class OrderController extends AuthedController
         }
     }
     
-    public function refund($id, $reason=''){
+    public function refund($id){
         $order=OrderModel::get(intval($id));
         if(empty($order) || $order['delete_time']>0){
             $this->error('订单不存在或已删除',0);
@@ -84,20 +85,31 @@ class OrderController extends AuthedController
         if($order['status'] < 1){
             $this->error('订单状态错误',0);
         }
+
+        $params = $this->request->param();
+        $params['member_id']=$this->user['id'];
         
         //退款
-        $success = $order->updateStatus(['status'=>-3,'reason'=>$reason]);
-        if($success){
-            
-            $this->success('订单已申请退款');
-        }else{
-            $this->error('取消失败');
+        if($this->request->isPost()){
+            try{
+                $success = OrderRefundModel::createRefund($order, $params);
+            }catch(\Exception $e){
+                $this->error($e->getMessage());
+            }
+            if($success){
+                $this->success('订单已申请退款');
+            }else{
+                $this->error('申请失败');
+            }
         }
+        
+        $refund = OrderRefundModel::where('order_id',$id)->find();
+        return $this->response(['refund'=>$refund]);
     }
     
     public function express($id){
         $order=OrderModel::get(intval($id));
-        if(empty($order) || $order['delete_time']>0){
+        if(empty($order) || $order['member_id']!=$this->user['id'] || $order['delete_time']>0){
             $this->error('订单不存在或已删除',0);
         }
         
@@ -142,7 +154,7 @@ class OrderController extends AuthedController
     
     public function confirm($id){
         $order=OrderModel::get(intval($id));
-        if(empty($order) || $order['delete_time']>0){
+        if(empty($order) || $order['member_id']!=$this->user['id'] || $order['delete_time']>0){
             $this->error('订单不存在或已删除',0);
         }
         if($order['status'] < 1){
@@ -158,7 +170,7 @@ class OrderController extends AuthedController
     
     public function delete($id){
         $order=OrderModel::get(intval($id));
-        if(empty($order) || $order['delete_time']>0){
+        if(empty($order) || $order['member_id']!=$this->user['id'] || $order['delete_time']>0){
             $this->error('订单不存在或已删除',0);
         }
         if($order['status'] >-1 || $order['status']<-2){

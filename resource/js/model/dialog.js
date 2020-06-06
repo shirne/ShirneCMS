@@ -176,6 +176,9 @@
             }
         });
         this.box.on('shown.bs.modal',function(){
+            if(self.box && self.closed){
+                return self.box.modal('hide');
+            }
             if(self.options.onshown){
                 self.options.onshown(body,self.box);
             }
@@ -457,6 +460,7 @@
             var contentHtml='<div class="form-group">{@input}</div>';
             var title='请输入信息';
             var is_multi=false;
+            var is_textarea=false;
             var multiset={};
             if(typeof message=='string'){
                 title=message;
@@ -469,12 +473,28 @@
                     is_multi=true;
                     multiset=message.multi;
                 }
+                if(message.is_textarea){
+                    is_textarea=true;
+                }
             }
             var inputHtml='<input type="text" name="confirm_input" class="form-control" />';
+            if(is_textarea){
+                inputHtml='<textarea name="confirm_input" class="form-control" ></textarea>';
+            }
             if(is_multi){
                 inputHtml='';
                 for(var i in multiset){
-                    inputHtml+= '<div class="input-group mt-1"><div class="input-group-prepend"><span class="input-group-text">'+multiset[i]+'</span></div><input type="text" data-key="'+i+'" name="confirm_input" class="form-control" /></div>';
+                    var label = multiset[i], value = '', sub_is_textarea=false;
+                    if(typeof label === 'object'){
+                        value = label.value?label.value:''
+                        sub_is_textarea = label.is_textarea?label.is_textarea:is_textarea;
+                        label = label.label?label.label:(label.title?label.title:i)
+                    }
+                    if(sub_is_textarea){
+                        inputHtml+= '<div class="input-group mt-2"><div class="input-group-prepend"><span class="input-group-text">'+label+'</span></div><textarea name="confirm_input" data-key="'+i+'" class="form-control" >'+value+'</textarea></div>';
+                    }else{
+                        inputHtml+= '<div class="input-group mt-2"><div class="input-group-prepend"><span class="input-group-text">'+label+'</span></div><input type="text" data-key="'+i+'" name="confirm_input" value="'+value+'" class="form-control" /></div>';
+                    }
                 }
             }
             return new Dialog({
@@ -485,7 +505,7 @@
                     }
                 },
                 'onshown':function(body){
-                    body.find('[name=confirm_input]').focus();
+                    body.find('[name=confirm_input]').eq(0).select();
                     if(message && message.onshown){
                         message.onshown(body);
                     }
@@ -668,18 +688,28 @@
             }).show(contentTpl,config.title);
             return dlg;
         },
-        pickUser:function(callback,filter){
+        pickUser:function(callback,title,filter){
+            if(typeof title=='object' && !filter){
+                filter = title;
+                title = null;
+            }
             return this.pickList({
-                'url':window.get_search_url('member'),
-                'name':'会员',
-                'searchHolder':'根据会员id或名称，电话来搜索',
-                'rowTemplate':'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action" style="line-height:30px;">{if @avatar}<img src="{@avatar}" style="width:30px;height:30px;border-radius: 100%;margin-right:10px;" />{else}<i class="ion-md-person"></i>{/if} [{@id}]&nbsp;{if @nickname}{@nickname}{else}{@username}{/if}&nbsp;&nbsp;&nbsp;{if @mobile}<small><i class="ion-md-phone-portrait"></i> {@mobile}</small>{/if}</a>'
+                url:window.get_search_url('member'),
+                title:title,
+                name:'会员',
+                searchHolder:'根据会员id或名称，电话来搜索',
+                rowTemplate:'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action" style="line-height:30px;">{if @avatar}<img src="{@avatar}" style="width:30px;height:30px;border-radius: 100%;margin-right:10px;" />{else}<i class="ion-md-person"></i>{/if} [{@id}]&nbsp;{if @nickname}{@nickname}{else}{@username}{/if}&nbsp;&nbsp;&nbsp;{if @mobile}<small><i class="ion-md-phone-portrait"></i> {@mobile}</small>{/if}</a>'
             },callback,filter);
         },
-        pickArticle:function(callback,filter){
+        pickArticle:function(callback,title,filter){
+            if(typeof title=='object' && !filter){
+                filter = title;
+                title = null;
+            }
             return this.pickList({
-                'url':window.get_search_url('article'),
+                url:window.get_search_url('article'),
                 rowTemplate:'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action">{if @cover}<div style="background-image:url({@cover})" class="imgview" ></div>{/if}<div class="text-block">[{@id}]&nbsp;{@title}&nbsp;<br />{@description}</div></a>',
+                title:title,
                 name:'文章',
                 idkey:'id',
                 extend:{
@@ -691,13 +721,18 @@
                 'searchHolder':'根据文章标题搜索'
             },callback,filter);
         },
-        pickProduct:function(callback,filter){
+        pickProduct:function(callback,title,filter){
+            if(typeof title=='object' && !filter){
+                filter = title;
+                title = null;
+            }
             var issku = filter && filter['searchtype'];
             var titletpl='<div class="text-block">[{@id}]&nbsp;{@title}&nbsp;<br />{@min_price}{if @max_price>@min_price}~{@max_price}{/if}</div>';
             if(issku)titletpl='<div class="text-block">[{@id}]&nbsp;{@title}&nbsp;<br />[{@sku_goods_no}]&nbsp;{@price}</div>';
             return this.pickList({
-                'url':window.get_search_url('product'),
+                url:window.get_search_url('product'),
                 rowTemplate:'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action">{if @image}<div style="background-image:url({@image})" class="imgview" ></div>{/if}'+titletpl+'</a>',
+                title:title,
                 name:'产品',
                 idkey:'id',
                 extend:{
@@ -754,20 +789,20 @@
         }
     };
 
-    //监控按键
+    // 监控按键
     $(document).on('keydown', function(e){
         if(!Dialog.instance)return;
         var dlg=Dialog.instance;
         if (e.keyCode == 13) {
             dlg.box.find('.modal-footer .btn[default]').trigger('click');
         }
-        //默认已监听关闭
+        // 默认已监听关闭
         /*if (e.keyCode == 27) {
          self.hide();
          }*/
     });
 
-    //暴露接口
+    // 暴露接口
     window.Dialog=$.Dialog=Dialog;
     window.dialog=$.dialog=dialog;
 })(window,jQuery||Zepto);

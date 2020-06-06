@@ -1,305 +1,343 @@
 <extend name="public:base" />
-
+<block name="header">
+    <style type="text/css">
+        .card .close{
+            position: absolute;
+            right: 10px;
+            top: 5px;
+        }
+        .card .swap{
+            position: absolute;
+            left: 10px;
+            right: auto;
+            top: 5px;
+        }
+    </style>
+</block>
 <block name="body">
 
-<include file="public/bread" menu="booth_index" title="展位设置" />
-
-<div id="page-wrapper">
-    <div class="page-header">{$id>0?'编辑':'添加'}展位</div>
-    <div class="page-content">
-    <form method="post" class="page-form" action="">
-        <div class="form-row">
-            <div class="form-group col">
-                <label for="title">位置名称</label>
-                <input type="text" name="title" class="form-control" v-model="model.title" placeholder="位置名称">
-            </div>
-            <div class="form-group col">
-                <label for="flag">调用标识</label>
-                <input type="text" name="flag" class="form-control" :readonly="model.locked==1" v-model="model.flag" placeholder="调用标识">
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="col form-row align-items-center">
-                <label class="pl-2 mr-2" for="status">展位类型</label>
+    <include file="public/bread" menu="booth_index" title="展位设置" />
+    
+    <div id="page-wrapper">
+        <div class="page-header">{$id>0?'编辑':'添加'}展位</div>
+        <div class="page-content">
+        <form method="post" class="page-form" action="">
+            <div class="form-row">
                 <div class="form-group col">
-                    <div class="btn-group btn-group-toggle" >
-                        <foreach name="booth_types" id="item">
-                            <label :class="'btn btn-outline-secondary'+(model.type=='{$key}'?' active':'')">
-                                <input type="radio" name="type" value="{$key}" autocomplete="off" v-model="model.type">{$item}
-                            </label>
-                        </foreach>
-                    </div>
+                    <label for="title">位置名称</label>
+                    <input type="text" name="title" class="form-control" v-model="model.title" placeholder="位置名称">
+                </div>
+                <div class="form-group col">
+                    <label for="flag">调用标识</label>
+                    <input type="text" name="flag" class="form-control" :readonly="model.locked==1" v-model="model.flag" placeholder="调用标识">
                 </div>
             </div>
-            <div class="col form-row align-items-center">
-                <label class="pl-2 mr-2" for="status">状态</label>
-                <div class="form-group col">
-                    <div class="btn-group btn-group-toggle" >
-                        <label :class="'btn btn-outline-secondary'+(model.status==1?' active':'')">
-                            <input type="radio" name="status" :value="1" autocomplete="off" v-model="model.status">显示
-                        </label>
-                        <label :class="'btn btn-outline-secondary'+(model.status==0?' active':'')">
-                            <input type="radio" name="status" :value="0" autocomplete="off" v-model="model.status">隐藏
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div v-if="model.type=='category'" class="card">
-            <div class="card-header"><h4 class="card-title">文章分类</h4></div>
-            <div class="card-body">
-                <div class="form-row">
+            <div class="form-row">
+                <div class="col form-row align-items-center">
+                    <label class="pl-2 mr-2" for="status">展位类型</label>
                     <div class="form-group col">
                         <div class="btn-group btn-group-toggle" >
-                            <label :class="'btn btn-outline-secondary'+(model.data.type==0?' active':'')">
-                                <input type="radio" name="data[type]" :value="0" autocomplete="off" v-model="model.data.type">自动获取
-                            </label>
-                            <label :class="'btn btn-outline-secondary'+(model.data.type==1?' active':'')">
-                                <input type="radio" name="data[type]" :value="1" autocomplete="off" v-model="model.data.type">手动选择
-                            </label>
-                        </div>
-                    </div>
-                    <div v-show="model.data.type==0" class="form-group col">
-                        <div class="input-group">
-                            <span class="input-group-prepend"><span class="input-group-text">显示数量</span> </span>
-                            <input type="text" class="form-control" name="data[count]" v-model="model.data.count"/>
+                            <foreach name="booth_types" id="item">
+                                <label :class="'btn btn-outline-secondary'+(model.type=='{$key}'?' active':'')">
+                                    <input type="radio" name="type" value="{$key}" autocomplete="off" v-model="model.type">{$item}
+                                </label>
+                            </foreach>
                         </div>
                     </div>
                 </div>
-                <div v-show="model.data.type==0" class="form-group">
-                    <div class="input-group">
-                        <span class="input-group-prepend"><span class="input-group-text">上级分类</span> </span>
-                        <select name="data[parent_id]" class="form-control" v-model="model.data.parent_id">
-                            <option :value="0">顶级分类</option>
-                            <option v-for="cate in category" :value="cate.id">{{cate.html}}{{cate.title}}</option>
-                        </select>
+                <div class="col form-row align-items-center">
+                    <label class="pl-2 mr-2" for="status">状态</label>
+                    <div class="form-group col">
+                        <div class="btn-group btn-group-toggle" >
+                            <label :class="'btn btn-outline-secondary'+(model.status==1?' active':'')">
+                                <input type="radio" name="status" :value="1" autocomplete="off" v-model="model.status">显示
+                            </label>
+                            <label :class="'btn btn-outline-secondary'+(model.status==0?' active':'')">
+                                <input type="radio" name="status" :value="0" autocomplete="off" v-model="model.status">隐藏
+                            </label>
+                        </div>
                     </div>
                 </div>
-                <div v-show="model.data.type==1" class="form-row">
-                    <div v-for="item in list_category"  class="col-6 col-md-4 col-lg-3">
-                        <input type="hidden" name="data[category_ids][]" :value="item.id" />
-                        <div class="card mb-2">
-                            <img v-if="item.icon" :src="item.icon" class="card-img-top" :alt="item.title">
-                            <div class="card-body">
-                                <h5 class="card-title">{{item.title}}</h5>
-                                <p class="card-text"></p>
+            </div>
+            <div v-if="model.type=='category'" class="card">
+                <div class="card-header"><h4 class="card-title">文章分类</h4></div>
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <div class="btn-group btn-group-toggle" >
+                                <label :class="'btn btn-outline-secondary'+(model.data.type==0?' active':'')">
+                                    <input type="radio" name="data[type]" :value="0" autocomplete="off" v-model="model.data.type">自动获取
+                                </label>
+                                <label :class="'btn btn-outline-secondary'+(model.data.type==1?' active':'')">
+                                    <input type="radio" name="data[type]" :value="1" autocomplete="off" v-model="model.data.type">手动选择
+                                </label>
+                            </div>
+                        </div>
+                        <div v-show="model.data.type==0" class="form-group col">
+                            <div class="input-group">
+                                <span class="input-group-prepend"><span class="input-group-text">显示数量</span> </span>
+                                <input type="text" class="form-control" name="data[count]" v-model="model.data.count"/>
                             </div>
                         </div>
                     </div>
-                    <div class="col-6 col-md-4 col-lg-3">
-                        <div class="media" @click="pickCate">
-                            <i class="ion-md-add border" style="font-size: 60px;line-height:1em;width:60px;text-align: center"></i>
-                            <div class="media-body">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div v-else-if="model.type=='article'" class="card">
-            <div class="card-header"><h4 class="card-title">文章</h4></div>
-            <div class="card-body">
-                <div class="form-row">
-                    <div class="form-group col">
-                        <div class="btn-group btn-group-toggle" >
-                            <label :class="'btn btn-outline-secondary'+(model.data.type==0?' active':'')">
-                                <input type="radio" name="data[type]" :value="0" autocomplete="off" v-model="model.data.type">自动获取
-                            </label>
-                            <label :class="'btn btn-outline-secondary'+(model.data.type==1?' active':'')">
-                                <input type="radio" name="data[type]" :value="1" autocomplete="off" v-model="model.data.type">手动选择
-                            </label>
-                        </div>
-                    </div>
-                    <div v-show="model.data.type==0" class="form-group col">
+                    <div v-show="model.data.type==0" class="form-group">
                         <div class="input-group">
-                            <span class="input-group-prepend"><span class="input-group-text">显示数量</span> </span>
-                            <input type="text" class="form-control" name="data[count]" v-model="model.data.count"/>
-                        </div>
-                    </div>
-                </div>
-                <div v-show="model.data.type==0" class="form-row">
-                    <div class="form-group col">
-                        <div class="input-group">
-                            <span class="input-group-prepend"><span class="input-group-text">文章分类</span> </span>
-                            <select name="data[category_id]" class="form-control" v-model="model.data.category_id">
-                                <option :value="0">全部分类</option>
+                            <span class="input-group-prepend"><span class="input-group-text">上级分类</span> </span>
+                            <select name="data[parent_id]" class="form-control" v-model="model.data.parent_id">
+                                <option :value="0">顶级分类</option>
                                 <option v-for="cate in category" :value="cate.id">{{cate.html}}{{cate.title}}</option>
                             </select>
                         </div>
                     </div>
-                    <div class="form-group col">
-                        <div class="btn-group btn-group-toggle" >
-                            <label :class="'btn btn-outline-secondary'+(model.data.filter_type?'':' active')">
-                                <input type="radio" name="data[filter_type]" value="" v-model="model.data.filter_type" autocomplete="off" >不限
-                            </label>
-                            <volist name="article_types" id="type" key="k">
-                                <label :class="'btn btn-outline-secondary'+(model.data.filter_type=={$key}?' active':'')">
-                                    <input type="radio" name="data[filter_type]" :value="{$key}" v-model="model.data.filter_type" autocomplete="off" >{$type}
+                    <div v-show="model.data.type==1" class="form-row">
+                        <div v-for="(item, index) in list_category"  class="col-6 col-md-4 col-lg-3">
+                            <input type="hidden" name="data[category_ids][]" :value="item.id" />
+                            <div class="card mb-2">
+                                <button type="button" class="close" aria-label="移除" @click.stop="removeThis(index)">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <button type="button" class="close swap" aria-label="交换" @click.stop="swapThis(index)">
+                                    <i aria-hidden="true" class="ion-md-swap"></i>
+                                </button>
+                                <img v-if="item.icon" :src="item.icon" class="card-img-top" :alt="item.title">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{item.title}}</h5>
+                                    <p class="card-text"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-3">
+                            <div class="media" @click="pickCate">
+                                <i class="ion-md-add border" style="font-size: 60px;line-height:1em;width:60px;text-align: center"></i>
+                                <div class="media-body">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div v-else-if="model.type=='article'" class="card">
+                <div class="card-header"><h4 class="card-title">文章</h4></div>
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <div class="btn-group btn-group-toggle" >
+                                <label :class="'btn btn-outline-secondary'+(model.data.type==0?' active':'')">
+                                    <input type="radio" name="data[type]" :value="0" autocomplete="off" v-model="model.data.type">自动获取
                                 </label>
-                            </volist>
+                                <label :class="'btn btn-outline-secondary'+(model.data.type==1?' active':'')">
+                                    <input type="radio" name="data[type]" :value="1" autocomplete="off" v-model="model.data.type">手动选择
+                                </label>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div v-show="model.data.type==1" class="form-row">
-                    <div v-for="item in list_article"  class="col-6 col-md-4 col-lg-3">
-                        <input type="hidden" name="data[article_ids][]" :value="item.id" />
-                        <div class="card mb-2">
-                            <img v-if="item.cover" :src="item.cover" class="card-img-top" :alt="item.title">
-                            <div class="card-body">
-                                <h5 class="card-title">{{item.title}}</h5>
-                                <p class="card-text" v-html="item.description"></p>
+                        <div v-show="model.data.type==0" class="form-group col">
+                            <div class="input-group">
+                                <span class="input-group-prepend"><span class="input-group-text">显示数量</span> </span>
+                                <input type="text" class="form-control" name="data[count]" v-model="model.data.count"/>
                             </div>
                         </div>
                     </div>
-                    <div class="col-6 col-md-4 col-lg-3">
-                        <div class="card border-0" @click="pickArticle">
-                            <i class="ion-md-add border" style="font-size: 60px;line-height:1em;width:60px;text-align: center"></i>
-                            <div class="card-body">
+                    <div v-show="model.data.type==0" class="form-row">
+                        <div class="form-group col">
+                            <div class="input-group">
+                                <span class="input-group-prepend"><span class="input-group-text">文章分类</span> </span>
+                                <select name="data[category_id]" class="form-control" v-model="model.data.category_id">
+                                    <option :value="0">全部分类</option>
+                                    <option v-for="cate in category" :value="cate.id">{{cate.html}}{{cate.title}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col">
+                            <div class="btn-group btn-group-toggle" >
+                                <label :class="'btn btn-outline-secondary'+(model.data.filter_type?'':' active')">
+                                    <input type="radio" name="data[filter_type]" value="" v-model="model.data.filter_type" autocomplete="off" >不限
+                                </label>
+                                <volist name="article_types" id="type" key="k">
+                                    <label :class="'btn btn-outline-secondary'+(model.data.filter_type=={$key}?' active':'')">
+                                        <input type="radio" name="data[filter_type]" :value="{$key}" v-model="model.data.filter_type" autocomplete="off" >{$type}
+                                    </label>
+                                </volist>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-show="model.data.type==1" class="form-row">
+                        <div v-for="(item, index) in list_article"  class="col-6 col-md-4 col-lg-3">
+                            <input type="hidden" name="data[article_ids][]" :value="item.id" />
+                            <div class="card mb-2">
+                                <button type="button" class="close" aria-label="移除" @click.stop="removeThis(index)">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <button type="button" class="close swap" aria-label="交换" @click.stop="swapThis(index)">
+                                    <i aria-hidden="true" class="ion-md-swap"></i>
+                                </button>
+                                <img v-if="item.cover" :src="item.cover" class="card-img-top" :alt="item.title">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{item.title}}</h5>
+                                    <p class="card-text" v-html="item.description"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-3">
+                            <div class="card border-0" @click="pickArticle">
+                                <i class="ion-md-add border" style="font-size: 60px;line-height:1em;width:60px;text-align: center"></i>
+                                <div class="card-body">
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div v-else-if="model.type=='product_category'" class="card">
-            <div class="card-header"><h4 class="card-title">商品分类</h4></div>
-            <div class="card-body">
-                <div class="form-row">
-                    <div class="form-group col">
-                        <div class="btn-group btn-group-toggle" >
-                            <label :class="'btn btn-outline-secondary'+(model.data.type==0?' active':'')">
-                                <input type="radio" name="data[type]" :value="0" autocomplete="off" v-model="model.data.type">自动获取
-                            </label>
-                            <label :class="'btn btn-outline-secondary'+(model.data.type==1?' active':'')">
-                                <input type="radio" name="data[type]" :value="1" autocomplete="off" v-model="model.data.type">手动选择
-                            </label>
+    
+            <div v-else-if="model.type=='product_category'" class="card">
+                <div class="card-header"><h4 class="card-title">商品分类</h4></div>
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <div class="btn-group btn-group-toggle" >
+                                <label :class="'btn btn-outline-secondary'+(model.data.type==0?' active':'')">
+                                    <input type="radio" name="data[type]" :value="0" autocomplete="off" v-model="model.data.type">自动获取
+                                </label>
+                                <label :class="'btn btn-outline-secondary'+(model.data.type==1?' active':'')">
+                                    <input type="radio" name="data[type]" :value="1" autocomplete="off" v-model="model.data.type">手动选择
+                                </label>
+                            </div>
+                        </div>
+                        <div v-show="model.data.type==0" class="form-group col">
+                            <div class="input-group">
+                                <span class="input-group-prepend"><span class="input-group-text">显示数量</span> </span>
+                                <input type="text" class="form-control" name="data[count]" v-model="model.data.count"/>
+                            </div>
                         </div>
                     </div>
-                    <div v-show="model.data.type==0" class="form-group col">
+                    <div v-show="model.data.type==0" class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-prepend"><span class="input-group-text">上级分类</span> </span>
+                            <select name="data[parent_id]" class="form-control" v-model="model.data.parent_id">
+                                <option :value="0">顶级分类</option>
+                                <option v-for="cate in product_category" :value="cate.id">{{cate.html}}{{cate.title}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div v-show="model.data.type==1" class="form-row">
+                        <div v-for="(item, index) in list_product_category"  class="col-6 col-md-4 col-lg-3">
+                            <input type="hidden" name="data[product_category_ids][]" :value="item.id" />
+                            <div class="card  mb-2">
+                                <button type="button" class="close" aria-label="移除" @click.stop="removeThis(index)">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <button type="button" class="close swap" aria-label="交换" @click.stop="swapThis(index)">
+                                    <i aria-hidden="true" class="ion-md-swap"></i>
+                                </button>
+                                <img v-if="item.icon" :src="item.icon" class="card-img-top" :alt="item.title">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{item.title}}</h5>
+                                    <p class="card-text"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-3">
+                            <div class="card border-0" @click="pickProductCate">
+                                <i class="ion-md-add border" style="font-size: 60px;line-height:1em;width:60px;text-align: center"></i>
+                                <div class="card-body">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div v-else-if="model.type=='product'" class="card">
+                <div class="card-header"><h4 class="card-title">商品</h4></div>
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <div class="btn-group btn-group-toggle" >
+                                <label :class="'btn btn-outline-secondary'+(model.data.type==0?' active':'')">
+                                    <input type="radio" name="data[type]" :value="0" autocomplete="off" v-model="model.data.type">自动获取
+                                </label>
+                                <label :class="'btn btn-outline-secondary'+(model.data.type==1?' active':'')">
+                                    <input type="radio" name="data[type]" :value="1" autocomplete="off" v-model="model.data.type">手动选择
+                                </label>
+                            </div>
+                        </div>
+                        <div v-show="model.data.type==0" class="form-group col">
+                            <div class="input-group">
+                                <span class="input-group-prepend"><span class="input-group-text">显示数量</span> </span>
+                                <input type="text" class="form-control" name="data[count]" v-model="model.data.count"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-show="model.data.type==0" class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-prepend"><span class="input-group-text">商品分类</span> </span>
+                            <select name="data[category_id]" class="form-control" v-model="model.data.category_id">
+                                <option :value="0">全部分类</option>
+                                <option v-for="cate in product_category" :value="cate.id">{{cate.html}}{{cate.title}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div v-show="model.data.type==1" class="form-row">
+                        <div v-for="(item, index) in list_product"  class="col-6 col-md-4 col-lg-3">
+                            <input type="hidden" name="data[product_ids][]" :value="item.id" />
+                            <div class="card mb-2">
+                                <button type="button" class="close" aria-label="移除" @click.stop="removeThis(index)">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <button type="button" class="close swap" aria-label="交换" @click.stop="swapThis(index)">
+                                    <i aria-hidden="true" class="ion-md-swap"></i>
+                                </button>
+                                <img v-if="item.image" :src="item.image" class="card-img-top" :alt="item.title">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{item.title}}</h5>
+                                    <p class="card-text">{{item.min_price}} ~ {{item.max_price}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-3">
+                            <div class="card border-0" @click="pickProduct">
+                                <i class="ion-md-add border" style="font-size: 60px;line-height:1em;width:60px;text-align: center"></i>
+                                <div class="card-body">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <div v-else-if="model.type=='ad'" class="card">
+                <div class="card-header"><h4 class="card-title">广告位</h4></div>
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="form-group col">
+                        <div class="input-group">
+                            <span class="input-group-prepend"><span class="input-group-text">广告位</span> </span>
+                            <input type="text" class="form-control" name="data[ad_flag]" v-model="model.data.ad_flag"/>
+                            <span class="input-group-append"><button class="btn btn-outline-primary" @click="pickAd"><i class="ion-md-search"></i> </button> </span>
+                        </div>
+                        </div>
+                        <div class="form-group col">
                         <div class="input-group">
                             <span class="input-group-prepend"><span class="input-group-text">显示数量</span> </span>
                             <input type="text" class="form-control" name="data[count]" v-model="model.data.count"/>
                         </div>
-                    </div>
-                </div>
-                <div v-show="model.data.type==0" class="form-group">
-                    <div class="input-group">
-                        <span class="input-group-prepend"><span class="input-group-text">上级分类</span> </span>
-                        <select name="data[parent_id]" class="form-control" v-model="model.data.parent_id">
-                            <option :value="0">顶级分类</option>
-                            <option v-for="cate in product_category" :value="cate.id">{{cate.html}}{{cate.title}}</option>
-                        </select>
-                    </div>
-                </div>
-                <div v-show="model.data.type==1" class="form-row">
-                    <div v-for="item in list_product_category"  class="col-6 col-md-4 col-lg-3">
-                        <input type="hidden" name="data[product_category_ids][]" :value="item.id" />
-                        <div class="card  mb-2">
-                            <img v-if="item.icon" :src="item.icon" class="card-img-top" :alt="item.title">
-                            <div class="card-body">
-                                <h5 class="card-title">{{item.title}}</h5>
-                                <p class="card-text"></p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6 col-md-4 col-lg-3">
-                        <div class="card border-0" @click="pickProductCate">
-                            <i class="ion-md-add border" style="font-size: 60px;line-height:1em;width:60px;text-align: center"></i>
-                            <div class="card-body">
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div v-else-if="model.type=='product'" class="card">
-            <div class="card-header"><h4 class="card-title">商品</h4></div>
-            <div class="card-body">
-                <div class="form-row">
-                    <div class="form-group col">
-                        <div class="btn-group btn-group-toggle" >
-                            <label :class="'btn btn-outline-secondary'+(model.data.type==0?' active':'')">
-                                <input type="radio" name="data[type]" :value="0" autocomplete="off" v-model="model.data.type">自动获取
-                            </label>
-                            <label :class="'btn btn-outline-secondary'+(model.data.type==1?' active':'')">
-                                <input type="radio" name="data[type]" :value="1" autocomplete="off" v-model="model.data.type">手动选择
-                            </label>
-                        </div>
-                    </div>
-                    <div v-show="model.data.type==0" class="form-group col">
-                        <div class="input-group">
-                            <span class="input-group-prepend"><span class="input-group-text">显示数量</span> </span>
-                            <input type="text" class="form-control" name="data[count]" v-model="model.data.count"/>
-                        </div>
-                    </div>
-                </div>
-                <div v-show="model.data.type==0" class="form-group">
-                    <div class="input-group">
-                        <span class="input-group-prepend"><span class="input-group-text">商品分类</span> </span>
-                        <select name="data[category_id]" class="form-control" v-model="model.data.category_id">
-                            <option :value="0">全部分类</option>
-                            <option v-for="cate in product_category" :value="cate.id">{{cate.html}}{{cate.title}}</option>
-                        </select>
-                    </div>
-                </div>
-                <div v-show="model.data.type==1" class="form-row">
-                    <div v-for="item in list_product"  class="col-6 col-md-4 col-lg-3">
-                        <input type="hidden" name="data[product_ids][]" :value="item.id" />
-                        <div class="card mb-2">
-                            <img v-if="item.image" :src="item.image" class="card-img-top" :alt="item.title">
-                            <div class="card-body">
-                                <h5 class="card-title">{{item.title}}</h5>
-                                <p class="card-text">{{item.min_price}} ~ {{item.max_price}}</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-6 col-md-4 col-lg-3">
-                        <div class="card border-0" @click="pickProduct">
-                            <i class="ion-md-add border" style="font-size: 60px;line-height:1em;width:60px;text-align: center"></i>
-                            <div class="card-body">
-                            </div>
-                        </div>
-                    </div>
+            <div v-else class="card">
+                <div class="card-body">
+                    <div class="empty">请选择展位类型</div>
                 </div>
             </div>
-        </div>
-
-        <div v-else-if="model.type=='ad'" class="card">
-            <div class="card-header"><h4 class="card-title">广告位</h4></div>
-            <div class="card-body">
-                <div class="form-row">
-                    <div class="form-group col">
-                    <div class="input-group">
-                        <span class="input-group-prepend"><span class="input-group-text">广告位</span> </span>
-                        <input type="text" class="form-control" name="data[ad_flag]" v-model="model.data.ad_flag"/>
-                        <span class="input-group-append"><button class="btn btn-outline-primary" @click="pickAd"><i class="ion-md-search"></i> </button> </span>
-                    </div>
-                    </div>
-                    <div class="form-group col">
-                    <div class="input-group">
-                        <span class="input-group-prepend"><span class="input-group-text">显示数量</span> </span>
-                        <input type="text" class="form-control" name="data[count]" v-model="model.data.count"/>
-                    </div>
-                    </div>
-                </div>
+            <div class="form-group submit-btn">
+                <input type="hidden" name="id" value="{$model.id}">
+                <button type="submit" class="btn btn-primary">{$id>0?'保存':'添加'}</button>
             </div>
+        </form>
         </div>
-        <div v-else class="card">
-            <div class="card-body">
-                <div class="empty">请选择展位类型</div>
-            </div>
-        </div>
-        <div class="form-group submit-btn">
-            <input type="hidden" name="id" value="{$model.id}">
-            <button type="submit" class="btn btn-primary">{$id>0?'保存':'添加'}</button>
-        </div>
-    </form>
     </div>
-</div>
-</block>
+    </block>
 
 <block name="script">
     <script type="text/plain" id="category_json">{:json_encode(\\app\\common\\facade\\CategoryFacade::getCategories())}</script>
@@ -396,6 +434,33 @@
                     dialog.pickList("{:url('adv/search')}",function (adv) {
                         Vue.set(self.model.data,'ad_flag',adv.flag)
                     })
+                },
+                removeThis:function(idx){
+                    var self = this;
+                    dialog.confirm('移除这块数据？',function(){
+                        if (self.model.type == 'article') {
+                            self.list_article.splice(idx, 1)
+                        }else if (self.model.type == 'category') {
+                            self.list_category.splice(idx, 1)
+                        }else if (self.model.type == 'product') {
+                            self.list_product.splice(idx, 1)
+                        }else if (self.model.type == 'product_category') {
+                            self.list_product_category.splice(idx, 1)
+                        }
+                    })
+                },
+                swapThis:function(idx){
+                    var self = this;
+                    if(idx == 0)idx += 1;
+                    if(idx > 0 && this['list_'+this.model.type].length>1){
+                        var tempList = this['list_'+this.model.type];
+                        console.log(tempList)
+                        var temp = tempList[idx];
+                        tempList[idx] = tempList[idx-1];
+                        tempList[idx-1] = temp;
+                        Vue.set(this, 'list_'+this.model.type, tempList)
+                        this.$forceUpdate()
+                    }
                 }
             }
         });

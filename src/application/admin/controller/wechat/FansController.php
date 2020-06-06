@@ -17,12 +17,19 @@ use think\Db;
  */
 class FansController extends WechatBaseController
 {
-    public function index(){
+    public function index($keyword = ''){
+        if($this->request->isPost()){
+            return redirect(url('',['keyword'=>base64url_encode($keyword)]));
+        }
+        $keyword=empty($keyword)?"":base64url_decode($keyword);
         $model=Db::name('MemberOauth')->where('type_id',$this->wid);
-
-        $lists=$model->paginate(15);
+        if(!empty($keyword)){
+            $model->whereLike('openid|nickname',"%$keyword%");
+        }
+        $lists=$model->order('id desc')->paginate(15);
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
+        $this->assign('keyword',$keyword);
         
         $this->assign('support_message',$this->wechatApp instanceof Application);
         $this->assign('support_sync',$this->wechatApp instanceof Application);
@@ -47,6 +54,9 @@ class FansController extends WechatBaseController
             $result=$messager->to($openid)->send();
         }catch(\Exception $e){
             $this->apiException($e);
+        }
+        if(isset($result['errcode']) && $result['errcode']!=0){
+            $this->error($result['errmsg']);
         }
         $this->success('消息已发送');
     }
@@ -98,10 +108,14 @@ class FansController extends WechatBaseController
             try{
                 $result=$app->user->list($openid);
                 $users = $app->user->select($result['data']['openid']);
+                $openidChunk = array_chunk($result['data']['openid'],100);
+                foreach($openidChunk as $openids){
+                    $users = $app->user->select($openids);
+                    $this->updateUsers($users['user_info_list'],$this->wid);
+                }
             }catch(\Exception $e){
                 $this->apiException($e);
             }
-            $this->updateUsers($users['user_info_list'],$this->wid);
 
             $sesskey='fans_count_'.$wechat['appid'];
             $count=(int)session($sesskey);

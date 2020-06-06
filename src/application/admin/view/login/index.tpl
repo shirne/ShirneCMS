@@ -62,7 +62,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="ion-md-checkmark-circle"></i> </span>
                         </div>
-                        <input type="text" name="verify" class="form-control" id="exampleInputCode" placeholder="验证码">
+                        <input type="text" name="verify" class="form-control" id="exampleInputCode" autocomplete="off" placeholder="验证码">
                     </div>
                 </div>
                 <div class="form-group text-center">

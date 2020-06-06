@@ -261,25 +261,43 @@ class CommonController extends BaseController
     /**
      * 获取配置
      */
+    /**
+     * 获取配置
+     */
     public function config($group){
+        $rdata = new \stdClass();
         if(!empty($group) && $group != 'third'){
             $settings = getSettings(false,true);
             if(strpos($group,',')===false){
-                return $this->response(isset($settings[$group])?$settings[$group]:new \stdClass());
+                if($group == 'wechat'){
+                    $rdata = $this->getDefaultWechat();
+                }elseif(isset($settings[$group])){
+                    $rdata = $settings[$group];
+                }
             }else{
                 $groups = explode(',',$group);
                 $rdata=[];
                 foreach($groups as $g){
                     $g = trim(strtolower($g));
-                    if($g != 'third'){
-                        $rdata[$g] = isset($settings[$group])?$settings[$group]:new \stdClass();
+                    if($g == 'wechat'){
+                        $rdata[$g] = $this->getDefaultWechat();
+                    }elseif($g != 'third' && isset($settings[$g])){
+                        $rdata[$g] = $settings[$g];
+                    }else{
+                        $rdata[$g] = new \stdClass();
                     }
                 }
-
-                return $this->response($rdata);
             }
         }
-        return $this->response(new \stdClass());
+        return $this->response($rdata);
+    }
+
+    private function getDefaultWechat(){
+        $wechat = Db::name('wechat')->where('is_default',1)->field('type,account_type,title,logo,qrcode,shareimg,appid,subscribeurl')->find();
+        if(!empty($wechat)){
+            return $wechat;
+        }
+        return new \stdClass();
     }
     
     /**

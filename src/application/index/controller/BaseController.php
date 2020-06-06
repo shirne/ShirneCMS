@@ -63,6 +63,17 @@ class BaseController extends Controller
         $this->config=getSettings();
         $this->assign('config',$this->config);
 
+        $this->checkPlatform();
+
+        if(isset($this->config['site-close']) && $this->config['site-close'] == 1){
+            if($this->request->get('force') == 1){
+                session('noclose-force',1);
+            }
+            if(session('noclose-force')!=1){
+                $this->error($this->config['site-close-desc']);
+            }
+        }
+
         // POST请求自动检查操作频率
         if((config('app.auto_check_submit_rate') || $this->config['auto_check_submit_rate'])
             && $this->request->isPost()){
@@ -82,8 +93,6 @@ class BaseController extends Controller
                 session('agent', $agent);
             }
         }
-
-        $this->checkPlatform();
 
         $this->checkLogin();
 

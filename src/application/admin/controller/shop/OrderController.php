@@ -28,9 +28,9 @@ class OrderController extends BaseController
      */
     public function index($keyword='',$start_date='',$end_date='',$status='',$audit=''){
         if($this->request->isPost()){
-            return redirect(url('',['status'=>$status,'start_date'=>$start_date,'end_date'=>$end_date,'audit'=>$audit,'keyword'=>base64_encode($keyword)]));
+            return redirect(url('',['status'=>$status,'start_date'=>$start_date,'end_date'=>$end_date,'audit'=>$audit,'keyword'=>base64url_encode($keyword)]));
         }
-        $keyword=empty($keyword)?"":base64_decode($keyword);
+        $keyword=empty($keyword)?"":base64url_decode($keyword);
         $model=Db::view('order','*')
             ->view('member',['username','realname','nickname','avatar','level_id'],'member.id=order.member_id','LEFT')
             ->where('order.delete_time',0);
@@ -92,11 +92,12 @@ class OrderController extends BaseController
      * @param string $end_date
      * @param string $status
      * @param string $audit
+     * @param string $mode
      */
-    public function export($order_ids='',$keyword='',$start_date='',$end_date='',$status='',$audit=''){
+    public function export($order_ids='',$keyword='',$start_date='',$end_date='',$status='',$audit='', $mode=''){
         $keyword=empty($keyword)?"":base64_decode($keyword);
         $model=Db::view('order','*')
-            ->view('member',['username','realname','avatar','level_id'],'member.id=order.member_id','LEFT')
+            ->view('member',['username','realname','nickname','avatar','level_id'],'member.id=order.member_id','LEFT')
             ->where('order.delete_time',0);
         if(empty($order_ids)){
             if(!empty($keyword)){
@@ -132,6 +133,14 @@ class OrderController extends BaseController
             $this->error('没有选择要导出的项目');
         }
 
+        if($mode == 'express'){
+            $this->exportForExpress($rows);
+        }else{
+            $this->exportData($rows);
+        }
+    }
+
+    private function exportData($rows){
         $excel=new Excel();
         $excel->setHeader(array(
             '编号','状态','时间','会员ID','会员账号','购买产品','购买价格','收货人','电话','省','市','区','地址'
@@ -142,13 +151,48 @@ class OrderController extends BaseController
 
         foreach ($rows as $row){
             $prodata = Db::name('OrderProduct')->where('order_id', $row['order_id'])->find();
+            $username = $row['username'];
+            if(strpos($username,'#') === 0){
+                $username = filter_emoji($row['nickname'], '?');
+            }
             $excel->addRow(array(
-                $row['order_id'],order_status($row['status'],false),date('Y/m/d H:i:s',$row['create_time']),$row['member_id'],$row['username'],
+                $row['order_no'],order_status($row['status'],false),date('Y/m/d H:i:s',$row['create_time']),$row['member_id'],$username,
                 $prodata['product_title'],$row['payamount'],$row['recive_name'],$row['mobile'],$row['province'],$row['city'],$row['area'],$row['address']
             ));
         }
 
         $excel->output(date('Y-m-d-H-i').'-订单导出['.count($rows).'条]');
+    }
+
+    private function exportForExpress($rows){
+        $excel=new Excel();
+        $excel->setHeader(array(
+            '','收件信息','','','物品信息','','备注'
+        ));
+        $excel->getSheet()->setMergeCells(['B1:D1','E1:F1']);
+        $excel->setHeader(array(
+            '编号','收件人姓名','收件人联系方式','收件地址','物品类','物品详情','备注信息'
+        ));
+        $excel->setColumnType('A',DataType::TYPE_STRING);
+        $excel->setColumnType('C',DataType::TYPE_STRING);
+
+        foreach ($rows as $row){
+            $prodata = Db::name('OrderProduct')->where('order_id', $row['order_id'])->select();
+            $prods = [];
+            foreach($prodata as $prod){
+                if(count($prods) > 2){
+                    $prods[2] .= '等';
+                    break;
+                }
+                $prods[]=$prod['product_title'];
+            }
+            $excel->addRow(array(
+                $row['order_no'],$row['recive_name'],$row['mobile'],$row['province'].$row['city'].$row['area'].$row['address'],
+                '食品',implode('、',$prods),''
+            ));
+        }
+
+        $excel->output(date('Y-m-d-H-i').'-订单发货['.count($rows).'条]');
     }
 
     /**

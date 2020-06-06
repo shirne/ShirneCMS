@@ -23,9 +23,9 @@ class PageController extends BaseController
     public function index($key="",$group='')
     {
         if($this->request->isPost()){
-            return redirect(url('',['group'=>$group,'key'=>base64_encode($key)]));
+            return redirect(url('',['group'=>$group,'key'=>base64url_encode($key)]));
         }
-        $key=empty($key)?"":base64_decode($key);
+        $key=empty($key)?"":base64url_decode($key);
         $model = Db::view('page','*');
         if(!empty($key)){
             $model->whereLike('page.title|page.name|page.group',"%$key%");

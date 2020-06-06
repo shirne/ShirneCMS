@@ -3,7 +3,7 @@
 namespace app\api\controller;
 
 
-use app\common\facade\CreditOrderFacade;
+use app\common\model\CreditOrderModel;
 use app\common\validate\OrderValidate;
 use think\Db;
 
@@ -94,7 +94,7 @@ class CreditOrderController extends AuthedController
                 }
             }
 
-            $orderModel=new CreditOrderFacade();
+            $orderModel=new CreditOrderModel();
             $result=$orderModel->makeOrder($this->user,$goods,$address,$data['remark'],$balancepay);
             if($result){
                 if($balancepay) {

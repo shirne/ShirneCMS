@@ -209,6 +209,7 @@
                     menuData.splice(curIdx,1);
                 }
                 showMenu(menuData);
+                updateJson();
             })
         }
         function setType(current) {
@@ -242,8 +243,7 @@
                     dialog.alert('链接地址请使用附带完整域名的地址<br />如：http://www.baidu.com/');
                 }
             }
-            menuStr=JSON.stringify(menuData);
-            $('[name=menu]').val(menuStr);
+            updateJson();
         }
         function addMenu(idx){
             if(idx>-1){
@@ -272,10 +272,13 @@
             }else{
                 editMenu(menuData.length-1);
             }
+            updateJson();
+        }
+        function updateJson(){
             menuStr=JSON.stringify(menuData);
             $('[name=menu]').val(menuStr);
         }
         showMenu(menuData);
-        $('[name=menu]').val(menuStr);
+        updateJson();
     </script>
 </block>

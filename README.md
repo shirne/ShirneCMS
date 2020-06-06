@@ -3,7 +3,7 @@ ShirneCMS
 
 基于[ThinkPHP5.1](https://github.com/top-think/think/tree/5.1)+[bootstrap4.x](https://v4.bootcss.com/docs/4.0/getting-started/introduction/)开发的后台管理系统,集成会员管理，文章管理，产品管理，微信接入，第三方登录等功能
 
-基于[ThinkPHP6.0](https://github.com/top-think/think/tree/6.0) 的版本 [ShirneCMS-tp6](https://gitee.com/shirnecn/ShirneCMS/tree/dev_tp6/) 目前正在进行框架兼容性调整
+基于[ThinkPHP6.0](https://github.com/top-think/think/tree/6.0) 的版本 [ShirneCMS-tp6](https://gitee.com/shirnecn/ShirneCMS/tree/dev_tp6/) 目前正在进行整体功能测试
 
 > 运行环境要求PHP7.2以上，Mysql5.5以上<br />
 > PHP扩展：mbstring,gd,mysql,pdo,cURL,OpenSSL,SimpleXML,fileinfo,zip,cli。
@@ -25,7 +25,7 @@ ShirneCMS
 * 无限级分类/文章系统，分类可独立设置模板
 * 无限级分类/产品/订单  产品采用多选项SKU模式
 * 广告管理（多用于网站banner图）/公告/链接/留言 等独立小功能
-* 基于bs的Modal写的Dialog组件，支持alert,prompt,confirm,以及常用的列表搜索/选择对话框，地图位置选择对话框（支持腾讯/高德/百度/谷哥地图）
+* 基于bs的Modal写的[Dialog](doc/DIALOG.md)组件，支持alert,prompt,confirm,以及常用的列表搜索/选择对话框，地图位置选择对话框（支持腾讯/高德/百度/谷哥地图）
 * 后台表单异步提交/文件上传进度显示
 * bs日期组件本地化，自动初始化
 * excel封装类，第三方接口（短信/快递等），文件上传封装 等便于开发的优化
@@ -137,6 +137,8 @@ ShirneCMS
 
 [API接口说明](doc/api/index.md)
 
+[Dialog弹窗组件说明](doc/DIALOG.md)
+
 ## Docker
 配置参见Dockerfile
 注：仅初步配置成功环境参数，具体运行过程中还有一些文件权限和挂载问题未搞清楚
@@ -168,7 +170,7 @@ docker.for.mac.host.internal
 
 ## 常见问题
 
-常见问题 [Dialog](doc/QA.md)
+[常见问题](doc/QA.md)
 
 
 ## 后台功能截图

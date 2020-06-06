@@ -20,11 +20,11 @@ class ReplyController extends WechatBaseController
      */
     public function index($key=''){
         if($this->request->isPost()){
-            return redirect(url('wechat/reply',['wid'=>$this->wid,'key'=>base64_encode($key)]));
+            return redirect(url('wechat/reply',['wid'=>$this->wid,'key'=>base64url_encode($key)]));
         }
         $model=Db::name('WechatReply')->where('wechat_id',$this->wid);
         if(!empty($key)){
-            $key=base64_decode($key);
+            $key=base64url_decode($key);
             $model->whereLike('title|keyword',"%$key%");
         }
 

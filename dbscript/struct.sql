@@ -778,11 +778,11 @@ CREATE TABLE `sa_invite_code` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `code` varchar(20) NOT NULL,
   `create_time` int(11) DEFAULT 0,
-  `invalid_at` int(11) DEFAULT 0,
+  `invalid_time` int(11) DEFAULT 0,
   `member_id` int(11) DEFAULT 0,
   `level_id` int(11) DEFAULT 0,
   `member_use` int(11) DEFAULT '0',
-  `use_at` int(11) DEFAULT '0',
+  `use_time` int(11) DEFAULT '0',
   `is_lock` tinyint(4) DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `code` (`code`)

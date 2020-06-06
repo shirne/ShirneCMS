@@ -59,7 +59,7 @@ class OrderController extends BaseController
     public function detail($id){
         $id=intval($id);
         $order=OrderModel::get($id);
-        if(empty($order) || $order['delete_time']>0){
+        if(empty($order) || $order['member_id']!=$this->userid || $order['delete_time']>0){
             $this->error('订单不存在或已删除',aurl('index/member.order/index'));
         }
         $this->assign('order',$order);
@@ -70,7 +70,7 @@ class OrderController extends BaseController
     
     public function cancel($id, $reason=''){
         $order=OrderModel::get(intval($id));
-        if(empty($order) || $order['delete_time']>0){
+        if(empty($order) || $order['member_id']!=$this->userid || $order['delete_time']>0){
             $this->error('订单不存在或已删除',0);
         }
         if($order['status'] != 0){
@@ -87,7 +87,7 @@ class OrderController extends BaseController
     
     public function refund($id, $reason=''){
         $order=OrderModel::get(intval($id));
-        if(empty($order) || $order['delete_time']>0){
+        if(empty($order) || $order['member_id']!=$this->userid || $order['delete_time']>0){
             $this->error('订单不存在或已删除',0);
         }
         if($order['status'] < 1){
@@ -112,7 +112,7 @@ class OrderController extends BaseController
     public function delete($id)
     {
         $model = Db::name('order');
-        if($model['status'] > -1 || $model['status']==-3){
+        if(empty($model) || $model['member_id']!=$this->userid || $model['status'] > -1 || $model['status']==-3){
             $this->error('订单当前状态不可删除',0);
         }
         $result = $model->where('member_id',$this->userid)->whereIn("order_id",idArr($id))

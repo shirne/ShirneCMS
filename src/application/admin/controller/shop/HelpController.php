@@ -18,9 +18,9 @@ class HelpController extends BaseController
     {
         
         if($this->request->isPost()){
-            return redirect(url('',['cate_id'=>$cate_id,'key'=>base64_encode($key)]));
+            return redirect(url('',['cate_id'=>$cate_id,'key'=>base64url_encode($key)]));
         }
-        $key=empty($key)?"":base64_decode($key);
+        $key=empty($key)?"":base64url_decode($key);
         $model = Db::view('help','*')->view('helpCategory',['name'=>'category_name','title'=>'category_title'],'help.cate_id=helpCategory.id','LEFT')
             ->view('manager',['username'],'help.user_id=manager.id','LEFT');
         if(!empty($key)){

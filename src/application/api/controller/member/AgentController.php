@@ -4,7 +4,9 @@ namespace app\api\controller\member;
 
 use app\api\controller\AuthedController;
 use app\common\model\AwardLogModel;
+use app\common\model\MemberAgentModel;
 use app\common\model\MemberAuthenModel;
+use app\common\model\MemberModel;
 use app\common\model\OrderModel;
 use app\common\model\WechatModel;
 use shirne\common\Poster;
@@ -67,103 +69,17 @@ class AgentController extends AuthedController
         $platform=$this->request->tokenData['platform'];
         
         try{
-            $url = $this->get_share_img($platform,$page);
+            $userModel = MemberModel::where('id',$this->user['id'])->find();
+            $url = $userModel->getSharePoster($platform,$page);
         }catch(\Exception $e){
             $this->error($e->getMessage());
+        }
+        if(!$url){
+            $this->error($userModel->getError());
         }
         
         $qrurl = str_replace('-'.$platform.'.jpg','-qrcode.png',$url);
         return $this->response(['poster_url'=>$url,'qr_url'=>$qrurl]);
-    }
-    private function get_share_img($platform,$page){
-    
-        $sharepath = './uploads/share/'.($this->user['id']%100).'/'.$this->user['agentcode'].'-'.$platform.'.jpg';
-        $config=config('poster.');
-        if(empty($config) || empty($config['background'])){
-            $this->error('请配置海报生成样式(config/poster.php)');
-        }
-        if(!file_exists($config['background'])){
-            $this->error('分享图生成失败(bg)');
-        }
-        if(file_exists($sharepath)){
-            $fileatime=filemtime($sharepath);
-            if($this->user['update_time']<$fileatime &&
-                filemtime($config['background'])<$fileatime
-            ){
-                return media(ltrim($sharepath,'.'));
-            }
-        }
-        if(in_array($platform, ['wechat-miniprogram','wechat-minigame'])){
-            $this->create_appcode_img($config,$sharepath,$page);
-        }else{
-            $this->create_share_img($config,$sharepath,$page);
-        }
-        
-        return media(ltrim($sharepath,'.'));
-    }
-    private function create_share_img($config,$sharepath,$page){
-        $qrpath=dirname($sharepath);
-        $qrfile = $this->user['agentcode'].'-qrcode.png';
-        $filename=$qrpath.'/'.$qrfile;
-
-        if(!file_exists($filename)) {
-            $content=gener_qrcode($page, 430);
-            if(!is_dir($qrpath)){
-                mkdir($qrpath,0777,true);
-            }
-            file_put_contents($filename,$content);
-            if(!file_exists($filename)){
-                $this->error('二维码生成失败');
-            }
-        }
-        
-        //$config['background']=$bgpath;
-        $poster = new Poster($config);
-        $poster->generate([
-            'qrcode'=>$filename,
-            'avatar'=>$this->user['avatar'],
-            'bg'=>1,
-            'nickname'=>$this->user['nickname']
-        ]);
-        $poster->save($sharepath);
-    }
-    private function create_appcode_img($config,$sharepath,$page){
-        $appid=$this->request->tokenData['appid'];
-        $wechat=WechatModel::where('appid',$appid)->find();
-        if(empty($wechat)){
-            $this->error('分享图生成失败(wechat)');
-        }
-    
-        $qrpath=dirname($sharepath);
-        $qrfile = $this->user['agentcode'].'-appcode.png';
-        $filename=$qrpath.'/'.$qrfile;
-        if(!file_exists($filename)) {
-            $app = WechatModel::createApp($wechat);
-            if (empty($app)) {
-                $this->error('分享图生成失败(app)');
-            }
-    
-            $response = $app->app_code->getUnlimit('agent=' . $this->user['agentcode'], [
-                'page' => $page,
-                'width' => 520
-            ]);
-            if ($response instanceof \EasyWeChat\Kernel\Http\StreamResponse) {
-                $genername = $response->saveAs($qrpath, $this->user['agentcode'] . '-appcode.png');
-            }
-            if(empty($genername)){
-                $this->error('小程序码生成失败');
-            }
-        }
-        
-        //$config['background']=$bgpath;
-        $poster = new Poster($config);
-        $poster->generate([
-            'appcode'=>$filename,
-            'avatar'=>$this->user['avatar'],
-            'bg'=>1,
-            'nickname'=>$this->user['nickname']
-        ]);
-        $poster->save($sharepath);
     }
     
     public function rank($mode='month'){
@@ -174,23 +90,69 @@ class AgentController extends AuthedController
     }
     
     
-    
-    public function award_log($type='',$status=''){
+    public function award_log($type='',$status='',$daterange=''){
         $model=Db::view('awardLog mlog','*')
             ->view('Member m',['username','level_id','nickname','avatar'],'m.id=mlog.from_member_id','LEFT')
             ->where('mlog.member_id',$this->user['id']);
+        
+        $static=Db::name('awardLog')->where('member_id',$this->user['id']);
         if(!empty($type) && $type!='all'){
             $model->where('mlog.type',$type);
+            $static->where('type',$type);
         }
         if($status!==''){
             $model->where('mlog.status',$status);
+            $static->where('status',$status);
+        }
+        if($daterange != ''){
+            $end_date = 0;
+            if($daterange == 'week'){
+                $start_date = strtotime('last Monday');
+            }elseif($daterange == 'month'){
+                $start_date = strtotime('first day of this month midnight');
+            }elseif(preg_match('/^(\d{4})\-(\d{1,2})$/',$daterange,$matches)){
+                $start_date = strtotime($daterange);
+                $month = $matches[2]+1;
+                $year = $matches[1];
+                if($month>12){
+                    $month = 1;
+                    $year += 1;
+                }
+                $end_date = strtotime($year.'-'.$month)-1;
+            }else{
+                $dateranges = explode('~',$daterange);
+                $start_date = strtotime($dateranges[0]);
+                if(isset($dateranges[1]))$end_date = strtotime($dateranges[1]);
+            }
+            if($start_date > 0){
+                if($end_date > 0){
+                    $static->whereBetween('create_time',[$start_date,$end_date]);
+                    $model->whereBetween('mlog.create_time',[$start_date,$end_date]);
+                }else{
+                    $static->where('create_time','>=',$start_date);
+                    $model->where('mlog.create_time','>=',$start_date);
+                }
+            }
         }
         
         $logs = $model->order('mlog.id DESC')->paginate(10);
+        $static_data=$static->field('count(distinct order_id) as order_count, sum(amount) as total_amount')->find();
         
+        $types = getLogTypes(false, 'award');
+        $level = $this->userLevel();
+        if($level['partner_sale_award'] <= 0){
+            unset($types['partner_sale']);
+        }
+        if($level['partner_new_award'] <= 0){
+            unset($types['partner_share']);
+        }
+
         return $this->response([
+            'types'=>$types,
+            'static_data'=>$static_data,
             'logs'=>$logs->items(),
             'total'=>$logs->total(),
+            'total_page'=>$logs->lastPage(),
             'page'=>$logs->currentPage()
         ]);
     }
@@ -303,13 +265,23 @@ class AgentController extends AuthedController
                 }
             }
             
-            $users->each(function ($item) use ($soncounts,$levels) {
+            $agents = MemberAgentModel::getCacheData();
+            
+            $users->each(function ($item) use ($soncounts, $levels, $agents) {
                 if(isset($soncounts[$item['id']])) {
                     $item['soncount'] = $soncounts[$item['id']];
                 }else{
                     $item['soncount'] = 0;
                 }
-                $item['level_name']=$levels[$item['level_id']]['level_name']?:'-';
+                if(isset($levels[$item['level_id']])){
+                    $item['level_name']=$levels[$item['level_id']]['level_name']?:'-';
+                    $item['level_style']=$levels[$item['level_id']]['style']?:'-';
+                }
+                if(isset($agents[$item['is_agent']])){
+                    $item['agent_name']=$agents[$item['is_agent']]['name']?:'-';
+                    $item['agent_short_name']=$agents[$item['is_agent']]['short_name']?:'-';
+                    $item['agent_style']=$agents[$item['is_agent']]['style']?:'-';
+                }
                 return $item;
             });
         }

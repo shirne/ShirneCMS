@@ -418,7 +418,7 @@ class OrderModel extends BaseOrderModel
             $i=0;
             foreach ($products as $product){
                 $product['order_id']=$result;
-                ProductModel::setFlash($product['id'],$time);
+                ProductModel::setFlash($product['product_id'],$time);
                 Db::name('orderProduct')->insert([
                     'order_id'=>$result,
                     'product_id'=>$product['product_id'],
@@ -679,6 +679,24 @@ class OrderModel extends BaseOrderModel
         }else{
             return PayOrderModel::refund($order['order_id'],'order',$reason);
         }
+    }
+
+    public function comment($data, $order = null){
+        if(empty($order)){
+            $order = $this->getOrigin();
+        }
+        if(empty($order['order_id'])){
+            throw new \Exception('order error');
+        }
+        
+        foreach($data as $row){
+            $row['order_id']=$order['order_id'];
+            ProductCommentModel::create($row);
+        }
+
+        $this->updateStatus(['status'=>ORDER_STATUS_FINISH],['order_id'=>$order['order_id']]);
+
+        return true;
     }
 
 }

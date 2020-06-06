@@ -33,8 +33,7 @@ VALUES
   (93,9,'菜单管理','Permission/index','permission_index','ion-md-code-working',5,0),
   (94,9,'导航管理','Navigator/index','navigator_index','ion-md-reorder',7,0),
   (95,9,'操作日志','Manager/log','manager_log','ion-md-clipboard',9,0),
-  (96,9,'付款方式','Paytype/index','paytype_index','ion-md-card',11,0),
-  (97,9,'公众号管理','Wechat/index','wechat_index','ion-md-chatboxes',13,0);
+  (96,9,'付款方式','Paytype/index','paytype_index','ion-md-card',11,0);
 
 TRUNCATE TABLE `sa_manager_role`;
 
@@ -48,7 +47,7 @@ TRUNCATE TABLE `sa_manager`;
 
 INSERT INTO `sa_manager` (`id`,`pid`, `username`,`realname`, `email`, `password`, `salt`, `avatar`, `create_time`, `update_time`, `login_ip`, `status`, `type`)
 VALUES
-  (1,0,'admin','','79099818@qq.com','60271966bbad6ead5faa991772a9277f', 'z5La7s0P',NULL,'1436679338','1436935104','0.0.0.0',1,1);
+  (1,0,'administrator','','79099818@qq.com','60271966bbad6ead5faa991772a9277f', 'z5La7s0P',NULL,'1436679338','1436935104','0.0.0.0',1,1);
 
 
 TRUNCATE TABLE `sa_setting`;
@@ -59,6 +58,8 @@ VALUES
   ('site-keywords','关键词','text','common',0,1,'关键词1,关键词2','关键词',''),
   ('site-description','站点描述','text','common',0,1,'站点描述信息','站点描述',''),
   ('site-weblogo','站点logo','image','common',0,1,'','站点logo',''),
+  ('site-close','关闭站点','radio','common',0,1,'0','是否关闭站点','0:开启\r\n1:关闭'),
+  ('site-close-desc','关闭说明','text','common',0,1,'系统维护中','关闭站点的说明',''),
   ('site-shareimg','默认分享图','image','common',0,1,'','默认分享图',''),
   ('site-tongji','统计代码','textarea','common',0,1,'','统计代码',''),
   ('site-icp','ICP备案号','text','common',0,1,'','ICP备案号',''),
@@ -79,10 +80,10 @@ VALUES
   ( 'sms_password', '登录密码', 'text', 'third', '0',1, '', '', ''),
   ( 'kd_userid', '快递鸟用户ID', 'text', 'third', '0',1, '', '', ''),
   ( 'kd_apikey', '快递鸟API Key', 'text', 'third', '0',1, '', '', ''),
-  ( 'mapkey_baidu', '百度地图密钥', 'text', 'third', '0',1, 'rO9tOdEWFfvyGgDkiWqFjxK6', '', ''),
-  ( 'mapkey_google', '谷哥地图密钥y', 'text', 'third', '0',1, 'AIzaSyB8lorvl6EtqIWz67bjWBruOhm9NYS1e24', '', ''),
-  ( 'mapkey_tencent', '腾讯地图密钥', 'text', 'third', '0',1, '7I5BZ-QUE6R-JXLWV-WTVAA-CJMYF-7PBBI', '', ''),
-  ( 'mapkey_gaode', '高德地图密钥', 'text', 'third', '0',1, '3ec311b5db0d597e79422eeb9a6d4449', '', ''),
+  ( 'mapkey_baidu', '百度地图密钥', 'text', 'third', '0',1, '', '', ''),
+  ( 'mapkey_google', '谷哥地图密钥y', 'text', 'third', '0',1, '', '', ''),
+  ( 'mapkey_tencent', '腾讯地图密钥', 'text', 'third', '0',1, '', '', ''),
+  ( 'mapkey_gaode', '高德地图密钥', 'text', 'third', '0',1, '', '', ''),
   ( 'captcha_mode', '验证码模式', 'radio', 'third', '0',1, '0', '', '0:图形验证\r\n1:极验验证'),
   ( 'captcha_geeid', '极验ID', 'text', 'third', '0',1, '', '', ''),
   ( 'captcha_geekey', '极验密钥', 'text', 'third', '0',1, '', '', ''),

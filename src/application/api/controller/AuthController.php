@@ -335,6 +335,7 @@ class AuthController extends BaseController
                 }
             }
         }
+        
         if(empty($userinfo)){
             $this->error('登录授权失败',ERROR_LOGIN_FAILED);
         }
@@ -372,6 +373,8 @@ class AuthController extends BaseController
                 if($member['id']){
                     $data['member_id']=$member['id'];
                 }
+            }else{
+                $this->error('请注册账号',ERROR_NEED_REGISTER, ['openid'=>$session['openid']]);
             }
             
         }else{
@@ -396,7 +399,7 @@ class AuthController extends BaseController
         if($this->isLogin){
             return $this->response(['openid'=>$session['openid']]);
         }
-
+        
         if(!empty($member)){
 
             if($member['status'] != 1){
@@ -464,9 +467,9 @@ class AuthController extends BaseController
         if(isset($userinfo['sex'])){
             $gender = $userinfo['sex'];
         }
-        return array(
+        $data = [
             'data'=>$rowData,
-            'is_follow'=>0,
+            //'is_follow'=>0,
             'nickname'=>$nickname,
             'gender'=>$gender,
             //'unionid'=>isset($userinfo['unionid'])?$userinfo['unionid']:'',
@@ -475,7 +478,16 @@ class AuthController extends BaseController
             'province'=>$userinfo['province'],
             'country'=>isset($userinfo['country'])?$userinfo['country']:'',
             'language'=>isset($userinfo['language'])?$userinfo['language']:''
-        );
+        ];
+        if(isset($userinfo['is_follow'])){
+            $data['is_follow'] = $userinfo['is_follow'];
+        }elseif(!empty($userinfo['subscribe_time'])){
+            $data['is_follow'] = 1;
+        }
+        if(isset($userinfo['unionid'])){
+            $data['unionid'] = $userinfo['unionid'];
+        }
+        return $data;
     }
 
     public function refresh($refresh_token){
@@ -707,8 +719,8 @@ class AuthController extends BaseController
         $invite_code=$this->request->post('invite_code');
         if(($this->config['m_invite']==1 && !empty($invite_code)) || $this->config['m_invite']==2) {
             if (empty($invite_code)) $this->error("请填写激活码");
-            $invite = Db::name('invite_code')->where(array('code' => $invite_code, 'is_lock' => 0, 'member_use' => 0))->find();
-            if (empty($invite) || ($invite['invalid_at'] > 0 && $invite['invalid_at'] < time())) {
+            $invite = Db::name('inviteCode')->where(array('code' => $invite_code, 'is_lock' => 0, 'member_use' => 0))->find();
+            if (empty($invite) || ($invite['invalid_time'] > 0 && $invite['invalid_time'] < time())) {
                 $this->error("激活码不正确");
             }
         }
@@ -733,7 +745,7 @@ class AuthController extends BaseController
 
         Db::startTrans();
         if(!empty($invite)) {
-            $invite = Db::name('invite_code')->lock(true)->find($invite['id']);
+            $invite = Db::name('inviteCode')->lock(true)->find($invite['id']);
             if (!empty($invite['member_use'])) {
                 Db::rollback();
                 $this->error("激活码已被使用");
@@ -779,8 +791,8 @@ class AuthController extends BaseController
         }
         if(!empty($invite)) {
             $invite['member_use'] = $model['id'];
-            $invite['use_at'] = time();
-            Db::name('invite_code')->update($invite);
+            $invite['use_time'] = time();
+            Db::name('inviteCode')->update($invite);
         }
         if(!empty($this->accessSession['openid'])){
             Db::name('memberOauth')->where('openid',$this->accessSession['openid'])

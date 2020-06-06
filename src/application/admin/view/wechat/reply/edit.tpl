@@ -47,6 +47,7 @@
                     <label for="text">回复内容</label>
                     <div>
                         <textarea class="form-control" name="content">{$model.content|raw}</textarea>
+                        <div class="text-muted">可用标签：昵称:[nickname], 性别:[sex]</div>
                     </div>
                 </div>
                 <div class="form-group rtype-row rtype-news">
@@ -104,6 +105,23 @@
                             </figure>
                             <input type="hidden" name="delete_image" value="{$model['data']['image']}"/>
                         </if>
+                    </div>
+                </div>
+                <div class="form-group rtype-row rtype-custom">
+                    <label for="text">托管处理</label>
+                    <div>
+                        <div class="input-group">
+                            <select name="custom[processor]" class="form-control">
+                                <option value="">请选择</option>
+                                <option value="system" {$model['module']['processor']=='system'?'selected':''}>系统基础</option>
+                            </select>
+                            <select name="custom[action]" class="form-control">
+                                <option value="">请选择操作</option>
+                                <option value="getNewArticles" {$model['module']['action']=='getNewArticles'?'selected':''}>最新文章</option>
+                                <option value="getNewProducts" {$model['module']['action']=='getNewProducts'?'selected':''}>最新产品</option>
+                                <option value="getPoster" {$model['module']['action']=='getPoster'?'selected':''}>分享二维码</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">

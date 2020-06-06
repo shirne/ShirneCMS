@@ -121,6 +121,15 @@
                 </div>
                 <div class="form-row">
                     <div class="col form-group">
+                        <label for="account">海报链接</label>
+                        <input type="text" name="share_poster_url" class="form-control" value="{$model.share_poster_url}">
+                    </div>
+                    <div class="col text-muted">
+                        代理码使用 [code] 代替
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col form-group">
                         <label for="appid">APPID</label>
                         <input type="text" name="appid" class="form-control" value="{$model.appid}">
                     </div>

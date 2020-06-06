@@ -57,7 +57,11 @@
                     <td>[{$v.member_id}]{$v.username}</td>
                     <td>{$v.subscribe_time|showdate}<br />{$v.create_time|showdate}</td>
                     <td>
-                        <span class="badge badge-{$levels[$v['level_id']]['style']}">{$levels[$v['level_id']]['level_name']}</span>
+                        <if condition="$v['is_follow']">
+                            <span class="badge badge-success">已关注</span>
+                            <else/>
+                            <span class="badge badge-secondary">未关注</span>
+                        </if>
                     </td>
                     <td class="operations">
                         <if condition="$support_message">
@@ -87,7 +91,7 @@
                     '发送素材'
                 ],function (type) {
                     if(type==0){
-                        dialog.prompt('请填写发送内容',function (text) {
+                        dialog.prompt({title:'请填写发送内容',is_textarea:true},function (text) {
                             if(text){
                                 sendMessage(openid,'text',text)
                             }

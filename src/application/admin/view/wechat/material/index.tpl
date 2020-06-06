@@ -14,10 +14,24 @@
             </div>
             <div class="col-6">
                 <form action="{:url('wechat.material/index',['wid'=>$wid])}" method="post">
-                    <div class="input-group input-group-sm">
-                        <input type="text" class="form-control" name="key" placeholder="输入标题或者名称关键词搜索">
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="submit"><i class="ion-md-search"></i></button>
+                    <div class="form-row">
+                        <div class="form-group col-3 input-group input-group-sm">
+                            <div class="input-group-prepend">
+                            <span class="input-group-text">类型</span>
+                            </div>
+                            <select name="type" class="form_control">
+                                <option value="">全部</option>
+                                <option value="news" {$type == 'news'?'selected':''}>图文</option>
+                                <option value="image" {$type == 'image'?'selected':''}>图片</option>
+                                <option value="voice" {$type == 'voice'?'selected':''}>语音</option>
+                                <option value="video" {$type == 'video'?'selected':''}>视频</option>
+                            </select>
+                        </div>
+                        <div class="form-group col input-group input-group-sm">
+                            <input type="text" class="form-control" name="key" placeholder="输入标题或者名称关键词搜索">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="submit"><i class="ion-md-search"></i></button>
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -44,6 +58,7 @@
                     <td>{$v.update_time|showdate}</td>
                     <td>{$v.keyword}</td>
                     <td class="operations">
+                        <a class="btn btn-outline-primary" title="预览" href="{:url('wechat.material/view',array('media_id'=>$v['media_id'],'wid'=>$wid))}"><i class="ion-md-document"></i> </a>
                         <a class="btn btn-outline-primary link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('wechat.material/delete',array('media_id'=>$v['media_id'],'wid'=>$wid))}" ><i class="ion-md-trash"></i> </a>
                     </td>
                 </tr>

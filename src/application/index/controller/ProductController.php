@@ -27,6 +27,7 @@ class ProductController extends BaseController
     {
         parent::initialize();
         $this->assign('navmodel','product');
+        $this->seo($this->config['shop_pagetitle'],$this->config['shop_keyword'],$this->config['shop_description']);
     }
 
     public function index($name=""){
@@ -39,10 +40,8 @@ class ProductController extends BaseController
                 'LEFT');
 
         if(!empty($this->category)){
-            $this->seo($this->category['title']);
+            $this->seo($this->category['title'],$this->category['keywords'],$this->category['description']);
             $model->whereIn('product.cate_id',ProductCategoryFacade::getSubCateIds($this->category['id']));
-        }else{
-            $this->seo("产品中心");
         }
 
         $lists=$model->where('product.status',1)
