@@ -57,9 +57,9 @@ class MemberController extends BaseController
     public function index($type=0,$start_date='',$end_date='',$keyword='',$referer='')
     {
         if($this->request->isPost()){
-            return redirect(url('',['referer'=>$referer,'start_date'=>$start_date,'end_date'=>$end_date,'type'=>$type,'keyword'=>base64_encode($keyword)]));
+            return redirect(url('',['referer'=>$referer,'start_date'=>$start_date,'end_date'=>$end_date,'type'=>$type,'keyword'=>base64url_encode($keyword)]));
         }
-        $keyword=empty($keyword)?"":base64_decode($keyword);
+        $keyword=empty($keyword)?"":base64url_decode($keyword);
         $model = Db::view('member m','*')
             ->view('member rm',['username'=> 'refer_name','nickname'=> 'refer_nickname','realname'=> 'refer_realname','avatar'=> 'refer_avatar','is_agent'=> 'refer_agent'],'m.referer=rm.id','LEFT');
         if(!empty($keyword)){
@@ -172,14 +172,20 @@ class MemberController extends BaseController
         $member=Db::name('member')->find($id);
         if(empty($member))$this->error('会员不存在');
 
+        if($agent_id < 1){
+            $this->error('参数错误');
+        }
 
         if($member['is_agent'] == $agent_id)$this->success('设置成功');
 
         $result=MemberModel::setAgent($id, $agent_id, 'admin', '后台升级');
+        
         if($result){
+            if($member['is_agent'] < 1){
+                MemberModel::updateRecommend($member['referer']);
+            }
             user_log($this->mid,'setagent',1,'设置代理 '.$id ,'manager');
             $this->success('设置成功');
-            exit;
         }else{
             $this->error('设置失败');
         }
@@ -384,14 +390,14 @@ class MemberController extends BaseController
      */
     public function log($key='',$type='',$member_id=0){
         if($this->request->isPost()){
-            return redirect(url('',['key'=>base64_encode($key)]));
+            return redirect(url('',['key'=>base64url_encode($key)]));
         }
 
         $model=Db::view('MemberLog','*')
             ->view('Member',['username','nickname','avatar'],'MemberLog.member_id=Member.id','LEFT');
 
         if(!empty($key)){
-            $key = base64_decode($key);
+            $key = base64url_decode($key);
             $model->whereLike('ManagerLog.remark',"%$key%");
         }
         if(!empty($type)){

@@ -13,9 +13,9 @@ class OrderController extends BaseController
 {
     public function index($key='',$status='',$audit=''){
         if($this->request->isPost()){
-            return redirect(url('',['status'=>$status,'audit'=>$audit,'key'=>base64_encode($key)]));
+            return redirect(url('',['status'=>$status,'audit'=>$audit,'key'=>base64url_encode($key)]));
         }
-        $key=empty($key)?"":base64_decode($key);
+        $key=empty($key)?"":base64url_decode($key);
         $model=Db::view('creditOrder','*')
             ->view('member',['username','realname','avatar','level_id'],'member.id=creditOrder.member_id','LEFT')
             ->where('creditOrder.delete_time',0);

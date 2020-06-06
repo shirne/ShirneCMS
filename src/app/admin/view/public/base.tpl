@@ -23,6 +23,7 @@
             return "{:url('admin/index/getCate',['model'=>'__MODEL__'])}".replace('__MODEL__',model);
         };
         window.get_search_url=function (model) {
+            if(model == 'product')model = 'shop.product';
             return "{:url('admin/--model--/search')}".replace('--model--',model);
         };
         window.get_view_url=function (model,id) {

@@ -44,9 +44,9 @@ class ArticleController extends BaseController
     public function index($key="",$cate_id=0)
     {
         if($this->request->isPost()){
-            return redirect(url('',['cate_id'=>$cate_id,'key'=>base64_encode($key)]));
+            return redirect(url('',['cate_id'=>$cate_id,'key'=>base64url_encode($key)]));
         }
-        $key=empty($key)?"":base64_decode($key);
+        $key=empty($key)?"":base64url_decode($key);
         $model = Db::view('article','*')->view('category',['name'=>'category_name','title'=>'category_title'],'article.cate_id=category.id','LEFT')
             ->view('manager',['username'],'article.user_id=manager.id','LEFT');
         if(!empty($key)){
@@ -346,28 +346,33 @@ class ArticleController extends BaseController
     /**
      * 评论管理
      * @param int $id
+     * @param int $category
      * @param string $key
      * @return mixed
      */
-	public function comments($id=0,$key=''){
+	public function comments($id=0, $category=0, $key=''){
         $model = Db::view('articleComment','*')
             ->view('member',['username','level_id','avatar'],'member.id=articleComment.member_id','LEFT')
             ->view('article',['title'=>'article_title','cate_id','cover'],'article.id=articleComment.article_id','LEFT')
             ->view('category',['name'=>'category_name','title'=>'category_title'],'article.cate_id=category.id','LEFT');
-        $where=array();
+        
         if($id>0){
-            $where[]=['article_id',$id];
+            $model->where('article_id',$id);
+        }
+        if($category>0){
+            $model->whereIn('article.cate_id',CategoryFacade::getSubCateIds($category));
         }
         if(!empty($key)){
-            $where[]=['article.title|category.title','like',"%$key%"];
+            $model->whereLike('article.title|category.title',"%$key%");
         }
 
-        $lists=$model->where($where)->order('articleComment.create_time desc')->paginate(10);
+        $lists=$model->order('articleComment.create_time desc')->paginate(10);
 
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
         $this->assign('keyword',$key);
         $this->assign('article_id',$id);
+        $this->assign('cate_id',$category);
         $this->assign("category",CategoryFacade::getCategories());
 
         return $this->fetch();

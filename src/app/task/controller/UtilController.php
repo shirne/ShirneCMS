@@ -2,7 +2,11 @@
 
 namespace app\task\controller;
 
+use app\common\model\MemberModel;
+use app\common\model\MemberOauthModel;
 use app\common\model\OrderModel;
+use app\common\model\WechatModel;
+use EasyWeChat\Kernel\Messages\Image;
 use think\Console;
 use think\console\Input;
 use think\console\Output;
@@ -41,6 +45,45 @@ class UtilController extends BaseController
         }else{
             return redirect(ltrim(config('upload.default_img'),'.'));
         }
+    }
+
+    /**
+     * 向用户发送推广海报
+     * @return void 
+     */
+    public function poster($key){
+        $data = cache($key);
+        if(empty($data)){
+            exit('N');
+        }
+        ignore_user_abort(true);
+        set_time_limit(0);
+
+        list($member_id,$account_id) = explode('-',$data);
+        $oauth = MemberOauthModel::where('type_id',$account_id)->where('member_id',$member_id)->find();
+        if(empty($oauth)){
+            exit('NMO');
+        }
+        $userModel = MemberModel::where('id',$member_id)->find();
+        if(empty($userModel)){
+            exit('NM');
+        }
+        $account = WechatModel::where('id',$account_id)->find();
+        if(empty($account)){
+            exit('NA');
+        }
+        $poster = $userModel->getSharePoster($account['type'].'-'.$account['account_type'],str_replace('[code]',$userModel['agentcode'],$account['share_poster_url']));
+        if(empty($poster)){
+            exit('NP');
+        }
+        $app = WechatModel::createApp($account);
+        $media = $app->media->uploadImage(DOC_ROOT . $poster );
+        if (empty($media['media_id'])) {
+            return 'NW';
+        }
+        $app->customer_service->message(new Image($media['media_id']))->to($oauth['openid'])->send();
+
+        exit('Y');
     }
 
     public function daily()

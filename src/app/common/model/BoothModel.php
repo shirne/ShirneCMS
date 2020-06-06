@@ -26,7 +26,7 @@ class BoothModel extends BaseModel
     public static function fetchBooth($flags,$single=false){
         if(!is_array($flags))$flags=explode(',',$flags);
         
-        $booths = static::newInstance()->whereIn('flag',$flags)->select();
+        $booths = static::whereIn('flag',$flags)->select();
         $lists=[];
         foreach ($booths as $booth){
             $lists[$booth['flag']]=$booth->fetchData();
@@ -113,9 +113,9 @@ class BoothModel extends BaseModel
     private function fetch_product($args){
         $list=[];
         if($args['type'] == '1'){
-            if(!empty($args['article_ids'])) {
+            if(!empty($args['product_ids'])) {
                 $list = ProductModel::getInstance()->tagList([
-                    'ids' => $args['article_ids']
+                    'ids' => $args['product_ids']
                 ]);
             }
         }else{

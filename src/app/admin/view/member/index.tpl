@@ -133,6 +133,7 @@
                         <a class="btn btn-outline-primary" title="查看下线" href="{:url('member/index',array('referer'=>$v['id']))}"><i class="ion-md-people"></i> </a>
                         <a class="btn btn-outline-danger link-confirm" data-confirm="取消代理不能更改已注册的用户!!!" title="取消代理" href="{:url('member/cancel_agent',array('id'=>$v['id']))}" ><i class="ion-md-log-out"></i> </a><br />
                         <a class="btn btn-sm pl-1 pr-1 pt-0 pb-0 mt-2 btn-{$agents[$v['is_agent']]['style']} btn-setagent" title="更改级别" data-id="{$v.id}" data-agent="{$v.is_agent}" href="{:url('member/set_agent',array('id'=>$v['id']))}" >{$agents[$v['is_agent']]['name']}&nbsp;<i class="ion-md-create"></i></a>
+                        <span class="badge badge-info">{$v.agentcode}</span>
                     {else/}
                         <a class="btn btn-sm btn-outline-primary"  data-id="{$v.id}" data-agent="0" title="设置代理" href="{:url('member/set_agent',array('id'=>$v['id']))}" ><i class="ion-md-medal"></i> </a>
                     {/if}
