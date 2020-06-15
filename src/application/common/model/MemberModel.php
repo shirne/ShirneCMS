@@ -14,8 +14,13 @@ use think\facade\Log;
 class MemberModel extends BaseModel
 {
 
-    protected $insert = ['is_agent' => 0,'type'=>1,'status'=>1,'referer'];
+    protected $insert = ['is_agent' => 0,'type','status'=>1,'referer'];
     protected $autoWriteTimestamp = true;
+
+    protected function setTypeAttr($value=0)
+    {
+        return intval($value);
+    }
 
     protected function setRefererAttr($value=0)
     {
