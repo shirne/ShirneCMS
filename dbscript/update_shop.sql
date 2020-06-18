@@ -34,7 +34,8 @@ INSERT INTO `sa_setting` ( `key`,`title`,`type`,`group`,`sort`,`is_sys`, `value`
 VALUES
   ( 'message_bind_agent', '绑定推荐人', 'text', 'message', '0', 1 , '', '可用变量 用户昵称:[username] 代理昵称:[agent] 用户ID:[userid] 代理ID:[agentid]', ''),
   ( 'message_become_agent', '成为代理', 'text', 'message', '0', 1 , '', '可用变量 用户昵称:[username] 用户ID:[userid]', ''),
-  ( 'message_upgrade_agent', '升级代理', 'text', 'message', '0', 1 , '', '可用变量 用户昵称:[username] 用户ID:[userid] 代理等级:[agent]', '');
+  ( 'message_upgrade_agent', '升级代理', 'text', 'message', '0', 1 , '', '可用变量 用户昵称:[username] 用户ID:[userid] 代理等级:[agent]', ''),
+  ( 'message_commission', '佣金消息', 'text', 'message', '0', 1 , '', '可用变量 用户昵称:[username] 用户ID:[userid] 购买人:[buyer] 订单金额:[amount] 佣金类型:[type], 佣金:[commission]', '');
 
 DROP TABLE IF EXISTS `sa_member_cart`;
 
