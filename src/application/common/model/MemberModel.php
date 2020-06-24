@@ -527,6 +527,10 @@ class MemberModel extends BaseModel
     }
 
     private function create_share_img($config,$sharepath,$page){
+        if(strpos($page, $this['agentcode']) === false){
+            $this->setError('分享链接错误');
+            return false;
+        }
         $qrpath=dirname($sharepath);
         $qrfile = $this['agentcode'].'-qrcode.png';
         $filename=$qrpath.'/'.$qrfile;
