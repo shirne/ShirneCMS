@@ -153,7 +153,7 @@
 
         <div class="form-row">
             <div class="col form-group">
-                <label for="stock">数量</label>
+                <label for="stock">总数量</label>
                 <input type="text" name="stock" class="form-control" value="{$model.stock}" placeholder="填写 -1 不限制数量" />
             </div>
             <div class="col form-group">

@@ -18,6 +18,17 @@ class ProductCouponModel extends BaseModel
         4=>'规格券'
     ];
     
+    protected function setExpiryTimeAttr($value=0)
+    {
+        if(is_int($value))return $value;
+        if(is_numeric($value))return intval($value);
+        return strtotime($value);
+    }
+    protected function setExpiryDayAttr($value=0)
+    {
+        return intval($value);
+    }
+
     /**
      * 发放优惠券给用户
      * @param $user_ids
