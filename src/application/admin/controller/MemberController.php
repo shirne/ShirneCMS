@@ -36,8 +36,10 @@ class MemberController extends BaseController
         if(!empty($type)){
             $model->where('type',$type);
         }
-        if($is_agent>-1){
-            $model->where('is_agent',$is_agent);
+        if($is_agent > 0){
+            $model->where('is_agent','>',0);
+        }elseif($is_agent > -1){
+            $model->where('is_agent',0);
         }
 
         $lists=$model->field('id,username,nickname,realname,mobile,avatar,level_id,is_agent,gender,email,create_time')
