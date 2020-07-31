@@ -25,7 +25,7 @@ class BoothModel extends BaseModel
     public static function fetchBooth($flags,$single=false){
         if(!is_array($flags))$flags=explode(',',$flags);
         
-        $booths = static::whereIn('flag',$flags)->select();
+        $booths = static::whereIn('flag',$flags)->where('status',1)->select();
         $lists=[];
         foreach ($booths as $booth){
             $lists[$booth['flag']]=$booth->fetchData();
