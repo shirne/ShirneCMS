@@ -511,7 +511,7 @@ class MemberController extends BaseController
                     $data['birth']=strtotime($data['birth']);
                 }
 
-                //更新
+                // 更新
                 $member=MemberModel::get($id);
                 if(empty($member)){
                     $this->error('会员资料错误');
