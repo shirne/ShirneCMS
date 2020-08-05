@@ -77,6 +77,14 @@
                             <div class="input-group">
                                 <span class="input-group-prepend"><span class="input-group-text">显示数量</span> </span>
                                 <input type="text" class="form-control" name="data[count]" v-model="model.data.count"/>
+                                <span class="input-group-middle"><span class="input-group-text">携带文章数量</span> </span>
+                                <input type="text" class="form-control" name="data[article_count]" v-model="model.data.article_count"/>
+                                <span class="input-group-middle"><span class="input-group-text">排序</span> </span>
+                                <select class="form-control" v-model="model.data.article_sort" name="data[article_sort]">
+                                    <option value="">默认排序</option>
+                                    <option value="update_time desc" >更新时间</option>
+                                    <option value="views desc">浏览量</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -265,6 +273,17 @@
                             <div class="input-group">
                                 <span class="input-group-prepend"><span class="input-group-text">显示数量</span> </span>
                                 <input type="text" class="form-control" name="data[count]" v-model="model.data.count"/>
+                                <span class="input-group-middle"><span class="input-group-text">携带产品数量</span> </span>
+                                <input type="text" class="form-control" name="data[product_count]" v-model="model.data.product_count"/>
+                                <span class="input-group-middle"><span class="input-group-text">排序</span> </span>
+                                <select class="form-control" v-model="model.data.product_sort" name="data[product_sort]">
+                                    <option value="">默认排序</option>
+                                    <option value="update_time desc" >更新时间</option>
+                                    <option value="min_price asc">价格升序</option>
+                                    <option value="min_price desc">价格降序</option>
+                                    <option value="sales desc">销售量</option>
+                                    <option value="goods_no asc">货号</option>
+                                </select>
                             </div>
                         </div>
                     </div>

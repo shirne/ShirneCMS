@@ -65,6 +65,21 @@ class BoothModel extends BaseModel
                 array_splice($list,$count);
             }
         }
+        $article_count = isset($args['article_count'])?intval($args['article_count']):0;
+        if($article_count > 0){
+            $article = ArticleModel::getInstance();
+            $filters['limit']=$article_count;
+            $filters['recursive']=1;
+            if(!empty($args['article_sort'])){
+                $filters['sort']=$args['article_sort'];
+            }
+
+            foreach($list as &$cate){
+                $filters['category']=$cate['id'];
+                $cate['articles']=$article->tagList($filters);
+            }
+            unset($cate);
+        }
         return $list;
     }
     private function fetch_article($args){
@@ -106,6 +121,22 @@ class BoothModel extends BaseModel
             if($count>0 && count($list)>$count){
                 array_splice($list,$count);
             }
+        }
+        $goods_count = isset($args['product_count'])?intval($args['product_count']):0;
+        if($goods_count > 0){
+            $product = ProductModel::getInstance();
+            $filters['limit']=$goods_count;
+            $filters['withsku']=1;
+            $filters['recursive']=1;
+            if(!empty($args['product_sort'])){
+                $filters['sort']=$args['product_sort'];
+            }
+
+            foreach($list as &$cate){
+                $filters['category']=$cate['id'];
+                $cate['products']=$product->tagList($filters);
+            }
+            unset($cate);
         }
         return $list;
     }
