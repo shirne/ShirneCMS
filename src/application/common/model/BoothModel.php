@@ -71,7 +71,7 @@ class BoothModel extends BaseModel
             $filters['limit']=$article_count;
             $filters['recursive']=1;
             if(!empty($args['article_sort'])){
-                $filters['sort']=$args['article_sort'];
+                $filters['order']=$args['article_sort'];
             }
 
             foreach($list as &$cate){
@@ -129,7 +129,7 @@ class BoothModel extends BaseModel
             $filters['withsku']=1;
             $filters['recursive']=1;
             if(!empty($args['product_sort'])){
-                $filters['sort']=$args['product_sort'];
+                $filters['order']=$args['product_sort'];
             }
 
             foreach($list as &$cate){
