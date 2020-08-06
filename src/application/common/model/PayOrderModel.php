@@ -120,7 +120,7 @@ class PayOrderModel extends BaseModel
             'order_id'=>$order_id,
             'create_time'=>time(),
             'pay_data'=>$data,
-            'pay_amount'=>intval($amount*100)
+            'pay_amount'=>round($amount*100)
         ]);
     }
 

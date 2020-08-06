@@ -340,7 +340,7 @@ class OrderModel extends BaseOrderModel
         //比较客户端传来的价格
         if(is_array($extdata) ){
             if(isset($extdata['total_price'])) {
-                if ($total_price != intval($extdata['total_price']*100)) {
+                if ($total_price != round($extdata['total_price']*100)) {
                     $this->setError('下单商品价格已变动');
                     return false;
                 }
