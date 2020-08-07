@@ -37,11 +37,26 @@
         <foreach name="lists" item="v">
             <tr>
                 <td>{$v.id}</td>
-                <td><figure class="figure" >
-                        <img src="{$v.image}?w=100" class="figure-img img-fluid rounded" alt="image">
-                    </figure></td>
                 <td>{$v.title}</td>
-                <td>{$v.member_id}{$v.member_name}</td>
+                <td>
+                    <a href="{:url('shop.coupon/itemlist',array('gid'=>$v['coupon_id'],'member_id'=>$v['member_id']))}" class="media">
+                    <if condition="!empty($v['avatar'])">
+                        <img src="{$v.avatar}" class="mr-2 rounded" width="30"/>
+                    </if>
+                    <div class="media-body">
+                        <h5 class="mt-0 mb-1" style="font-size:13px;">
+                            <if condition="!empty($v['nickname'])">
+                                {$v.nickname}
+                                <else/>
+                                {$v.username}
+                            </if>
+                        </h5>
+                        <div style="font-size:12px;">
+                            [{$v.member_id} {$levels[$v['level_id']]['level_name']}]
+                        </div>
+                    </div>
+                </a>
+            </td>
                 <td>{$v.create_time|showdate}</td>
                 <td>{$v.start_date|showdate}<br />{$v.end_date|showdate}</td>
                 <td>{$v.status|show_status|raw}</td>

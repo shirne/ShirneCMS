@@ -97,7 +97,7 @@
                 <div class="input-group-middle">
                     <div class="input-group-text">减</div>
                 </div>
-                <input type="text" class="form-control" name="amount" value="{$model.amount|showmoney|number_empty}">
+                <input type="text" class="form-control" name="amount" value="{$model.amount|number_empty}">
             </div>
         </div>
         <div class="form-group cptype cptype_1">
@@ -142,7 +142,7 @@
         </div>
 
         <div class="form-group">
-            <label for="count_limit">数量限制</label>
+            <label for="count_limit">领取限制</label>
             <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text">每会员最多领取</span>

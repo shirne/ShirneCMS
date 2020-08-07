@@ -324,8 +324,6 @@ class OrderModel extends BaseOrderModel
             }
             $postage_fee = round($postage_fee,2);
         }
-        
-        //todo  优惠券
     
         $level_id = 0;
         $levelids = array_unique($levelids);
