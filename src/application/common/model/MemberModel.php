@@ -349,9 +349,15 @@ class MemberModel extends BaseModel
             return true;
         }
         
-        $agentMember=static::where('agentcode|id',$agent)
+        if(is_numeric($agent)){
+            $agentMember=static::where('id',intval($agent))
             ->where('is_agent','GT',0)
             ->where('status',1)->find();
+        }else{
+            $agentMember=static::where('agentcode',$agent)
+            ->where('is_agent','GT',0)
+            ->where('status',1)->find();
+        }
         if(empty($agentMember) || $agentMember['id']==$member['id'] || !$agentMember['is_agent']){
             return false;
         }
