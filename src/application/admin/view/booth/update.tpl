@@ -323,7 +323,53 @@
                     </div>
                 </div>
             </div>
-    
+            <div v-else-if="model.type=='brand'" class="card">
+                <div class="card-header"><h4 class="card-title">品牌</h4></div>
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="form-group col">
+                            <div class="btn-group btn-group-toggle" >
+                                <label :class="'btn btn-outline-secondary'+(model.data.type==0?' active':'')">
+                                    <input type="radio" name="data[type]" :value="0" autocomplete="off" v-model="model.data.type">自动获取
+                                </label>
+                                <label :class="'btn btn-outline-secondary'+(model.data.type==1?' active':'')">
+                                    <input type="radio" name="data[type]" :value="1" autocomplete="off" v-model="model.data.type">手动选择
+                                </label>
+                            </div>
+                        </div>
+                        <div v-show="model.data.type==0" class="form-group col">
+                            <div class="input-group">
+                                <span class="input-group-prepend"><span class="input-group-text">显示数量</span> </span>
+                                <input type="text" class="form-control" name="data[count]" v-model="model.data.count"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-show="model.data.type==1" class="form-row">
+                        <div v-for="(item, index) in list_brand"  class="col-4 col-md-3 col-lg-2">
+                            <input type="hidden" name="data[brand_ids][]" :value="item.id" />
+                            <div class="card mb-2">
+                                <button type="button" class="close" aria-label="移除" @click.stop="removeThis(index)">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                <button type="button" class="close swap" aria-label="交换" @click.stop="swapThis(index)">
+                                    <i aria-hidden="true" class="ion-md-swap"></i>
+                                </button>
+                                <img v-if="item.logo" :src="item.logo" class="card-img-top" :alt="item.title">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{item.title}}</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-3">
+                            <div class="card border-0" @click="pickBrand">
+                                <i class="ion-md-add border" style="font-size: 60px;line-height:1em;width:60px;text-align: center"></i>
+                                <div class="card-body">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div v-else-if="model.type=='ad'" class="card">
                 <div class="card-header"><h4 class="card-title">广告位</h4></div>
                 <div class="card-body">
@@ -465,6 +511,8 @@
                             self.list_product.splice(idx, 1)
                         }else if (self.model.type == 'product_category') {
                             self.list_product_category.splice(idx, 1)
+                        }else if (self.model.type == 'brand') {
+                            self.list_brand.splice(idx, 1)
                         }
                     })
                 },
@@ -473,7 +521,7 @@
                     if(idx == 0)idx += 1;
                     if(idx > 0 && this['list_'+this.model.type].length>1){
                         var tempList = this['list_'+this.model.type];
-                        console.log(tempList)
+                        // console.log(tempList)
                         var temp = tempList[idx];
                         tempList[idx] = tempList[idx-1];
                         tempList[idx-1] = temp;

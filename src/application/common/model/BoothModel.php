@@ -19,6 +19,7 @@ class BoothModel extends BaseModel
         'article'=>'文章',
         'product_category'=>'商品分类',
         'product'=>'商品',
+        'brand'=>'品牌',
         'ad'=>'广告位',
     ];
     
