@@ -521,9 +521,12 @@ class MemberModel extends BaseModel
         $config['background']='.'.$posterConfig['poster_background'];
         $config['data']['avatar']=$posterConfig['poster_avatar'];
         $config['data']['avatar']['type']='image';
-        $config['data']['nickname']=$posterConfig['poster_nickname'];
         $config['data']['qrcode']=$posterConfig['poster_qrcode'];
         $config['data']['qrcode']['type']='image';
+        if($posterConfig['poster_bgset'] == 1){
+            $config['data']['bg']=['type'=>'background'];
+        }
+        $config['data']['nickname']=$posterConfig['poster_nickname'];
         if(!empty($posterConfig['poster_qrlogo'])){
             $config['data']['qrlogo']=$posterConfig['poster_qrcode'];
             $config['data']['qrlogo']['type']='image';
@@ -558,7 +561,6 @@ class MemberModel extends BaseModel
         $poster->generate([
             'qrcode'=>$filename,
             'avatar'=>$this['avatar'],
-            'bg'=>1,
             'nickname'=>$this['nickname']
         ]);
         $poster->save($sharepath);
@@ -600,7 +602,6 @@ class MemberModel extends BaseModel
         $poster->generate([
             'appcode'=>$filename,
             'avatar'=>$this['avatar'],
-            'bg'=>1,
             'nickname'=>$this['nickname']
         ]);
         $poster->save($sharepath);

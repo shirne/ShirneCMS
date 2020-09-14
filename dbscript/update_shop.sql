@@ -24,7 +24,8 @@ VALUES
 
 INSERT INTO `sa_setting` ( `key`,`title`,`type`,`group`,`sort`,`is_sys`, `value`, `description`,`data`)
 VALUES
-  ( 'poster_background', '分享图背景', 'image', 'poster', '0', 1 , '', '建议尺寸 1080px x 1920px', ''),
+  ( 'poster_background', '分享图背景', 'image', 'poster', '0', 1 , '', 'png格式，建议尺寸 1080px x 1920px', ''),
+  ( 'poster_bgset','二维码/头像遮掩', 'radio', 'poster', 0, 1, '0', '需要背景图对应二维码和头的位置设计为透明，可将周边裁为圆形或其它形状', '0:开启\r\n1:关闭'),
   ( 'poster_avatar', '用户头像', 'json', 'poster', '0', 1 , '', '', ''),
   ( 'poster_nickname', '用户昵称', 'json', 'poster', '0', 1 , '', '', ''),
   ( 'poster_qrcode', '二维码位置', 'json', 'poster', '0', 1 , '', '', ''),
