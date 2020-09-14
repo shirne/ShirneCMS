@@ -565,7 +565,7 @@ class MemberModel extends BaseModel
         return true;
     }
     private function create_appcode_img($config,$sharepath,$page){
-        $appid=$this->request->tokenData['appid'];
+        $appid=request()->tokenData['appid'];
         $wechat=WechatModel::where('appid',$appid)->find();
         if(empty($wechat)){
             $this->setError('分享图生成失败(wechat)');
