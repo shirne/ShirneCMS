@@ -70,7 +70,7 @@ class InstallController extends Controller
                 $args[] = $sql;
             }
             if (!empty($mode)) {
-                $args[] = '--mode';
+                $args[] = '--module';
                 $args[] = is_array($mode)?implode(',',$mode):$mode;
             }
             if ($this->request->has('admin', 'post')) {

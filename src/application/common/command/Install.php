@@ -97,8 +97,8 @@ class Install extends Command
                         $output->warning('Sql file '.$script.'.sql not exists!');
                     }
                 }
-                if($input->hasOption('mode')){
-                    $mode=$input->getOption('mode');
+                if($input->hasOption('module')){
+                    $mode=$input->getOption('module');
                     if(!empty($mode)){
                         $modes=explode(',',$mode);
                         foreach ($modes as $mode){
