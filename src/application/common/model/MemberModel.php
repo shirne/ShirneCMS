@@ -600,7 +600,7 @@ class MemberModel extends BaseModel
         //$config['background']=$bgpath;
         $poster = new Poster($config);
         $poster->generate([
-            'appcode'=>$filename,
+            'qrcode'=>$filename,
             'avatar'=>$this['avatar'],
             'nickname'=>$this['nickname']
         ]);

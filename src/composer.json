@@ -33,7 +33,8 @@
         "overtrue/wechat": "^4.0",
         "aliyuncs/oss-sdk-php": "^2.3",
         "alibabacloud/green": "^1.7",
-        "alibabacloud/dysmsapi": "^1.7"
+        "alibabacloud/dysmsapi": "^1.7",
+        "overtrue/pinyin": "~4.0"
     },
     "autoload": {
         "psr-4": {
