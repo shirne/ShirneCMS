@@ -32,7 +32,7 @@ class AdvGroupModel extends BaseModel
         $model['lists'] = self::fixAdItem($lists, true);
         return $model;
     }
-    
+
     public static function getAdList($flag,$limit=10)
     {
         $model=self::get(['flag'=>$flag]);
