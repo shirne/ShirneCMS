@@ -309,7 +309,7 @@ class AuthController extends BaseController
 
         if($weapp instanceof Application){
             $userinfo = $weapp->oauth->user()->getOriginal();
-            if(empty($userinfo)){
+            if(empty($userinfo) || empty($userinfo['openid'])){
                 $this->error('登录失败', ERROR_LOGIN_FAILED);
             }
             $rowData = json_encode($userinfo, JSON_UNESCAPED_UNICODE);
