@@ -189,18 +189,19 @@ a{
 
 .article-list{
   .list-group-item{
-    border:0;
-    border-radius:0;
-    margin-bottom:20px;
-    padding:0;
-    display:flex;
-    transition: all .3s linear;
+    border: 0;
+    border-radius: 0;
+    margin-bottom: 20px;
+    padding: 0;
+    display: flex;
+    transition: all .3s ease-out;
     
     .list-img{
       width:20%;
       padding-top:15%;
       flex:0 0 auto;
       height: 0;
+      margin: 10px;
       background:url(../images/blank.gif) center center no-repeat;
       background-size:cover;
       img{
@@ -228,8 +229,10 @@ a{
       }
     }
     &:hover{
-      box-shadow: 1px 1px 10px rgba(0,0,0,.1);
-      transform: scale(1.05);
+      box-shadow: 0 4px 12px 0 rgba(0,0,0,.1);
+      border-radius:3px;
+      transform:translateY(-2px);
+      /*transform: scale(1.05);*/
     }
     &.empty-box:hover{
       background-color : $color-white;

@@ -33,6 +33,15 @@
                 <span class="text-muted">{$setting['message_upgrade_agent']['description']}</span>
             </div>
         </div>
+        <div class="form-row form-group">
+            <label for="v-message_commission" class="form-label w-100px text-right align-middle">{$setting['message_commission']['title']}</label>
+            <div class="col-5">
+                <textarea name="v-message_commission" class="form-control">{$setting['message_commission']['value']}</textarea>
+            </div>
+            <div class="col-5">
+                <span class="text-muted">{$setting['message_commission']['description']}</span>
+            </div>
+        </div>
 
         <button type="submit" class="btn btn-primary">保存配置</button>
     </form>

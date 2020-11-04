@@ -24,7 +24,8 @@ VALUES
 
 INSERT INTO `sa_setting` ( `key`,`title`,`type`,`group`,`sort`,`is_sys`, `value`, `description`,`data`)
 VALUES
-  ( 'poster_background', '分享图背景', 'image', 'poster', '0', 1 , '', '建议尺寸 1080px x 1920px', ''),
+  ( 'poster_background', '分享图背景', 'image', 'poster', '0', 1 , '', 'png格式，建议尺寸 1080px x 1920px', ''),
+  ( 'poster_bgset','二维码/头像遮掩', 'radio', 'poster', 0, 1, '0', '需要背景图对应二维码和头的位置设计为透明，可将周边裁为圆形或其它形状', '0:开启\r\n1:关闭'),
   ( 'poster_avatar', '用户头像', 'json', 'poster', '0', 1 , '', '', ''),
   ( 'poster_nickname', '用户昵称', 'json', 'poster', '0', 1 , '', '', ''),
   ( 'poster_qrcode', '二维码位置', 'json', 'poster', '0', 1 , '', '', ''),
@@ -34,7 +35,8 @@ INSERT INTO `sa_setting` ( `key`,`title`,`type`,`group`,`sort`,`is_sys`, `value`
 VALUES
   ( 'message_bind_agent', '绑定推荐人', 'text', 'message', '0', 1 , '', '可用变量 用户昵称:[username] 代理昵称:[agent] 用户ID:[userid] 代理ID:[agentid]', ''),
   ( 'message_become_agent', '成为代理', 'text', 'message', '0', 1 , '', '可用变量 用户昵称:[username] 用户ID:[userid]', ''),
-  ( 'message_upgrade_agent', '升级代理', 'text', 'message', '0', 1 , '', '可用变量 用户昵称:[username] 用户ID:[userid] 代理等级:[agent]', '');
+  ( 'message_upgrade_agent', '升级代理', 'text', 'message', '0', 1 , '', '可用变量 用户昵称:[username] 用户ID:[userid] 代理等级:[agent]', ''),
+  ( 'message_commission', '佣金消息', 'text', 'message', '0', 1 , '', '可用变量 用户昵称:[username] 用户ID:[userid] 购买人:[buyer] 订单金额:[amount] 佣金类型:[type], 佣金:[commission]', '');
 
 DROP TABLE IF EXISTS `sa_member_cart`;
 
@@ -185,7 +187,10 @@ CREATE TABLE `sa_product` (
   `type` tinyint(4) DEFAULT '0' COMMENT '商品类型,参见后台编辑页',
   `is_commission` tinyint(4) DEFAULT '1' COMMENT '是否启用分佣',
   `commission_percent`  text COMMENT '独立的分佣设置',
+  `is_coupon` tinyint(4) DEFAULT '1' COMMENT '是否可用优惠券',
   `is_discount` tinyint(4) DEFAULT '1' COMMENT '是否启用折扣',
+  `max_buy` int(11) DEFAULT '0' COMMENT '会员可购买数量 0为不限制',
+  `max_buy_cycle` varchar(10) DEFAULT '' COMMENT '限制周期',
   `status` tinyint(4) NOT NULL DEFAULT '1',
   `create_time` int(11) DEFAULT '0',
   `update_time` int(11) DEFAULT '0',

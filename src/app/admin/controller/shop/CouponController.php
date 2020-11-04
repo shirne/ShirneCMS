@@ -47,9 +47,6 @@ class CouponController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             }else{
-                if(!empty($data['expiry_time']))$data['expiry_time']=strtotime($data['expiry_time']);
-                if(!empty($data['start_time']))$data['start_time']=strtotime($data['start_time']);
-                if(!empty($data['end_time']))$data['end_time']=strtotime($data['end_time']);
                 $model=ProductCouponModel::create($data);
                 if ($model['id']) {
                     $this->success(lang('Add success!'), url('shop.coupon/index'));
@@ -85,9 +82,6 @@ class CouponController extends BaseController
             }else{
 
                 try{
-                    if(!empty($data['expiry_time']))$data['expiry_time']=strtotime($data['expiry_time']);
-                    if(!empty($data['start_time']))$data['start_time']=strtotime($data['start_time']);
-                    if(!empty($data['end_time']))$data['end_time']=strtotime($data['end_time']);
                     $model->save($data);
                     
                 }catch(\Exception $err){
@@ -157,21 +151,26 @@ class CouponController extends BaseController
      * @param $gid
      * @return mixed
      */
-    public function itemlist($gid,$key=''){
-        $model = Db::name('MemberCoupon');
+    public function itemlist($gid,$key='',$member_id=0){
         $gid=intval($gid);
         $group=Db::name('ProductCoupon')->find($gid);
         if(empty($group)){
             $this->error('优惠券不存在');
         }
-        $model->where('coupon_id',$gid);
+        $model = Db::view('MemberCoupon mc','*')
+            ->view('__MEMBER__ m',['username','realname','nickname','avatar','mobile','level_id'],'m.id = mc.member_id','LEFT')
+            ->where('coupon_id',$gid);
+        if($member_id > 0){
+            $model->where('member_id',$member_id);
+        }
         if(!empty($key)){
             $model->whereLike('title|url',"%$key%");
         }
-        $lists=$model->order('sort ASC,id DESC')->paginate(15);
+        $lists=$model->order('id DESC')->paginate(15);
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
         $this->assign('gid',$gid);
+        $this->assign('levels',getMemberLevels());
         return $this->fetch();
     }
 

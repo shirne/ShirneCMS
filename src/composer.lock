@@ -1440,6 +1440,7 @@
             "time": "2020-02-14T08:15:52+00:00"
         },
         {
+<<<<<<< HEAD
             "name": "opis/closure",
             "version": "3.5.1",
             "source": {
@@ -1451,6 +1452,19 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/opis/closure/zipball/93ebc5712cdad8d5f489b500c59d122df2e53969",
                 "reference": "93ebc5712cdad8d5f489b500c59d122df2e53969",
+=======
+            "name": "overtrue/pinyin",
+            "version": "4.0.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/overtrue/pinyin.git",
+                "reference": "9836dae1783bcf5934508a2abe32eca9ea5ee15d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/overtrue/pinyin/zipball/9836dae1783bcf5934508a2abe32eca9ea5ee15d",
+                "reference": "9836dae1783bcf5934508a2abe32eca9ea5ee15d",
+>>>>>>> master
                 "shasum": "",
                 "mirrors": [
                     {
@@ -1460,6 +1474,7 @@
                 ]
             },
             "require": {
+<<<<<<< HEAD
                 "php": "^5.4 || ^7.0"
             },
             "require-dev": {
@@ -1470,14 +1485,41 @@
             "extra": {
                 "branch-alias": {
                     "dev-master": "3.5.x-dev"
+=======
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "brainmaestro/composer-git-hooks": "^2.7",
+                "friendsofphp/php-cs-fixer": "^2.16",
+                "phpunit/phpunit": "~8.0"
+            },
+            "type": "library",
+            "extra": {
+                "hooks": {
+                    "pre-commit": [
+                        "composer test",
+                        "composer fix-style"
+                    ],
+                    "pre-push": [
+                        "composer test",
+                        "composer check-style"
+                    ]
+>>>>>>> master
                 }
             },
             "autoload": {
                 "psr-4": {
+<<<<<<< HEAD
                     "Opis\\Closure\\": "src/"
                 },
                 "files": [
                     "functions.php"
+=======
+                    "Overtrue\\Pinyin\\": "src/"
+                },
+                "files": [
+                    "src/const.php"
+>>>>>>> master
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1486,6 +1528,7 @@
             ],
             "authors": [
                 {
+<<<<<<< HEAD
                     "name": "Marius Sarca",
                     "email": "marius.sarca@gmail.com"
                 },
@@ -1505,6 +1548,21 @@
                 "serialize"
             ],
             "time": "2019-11-29T22:36:02+00:00"
+=======
+                    "name": "overtrue",
+                    "email": "anzhengchao@gmail.com",
+                    "homepage": "http://github.com/overtrue"
+                }
+            ],
+            "description": "Chinese to pinyin translator.",
+            "homepage": "https://github.com/overtrue/pinyin",
+            "keywords": [
+                "Chinese",
+                "Pinyin",
+                "cn2pinyin"
+            ],
+            "time": "2020-04-13T08:53:30+00:00"
+>>>>>>> master
         },
         {
             "name": "overtrue/socialite",

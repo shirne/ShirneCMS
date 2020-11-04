@@ -17,6 +17,15 @@
             <input type="text" name="flag" class="form-control" value="{$model.flag|default=''}" placeholder="调用标识">
         </div>
         <div class="form-group">
+            <label for="type">类型</label>
+            <label class="radio-inline">
+                <input type="radio" name="type" value="1" <if condition="$model['type'] eq 1">checked="checked"</if> >视频
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="type" value="0" <if condition="$model['type'] eq 0">checked="checked"</if> >图片
+            </label>
+        </div>
+        <div class="form-group">
             <label >自定义字段</label>
             <div class="form-group ">
                 <div class="prop-groups">

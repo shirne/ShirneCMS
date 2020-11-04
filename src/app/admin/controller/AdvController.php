@@ -6,6 +6,7 @@ namespace app\admin\controller;
 use app\admin\validate\AdvGroupValidate;
 use app\admin\validate\AdvItemValidate;
 use app\common\model\AdvGroupModel;
+use app\common\model\AdvItemModel;
 use think\facade\Db;
 use think\Exception;
 
@@ -202,15 +203,25 @@ class AdvController extends BaseController
                 }elseif($this->uploadErrorCode>102){
                     $this->error($this->uploadErrorCode.':'.$this->uploadError);
                 }
-                $model = Db::name("AdvItem");
+                $uploaded=$this->uploadFile('banner','upload_video',2);
+                if(!empty($uploaded)){
+                    $data['video']=$uploaded['url'];
+                }elseif($this->uploadErrorCode>102){
+                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
+                }
+                
                 $url=url('adv/itemlist',array('gid'=>$gid));
                 $data['start_date']=empty($data['start_date'])?0:strtotime($data['start_date']);
                 $data['end_date']=empty($data['end_date'])?0:strtotime($data['end_date']);
                 if(isset($data['ext'])) {
-                    $data['ext_data'] = json_encode($data['ext'], JSON_UNESCAPED_UNICODE);
+                    $data['ext_data'] = $data['ext'];
                     unset($data['ext']);
                 }
-                if ($model->insert($data)) {
+                if(isset($data['elements'])){
+                    $data['elements'] = $this->filterElements($data['elements']);
+                }
+                $model = AdvItemModel::create($data);
+                if ($model['id']) {
                     $this->success(lang('Add success!'),$url);
                 } else {
                     delete_image($data['image']);
@@ -248,7 +259,7 @@ class AdvController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             }else{
-                $model = Db::name("AdvItem");
+                $model = AdvItemModel::where('id',$id)->find();
                 $url=url('adv/itemlist',array('gid'=>$data['group_id']));
                 $delete_images=[];
                 $uploaded=$this->upload('banner','upload_image');
@@ -259,14 +270,25 @@ class AdvController extends BaseController
                     $this->error($this->uploadErrorCode.':'.$this->uploadError);
                 }
                 unset($data['delete_image']);
+
+                $uploaded=$this->uploadFile('banner','upload_video',2);
+                if(!empty($uploaded)){
+                    $data['video']=$uploaded['url'];
+                }elseif($this->uploadErrorCode>102){
+                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
+                }
+                
                 $data['start_date']=empty($data['start_date'])?0:strtotime($data['start_date']);
                 $data['end_date']=empty($data['end_date'])?0:strtotime($data['end_date']);
                 if(isset($data['ext'])) {
-                    $data['ext_data'] = json_encode($data['ext'], JSON_UNESCAPED_UNICODE);
+                    $data['ext_data'] = $data['ext'];
                     unset($data['ext']);
                 }
-                $data['id']=$id;
-                if ($model->update($data)) {
+                if(isset($data['elements'])){
+                    $data['elements'] = $this->filterElements($data['elements']);
+                }
+                
+                if ($model->allowField(true)->save($data)) {
                     delete_image($delete_images);
                     $this->success(lang('Update success!'), $url);
                 } else {
@@ -280,8 +302,29 @@ class AdvController extends BaseController
         $this->assign('model',$model);
         $this->assign('id',$id);
         return $this->fetch();
-
     }
+
+    private function filterElements($elements){
+        $fields=[];
+        foreach($elements as $k=>$item){
+            if($item['type']=='image'){
+                $fields[]="elements_{$k}_image";
+            }
+        }
+        
+        $uploaded = $this->batchUpload('banner',$fields);
+        if(!empty($uploaded)){
+            foreach($uploaded as $k=>$file){
+                $newkey = explode('_',$k.'_');
+                $newkey = $newkey[1];
+                $elements[$newkey]['image']=$file;
+            }
+        }elseif($this->uploadErrorCode>102){
+            $this->error($this->uploadErrorCode.':'.$this->uploadError);
+        }
+        return array_values($elements);
+    }
+
     /**
      * 删除广告
      */
