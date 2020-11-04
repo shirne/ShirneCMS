@@ -4,6 +4,7 @@ namespace app\common\model;
 
 
 use app\common\core\BaseOrderModel;
+use app\common\service\MessageService;
 use think\Db;
 use think\Exception;
 use think\facade\Log;
@@ -323,8 +324,6 @@ class OrderModel extends BaseOrderModel
             }
             $postage_fee = round($postage_fee,2);
         }
-        
-        //todo  优惠券
     
         $level_id = 0;
         $levelids = array_unique($levelids);
@@ -339,7 +338,7 @@ class OrderModel extends BaseOrderModel
         //比较客户端传来的价格
         if(is_array($extdata) ){
             if(isset($extdata['total_price'])) {
-                if ($total_price != intval($extdata['total_price']*100)) {
+                if ($total_price != round($extdata['total_price']*100)) {
                     $this->setError('下单商品价格已变动');
                     return false;
                 }
@@ -419,7 +418,7 @@ class OrderModel extends BaseOrderModel
             foreach ($products as $product){
                 $product['order_id']=$result;
                 ProductModel::setFlash($product['product_id'],$time);
-                Db::name('orderProduct')->insert([
+                OrderProductModel::create([
                     'order_id'=>$result,
                     'product_id'=>$product['product_id'],
                     'member_id'=>$member['id'],
@@ -648,6 +647,7 @@ class OrderModel extends BaseOrderModel
                     $amount = round($amount,2);
                     if ($amount > 0) {
                         self::award_log($parents[$i]['id'], $amount, '消费分佣' . ($i + 1) . '代', 'commission', $order);
+                        self::sendCommissionMessage($parents[$i], $member, $order, $amount, '消费分佣' . ($i + 1) . '代');
                         $total_rebate += $amount;
                     }
                 }
@@ -664,6 +664,24 @@ class OrderModel extends BaseOrderModel
         //返奖同时可以处理其它
 
         return $results;
+    }
+
+    public static function sendCommissionMessage($member, $buyer, $order, $commission, $type = '佣金'){
+        $message = getSetting('message_commission');
+        if(!empty($message)){
+            foreach([
+                'username'=>MemberModel::showname($member),
+                'userid'=>$member['id'],
+                'buyer'=>MemberModel::showname($buyer),
+                'amount'=>number_format($order['payamount'], 2),
+                'type'=>$type,
+                'commission'=>number_format($commission, 2)
+            ] as $k=>$v){
+                $message = str_replace("[$k]", $v, $message);
+            }
+
+            MessageService::sendWechatMessage($member['id'],$message);
+        }
     }
 
     public function refund($order = null, $reason = '', $type = ''){

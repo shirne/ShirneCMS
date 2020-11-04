@@ -14,8 +14,13 @@ use think\facade\Log;
 class MemberModel extends BaseModel
 {
 
-    protected $insert = ['is_agent' => 0,'type'=>1,'status'=>1,'referer'];
+    protected $insert = ['is_agent' => 0,'type','status'=>1,'referer'];
     protected $autoWriteTimestamp = true;
+
+    protected function setTypeAttr($value=0)
+    {
+        return intval($value);
+    }
 
     protected function setRefererAttr($value=0)
     {
@@ -285,7 +290,7 @@ class MemberModel extends BaseModel
         $parents=[];
         $ids=[];
         $currentid=$userid;
-        $user=Db::name('Member')->where('id',$currentid)->field('id,level_id,is_agent,username,referer')->find();
+        $user=Db::name('Member')->where('id',$currentid)->field('id,level_id,is_agent,username,nickname,mobile,referer')->find();
         $layer=0;
         while(!empty($user)){
             $layer++;
@@ -296,7 +301,7 @@ class MemberModel extends BaseModel
                 Log::record('会员 '.$userid.' 在查找上级时在第 '.$layer.' 层出现递归',\think\Log::ERROR);
                 break;
             }
-            $user=Db::name('Member')->where('id',$currentid)->field('id,level_id,is_agent,username,referer')->find();
+            $user=Db::name('Member')->where('id',$currentid)->field('id,level_id,is_agent,username,nickname,mobile,referer')->find();
             $parents[] = $getid?$currentid:$user;
             if($level>0 && $layer>=$level)break;
         }
@@ -313,7 +318,7 @@ class MemberModel extends BaseModel
     public static function getSons($userid,$level=1,$getid=true)
     {
         $sons=[];
-        $users=Db::name('Member')->where('referer',$userid)->field('id,level_id,is_agent,username,referer')->select();
+        $users=Db::name('Member')->where('referer',$userid)->field('id,level_id,is_agent,username,nickname,mobile,referer')->select();
         $layer=0;
         while(!empty($users)){
             $layer++;
@@ -324,7 +329,7 @@ class MemberModel extends BaseModel
             }
             $sons = array_merge($sons, $getid?$userids:$users);
             if($level>0 && $layer>=$level)break;
-            $users=Db::name('Member')->whereIn('referer',$userids)->field('id,level_id,is_agent,username,referer')->select();
+            $users=Db::name('Member')->whereIn('referer',$userids)->field('id,level_id,is_agent,username,nickname,mobile,referer')->select();
         }
         return $sons;
     }
@@ -344,9 +349,15 @@ class MemberModel extends BaseModel
             return true;
         }
         
-        $agentMember=static::where('agentcode|id',$agent)
+        if(is_numeric($agent)){
+            $agentMember=static::where('id',intval($agent))
             ->where('is_agent','GT',0)
             ->where('status',1)->find();
+        }else{
+            $agentMember=static::where('agentcode',$agent)
+            ->where('is_agent','GT',0)
+            ->where('status',1)->find();
+        }
         if(empty($agentMember) || $agentMember['id']==$member['id'] || !$agentMember['is_agent']){
             return false;
         }
@@ -510,9 +521,12 @@ class MemberModel extends BaseModel
         $config['background']='.'.$posterConfig['poster_background'];
         $config['data']['avatar']=$posterConfig['poster_avatar'];
         $config['data']['avatar']['type']='image';
-        $config['data']['nickname']=$posterConfig['poster_nickname'];
         $config['data']['qrcode']=$posterConfig['poster_qrcode'];
         $config['data']['qrcode']['type']='image';
+        if($posterConfig['poster_bgset'] == 1){
+            $config['data']['bg']=['type'=>'background'];
+        }
+        $config['data']['nickname']=$posterConfig['poster_nickname'];
         if(!empty($posterConfig['poster_qrlogo'])){
             $config['data']['qrlogo']=$posterConfig['poster_qrcode'];
             $config['data']['qrlogo']['type']='image';
@@ -522,6 +536,10 @@ class MemberModel extends BaseModel
     }
 
     private function create_share_img($config,$sharepath,$page){
+        if(strpos($page, $this['agentcode']) === false){
+            $this->setError('分享链接错误');
+            return false;
+        }
         $qrpath=dirname($sharepath);
         $qrfile = $this['agentcode'].'-qrcode.png';
         $filename=$qrpath.'/'.$qrfile;
@@ -543,14 +561,13 @@ class MemberModel extends BaseModel
         $poster->generate([
             'qrcode'=>$filename,
             'avatar'=>$this['avatar'],
-            'bg'=>1,
             'nickname'=>$this['nickname']
         ]);
         $poster->save($sharepath);
         return true;
     }
     private function create_appcode_img($config,$sharepath,$page){
-        $appid=$this->request->tokenData['appid'];
+        $appid=request()->tokenData['appid'];
         $wechat=WechatModel::where('appid',$appid)->find();
         if(empty($wechat)){
             $this->setError('分享图生成失败(wechat)');
@@ -583,9 +600,8 @@ class MemberModel extends BaseModel
         //$config['background']=$bgpath;
         $poster = new Poster($config);
         $poster->generate([
-            'appcode'=>$filename,
+            'qrcode'=>$filename,
             'avatar'=>$this['avatar'],
-            'bg'=>1,
             'nickname'=>$this['nickname']
         ]);
         $poster->save($sharepath);

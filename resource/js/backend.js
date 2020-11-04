@@ -248,7 +248,33 @@ jQuery(function ($) {
         }
     });
 
-    //状态切换按钮
+    // 状态切换 input[hidden]
+    $('.radiostatus').click(function(e){
+        var init = $(this).data('init');
+        var hid = $(this).find('input');
+        var openText = hid.data('open');
+        var closeText = hid.data('close');
+        var value = hid.val();
+        if(!init){
+            $(this).data('init',1);
+            $(this).append('<span></span>');
+        }else{
+            value = value == '1' ? 0 : 1;
+            hid.val(value);
+        }
+        if(value == '1'){
+            $(this).find('span').text(openText)
+            $(this).prop('title','点击'+closeText);
+            $(this).removeClass('off')
+        }else{
+            $(this).find('span').text(closeText)
+            $(this).prop('title','点击'+openText);
+            $(this).addClass('off')
+        }
+
+    }).trigger('click');
+
+    // 状态切换按钮 切换后跳转
     $('.chgstatus').click(function (e) {
         if($(this).data('ajaxing'))return;
         $(this).data('ajaxing',1);

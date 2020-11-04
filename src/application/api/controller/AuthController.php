@@ -309,11 +309,11 @@ class AuthController extends BaseController
 
         if($weapp instanceof Application){
             $userinfo = $weapp->oauth->user()->getOriginal();
-            if(empty($userinfo)){
+            if(empty($userinfo) || empty($userinfo['openid'])){
                 $this->error('登录失败', ERROR_LOGIN_FAILED);
             }
             $rowData = json_encode($userinfo, JSON_UNESCAPED_UNICODE);
-            $session=['openid'=>$userinfo['openid'],'unionid'=>$userinfo['unionid']];
+            $session=['openid'=>$userinfo['openid'],'unionid'=>$userinfo['unionid']??''];
         }else{
             //调试模式允许mock登录
             if($wechat['is_debug'] && $code=='the code is a mock one'){

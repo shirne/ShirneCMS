@@ -19,13 +19,14 @@ class BoothModel extends BaseModel
         'article'=>'文章',
         'product_category'=>'商品分类',
         'product'=>'商品',
+        'brand'=>'品牌',
         'ad'=>'广告位',
     ];
     
     public static function fetchBooth($flags,$single=false){
         if(!is_array($flags))$flags=explode(',',$flags);
         
-        $booths = static::whereIn('flag',$flags)->select();
+        $booths = static::whereIn('flag',$flags)->where('status',1)->select();
         $lists=[];
         foreach ($booths as $booth){
             $lists[$booth['flag']]=$booth->fetchData();
@@ -64,6 +65,21 @@ class BoothModel extends BaseModel
             if($count>0 && count($list)>$count){
                 array_splice($list,$count);
             }
+        }
+        $article_count = isset($args['article_count'])?intval($args['article_count']):0;
+        if($article_count > 0){
+            $article = ArticleModel::getInstance();
+            $filters['limit']=$article_count;
+            $filters['recursive']=1;
+            if(!empty($args['article_sort'])){
+                $filters['order']=$args['article_sort'];
+            }
+
+            foreach($list as &$cate){
+                $filters['category']=$cate['id'];
+                $cate['articles']=$article->tagList($filters);
+            }
+            unset($cate);
         }
         return $list;
     }
@@ -106,6 +122,22 @@ class BoothModel extends BaseModel
             if($count>0 && count($list)>$count){
                 array_splice($list,$count);
             }
+        }
+        $goods_count = isset($args['product_count'])?intval($args['product_count']):0;
+        if($goods_count > 0){
+            $product = ProductModel::getInstance();
+            $filters['limit']=$goods_count;
+            $filters['withsku']=1;
+            $filters['recursive']=1;
+            if(!empty($args['product_sort'])){
+                $filters['order']=$args['product_sort'];
+            }
+
+            foreach($list as &$cate){
+                $filters['category']=$cate['id'];
+                $cate['products']=$product->tagList($filters);
+            }
+            unset($cate);
         }
         return $list;
     }

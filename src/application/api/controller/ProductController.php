@@ -4,6 +4,7 @@ namespace app\api\controller;
 
 use app\common\facade\MemberFavouriteFacade;
 use app\common\facade\ProductCategoryFacade;
+use app\common\model\MemberLevelModel;
 use app\common\model\PostageModel;
 use app\common\model\ProductModel;
 use app\common\model\WechatModel;
@@ -101,6 +102,14 @@ class ProductController extends BaseController
 
         $skus=ProductSkuModel::where('product_id',$product['id'])->select();
         $images=Db::name('ProductImages')->where('product_id',$product['id'])->select();
+        if(!empty($product['levels'])){
+            $levels=MemberLevelModel::getCacheData();
+            $level_names=[];
+            foreach($product['levels'] as $lvid){
+                $level_names[] = $levels[intval($lvid)]['level_name'];
+            }
+            $product['level_names']=$level_names;
+        }
 
         $isFavourite=$this->isLogin?MemberFavouriteFacade::isFavourite($this->user['id'],'product',$id):0;
 

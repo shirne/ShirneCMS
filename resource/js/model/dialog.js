@@ -462,6 +462,7 @@
             var is_multi=false;
             var is_textarea=false;
             var multiset={};
+            var keyboard=true;
             if(typeof message=='string'){
                 title=message;
             }else{
@@ -475,6 +476,11 @@
                 }
                 if(message.is_textarea){
                     is_textarea=true;
+                }
+                if(message.keyboard !== undefined){
+                    keyboard = message.keyboard;
+                }else if(is_textarea){
+                    keyboard = false;
                 }
             }
             var inputHtml='<input type="text" name="confirm_input" class="form-control" />';
@@ -498,19 +504,20 @@
                 }
             }
             return new Dialog({
-                'backdrop':'static',
-                'onshow':function(body){
+                backdrop:'static',
+                keyboard: keyboard,
+                onshow:function(body){
                     if(message && message.onshow){
                         message.onshow(body);
                     }
                 },
-                'onshown':function(body){
+                onshown:function(body){
                     body.find('[name=confirm_input]').eq(0).select();
                     if(message && message.onshown){
                         message.onshown(body);
                     }
                 },
-                'onsure':function(body){
+                onsure:function(body){
                     var inputs=body.find('[name=confirm_input]'),val=inputs.val();
                     if(is_multi){
                         val={};
@@ -520,14 +527,14 @@
                         })
                     }
                     if(typeof callback=='function'){
-                        var result = callback(val);
+                        var result = callback(val, body);
                         if(result===true){
                             called=true;
                         }
                         return result;
                     }
                 },
-                'onhide':function () {
+                onhide:function () {
                     if(called=false && typeof cancel=='function'){
                         return cancel();
                     }
@@ -538,13 +545,13 @@
             var html='<div class="list-group"  style="max-height: 70vh;overflow: auto;"><a href="javascript:" class="list-group-item list-group-item-action">'+list.join('</a><a href="javascript:" class="list-group-item list-group-item-action">')+'</a></div>';
             var actions=null;
             var dlg=new Dialog({
-                'bodyClass':'modal-action',
-                'backdrop':'static',
-                'size':'sm',
-                'btns':[
+                bodyClass:'modal-action',
+                backdrop:'static',
+                size:'sm',
+                btns:[
                     {'text':'取消','type':'secondary'}
                 ],
-                'onshow':function(body){
+                onshow:function(body){
                     actions=body.find('.list-group-item-action');
                     actions.click(function (e) {
                         actions.removeClass('active');
@@ -559,10 +566,10 @@
                         }
                     })
                 },
-                'onsure':function(body){
+                onsure:function(body){
                     return true;
                 },
-                'onhide':function () {
+                onhide:function () {
                     return true;
                 }
             }).show(html,title?title:'请选择');
@@ -605,8 +612,8 @@
             if(!config.title)config.title=title;
 
             var dlg=new Dialog({
-                'backdrop':'static',
-                'onshown':function(body){
+                backdrop:'static',
+                onshown:function(body){
                     var btn=body.find('.searchbtn');
                     var input=body.find('.searchtext');
                     var listbox=body.find('.list-group');
@@ -675,7 +682,7 @@
 
                     }).trigger('click');
                 },
-                'onsure':function(body){
+                onsure:function(body){
                     if(!current){
                         dialog.warning('没有选择'+config.name+'!');
                         return false;
@@ -748,9 +755,9 @@
             var settedLocate=null;
             var height=$(window).height()*.6
             var dlg=new Dialog({
-                'size':'lg',
-                'backdrop':'static',
-                'onshown':function(body){
+                size:'lg',
+                backdrop:'static',
+                onshown:function(body){
                     var btn=body.find('.searchbtn');
                     var input=body.find('.searchtext');
                     var mapbox=body.find('.map');
@@ -771,7 +778,7 @@
                     },500)
 
                 },
-                'onsure':function(body){
+                onsure:function(body){
                     if(!settedLocate){
                         dialog.warning('没有选择位置!');
                         return false;
@@ -788,19 +795,6 @@
             return dlg;
         }
     };
-
-    // 监控按键
-    $(document).on('keydown', function(e){
-        if(!Dialog.instance)return;
-        var dlg=Dialog.instance;
-        if (e.keyCode == 13) {
-            dlg.box.find('.modal-footer .btn[default]').trigger('click');
-        }
-        // 默认已监听关闭
-        /*if (e.keyCode == 27) {
-         self.hide();
-         }*/
-    });
 
     // 暴露接口
     window.Dialog=$.Dialog=Dialog;

@@ -36,8 +36,10 @@ class MemberController extends BaseController
         if(!empty($type)){
             $model->where('type',$type);
         }
-        if($is_agent>-1){
-            $model->where('is_agent',$is_agent);
+        if($is_agent > 0){
+            $model->where('is_agent','>',0);
+        }elseif($is_agent > -1){
+            $model->where('is_agent',0);
         }
 
         $lists=$model->field('id,username,nickname,realname,mobile,avatar,level_id,is_agent,gender,email,create_time')
@@ -509,8 +511,15 @@ class MemberController extends BaseController
                     $data['birth']=strtotime($data['birth']);
                 }
 
-                //更新
+                // 更新
                 $member=MemberModel::get($id);
+                if(empty($member)){
+                    $this->error('会员资料错误');
+                }
+
+                if($member['mobile_bind'] == 1 && empty($data['mobile'])){
+                    $data['mobile_bind'] = 0;
+                }
                 if ($member->allowField(true)->save($data)) {
                     user_log($this->mid,'updateuser',1,'修改会员资料'.$id ,'manager');
                     $this->success(lang('Update success!'), url('member/index'));
