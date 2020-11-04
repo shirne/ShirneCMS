@@ -55,6 +55,17 @@ class BaseHandler
         return $this->getTypeReply('subscribe');
     }
 
+    protected function onUnSubscribe($message)
+    {
+        $openid = $message['FromUserName'];
+        $userinfo = MemberOauthModel::where('openid',$openid)->find();
+        if(!empty($userinfo)){
+            $userinfo->save(['is_follow'=>0]);
+        }
+
+        return '';
+    }
+
     protected function onScan($message, $scene_id)
     {
         return $this->getTypeReply('scan', $scene_id);

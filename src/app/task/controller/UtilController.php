@@ -47,6 +47,34 @@ class UtilController extends BaseController
         }
     }
 
+    public function restatic(){
+
+        Db::name('member')->where('status',1)->update(['recom_total'=>0,'recom_count'=>0,'team_count'=>0,'recom_performance'=>0,'total_performance'=>0]);
+        $members = Db::name('member')->where('referer','<>',0)->select();
+        foreach($members as $member){
+            Db::name('member')->where('id',$member['referer'])->setInc('recom_total',1);
+            if($member['is_agent']>0){
+                Db::name('member')->where('id',$member['referer'])->setInc('recom_count',1);
+                
+                $parents = MemberModel::getParents($member['id'],0);
+                Db::name('member')->whereIn('id',$parents)->setInc('team_count',1);
+            }
+        }
+        unset($members,$member);
+
+        $orders = Db::view('order','*')->view('member','referer','order.member_id=member.id','LEFT')->where('order.status','>',0)->select();
+        foreach($orders as $order){
+            if($order['referer'] > 0){
+                $amount = round($order['payamount']*100);
+                Db::name('member')->where('id',$member['referer'])->setInc('recom_performance',$amount);
+                
+                $parents = MemberModel::getParents($order['member_id'],0);
+                Db::name('member')->whereIn('id',$parents)->setInc('total_performance',$amount);
+            }
+        }
+        exit('success');
+    }
+
     /**
      * 向用户发送推广海报
      * @return void 

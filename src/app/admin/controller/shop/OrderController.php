@@ -4,6 +4,7 @@ namespace app\admin\controller\shop;
 
 use app\admin\controller\BaseController;
 use app\common\model\OrderModel;
+use app\common\model\OrderProductModel;
 use app\common\model\PayOrderModel;
 use shirne\excel\Excel;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
@@ -204,7 +205,7 @@ class OrderController extends BaseController
         $model=Db::name('Order')->where('order_id',$id)->find();
         if(empty($model))$this->error('订单不存在');
         $member=Db::name('Member')->find($model['member_id']);
-        $products = Db::name('OrderProduct')->where('order_id',  $id)->select();
+        $products = OrderProductModel::where('order_id',  $id)->select();
         $payorders = PayOrderModel::filterTypeAndId('order',$id)->select();
         $this->assign('model',$model);
         $this->assign('member',$member);

@@ -13,7 +13,7 @@
                 </div>
             </div>
             <div class="col col-6">
-                <form action="{:url('wechat.fans/index')}" method="post">
+                <form action="{:url('wechat.fans/index',['wid'=>$wid])}" method="post">
                     <div class="form-row">
                         <div class="form-group col input-group input-group-sm">
                             <div class="input-group-prepend">

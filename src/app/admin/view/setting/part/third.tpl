@@ -81,8 +81,36 @@
 <div class="form-row mb-3">
     <div class="col-12 col-lg-6">
         <div class="card">
-            <div class="card-header">短信</div>
+            <div class="card-header">阿里云</div>
             <div class="card-body">
+                <div class="form-row form-group">
+                    <label for="v-accesskey_id" class="col-3 col-md-2 text-right align-middle">账号ID</label>
+                    <div class="col">
+                        <input type="text" class="form-control" name="v-accesskey_id" value="{$setting['accesskey_id']['value']}" placeholder="">
+                    </div>
+                </div>
+                <div class="form-row form-group">
+                    <label for="v-accesskey_secret" class="col-3 col-md-2 text-right align-middle">账号密钥</label>
+                    <div class="col">
+                        <input type="text" class="form-control" name="v-accesskey_secret" value="{$setting['accesskey_secret']['value']}" placeholder="">
+                    </div>
+                </div>
+                <div class="form-row form-group">
+                    <label for="v-aliyun_oss" class="col-3 col-md-2 text-right align-middle">OSS Buket</label>
+                    <div class="col">
+                        <input type="text" class="form-control" name="v-aliyun_oss" value="{$setting['aliyun_oss']['value']}" placeholder="">
+                    </div>
+                </div>
+                <div class="form-row form-group">
+                    <label for="v-aliyun_oss_domain" class="col-3 col-md-2 text-right align-middle">OSS域名</label>
+                    <div class="col">
+                        <input type="text" class="form-control" name="v-aliyun_oss_domain" value="{$setting['aliyun_oss_domain']['value']}" placeholder="">
+                    </div>
+                    <div class="col-2">
+                        <input type="hidden" id="sslhidden" name="v-aliyun_oss_ssl" value="{$setting['aliyun_oss_domain']['value']}" />
+                        <label><input type="checkbox" {$setting['aliyun_oss_ssl']['value']==1?'checked':''} class="sslcheck" value="1"/> 是否SSL</label>
+                    </div>
+                </div>
                 <div class="form-row form-group">
                     <label for="v-sms_code" class="col-3 col-md-2 text-right align-middle">短信验证</label>
                     <div class="col">
@@ -102,21 +130,33 @@
                     </div>
                 </div>
                 <div class="form-row form-group">
-                    <label for="v-sms_spcode" class="col-3 col-md-2 text-right align-middle">企业编号</label>
+                    <label for="v-aliyun_dysms_sign" class="col-3 col-md-2 text-right align-middle">短信签名</label>
                     <div class="col">
-                        <input type="text" class="form-control" name="v-sms_spcode" value="{$setting['sms_spcode']['value']}" placeholder="">
+                        <input type="text" class="form-control" name="v-aliyun_dysms_sign" value="{$setting['aliyun_dysms_sign']['value']}" placeholder="">
                     </div>
                 </div>
                 <div class="form-row form-group">
-                    <label for="v-sms_loginname" class="col-3 col-md-2 text-right align-middle">登录名称</label>
+                    <label for="v-aliyun_dysms_register" class="col-3 col-md-2 text-right align-middle">注册验证码模板</label>
                     <div class="col">
-                        <input type="text" class="form-control" name="v-sms_loginname" value="{$setting['sms_loginname']['value']}" placeholder="">
+                        <input type="text" class="form-control" name="v-aliyun_dysms_register" value="{$setting['aliyun_dysms_register']['value']}" placeholder="">
                     </div>
                 </div>
                 <div class="form-row form-group">
-                    <label for="v-sms_password" class="col-3 col-md-2 text-right align-middle">登录密码</label>
+                    <label for="v-aliyun_dysms_login" class="col-3 col-md-2 text-right align-middle">登录验证码模板</label>
                     <div class="col">
-                        <input type="text" class="form-control" name="v-sms_password" value="{$setting['sms_password']['value']}" placeholder="">
+                        <input type="text" class="form-control" name="v-aliyun_dysms_login" value="{$setting['aliyun_dysms_login']['value']}" placeholder="">
+                    </div>
+                </div>
+                <div class="form-row form-group">
+                    <label for="v-aliyun_dysms_forget" class="col-3 col-md-2 text-right align-middle">找回密码验证码模板</label>
+                    <div class="col">
+                        <input type="text" class="form-control" name="v-aliyun_dysms_forget" value="{$setting['aliyun_dysms_forget']['value']}" placeholder="">
+                    </div>
+                </div>
+                <div class="form-row form-group">
+                    <label for="v-aliyun_dysms_verify" class="col-3 col-md-2 text-right align-middle">通用验证码模板</label>
+                    <div class="col">
+                        <input type="text" class="form-control" name="v-aliyun_dysms_verify" value="{$setting['aliyun_dysms_verify']['value']}" placeholder="">
                     </div>
                 </div>
             </div>
@@ -124,7 +164,7 @@
     </div>
 
     <div class="col-12 col-lg-6">
-        <div class="card">
+        <div class="card mb-3">
             <div class="card-header">地图</div>
             <div class="card-body">
                 <div class="form-row form-group">
@@ -156,10 +196,6 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
-<div class="form-row mb-3">
-    <div class="col-12 col-lg-6">
         <div class="card">
             <div class="card-header">邮箱</div>
             <div class="card-body">
@@ -185,41 +221,6 @@
                     <label for="v-mail_pass" class="col-3 col-md-2 text-right align-middle">邮箱密码</label>
                     <div class="col">
                         <input type="text" class="form-control" name="v-mail_pass" value="{$setting['mail_pass']['value']|default=''}" placeholder="">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-lg-6">
-        <div class="card">
-            <div class="card-header">阿里云</div>
-            <div class="card-body">
-                <div class="form-row form-group">
-                    <label for="v-accesskey_id" class="col-3 col-md-2 text-right align-middle">账号ID</label>
-                    <div class="col">
-                        <input type="text" class="form-control" name="v-accesskey_id" value="{$setting['accesskey_id']['value']}" placeholder="">
-                    </div>
-                </div>
-                <div class="form-row form-group">
-                    <label for="v-accesskey_secret" class="col-3 col-md-2 text-right align-middle">账号密钥</label>
-                    <div class="col">
-                        <input type="text" class="form-control" name="v-accesskey_secret" value="{$setting['accesskey_secret']['value']}" placeholder="">
-                    </div>
-                </div>
-                <div class="form-row form-group">
-                    <label for="v-aliyun_oss" class="col-3 col-md-2 text-right align-middle">OSS Buket</label>
-                    <div class="col">
-                        <input type="text" class="form-control" name="v-aliyun_oss" value="{$setting['aliyun_oss']['value']}" placeholder="">
-                    </div>
-                </div>
-                <div class="form-row form-group">
-                    <label for="v-aliyun_oss_domain" class="col-3 col-md-2 text-right align-middle">OSS域名</label>
-                    <div class="col">
-                        <input type="text" class="form-control" name="v-aliyun_oss_domain" value="{$setting['aliyun_oss_domain']['value']}" placeholder="">
-                    </div>
-                    <div class="col-2">
-                        <input type="hidden" id="sslhidden" name="v-aliyun_oss_ssl" value="{$setting['aliyun_oss_domain']['value']}" />
-                        <label><input type="checkbox" {$setting['aliyun_oss_ssl']['value']==1?'checked':''} class="sslcheck" value="1"/> 是否SSL</label>
                     </div>
                 </div>
             </div>
