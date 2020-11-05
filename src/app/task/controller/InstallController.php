@@ -45,15 +45,44 @@ class InstallController extends BaseController
                     }
                 }
                 if($needupdate){
-                    $config = env('config_path').'database.php';
+                    $config = env('config_path').'/../.env';
+                    if(!is_file($config)){
+                        $example = env('config_path').'/../.env.example';
+                        if(is_file($example)){
+                            copy($example,$config);
+                        }else{
+                            $configstr=<<<'ENVDATA'
+APP_DEBUG = false
+
+[APP]
+DEFAULT_TIMEZONE = Asia/Shanghai
+
+[DATABASE]
+TYPE = mysql
+HOSTNAME = localhost
+DATABASE = shirnecms
+USERNAME = root
+PASSWORD = 123456
+PREFIX = sa_
+HOSTPORT = 3306
+CHARSET = utf8mb4
+DEBUG = false
+
+[LANG]
+default_lang = zh-cn
+ENVDATA;
+                            file_put_contents($config, $configstr);
+                        }
+                    }
                     if(!is_writable($config)){
                         $this->error('数据库配置文件不可写,请修改权限或手动配置');
                     }
                     $content = file_get_contents($config);
-                    $content = preg_replace_callback('/\'([\w\d]+)\'(\s*)=>(\s*)\'[^\']+\'/',function($matches)use($db,&$dbconfig){
-                        if(isset($db[$matches[1]])){
-                            $dbconfig[$matches['1']]=$db[$matches['1']];
-                            return "'{$matches['1']}'{$matches['2']}=>{$matches['3']}'{$db[$matches['1']]}'";
+                    $content = preg_replace_callback('/\'([\w\d]+)\'(\s*)=(\s*)\'[^\']+\'/',function($matches)use($db,&$dbconfig){
+                        $key = strtolower($matches[1]);
+                        if(isset($db[$key])){
+                            $dbconfig[$matches['1']]=$db[$key];
+                            return "'{$matches['1']}'{$matches['2']}={$matches['3']}'{$db[$key]}'";
                         }
                         return $matches[0];
                     },$content);
