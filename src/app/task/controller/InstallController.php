@@ -126,8 +126,10 @@ ENVDATA;
         $mysqlenv=['title'=>'Mysql','require'=>MYSQL_MIN_VERSION,'current'=>'','pass'=>null];
         $dbcfg=config('database');
         try{
-            if(!empty($dbcfg['hostname'])){
-                $version=Db::connect($dbcfg)->query('select version()');
+            $default = $dbcfg['default']??'mysql';
+            $connections = $dbcfg['connections']??[];
+            if(!empty($connections[$default])){
+                $version=Db::connect($default)->query('select version()');
                 $mysqlenv['current']=$version[0]['version()'];
                 if($mysqlenv['current'] && version_compare($mysqlenv['require'],$mysqlenv['current'],'<=')){
                     $mysqlenv['pass']=true;
