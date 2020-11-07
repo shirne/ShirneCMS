@@ -91,7 +91,7 @@ ENVDATA;
                     Config::set($dbconfig, 'database');
                 }
             }
-            $console = Console::init(false);
+            $console = app()->console;
             $output = new Output('buffer');
             $args = ['install'];
             if (!empty($sql)) {
@@ -139,7 +139,7 @@ ENVDATA;
                 }
             }
         }catch(Exception $e){
-            
+            Log::record($e->getMessage());
         }
         $envs[]=$mysqlenv;
 
@@ -169,7 +169,7 @@ ENVDATA;
         $phpgdenv=['title'=>'PHP-gd','require'=>'*','current'=>'','pass'=>false];
         if(function_exists('gd_info')){
             $gdinfo=gd_info();
-            $phpgdenv['current']=$gdinfo['GD Verion'];
+            $phpgdenv['current']=$gdinfo['GD Version'];
             $phpgdenv['pass']=true;
         }
         $envs[]=$phpgdenv;
@@ -201,6 +201,7 @@ ENVDATA;
                 break;
             }
         }
+        $this->assign('dbcfg',$dbcfg);
         $this->assign('envs',$envs);
         $this->assign('pass',$pass);
         return $this->fetch();
@@ -212,12 +213,19 @@ ENVDATA;
         }
         $db['type']='mysql';
         try{
-            $version=Db::connect($db)->query('select version()');
+            $tmpConfig = config('database');
+            $key = 'db'.time();
+            $default = $tmpConfig['connections'][$tmpConfig['default']];
+            $tmpConfig['connections'][$key]=array_merge($default, $db);
+            
+            Config::set($tmpConfig,'database');
+            
+            $version=Db::connect($key)->query('select version()');
             $versionstr=$version[0]['version()'];
             
         }catch(\Throwable $e){
             $message=$e->getMessage();
-            Log::record($message);
+            Log::record($message.$e->getTraceAsString());
             $this->error('数据库连接失败');
         }
 
