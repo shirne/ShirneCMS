@@ -129,6 +129,7 @@ ENVDATA;
             $default = $dbcfg['default']??'mysql';
             $connections = $dbcfg['connections']??[];
             if(!empty($connections[$default])){
+                $dbcfg = $connections[$default];
                 $version=Db::connect($default)->query('select version()');
                 $mysqlenv['current']=$version[0]['version()'];
                 if($mysqlenv['current'] && version_compare($mysqlenv['require'],$mysqlenv['current'],'<=')){
