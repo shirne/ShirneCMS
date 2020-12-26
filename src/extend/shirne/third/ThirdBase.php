@@ -35,10 +35,10 @@ class ThirdBase extends ThirdModelBase
      * @param mixed $log 输入日志
      * @return mixed
      */
-    protected function log($log){
+    protected function log($log, $type='info'){
         if ($this->debug && $this->logcallback!==false) {
             if (is_array($log)) $log = print_r($log,true);
-            return call_user_func($this->logcallback,$log);
+            return call_user_func($this->logcallback, $log, $type);
         }
         return false;
     }
