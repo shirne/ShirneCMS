@@ -23,6 +23,7 @@ class ThirdBase extends ThirdModelBase
 
     public function __construct($options)
     {
+        parent::__construct($options);
         $this->userAgent = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36';
         $this->appid = isset($options['appid'])?$options['appid']:'';
         $this->appsecret = isset($options['appsecret'])?$options['appsecret']:'';
