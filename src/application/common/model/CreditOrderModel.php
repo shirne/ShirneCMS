@@ -32,6 +32,16 @@ class CreditOrderModel extends BaseOrderModel
         }
         return $counts;
     }
+
+    public function onPayResult($paytype, $paytime, $payamount){
+        parent::onPayResult($paytype, $paytime, $payamount);
+
+        $this->updateStatus([
+            'status'=>1,
+            'pay_type'=>$paytype,
+            'pay_time'=>$paytime
+        ]);
+    }
     
     protected function triggerStatus($item, $status, $newData=[])
     {

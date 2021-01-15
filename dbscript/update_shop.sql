@@ -278,6 +278,7 @@ CREATE TABLE `sa_order` (
   `order_no` VARCHAR(30) NOT NULL,
   `member_id` INT NULL DEFAULT 0,
   `payamount` DECIMAL(10,2) NULL DEFAULT 0,
+  `payedamount` DECIMAL(10,2) NULL DEFAULT 0,
   `product_amount` DECIMAL(10,2) NULL DEFAULT 0,
   `cost_amount` DECIMAL(10,2) NULL DEFAULT 0,
   `discount_amount` DECIMAL(10,2) NULL DEFAULT 0,
