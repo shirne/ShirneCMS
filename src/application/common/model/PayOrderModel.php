@@ -262,6 +262,8 @@ class PayOrderModel extends BaseModel
                 $this->setError( $result['err_code_des']?:$result['return_msg']);
                 return false;
             }
+        }elseif($this['pay_type']=='alipay'){
+
         }
 
         return true;

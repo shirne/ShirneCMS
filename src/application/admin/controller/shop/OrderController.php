@@ -390,6 +390,9 @@ class OrderController extends BaseController
         if(empty($payorders)){
             $this->error('该订单没有在线支付记录');
         }
+        foreach($payorders as $porder){
+            $porder->checkStatus();
+        }
         
         $this->success('操作成功', null, ['lists'=>$payorders]);
     }
