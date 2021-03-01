@@ -102,6 +102,7 @@ class BaseHandler
         try {
             $result = $model->find();
         } catch (\Exception $e) {
+            Log::record($e->getMessage());
         }
 
         if (empty($result)) {
@@ -118,7 +119,7 @@ class BaseHandler
         $key = $matches[1];
         if(isset($this->user[$key])){
             if($key == 'sex'){
-                return $this->user['gender']==1?'先生':($this->user['gender']==2?'女士':'');
+                return $this->user['gender']==1?'先生':( $this->user['gender'] == 2 ? '女士' : '' );
             }
             return $this->user[$key];
         }
