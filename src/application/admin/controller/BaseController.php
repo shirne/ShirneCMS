@@ -2,6 +2,7 @@
 
 namespace app\admin\controller;
 
+use app\common\service\EncryptService;
 use extcore\traits\Upload;
 use think\Controller;
 use think\Db;
@@ -40,8 +41,15 @@ class BaseController extends Controller {
 
         $this->mid = session(SESSKEY_ADMIN_ID);
     
+        if(empty($this->mid)){
+            $this->autoLogin();
+        }
+
         $controller=strtolower($this->request->controller());
         if($controller === 'login'){
+            if($this->mid){
+                $this->success('已自动登录', url('admin/index/index'));
+            }
             return;
         }
         
@@ -49,7 +57,9 @@ class BaseController extends Controller {
         if(empty($this->mid ) ) {
             $this->error(lang('Please login first!'),url('admin/login/index'));
         }
-        $this->manager=Db::name('Manager')->find($this->mid);
+        if(empty($this->manager)){
+            $this->manager=Db::name('Manager')->where('id',$this->mid)->find();
+        }
         if(empty($this->manager)){
             clearLogin();
             $this->error(lang('Invalid account!'),url('admin/login/index'));
@@ -80,6 +90,34 @@ class BaseController extends Controller {
             //空数据默认样式
             $this->assign('empty', list_empty());
         }
+    }
+
+    protected function autoLogin(){
+        $loginsession = $this->request->cookie(SESSKEY_ADMIN_AUTO_LOGIN);
+        if(!empty($loginsession)){
+            cookie(SESSKEY_ADMIN_AUTO_LOGIN, null);
+            $data = EncryptService::getInstance()->decrypt($loginsession);
+            if(!empty($data)){
+                $json = json_decode($data, true);
+                if(!empty($json['id'])){
+                    $timestamp = $json['time'];
+                    if($timestamp >= time()){
+                        $this->mid = $json['id'];
+                        $this->manager = Db::name('Manager')->where('id',$this->mid)->find();
+                        setLogin($this->manager, 0);
+                        $this->manager['logintime'] = session(SESSKEY_ADMIN_LAST_TIME);
+                        $this->setAotuLogin($this->manager);
+                    }
+                }
+            }
+        }
+    }
+
+    protected function setAotuLogin($manager, $days = 7){
+        $expire = $days * 24 * 60 * 60;
+        $timestamp = time() + $expire;
+        $data = EncryptService::getInstance()->encrypt(json_encode(['id'=>$manager['id'],'time'=>$timestamp]));
+        cookie(SESSKEY_ADMIN_AUTO_LOGIN, $data, $expire);
     }
     
     public function _empty(){

@@ -438,6 +438,7 @@ class LoginController extends BaseController{
     public function logout()
     {
         $this->clearLogin();
+        
         $this->success("已成功退出登陆");
 
     }

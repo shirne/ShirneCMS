@@ -38,7 +38,7 @@ class LoginController extends BaseController
      */
     public function login(){
         if(!$this->request->isPost())$this->error(lang('Bad Request!'));
-        $member = Db::name('Manager');
+        
         $username =$this->request->post('username','','trim');
         $password =$this->request->post('password');
 
@@ -69,7 +69,7 @@ class LoginController extends BaseController
         }
 
         //验证账号密码是否正确
-        $user = $member->where('username',$username)->find();
+        $user = Db::name('Manager')->where('username',$username)->find();
 
         if(empty($user) || $user['password'] !== encode_password($password,$user['salt'])) {
 
@@ -99,6 +99,10 @@ class LoginController extends BaseController
         check_password($password);
 
         setLogin($user);
+        $remember = $this->request->post('remember');
+        if($remember){
+            $this->setAotuLogin($user);
+        }
 
         $this->success(lang('Login success!'),url('Index/index'));
     }

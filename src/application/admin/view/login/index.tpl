@@ -72,6 +72,11 @@
                     </figure>
                 </div>
                 </if>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" name="remember" value="1"> 保持登录状态
+                      </label>
+                </div>
                 <button type="submit" class="btn btn-block btn-primary">登陆</button>
                 <div class="alert fade show" role="alert">
                     <span class="alert-content"></span>

@@ -200,10 +200,16 @@ class BaseController extends Controller
         session('userid',null);
         session('username',null);
         session('logintime',null);
+        
+        cookie('login', null);
     }
 
     protected function setAotuLogin($member, $days = 7){
-        cookie('login',EncryptService::getInstance()->encrypt(json_encode(['id'=>$member['id'],'time'=>time() + $days * 24 * 60 * 60])));
+
+        $expire = $days * 24 * 60 * 60;
+        $timestamp = time() + $expire;
+        $data = EncryptService::getInstance()->encrypt(json_encode(['id'=>$member['id'],'time'=>$timestamp]));
+        cookie('login', $data, $expire);
     }
 
     /**
