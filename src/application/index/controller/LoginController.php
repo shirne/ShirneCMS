@@ -50,6 +50,10 @@ class LoginController extends BaseController{
                         $this->error(lang('Account is disabled!'));
                     }else {
                         $this->setLogin($member);
+                        $remember = $this->request->post('remember');
+                        if($remember){
+                            $this->setAotuLogin($member);
+                        }
                         $redirect=redirect()->restore();
                         if(empty($redirect->getData())){
                             $url=aurl('index/member/index');
