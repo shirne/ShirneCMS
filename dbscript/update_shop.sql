@@ -241,15 +241,14 @@ CREATE TABLE `sa_product_comment` (
   `product_id` int(11) NOT NULL DEFAULT '0',
   `sku_id` int(11) NOT NULL DEFAULT '0',
   `order_id` int(11) NOT NULL DEFAULT '0',
-  `create_time` int(11) NOT NULL DEFAULT '0',
-  `device` varchar(50) NOT NULL DEFAULT '',
-  `ip` varchar(50) NOT NULL DEFAULT '',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `is_anonymous` tinyint(4) NOT NULL DEFAULT '0',
+  `stars` tinyint(4) NOT NULL DEFAULT '0',
   `content` text,
   `reply_time` int(11) NOT NULL DEFAULT '0',
   `reply_user_id` int(11) NOT NULL DEFAULT '0',
   `reply` text,
+  `create_time` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `member_id` (`member_id`),
   KEY `product_id` (`product_id`)
@@ -359,6 +358,29 @@ CREATE TABLE `sa_order_refund` (
   `update_time` INT(11) DEFAULT '0',
   PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `sa_order_comment`;
+
+CREATE TABLE `sa_order_comment` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NOT NULL DEFAULT '0',
+  `order_id` int(11) NOT NULL DEFAULT '0',
+  `device` varchar(50) NOT NULL DEFAULT '',
+  `ip` varchar(50) NOT NULL DEFAULT '',
+  `status` tinyint(4) NOT NULL DEFAULT '0',
+  `is_anonymous` tinyint(4) NOT NULL DEFAULT '0',
+  `service_stars` tinyint(4) NOT NULL DEFAULT '0',
+  `express_stars` tinyint(4) NOT NULL DEFAULT '0',
+  `delivery_stars` tinyint(4) NOT NULL DEFAULT '0',
+  `content` text,
+  `reply_time` int(11) NOT NULL DEFAULT '0',
+  `reply_user_id` int(11) NOT NULL DEFAULT '0',
+  `reply` text,
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `member_id` (`member_id`),
+  KEY `product_id` (`product_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `sa_order_log`;
 CREATE TABLE `sa_order_log` (
