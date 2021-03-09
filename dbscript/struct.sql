@@ -196,10 +196,13 @@ CREATE TABLE `sa_adv_group` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(100) DEFAULT '',
   `flag` varchar(50) DEFAULT '',
-  `ext_set` varchar(500) DEFAULT '',
+  `width` int(11) DEFAULT 0,
+  `height` int(11) DEFAULT 0,
   `create_time` int(11) DEFAULT 0,
+  `ext_set` varchar(500) DEFAULT '',
   `locked` tinyint(11) DEFAULT 0,
   `status` tinyint(11) DEFAULT 0,
+  `create_time` int(11) DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `flag_UNIQUE` (`flag` ASC)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
