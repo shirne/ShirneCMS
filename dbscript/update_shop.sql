@@ -381,8 +381,7 @@ CREATE TABLE `sa_order_comment` (
   `reply` text,
   `create_time` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
-  KEY `member_id` (`member_id`),
-  KEY `product_id` (`product_id`)
+  KEY `member_id` (`member_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `sa_order_log`;
