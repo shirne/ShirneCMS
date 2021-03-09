@@ -444,6 +444,10 @@
                             var k = nameparts[1].replace(']','');
                             $(item).val(row[k]?row[k]:'');
                         }
+
+                        if($(item).attr('type')=='file'){
+                            $(item).on('change',window.fileInputHander);
+                        }
                     }
                 })
 
