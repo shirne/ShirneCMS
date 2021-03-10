@@ -28,7 +28,12 @@ class LoginController extends BaseController
      * @return mixed
      * @throws \Throwable
      */
-    public function index(){
+    public function index(){ 
+        $this->autoLogin();
+        if($this->mid){
+            $this->success('已自动登录',url('admin/index/index'));
+        }
+
         $this->assign('config',getSettings());
         return $this->fetch();
     }
@@ -126,6 +131,6 @@ class LoginController extends BaseController
      */
     public function logout(){
         clearLogin();
-        $this->redirect(url('index'));
+        $this->success('退出成功', url('index'));
     }
 }

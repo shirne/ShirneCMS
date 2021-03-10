@@ -41,18 +41,15 @@ class BaseController extends Controller {
 
         $this->mid = session(SESSKEY_ADMIN_ID);
     
-        if(empty($this->mid)){
-            $this->autoLogin();
-        }
 
         $controller=strtolower($this->request->controller());
         if($controller === 'login'){
-            if($this->mid){
-                $this->success('已自动登录', url('admin/index/index'));
-            }
             return;
         }
-        
+        //未登录的自动登录
+        if(empty($this->mid)){
+            $this->autoLogin();
+        }
         //判断用户是否登陆
         if(empty($this->mid ) ) {
             $this->error(lang('Please login first!'),url('admin/login/index'));
