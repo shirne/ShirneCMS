@@ -4,13 +4,16 @@ namespace app\api\controller;
 
 use app\common\model\AdvGroupModel;
 use app\common\model\BoothModel;
+use app\common\model\FeedbackModel;
 use app\common\model\LinksModel;
 use app\common\model\MemberAgentModel;
 use app\common\model\MemberSignModel;
 use app\common\model\NoticeModel;
+use InvalidArgumentException;
 use think\Db;
 use think\facade\Log;
 use think\Response;
+use Throwable;
 
 /**
  * 通用接口
@@ -101,15 +104,14 @@ class CommonController extends BaseController
                         $args[] = $param->getDefaultValue();
                     }
                 }
-                //call_user_func_array([$controller, $m],$args);
+                
                 $response = $reflect->invokeArgs($controller, $args);
                 if($response instanceof Response) {
                     $curData = $response->getData();
     
                     return $curData['data'];
                 }else{
-                    echo var_dump($response);
-                    exit;
+                    return null;
                 }
             }catch (\ReflectionException $e){
                 Log::record($e->getMessage(),'error');
@@ -218,10 +220,6 @@ class CommonController extends BaseController
         return $this->response($model->order('sort ASC,create_time DESC')->limit($count)->select());
     }
     
-    //todo
-    public function feedback(){
-    
-    }
     
     public function feedbacks($pagesize=10){
         $model = Db::view('feedback','*')
@@ -239,10 +237,38 @@ class CommonController extends BaseController
         ]);
     }
     
-    //todo
+    /**
+     * 反馈提交接口
+     * @return void 
+     * @throws InvalidArgumentException 
+     * @throws Throwable 
+     */
     public function do_feedback(){
         $this->check_submit_rate();
-        
+        $content = $this->request->param('content');
+        $truename = $this->request->param('truename');
+        $mobile = $this->request->param('mobile');
+        $email = $this->request->param('email');
+        $type = $this->request->param('type');
+        $data=array();
+        $data['content']=htmlspecialchars($content);
+        $data['email']=htmlspecialchars($email);
+        $data['truename']=htmlspecialchars($truename);
+        $data['mobile']=htmlspecialchars($mobile);
+        $data['member_id']= $this->isLogin?$this->user['id']:0;
+        $data['type']=empty($type)?1:intval($type);
+        $data['ip']=$this->request->ip();
+        $data['status']=0;
+        $data['reply_time']=0;
+        try{
+            $feeded=FeedbackModel::create($data);
+            if(!$feeded || !$feeded['id']){
+                $this->error('系统错误');
+            }
+        }catch(\Exception $e){
+            $this->error($e->getMessage());
+        }
+        $this->success('反馈成功');
     }
 
     public function siteinfo(){
@@ -258,9 +284,7 @@ class CommonController extends BaseController
         return $this->response($data);
     }
 
-    /**
-     * 获取配置
-     */
+    
     /**
      * 获取配置
      */

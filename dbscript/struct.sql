@@ -1009,6 +1009,8 @@ DROP TABLE IF EXISTS `sa_feedback`;
 CREATE TABLE `sa_feedback` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `member_id` int(11) NOT NULL DEFAULT '0',
+  `realname` varchar(30) NOT NULL DEFAULT '',
+  `mobile` varchar(30) NOT NULL DEFAULT '',
   `email` varchar(150) NOT NULL DEFAULT '',
   `type` tinyint(4) DEFAULT '0',
   `create_time` int(11) NOT NULL DEFAULT '0',
