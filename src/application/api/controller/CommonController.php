@@ -246,14 +246,14 @@ class CommonController extends BaseController
     public function do_feedback(){
         $this->check_submit_rate();
         $content = $this->request->param('content');
-        $truename = $this->request->param('truename');
+        $realname = $this->request->param('realname');
         $mobile = $this->request->param('mobile');
         $email = $this->request->param('email');
         $type = $this->request->param('type');
         $data=array();
         $data['content']=htmlspecialchars($content);
         $data['email']=htmlspecialchars($email);
-        $data['truename']=htmlspecialchars($truename);
+        $data['realname']=htmlspecialchars($realname);
         $data['mobile']=htmlspecialchars($mobile);
         $data['member_id']= $this->isLogin?$this->user['id']:0;
         $data['type']=empty($type)?1:intval($type);
