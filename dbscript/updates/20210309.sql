@@ -1,6 +1,9 @@
 alter TABLE `sa_adv_group` add `width` int(11) DEFAULT 0 after `flag`,
 add  `height` int(11) DEFAULT 0 after `width`;
 
+alter TABLE `sa_page`
+  add `image` varchar(150) NOT NULL DEFAULT '' after `icon`;
+
 
 alter TABLE `sa_order` add `refund_status` TINYINT NULL DEFAULT 0 after `status`,
 add `payedamount` DECIMAL(10,2) NULL DEFAULT 0 after `payamount`;

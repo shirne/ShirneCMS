@@ -78,7 +78,7 @@
             <div class="form-group">
                 <label for="image">元件</label>
                 <div>
-                    <div class="elements-box">
+                    <div class="row elements-box">
 
                     </div>
                     <a href="javascript:" class="btn btn-outline-dark btn-sm addelement"><i class="ion-md-add"></i> 添加元件</a>
@@ -434,7 +434,7 @@
             }
             if(tmpl){
                 row.i = key;
-                $('.elements-box').append(tmpl.compile(row));
+                $('.elements-box').append('<div class="col-12 col-lg-6 mb-2"><div class="card"><div class="card-body">'+tmpl.compile(row)+'</div></div></div>');
                 var current = $('.elements-box .slide-element').eq(-1);
                 current.find('input,select').each(function(idx, item){
                     if($(item).attr('type')!=='hidden'){
@@ -460,7 +460,11 @@
                 dialog.action(['文本','图片'],function(index){
                     addElement({
                         image:'/static/images/nopic.png',
-                        type:index?'image':'text'
+                        type:index?'image':'text',
+                        style:'left:50%;top:0px;margin-left:-550px;',
+                        effect:'fadeIn',
+                        duration:'0.5',
+                        delay:0
                     },'add'+(elementCount++))
                 })
             });

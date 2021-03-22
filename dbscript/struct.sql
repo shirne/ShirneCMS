@@ -837,6 +837,7 @@ CREATE TABLE `sa_page` (
   `vice_title` varchar(100) NOT NULL DEFAULT '' COMMENT '副标题',
   `group` varchar(50) NOT NULL DEFAULT '',
   `icon` varchar(150) NOT NULL DEFAULT '',
+  `image` varchar(150) NOT NULL DEFAULT '',
   `name` varchar(50) DEFAULT NULL,
   `sort` int(11) DEFAULT 0,
   `status` tinyint(11) DEFAULT 0,
