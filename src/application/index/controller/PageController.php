@@ -15,7 +15,7 @@ class PageController extends BaseController{
     public function index($name='',$group='')
     {
         if(!empty($name)) {
-            $page = Db::name('page')->where('status',1)->where(is_numeric($name)?'id':'name' , $name)->find();
+            $page = Db::name('page')->where('status',1)->where(is_numeric($name)?'id':'name' ,is_numeric($name)?intval($name):$name)->find();
             if (empty($page)) $this->errorPage('页面不存在');
             $group=$page['group'];
         }elseif(empty($group)){
@@ -31,7 +31,7 @@ class PageController extends BaseController{
         $lists=$model->field('id,name,group,icon,title,vice_title')->where('status',1)->order('sort ASC,id ASC')->select();
         if(empty($lists))$this->errorPage('页面不存在');
         if(empty($page)){
-            $page=Db::name('page')->where('status',1)->where(is_numeric($name)?'id':'name' , $lists[0]['name'])->find();;
+            $page=Db::name('page')->where('status',1)->where('name' , $lists[0]['name'])->find();;
         }
 
         $this->assign('navmodel','page-'.$group.'-'.$page['name']);
