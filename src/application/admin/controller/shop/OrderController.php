@@ -5,6 +5,7 @@ namespace app\admin\controller\shop;
 use app\admin\controller\BaseController;
 use app\common\model\OrderModel;
 use app\common\model\OrderProductModel;
+use app\common\model\OrderRefundModel;
 use app\common\model\PayOrderModel;
 use shirne\excel\Excel;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
@@ -212,6 +213,7 @@ class OrderController extends BaseController
         $this->assign('products',$products);
         $this->assign('payorders',$payorders);
         $this->assign('expresscodes',config('express.'));
+        $this->assign('refunds',$refunds);
         return $this->fetch();
     }
 
@@ -390,6 +392,9 @@ class OrderController extends BaseController
         if(empty($payorders)){
             $this->error('该订单没有在线支付记录');
         }
+        foreach($payorders as $porder){
+            $porder->checkStatus();
+        }
         
         $this->success('操作成功', null, ['lists'=>$payorders]);
     }
@@ -446,5 +451,55 @@ class OrderController extends BaseController
         }else{
             $this->error(lang('Delete failed!'));
         }
+    }
+
+    public function refundcancel($id, $reason = ''){
+        $refund = OrderRefundModel::where('id',$id)->find();
+        if(empty($refund) || $refund['status'] != 0){
+            $this->error('该投诉已处理过了');
+        }
+        $refund->save([
+            'status'=>-1,
+            'reply'=>$reason
+        ]);
+        $order = OrderModel::where('order_id',$refund['order_id'])->find();
+        
+        user_log($this->mid,'orderrefundcancel',1,'拒绝退款单 '.$id ,'manager');
+        $this->success('处理成功');
+    }
+
+    public function refundallow($id){
+        $refund = OrderRefundModel::where('id',$id)->find();
+        if(empty($refund) || $refund['status'] != 0){
+            $this->error('该投诉已处理过了');
+        }
+        $order = OrderModel::where('order_id',$refund['order_id'])->find();
+        if(empty($order) || $order['status'] < 1){
+            $this->error('订单状态错误');
+        }
+        
+        if($order['pay_type'] == 'balance'){
+            $loged = money_log($order['member_id'], $order['payamount'], "订单退款", 'refund',0,'money');
+            if($loged){
+                $refund->save([
+                    'status'=>1,
+                    'reply'=>'success'
+                ]);
+            }else{
+                $this->success('退款失败');
+            }
+        }else{
+            $refunded = PayOrderModel::refund($refund['order_id'], 'order', $refund['type']);
+            if($refunded){
+                $refund->save([
+                    'status'=>1,
+                    'reply'=>'process'
+                ]);
+            }else{
+                $this->success('退款申请失败');
+            }
+        }
+        user_log($this->mid,'orderrefundallow',1,'通过退款单 '.$id ,'manager');
+        $this->success('处理成功');
     }
 }

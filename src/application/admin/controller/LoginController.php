@@ -28,7 +28,12 @@ class LoginController extends BaseController
      * @return mixed
      * @throws \Throwable
      */
-    public function index(){
+    public function index(){ 
+        $this->autoLogin();
+        if($this->mid){
+            $this->success('已自动登录',url('admin/index/index'));
+        }
+
         $this->assign('config',getSettings());
         return $this->fetch();
     }
@@ -38,7 +43,7 @@ class LoginController extends BaseController
      */
     public function login(){
         if(!$this->request->isPost())$this->error(lang('Bad Request!'));
-        $member = Db::name('Manager');
+        
         $username =$this->request->post('username','','trim');
         $password =$this->request->post('password');
 
@@ -69,7 +74,7 @@ class LoginController extends BaseController
         }
 
         //验证账号密码是否正确
-        $user = $member->where('username',$username)->find();
+        $user = Db::name('Manager')->where('username',$username)->find();
 
         if(empty($user) || $user['password'] !== encode_password($password,$user['salt'])) {
 
@@ -99,6 +104,10 @@ class LoginController extends BaseController
         check_password($password);
 
         setLogin($user);
+        $remember = $this->request->post('remember');
+        if($remember){
+            $this->setAotuLogin($user);
+        }
 
         $this->success(lang('Login success!'),url('Index/index'));
     }
@@ -122,6 +131,6 @@ class LoginController extends BaseController
      */
     public function logout(){
         clearLogin();
-        $this->redirect(url('index'));
+        $this->success('退出成功', url('index'));
     }
 }

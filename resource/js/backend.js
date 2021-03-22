@@ -382,7 +382,7 @@ jQuery(function ($) {
     });
 
     //上传框
-    $('.custom-file .custom-file-input').on('change', function () {
+    window.fileInputHander = function () {
         var self=$(this);
         if(!this.files || !this.files[0])return;
         var inputgroup=$(this).parents('.input-group').eq(0);
@@ -438,7 +438,8 @@ jQuery(function ($) {
 
             })
         }
-    });
+    };
+    $('.custom-file .custom-file-input').on('change', window.fileInputHander);
 
     //表单Ajax提交
     $('.btn-primary[type=submit]').click(function (e) {

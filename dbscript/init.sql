@@ -66,6 +66,8 @@ VALUES
   ('gongan-icp','公安备案号','text','common',0,1,'','公安备案号',''),
   ('site-url','站点网址','text','common',0,1,'http://www.shirne.cn','站点地址',''),
   ('site-name','公司名','text','common',0,1,'ShirneCMS','公司名',''),
+  ('site-400','400电话','text','common',0,1,'','400电话',''),
+  ('site-email','公司邮箱','text','common',0,1,'','公司邮箱',''),
   ('site-telephone','公司电话','text','common',0,1,'','公司电话',''),
   ('site-address','公司地址','text','common',0,1,'','公司地址',''),
   ('site-location','公司位置','location','common',0,1,'','location',''),

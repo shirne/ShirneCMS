@@ -5,7 +5,7 @@
 ```$ini
 curl.cainfo = /path/to/downloaded/cacert.pem
 ```
-并重启相关服务器 （cacert.pem在htdocs/cert目录下，该文件为从微信平台下载）
+并重启相关服务器 （cacert.pem在htdocs/config/cert目录下，该文件为从微信平台下载）
 
 #### 虚拟主机不支持在web根目录之外布署系统
 

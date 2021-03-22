@@ -1,17 +1,46 @@
 function setNav(nav) {
+    
+    var current=findCurrentNav(nav);
+    setNavHover(current);
+
+    var intval=0;
+    $('.nav-box .navbar-collapse').hover(function(){
+        clearInterval(intval)
+    },function(){
+        intval = setInterval(function(){
+            setNavHover(current);
+        },500)
+    })
+    $('.nav-box .nav-item').hover(function(){
+        var index = $('.main-nav .nav-item').index(this);
+        setNavHover(index);
+    },function(){
+
+    })
+}
+
+function setNavHover(index){
     var items=$('.main-nav .nav-item');
-    var finded=false;
+    items.removeClass('active prev-hover')
+    items.eq(index).addClass('active');
+    $('.main-nav .nav-item.active').prev().addClass('prev-hover');
+
+    $('.nav-box .nav-bg').css('right',(items.length-index-1)*items.eq(0).outerWidth())
+}
+
+function findCurrentNav(nav){
+    var items=$('.main-nav .nav-item');
+    
     for(var i=0;i<items.length;i++){
         if(items.eq(i).data('model')===nav){
-            items.eq(i).addClass('active');
-            finded=true;
-            break;
+            return i;
         }
     }
-    if(!finded && nav.indexOf('-')>0){
-        nav=nav.substr(0,nav.lastIndexOf('-'));
-        setNav(nav);
+    var pnav=nav.substr(0,nav.lastIndexOf('-'));
+    if(pnav == nav || !pnav){
+        return 0;
     }
+    return findCurrentNav(pnav);
 }
 
 jQuery(function($){

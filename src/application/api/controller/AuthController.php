@@ -219,7 +219,7 @@ class AuthController extends BaseController
             ->where('is_default',1)->find();
         }else{
             $wechat=Db::name('wechat')->where('type','wechat')
-            ->where('id|hash',$wxid)->find();
+            ->where(is_numeric($wxid)?'id':'hash',$wxid)->find();
         }
         
         if(!empty($wechat['appid'])) {
@@ -264,7 +264,7 @@ class AuthController extends BaseController
             ->where('is_default',1)->find();
         }else{
             $wechat=Db::name('wechat')->where('type','wechat')
-            ->where('id|hash',$wxid)->find();
+            ->where(is_numeric($wxid)?'id':'hash',$wxid)->find();
         }
         if(empty($wechat)){
             $this->error('服务器配置错误',ERROR_LOGIN_FAILED);
@@ -287,7 +287,7 @@ class AuthController extends BaseController
         
         $agent=$this->request->param('agent');
         $wechat=Db::name('wechat')->where('type','wechat')
-            ->where('id|hash',$wxid)->find();
+            ->where(is_numeric($wxid)?'id':'hash',$wxid)->find();
         if(empty($wechat)){
             $this->error('服务器配置错误',ERROR_LOGIN_FAILED);
         }
