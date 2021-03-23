@@ -7,8 +7,9 @@
 .env
 !.env.example
 
-src/cert
-!src/cert/cacert.pem
+/config/cert/*
+!/config/cert/cacert.pem
+!/config/cert/openssl.cnf
 
 /src/public/uploads/*
 !/src/public/uploads/index.html

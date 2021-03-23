@@ -187,25 +187,17 @@ class PayOrderModel extends BaseModel
             if(!$paytime)$paytime=time();
             switch ($item['order_type']){
                 case 'recharge':
-                    MemberRechargeModel::getInstance()->updateStatus([
-                        'status'=>1,
-                        'audit_time'=>$paytime
-                    ],['id'=>$item['order_id']]);
+                    $order = MemberRechargeModel::where('id',$item['order_id'])->find();
                     break;
                 case 'credit':
-                    CreditOrderModel::getInstance()->updateStatus([
-                        'status'=>1,
-                        'pay_type'=>$item['pay_type'],
-                        'pay_time'=>$paytime
-                    ],['order_id'=>$item['order_id']]);
+                    $order = CreditOrderModel::where('order_id',$item['order_id'])->find();
                     break;
                 default:
-                    OrderModel::getInstance()->updateStatus([
-                        'status'=>1,
-                        'pay_type'=>$item['pay_type'],
-                        'pay_time'=>$paytime
-                    ],['order_id'=>$item['order_id']]);
+                    $order = OrderModel::where('order_id',$item['order_id'])->find();
                     break;
+            }
+            if(!empty($order)){
+                $order->onPayResult($item['pay_type'], $paytime, $item['pay_amount']/100);
             }
         }
     }
@@ -271,6 +263,8 @@ class PayOrderModel extends BaseModel
                 $this->setError( $result['err_code_des']?:$result['return_msg']);
                 return false;
             }
+        }elseif($this['pay_type']=='alipay'){
+
         }
 
         return true;

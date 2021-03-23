@@ -44,6 +44,7 @@ class Install extends Command
         }
 
         $dbconfig=config('database');
+        $dbconfig = $dbconfig['connections'][$dbconfig['default']];
 
         if($input->hasOption('name')){
             $name = trim($input->getOption('name'));

@@ -4,6 +4,7 @@ namespace app\index\controller;
 use app\common\model\MemberLevelModel;
 use app\common\model\MemberModel;
 use app\common\model\WechatModel;
+use app\common\service\EncryptService;
 use EasyWeChat\Factory;
 use extcore\traits\Email;
 use shirne\sdk\OAuthFactory;
@@ -169,7 +170,7 @@ class BaseController extends Controller
      * @param $member
      * @throws Exception
      */
-    protected function setLogin($member){
+    protected function setLogin($member, $logintype = 1){
         if($member['status']!='1'){
             $this->error('会员已禁用');
         }
@@ -177,11 +178,13 @@ class BaseController extends Controller
         session('username',empty($member['realname'])? $member['username']:$member['realname']);
         $time=time();
         session('logintime',$time);
-        Db::name('member')->where('id',$member['id'])->update(array(
-            'login_ip'=>request()->ip(),
-            'logintime'=>$time
-        ));
-        user_log($member['id'], 'login', 1, '登录成功');
+        if($logintype == 1){
+            Db::name('member')->where('id',$member['id'])->update(array(
+                'login_ip'=>request()->ip(),
+                'logintime'=>$time
+            ));
+            user_log($member['id'], 'login', 1, '登录成功');
+        }
     }
 
     /**
@@ -197,6 +200,16 @@ class BaseController extends Controller
         session('userid',null);
         session('username',null);
         session('logintime',null);
+        
+        cookie('login', null);
+    }
+
+    protected function setAotuLogin($member, $days = 7){
+
+        $expire = $days * 24 * 60 * 60;
+        $timestamp = time() + $expire;
+        $data = EncryptService::getInstance()->encrypt(json_encode(['id'=>$member['id'],'time'=>$timestamp]));
+        cookie('login', $data, $expire);
     }
 
     /**
@@ -205,8 +218,30 @@ class BaseController extends Controller
      */
     protected function checkLogin(){
         $this->userid = session('userid');
+
+        $loginsession = $this->request->cookie('login');
+        if(!empty($loginsession)){
+            cookie('login',null);
+            $data = EncryptService::getInstance()->decrypt($loginsession);
+            if(!empty($data)){
+                $json = json_decode($data, true);
+                if(!empty($json['id'])){
+                    $timestamp = $json['time'];
+                    if($timestamp >= time()){
+                        $this->userid = $json['id'];
+                        $member = MemberModel::where('id',$this->userid)->find();
+                        $this->setLogin($member, 0);
+                        $this->user = $member;
+                        $this->setAotuLogin($member);
+                    }
+                }
+            }
+        }
+
         if(!empty($this->userid)){
-            $this->user = Db::name('Member')->find($this->userid);
+            if(empty($this->user)){
+                $this->user = MemberModel::where('id',$this->userid)->find();
+            }
             /*$time=session('logintime');
             if($time != $this->user['logintime']){
                 session('userid',null);

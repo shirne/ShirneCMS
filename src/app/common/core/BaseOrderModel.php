@@ -91,6 +91,10 @@ class BaseOrderModel extends BaseModel
         return $keywords;
     }
 
+    public function onPayResult($paytype, $paytime, $payamount){
+        return false;
+    }
+
     /**
      * @param bool $force
      * @return array

@@ -196,10 +196,13 @@ CREATE TABLE `sa_adv_group` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(100) DEFAULT '',
   `flag` varchar(50) DEFAULT '',
+  `width` int(11) DEFAULT 0,
+  `height` int(11) DEFAULT 0,
   `ext_set` varchar(500) DEFAULT '',
-  `create_time` int(11) DEFAULT 0,
   `locked` tinyint(11) DEFAULT 0,
   `status` tinyint(11) DEFAULT 0,
+  `create_time` int(11) DEFAULT 0,
+  `update_time` int(11) DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `flag_UNIQUE` (`flag` ASC)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -834,6 +837,7 @@ CREATE TABLE `sa_page` (
   `vice_title` varchar(100) NOT NULL DEFAULT '' COMMENT '副标题',
   `group` varchar(50) NOT NULL DEFAULT '',
   `icon` varchar(150) NOT NULL DEFAULT '',
+  `image` varchar(150) NOT NULL DEFAULT '',
   `name` varchar(50) DEFAULT NULL,
   `sort` int(11) DEFAULT 0,
   `status` tinyint(11) DEFAULT 0,
@@ -1006,6 +1010,8 @@ DROP TABLE IF EXISTS `sa_feedback`;
 CREATE TABLE `sa_feedback` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `member_id` int(11) NOT NULL DEFAULT '0',
+  `realname` varchar(30) NOT NULL DEFAULT '',
+  `mobile` varchar(30) NOT NULL DEFAULT '',
   `email` varchar(150) NOT NULL DEFAULT '',
   `type` tinyint(4) DEFAULT '0',
   `create_time` int(11) NOT NULL DEFAULT '0',

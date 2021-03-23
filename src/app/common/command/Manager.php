@@ -26,18 +26,32 @@ class Manager extends Command
 
     protected function execute(Input $input, Output $output)
     {
-        $admin='admin';
-        if($input->hasOption('admin')){
-            $admin=$input->getOption('admin');
+        $admin='';
+        if($input->hasOption('username')){
+            $admin=$input->getOption('username');
         }
         if($input->hasOption('password')){
             $password=$input->getOption('password');
 
             $data['type']=1;
-            $data['username']=$admin;
+            if(!empty($admin))$data['username']=$admin;
             $data['salt']=random_str(8);
             $data['password'] = encode_password($password,$data['salt']);
-            Db::name('Manager')->where('id',1)->update($data);
+            $exists = Db::name('Manager')->where('id',1)->find();
+            if(empty($exists)){
+                if(empty($data['username'])){
+                    $data['username']='administrator';
+                }
+                $data['id'] = 1;
+                $data['pid'] = 0;
+                $data['create_time'] = time();
+                $data['update_time'] = time();
+                $data['status'] = 1;
+                $data['type'] = 1;
+                Db::name('Manager')->insert($data);
+            }else{
+                Db::name('Manager')->where('id',1)->update($data);
+            }
         }else{
             $output->error('The password option mast be specified.');
             exit;

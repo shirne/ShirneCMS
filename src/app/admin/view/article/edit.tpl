@@ -8,8 +8,8 @@
     <form method="post" class="page-form" action="" enctype="multipart/form-data">
         <div class="form-row">
             <div class="col form-group">
-                <label for="article-title">文章标题</label>
-                <input type="text" name="title" class="form-control" value="{$article.title|default=''}" id="article-title" placeholder="输入文章标题">
+                <label for="title">文章标题</label>
+                <input type="text" name="title" class="form-control" value="{$article.title|default=''}" placeholder="输入文章标题">
             </div>
             <div class="col form-group">
                 <label for="vice_title">副标题</label>

@@ -112,6 +112,24 @@
     </div>
 </div>
 <div class="form-row form-group">
+    <label for="v-site-400" class="col-3 col-md-2 text-right align-middle">400电话</label>
+    <div class="col-9 col-md-8 col-lg-6">
+        <input type="text" class="form-control" name="v-site-400" value="{$setting['site-400']['value']}" placeholder="400电话">
+    </div>
+</div>
+<div class="form-row form-group">
+    <label for="v-site-telephone" class="col-3 col-md-2 text-right align-middle">联系电话</label>
+    <div class="col-9 col-md-8 col-lg-6">
+        <input type="text" class="form-control" name="v-site-telephone" value="{$setting['site-telephone']['value']}" placeholder="联系电话">
+    </div>
+</div>
+<div class="form-row form-group">
+    <label for="v-site-email" class="col-3 col-md-2 text-right align-middle">公司邮箱</label>
+    <div class="col-9 col-md-8 col-lg-6">
+        <input type="text" class="form-control" name="v-site-email" value="{$setting['site-email']['value']}" placeholder="公司邮箱">
+    </div>
+</div>
+<div class="form-row form-group">
     <label for="v-site-address" class="col-3 col-md-2 text-right align-middle">公司地址</label>
     <div class="col-9 col-md-8 col-lg-6">
         <input type="text" class="form-control" name="v-site-address" value="{$setting['site-address']['value']}" placeholder="公司地址">
