@@ -38,7 +38,7 @@
                         </if>
                     </td>
                     <td>
-                        {$area_type==1?'仅':'不'}配送地区:
+                        {$v['area_type']==1?'仅':'不'}配送地区:
                         {:implode(', ',$v['specials'])}
                     </td>
                     <td class="operations">
