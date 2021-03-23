@@ -17,7 +17,7 @@
                                 <a href="{$nav['url']}" target="{$nav['target']}" class="nav-link dropdown-toggle" role="button" aria-haspopup="true" aria-expanded="false">{$nav['title']} <span class="caret"></span></a>
                                 <div class="dropdown-menu">
                                     {volist name="nav['subnav']" id="nav"}
-                                        <a class="dropdown-item" target="{$nav['target']}" href="{$nav['url']}">{$nav['title']}</a>
+                                        <a class="dropdown-item" target="{$nav['target']|default=''}" href="{$nav['url']}">{$nav['title']}</a>
                                     {/volist}
                                 </div>
                             </li>
