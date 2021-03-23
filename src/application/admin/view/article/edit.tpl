@@ -21,7 +21,7 @@
                 <label for="article-cate">文章分类</label>
                 <select name="cate_id" id="article-cate" class="form-control">
                     <foreach name="category" item="v">
-                        <option value="{$v.id}" {$article['cate_id'] == $v['id']?'selected="selected"':""}>{$v.html} {$v.title}</option>
+                        <option value="{$v.id}" data-pid="{$v['pid']}" {$article['cate_id'] == $v['id']?'selected="selected"':""} data-props="{$v['props']}">{$v.html} {$v.title}</option>
                     </foreach>
                 </select>
             </div>
@@ -119,11 +119,7 @@
     });
     jQuery(function ($) {
         $('.addpropbtn').click(function (e) {
-            $('.prop-groups').append('<div class="input-group mb-2" >\n' +
-                '                            <input type="text" class="form-control" style="max-width:120px;" name="prop_data[keys][]" />\n' +
-                '                            <input type="text" class="form-control" name="prop_data[values][]" />\n' +
-                '                            <div class="input-group-append delete"><a href="javascript:" class="btn btn-outline-secondary"><i class="ion-md-trash"></i> </a> </div>\n' +
-                '                        </div>');
+            addProp();
         });
         $('.prop-groups').on('click','.delete .btn',function (e) {
             var self=$(this);
@@ -131,6 +127,42 @@
                 self.parents('.input-group').remove();
             })
         });
+        function addProp(key,value) {
+            $('.prop-groups').append('<div class="input-group mb-2" >\n' +
+                '                            <input type="text" class="form-control" style="max-width:120px;" name="prop_data[keys][]" value="'+(key?key:'')+'" />\n' +
+                '                            <input type="text" class="form-control" name="prop_data[values][]" value="'+(value?value:'')+'" />\n' +
+                '                            <div class="input-group-append delete"><a href="javascript:" class="btn btn-outline-secondary"><i class="ion-md-trash"></i> </a> </div>\n' +
+                '                        </div>');
+        }
+        function changeCategory(select,force) {
+            var option=$(select).find('option:selected');
+            var curProps=[];
+            var props=$(option).data('props') || [];
+            $('.prop-groups .input-group').each(function () {
+                var input=$(this).find('input');
+                var prop=input.val().trim();
+                if(input.eq(1).val().trim()===''){
+                    if(props.indexOf(prop)<0){
+                        $(this).remove();
+                    }else{
+                        curProps.push(prop);
+                    }
+                }else {
+                    curProps.push(prop);
+                }
+            });
+            for(var i=0;i<props.length;i++){
+                if(curProps.indexOf(props[i])<0){
+                    addProp(props[i]);
+                }
+            }
+        }
+        $('#article-cate').change(function (e) {
+            changeCategory(this);
+        });
+        if('add'==="{$article['id']?'':'add'}"){
+            changeCategory($('#article-cate'),true);
+        }
     });
 </script>
 </block>

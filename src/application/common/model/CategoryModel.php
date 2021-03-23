@@ -13,6 +13,8 @@ class CategoryModel extends BaseModel
 {
     protected $precache='';
 
+    protected $type = ['props'=>'array'];
+
     protected $data;
     protected $treed;
 

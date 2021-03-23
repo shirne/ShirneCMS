@@ -5,6 +5,8 @@ add `update_time` int(11) DEFAULT 0 after `create_time`;
 alter TABLE `sa_page`
   add `image` varchar(150) NOT NULL DEFAULT '' after `icon`;
 
+alter TABLE `sa_category`
+  add `props` TEXT COMMENT '默认属性' after `sort`;
 
 alter TABLE `sa_order` add `refund_status` TINYINT NULL DEFAULT 0 after `status`,
 add `payedamount` DECIMAL(10,2) NULL DEFAULT 0 after `payamount`;
