@@ -14,8 +14,8 @@
                                placeholder="输入单页标题">
                     </div>
                     <div class="col form-group">
-                        <label for="page-title">副标题</label>
-                        <input type="text" name="vice_title" class="form-control" value="{$page.vice_title|default=''}" id="page-title"
+                        <label for="vice_title">副标题</label>
+                        <input type="text" name="vice_title" class="form-control" value="{$page.vice_title|default=''}"
                                >
                     </div>
                 </div>
@@ -26,7 +26,11 @@
                                placeholder="输入标识,不能和其他页面标识重复">
                     </div>
                     <div class="col form-group">
-                        <label for="page-title">分组</label>
+                        <label for="page-title">排序</label>
+                        <input type="text" name="sort" class="form-control" value="{$page.sort|default=9}" >
+                    </div>
+                    <div class="col form-group">
+                        <label for="group">分组</label>
                         <div class="input-group">
                         <input type="text" name="group" class="form-control" value="{$page.group|default=''}" placeholder="从右侧选择或填写一个新的分组" >
                             <select class="form-control" onchange="var val=$(this).val();if(val)this.form.group.value=val;">
@@ -39,26 +43,38 @@
                     </div>
                 </div>
                 <div class="form-row">
-                <div class="col form-group">
-                    <label for="image">图标</label>
-                    <div class="input-group">
-                        <div class="custom-file">
-                            <input type="file" class="custom-file-input" name="upload_icon"/>
-                            <label class="custom-file-label" for="upload_icon">选择文件</label>
+                    <div class="col form-group">
+                        <label for="upload_icon">图标</label>
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" name="upload_icon"/>
+                                <label class="custom-file-label" for="upload_icon">选择文件</label>
+                            </div>
                         </div>
+                        {if !empty($page['icon'])}
+                            <figure class="figure">
+                                <img src="{$page.icon}" class="figure-img img-fluid rounded" alt="image">
+                                <figcaption class="figure-caption text-center">{$page.icon}</figcaption>
+                            </figure>
+                            <input type="hidden" name="delete_icon" value="{$page.icon}"/>
+                        {/if}
                     </div>
-                    {if !empty($page['icon'])}
-                        <figure class="figure">
-                            <img src="{$page.icon}" class="figure-img img-fluid rounded" alt="image">
-                            <figcaption class="figure-caption text-center">{$page.icon}</figcaption>
-                        </figure>
-                        <input type="hidden" name="delete_icon" value="{$page.icon}"/>
-                    {/if}
-                </div>
-                <div class="col form-group">
-                    <label for="page-title">排序</label>
-                    <input type="text" name="sort" class="form-control" value="{$page.sort|default=9}" >
-                </div>
+                    <div class="col form-group">
+                        <label for="upload_image">封面图</label>
+                        <div class="input-group">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" name="upload_image"/>
+                                <label class="custom-file-label" for="upload_image">选择文件</label>
+                            </div>
+                        </div>
+                        {if !empty($page['image'])}
+                            <figure class="figure">
+                                <img src="{$page.image}" class="figure-img img-fluid rounded" alt="image">
+                                <figcaption class="figure-caption text-center">{$page.image}</figcaption>
+                            </figure>
+                            <input type="hidden" name="delete_image" value="{$page.image}"/>
+                        {/if}
+                    </div>
                 </div>
                 <div class="form-row">
                     <label class="col-md-1">独立模板</label>

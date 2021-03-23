@@ -140,7 +140,7 @@ class OrderController extends AuthedController
 
     public function wechatpay($order_id, $trade_type='JSAPI', $payid=0){
         $trade_type = strtoupper($trade_type);
-        if($payid)$wechat=WechatModel::where('id|hash',$payid)->where('type','wechat')->find();
+        if($payid)$wechat=WechatModel::where(is_numeric($payid)?'id':'hash',$payid)->where('type','wechat')->find();
         if($trade_type == 'JSAPI' ) {
             if(empty($this->wechatUser) && !empty($wechat)){
                 $openid = $this->request->param('openid');
@@ -160,7 +160,7 @@ class OrderController extends AuthedController
             }
         }
         if(empty($wechat) && $payid){
-            $wechat=WechatModel::where('id|hash',$payid)
+            $wechat=WechatModel::where(is_numeric($payid)?'id':'hash', $payid)
                 ->where('type','wechat')->find();
         }
         if(empty($wechat)){

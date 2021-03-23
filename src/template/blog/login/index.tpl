@@ -49,6 +49,11 @@
 								</div>
 							</div>
 						</div>
+						<div class="form-group">
+						<label>
+							<input type="checkbox" name="remember" value="1"> 保持登录
+						  </label>
+						</div>
 						<div class="form-group submitline">
 							<button type="submit" class="btn btn-info btn-block create">{:lang('Sign in')}</button>
 						</div>

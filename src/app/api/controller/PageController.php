@@ -27,7 +27,7 @@ class PageController extends BaseController
     }
 
     public function page($name){
-        $page = Db::name('page')->where('id|name' , $name)->find();
+        $page = Db::name('page')->where(is_numeric($name)?'id':'name' ,is_numeric($name)?intval($name):$name)->find();
         if (empty($page)) $this->error('页面不存在',0);
         $images=Db::name('PageImages')->where('page_id' , $page['id'])->select();
 

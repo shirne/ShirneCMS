@@ -56,6 +56,13 @@ class OrderModel extends BaseOrderModel
         }
         return $counts;
     }
+
+    public function getProducts(){
+        if($this->isEmpty()){
+            return [];
+        }
+        return Db::name('orderProduct')->where('order_id',$this['order_id'])->order('id asc')->select();
+    }
     
     public function audit(){
         if($this->isExists()){
@@ -74,6 +81,17 @@ class OrderModel extends BaseOrderModel
             self::setLevel($item);
             self::doRebate($item);
         }
+    }
+
+    public function onPayResult($paytype, $paytime, $payamount){
+        parent::onPayResult($paytype, $paytime, $payamount);
+
+        $this->updateStatus([
+            'status'=>1,
+            'pay_type'=>$paytype,
+            'pay_time'=>$paytime,
+            'payedamount'=>['INC', $payamount]
+        ]);
     }
     
     protected function triggerStatus($item, $status, $newData=[])

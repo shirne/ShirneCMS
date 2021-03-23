@@ -406,7 +406,8 @@ function get_order_status($status){
             return lang('Unevaluate');
         case "4":
             return lang('Completed');
-
+        default:
+            return lang('Unknown');
     }
     return lang('Unknown');
 }
@@ -417,7 +418,7 @@ function get_order_status($status){
  * @return string
  */
 function order_status($status,$wrap=true){
-    $style='default';
+    $style='secondary';
     switch ($status){
         case "0":
             $style='warning';
@@ -434,6 +435,8 @@ function order_status($status,$wrap=true){
         case "4":
             $style='success';
             break;
+        default:
+            $style='secondary';
 
     }
     return $wrap?wrap_label(get_order_status($status),$style):get_order_status($status);
@@ -446,9 +449,11 @@ function money_type($type,$wrap=true){
             return $wrap?wrap_label(lang('Credit'),'info'):lang('Credit');
         case "reward":
             return $wrap?wrap_label(lang('Reward'),'warning'):lang('Reward');
+        default:
+            return $wrap?wrap_label(lang('Unknown'),'secondary'):lang('Unknown');
 
     }
-    return $wrap?wrap_label(lang('Unknown'),'default'):lang('Unknown');
+    return $wrap?wrap_label(lang('Unknown'),'secondary'):lang('Unknown');
 }
 function award_status($status,$wrap=true){
     switch ($status){
@@ -458,7 +463,8 @@ function award_status($status,$wrap=true){
             return $wrap?wrap_label(lang('Canceled'),'secondary'):lang('Canceled');
         case "0":
             return $wrap?wrap_label(lang('Waiting'),'warning'):lang('Waiting');
-        
+        default:
+            $wrap?wrap_label(lang('Unknown'),'default'):lang('Unknown');
     }
     return $wrap?wrap_label(lang('Unknown'),'default'):lang('Unknown');
 }
@@ -965,6 +971,7 @@ function weight_random($array, $wfield='weight',$order=true){
         foreach ($array as &$row){
             $row[$wfield]=$row[$ofield]==0?$pow:($pow/$row[$ofield]);
         }
+        unset($row);
     }
     $total = array_sum(array_column($array,$wfield));
     $randmax = min($total * 1000, mt_getrandmax());

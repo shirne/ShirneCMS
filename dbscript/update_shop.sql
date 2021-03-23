@@ -241,15 +241,14 @@ CREATE TABLE `sa_product_comment` (
   `product_id` int(11) NOT NULL DEFAULT '0',
   `sku_id` int(11) NOT NULL DEFAULT '0',
   `order_id` int(11) NOT NULL DEFAULT '0',
-  `create_time` int(11) NOT NULL DEFAULT '0',
-  `device` varchar(50) NOT NULL DEFAULT '',
-  `ip` varchar(50) NOT NULL DEFAULT '',
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `is_anonymous` tinyint(4) NOT NULL DEFAULT '0',
+  `stars` tinyint(4) NOT NULL DEFAULT '0',
   `content` text,
   `reply_time` int(11) NOT NULL DEFAULT '0',
   `reply_user_id` int(11) NOT NULL DEFAULT '0',
   `reply` text,
+  `create_time` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `member_id` (`member_id`),
   KEY `product_id` (`product_id`)
@@ -278,6 +277,7 @@ CREATE TABLE `sa_order` (
   `order_no` VARCHAR(30) NOT NULL,
   `member_id` INT NULL DEFAULT 0,
   `payamount` DECIMAL(10,2) NULL DEFAULT 0,
+  `payedamount` DECIMAL(10,2) NULL DEFAULT 0,
   `product_amount` DECIMAL(10,2) NULL DEFAULT 0,
   `cost_amount` DECIMAL(10,2) NULL DEFAULT 0,
   `discount_amount` DECIMAL(10,2) NULL DEFAULT 0,
@@ -297,6 +297,7 @@ CREATE TABLE `sa_order` (
   `rebate_time` INT NULL DEFAULT 0,
   `rebate_total` DECIMAL(10,2) NULL DEFAULT 0,
   `status` TINYINT NULL DEFAULT 0 COMMENT '订单状态',
+  `refund_status` TINYINT NULL DEFAULT 0,
   `noticed` TINYINT NULL DEFAULT 0 COMMENT '通知状态',
   `isaudit` TINYINT NULL DEFAULT 0 COMMENT '审核状态',
   `delete_time` INT NULL DEFAULT 0 COMMENT '删除状态',
@@ -353,11 +354,35 @@ CREATE TABLE `sa_order_refund` (
   `product` text,
   `address` text,
   `express` text,
+  `reply` varchar(200) DEFAULT '',
   `status` TINYINT(4) NULL DEFAULT 0,
   `create_time` INT(11) DEFAULT '0',
   `update_time` INT(11) DEFAULT '0',
   PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `sa_order_comment`;
+
+CREATE TABLE `sa_order_comment` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) NOT NULL DEFAULT '0',
+  `order_id` int(11) NOT NULL DEFAULT '0',
+  `client` varchar(50) NOT NULL DEFAULT '',
+  `device` varchar(50) NOT NULL DEFAULT '',
+  `ip` varchar(50) NOT NULL DEFAULT '',
+  `status` tinyint(4) NOT NULL DEFAULT '0',
+  `is_anonymous` tinyint(4) NOT NULL DEFAULT '0',
+  `service_stars` tinyint(4) NOT NULL DEFAULT '0',
+  `express_stars` tinyint(4) NOT NULL DEFAULT '0',
+  `delivery_stars` tinyint(4) NOT NULL DEFAULT '0',
+  `content` text,
+  `reply_time` int(11) NOT NULL DEFAULT '0',
+  `reply_user_id` int(11) NOT NULL DEFAULT '0',
+  `reply` text,
+  `create_time` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `member_id` (`member_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `sa_order_log`;
 CREATE TABLE `sa_order_log` (

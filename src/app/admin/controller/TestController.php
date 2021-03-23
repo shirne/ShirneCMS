@@ -26,7 +26,7 @@ class TestController extends BaseController
 
     public function rand_bouns($amount=100,$count=10,$precision=2,$ratio=5,$disperse=10000){
         if($this->request->isPost()){
-            return redirect('',['amount'=>$amount,'count'=>$count,'precision'=>$precision,'ratio'=>$ratio,'disperse'=>$disperse]);
+            return redirect(url('',['amount'=>$amount,'count'=>$count,'precision'=>$precision,'ratio'=>$ratio,'disperse'=>$disperse]));
         }
 
         $total_count=$count;

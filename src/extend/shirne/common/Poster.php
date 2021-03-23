@@ -160,6 +160,8 @@ class Poster
                             $set['x'] += $box['x']+$box['width'];
                             $set['y'] += $box['y']+$box['height'];
                             break;
+                        default:
+                            break;
                     }
                     //Log::record('offset result:'.json_encode($set));
                 }

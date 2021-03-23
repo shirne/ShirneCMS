@@ -10,11 +10,10 @@ use think\facade\Db;
  * Class CheckcodeService
  * @package app\common\service
  */
-class CheckcodeService
+class CheckcodeService extends BaseService
 {
     use Email;
 
-    protected $errMsg;
     protected $limits=[
         'email'=>[],
         'mobile'=>[
@@ -23,10 +22,6 @@ class CheckcodeService
             'second_limit'=>120
         ]
     ];
-
-    public function getError(){
-        return $this->errMsg;
-    }
 
     public function sendCode($type,$sendto, $codetype='verify'){
         $ip=request()->ip();
@@ -42,7 +37,7 @@ class CheckcodeService
                         ->update(['create_time' => time(), 'count' => 0]);
                 } else {
                     if ($ipcount['count'] >= $limit['ip_limit']) {
-                        $this->errMsg='验证码发送过于频繁';
+                        $this->setError('验证码发送过于频繁');
                         return false;
                     }
                 }
@@ -57,7 +52,7 @@ class CheckcodeService
                         ->update(['create_time' => time(), 'count' => 0]);
                 } else {
                     if ($phonecount['count'] >= $limit['item_limit']) {
-                        $this->errMsg='验证码发送过于频繁';
+                        $this->setError('验证码发送过于频繁');
                         return false;
                     }
                 }
@@ -127,7 +122,7 @@ class CheckcodeService
 
             //验证发送时间间隔
             if(time()-$exist['create_time']<$timeLimit){
-                $this->errMsg='验证码发送过于频繁';
+                $this->setError('验证码发送过于频繁');
                 return false;
             }
 
@@ -143,14 +138,14 @@ class CheckcodeService
             $tplCode = $config['aliyun_dysms_verify'];
         }
         if(empty($tplCode)){
-            $this->errMsg = '模板消息未设置';
+            $this->setError('模板消息未设置');
             return false;
         }
         
         $aliyun = new Aliyun($config);
         $sended = $aliyun->sendSms($mobile, $newcode, $tplCode, $config['aliyun_dysms_sign']);
         if(!$sended){
-            $this->errMsg = $aliyun->get_error_msg();
+            $this->setError($aliyun->get_error_msg());
         }
 
 
@@ -179,7 +174,7 @@ class CheckcodeService
 
             //验证发送时间间隔
             if(time()-$exist['create_time']<$timeLimit){
-                $this->errMsg='验证码发送过于频繁';
+                $this->setError('验证码发送过于频繁');
                 return false;
             }
 
