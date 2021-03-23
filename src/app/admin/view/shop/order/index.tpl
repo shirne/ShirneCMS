@@ -36,7 +36,7 @@
                             <a class="dropdown-item action-btn" data-action="export" data-mode="express" href="javascript:" target="_blank" >导出选中项</a>
                             <a class="dropdown-item" href="{:url('shop.order/export',['order_ids'=>$orderids,'mode'=>'express'])}" target="_blank" >导出本页</a>
                             <a class="dropdown-item" href="{:url('shop.order/export',['status'=>1,'mode'=>'express'])}" target="_blank">导出未处理</a>
-                            <a class="dropdown-item" href="{:url('shop.order/export',['status'=>$status,'start_date'=>$start_date,'end_date'=>$end_date,'audit'=>$audit,'keyword'=>base64_encode($keyword),'region'=>base64_encode($region),'mode'=>'express'])}" target="_blank">导出筛选结果</a>
+                            <a class="dropdown-item" href="{:url('shop.order/export',['status'=>$status,'start_date'=>$start_date,'end_date'=>$end_date,'audit'=>$audit,'keyword'=>base64_encode($keyword),'mode'=>'express'])}" target="_blank">导出筛选结果</a>
                         </div>
                     </div>
                 </div>

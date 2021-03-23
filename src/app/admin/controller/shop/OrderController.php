@@ -208,6 +208,7 @@ class OrderController extends BaseController
         $member=Db::name('Member')->find($model['member_id']);
         $products = OrderProductModel::where('order_id',  $id)->select();
         $payorders = PayOrderModel::filterTypeAndId('order',$id)->select();
+        $refunds = [];
         if($model['status'] < -1){
             $refunds = OrderRefundModel::where('order_id', $id)->select();
         }

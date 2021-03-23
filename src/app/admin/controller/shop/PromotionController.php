@@ -33,7 +33,7 @@ class PromotionController extends BaseController
             user_log($this->mid,'messageconfig',1,'修改消息配置' ,'manager');
             $this->success('配置已更新',url('shop.promotion/message'));
         }
-        $this->assign('setting',$setting['message']);
+        $this->assign('setting',$setting['message']??[]);
         return $this->fetch();
     }
 
@@ -56,7 +56,7 @@ class PromotionController extends BaseController
             user_log($this->mid,'posterconfig',1,'修改分享图配置' ,'manager');
             $this->success('配置已更新',url('shop.promotion/poster'));
         }
-        $this->assign('setting',$setting['poster']);
+        $this->assign('setting',$setting['poster']??[]);
         return $this->fetch();
     }
 

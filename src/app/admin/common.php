@@ -68,7 +68,7 @@ function FU($url='',$vars=[]){
 
     $link=url($url,$vars);
 
-    return str_replace(app()->getModulePath(),'',$link);
+    return str_replace('admin','',$link);
 }
 
 function delete_image($images){

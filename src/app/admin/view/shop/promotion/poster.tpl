@@ -32,7 +32,7 @@
             <label for="v-poster_bgset" class="form-label w-100px text-right align-middle">{$setting['poster_bgset']['title']|default='背景设置'}</label>
             <div class="col-5">
                 <div class="btn-group btn-group-toggle mregopengroup" data-toggle="buttons">
-                    {foreach $setting['poster_bgset']['data'] as $k=>$value}
+                    {foreach $setting['poster_bgset']['data']??[] as $k=>$value}
                         {if $k==$setting['poster_bgset']['value']}
                             <label class="btn btn-outline-secondary active">
                                 <input type="radio" name="v-poster_bgset" value="{$k}" autocomplete="off" checked> {$value}
@@ -46,7 +46,7 @@
                 </div>
             </div>
             <div class="col">
-                <div class="text-muted">{$setting['poster_bgset']['description']}</div>
+                <div class="text-muted">{$setting['poster_bgset']['description']|default=''}</div>
             </div>
         </div>
         <div class="form-row form-group">
@@ -71,12 +71,13 @@
                 <div class="input-group">
                     <span class="input-group-prepend"><span class="input-group-text">对齐</span></span>
                     <select name="v-poster_nickname[align]" class="form-control">
+                        {php}if(!isset($setting['poster_nickname']['value']['align'])){ $setting['poster_nickname']['value']['align'] = 'left'; }{/php}
                         <option value="left" {$setting['poster_nickname']['value']['align']=='left'?'selected':''}>靠左</option>
                         <option value="center" {$setting['poster_nickname']['value']['align']=='center'?'selected':''}>居中</option>
                         <option value="right" {$setting['poster_nickname']['value']['align']=='right'?'selected':''}>靠右</option>
                     </select>
                     <span class="input-group-prepend"><span class="input-group-text">前缀</span></span>
-                    <input type="text" class="form-control" name="v-poster_nickname[prefix]" value="{$setting['poster_nickname']['value']['prefix']}" placeholder="">
+                    <input type="text" class="form-control" name="v-poster_nickname[prefix]" value="{$setting['poster_nickname']['value']['prefix']|default=''}" placeholder="">
                     <span class="input-group-prepend"><span class="input-group-text">左边距</span></span>
                     <input type="text" class="form-control" name="v-poster_nickname[x]" value="{$setting['poster_nickname']['value']['x']|default=''}" placeholder="">
                     <span class="input-group-prepend"><span class="input-group-text">上边距</span></span>
@@ -97,6 +98,7 @@
                 <div class="input-group">
                     <span class="input-group-prepend"><span class="input-group-text">对齐</span></span>
                     <select name="v-poster_agentcode[align]" class="form-control">
+                        {php}if(!isset($setting['poster_agentcode']['value']['align'])){ $setting['poster_agentcode']['value']['align'] = 'left'; }{/php}
                         <option value="left" {$setting['poster_agentcode']['value']['align']=='left'?'selected':''}>靠左</option>
                         <option value="center" {$setting['poster_agentcode']['value']['align']=='center'?'selected':''}>居中</option>
                         <option value="right" {$setting['poster_agentcode']['value']['align']=='right'?'selected':''}>靠右</option>
