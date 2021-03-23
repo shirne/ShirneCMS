@@ -134,10 +134,27 @@
                 '                            <div class="input-group-append delete"><a href="javascript:" class="btn btn-outline-secondary"><i class="ion-md-trash"></i> </a> </div>\n' +
                 '                        </div>');
         }
+        function mergeArray(arr, newArr){
+            if(newArr && newArr.length>0){
+                for(var i=0;i<newArr.length;i++){
+                    if(arr.indexOf(newArr[i]) < 0){
+                        arr.push(newArr[i])
+                    }
+                }
+            }
+            return arr;
+        }
         function changeCategory(select,force) {
             var option=$(select).find('option:selected');
             var curProps=[];
             var props=$(option).data('props') || [];
+            var pid = $(option).data('pid');
+            while(pid > 0){
+                var parentnode=$(select).find('option[value='+pid+']');
+                if(!parentnode || !parentnode.length)break;
+                props = mergeArray(props, $(parentnode).data('props'));
+                pid = $(parentnode).data('pid');
+            }
             $('.prop-groups .input-group').each(function () {
                 var input=$(this).find('input');
                 var prop=input.val().trim();
