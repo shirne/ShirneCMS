@@ -212,14 +212,14 @@
                             <td>{$po.mobile}</td>
                             <td>{$po.create_time|showdate}</td>
                             <td>
-                                <if condition="$po['status'] == 1">
+                                {if $po['status'] == 1}
                                     <span class="badge badge-success">已处理</span><br />
                                     <span class="badge badge-secondary">{$po.update_time|showdate}</span>
-                                <elseif condition="$po['status'] LT 0"/>
+                                {elseif $po['status'] > 0/}
                                     <span class="badge badge-secondary">已拒绝</span>
                                     <else/>
                                     <span class="badge badge-warning"  >待处理</span>
-                                </if>
+                                {/if}
 
                             </td>
                             <td>

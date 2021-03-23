@@ -65,13 +65,13 @@
                 <div class="form-row form-group">
                     <label for="v-kd_userid" class="col-3 col-md-2 text-right align-middle">用户ID</label>
                     <div class="col">
-                        <input type="text" class="form-control" name="v-kd_userid" value="{$setting['kd_userid']['value']}" placeholder="">
+                        <input type="text" class="form-control" name="v-kd_userid" value="{$setting['kd_userid']['value']|default=''}" placeholder="">
                     </div>
                 </div>
                 <div class="form-row form-group">
                     <label for="v-kd_apikey" class="col-3 col-md-2 text-right align-middle">API Key</label>
                     <div class="col">
-                        <input type="text" class="form-control" name="v-kd_apikey" value="{$setting['kd_apikey']['value']}" placeholder="">
+                        <input type="text" class="form-control" name="v-kd_apikey" value="{$setting['kd_apikey']['value']|default=''}" placeholder="">
                     </div>
                 </div>
             </div>
@@ -86,28 +86,28 @@
                 <div class="form-row form-group">
                     <label for="v-accesskey_id" class="col-3 col-md-2 text-right align-middle">账号ID</label>
                     <div class="col">
-                        <input type="text" class="form-control" name="v-accesskey_id" value="{$setting['accesskey_id']['value']}" placeholder="">
+                        <input type="text" class="form-control" name="v-accesskey_id" value="{$setting['accesskey_id']['value']|default=''}" placeholder="">
                     </div>
                 </div>
                 <div class="form-row form-group">
                     <label for="v-accesskey_secret" class="col-3 col-md-2 text-right align-middle">账号密钥</label>
                     <div class="col">
-                        <input type="text" class="form-control" name="v-accesskey_secret" value="{$setting['accesskey_secret']['value']}" placeholder="">
+                        <input type="text" class="form-control" name="v-accesskey_secret" value="{$setting['accesskey_secret']['value']|default=''}" placeholder="">
                     </div>
                 </div>
                 <div class="form-row form-group">
                     <label for="v-aliyun_oss" class="col-3 col-md-2 text-right align-middle">OSS Buket</label>
                     <div class="col">
-                        <input type="text" class="form-control" name="v-aliyun_oss" value="{$setting['aliyun_oss']['value']}" placeholder="">
+                        <input type="text" class="form-control" name="v-aliyun_oss" value="{$setting['aliyun_oss']['value']|default=''}" placeholder="">
                     </div>
                 </div>
                 <div class="form-row form-group">
                     <label for="v-aliyun_oss_domain" class="col-3 col-md-2 text-right align-middle">OSS域名</label>
                     <div class="col">
-                        <input type="text" class="form-control" name="v-aliyun_oss_domain" value="{$setting['aliyun_oss_domain']['value']}" placeholder="">
+                        <input type="text" class="form-control" name="v-aliyun_oss_domain" value="{$setting['aliyun_oss_domain']['value']|default=''}" placeholder="">
                     </div>
                     <div class="col-2">
-                        <input type="hidden" id="sslhidden" name="v-aliyun_oss_ssl" value="{$setting['aliyun_oss_domain']['value']}" />
+                        <input type="hidden" id="sslhidden" name="v-aliyun_oss_ssl" value="1" />
                         <label><input type="checkbox" {$setting['aliyun_oss_ssl']['value']==1?'checked':''} class="sslcheck" value="1"/> 是否SSL</label>
                     </div>
                 </div>
@@ -132,31 +132,31 @@
                 <div class="form-row form-group">
                     <label for="v-aliyun_dysms_sign" class="col-3 col-md-2 text-right align-middle">短信签名</label>
                     <div class="col">
-                        <input type="text" class="form-control" name="v-aliyun_dysms_sign" value="{$setting['aliyun_dysms_sign']['value']}" placeholder="">
+                        <input type="text" class="form-control" name="v-aliyun_dysms_sign" value="{$setting['aliyun_dysms_sign']['value']|default=''}" placeholder="">
                     </div>
                 </div>
                 <div class="form-row form-group">
                     <label for="v-aliyun_dysms_register" class="col-3 col-md-2 text-right align-middle">注册验证码模板</label>
                     <div class="col">
-                        <input type="text" class="form-control" name="v-aliyun_dysms_register" value="{$setting['aliyun_dysms_register']['value']}" placeholder="">
+                        <input type="text" class="form-control" name="v-aliyun_dysms_register" value="{$setting['aliyun_dysms_register']['value']|default=''}" placeholder="">
                     </div>
                 </div>
                 <div class="form-row form-group">
                     <label for="v-aliyun_dysms_login" class="col-3 col-md-2 text-right align-middle">登录验证码模板</label>
                     <div class="col">
-                        <input type="text" class="form-control" name="v-aliyun_dysms_login" value="{$setting['aliyun_dysms_login']['value']}" placeholder="">
+                        <input type="text" class="form-control" name="v-aliyun_dysms_login" value="{$setting['aliyun_dysms_login']['value']|default=''}" placeholder="">
                     </div>
                 </div>
                 <div class="form-row form-group">
                     <label for="v-aliyun_dysms_forget" class="col-3 col-md-2 text-right align-middle">找回密码验证码模板</label>
                     <div class="col">
-                        <input type="text" class="form-control" name="v-aliyun_dysms_forget" value="{$setting['aliyun_dysms_forget']['value']}" placeholder="">
+                        <input type="text" class="form-control" name="v-aliyun_dysms_forget" value="{$setting['aliyun_dysms_forget']['value']|default=''}" placeholder="">
                     </div>
                 </div>
                 <div class="form-row form-group">
                     <label for="v-aliyun_dysms_verify" class="col-3 col-md-2 text-right align-middle">通用验证码模板</label>
                     <div class="col">
-                        <input type="text" class="form-control" name="v-aliyun_dysms_verify" value="{$setting['aliyun_dysms_verify']['value']}" placeholder="">
+                        <input type="text" class="form-control" name="v-aliyun_dysms_verify" value="{$setting['aliyun_dysms_verify']['value']|default=''}" placeholder="">
                     </div>
                 </div>
             </div>

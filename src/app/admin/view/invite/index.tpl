@@ -59,16 +59,16 @@
                 <td>{$v.code}</td>
                 <td>
                     <div class="media">
-                        <if condition="!empty($v['avatar'])">
+                        {if !empty($v['avatar'])}
                             <img src="{$v.avatar}" class="mr-2 rounded" width="30"/>
-                        </if>
+                        {/if}
                         <div class="media-body">
                             <h5 class="mt-0 mb-1" style="font-size:13px;">
-                                <if condition="!empty($v['nickname'])">
+                                {if !empty($v['nickname'])}
                                     {$v.nickname}
-                                    <else/>
+                                    {else/}
                                     {$v.username}
-                                </if>
+                                {/if}
                             </h5>
                             <div style="font-size:12px;">
                                 [{$v.member_id} {$levels[$v['level_id']]['level_name']}]
@@ -107,7 +107,7 @@
                         -
                     {/if}
                 </td>
-                <td>{$v.valid_time|showdate}</td>
+                <td>{$v.invalid_time|showdate}</td> 
                 <td>{if $v.is_lock == 1}<span class="badge badge-danger">锁定</span>{else/}<span class="badge badge-secondary">正常</span>{/if}</td>
                 <td class="operations">
                     <a class="btn btn-outline-primary btn-transfer" data-id="{$v.id}" title="转赠" href="javascript:"><i class="ion-md-repeat"></i> </a>

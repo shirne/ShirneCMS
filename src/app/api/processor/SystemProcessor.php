@@ -8,7 +8,6 @@ use app\common\model\ProductModel;
 use EasyWeChat\Kernel\Messages\News;
 use EasyWeChat\Kernel\Messages\NewsItem;
 use EasyWeChat\Kernel\Messages\Text;
-use think\Db;
 
 class SystemProcessor extends BaseProcessor
 {

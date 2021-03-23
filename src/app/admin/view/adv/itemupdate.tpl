@@ -66,6 +66,7 @@
             </div>
         {/if}
         
+        {if !empty($group['ext_set'])}
         <div class="form-row">
             {foreach name="group['ext_set']['key']" item="ikey"}
                 <div class="col-6 form-group">
@@ -74,6 +75,7 @@
                 </div>
             {/foreach}
         </div>
+        {/if}
         {if $group['type'] == 0}
             <div class="form-group">
                 <label for="image">元件</label>

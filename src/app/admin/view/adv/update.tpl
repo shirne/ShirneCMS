@@ -19,10 +19,10 @@
         <div class="form-group">
             <label for="type">类型</label>
             <label class="radio-inline">
-                <input type="radio" name="type" value="1" <if condition="$model['type'] eq 1">checked="checked"</if> >视频
+                <input type="radio" name="type" value="1" {if $model['type'] == 1}checked="checked"{/if} >视频
             </label>
             <label class="radio-inline">
-                <input type="radio" name="type" value="0" <if condition="$model['type'] eq 0">checked="checked"</if> >图片
+                <input type="radio" name="type" value="0" {if $model['type'] == 0}checked="checked"{/if} >图片
             </label>
         </div>
         <div class="form-group">

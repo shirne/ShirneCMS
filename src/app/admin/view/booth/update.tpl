@@ -54,11 +54,11 @@
                     <label class="pl-2 mr-2" for="status">展位类型</label>
                     <div class="form-group col">
                         <div class="btn-group btn-group-toggle" >
-                            <foreach name="booth_types" id="item">
+                            {foreach name="booth_types" id="item"}
                                 <label :class="'btn btn-outline-secondary'+(model.type=='{$key}'?' active':'')">
                                     <input type="radio" name="type" value="{$key}" autocomplete="off" v-model="model.type">{$item}
                                 </label>
-                            </foreach>
+                            {/foreach}
                         </div>
                     </div>
                 </div>

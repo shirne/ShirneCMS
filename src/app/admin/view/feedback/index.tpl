@@ -40,27 +40,27 @@
             <tr>
                 <td>{$v.id}</td>
                 <td>
-                    <if condition="empty($v['member_id'])">
+                    {if empty($v['member_id'])}
                         -
-                    <else/>
+                    {else/}
                         <div class="media">
-                            <if condition="!empty($v['avatar'])">
+                            {if !empty($v['avatar'])}
                                 <img src="{$v.avatar}" class="mr-2 rounded" width="30"/>
-                            </if>
+                            {/if}
                             <div class="media-body">
                                 <h5 class="mt-0 mb-1" style="font-size:13px;">
-                                    <if condition="!empty($v['nickname'])">
+                                    {if !empty($v['nickname'])}
                                         {$v.nickname}
                                         <else/>
                                         {$v.username}
-                                    </if>
+                                    {/if}
                                 </h5>
                                 <div style="font-size:12px;">
                                     [{$v.member_id} {$levels[$v['level_id']]['level_name']}]
                                 </div>
                             </div>
                         </div>
-                    </if>
+                    {/if}
                 </td>
                 <td>{$v.realname}<br />{$v.mobile}<br />{$v.email}</td>
                 <td>{$v.type}</td>
