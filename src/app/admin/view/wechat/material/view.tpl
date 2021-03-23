@@ -11,7 +11,7 @@
 {/block}
 {block name="body"}
 
-    <include file="public/bread" menu="wechat_index" title="公众号素材" />
+    {include file="public/bread" menu="wechat_index" title="公众号素材" /}
     <div id="page-wrapper">
         <div class="page-header"><a href="javascript:history.back()" class="btn btn-outline-primary btn-sm"><i class="ion-md-arrow-back"></i> 返回列表</a> 预览素材</div>
         <div class="page-content">

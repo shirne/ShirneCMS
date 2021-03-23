@@ -39,7 +39,7 @@
             <tr>
                 <td>{$v.id}</td>
                 <td><img src="{$v.icon}" class="rounded" width="60"/></td>
-                <td>{$v.html|raw} {$v.title}&nbsp;<span class="badge badge-info">{$v.short}</span><if condition="$v.use_template EQ 1">&nbsp;<span class="badge badge-warning">独立模板</span></if></td>
+                <td>{$v.html|raw} {$v.title}&nbsp;<span class="badge badge-info">{$v.short}</span>{if $v.use_template EQ 1}&nbsp;<span class="badge badge-warning">独立模板</span>{/if}</td>
                 <td>{$v.name}</td>
                 <td>{$v.sort}</td>
                 <td class="operations">

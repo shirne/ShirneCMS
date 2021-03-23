@@ -70,7 +70,7 @@
 					<td>
 						{if $v['type'] GT 1}<span class="badge badge-warning">{$types[$v['type']]}</span>{/if}
 						<a href="{:url('index/product/view',['id'=>$v['id']])}" target="_blank">{$v.title}</a>
-						<if condition="!empty($v['unit'])"><span class="badge badge-info">{$v.unit}</span></if>
+						{if !empty($v['unit'])}<span class="badge badge-info">{$v.unit}</span>{/if}
 						<span class="text-muted">销量: {$v.sale}</span>
 					</td>
 					<td>

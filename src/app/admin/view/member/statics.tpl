@@ -52,13 +52,13 @@
                     </tr>
                     </thead>
                     <tbody>
-                        <foreach name="statics" id="item">
+                        {foreach name="statics" id="item"}
                             <tr>
                                 <th>{$item['awdate']}</th>
                                 <td>{$item['member_count']}</td>
                                 <td>{$item['agent_count']}</td>
                             </tr>
-                        </foreach>
+                        {/foreach}
                     </tbody>
                 </table>
             </div>
