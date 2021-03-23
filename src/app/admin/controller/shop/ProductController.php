@@ -293,7 +293,7 @@ class ProductController extends BaseController
     
                 $data = $this->processData($data);
                 try{
-                    $model->allowField(true)->save($data);
+                    $model->save($data);
                     //不删除图片，可能会导致订单数据图片不显示
                     //delete_image($delete_images);
                     $existsIds=[];

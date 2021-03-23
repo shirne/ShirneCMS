@@ -165,7 +165,7 @@ class SettingController extends BaseController
                 $this->error($validate->getError());
             } else {
                 $model=SettingModel::find($id);
-                if ($model->allowField(true)->save($data)) {
+                if ($model->save($data)) {
                     cache('setting',null);
                     $this->success(lang('Update success!'), url('setting/advance'));
                 } else {

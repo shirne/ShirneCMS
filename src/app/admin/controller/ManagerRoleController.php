@@ -99,7 +99,7 @@ class ManagerRoleController extends BaseController
                 }
                 
                 //更新
-                if ($model->allowField(true)->update($data)) {
+                if ($model->update($data)) {
                     user_log($this->mid,'editmanagerrole',1,'修改管理员'.$model->id ,'manager');
                     $this->success(lang('Update success!'), url('manager_role/index'));
                 } else {

@@ -80,7 +80,7 @@ class PostageController extends BaseController
                 $this->error($validate->getError());
             }else{
                 if(empty($data['specials']))$data['specials']=[];
-                if ($model->allowField(true)->save($data)) {
+                if ($model->save($data)) {
                     PostageModel::updateAreas($data['areas'],$id);
                     cache('postage', null);
                     user_log($this->mid,'updatepostage',1,'修改运费模板'.$id ,'manager');

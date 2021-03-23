@@ -156,7 +156,7 @@ class ArticleController extends BaseController
                 if(empty($data['create_time']))unset($data['create_time']);
                 $model=ArticleModel::find($id);
                 try {
-                    $model->allowField(true)->save($data);
+                    $model->save($data);
                     delete_image($delete_images);
                     user_log($this->mid, 'updatearticle', 1, '修改文章 ' . $id, 'manager');
                 }catch(\Exception $err){

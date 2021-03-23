@@ -81,7 +81,7 @@ class BoothController extends BaseController
                 if(!isset($data['ext_set']))$data['ext_set']=[];
                 
                 try {
-                    $model->allowField(true)->save($data);
+                    $model->save($data);
                 }catch(\Exception $err){
                     $this->error(lang('Update failed: %',[$err->getMessage()]));
                 }

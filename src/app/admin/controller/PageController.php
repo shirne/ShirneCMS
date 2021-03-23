@@ -100,7 +100,7 @@ class PageController extends BaseController
                 }elseif($this->uploadErrorCode>102){
                     $this->error($this->uploadErrorCode.':'.$this->uploadError);
                 }
-                if ($model->allowField(true)->save($data)) {
+                if ($model->save($data)) {
                     delete_image($delete_images);
                     $this->success(lang('Update success!'), url('page/index'));
                 } else {
