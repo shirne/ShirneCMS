@@ -17,7 +17,7 @@ class MemberLevelModel extends CacheableModel
 
     protected $type = ['commission_percent'=>'array'];
 
-    public function onAfterWrite($userLevel)
+    public static function onAfterWrite($userLevel)
     {
         if($userLevel->is_default) {
             Db::name('MemberLevel')->where('level_id','<>', $userLevel->level_id)

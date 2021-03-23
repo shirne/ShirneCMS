@@ -33,6 +33,8 @@ class MemberLevelLogModel extends BaseModel
                 case 1:
                     $this->afterPay($item);
                     break;
+                default:
+                    break;
             }
         }
     }

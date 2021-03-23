@@ -16,7 +16,7 @@ class ManagerRoleModel extends BaseModel
     protected static $roles;
     protected static $roles_cache_key = 'manager_role';
 
-    public function onAfterWrite($model)
+    public static function onAfterWrite($model)
     {
         cache(self::$roles_cache_key,null);
     }
