@@ -6,4 +6,5 @@ use app\Request;
 return [
     'think\Request'          => Request::class,
     'think\exception\Handle' => ExceptionHandle::class,
+    'think\Paginator'    =>    'shirne\paginator\Bootstrap4'
 ];

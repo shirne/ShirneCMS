@@ -18,8 +18,11 @@ class Bootstrap4 extends Paginator
 
     public function __construct($items, $listRows, $currentPage = null, $total = null, $simple = false, array $options = [])
     {
+        $options = array_merge($options, config('paginate'));
         parent::__construct($items, $listRows, $currentPage, $total, $simple, $options);
-
+        if(!isset($this->options['simple'])){
+            $this->options['simple'] = false;
+        }
         if(isset($this->options['justify'])) {
             switch ($this->options['justify']){
                 case 'center':
@@ -27,6 +30,8 @@ class Bootstrap4 extends Paginator
                     break;
                 case 'right':
                     $this->extstyle = ' justify-content-end';
+                    break;
+                default:
                     break;
             }
         }
@@ -39,6 +44,8 @@ class Bootstrap4 extends Paginator
                 case 'small':
                 case 'sm':
                     $this->extstyle .= ' pagination-sm';
+                    break;
+                default:
                     break;
             }
         }
