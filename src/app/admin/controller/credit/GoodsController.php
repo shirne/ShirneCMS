@@ -128,7 +128,7 @@ class GoodsController extends BaseController
 
                 $data['storage']=intval($data['storage']);
                 if(empty($data['levels']))$data['levels']=[];
-                if ($model->allowField(true)->save($data)) {
+                if ($model->save($data)) {
                     //delete_image($delete_images);
 
                     user_log($this->mid, 'updategoods', 1, '修改商品 ' . $id, 'manager');

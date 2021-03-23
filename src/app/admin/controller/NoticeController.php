@@ -74,7 +74,7 @@ class NoticeController extends BaseController
             } else {
                 $model=NoticeModel::find($id);
 
-                if ($model->allowField(true)->save($data)) {
+                if ($model->save($data)) {
                     $this->success(lang('Update success!'), url('Notice/index'));
                 } else {
                     $this->error(lang('Update failed!'));

@@ -42,7 +42,7 @@ class MemberAuthenController extends BaseController
 
             $model=MemberAuthenModel::get($id);
             try{
-                $model->allowField(true)->save($data);
+                $model->save($data);
                 user_log($this->mid,'updatememberauthen',1,'审核升级申请'.$id ,'manager');
             }catch(\Exception $err){
                 $this->error(lang('Update failed: %s',[$err->getMessage()]));

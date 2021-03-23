@@ -197,7 +197,7 @@ class ManagerController extends BaseController
                 $updatePermission=false;
                 if($data['type']!=$model['type'])$updatePermission=true;
                 //更新
-                if ($model->allowField(true)->update($data)) {
+                if ($model->update($data)) {
                     if($updatePermission)$this->updatePermission($id,$data['type']);
                     user_log($this->mid,'addmanager',1,'修改管理员'.$model->id ,'manager');
                     $this->success(lang('Update success!'), url('manager/index'));

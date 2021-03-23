@@ -5,6 +5,7 @@ namespace app\common\model;
 
 use app\common\core\BaseOrderModel;
 use think\facade\Db;
+use think\facade\Log;
 
 define('CREDIT_STATUS_REFUND',-2);
 define('CREDIT_STATUS_CANCEL',-1);
@@ -74,21 +75,23 @@ class CreditOrderModel extends BaseOrderModel
                 case 4:
                     $this->afterComplete($item);
                     break;
+                default:
+                    break;
             }
         }
     }
     
     protected function afterPay($item=null){
-    
+        Log::record('credit order afterPay:'.var_export($item,true));
     }
     protected function afterDeliver($item=null){
-    
+        Log::record('credit order afterDeliver:'.var_export($item,true));
     }
     protected function afterReceive($item=null){
-    
+        Log::record('credit order afterReceive:'.var_export($item,true));
     }
     protected function afterComplete($item=null){
-    
+        Log::record('credit order afterComplete:'.var_export($item,true));
     }
     
     /**

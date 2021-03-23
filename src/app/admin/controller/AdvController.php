@@ -97,7 +97,7 @@ class AdvController extends BaseController
             }else{
                 if(!isset($data['ext_set']))$data['ext_set']=[];
                 try{
-                    $model->allowField(true)->save($data);
+                    $model->save($data);
 
                 }catch(\Exception $err){
                     $this->error(lang('Update failed: %s',[$err->getMessage()]));
@@ -288,7 +288,7 @@ class AdvController extends BaseController
                     $data['elements'] = $this->filterElements($data['elements']);
                 }
                 
-                if ($model->allowField(true)->save($data)) {
+                if ($model->save($data)) {
                     delete_image($delete_images);
                     $this->success(lang('Update success!'), $url);
                 } else {

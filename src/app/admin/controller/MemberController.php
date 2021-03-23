@@ -520,7 +520,7 @@ class MemberController extends BaseController
                 if($member['mobile_bind'] == 1 && empty($data['mobile'])){
                     $data['mobile_bind'] = 0;
                 }
-                if ($member->allowField(true)->save($data)) {
+                if ($member->save($data)) {
                     user_log($this->mid,'updateuser',1,'修改会员资料'.$id ,'manager');
                     $this->success(lang('Update success!'), url('member/index'));
                 } else {

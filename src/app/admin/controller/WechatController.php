@@ -151,7 +151,7 @@ class WechatController extends BaseController
                 if(empty($model['hash'])){
                     $data['hash']=$this->createHash();
                 }
-                if ($model->allowField(true)->save($data)) {
+                if ($model->save($data)) {
                     delete_image($this->deleteFiles);
                     if($data['is_default']){
                         Db::name('wechat')->where('type', $data['type'])

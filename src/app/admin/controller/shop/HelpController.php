@@ -129,7 +129,7 @@ class HelpController extends BaseController
                 if(empty($data['create_time']))unset($data['create_time']);
                 $model=HelpModel::find($id);
                 try{
-                    $model->allowField(true)->save($data);
+                    $model->save($data);
                     delete_image($delete_images);
                     user_log($this->mid, 'updatehelp', 1, '修改帮助 ' . $id, 'manager');
                 }catch(\Exception $err){

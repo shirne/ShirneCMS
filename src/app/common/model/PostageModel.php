@@ -12,7 +12,7 @@ class PostageModel extends CacheableModel
     protected $name = 'postage';
     protected $type = ['specials'=>'array'];
     
-    public function onAfterWrite($postage)
+    public static function onAfterWrite($postage)
     {
         if($postage->is_default) {
             Db::name('postage')->where('id','NEQ', $postage->id)

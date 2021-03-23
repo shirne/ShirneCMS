@@ -127,7 +127,7 @@ class MemberLevelController extends BaseController
                 $this->error($validate->getError());
             }else{
                 $model=MemberLevelModel::find($id);
-                if ($model->allowField(true)->save($data)) {
+                if ($model->save($data)) {
                     MemberLevelModel::clearCacheData();
                     user_log($this->mid,'updatelevel',1,'修改会员组'.$id ,'manager');
                     $this->success(lang('Update success!'), url('memberLevel/index'));

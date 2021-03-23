@@ -26,7 +26,7 @@ class OrderModel extends BaseOrderModel
     protected $name = 'order';
     protected $pk='order_id';
 
-    public function onAfterWrite($model)
+    public static function onAfterWrite($model)
     {
         $where=$model->getWhere();if(empty($where))return;
         $orders=$model->where($where)->select();

@@ -132,7 +132,10 @@ class BaseController extends Controller
         return $this->errorPage();
     }
 
-    protected function errorPage($error='页面不存在',$description='', $redirect=null){
+    protected function errorPage($error='',$description='', $redirect=null){
+        if(empty($error)){
+            $error = lang('Page not found!');
+        }
         $this->assign('error',$error);
         $this->assign('description',$description);
         if(empty($redirect))$redirect=url('index/index/index');

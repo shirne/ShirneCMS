@@ -16,10 +16,10 @@ class PageController extends BaseController{
     {
         if(!empty($name)) {
             $page = Db::name('page')->where('status',1)->where(is_numeric($name)?'id':'name' ,is_numeric($name)?intval($name):$name)->find();
-            if (empty($page)) $this->errorPage('页面不存在');
+            if (empty($page)) $this->errorPage(lang('Page not found!'));
             $group=$page['group'];
         }elseif(empty($group)){
-            return $this->errorPage('页面不存在');
+            return $this->errorPage(lang('Page not found!'));
         }
 
         $model=Db::name('page');
@@ -29,7 +29,7 @@ class PageController extends BaseController{
             $groupset=Db::name('PageGroup')->where('group',$group)->find();
         }
         $lists=$model->field('id,name,group,icon,title,vice_title')->where('status',1)->order('sort ASC,id ASC')->select()->all();
-        if(empty($lists))$this->errorPage('页面不存在');
+        if(empty($lists))$this->errorPage(lang('Page not found!'));
         if(empty($page)){
             $page=Db::name('page')->where('status',1)->where('name' , $lists[0]['name'])->find();;
         }
