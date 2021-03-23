@@ -8,7 +8,6 @@ use app\api\handler\WechatPlatformHandler;
 use app\common\model\PayOrderModel;
 use app\common\model\PayOrderRefundModel;
 use app\common\model\WechatModel;
-use EasyWeChat\BasicService\Application;
 use EasyWeChat\Factory;
 use think\App;
 use think\facade\Db;
@@ -50,7 +49,6 @@ class WechatController{
     }
 
     public function initialize(){
-        parent::initialize();
         $this->config=getSettings();
     }
 
