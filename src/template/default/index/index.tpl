@@ -12,7 +12,7 @@
         <div class="carousel-inner">
             <volist name="banners" id="item" key="k">
                 <div class="carousel-item{$k==1?' active':''}" style="background-image:url({$item.image})">
-                    <img src="{$item.image}" alt="{$image.title}">
+                    <img src="{$item.image}" alt="{$item.title}">
                     <p>{$item.title}</p>
                 </div>
             </volist>

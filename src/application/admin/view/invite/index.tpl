@@ -107,7 +107,7 @@
                         -
                     </if>  
                 </td>
-                <td>{$v.valid_time|showdate}</td>
+                <td>{$v.invalid_time|showdate}</td>
                 <td><if condition="$v.is_lock eq 1"><span class="badge badge-danger">锁定</span><else/><span class="badge badge-secondary">正常</span></if></td>
                 <td class="operations">
                     <a class="btn btn-outline-primary btn-transfer" data-id="{$v.id}" title="转赠" href="javascript:"><i class="ion-md-repeat"></i> </a>

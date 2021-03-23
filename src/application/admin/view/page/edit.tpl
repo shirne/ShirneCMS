@@ -25,7 +25,7 @@
                                placeholder="输入标识,不能和其他页面标识重复">
                     </div>
                     <div class="col form-group">
-                        <label for="page-title">排序</label>
+                        <label for="sort">排序</label>
                         <input type="text" name="sort" class="form-control" value="{$page.sort}" >
                     </div>
                     <div class="col form-group">
