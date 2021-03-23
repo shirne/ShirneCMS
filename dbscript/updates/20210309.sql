@@ -1,5 +1,6 @@
 alter TABLE `sa_adv_group` add `width` int(11) DEFAULT 0 after `flag`,
-add  `height` int(11) DEFAULT 0 after `width`;
+add  `height` int(11) DEFAULT 0 after `width`,
+add `update_time` int(11) DEFAULT 0 after `create_time`;
 
 alter TABLE `sa_page`
   add `image` varchar(150) NOT NULL DEFAULT '' after `icon`;
