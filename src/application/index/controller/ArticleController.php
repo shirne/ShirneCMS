@@ -43,9 +43,8 @@ class ArticleController extends BaseController{
         $lists=$model->order('article.create_time DESC,article.id DESC')->paginate($this->pagesize);
         $lists->each(function($item){
             if(!empty($item['prop_data'])){
-                $item['prop_data']=json_decode($item['prop_data'],true);
+                $item['prop_data']=force_json_decode($item['prop_data'],true);
             }
-            $item['prop_data']=[];
             return $item;
         });
 
