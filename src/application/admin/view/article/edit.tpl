@@ -31,6 +31,10 @@
             </div>
         </div>
         <div class="form-group">
+            <label for="source">文章来源</label>
+            <input type="text" name="source" class="form-control" value="{$article.source}" >
+        </div>
+        <div class="form-group">
             <label for="image">封面图</label>
             <div class="input-group">
                 <div class="custom-file">

@@ -892,6 +892,7 @@ CREATE TABLE `sa_article` (
   `vice_title` varchar(200) DEFAULT NULL,
   `cover` varchar(100) DEFAULT NULL COMMENT '封面图',
   `description` varchar(250) DEFAULT NULL,
+  `source` varchar(150) DEFAULT NULL,
   `prop_data` text,
   `content` text,
   `create_time` INT(11) DEFAULT '0',
