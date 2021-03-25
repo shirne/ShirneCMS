@@ -235,4 +235,20 @@ class HelpController extends BaseController
         return json(['data'=>$model,'code'=>1]);
     }
 
+    public function category_delete($id){
+        $id = intval($id);
+        $model = Db::name('helpCategory')->where('id',$id)->find();
+        if(empty($model)){
+            $this->error('分类不存在');
+        }
+        $hasson = Db::name('helpCategory')->where('pid',$id)->count();
+        if($hasson > 0){
+            $this->error('请先删除子类');
+        }
+        Db::name('helpCategory')->where('id',$id)->delete();
+        Db::name('help')->where('cate_id',$id)->update(['cate_id'=>0]);
+        HelpCategoryFacade::clearCache();
+        $this->success('删除成功！');
+    }
+
 }

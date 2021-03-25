@@ -14,6 +14,7 @@
 					<li class="list-group-item"><a class="list-cate-item" href="{:url('index',['key'=>$keyword,'cate_id'=>0])}" data-value="0">不限分类</a></li>
 				<foreach name="category" item="v">
 					<li class="list-group-item{$cate_id == $v['id']?' active':''}">
+						<a href="javascript:" data-id="{$v['id']}" title="删除分类" class="float-right ml-2 text-danger delcate"><i class="ion-md-trash"></i></a>
 						<a href="javascript:" data-pid="{$v['id']}" title="添加子类" class="float-right ml-2 addcate"><i class="ion-md-add"></i></a>
 						<a href="javascript:" data-id="{$v['id']}" title="编辑分类" data-title="{$v['title']}" data-short="{$v['short']}" data-name="{$v['name']}" data-sort="{$v['sort']}" data-pid="{$v['pid']}" class="float-right addcate"><i class="ion-md-create"></i></a>
 						<a class="list-cate-item" href="{:url('index',['key'=>$keyword,'cate_id'=>$v['id']])}" data-value="{$v.id}" >{$v.html} {$v.title}</a>
@@ -232,6 +233,26 @@
 				}).show($('#cate-template').html(),data.id>0?'编辑分类':'添加分类');
 				
 			})
+			$('.delcate').click(function(e){
+				var id = $(this).data('id');
+				dialog.confirm('确定删除该分类？',function(){
+					$.ajax({
+						url:"{:url('category_delete')}",
+						data:{id : id},
+						type:'POST',
+						dataType:'json',
+						success:function(json){
+							if(json.code==1){
+								dialog.alert(json.msg,function(){
+									location.reload()
+								})
+							}else{
+								dialog.error(json.msg);
+							}
+						}
+					})
+				})
+			});
 		})
 	</script>
 </block>
