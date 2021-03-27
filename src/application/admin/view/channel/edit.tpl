@@ -15,6 +15,10 @@
                 <label for="vice_title">副标题</label>
                 <input type="text" name="vice_title" class="form-control" value="{$article.vice_title}" >
             </div>
+            <div class="col form-group">
+                <label for="name">URL名称</label>
+                <input type="text" name="name" class="form-control" value="{$article.name}" placeholder="留空系统自动生成" >
+            </div>
         </div>
         <div class="form-row">
             <div class="col form-group">

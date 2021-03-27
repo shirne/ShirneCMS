@@ -35,6 +35,9 @@ class ArticleModel extends ContentModel
         }else{
             $value = $pinyin->permalink(trim($this->title),'');
         }
+        if(strlen($value) > 90){
+            $value = substr($value, 0, 90);
+        }
         $sufix = 0;
         $newValue = $value;
         while(Db::name('article')->where('name',$newValue)->count()>0){
