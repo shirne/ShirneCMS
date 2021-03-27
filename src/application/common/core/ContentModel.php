@@ -265,7 +265,7 @@ class ContentModel extends BaseModel
     
             $list = $model->select();
             
-            if(!empty($sortids) && count($sortids)>1){
+            if(!empty($list) && !empty($sortids) && count($sortids)>1){
                 $newlist=[];
                 $list = array_column($list,null,'id');
                 foreach ($sortids as $id){
@@ -275,6 +275,7 @@ class ContentModel extends BaseModel
                 unset($newlist);
             }
         }
+        if(empty($list))return $list;
         
         return $this->afterTagList($this->analysisType($list),$attrs);
     }
@@ -318,6 +319,7 @@ class ContentModel extends BaseModel
         $model->limit($attrs['limit']);
     
         $list = $model->select();
+        if(empty($list))return $list;
     
         return $this->afterTagList($this->analysisType($list),$attrs);
     }
@@ -342,9 +344,10 @@ class ContentModel extends BaseModel
             $model->where($this->model.".id", "LT",  $attrs['id'] );
         }
 
-        $model->order($this->model.'.'.$this->getPk().' DESC');
+        $item = $model->order($this->model.'.'.$this->getPk().' DESC')->find();
 
-        return $this->afterTagItem($this->analysisType($model->find(),false),$attrs);
+        if(empty($item))return $item;
+        return $this->afterTagItem($this->analysisType($item,false),$attrs);
     }
 
     public function tagNext($attrs)
@@ -367,8 +370,9 @@ class ContentModel extends BaseModel
             $model->where($this->model.".id", "GT",  $attrs['id'] );
         }
 
-        $model->order($this->model.'.'.$this->getPk().' ASC');
+        $item = $model->order($this->model.'.'.$this->getPk().' ASC')->find();
 
-        return $this->afterTagItem($this->analysisType($model->find(),false),$attrs);
+        if(empty($item))return $item;
+        return $this->afterTagItem($this->analysisType($item,false),$attrs);
     }
 }
