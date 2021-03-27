@@ -37,7 +37,18 @@ function parseModel($url){
         $url[0]=explode('/',$url[0]);
         $model[0]=strtolower($url[0][0]);
         if(!empty($url[1]['group']))$model[]=$url[1]['group'];
-        if(!empty($url[1]['name']))$model[]=$url[1]['name'];
+        if(!empty($url[1]['name'])){
+            if($model[0] === 'article'){
+                $category = CategoryFacade::findCategory($url[1]['name']);
+                $topCate = CategoryFacade::getTopCategory($url[1]['name']);
+                $model[]=$topCate['name'];
+                if($category['id'] != $topCate['id']){
+                    $model[]=$category['name'];
+                }
+            }else{
+                $model[]=$url[1]['name'];
+            }
+        }
     }elseif(is_string($url)) {
         if (strpos($url, 'http://') !== 0 &&
             strpos($url, 'https://') !== 0 &&
