@@ -61,11 +61,11 @@
 				<thead>
 					<tr>
 						<th width="50">编号</th>
+						<th>封面图</th>
 						<th>标题</th>
-						<th>类型</th>
+						<th>分类</th>
 						<th>发布时间</th>
 						<th>作者</th>
-						<th>分类</th>
 						<th>状态</th>
 						<th width="160">&nbsp;</th>
 					</tr>
@@ -75,13 +75,22 @@
 					<volist name="lists" id="v" >
 						<tr>
 							<td><input type="checkbox" name="id" value="{$v.id}" /></td>
-							<td><a href="{:url('index/article/view',['id'=>$v['id']])}" target="_blank">{$v.title}</a> </td>
 							<td>
+								<if condition="!empty($v['cover'])">
+									<figure class="figure img-view" data-img="{$v.cover}" >
+										<img src="{$v.cover|default='/static/images/nopic.png'}?w=100" class="figure-img img-fluid rounded" alt="cover">
+									</figure>
+									<else/>
+									<span class="text-muted">无</span>
+								</if>
+							</td>
+							<td><a href="{:url('index/channel/view',['channel_name'=>$channel['name'],'cate_name'=>$v['category_name'],'article_name'=>$v['name']])}" target="_blank">{$v.title}</a> <br />
 								<span class="badge badge-info">{$types[$v['type']]}</span>
 							</td>
+							<td>{$v.category_title}</td>
 							<td>{$v.create_time|showdate}</td>
 							<td>{$v.username}</td>
-							<td>{$v.category_title}</td>
+
 							<td data-url="{:url('status')}" data-id="{$v.id}">
 								<if condition="$v['status'] EQ 1">
 									<span class="chgstatus" data-status="0" title="点击隐藏">已发布</span>

@@ -80,6 +80,7 @@ class ArticleController extends BaseController
         if ($this->request->isPost()) {
             $data = $this->request->post();
             $validate = new ArticleValidate();
+            $validate->setId(0);
 
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
@@ -134,6 +135,7 @@ class ArticleController extends BaseController
         if ($this->request->isPost()) {
             $data=$this->request->post();
             $validate=new ArticleValidate();
+            $validate->setId($id);
 
             if (!$validate->check($data)) {
                 $this->error($validate->getError());

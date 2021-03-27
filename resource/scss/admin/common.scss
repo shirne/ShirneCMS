@@ -334,6 +334,14 @@ h6 {
   .row + .row {
     margin-top: 1rem;
   }
+  td{
+    .figure{
+      margin:0;
+      .figure-img{
+        margin-bottom:0;
+      }
+    }
+  }
   .page-content{
     width: 100%;
   }
