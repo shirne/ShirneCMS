@@ -34,6 +34,10 @@
                 <label for="create_time">发布时间</label>
                 <input type="text" name="create_time" class="form-control datepicker" data-format="YYYY-MM-DD hh:mm:ss" value="{$article.create_time|showdate}" placeholder="默认取当前系统时间" >
             </div>
+            <div class="col form-group">
+                <label for="template">模板文件</label>
+                <input type="text" name="template" class="form-control" placeholder="留空使用默认页面" value="{$article.template}" >
+            </div>
         </div>
         <div class="form-group">
             <label for="source">网店链接</label>
