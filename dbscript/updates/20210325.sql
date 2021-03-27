@@ -8,5 +8,6 @@ add `is_attachments` tinyint(11) DEFAULT 0 COMMENT '是否有附件' after `is_i
 
 alter TABLE `sa_article`
 add `name` varchar(100) DEFAULT '' after `main_id`,
+add `channel_id` int(11) DEFAULT 0 after `name`,
 add `keywords` varchar(150) DEFAULT '' after `cover`,
 add `template` varchar(100) NOT NULL DEFAULT '' after `type`;
