@@ -49,8 +49,26 @@ function parseModel($url){
     return implode('-',$model);
 }
 function parseNavUrl($url,$module){
+    
     if(is_array($url)){
-        $url[0]=$module.'/'.strtolower($url[0]);
+        if(count($url)>1 && strpos(strtolower($url[0]),'article/')===0 && isset($url[1]['name'])){
+                $category = CategoryFacade::findCategory($url[1]['name']);
+                $topCate = CategoryFacade::getTopCategory($url[1]['name']);
+                if($category['id'] === $topCate['id']){
+                    $url = [
+                        'index/channel/index',
+                        ['channel_name'=>$topCate['name']]
+                    ];
+                }else{
+                    $url = [
+                        'index/channel/list',
+                        ['channel_name'=>$topCate['name'],'cate_name'=>$category['name']]
+                    ];
+                }
+        }else{
+            $url[0]=$module.'/'.strtolower($url[0]);
+        }
+        
         return call_user_func_array('url',$url);
     }elseif(is_string($url)) {
         if (strpos($url, 'http://') === 0 ||

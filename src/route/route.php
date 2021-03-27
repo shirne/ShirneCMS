@@ -9,11 +9,17 @@
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 
+define('CHANNELS', 'product|industry|infomation|about');
+
 Route::pattern([
     'name' => '[a-zA-Z]\w*',
     'id'   => '\d+',
+    'page'   => '\d+',
     'group'=> '[a-zA-Z]\w*',
     'action'=> '[a-zA-Z]\w*',
+    'channel_name'=> '('.CHANNELS.')',
+    'cate_name'=> '[a-zA-Z]\w*',
+    'article_name'=> '[a-zA-Z]\w*',
     'type'=>'\w+',
     'agent'=>'\w{6,}'
 ]);
@@ -75,6 +81,10 @@ Route::group('user',[
     '[:action]'=>'index/member/:action'
 ])->method('GET|POST');
 
+Route::get(':channel_name/:cate_name/:article_name/comment/[:page]', 'index/channel/comment');
+Route::get(':channel_name/:cate_name/:article_name', 'index/channel/view');
+Route::get(':channel_name/:cate_name/[:page]', 'index/channel/list');
+Route::get(':channel_name', 'index/channel/index');
 
 return [
 
