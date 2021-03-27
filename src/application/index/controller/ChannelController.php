@@ -30,13 +30,17 @@ class ChannelController extends BaseController{
     }
 
     public function index($channel_name=""){
-        $channel = CategoryFacade::findCategory($channel_name);
-        if(empty($channel)){
+        $currentChannel = CategoryFacade::findCategory($channel_name);
+        if(empty($currentChannel)){
             return $this->errorPage(lang('Page not exists!'));
         }
-        if($this->channel['channel_mode'] == 0){
+        if($currentChannel['channel_mode'] == 0){
             return $this->list($channel_name, $channel_name);
-        }elseif($this->channel['channel_mode'] == 1){
+        }elseif($currentChannel['channel_mode'] == 1){
+            $subCates = CategoryFacade::getSubCategory($currentChannel['id']);
+            if(!empty($subCates)){
+                return $this->view($channel_name, $subCates[0]['name']);
+            }
             return $this->view($channel_name, $channel_name);
         }
         $this->category($channel_name);
