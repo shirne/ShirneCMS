@@ -86,7 +86,7 @@ class BaseController extends Controller {
             $menus = getMenus();
             foreach($menus[0] as $bigmenu){
                 if($bigmenu['disable'] == 0){
-                    $this->modules[] = strtolower($bigmenu['name']);
+                    $this->modules[] = strtolower($bigmenu['key']);
                 }
             }
             $this->assign('menus', $menus);
