@@ -32,7 +32,10 @@ function viewurl($art, $channel_name = ''){
             $channel_name = $art['category_name'];
         }
     }
-    return url('index/channel/view', ['channel_name'=>$channel_name, 'cate_name'=>$art['category_name'], 'article_name'=>$art['name']]);
+
+    // name为空则取id
+    $name = empty($art['name'])?$art['id']:$art['name'];
+    return url('index/channel/view', ['channel_name'=>$channel_name, 'cate_name'=>$art['category_name'], 'article_name'=>$name]);
 }
 
 function parseNavigator(&$config,$module){

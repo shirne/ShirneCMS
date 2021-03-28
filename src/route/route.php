@@ -28,13 +28,6 @@ Route::get('index$', 'index/index/index');
 
 Route::get('share/:agent', 'index/index/share');
 
-Route::group('article',[
-    ':id'=>'index/article/view',
-    'comment/:id'=>'index/article/comment',
-    'favourite'=>'index/article/favourite',
-    '[:name]'=>'index/article/index'
-])->method('GET|POST');
-
 Route::group('product',[
     ':id'=>'index/product/view',
     'comment/:id'=>'index/product/comment',
@@ -53,11 +46,6 @@ Route::group('cart',[
 Route::group('order',[
     'confirm'=>'index/order/confirm',
     'wechatpay'=>'index/order/wechatpay'
-])->method('GET|POST');
-
-Route::group('page',[
-    '[:group]'=>'index/page/index',
-    ':group/[:name]'=>'index/page/index'
 ])->method('GET|POST');
 
 Route::get('notice/:id', 'index/article/notice');

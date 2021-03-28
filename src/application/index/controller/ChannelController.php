@@ -34,9 +34,13 @@ class ChannelController extends BaseController{
         if(empty($currentChannel)){
             return $this->errorPage(lang('Page not exists!'));
         }
+
+        // 列表模式直接渲染列表页
         if($currentChannel['channel_mode'] == 0){
             return $this->list($channel_name, $channel_name);
         }elseif($currentChannel['channel_mode'] == 1){
+
+            // 单页模式尝试获取第一个分类并重定向到详情页
             $subCates = CategoryFacade::getSubCategory($currentChannel['id']);
             if(!empty($subCates)){
                 return $this->view($channel_name, $subCates[0]['name']);
@@ -50,6 +54,11 @@ class ChannelController extends BaseController{
 
     public function list($channel_name, $cate_name=null){
         $this->category(empty($cate_name)?$channel_name:$cate_name);
+        if(empty($this->channel)){
+            return $this->errorPage(lang('Page not exists!'));
+        }
+
+        // 单页模式直接渲染详情页
         if($this->channel['channel_mode'] == 1){
             return $this->view($channel_name, $cate_name);
         }
@@ -58,12 +67,9 @@ class ChannelController extends BaseController{
             ->view('manager',['username'],'manager.id=article.user_id','LEFT');
 
         $model->where('article.status',1);
-        if(!empty($this->category)){
-            $this->seo($this->category['title'],$this->category['keywords'],$this->category['description']);
-            $model->whereIn('article.cate_id',CategoryFacade::getSubCateIds($this->category['id']));
-        }else{
-            $this->seo(lang('News'));
-        }
+        
+        $this->seo($this->category['title'],$this->category['keywords'],$this->category['description']);
+        $model->whereIn('article.cate_id',CategoryFacade::getSubCateIds($this->category['id']));
 
         $lists=$model->order('article.create_time DESC,article.id DESC')->paginate($this->pagesize);
         $lists->each(function($item){
@@ -80,20 +86,35 @@ class ChannelController extends BaseController{
 
     public function view($channel_name, $cate_name = '', $article_name = ''){
         $this->category(empty($cate_name)?$channel_name:$cate_name);
-        if(is_int($article_name)){
+        
+        if(is_numeric($article_name)){
             $id = intval($article_name);
             $article = ArticleModel::where('id', $id)->where('status',1)->find();
         }elseif(!empty($article_name)){
             $article = ArticleModel::where('name', $article_name)->where('status',1)->find();
-        }elseif($this->channel['channel_mode'] == 1){
-            $article = ArticleModel::where('cate_id', $this->category['id'])->where('status',1)->find();
+        }else{
+            if(empty($this->channel)){
+                return $this->errorPage(lang('Page not exists!'));
+            }
+
+            // 单页模式直接获取栏目下第一篇文章
+            if($this->channel['channel_mode'] == 1){
+                $article = ArticleModel::where('cate_id', $this->category['id'])->where('status',1)->find();
+            }
         }
         
         if(empty($article)){
             return $this->errorPage(lang('Article not exists!'));
         }
-        $this->seo($article['title']);
 
+        // 文章已修改分类，重定向
+        if(empty($this->channel) || $this->category['id'] != $article['cate_id']){
+            return redirect(viewurl($article), [], 301);
+        }
+
+        $this->seo($article['title'], $article['keywords'], $article['description']);
+
+        // 浏览数
         $article->setInc('views',1);
         $article['views']+=$article['v_views'];
         $article['digg']+=$article['v_digg'];
@@ -212,7 +233,7 @@ class ChannelController extends BaseController{
 
         $this->category=CategoryFacade::findCategory($name);
         if(empty($this->category)){
-            $this->errorPage('页面不存在');
+            return;
         }
         $this->categoryTree=CategoryFacade::getCategoryTree($name);
         $this->categries=CategoryFacade::getTreedCategory();
