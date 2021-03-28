@@ -196,7 +196,7 @@
                     </div>
                 </div>
             </div>
-    
+            <if condition="in_array('shop',$modules) !== false">
             <div v-else-if="model.type=='product_category'" class="card">
                 <div class="card-header"><h4 class="card-title">商品分类</h4></div>
                 <div class="card-body">
@@ -370,6 +370,7 @@
                     </div>
                 </div>
             </div>
+            </if>
             <div v-else-if="model.type=='ad'" class="card">
                 <div class="card-header"><h4 class="card-title">广告位</h4></div>
                 <div class="card-body">
