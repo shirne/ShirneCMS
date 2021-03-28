@@ -120,24 +120,24 @@
                     </div>
                     <div class="col">
                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                            <label class="btn btn-outline-primary{$channel['is_comments']==1?' active':''}">
-                                <input type="radio" name="is_comments" value="1" autocomplete="off" {$channel['is_comments']==1?' checked':''}> 允许评论
+                            <label class="btn btn-outline-primary{$channel['is_comment']==1?' active':''}">
+                                <input type="radio" name="is_comment" value="1" autocomplete="off" {$channel['is_comment']==1?' checked':''}> 允许评论
                             </label>
-                            <label class="btn btn-outline-secondary{$channel['is_comments']==0?' active':''}">
-                                <input type="radio" name="is_comments" value="0" autocomplete="off"{$channel['is_comments']==0?' checked':''}> 无评论
+                            <label class="btn btn-outline-secondary{$channel['is_comment']==0?' active':''}">
+                                <input type="radio" name="is_comment" value="0" autocomplete="off"{$channel['is_comment']==0?' checked':''}> 无评论
                             </label>
                         </div>
                     </div>
                     <div class="col">
                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                            <label class="btn btn-outline-warning{$channel['is_single']==2?' active':''}">
-                                <input type="radio" name="is_single" value="2" autocomplete="off" {$channel['is_single']==2?' checked':''}> 栏目
+                            <label class="btn btn-outline-warning{$channel['channel_mode']==2?' active':''}">
+                                <input type="radio" name="channel_mode" value="2" autocomplete="off" {$channel['channel_mode']==2?' checked':''}> 栏目
                             </label>
-                            <label class="btn btn-outline-primary{$channel['is_single']==0?' active':''}">
-                                <input type="radio" name="is_single" value="0" autocomplete="off"{$channel['is_single']==0?' checked':''}> 列表
+                            <label class="btn btn-outline-primary{$channel['channel_mode']==0?' active':''}">
+                                <input type="radio" name="channel_mode" value="0" autocomplete="off"{$channel['channel_mode']==0?' checked':''}> 列表
                             </label>
-                            <label class="btn btn-outline-secondary{$channel['is_single']==1?' active':''}">
-                                <input type="radio" name="is_single" value="1" autocomplete="off" {$channel['is_single']==1?' checked':''}> 单页
+                            <label class="btn btn-outline-secondary{$channel['channel_mode']==1?' active':''}">
+                                <input type="radio" name="channel_mode" value="1" autocomplete="off" {$channel['channel_mode']==1?' checked':''}> 单页
                             </label>
                         </div>
                     </div>

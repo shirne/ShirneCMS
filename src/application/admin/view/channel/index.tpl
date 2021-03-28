@@ -227,7 +227,7 @@
 						if(data.id){
 							$.ajax({
 								url:"{:url('category',['channel_id'=>$channel_id,])}",
-								data:{cate_id: data.id},
+								data:{id: data.id},
 								type:'GET',
 								dataType:'json',
 								success:function(json){
