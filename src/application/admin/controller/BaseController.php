@@ -82,13 +82,13 @@ class BaseController extends Controller {
             }
         }
 
-        if(!$this->request->isAjax()) {
-            $menus = getMenus();
-            foreach($menus[0] as $bigmenu){
-                if($bigmenu['disable'] == 0){
-                    $this->modules[] = strtolower($bigmenu['key']);
-                }
+        $menus = getMenus();
+        foreach($menus[0] as $bigmenu){
+            if($bigmenu['disable'] == 0){
+                $this->modules[] = strtolower($bigmenu['key']);
             }
+        }
+        if(!$this->request->isAjax()) {
             $this->assign('menus', $menus);
 
             //空数据默认样式

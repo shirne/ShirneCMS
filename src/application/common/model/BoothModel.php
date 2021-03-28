@@ -14,15 +14,6 @@ class BoothModel extends BaseModel
     protected $autoWriteTimestamp = true;
     protected $type = ['data'=>'array'];
     
-    public static $booth_types=[
-        'category'=>'文章分类',
-        'article'=>'文章',
-        'product_category'=>'商品分类',
-        'product'=>'商品',
-        'brand'=>'品牌',
-        'ad'=>'广告位',
-    ];
-    
     public static function fetchBooth($flags,$single=false){
         if(!is_array($flags))$flags=explode(',',$flags);
         
