@@ -1,8 +1,39 @@
 <?php
 
+use app\common\facade\CategoryFacade;
 use think\Db;
 use think\facade\Route;
 
+function indexurl($channel_name){
+    return url('index/channel/list', ['channel_name'=>$channel_name]);
+}
+function listurl($cate_name, $channel_name = ''){
+    if(empty($channel_name)){
+        $topCate = CategoryFacade::getTopCategory($cate_name);
+        if(!empty($topCate)){
+            $channel_name = $topCate['name'];
+        }else{
+            $channel_name = $cate_name;
+        }
+    }
+    return url('index/channel/list', ['channel_name'=>$channel_name, 'cate_name'=>$cate_name]);
+}
+function viewurl($art, $channel_name = ''){
+    if(empty($channel_name)){
+        if(!empty($art['channel_name'])){
+            $channel_name = $art['channel_name'];
+        }elseif(!empty($art['category_name'])){
+            $topCate = CategoryFacade::getTopCategory($art['category_name']);
+            if(!empty($topCate)){
+                $channel_name = $topCate['name'];
+            }
+        }
+        if(empty($channel_name)){
+            $channel_name = $art['category_name'];
+        }
+    }
+    return url('index/channel/view', ['channel_name'=>$channel_name, 'cate_name'=>$art['category_name'], 'article_name'=>$art['name']]);
+}
 
 function parseNavigator(&$config,$module){
     $navigators=cache($module.'_navigator');
