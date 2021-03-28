@@ -25,6 +25,7 @@ class BaseController extends Controller {
     protected $mid;
     protected $manager;
     protected $permision;
+    protected $modules = [];
 
     protected $viewData=[];
     
@@ -82,7 +83,13 @@ class BaseController extends Controller {
         }
 
         if(!$this->request->isAjax()) {
-            $this->assign('menus', getMenus());
+            $menus = getMenus();
+            foreach($menus[0] as $bigmenu){
+                if($bigmenu['disable'] == 0){
+                    $this->modules[] = strtolower($bigmenu['name']);
+                }
+            }
+            $this->assign('menus', $menus);
 
             //空数据默认样式
             $this->assign('empty', list_empty());

@@ -960,6 +960,7 @@ CREATE TABLE `sa_article_digg` (
 DROP TABLE IF EXISTS `sa_article_comment`;
 CREATE TABLE `sa_article_comment` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `channel_id` INT(11) DEFAULT 0,
   `member_id` int(11) NOT NULL DEFAULT '0',
   `article_id` int(11) NOT NULL DEFAULT '0',
   `nickname` varchar(50) NOT NULL DEFAULT '',

@@ -11,3 +11,6 @@ add `name` varchar(100) DEFAULT '' after `main_id`,
 add `channel_id` int(11) DEFAULT 0 after `name`,
 add `keywords` varchar(150) DEFAULT '' after `cover`,
 add `template` varchar(100) NOT NULL DEFAULT '' after `type`;
+
+alter table sa_article_comment add 
+  `channel_id` INT(11) DEFAULT 0 after `id`;
