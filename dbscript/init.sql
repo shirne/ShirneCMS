@@ -34,6 +34,8 @@ VALUES
   (94,9,'导航管理','Navigator/index','navigator_index','ion-md-reorder',7,0),
   (95,9,'操作日志','Manager/log','manager_log','ion-md-clipboard',9,0),
   (96,9,'付款方式','Paytype/index','paytype_index','ion-md-card',11,0);
+  
+UPDATE `sa_permission` set `is_sys`=1 where `id` > 0;
 
 TRUNCATE TABLE `sa_manager_role`;
 
