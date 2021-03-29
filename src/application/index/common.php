@@ -3,6 +3,22 @@
 use think\Db;
 use think\facade\Route;
 
+function addonurl($action = '', $controller = '', $addon = ''){
+    if(empty($action)){
+        $action = request()->param('action');
+    }
+    if(empty($controller)){
+        $controller = request()->param('controller');
+    }
+    if(empty($addon)){
+        $addon = request()->param('addon');
+    }
+    return url('index/addon/index',[
+        'addon'=>$addon,
+        'controller'=>$controller,
+        'action'=>$action
+    ]);
+}
 
 function parseNavigator(&$config,$module){
     $navigators=cache($module.'_navigator');

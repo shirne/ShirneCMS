@@ -32,6 +32,13 @@ class BaseAddon{
         return self::$instances[$name];
     }
 
+    protected function addPermission(){
+        return false;
+    }
+    protected function addMenu(){
+        return false;
+    }
+
     public function init(){
         return false;
     }

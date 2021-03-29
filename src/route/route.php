@@ -9,11 +9,15 @@
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 
+define('ADDONS', 'credit_shop|groupbuy|shop');
+
 Route::pattern([
     'name' => '[a-zA-Z]\w*',
     'id'   => '\d+',
     'group'=> '[a-zA-Z]\w*',
+    'controller'=> '[a-zA-Z]\w*',
     'action'=> '[a-zA-Z]\w*',
+    'addon'=> '('.ADDONS.')',
     'type'=>'\w+',
     'agent'=>'\w{6,}'
 ]);
@@ -75,6 +79,10 @@ Route::group('user',[
     '[:action]'=>'index/member/:action'
 ])->method('GET|POST');
 
+
+Route::rule('admin/<addon>\\.<controller>/<action>', 'admin/addon/index');
+Route::rule('api/<addon>\\.<controller>/<action>', 'api/addon/index');
+Route::rule('index/<addon>\\.<controller>/<action>', 'index/addon/index');
 
 return [
 

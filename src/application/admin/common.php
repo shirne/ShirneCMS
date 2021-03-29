@@ -8,6 +8,23 @@ define('SESSKEY_ADMIN_NAME','adminname');
 define('SESSKEY_ADMIN_LAST_TIME','adminLTime');
 define('SESSKEY_ADMIN_AUTO_LOGIN','adminlogin');
 
+function addonurl($action = '', $controller = '', $addon = ''){
+    if(empty($action)){
+        $action = request()->param('action');
+    }
+    if(empty($controller)){
+        $controller = request()->param('controller');
+    }
+    if(empty($addon)){
+        $addon = request()->param('addon');
+    }
+    return url('admin/addon/index',[
+        'addon'=>$addon,
+        'controller'=>$controller,
+        'action'=>$action
+    ]);
+}
+
 function setLogin($user, $logintype = 1){
     $time=time();
     session(SESSKEY_ADMIN_ID,$user['id']);
