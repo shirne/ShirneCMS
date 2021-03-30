@@ -41,19 +41,21 @@ class CommonController extends BaseController
                 $data[$method] = $this->call_api($method, $params);
             }
         }else{
+            $input = $this->request->put();
+            if(!empty($input)){
+                foreach ($input as $method=>$arguments) {
+                    if($method == 'token')continue;
 
-            foreach ($this->input as $method=>$arguments) {
-                if($method == 'token')continue;
+                    if(!is_array($arguments)){
+                        if(empty($arguments))$arguments=[];
+                        else continue;
+                    } 
+                    
+                    if(isset($arguments['call']))$calls=$arguments['call'];
+                    else $calls=$method;
 
-                if(!is_array($arguments)){
-                    if(empty($arguments))$arguments=[];
-                    else continue;
-                } 
-                
-                if(isset($arguments['call']))$calls=$arguments['call'];
-                else $calls=$method;
-
-                $data[$method] = $this->call_api($calls, $arguments);
+                    $data[$method] = $this->call_api($calls, $arguments);
+                }
             }
         }
         return $this->response($data);
@@ -62,10 +64,23 @@ class CommonController extends BaseController
     private function call_api($calls, $arguments = [])
     {
         $m = explode('.', $calls);
+        $modules = explode('|', ADDONS);
         if (count($m) > 1) {
+            $method = array_pop($m);
             if(strtolower($m[0])=='common'){
                 $controller = $this;
-            }else {
+            } else {
+                if (in_array($m[0], $modules)){
+                    $module = array_shift($m);
+                    $arguments = [
+                        'addon'=>$module,
+                        'controller'=>implode('.', $m),
+                        'action'=>$method,
+                        'arguments'=>$arguments
+                    ];
+                    $method = 'index';
+                    $m = ['Addon'];
+                }
                 if(strpos($m[0],'/')>0 || strpos($m[0],'\\')>0){
                     $m[0] = str_replace('\\','/',$m[0]);
                     $layers = explode('/',strtolower($m[0]));
@@ -85,21 +100,20 @@ class CommonController extends BaseController
                     return null;
                 }
             }
-            $m = $m[1];
         } else {
             $controller = $this;
-            $m = $m[0];
+            $method = $m[0];
         }
 
-        if (method_exists($controller, $m)) {
+        if (method_exists($controller, $method)) {
             try {
                 $args = [];
-                $reflect = new \ReflectionMethod($controller, $m);
+                $reflect = new \ReflectionMethod($controller, $method);
                 foreach ($reflect->getParameters() as $param) {
                     if (isset($arguments[$param->name])) {
                         $args[] = $arguments[$param->name];
-                    } elseif ($this->request->has($param->name, 'get')) {
-                        $args[] = $this->request->get($param->name);
+                    } elseif ($this->request->has($param->name)) {
+                        $args[] = $this->request->param($param->name);
                     } else {
                         $args[] = $param->getDefaultValue();
                     }

@@ -2,6 +2,8 @@
 
 namespace app\api\controller;
 
+use think\facade\Log;
+
 /**
  * 扩展
  * Class AddonController
@@ -14,28 +16,31 @@ class AddonController extends BaseController
 
     protected $addon;
 
-    public function index($addon, $controller = 'index', $action = 'index')
+    public function index($addon, $controller = 'index', $action = 'index', $arguments = [])
     {
 
         $this->controller = $controller;
         $this->action = $action;
 
-        $class = '\\addon\\'.$addon.'\\admin\\controller\\'.ucfirst($controller).'Controller';
+        $class = '\\addon\\'.$addon.'\\api\\controller\\'.ucfirst($controller).'Controller';
         if(!class_exists($class)){
+            Log::record('Addon 接口定位错误: '.$class);
             $this->error('接口不存在');
         }
         $this->addon = new $class($this);
         $method = new \ReflectionMethod($this->addon, $action);
-        $arguments = [];
+        $args = [];
         foreach ($method->getParameters() as $param) {
-            if ($this->request->has($param->name)) {
-                $arguments[] = $this->request->param($param->name);
+            if( isset($arguments[$param->name])){
+                $args[] = $arguments[$param->name];
+            } elseif ($this->request->has($param->name)) {
+                $args[] = $this->request->param($param->name);
             } elseif ($param->isDefaultValueAvailable()) {
-                $arguments[] = $param->getDefaultValue();
+                $args[] = $param->getDefaultValue();
             }
         }
         
-        return $method->invokeArgs($this->addon, $arguments);
+        return $method->invokeArgs($this->addon, $args);
     }
 
     public function __callProtected($method, $arguments){
