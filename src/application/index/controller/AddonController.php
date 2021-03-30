@@ -15,6 +15,8 @@ class AddonController extends BaseController
     protected $controller;
     protected $action;
 
+    protected $addon;
+
     public function getViewPath(){
         return $this->viewPath;
     }
@@ -32,13 +34,32 @@ class AddonController extends BaseController
         $this->action = $action;
 
         $class = '\\addon\\'.$addon.'\\index\\controller\\'.ucfirst($controller).'Controller';
-        $addonController = new $class($this);
-        return $addonController->$action();
+        $this->addon = new $class($this);
+        $method = new \ReflectionMethod($this->addon, $action);
+        $arguments = [];
+        foreach ($method->getParameters() as $param) {
+            if ($this->request->has($param->name)) {
+                $arguments[] = $this->request->param($param->name);
+            } elseif ($param->isDefaultValueAvailable()) {
+                $arguments[] = $param->getDefaultValue();
+            }
+        }
+        
+        return $method->invokeArgs($this->addon, $arguments);
     }
 
-    public function public_assign($name, $value=''){
-        $this->assign($name, $value);
-        return $this;
+    public function __callProtected($method, $arguments){
+        if(empty($this->addon) || !$this->addon instanceof \addon\base\BaseController){
+            $this->error('页面不存在');
+        }
+        return call_user_func_array([$this, $method], $arguments);
+    }
+
+    public function __getProtected($name){
+        if(empty($this->addon) || !$this->addon instanceof \addon\base\BaseController){
+            $this->error('页面不存在');
+        }
+        return $this->$name;
     }
 
     public function public_fetch($template='', $vars=[], $connfig=[]){

@@ -26,8 +26,9 @@ class BaseController {
         if(method_exists($this->controller, 'public_'.$name)){
             return call_user_func_array([$this->controller, 'public_'.$name], $arguments);
         }
+        
         if(method_exists($this->controller, $name)){
-            return call_user_func_array([$this->controller, $name], $arguments);
+            return $this->controller->__callProtected($name, $arguments);
         }
         throw new \Exception('Methods '.$name.' not exists');
     }
@@ -35,7 +36,7 @@ class BaseController {
     public function __get($name)
     {
         if(property_exists($this->controller, $name)){
-            return $this->controller->$name;
+            return $this->controller->__getProtected($name);
         }
         throw new \Exception('Property '.$name.' not exists');
     }
