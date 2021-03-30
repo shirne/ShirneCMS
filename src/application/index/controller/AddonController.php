@@ -2,7 +2,8 @@
 
 namespace app\index\controller;
 
-
+use think\facade\Env;
+use think\facade\Lang;
 
 /**
  * 扩展
@@ -34,6 +35,14 @@ class AddonController extends BaseController
         $this->action = $action;
 
         $class = '\\addon\\'.$addon.'\\index\\controller\\'.ucfirst($controller).'Controller';
+        if(!class_exists($class)){
+            $this->error('页面不存在');
+        }
+
+        $addon_lang= Env::get('app_path').'/../addon/'.$addon.'/lang/'.Lang::range().'.php';
+        if(is_file($addon_lang)){
+            Lang::load($addon_lang);
+        }
         $this->addon = new $class($this);
         $method = new \ReflectionMethod($this->addon, $action);
         $arguments = [];
@@ -63,6 +72,9 @@ class AddonController extends BaseController
     }
 
     public function public_fetch($template='', $vars=[], $connfig=[]){
+        if(empty($this->addon) || !$this->addon instanceof \addon\base\BaseController){
+            $this->error('页面不存在');
+        }
         if(empty($template)){
             $template = $this->viewPath.$this->controller.'/'.$this->action;
         }else{

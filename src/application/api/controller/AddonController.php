@@ -21,6 +21,9 @@ class AddonController extends BaseController
         $this->action = $action;
 
         $class = '\\addon\\'.$addon.'\\admin\\controller\\'.ucfirst($controller).'Controller';
+        if(!class_exists($class)){
+            $this->error('接口不存在');
+        }
         $this->addon = new $class($this);
         $method = new \ReflectionMethod($this->addon, $action);
         $arguments = [];
