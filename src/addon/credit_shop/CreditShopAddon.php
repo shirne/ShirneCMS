@@ -1,6 +1,6 @@
 <?php
 
-namespace addon\credit;
+namespace addon\credit_shop;
 
 use addon\base\BaseAddon;
 use app\common\model\CreditOrderModel;
@@ -10,7 +10,7 @@ use think\facade\Log;
 class CreditShopAddon extends BaseAddon{
     
     public function task(){
-        Log::record('credit自动执行任务','task');
+        Log::record('credit_shop自动执行任务','task');
         $time = time();
 
         $creditOrders=Db::name('creditOrder')->where('status',0)
