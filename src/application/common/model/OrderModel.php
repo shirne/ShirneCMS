@@ -140,6 +140,7 @@ class OrderModel extends BaseOrderModel
                     case ORDER_STATUS_FINISH:
                         $this->afterComplete($item);
                         break;
+                    default:break;
                 }
             }
         }

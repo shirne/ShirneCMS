@@ -40,6 +40,10 @@ class BaseAddon{
         return false;
     }
 
+    public function getOrder(){
+        return null;
+    }
+
     public function init(){
         return false;
     }

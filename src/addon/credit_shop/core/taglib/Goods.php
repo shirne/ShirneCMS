@@ -1,6 +1,6 @@
 <?php
 
-namespace app\common\taglib;
+namespace addon\credit_shop\core\taglib;
 
 
 use app\common\core\BaseTabLib;
@@ -19,17 +19,17 @@ class Goods extends BaseTabLib
         $recursive =isset($tag['recursive']) ? $tag['recursive'] : 'false';
         $category=isset($tag['category']) ? $this->parseArg($tag['category']) : '';
         if(is_string($category) && strpos($category,"'")===0){
-            $category="\\app\\common\\facade\\GoodsCategoryFacade::getCategoryId(".$category.")";
+            $category="\\addon\\credit_shop\\core\\facade\\GoodsCategoryFacade::getCategoryId(".$category.")";
         }
 
         $parseStr='<?php ';
 
-        $parseStr.='$'.$var.'=\think\Db::view("Goods","*")';
+        $parseStr.='$'.$var.'=\\think\\Db::view("Goods","*")';
         $parseStr .= '->view("GoodsCategory",["title"=>"category_title","name"=>"category_name","short"=>"category_short","icon"=>"category_icon","image"=>"category_image"],"Goods.cate_id=GoodsCategory.id","LEFT")';
         $parseStr .= '->where("Goods.status",1)';
         if(!empty($category)){
             if($recursive=='true'){
-                $parseStr .= '->where("Goods.cate_id", "IN", \app\common\facade\GoodsCategoryFacade::getSubCateIds(' . $category . '))';
+                $parseStr .= '->where("Goods.cate_id", "IN", \\addon\\credit_shop\\core\\facade\\GoodsCategoryFacade::getSubCateIds(' . $category . '))';
             }else {
                 $parseStr .= '->where("Goods.cate_id",' . $category . ')';
             }
@@ -55,7 +55,7 @@ class Goods extends BaseTabLib
         $category=isset($tag['category']) ? $tag['category'] : '';
         $id=isset($tag['id']) ? $tag['id'] : 0;
         if(preg_match('/^[a-zA-Z]\w*$/',$category)){
-            $category="\\app\\common\\facade\\GoodsCategoryFacade::getCategoryId('".$category."')";
+            $category="\\addon\\credit_shop\\core\\facade\\GoodsCategoryFacade::getCategoryId('".$category."')";
         }
 
         $parseStr='<?php ';
@@ -65,7 +65,7 @@ class Goods extends BaseTabLib
         $parseStr .= '->where("Goods.status",1)';
         $parseStr .= '->where("Goods.id", "NEQ", ' . $id . ')';
         if(!empty($category)){
-            $parseStr .= '->where("Goods.cate_id", "IN", \app\common\facade\GoodsCategoryFacade::getSubCateIds(' . $category . '))';
+            $parseStr .= '->where("Goods.cate_id", "IN", \\addon\\credit_shop\\core\\facade\\GoodsCategoryFacade::getSubCateIds(' . $category . '))';
         }
         if(empty($tag['limit'])){
             $tag['limit']=10;
@@ -103,7 +103,7 @@ class Goods extends BaseTabLib
 
         $parseStr='<?php ';
 
-        $parseStr.='$'.$var.'=\app\common\facade\GoodsCategoryFacade::findCategory('.$name.');';
+        $parseStr.='$'.$var.'=\\addon\\credit_shop\\core\\facade\\GoodsCategoryFacade::findCategory('.$name.');';
 
         $parseStr .= ' ?>';
         return $parseStr;
