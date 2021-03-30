@@ -40,7 +40,6 @@ class PayOrderModel extends BaseModel
     }
     
     public function createFromOrder($payid, $paytype, $orderno, $trade_type='', $ordertype='order'){
-        $ordertype='';
         $orderid=0;
         if(strpos($orderno,'CZ_')===0){
             $ordertype='recharge';
