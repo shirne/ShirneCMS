@@ -45,7 +45,7 @@
             </div>
             </volist>
         </if>
-        <if condition="!empty($stat['article'])">
+        <if condition="isset($stat['article'])">
             <div class="col-lg-3 col-md-6 mb-3">
                 <div class="card border-info">
                     <div class="card-body">
