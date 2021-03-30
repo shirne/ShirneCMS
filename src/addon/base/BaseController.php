@@ -4,6 +4,8 @@ namespace addon\base;
 
 
 class BaseController {
+
+    protected $moduleName;
     protected $controller;
 
     protected $request;

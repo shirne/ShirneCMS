@@ -1,8 +1,8 @@
 <?php
 
-namespace adddon\shop;
+namespace addon\shop;
 
-use adddon\base\BaseAddon;
+use addon\base\BaseAddon;
 use app\common\model\OrderModel;
 use think\Db;
 use think\facade\Log;

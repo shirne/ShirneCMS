@@ -1,6 +1,6 @@
 <?php
 
-namespace adddon\base;
+namespace addon\base;
 
 use think\facade\Log;
 
@@ -11,7 +11,8 @@ class BaseAddon{
 
     public function __construct()
     {
-        $this->addonName = str_replace('Addon', '', static::class);
+        $class = array_pop(explode('\\', static::class));
+        $this->addonName = substr($class, 0, -strlen('Addon'));
         $this->settings = getSetting($this->addonName);
         $this->init();
     }

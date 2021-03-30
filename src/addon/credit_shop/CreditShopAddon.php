@@ -1,8 +1,8 @@
 <?php
 
-namespace adddon\credit;
+namespace addon\credit;
 
-use adddon\base\BaseAddon;
+use addon\base\BaseAddon;
 use app\common\model\CreditOrderModel;
 use think\Db;
 use think\facade\Log;

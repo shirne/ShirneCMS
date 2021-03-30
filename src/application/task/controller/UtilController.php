@@ -2,7 +2,7 @@
 
 namespace app\task\controller;
 
-use adddon\base\BaseAddon;
+use addon\base\BaseAddon;
 use app\common\model\MemberModel;
 use app\common\model\MemberOauthModel;
 use app\common\model\WechatModel;
