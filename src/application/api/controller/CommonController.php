@@ -98,9 +98,9 @@ class CommonController extends BaseController
                 foreach ($reflect->getParameters() as $param) {
                     if (isset($arguments[$param->name])) {
                         $args[] = $arguments[$param->name];
-                    } elseif ($this->request->has($param->name, 'get')) {
-                        $args[] = $this->request->get($param->name);
-                    } else {
+                    } elseif ($this->request->has($param->name)) {
+                        $args[] = $this->request->param($param->name);
+                    } elseif ($param->isDefaultValueAvailable()) {
                         $args[] = $param->getDefaultValue();
                     }
                 }

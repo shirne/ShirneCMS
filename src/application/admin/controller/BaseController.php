@@ -171,16 +171,13 @@ class BaseController extends Controller {
         }
     
         try {
-            $succed = Db::execute('ALTER TABLE ' . config('database.prefix').$table . ' AUTO_INCREMENT = ' . intval($incre));
+            Db::execute('ALTER TABLE ' . config('database.prefix').$table . ' AUTO_INCREMENT = ' . intval($incre));
         }catch(Exception $e){
             $this->error($e->getMessage());
         }
-        if($succed){
-            user_log($this->mid,'set_increment',1,'设置['.$table.']起始id'.$incre,'manager');
-            $this->success('设置成功');
-        }else{
-            $this->error('设置失败');
-        }
+        
+        user_log($this->mid,'set_increment',1,'设置['.$table.']起始id'.$incre,'manager');
+        $this->success('设置成功');
     }
 
     /**
