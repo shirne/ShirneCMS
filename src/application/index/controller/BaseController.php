@@ -76,7 +76,7 @@ class BaseController extends Controller
         }
 
         // POST请求自动检查操作频率
-        if((config('app.auto_check_submit_rate') || $this->config['auto_check_submit_rate'])
+        if((config('app.auto_check_submit_rate') || (isset($this->config['auto_check_submit_rate']) && $this->config['auto_check_submit_rate']))
             && $this->request->isPost()){
             $this->checkSubmitRate($this->config['submit_rate']?:2);
         }

@@ -47,5 +47,8 @@
     "config": {
         "preferred-install": "dist",
         "component-dir": "public/static"
+    },
+    "require-dev": {
+        "topthink/think-testing": "2.0.*"
     }
 }
