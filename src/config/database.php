@@ -13,13 +13,13 @@ return [
     // 数据库类型
     'type'            => 'mysql',
     // 服务器地址
-    'hostname'        => 'localhost',
+    'hostname'        => Env::get('database.hostname','localhost'),
     // 数据库名
-    'database'        => 'shirnecms',
+    'database'        => Env::get('database.database','shirnecms'),
     // 用户名
-    'username'        => 'root',
+    'username'        => Env::get('database.username','root'),
     // 密码
-    'password'        => '123456',
+    'password'        => Env::get('database.password','123456'),
     // 端口
     'hostport'        => '',
     // 连接dsn
