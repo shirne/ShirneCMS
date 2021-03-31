@@ -19,7 +19,7 @@ Route::pattern([
     'action'=> '[a-zA-Z]\w*',
     'channel_name'=> '('.CHANNELS.')',
     'cate_name'=> '[a-zA-Z]\w*',
-    'article_name'=> '[a-zA-Z]\w*',
+    'article_name'=> '[a-zA-Z][\-\w]*',
     'type'=>'\w+',
     'agent'=>'\w{6,}'
 ]);

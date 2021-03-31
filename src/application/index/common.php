@@ -34,7 +34,7 @@ function viewurl($art, $channel_name = ''){
     }
 
     // name为空则取id
-    $name = empty($art['name'])?$art['id']:$art['name'];
+    $name = empty($art['name'])?('a-'.$art['id']):$art['name'];
     return url('index/channel/view', ['channel_name'=>$channel_name, 'cate_name'=>$art['category_name'], 'article_name'=>$name]);
 }
 
@@ -157,10 +157,15 @@ function parseNavModel($cate,$module,$modelName='Article'){
     if(!empty($model)){
         $cates=Db::name($cateModel)->where('pid',$model['id'])->select();;
         foreach ($cates as $c){
+            if(strtolower($modelName) == 'article'){
+                $url = listurl($c['name'], $cate);
+            }else{
+                $url = url($module.'/'.strtolower($modelName).'/index',['name'=>$c['name']]);
+            }
             $subs[]=array(
                 'title'=>$c['title'],
                 'icon'=>$c['icon'],
-                'url'=>url($module.'/'.strtolower($modelName).'/index',['name'=>$c['name']])
+                'url'=>$url
             );
         }
     }

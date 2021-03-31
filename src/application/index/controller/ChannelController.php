@@ -87,6 +87,9 @@ class ChannelController extends BaseController{
     public function view($channel_name, $cate_name = '', $article_name = ''){
         $this->category(empty($cate_name)?$channel_name:$cate_name);
         
+        if(strpos($article_name, 'a-') === 0){
+            $article_name = intval(substr($article_name, 2));
+        }
         if(is_numeric($article_name)){
             $id = intval($article_name);
             $article = ArticleModel::where('id', $id)->where('status',1)->find();
