@@ -30,11 +30,7 @@ class ArticleModel extends ContentModel
             return $value;
         }
         $pinyin = new Pinyin();
-        if(mb_strlen($this->title) > 10){
-            $value = $pinyin->abbr(trim($this->title),'');
-        }else{
-            $value = $pinyin->permalink(trim($this->title),'');
-        }
+        $value = $pinyin->permalink(trim($this->title),'');
         if(strlen($value) > 90){
             $value = substr($value, 0, 90);
         }
