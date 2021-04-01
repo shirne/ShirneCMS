@@ -38,7 +38,7 @@
         <foreach name="lists" item="v">
             <tr>
                 <td>{$v.id}</td>
-                <td><figure class="figure" >
+                <td><figure class="figure img-view" data-img="{$v.image}" >
                         <img src="{$v.image|default='/static/images/nopic.png'}?w=100" class="figure-img img-fluid rounded" alt="image">
                     </figure></td>
                 <td>{$v.title}</td>

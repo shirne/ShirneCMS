@@ -575,6 +575,19 @@ function cutstr($str,$len,$dot='...'){
     return $strcut . $dot;
 }
 
+/**
+ * 普通文本转换为段落
+ * @param mixed $string 
+ * @return string|string[] 
+ */
+function nl2p($string){
+    if(empty($string))return '';
+
+    $html = "<p>".implode("</p><p>", array_map('trim', explode("\n", trim($string))))."</p>";
+
+    return str_replace('<p></p>','',$html);
+}
+
 /** =====================================  数据类函数  ===================================== **/
 
 /**
