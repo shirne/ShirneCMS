@@ -57,11 +57,11 @@
                     <td>[{$v.member_id}]{$v.username}</td>
                     <td>{$v.subscribe_time|showdate}<br />{$v.create_time|showdate}</td>
                     <td>
-                        <if condition="$v['is_follow']">
+                        {if $v['is_follow']}
                             <span class="badge badge-success">已关注</span>
-                            <else/>
+                            {else/}
                             <span class="badge badge-secondary">未关注</span>
-                        </if>
+                        {/if}
                     </td>
                     <td class="operations">
                         {if $support_message}

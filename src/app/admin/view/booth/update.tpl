@@ -1,38 +1,5 @@
-<<<<<<< HEAD:src/app/admin/view/booth/update.tpl
 {extend name="public:base" /}
-
-{block name="body"}
-
-{include  file="public/bread" menu="booth_index" title="展位设置"  /}
-
-<div id="page-wrapper">
-    <div class="page-header">{$id>0?'编辑':'添加'}展位</div>
-    <div class="page-content">
-    <form method="post" class="page-form" action="">
-        <div class="form-row">
-            <div class="form-group col">
-                <label for="title">位置名称</label>
-                <input type="text" name="title" class="form-control" v-model="model.title" placeholder="位置名称">
-            </div>
-            <div class="form-group col">
-                <label for="flag">调用标识</label>
-                <input type="text" name="flag" class="form-control" :readonly="model.locked==1" v-model="model.flag" placeholder="调用标识">
-            </div>
-        </div>
-        <div class="form-row">
-            <div class="col form-row align-items-center">
-                <label class="pl-2 mr-2" for="status">展位类型</label>
-                <div class="form-group col">
-                    <div class="btn-group btn-group-toggle" >
-                        {foreach name="booth_types" id="item"}
-                            <label :class="'btn btn-outline-secondary'+(model.type=='{$key}'?' active':'')">
-                                <input type="radio" name="type" value="{$key}" autocomplete="off" v-model="model.type">{$item}
-                            </label>
-                        {/foreach}
-                    </div>
-=======
-<extend name="public:base" />
-<block name="header">
+{block name="header"}
     <style type="text/css">
         .card .close{
             position: absolute;
@@ -46,10 +13,10 @@
             top: 5px;
         }
     </style>
-</block>
-<block name="body">
+{/block}
+{block name="body"}
 
-    <include file="public/bread" menu="booth_index" title="展位设置" />
+    {include file="public/bread" menu="booth_index" title="展位设置" /}
     
     <div id="page-wrapper">
         <div class="page-header">{$id>0?'编辑':'添加'}展位</div>
@@ -59,7 +26,6 @@
                 <div class="form-group col">
                     <label for="title">位置名称</label>
                     <input type="text" name="title" class="form-control" v-model="model.title" placeholder="位置名称">
->>>>>>> v2:src/application/admin/view/booth/update.tpl
                 </div>
                 <div class="form-group col">
                     <label for="flag">调用标识</label>
@@ -71,11 +37,11 @@
                     <label class="pl-2 mr-2" for="status">展位类型</label>
                     <div class="form-group col">
                         <div class="btn-group btn-group-toggle" >
-                            <foreach name="booth_types" id="item">
+                            {foreach name="booth_types" id="item"}
                                 <label :class="'btn btn-outline-secondary'+(model.type=='{$key}'?' active':'')">
                                     <input type="radio" name="type" value="{$key}" autocomplete="off" v-model="model.type">{$item}
                                 </label>
-                            </foreach>
+                            {/foreach}
                         </div>
                     </div>
                 </div>
@@ -190,31 +156,17 @@
                                 </select>
                             </div>
                         </div>
-<<<<<<< HEAD:src/app/admin/view/booth/update.tpl
-                    </div>
-                    <div class="form-group col">
-                        <div class="btn-group btn-group-toggle" >
-                            <label :class="'btn btn-outline-secondary'+(model.data.filter_type?'':' active')">
-                                <input type="radio" name="data[filter_type]" value="" v-model="model.data.filter_type" autocomplete="off" >不限
-                            </label>
-                            {volist name="article_types" id="type" key="k"}
-                                <label :class="'btn btn-outline-secondary'+(model.data.filter_type=={$key}?' active':'')">
-                                    <input type="radio" name="data[filter_type]" :value="{$key}" v-model="model.data.filter_type" autocomplete="off" >{$type}
-                                </label>
-                            {/volist}
-=======
                         <div class="form-group col">
                             <div class="btn-group btn-group-toggle" >
                                 <label :class="'btn btn-outline-secondary'+(model.data.filter_type?'':' active')">
                                     <input type="radio" name="data[filter_type]" value="" v-model="model.data.filter_type" autocomplete="off" >不限
                                 </label>
-                                <volist name="article_types" id="type" key="k">
+                                {volist name="article_types" id="type" key="k"}
                                     <label :class="'btn btn-outline-secondary'+(model.data.filter_type=={$key}?' active':'')">
                                         <input type="radio" name="data[filter_type]" :value="{$key}" v-model="model.data.filter_type" autocomplete="off" >{$type}
                                     </label>
-                                </volist>
+                                {/volist}
                             </div>
->>>>>>> v2:src/application/admin/view/booth/update.tpl
                         </div>
                     </div>
                     <div v-show="model.data.type==1" class="form-row">
@@ -244,7 +196,7 @@
                     </div>
                 </div>
             </div>
-            <if condition="in_array('shop',$modules) !== false">
+            {if in_array('shop',$modules) !== false}
             <div v-else-if="model.type=='product_category'" class="card">
                 <div class="card-header"><h4 class="card-title">商品分类</h4></div>
                 <div class="card-body">
@@ -418,7 +370,7 @@
                     </div>
                 </div>
             </div>
-            </if>
+            {/if}
             <div v-else-if="model.type=='ad'" class="card">
                 <div class="card-header"><h4 class="card-title">广告位</h4></div>
                 <div class="card-body">
@@ -451,12 +403,7 @@
         </form>
         </div>
     </div>
-<<<<<<< HEAD:src/app/admin/view/booth/update.tpl
-</div>
-{/block}
-=======
-    </block>
->>>>>>> v2:src/application/admin/view/booth/update.tpl
+    {/block}
 
 {block name="script"}
     <script type="text/plain" id="category_json">{:json_encode(\\app\\common\\facade\\CategoryFacade::getCategories())}</script>

@@ -13,8 +13,8 @@
         </div>
     {/foreach}
     <div class="row">
-        <if condition="!empty($stat['channels'])">
-            <volist name="$stat['channels']" id="channel">
+        {if !empty($stat['channels'])}
+            {volist name="$stat['channels']" id="channel"}
             <div class="col-lg-3 col-md-6 mb-3">
                 <div class="card border-info">
                     <div class="card-body">
@@ -31,21 +31,21 @@
                     <div class="card-footer announcement-bottom">
                         <nav class="nav nav-fill">
                             <a class="nav-item nav-link" href="{:url('channel/index',['channel_id'=>$channel['id']])}"><i class="ion-md-navicon"></i> 管理{$channel['unit']} </a>
-                            <if condition="$channel['mode'] == 1">
+                            {if $channel['mode'] == 1}
 
-                                <else/>
+                                {else/}
                                 <a class="nav-item nav-link" href="{:url('channel/add',['channel_id'=>$channel['id']])}"><i class="ion-md-add"></i> 发布{$channel['unit']} </a>
-                            </if>
-                            <if condition="$channel['is_comment'] == 1">
+                            {/if}
+                            {if $channel['is_comment'] == 1}
                                 <a class="nav-item nav-link" href="{:url('channel/comments',['channel_id'=>$channel['id']])}"><i class="ion-md-add"></i> 新评论({$channel['comment_new']}) </a>
-                            </if>
+                            {/if}
                         </nav>
                     </div>
                 </div>
             </div>
-            </volist>
-        </if>
-        <if condition="isset($stat['article'])">
+            {/volist}
+        {/if}
+        {if isset($stat['article'])}
             <div class="col-lg-3 col-md-6 mb-3">
                 <div class="card border-info">
                     <div class="card-body">
@@ -67,7 +67,7 @@
                     </div>
                 </div>
             </div>
-        </if>
+        {/if}
         <div class="col-lg-3 col-md-6 mb-3">
             <div class="card border-info">
                 <div class="card-body">
@@ -89,7 +89,7 @@
                 </div>
             </div>
         </div>
-        <if condition="!empty($member)">
+        {if !empty($member)}
         <div class="col-lg-3 col-md-6 mb-3">
             <div class="card border-info">
                 <div class="card-body">
@@ -111,8 +111,8 @@
                 </div>
             </div>
         </div>
-        </if>
-        <if condition="!empty($stat['orders'])">
+        {/if}
+        {if !empty($stat['orders'])}
         <div class="col-lg-3 col-md-6 mb-3">
             <div class="card border-info">
                 <div class="card-body">
@@ -135,12 +135,12 @@
                 </div>
             </div>
         </div>
-        </if>
+        {/if}
         
     </div>
 
     <div class="row">
-        <if condition="!empty($member)">
+        {if !empty($member)}
         <div class="col-md-6">
             <div class="card border-default">
                 <div class="card-header">
@@ -162,8 +162,8 @@
                 </table>
             </div>
         </div>
-        </if>
-        <if condition="!empty($money)">
+        {/if}
+        {if !empty($money)}
         <div class="col-md-6">
             <div class="card border-default">
                 <div class="card-header">
@@ -192,7 +192,7 @@
                 </table>
             </div>
         </div>
-        </if>
+        {/if}
     </div>
 
 </div>

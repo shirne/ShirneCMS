@@ -1,8 +1,8 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
-<include file="channel/_bread" title="图片详情" />
+{include file="channel/_bread" title="图片详情" /}
 
 <div id="page-wrapper">
     <div class="page-header"><a href="{:url('channel/imagelist',array('channel_id'=>$channel_id,'aid'=>$aid))}" class="btn btn-outline-primary btn-sm"><i class="ion-md-arrow-back"></i> 返回</a>&nbsp;{$id>0?'编辑':'添加'}图片 </div>
@@ -25,13 +25,13 @@
                         <label class="custom-file-label" for="upload_image">选择文件</label>
                     </div>
                 </div>
-                <if condition="$model['image']">
+                {if !empty($model['image'])}
                     <figure class="figure">
                         <img src="{$model.image}" class="figure-img img-fluid rounded" alt="image">
                         <figcaption class="figure-caption text-center">{$model.image}</figcaption>
                     </figure>
                     <input type="hidden" name="delete_image" value="{$model.image}"/>
-                </if>
+                {/if}
             </div>
             <div class="col form-group">
                 <label for="image">排序</label>
@@ -45,4 +45,4 @@
     </form>
     </div>
 </div>
-</block>
+{/block}

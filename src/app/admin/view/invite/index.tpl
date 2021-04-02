@@ -59,16 +59,16 @@
                 <td>{$v.code}</td>
                 <td>
                     <div class="media">
-                        <if condition="!empty($v['avatar'])">
+                        {if !empty($v['avatar'])}
                             <img src="{$v.avatar}" class="mr-2 rounded" width="30"/>
-                        </if>
+                        {/if}
                         <div class="media-body">
                             <h5 class="mt-0 mb-1" style="font-size:13px;">
-                                <if condition="!empty($v['nickname'])">
+                                {if !empty($v['nickname'])}
                                     {$v.nickname}
-                                    <else/>
+                                    {else/}
                                     {$v.username}
-                                </if>
+                                {/if}
                             </h5>
                             <div style="font-size:12px;">
                                 [{$v.member_id} {$levels[$v['level_id']]['level_name']}]
@@ -84,44 +84,34 @@
                     {/if}
                 </td>
                 <td>{$v.create_time|showdate}</td>
-<<<<<<< HEAD:src/app/admin/view/invite/index.tpl
-                <td>[{$v.member_use}]{$v.use_username}</td>
-                <td>{$v.use_at|showdate}</td>
-                <td>{$v.valid_at|showdate}</td>
-                <td>{if $v.status eq 1}<span class="badge badge-danger">锁定</span>{else/}<span class="badge badge-secondary">正常</span>{/if}</td>
-                <td class="operations">
-                    <a class="btn btn-outline-primary" title="转赠" href="{:url('Invite/update',array('id'=>$v['id']))}"><i class="ion-md-repeat"></i> </a>
-                    {if $v.status eq 0}
-=======
                 <td>
-                    <if condition="$v['member_use'] gt 0">
+                    {if $v['member_use'] > 0}
                         <div class="media">
-                            <if condition="!empty($v['avatar'])">
+                            {if !empty($v['avatar'])}
                                 <img src="{$v.avatar}" class="mr-2 rounded" width="30"/>
-                            </if>
+                            {/if}
                             <div class="media-body">
                                 <h5 class="mt-0 mb-1" style="font-size:13px;">
-                                    [{$v.member_id}]<if condition="!empty($v['nickname'])">
+                                    [{$v.member_id}]{if !empty($v['nickname'])}
                                         {$v.nickname}
-                                        <else/>
+                                        {else/}
                                         {$v.username}
-                                    </if>
+                                    {/if}
                                 </h5>
                                 <div style="font-size:12px;">
                                     {$v.use_time|showdate}
                                 </div>
                             </div>
                         </div>
-                        <else/>
+                        {else/}
                         -
-                    </if>  
+                    {/if}  
                 </td>
                 <td>{$v.invalid_time|showdate}</td>
-                <td><if condition="$v.is_lock eq 1"><span class="badge badge-danger">锁定</span><else/><span class="badge badge-secondary">正常</span></if></td>
+                <td>{if $v.is_lock == 1}<span class="badge badge-danger">锁定</span>{else/}<span class="badge badge-secondary">正常</span>{/if}</td>
                 <td class="operations">
                     <a class="btn btn-outline-primary btn-transfer" data-id="{$v.id}" title="转赠" href="javascript:"><i class="ion-md-repeat"></i> </a>
-                    <if condition="$v.is_lock eq 0">
->>>>>>> v2:src/application/admin/view/invite/index.tpl
+                    {if $v.is_lock == 0}
                         <a class="btn btn-outline-danger link-confirm" title="锁定" data-confirm="锁定后将不能使用此激活码注册!\n请确认!!!" href="{:url('Invite/lock',array('id'=>$v['id']))}" ><i class="ion-md-close"></i> </a>
                     {else/}
                         <a class="btn btn-outline-success link-confirm" title="解锁" href="{:url('Invite/unlock',array('id'=>$v['id']))}" style="color:#50AD1E;"><i class="ion-md-check"></i> </a>
@@ -134,11 +124,8 @@
     {$page|raw}
 </div>
 
-<<<<<<< HEAD:src/app/admin/view/invite/index.tpl
 {/block}
-=======
-</block>
-<block name="script">
+{block name="script"}
     <script>
         (function(w){
             w.actionEnable=function(ids){
@@ -219,5 +206,4 @@
             })
         })
     </script>
-</block>
->>>>>>> v2:src/application/admin/view/invite/index.tpl
+{/block}

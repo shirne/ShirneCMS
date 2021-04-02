@@ -150,15 +150,11 @@
             </form>
         </div>
     </div>
-<<<<<<< HEAD:src/app/admin/view/category/edit.tpl
 {/block}
-=======
-</block>
-<block name="script">
+{block name="script"}
     <script type="text/javascript">
         jQuery(function($){
             $('.taginput').tags('props[]');
         })
     </script>
-</block>
->>>>>>> v2:src/application/admin/view/category/edit.tpl
+{/block}

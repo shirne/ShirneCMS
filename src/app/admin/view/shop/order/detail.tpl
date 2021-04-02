@@ -187,10 +187,7 @@
                 </table>
             </div>
         </div>
-<<<<<<< HEAD:src/app/admin/view/shop/order/detail.tpl
-        {if $model['status'] GT -1 AND $model['status'] LT 4}
-=======
-        <if condition="!empty($refunds)">
+        {if !empty($refunds)}
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">退款申请</h3>
@@ -208,38 +205,37 @@
                             </tr>
                         </thead>
                         <tbody>
-                        <volist name="refunds" id="po">
+                        {volist name="refunds" id="po"}
                         <tr>
                             <td>{$po.type}</td>
                             <td>{$po.reason}</td>
                             <td>{$po.mobile}</td>
                             <td>{$po.create_time|showdate}</td>
                             <td>
-                                <if condition="$po['status'] == 1">
+                                {if $po['status'] == 1}
                                     <span class="badge badge-success">已处理</span><br />
                                     <span class="badge badge-secondary">{$po.update_time|showdate}</span>
-                                <elseif condition="$po['status'] LT 0"/>
+                                {elseif condition="$po['status'] LT 0"/}
                                     <span class="badge badge-secondary">已拒绝</span>
-                                    <else/>
+                                    {else/}
                                     <span class="badge badge-warning"  >待处理</span>
-                                </if>
+                                {/if}
 
                             </td>
                             <td>
-                                <if condition="$po['status'] == 0">
+                                {if $po['status'] == 0}
                                     <a href="javascript:" class="btn btn-sm btn-outline-danger btn-refund-cancel" data-id="{$po.id}">拒绝</a>
                                     <a href="javascript:" class="btn btn-sm btn-outline-primary btn-refund-allow" data-id="{$po.id}">通过</a>
-                                </if>
+                                {/if}
                             </td>
                         </tr>
-                        </volist>
+                        {/volist}
                         </tbody>
                     </table>
                 </div>
             </div>
-        </if>
-        <if condition="$model['status'] GT -1 AND $model['status'] LT 4">
->>>>>>> v2:src/application/admin/view/shop/order/detail.tpl
+        {/if}
+        {if $model['status'] > -1 AND $model['status'] < 4}
             <div class="form-group submit-btn">
                 {if $model['status'] EQ 0}
                     <a class="btn btn-outline-danger btn-status" title="取消订单" data-id="{$model.order_id}" href="javascript:"  data-status="-1" ><i class="ion-md-close-circle-outline"></i> 取消订单</a>

@@ -1,8 +1,8 @@
-<extend name="public:base"/>
+{extend name="public:base"/}
 
-<block name="body">
+{block name="body"}
 
-    <include file="channel/_bread" title="频道设置"/>
+    {include file="channel/_bread" title="频道设置"/}
 
     <div id="page-wrapper">
         <div class="page-header">频道设置</div>
@@ -46,13 +46,13 @@
                             <label class="custom-file-label" for="upload_icon">选择文件</label>
                         </div>
                     </div>
-                    <if condition="$channel['icon']">
+                    {if !empty($channel['icon'])}
                         <figure class="figure">
                             <img src="{$channel.icon}" class="figure-img img-fluid rounded" alt="icon">
                             <figcaption class="figure-caption text-center">{$channel.icon}</figcaption>
                         </figure>
                         <input type="hidden" name="delete_icon" value="{$channel.icon}"/>
-                    </if>
+                    {/if}
                 </div>
                 <div class="form-group col">
                     <div class="input-group">
@@ -64,13 +64,13 @@
                             <label class="custom-file-label" for="upload_image">选择文件</label>
                         </div>
                     </div>
-                    <if condition="$channel['image']">
+                    {if !empty($channel['image'])}
                         <figure class="figure">
                             <img src="{$channel.image}" class="figure-img img-fluid rounded" alt="image">
                             <figcaption class="figure-caption text-center">{$channel.image}</figcaption>
                         </figure>
                         <input type="hidden" name="delete_image" value="{$channel.image}"/>
-                    </if>
+                    {/if}
                 </div>
                 </div>
                 <div class="form-row">
@@ -172,11 +172,11 @@
             </form>
         </div>
     </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/javascript">
         jQuery(function($){
             $('.taginput').tags('props[]');
         })
     </script>
-</block>
+{/block}

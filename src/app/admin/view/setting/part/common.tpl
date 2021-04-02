@@ -39,17 +39,17 @@
     <label for="v-site-close" class="col-3 col-md-2 text-right align-middle">关闭站点</label>
     <div class="col-5">
         <div class="btn-group btn-group-toggle mregopengroup" data-toggle="buttons">
-            <foreach name="setting['site-close']['data']" item="value" key="k">
-                <if condition="$k==$setting['site-close']['value']">
+            {foreach name="setting['site-close']['data']" item="value" key="k"}
+                {if $k==$setting['site-close']['value']}
                     <label class="btn btn-outline-secondary active">
                         <input type="radio" name="v-site-close" value="{$k}" autocomplete="off" checked> {$value}
                     </label>
-                    <else />
+                    {else /}
                     <label class="btn btn-outline-secondary">
                         <input type="radio" name="v-site-close" value="{$k}" autocomplete="off"> {$value}
                     </label>
-                </if>
-            </foreach>
+                {/if}
+            {/foreach}
         </div>
     </div>
     <div class="col-4">

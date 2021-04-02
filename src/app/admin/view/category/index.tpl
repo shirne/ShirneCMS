@@ -51,18 +51,15 @@
     </table>
 </div>
 
-<<<<<<< HEAD:src/app/admin/view/category/index.tpl
 {/block}
-=======
-</block>
-<block name="script">
+{block name="script"}
     <script type="text/html" id="cateselect">
         <div class="form-group">
             <select class="form-control">
                 <option value="0">顶级分类</option>
-                <volist name="model" id="cate">
+                {volist name="model" id="cate"}
                     <option value="{$cate.id}">{$cate.html|raw} {$cate.title}</option>
-                </volist>
+                {/volist}
             </select>
         </div>
         <div class="form-group text-muted">每行一个分类，每个分类以空格区分名称、简称、别名，简称、别名可依次省略，别名必须使用英文字母<br />例：分类名称 分类简称 catename</div>
@@ -104,5 +101,4 @@
             })
         })
     </script>
-</block>
->>>>>>> v2:src/application/admin/view/category/index.tpl
+{/block}

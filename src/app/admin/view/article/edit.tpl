@@ -8,13 +8,8 @@
     <form method="post" class="page-form" action="" enctype="multipart/form-data">
         <div class="form-row">
             <div class="col form-group">
-<<<<<<< HEAD:src/app/admin/view/article/edit.tpl
-                <label for="article-title">文章标题</label>
-                <input type="text" name="title" class="form-control" value="{$article.title|default=''}" id="article-title" placeholder="输入文章标题">
-=======
                 <label for="title">文章标题</label>
-                <input type="text" name="title" class="form-control" value="{$article.title}" placeholder="输入文章标题">
->>>>>>> v2:src/application/admin/view/article/edit.tpl
+                <input type="text" name="title" class="form-control" value="{$article.title|default=''}" placeholder="输入文章标题">
             </div>
             <div class="col form-group">
                 <label for="vice_title">副标题</label>
@@ -23,17 +18,11 @@
         </div>
         <div class="form-row">
             <div class="col form-group">
-                <label for="article-cate">文章分类</label>
-                <select name="cate_id" id="article-cate" class="form-control">
-<<<<<<< HEAD:src/app/admin/view/article/edit.tpl
+                <label for="cate_id">文章分类</label>
+                <select name="cate_id" class="form-control">
                     {foreach name="category" item="v"}
                         <option value="{$v.id}" {$article['cate_id'] == $v['id']?'selected="selected"':""}>{$v.html} {$v.title}</option>
                     {/foreach}
-=======
-                    <foreach name="category" item="v">
-                        <option value="{$v.id}" data-pid="{$v['pid']}" {$article['cate_id'] == $v['id']?'selected="selected"':""} data-props="{$v['props']}">{$v.html} {$v.title}</option>
-                    </foreach>
->>>>>>> v2:src/application/admin/view/article/edit.tpl
                 </select>
             </div>
             <div class="col form-group">

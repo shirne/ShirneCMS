@@ -1,8 +1,8 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
-<include file="channel/_bread" title="Banner列表" />
+{include file="channel/_bread" title="Banner列表" /}
 
 <div id="page-wrapper">
     
@@ -28,8 +28,8 @@
             </tr>
         </thead>
         <tbody>
-            <empty name="lists">{:list_empty(8)}</empty>
-        <foreach name="lists" item="v">
+            {empty name="lists"}{:list_empty(8)}{/empty}
+        {foreach name="lists" item="v"}
             <tr>
                 <td>{$v.id}</td>
                 <td><figure class="figure img-view" data-img="{$v.image}" >
@@ -45,9 +45,9 @@
                     <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n\n删除后将不能恢复!" href="{:url('channel/bannerdelete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
                 </td>
             </tr>
-        </foreach>
+        {/foreach}
         </tbody>
     </table>
     {$page|raw}
 </div>
-</block>
+{/block}

@@ -71,16 +71,12 @@
                         <figcaption class="figure-caption">看不清？点击图片刷新</figcaption>
                     </figure>
                 </div>
-<<<<<<< HEAD:src/app/admin/view/login/index.tpl
                 {/if}
-=======
-                </if>
                 <div class="form-group">
                     <label>
                         <input type="checkbox" name="remember" value="1"> 保持登录状态
                       </label>
                 </div>
->>>>>>> v2:src/application/admin/view/login/index.tpl
                 <button type="submit" class="btn btn-block btn-primary">登陆</button>
                 <div class="alert fade show" role="alert">
                     <span class="alert-content"></span>

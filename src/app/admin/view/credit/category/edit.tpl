@@ -36,7 +36,7 @@
                         <option value="">顶级分类</option>
                         {foreach name="cate" item="v"}
                             <option value="{$v.id}"
-                            <?php if($model['pid'] == $v['id']) {echo 'selected="selected"' ;}?>
+                            {$model['pid'] == $v['id']?'selected="selected"' :''}
                             >{$v.html} {$v.title}</option>
                         {/foreach}
                     </select>

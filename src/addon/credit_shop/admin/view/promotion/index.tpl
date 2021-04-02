@@ -1,8 +1,8 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
-    <include file="public/bread" menu="credit_shop_promotion_index" title="积分策略" />
+    {include file="public/bread" menu="credit_shop_promotion_index" title="积分策略" /}
 
     <div id="page-wrapper">
     <div class="page-header">积分商城配置</div>
@@ -61,12 +61,12 @@
     </form>
         </div>
 </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
 <script type="text/javascript">
     jQuery(function ($) {
 
 
     });
 </script>
-</block>
+{/block}

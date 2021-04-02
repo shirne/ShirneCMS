@@ -36,11 +36,11 @@
                     <td>
                         <select name="agents[{$v.id}][style]" class="form-control text-{$v.style}"
                                 onchange="$(this).attr('class','form-control text-'+$(this).val())">
-                            <foreach name="styles" id="style">
+                            {foreach name="styles" id="style"}
                                 <option value="{$style}" {$v['style']==$style?'selected':''}
                                         class="text-{$style}">██████████
                                 </option>
-                            </foreach>
+                            {/foreach}
                         </select>
                     </td>
                     <td><input type="radio" name="is_default" value="{$v.id}" {$v['is_default']?'checked':''}></td>

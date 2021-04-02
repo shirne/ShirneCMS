@@ -12,7 +12,7 @@
             <label for="title">名称</label>
             <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="名称">
         </div>
-        <if condition="$group['type'] eq 1">
+        {if $group['type'] == 1}
             <div class="form-row">
                 <div class="form-group col">
                     <label for="image">预览图</label>
@@ -22,13 +22,13 @@
                             <label class="custom-file-label" for="upload_image">选择文件</label>
                         </div>
                     </div>
-                    <if condition="$model['image']">
+                    {if !empty($model['image'])}
                         <figure class="figure">
                             <img src="{$model.image}" class="figure-img img-fluid rounded" alt="image">
                             <figcaption class="figure-caption text-center">{$model.image}</figcaption>
                         </figure>
                         <input type="hidden" name="delete_image" value="{$model.image}"/>
-                    </if>
+                    {/if}
                 </div>
                 <div class="form-group col">
                     <label for="video">视频</label>
@@ -38,26 +38,16 @@
                             <label class="custom-file-label" for="upload_video">选择文件</label>
                         </div>
                     </div>
-                    <if condition="$model['video']">
+                    {if !empty($model['video'])}
                         <figure class="figure">
                             <video src="{$model.video}" controls class="figure-img img-fluid rounded" alt="video"></video>
                             <figcaption class="figure-caption text-center">{$model.video}</figcaption>
                         </figure>
                         <input type="hidden" name="delete_video" value="{$model.video}"/>
-                    </if>
+                    {/if}
                 </div>
             </div>
-<<<<<<< HEAD:src/app/admin/view/adv/itemupdate.tpl
-            {if $model['image']}
-                <figure class="figure">
-                    <img src="{$model.image}" class="figure-img img-fluid rounded" alt="image">
-                    <figcaption class="figure-caption text-center">{$model.image}</figcaption>
-                </figure>
-                <input type="hidden" name="delete_image" value="{$model.image}"/>
-            {/if}
-        </div>
-=======
-            <else/>
+            {else/}
             <div class="form-group">
                 <label for="image">图片</label>
                 <div class="input-group">
@@ -66,17 +56,16 @@
                         <label class="custom-file-label" for="upload_image">选择文件</label>
                     </div>
                 </div>
-                <if condition="$model['image']">
+                {if !empty($model['image'])}
                     <figure class="figure">
                         <img src="{$model.image}" class="figure-img img-fluid rounded" alt="image">
                         <figcaption class="figure-caption text-center">{$model.image}</figcaption>
                     </figure>
                     <input type="hidden" name="delete_image" value="{$model.image}"/>
-                </if>
+                {/if}
             </div>
-        </if>
+        {/if}
         
->>>>>>> v2:src/application/admin/view/adv/itemupdate.tpl
         <div class="form-row">
             {foreach name="group['ext_set']['key']" item="ikey"}
                 <div class="col-6 form-group">
@@ -85,7 +74,7 @@
                 </div>
             {/foreach}
         </div>
-        <if condition="$group['type'] eq 0">
+        {if $group['type'] == 0}
             <div class="form-group">
                 <label for="image">元件</label>
                 <div>
@@ -95,7 +84,7 @@
                     <a href="javascript:" class="btn btn-outline-dark btn-sm addelement"><i class="ion-md-add"></i> 添加元件</a>
                 </div>
             </div>
-        </if>
+        {/if}
 
         <div class="form-group">
             <label for="image">有效期</label>
@@ -142,11 +131,8 @@
     </form>
     </div>
 </div>
-<<<<<<< HEAD:src/app/admin/view/adv/itemupdate.tpl
 {/block}
-=======
-</block>
-<block name="script">
+{block name="script"}
     <script type="text/html" id="element-image">
         <div class="slide-element mb-2">
             <input type="hidden" name="elements[{@i}][type]" value="image" />
@@ -495,5 +481,4 @@
             }
         });
     </script>
-    </block>
->>>>>>> v2:src/application/admin/view/adv/itemupdate.tpl
+    {/block}

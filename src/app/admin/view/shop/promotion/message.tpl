@@ -1,7 +1,7 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
-<include file="public/bread" menu="shop_promotion_index" title="商城配置" />
+{block name="body"}
+{include file="public/bread" menu="shop_promotion_index" title="商城配置" /}
 <div id="page-wrapper">
     <div class="page-header">消息配置</div>
     <div id="page-content">
@@ -47,12 +47,12 @@
     </form>
     </div>
 </div>
-    </block>
-<block name="script">
+    {/block}
+{block name="script"}
 <script type="text/javascript">
     jQuery(function ($) {
 
 
     });
 </script>
-</block>
+{/block}

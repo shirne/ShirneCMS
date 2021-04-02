@@ -1,7 +1,7 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
-    <include file="public/bread" menu="article_comments" title="文章列表" />
+{block name="body"}
+    {include file="public/bread" menu="article_comments" title="文章列表" /}
     <div id="page-wrapper">
 
         <div class="row list-header">
@@ -27,9 +27,9 @@
                             </div>
                             <select name="cate_id" class="form-control">
                                 <option value="0">不限分类</option>
-                                <foreach name="category" item="v">
+                                {foreach name="category" item="v"}
                                     <option value="{$v.id}" {$cate_id == $v['id']?'selected="selected"':""}>{$v.html} {$v.title}</option>
-                                </foreach>
+                                {/foreach}
                             </select>
                         </div>
                         <div class="col input-group input-group-sm">
@@ -56,7 +56,7 @@
             </tr>
             </thead>
             <tbody>
-            <foreach name="lists" item="v">
+            {foreach name="lists" item="v"}
                 <tr>
                     <td><input type="checkbox" name="id" value="{$v.id}" /></td>
                     <td>[{$v.category_title}]{$v.article_title}</td>
@@ -65,11 +65,11 @@
                     <td>{$v.email}</td>
                     <td>{$v.content|cutstr=20}</td>
                     <td>
-                        <if condition="$v.status eq 1">
+                        {if $v.status == 1}
                             <span class="badge badge-success">已审核</span>
-                            <else/>
+                            {else/}
                             <span class="badge badge-warning">未审核</span>
-                        </if>
+                        {/if}
                     </td>
 
                     <td class="operations">
@@ -77,21 +77,21 @@
                         <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('article/commentdelete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
                     </td>
                 </tr>
-            </foreach>
+            {/foreach}
             </tbody>
         </table>
         <div class="clearfix"></div>
         {$page|raw}
 
     </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/javascript">
         (function(w){
             w.actionAudit=function(ids){
                 dialog.confirm('确定将选中的评论设为已审核？',function() {
                     $.ajax({
-                        url:'{:url('article/commentstatus',['id'=>'__id__','type'=>1])}'.replace('__id__',ids.join(',')),
+                        url:"{:url('article/commentstatus',['id'=>'__id__','type'=>1])}".replace('__id__',ids.join(',')),
                         type:'GET',
                         dataType:'JSON',
                         success:function(json){
@@ -109,7 +109,7 @@
             w.actionHidden=function(ids){
                 dialog.confirm('确定将选中的评论隐藏？',function() {
                     $.ajax({
-                        url:'{:url('article/commentstatus',['id'=>'__id__','type'=>2])}'.replace('__id__',ids.join(',')),
+                        url:"{:url('article/commentstatus',['id'=>'__id__','type'=>2])}".replace('__id__',ids.join(',')),
                         type:'GET',
                         dataType:'JSON',
                         success:function(json){
@@ -127,7 +127,7 @@
             w.actionDelete=function(ids){
                 dialog.confirm('确定删除选中的评论？',function() {
                     $.ajax({
-                        url:'{:url('article/commentdelete',['id'=>'__id__'])}'.replace('__id__',ids.join(',')),
+                        url:"{:url('article/commentdelete',['id'=>'__id__'])}".replace('__id__',ids.join(',')),
                         type:'GET',
                         dataType:'JSON',
                         success:function(json){
@@ -144,4 +144,4 @@
             };
         })(window)
     </script>
-</block>
+{/block}
