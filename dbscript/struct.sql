@@ -1047,13 +1047,14 @@ CREATE TABLE `sa_feedback` (
 DROP TABLE IF EXISTS `sa_permission`;
 CREATE TABLE `sa_permission` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `parent_id` INT NULL,
-  `name` VARCHAR(50) NULL,
-  `url` VARCHAR(100) NULL,
-  `key` VARCHAR(50) NULL,
-  `icon` VARCHAR(30) NULL,
-  `sort_id` INT NULL,
-  `disable` TINYINT NULL,
+  `parent_id` INT DEFAULT '0',
+  `name` VARCHAR(50) DEFAULT '',
+  `url` VARCHAR(100) DEFAULT '',
+  `key` VARCHAR(50) DEFAULT '',
+  `icon` VARCHAR(30) DEFAULT '',
+  `sort_id` INT DEFAULT '0',
+  `is_sys` INT DEFAULT '0',
+  `disable` TINYINT DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

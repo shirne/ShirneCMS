@@ -10,16 +10,19 @@
 // +----------------------------------------------------------------------
 
 define('CHANNELS', 'product|industry|infomation|about');
+define('ADDONS', 'credit_shop|groupbuy|shop');
 
 Route::pattern([
     'name' => '[a-zA-Z]\w*',
     'id'   => '\d+',
     'page'   => '\d+',
     'group'=> '[a-zA-Z]\w*',
+    'controller'=> '[a-zA-Z]\w*',
     'action'=> '[a-zA-Z]\w*',
     'channel_name'=> '('.CHANNELS.')',
     'cate_name'=> '[a-zA-Z]\w*',
     'article_name'=> '[a-zA-Z][\-\w]*',
+    'addon'=> '('.ADDONS.')',
     'type'=>'\w+',
     'agent'=>'\w{6,}'
 ]);
@@ -73,6 +76,10 @@ Route::get(':channel_name/:cate_name/:article_name/comment/[:page]', 'index/chan
 Route::get(':channel_name/:cate_name/:article_name', 'index/channel/view');
 Route::get(':channel_name/:cate_name/[:page]', 'index/channel/list');
 Route::get(':channel_name', 'index/channel/index');
+
+Route::rule('admin/<addon>\\.<controller>/<action>', 'admin/addon/index');
+Route::rule('api/<addon>\\.<controller>/<action>', 'api/addon/index');
+Route::rule('index/<addon>\\.<controller>/<action>', 'index/addon/index');
 
 return [
 

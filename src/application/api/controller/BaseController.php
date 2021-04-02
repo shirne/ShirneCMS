@@ -32,11 +32,6 @@ class BaseController extends Controller
         parent::initialize();
         $this->config=getSettings();
 
-        /**
-         * @deprecated DO NOT use this property
-         */
-        $this->input=$this->request->put();
-
         $this->checkLogin();
     }
     

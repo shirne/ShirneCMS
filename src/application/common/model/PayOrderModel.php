@@ -2,6 +2,7 @@
 
 namespace app\common\model;
 
+use addon\base\BaseAddon;
 use EasyWeChat\Factory;
 use app\common\core\BaseModel;
 use think\Db;
@@ -38,8 +39,7 @@ class PayOrderModel extends BaseModel
         return $strlen<$len?str_pad($id,$len,'0',STR_PAD_LEFT):substr($id,$strlen-$len);
     }
     
-    public function createFromOrder($payid, $paytype, $orderno, $trade_type=''){
-        $ordertype='';
+    public function createFromOrder($payid, $paytype, $orderno, $trade_type='', $ordertype='order'){
         $orderid=0;
         if(strpos($orderno,'CZ_')===0){
             $ordertype='recharge';
@@ -59,9 +59,9 @@ class PayOrderModel extends BaseModel
                 $orderid = $order['id'];
             }
         }elseif(strpos($orderno,'PO_')===0){
-            $ordertype = 'credit';
+            //$ordertype = 'credit_shop';
             $orderno = intval(substr($orderno, 3));
-            $order = CreditOrderModel::get($orderno);
+            $order = $this->getAddonOrder($orderno, $ordertype);
             if(!empty($order)) {
                 $orderid = $order['id'];
             }
@@ -189,7 +189,7 @@ class PayOrderModel extends BaseModel
                     $order = MemberRechargeModel::where('id',$item['order_id'])->find();
                     break;
                 case 'credit':
-                    $order = CreditOrderModel::where('order_id',$item['order_id'])->find();
+                    $order = $this->getAddonOrder($item['order_id'], $item['order_type']);
                     break;
                 default:
                     $order = OrderModel::where('order_id',$item['order_id'])->find();
@@ -199,6 +199,12 @@ class PayOrderModel extends BaseModel
                 $order->onPayResult($item['pay_type'], $paytime, $item['pay_amount']/100);
             }
         }
+    }
+
+    protected function getAddonOrder($orderid, $type){
+        $addon = BaseAddon::factory($type);
+
+        return $addon->getOrder($orderid);
     }
     
     public function getSignedData($result, $key){

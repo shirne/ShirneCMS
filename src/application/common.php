@@ -521,6 +521,21 @@ function filter_emoji($str, $replace = '')
 }
 
 /**
+ * 转换CamelCase格式为小写下划线
+ * @param mixed $input 
+ * @param string $delimiter 
+ * @return string 
+ */
+function from_camel_case($input, $delimiter = '_') {
+    preg_match_all('!([A-Z][A-Z0-9]*(?=$|[A-Z][a-z0-9])|[A-Za-z][a-z0-9]+)!', $input, $matches);
+    $ret = $matches[0];
+    foreach ($ret as &$match) {
+        $match = $match == strtoupper($match) ? strtolower($match) : lcfirst($match);
+    }
+    return implode($delimiter, $ret);
+}
+
+/**
  * 字符串截取
  * @param $str
  * @param $len

@@ -36,6 +36,21 @@ function viewurl($art, $channel_name = ''){
     // name为空则取id
     $name = empty($art['name'])?('a-'.$art['id']):$art['name'];
     return url('index/channel/view', ['channel_name'=>$channel_name, 'cate_name'=>$art['category_name'], 'article_name'=>$name]);
+function addonurl($action = '', $controller = '', $addon = ''){
+    if(empty($action)){
+        $action = request()->param('action');
+    }
+    if(empty($controller)){
+        $controller = request()->param('controller');
+    }
+    if(empty($addon)){
+        $addon = request()->param('addon');
+    }
+    return url('index/addon/index',[
+        'addon'=>$addon,
+        'controller'=>$controller,
+        'action'=>$action
+    ]);
 }
 
 function parseNavigator(&$config,$module){
@@ -208,4 +223,4 @@ function aurl($url = '', $vars = '', $suffix = true, $domain = false){
     return url(implode('/',$part),$vars,$suffix,$domain);
 }
 
-//end file
+// end file
