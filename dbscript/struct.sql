@@ -101,6 +101,7 @@ CREATE TABLE `sa_category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `pid` int(11) DEFAULT NULL COMMENT '父分类ID',
   `title` varchar(100) DEFAULT NULL COMMENT '分类名称',
+  `vice_title` varchar(100) DEFAULT NULL COMMENT '分类副名称',
   `short` varchar(20) DEFAULT NULL COMMENT '分类简称',
   `name` varchar(50) DEFAULT NULL COMMENT '分类别名',
   `icon` varchar(150) DEFAULT NULL COMMENT '图标',
