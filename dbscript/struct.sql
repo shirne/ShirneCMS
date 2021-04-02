@@ -897,6 +897,8 @@ CREATE TABLE `sa_article` (
   `name` varchar(100) DEFAULT '',
   `title` varchar(100) DEFAULT '',
   `vice_title` varchar(200) DEFAULT '',
+  `channel_id` int(11) DEFAULT 0,
+  `cate_id` INT(11) DEFAULT 0,
   `cover` varchar(100) DEFAULT '' COMMENT '封面图',
   `keywords` varchar(150) DEFAULT '',
   `description` varchar(250) DEFAULT '',
@@ -905,7 +907,6 @@ CREATE TABLE `sa_article` (
   `content` text,
   `create_time` INT(11) DEFAULT '0',
   `update_time` INT(11) DEFAULT '0',
-  `cate_id` INT(11) DEFAULT 0,
   `user_id` INT(11) DEFAULT 0,
   `digg` INT(11) DEFAULT '0',
   `v_digg` INT(11) DEFAULT '0',
@@ -959,6 +960,7 @@ CREATE TABLE `sa_article_digg` (
 DROP TABLE IF EXISTS `sa_article_comment`;
 CREATE TABLE `sa_article_comment` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `channel_id` INT(11) DEFAULT 0,
   `member_id` int(11) NOT NULL DEFAULT '0',
   `article_id` int(11) NOT NULL DEFAULT '0',
   `nickname` varchar(50) NOT NULL DEFAULT '',

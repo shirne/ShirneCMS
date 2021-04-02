@@ -27,6 +27,33 @@ return array(
             'commentdelete'=>'评论删除'
         )
     ),
+    'channel'=>array(
+        'title'=>'频道管理',
+        'items'=>array(
+            'index'=>'频道内容查看',
+            'setting'=>'频道设置',
+            'banner'=>'Banner查看',
+            'banneradd'=>'添加Banner',
+            'bannerupdate'=>'修改Banner',
+            'category'=>'分类更新',
+            'add'=>'添加内容',
+            'edit'=>'修改内容',
+            'delete'=>'删除内容',
+            'status'=>'发布内容',
+            'imagelist'=>'查看图集',
+            'imageadd'=>'添加图片',
+            'imageupdate'=>'修改图片',
+            'imagedelete'=>'删除图片',
+            'attachmentlist'=>'查看附件',
+            'attachmentadd'=>'添加附件',
+            'attachmentupdate'=>'修改附件',
+            'attachmentdelete'=>'删除附件',
+            'comments'=>'评论查看',
+            'commentview'=>'评论回复',
+            'commentstatus'=>'评论审核',
+            'commentdelete'=>'评论删除'
+        )
+    ),
     'credit.category'=>array(
         'title'=>'产品分类',
         'items'=>array(

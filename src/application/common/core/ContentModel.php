@@ -205,10 +205,21 @@ class ContentModel extends BaseModel
                 $model->where($this->model.".cate_id",$cate_id);
             }
         }
-        $sortids=[];
+        
+        $needSort = false;
+        if(!empty($attrs['exclude_ids'])){
+            $model->whereNotIn($this->model . ".id",idArr($attrs['exclude_ids']));
+        }
         if(!empty($attrs['ids'])){
             $sortids=idArr($attrs['ids']);
+            if(count($sortids)>1)$needSort=true;
             $model->whereIn($this->model . ".id",$sortids);
+        }
+        if(!empty($attrs['name'])){
+            $sortnames=explode(',',trim($attrs['name']));
+            $sortnames=array_map('trim', $sortnames);
+            if(count($sortnames)>1)$needSort=true;
+            $model->whereIn($this->model . ".name",$sortnames);
         }
         if(!empty($attrs['keyword'])){
             $model->whereLike($this->getSearchFields(),"%{$attrs['keyword']}%");
@@ -265,19 +276,34 @@ class ContentModel extends BaseModel
     
             $list = $model->select();
             
-            if(!empty($list) && !empty($sortids) && count($sortids)>1){
+            if(!empty($list) && $needSort){
                 $newlist=[];
-                $list = array_column($list,null,'id');
-                foreach ($sortids as $id){
-                    if(isset($list[$id]))$newlist[]=$list[$id];
+                if(!empty($sortids)){
+                    $list = array_column($list,null,'id');
+                    foreach ($sortids as $id){
+                        if(isset($list[$id]))$newlist[]=$list[$id];
+                    }
+                }
+                if(!empty($sortnames)){
+                    $list = array_column($list,null,'name');
+                    foreach ($sortnames as $name){
+                        if(isset($list[$name]))$newlist[]=$list[$name];
+                    }
                 }
                 $list=$newlist;
                 unset($newlist);
             }
         }
-        if(empty($list))return $list;
+        if(empty($list) || ($list instanceof Paginator && $list->isEmpty()))return $list;
         
-        return $this->afterTagList($this->analysisType($list),$attrs);
+        $list = $this->afterTagList($this->analysisType($list),$attrs);
+        if(isset($attrs['find']) && $attrs['find'] == 1){
+            if(!is_array($list)){
+                $list = $list->items();
+            }
+            return current($list);
+        }
+        return $list;
     }
 
     public function tagRelation($attrs, $filter=false)

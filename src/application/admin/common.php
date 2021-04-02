@@ -1,5 +1,6 @@
 <?php
 
+use app\common\facade\CategoryFacade;
 use think\Db;
 use think\facade\Request;
 
@@ -43,6 +44,21 @@ function getMenus(){
         $menus=array();
         foreach ($list as $item){
             $menus[$item['parent_id']][]=$item;
+        }
+        if(config('channel_mode')){
+            $menus[2]=[];
+            $topCates = CategoryFacade::getSubCategory(0);
+            foreach($topCates as $cate){
+                $menus[2][]=[
+                    'parent_id'=>2,
+                    'name'=>$cate['title'],
+                    'url'=>'Channel/index?channel_id='.$cate['id'],
+                    'key'=>'channel_index_'.$cate['id'],
+                    'icon'=>'ion-md-apps',
+                    'sort_id'=>$cate['sort'],
+                    'disable'=>0
+                ];
+            }
         }
 
         cache('menus',$menus,1800);

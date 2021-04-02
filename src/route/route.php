@@ -9,11 +9,17 @@
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 
+define('CHANNELS', 'product|industry|infomation|about');
+
 Route::pattern([
     'name' => '[a-zA-Z]\w*',
     'id'   => '\d+',
+    'page'   => '\d+',
     'group'=> '[a-zA-Z]\w*',
     'action'=> '[a-zA-Z]\w*',
+    'channel_name'=> '('.CHANNELS.')',
+    'cate_name'=> '[a-zA-Z]\w*',
+    'article_name'=> '[a-zA-Z][\-\w]*',
     'type'=>'\w+',
     'agent'=>'\w{6,}'
 ]);
@@ -21,13 +27,6 @@ Route::pattern([
 Route::get('index$', 'index/index/index');
 
 Route::get('share/:agent', 'index/index/share');
-
-Route::group('article',[
-    ':id'=>'index/article/view',
-    'comment/:id'=>'index/article/comment',
-    'favourite'=>'index/article/favourite',
-    '[:name]'=>'index/article/index'
-])->method('GET|POST');
 
 Route::group('product',[
     ':id'=>'index/product/view',
@@ -47,11 +46,6 @@ Route::group('cart',[
 Route::group('order',[
     'confirm'=>'index/order/confirm',
     'wechatpay'=>'index/order/wechatpay'
-])->method('GET|POST');
-
-Route::group('page',[
-    '[:group]'=>'index/page/index',
-    ':group/[:name]'=>'index/page/index'
 ])->method('GET|POST');
 
 Route::get('notice/:id', 'index/article/notice');
@@ -75,6 +69,10 @@ Route::group('user',[
     '[:action]'=>'index/member/:action'
 ])->method('GET|POST');
 
+Route::get(':channel_name/:cate_name/:article_name/comment/[:page]', 'index/channel/comment');
+Route::get(':channel_name/:cate_name/:article_name', 'index/channel/view');
+Route::get(':channel_name/:cate_name/[:page]', 'index/channel/list');
+Route::get(':channel_name', 'index/channel/index');
 
 return [
 

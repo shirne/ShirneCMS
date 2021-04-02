@@ -35,6 +35,7 @@ class BaseController extends Controller
     protected $config=array();
     protected $isWechat=false;
     protected $isMobile=false;
+    protected $seoIsInit=false;
 
     protected $lang;
     protected $lang_switch;
@@ -143,26 +144,34 @@ class BaseController extends Controller
     /**
      * 设置seo信息
      * @param string $title
-     * @param string $keys
+     * @param string $keywords
      * @param string $desc
      */
-    protected function seo($title='',$keys='',$desc=''){
+    protected function seo($title='',$keywords='',$desc=''){
         $sitename=$this->config['site-webname'];
         if(empty($title)){
-            $title .= $sitename;
+            $title = $sitename;
         }elseif($title!=$sitename){
             $title .= ' - '.$sitename;
         }
-        if(empty($keys)){
-            $keys = $this->config['site-keywords'];
+        
+        $this->assign('title',$title);
+
+        if(empty($keywords) && !$this->seoIsInit){
+            $keywords = $this->config['site-keywords'];
         }
-        if(empty($desc)){
-            $desc = $this->config['site-description'];
+        if(!$this->seoIsInit || !empty($keywords)){
+            $this->assign('keywords',$keywords);
         }
 
-        $this->assign('title',$title);
-        $this->assign('keywords',$keys);
-        $this->assign('description',$desc);
+        if(empty($desc) && !$this->seoIsInit){
+            $desc = $this->config['site-description'];
+        }
+        if(!$this->seoIsInit || !empty($desc)){
+            $this->assign('description',$desc);
+        }
+
+        $this->seoIsInit = true;
     }
 
     /**
