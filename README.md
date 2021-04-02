@@ -3,6 +3,8 @@ ShirneCMS
 
 基于[ThinkPHP5.1](https://github.com/top-think/think/tree/5.1)+[bootstrap4.x](https://v4.bootcss.com/docs/4.0/getting-started/introduction/)开发的后台管理系统,集成会员管理，文章管理，产品管理，微信接入，第三方登录等功能
 
+基于[ThinkPHP6.0](https://github.com/top-think/think/tree/6.0) 的版本 [ShirneCMS-tp6](https://gitee.com/shirnecn/ShirneCMS/tree/dev_tp6/) 目前正在进行整体功能测试
+
 > 运行环境要求PHP7.2以上，Mysql5.5以上<br />
 > PHP扩展：mbstring,gd,mysql,pdo,cURL,OpenSSL,SimpleXML,fileinfo,zip,cli。
 
@@ -23,7 +25,7 @@ ShirneCMS
 * 无限级分类/文章系统，分类可独立设置模板
 * 无限级分类/产品/订单  产品采用多选项SKU模式
 * 广告管理（多用于网站banner图）/公告/链接/留言 等独立小功能
-* 基于bs的Modal写的Dialog组件，支持alert,prompt,confirm,以及常用的列表搜索/选择对话框，地图位置选择对话框（支持腾讯/高德/百度/谷哥地图）
+* 基于bs的Modal写的[Dialog](doc/DIALOG.md)组件，支持alert,prompt,confirm,以及常用的列表搜索/选择对话框，地图位置选择对话框（支持腾讯/高德/百度/谷哥地图）
 * 后台表单异步提交/文件上传进度显示
 * bs日期组件本地化，自动初始化
 * excel封装类，第三方接口（短信/快递等），文件上传封装 等便于开发的优化
@@ -42,6 +44,7 @@ ShirneCMS
 - [x] 分类/文章模块
 - [x] 单页模块
 - [ ] 文章模块自定义字段
+- [ ] 文章/产品模块详情页模板功能
 
 ### 商城系统
 - [x] 无限级分类
@@ -114,6 +117,10 @@ ShirneCMS
 ### 字体(生成图片使用)
 [NotoSansCJKsc]
 [百度网盘](https://pan.baidu.com/s/1i5l0qblUhhendpIhOqu4Iw) 提取码：7cwl
+```
+# 字体文件目录
+\src\public\static\fonts\NotoSansCJKsc
+```
 
 ## 安装 及 开发说明
 
@@ -130,6 +137,8 @@ ShirneCMS
 [CMS安装说明](doc/INSTALL.md)
 
 [API接口说明](doc/api/index.md)
+
+[Dialog弹窗组件说明](doc/DIALOG.md)
 
 ## Docker
 配置参见Dockerfile
@@ -162,7 +171,7 @@ docker.for.mac.host.internal
 
 ## 常见问题
 
-常见问题 [Dialog](doc/QA.md)
+[常见问题](doc/QA.md)
 
 
 ## 后台功能截图
@@ -196,4 +205,8 @@ docker.for.mac.host.internal
 备注 技术探讨/咨询 或 其它需求
 
 ## 开源协议
-ShirneCMS延续ThinkPHP开源协议Apache-2.0，提供个人及商业免费使用，但不对使用本系统引起的任何后果负责。
+
+* 基于GPL-2.0
+* 个人及商业免费使用，但不对使用本系统引起的任何后果负责
+* 修改后的源代码可商用，可以开源形式发布
+* 禁止任何形式任何名义的出售

@@ -60,7 +60,7 @@ h6 {
 .ani-loading{
   animation: loading 2s infinite linear;
 }
-.chgstatus{
+.chgstatus,.radiostatus{
   padding:4px 8px;
   padding-right: 24px;
   position: relative;
@@ -103,7 +103,13 @@ h6 {
       margin-bottom : 0;
     }
     &.form-label{
-      width:70px;
+      width:80px;
+    }
+    &.w-100px{
+      width:100px;
+    }
+    &.w-160px{
+      width:160px;
     }
   }
 }
@@ -327,6 +333,14 @@ h6 {
 
   .row + .row {
     margin-top: 1rem;
+  }
+  td{
+    .figure{
+      margin:0;
+      .figure-img{
+        margin-bottom:0;
+      }
+    }
   }
   .page-content{
     width: 100%;

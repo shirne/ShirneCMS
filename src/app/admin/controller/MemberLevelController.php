@@ -34,7 +34,7 @@ class MemberLevelController extends BaseController
 
         $names=['普通','初级','中级','高级'];
         $snames=['普','初','中','高'];
-        $styles=['secondary','info','warning','danger'];
+        $styles=['info','success','warning','danger'];
 
         if($this->request->isPost()){
             $agents=$this->request->post('agents');
@@ -45,7 +45,7 @@ class MemberLevelController extends BaseController
                 }else{
                     $data['is_default']=0;
                 }
-                $data['style']=$styles[$id-1];
+                if(!isset($data['style']))$data['style']=$styles[$id-1];
                 Db::name('memberAgent')->where('id',$id)->update($data);
             }
             MemberAgentModel::clearCacheData();
@@ -98,7 +98,7 @@ class MemberLevelController extends BaseController
                 $levelModel=MemberLevelModel::create($data);
                 $insertId=$levelModel['id'];
                 if ($insertId!==false) {
-                    cache('levels', null);
+                    MemberLevelModel::clearCacheData();
                     user_log($this->mid,'addlevel',1,'添加会员组'.$insertId ,'manager');
                     $this->success(lang('Add success!'), url('memberLevel/index'));
                 } else {
@@ -128,7 +128,7 @@ class MemberLevelController extends BaseController
             }else{
                 $model=MemberLevelModel::get($id);
                 if ($model->allowField(true)->save($data)) {
-                    cache('levels', null);
+                    MemberLevelModel::clearCacheData();
                     user_log($this->mid,'updatelevel',1,'修改会员组'.$id ,'manager');
                     $this->success(lang('Update success!'), url('memberLevel/index'));
                 } else {

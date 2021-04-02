@@ -7,7 +7,7 @@
     <div id="page-wrapper">
 
         <div class="row">
-            <div class="col-6">
+            <div class="col-5">
                 <div class="btn-toolbar list-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                     <div class="btn-group btn-group-sm mr-2" role="group" aria-label="check action group">
                         <a href="javascript:" class="btn btn-outline-secondary checkall-btn" data-toggle="button" aria-pressed="false">全选</a>
@@ -17,41 +17,60 @@
                         <a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="setStatus">设置状态</a>
                         <a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="delete">{:lang('Delete')}</a>
                     </div>
-                    <div class="btn-group btn-group-sm" role="group" aria-label="Button group with nested dropdown">
+                    <div class="btn-group btn-group-sm mr-2" role="group" aria-label="Button group with nested dropdown">
                         <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             导出订单
                         </button>
                         <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                            <a class="dropdown-item action-btn" data-action="export" href="javascript:" target="_blank" >导出选中项</a>
                             <a class="dropdown-item" href="{:url('shop.order/export',['order_ids'=>$orderids])}" target="_blank" >导出本页</a>
                             <a class="dropdown-item" href="{:url('shop.order/export',['status'=>1])}" target="_blank">导出未处理</a>
-                            <a class="dropdown-item" href="{:url('shop.order/export',['status'=>$status,'audit'=>$audit,'key'=>base64_encode($key)])}" target="_blank">导出筛选结果</a>
+                            <a class="dropdown-item" href="{:url('shop.order/export',['status'=>$status,'start_date'=>$start_date,'end_date'=>$end_date,'audit'=>$audit,'keyword'=>base64_encode($keyword)])}" target="_blank">导出筛选结果</a>
+                        </div>
+                    </div>
+                    <div class="btn-group btn-group-sm" role="group" aria-label="Button group with nested dropdown">
+                        <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            导出发货单
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                            <a class="dropdown-item action-btn" data-action="export" data-mode="express" href="javascript:" target="_blank" >导出选中项</a>
+                            <a class="dropdown-item" href="{:url('shop.order/export',['order_ids'=>$orderids,'mode'=>'express'])}" target="_blank" >导出本页</a>
+                            <a class="dropdown-item" href="{:url('shop.order/export',['status'=>1,'mode'=>'express'])}" target="_blank">导出未处理</a>
+                            <a class="dropdown-item" href="{:url('shop.order/export',['status'=>$status,'start_date'=>$start_date,'end_date'=>$end_date,'audit'=>$audit,'keyword'=>base64_encode($keyword),'mode'=>'express'])}" target="_blank">导出筛选结果</a>
                         </div>
                     </div>
                 </div>
-                
             </div>
-            <div class="col-6">
+            <div class="col-7">
                 <form action="{:url('shop.order/index')}" method="post">
                     <div class="form-row">
-                        <div class="col-3 form-group">
+                        <div class="col-2 form-group">
                             <select name="audit" class="form-control form-control-sm">
                                 <option value="">全部</option>
                                 <option value="1"{$audit==='1'?' selected':''}>已审核</option>
                                 <option value="0"{$audit==='0'?' selected':''}>未审核</option>
                             </select>
                         </div>
-                        <div class="col-3 form-group">
+                        <div class="col-2 form-group">
                             <select name="status" class="form-control form-control-sm">
                                 <option value="">全部</option>
                                 <option value="1"{$status==='1'?' selected':''}>待发货</option>
                                 <option value="2"{$status==='2'?' selected':''}>待收货</option>
                                 <option value="3"{$status==='3'?' selected':''}>待评价</option>
-                                <option value="3"{$status==='4'?' selected':''}>已完成</option>
+                                <option value="4"{$status==='4'?' selected':''}>已完成</option>
                                 <option value="-1"{$status==='-1'?' selected':''}>已失效</option>
                             </select>
                         </div>
-                        <div class="col-6 form-group input-group input-group-sm">
-                            <input type="text" class="form-control" name="key" value="{$keyword}" placeholder="输入关键词搜索">
+                        <div class="form-group col input-group input-group-sm date-range">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">下单时间</span>
+                            </div>
+                            <input type="text" class="form-control fromdate" name="start_date" placeholder="选择开始日期" value="{$start_date}">
+                            <div class="input-group-middle"><span class="input-group-text">-</span></div>
+                            <input type="text" class="form-control todate" name="end_date" placeholder="选择结束日期" value="{$end_date}">
+                        </div>
+                        <div class="col form-group input-group input-group-sm">
+                            <input type="text" class="form-control" name="keyword" value="{$keyword}" placeholder="输入关键词搜索">
                             <span class="input-group-append">
                               <button class="btn btn-outline-secondary" type="submit"><i class="ion-md-search"></i></button>
                             </span>
@@ -186,6 +205,12 @@
                     }
                 })
             });
+        }
+        w.actionExport = function(ids){
+            var baseUrl = "{:url('shop.order/export',['order_ids'=>'__IDS__','mode'=>'__MODE__'])}";
+            var idstr = ids.join(',')
+            var mode = $(this).data('mode')
+            location.href = baseUrl.replace('__IDS__',idstr).replace('__MODE__',mode?mode:'')
         }
     })(window);
         jQuery(function(){

@@ -4,6 +4,7 @@ namespace app\index\controller;
 use app\common\model\MemberLevelModel;
 use app\common\model\MemberModel;
 use app\common\model\WechatModel;
+use app\common\service\EncryptService;
 use EasyWeChat\Factory;
 use extcore\traits\Email;
 use shirne\sdk\OAuthFactory;
@@ -34,6 +35,7 @@ class BaseController extends Controller
     protected $config=array();
     protected $isWechat=false;
     protected $isMobile=false;
+    protected $seoIsInit=false;
 
     protected $lang;
     protected $lang_switch;
@@ -63,6 +65,17 @@ class BaseController extends Controller
         $this->config=getSettings();
         $this->assign('config',$this->config);
 
+        $this->checkPlatform();
+
+        if(isset($this->config['site-close']) && $this->config['site-close'] == 1){
+            if($this->request->get('force') == 1){
+                session('noclose-force',1);
+            }
+            if(session('noclose-force')!=1){
+                $this->error($this->config['site-close-desc']);
+            }
+        }
+
         // POST请求自动检查操作频率
         if((config('app.auto_check_submit_rate') || (isset($this->config['auto_check_submit_rate']) && $this->config['auto_check_submit_rate']))
             && $this->request->isPost()){
@@ -82,8 +95,6 @@ class BaseController extends Controller
                 session('agent', $agent);
             }
         }
-
-        $this->checkPlatform();
 
         $this->checkLogin();
 
@@ -133,26 +144,34 @@ class BaseController extends Controller
     /**
      * 设置seo信息
      * @param string $title
-     * @param string $keys
+     * @param string $keywords
      * @param string $desc
      */
-    protected function seo($title='',$keys='',$desc=''){
+    protected function seo($title='',$keywords='',$desc=''){
         $sitename=$this->config['site-webname'];
         if(empty($title)){
-            $title .= $sitename;
+            $title = $sitename;
         }elseif($title!=$sitename){
             $title .= ' - '.$sitename;
         }
-        if(empty($keys)){
-            $keys = $this->config['site-keywords'];
+        
+        $this->assign('title',$title);
+
+        if(empty($keywords) && !$this->seoIsInit){
+            $keywords = $this->config['site-keywords'];
         }
-        if(empty($desc)){
-            $desc = $this->config['site-description'];
+        if(!$this->seoIsInit || !empty($keywords)){
+            $this->assign('keywords',$keywords);
         }
 
-        $this->assign('title',$title);
-        $this->assign('keywords',$keys);
-        $this->assign('description',$desc);
+        if(empty($desc) && !$this->seoIsInit){
+            $desc = $this->config['site-description'];
+        }
+        if(!$this->seoIsInit || !empty($desc)){
+            $this->assign('description',$desc);
+        }
+
+        $this->seoIsInit = true;
     }
 
     /**
@@ -160,7 +179,7 @@ class BaseController extends Controller
      * @param $member
      * @throws Exception
      */
-    protected function setLogin($member){
+    protected function setLogin($member, $logintype = 1){
         if($member['status']!='1'){
             $this->error('会员已禁用');
         }
@@ -168,11 +187,13 @@ class BaseController extends Controller
         session('username',empty($member['realname'])? $member['username']:$member['realname']);
         $time=time();
         session('logintime',$time);
-        Db::name('member')->where('id',$member['id'])->update(array(
-            'login_ip'=>request()->ip(),
-            'logintime'=>$time
-        ));
-        user_log($member['id'], 'login', 1, '登录成功');
+        if($logintype == 1){
+            Db::name('member')->where('id',$member['id'])->update(array(
+                'login_ip'=>request()->ip(),
+                'logintime'=>$time
+            ));
+            user_log($member['id'], 'login', 1, '登录成功');
+        }
     }
 
     /**
@@ -188,6 +209,16 @@ class BaseController extends Controller
         session('userid',null);
         session('username',null);
         session('logintime',null);
+        
+        cookie('login', null);
+    }
+
+    protected function setAotuLogin($member, $days = 7){
+
+        $expire = $days * 24 * 60 * 60;
+        $timestamp = time() + $expire;
+        $data = EncryptService::getInstance()->encrypt(json_encode(['id'=>$member['id'],'time'=>$timestamp]));
+        cookie('login', $data, $expire);
     }
 
     /**
@@ -196,8 +227,30 @@ class BaseController extends Controller
      */
     protected function checkLogin(){
         $this->userid = session('userid');
+
+        $loginsession = $this->request->cookie('login');
+        if(!empty($loginsession)){
+            cookie('login',null);
+            $data = EncryptService::getInstance()->decrypt($loginsession);
+            if(!empty($data)){
+                $json = json_decode($data, true);
+                if(!empty($json['id'])){
+                    $timestamp = $json['time'];
+                    if($timestamp >= time()){
+                        $this->userid = $json['id'];
+                        $member = MemberModel::where('id',$this->userid)->find();
+                        $this->setLogin($member, 0);
+                        $this->user = $member;
+                        $this->setAotuLogin($member);
+                    }
+                }
+            }
+        }
+
         if(!empty($this->userid)){
-            $this->user = Db::name('Member')->find($this->userid);
+            if(empty($this->user)){
+                $this->user = MemberModel::where('id',$this->userid)->find();
+            }
             /*$time=session('logintime');
             if($time != $this->user['logintime']){
                 session('userid',null);

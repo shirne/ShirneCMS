@@ -1,6 +1,6 @@
 'use strict';
 
-const gulp = require('gulp4');
+const gulp = require('gulp');
 const uglify = require('gulp-uglify');
 const babel = require('gulp-babel');
 const autoprefixer = require('gulp-autoprefixer');
@@ -150,7 +150,7 @@ function watchAll() {
 
 const build = gulp.series(cleanTask,gulp.parallel(sassTask,sassadminTask,backendTask,frontTask,mobileTask,locationTask),copyDest);
 
-gulp.task('default', build);
+gulp.task('default',gulp.series( build, watchAll));
 gulp.task('clean', cleanTask);
 gulp.task('watch', watchAll);
 gulp.task('build', build);

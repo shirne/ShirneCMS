@@ -17,6 +17,33 @@
             <input type="text" name="flag" class="form-control" value="{$model.flag}" placeholder="调用标识">
         </div>
         <div class="form-group">
+            <label for="type">类型</label>
+            <label class="radio-inline">
+                <input type="radio" name="type" value="1" <if condition="$model['type'] eq 1">checked="checked"</if> >视频
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="type" value="0" <if condition="$model['type'] eq 0">checked="checked"</if> >图片
+            </label>
+        </div>
+        <div class="form-group">
+            <label for="image">广告位尺寸</label>
+            <div class="form-row">
+                <div class="input-group col">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text">宽</span>
+                    </div>
+                    <input type="text" name="width" class="form-control fromdate" value="{$model.width|default=0}" />
+                </div>
+                <div class="input-group col">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text">高</span>
+                    </div>
+                    <input type="text" name="height" class="form-control todate" value="{$model.height|default=0}" />
+                </div>
+            </div>
+
+        </div>
+        <div class="form-group">
             <label >自定义字段</label>
             <div class="form-group ">
                 <div class="prop-groups">

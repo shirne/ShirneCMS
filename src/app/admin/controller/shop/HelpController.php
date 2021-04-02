@@ -5,7 +5,7 @@ namespace app\admin\controller\shop;
 use app\admin\controller\BaseController;
 use app\common\model\HelpModel;
 use app\admin\validate\HelpValidate;
-use app\admin\validate\CategoryValidate;
+use app\admin\validate\HelpCategoryValidate;
 use app\common\facade\HelpCategoryFacade;
 use think\facade\Db;
 
@@ -18,9 +18,9 @@ class HelpController extends BaseController
     {
         
         if($this->request->isPost()){
-            return redirect(url('',['cate_id'=>$cate_id,'key'=>base64_encode($key)]));
+            return redirect(url('',['cate_id'=>$cate_id,'key'=>base64url_encode($key)]));
         }
-        $key=empty($key)?"":base64_decode($key);
+        $key=empty($key)?"":base64url_decode($key);
         $model = Db::view('help','*')->view('helpCategory',['name'=>'category_name','title'=>'category_title'],'help.cate_id=helpCategory.id','LEFT')
             ->view('manager',['username'],'help.user_id=manager.id','LEFT');
         if(!empty($key)){
@@ -192,7 +192,7 @@ class HelpController extends BaseController
 
         if($this->request->isPost()){
             $data=$this->request->post();
-            $validate=new CategoryValidate();
+            $validate=new HelpCategoryValidate();
             $validate->setId($id);
 
             if (!$validate->check($data)) {
@@ -233,6 +233,22 @@ class HelpController extends BaseController
             $this->error('分类不存在');
         }
         return json(['data'=>$model,'code'=>1]);
+    }
+
+    public function category_delete($id){
+        $id = intval($id);
+        $model = Db::name('helpCategory')->where('id',$id)->find();
+        if(empty($model)){
+            $this->error('分类不存在');
+        }
+        $hasson = Db::name('helpCategory')->where('pid',$id)->count();
+        if($hasson > 0){
+            $this->error('请先删除子类');
+        }
+        Db::name('helpCategory')->where('id',$id)->delete();
+        Db::name('help')->where('cate_id',$id)->update(['cate_id'=>0]);
+        HelpCategoryFacade::clearCache();
+        $this->success('删除成功！');
     }
 
 }

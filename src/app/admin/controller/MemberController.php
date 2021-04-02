@@ -36,8 +36,10 @@ class MemberController extends BaseController
         if(!empty($type)){
             $model->where('type',$type);
         }
-        if($is_agent>-1){
-            $model->where('is_agent',$is_agent);
+        if($is_agent > 0){
+            $model->where('is_agent','>',0);
+        }elseif($is_agent > -1){
+            $model->where('is_agent',0);
         }
 
         $lists=$model->field('id,username,nickname,realname,mobile,avatar,level_id,is_agent,gender,email,create_time')
@@ -48,16 +50,18 @@ class MemberController extends BaseController
     /**
      * 会员列表
      * @param int $type
+     * @param string $start_date
+     * @param string $end_date
      * @param string $keyword
      * @param string $referer
      * @return mixed|\think\response\Redirect
      */
-    public function index($type=0,$keyword='',$referer='')
+    public function index($type=0,$start_date='',$end_date='',$keyword='',$referer='')
     {
         if($this->request->isPost()){
-            return redirect(url('',['referer'=>$referer,'type'=>$type,'keyword'=>base64_encode($keyword)]));
+            return redirect(url('',['referer'=>$referer,'start_date'=>$start_date,'end_date'=>$end_date,'type'=>$type,'keyword'=>base64url_encode($keyword)]));
         }
-        $keyword=empty($keyword)?"":base64_decode($keyword);
+        $keyword=empty($keyword)?"":base64url_decode($keyword);
         $model = Db::view('__MEMBER__ m','*')
             ->view('__MEMBER__ rm',['username'=> 'refer_name','nickname'=> 'refer_nickname','realname'=> 'refer_realname','avatar'=> 'refer_avatar','is_agent'=> 'refer_agent'],'m.referer=rm.id','LEFT');
         if(!empty($keyword)){
@@ -78,6 +82,17 @@ class MemberController extends BaseController
         if($type>0){
             $model->where('m.type',intval($type)-1);
         }
+        if($start_date !== ''){
+            if($end_date !== ''){
+                $model->whereBetween('m.create_time',[strtotime($start_date),strtotime($end_date.' 23:59:59')]);
+            }else{
+                $model->where('m.create_time','GT',strtotime($start_date));
+            }
+        }else{
+            if($end_date !== ''){
+                $model->where('m.create_time','LT',strtotime($end_date.' 23:59:59'));
+            }
+        }
 
         $lists=$model->order('m.id desc')->paginate(15);
 
@@ -90,6 +105,8 @@ class MemberController extends BaseController
         $this->assign('type',$type);
         $this->assign('page',$lists->render());
         $this->assign('referer',$referer);
+        $this->assign('start_date',$start_date);
+        $this->assign('end_date',$end_date);
         $this->assign('keyword',$keyword);
         return $this->fetch();
     }
@@ -157,14 +174,20 @@ class MemberController extends BaseController
         $member=Db::name('member')->find($id);
         if(empty($member))$this->error('会员不存在');
 
+        if($agent_id < 1){
+            $this->error('参数错误');
+        }
 
         if($member['is_agent'] == $agent_id)$this->success('设置成功');
 
         $result=MemberModel::setAgent($id, $agent_id, 'admin', '后台升级');
+        
         if($result){
+            if($member['is_agent'] < 1){
+                MemberModel::updateRecommend($member['referer']);
+            }
             user_log($this->mid,'setagent',1,'设置代理 '.$id ,'manager');
             $this->success('设置成功');
-            exit;
         }else{
             $this->error('设置失败');
         }
@@ -249,7 +272,7 @@ class MemberController extends BaseController
         $types=getLogTypes();
         $allstatus=['-1'=>'已取消','0'=>'待发放','1'=>'已发放'];
         
-        $stacrows=$model->group('mlog.status,mlog.type')->setOption('field',[])->setOption('order','mlog.field')->field('mlog.status,mlog.type,sum(mlog.amount) as total_amount')->select();
+        $stacrows=$model->group('mlog.status,mlog.type')->setOption('field',[])->setOption('order','mlog.status')->field('mlog.status,mlog.type,sum(mlog.amount) as total_amount')->select();
         $statics=[];
         foreach ($stacrows as $row){
             $statics[$row['status']][$row['type']]=$row['total_amount'];
@@ -369,14 +392,14 @@ class MemberController extends BaseController
      */
     public function log($key='',$type='',$member_id=0){
         if($this->request->isPost()){
-            return redirect(url('',['key'=>base64_encode($key)]));
+            return redirect(url('',['key'=>base64url_encode($key)]));
         }
 
         $model=Db::view('MemberLog','*')
             ->view('Member',['username','nickname','avatar'],'MemberLog.member_id=Member.id','LEFT');
 
         if(!empty($key)){
-            $key = base64_decode($key);
+            $key = base64url_decode($key);
             $model->whereLike('ManagerLog.remark',"%$key%");
         }
         if(!empty($type)){
@@ -488,8 +511,15 @@ class MemberController extends BaseController
                     $data['birth']=strtotime($data['birth']);
                 }
 
-                //更新
+                // 更新
                 $member=MemberModel::get($id);
+                if(empty($member)){
+                    $this->error('会员资料错误');
+                }
+
+                if($member['mobile_bind'] == 1 && empty($data['mobile'])){
+                    $data['mobile_bind'] = 0;
+                }
                 if ($member->allowField(true)->save($data)) {
                     user_log($this->mid,'updateuser',1,'修改会员资料'.$id ,'manager');
                     $this->success(lang('Update success!'), url('member/index'));
@@ -593,23 +623,51 @@ class MemberController extends BaseController
         }
 
         $model=Db::name('member')->field('count(id) as member_count,date_format(from_unixtime(create_time),' . $format . ') as awdate');
+        $logModel = Db::name('memberAgentLog')->where('agent_id',1)->field('count(id) as agent_count,date_format(from_unixtime(create_time),' . $format . ') as awdate');
+
         $start_date=format_date($start_date,'Y-m-d');
         $end_date=format_date($end_date,'Y-m-d');
         if(!empty($start_date)){
             if(!empty($end_date)){
                 $model->whereBetween('create_time',[strtotime($start_date),strtotime($end_date.' 23:59:59')]);
+                $logModel->whereBetween('create_time',[strtotime($start_date),strtotime($end_date.' 23:59:59')]);
             }else{
+<<<<<<< HEAD:src/app/admin/controller/MemberController.php
                 $model->where('create_time','>',strtotime($start_date));
             }
         }else{
             if(!empty($end_date)){
                 $model->where('create_time','<',strtotime($end_date.' 23:59:59'));
+=======
+                $model->where('create_time','GT',strtotime($start_date));
+                $logModel->where('create_time','GT',strtotime($start_date));
+            }
+        }else{
+            if(!empty($end_date)){
+                $model->where('create_time','LT',strtotime($end_date.' 23:59:59'));
+                $logModel->where('create_time','LT',strtotime($end_date.' 23:59:59'));
+>>>>>>> v2:src/application/admin/controller/MemberController.php
             }
         }
 
         $statics=$model->group('awdate')->select();
+        $logStatics=$logModel->group('awdate')->select();
+        $dates = array_merge(array_column($statics,'awdate'),array_column($logStatics,'awdate'));
+        $dates = array_unique($dates);
 
-        $this->assign('statics',$statics);
+        $statics = array_column($statics,'member_count','awdate');
+        $logStatics = array_column($logStatics,'agent_count','awdate');
+
+        $newStatics = [];
+        foreach($dates as $date){
+            $newStatics[]=[
+                'awdate'=>$date,
+                'member_count'=>isset($statics[$date])?$statics[$date]:0,
+                'agent_count'=> isset($logStatics[$date])?$logStatics[$date]:0
+            ];
+        }
+
+        $this->assign('statics',$newStatics);
         $this->assign('static_type',$type);
         $this->assign('start_date',$start_date);
         $this->assign('end_date',$end_date);

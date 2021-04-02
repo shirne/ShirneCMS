@@ -102,9 +102,15 @@
                 <tr>
                     <td>{$v.id}</td>
                     <td>
+<<<<<<< HEAD:src/app/admin/view/member/award_log.tpl
                         {if $v['member_id']}
                             <a href="{:url('money_log',array('id'=>$v['member_id'],'fromdate'=>$fromdate,'todate'=>$todate,'from_id'=>$from_id,'type'=>$type))}" class="media">
                                 {if !empty($v['avatar'])}
+=======
+                        <if condition="$v['member_id']">
+                            <a href="{:url('award_log',array('id'=>$v['member_id'],'fromdate'=>$fromdate,'todate'=>$todate,'from_id'=>$from_id,'type'=>$type))}" class="media">
+                                <if condition="!empty($v['avatar'])">
+>>>>>>> v2:src/application/admin/view/member/award_log.tpl
                                     <img src="{$v.avatar}" class="mr-2 rounded" width="30"/>
                                 {/if}
                                 <div class="media-body">
@@ -126,9 +132,15 @@
                     </td>
                     <td class="{$v['amount']>0?'text-success':'text-danger'}">{$v.status|award_status|raw}&nbsp;{$v.amount|showmoney}</td>
                     <td>
+<<<<<<< HEAD:src/app/admin/view/member/award_log.tpl
                         {if $v['from_member_id']}
                             <a href="{:url('money_log',array('id'=>$id,'fromdate'=>$fromdate,'todate'=>$todate,'from_id'=>$v['from_member_id'],'type'=>$type))}" class="media">
                                 {if !empty($v['from_avatar'])}
+=======
+                        <if condition="$v['from_member_id']">
+                            <a href="{:url('award_log',array('id'=>$id,'fromdate'=>$fromdate,'todate'=>$todate,'from_id'=>$v['from_member_id'],'type'=>$type))}" class="media">
+                                <if condition="!empty($v['from_avatar'])">
+>>>>>>> v2:src/application/admin/view/member/award_log.tpl
                                     <img src="{$v.from_avatar}" class="mr-2 rounded" width="30"/>
                                 {/if}
                                 <div class="media-body">

@@ -4,7 +4,12 @@ namespace app\common\model;
 
 
 use app\common\core\BaseOrderModel;
+<<<<<<< HEAD:src/app/common/model/OrderModel.php
 use think\facade\Db;
+=======
+use app\common\service\MessageService;
+use think\Db;
+>>>>>>> v2:src/application/common/model/OrderModel.php
 use think\Exception;
 use think\facade\Log;
 
@@ -55,6 +60,13 @@ class OrderModel extends BaseOrderModel
         }
         return $counts;
     }
+
+    public function getProducts(){
+        if($this->isEmpty()){
+            return [];
+        }
+        return Db::name('orderProduct')->where('order_id',$this['order_id'])->order('id asc')->select();
+    }
     
     public function audit(){
         if($this->isExists()){
@@ -73,6 +85,17 @@ class OrderModel extends BaseOrderModel
             self::setLevel($item);
             self::doRebate($item);
         }
+    }
+
+    public function onPayResult($paytype, $paytime, $payamount){
+        parent::onPayResult($paytype, $paytime, $payamount);
+
+        $this->updateStatus([
+            'status'=>1,
+            'pay_type'=>$paytype,
+            'pay_time'=>$paytime,
+            'payedamount'=>['INC', $payamount]
+        ]);
     }
     
     protected function triggerStatus($item, $status, $newData=[])
@@ -118,6 +141,7 @@ class OrderModel extends BaseOrderModel
                     case ORDER_STATUS_FINISH:
                         $this->afterComplete($item);
                         break;
+                    default:break;
                 }
             }
         }
@@ -320,8 +344,6 @@ class OrderModel extends BaseOrderModel
             }
             $postage_fee = round($postage_fee,2);
         }
-        
-        //todo  优惠券
     
         $level_id = 0;
         $levelids = array_unique($levelids);
@@ -336,7 +358,7 @@ class OrderModel extends BaseOrderModel
         //比较客户端传来的价格
         if(is_array($extdata) ){
             if(isset($extdata['total_price'])) {
-                if ($total_price != intval($extdata['total_price']*100)) {
+                if ($total_price != round($extdata['total_price']*100)) {
                     $this->setError('下单商品价格已变动');
                     return false;
                 }
@@ -415,7 +437,8 @@ class OrderModel extends BaseOrderModel
             $i=0;
             foreach ($products as $product){
                 $product['order_id']=$result;
-                Db::name('orderProduct')->insert([
+                ProductModel::setFlash($product['product_id'],$time);
+                OrderProductModel::create([
                     'order_id'=>$result,
                     'product_id'=>$product['product_id'],
                     'member_id'=>$member['id'],
@@ -484,6 +507,9 @@ class OrderModel extends BaseOrderModel
                 $products=Db::name('orderProduct')->where('order_id',$order['order_id'])->select();
             }
             if(empty($msgdata)){
+                if(!empty($order['appid'])){
+                    $msgdata['appid']=$order['appid'];
+                }
                 $msgdata['order_no']=$order['order_no'];
                 $msgdata['amount']=$order['payamount'];
                 $goods=[];
@@ -500,7 +526,7 @@ class OrderModel extends BaseOrderModel
                 $msgdata['create_date'] = date('Y-m-d H:i:s',$order['create_time']);
                 $msgdata['pay_date'] = date('Y-m-d H:i:s',$order['pay_time']);
                 $msgdata['confirm_date'] = date('Y-m-d H:i:s',$order['confirm_time']);
-                
+                $msgdata['status']=order_status($order['status'],false);
                 if($order['status']<1){
                     $msgdata['pay_notice'] = '请在'.date('Y-m-d H:i:s',$order['create_time']+30*60).'前付款';
                 }
@@ -513,10 +539,11 @@ class OrderModel extends BaseOrderModel
                         $msgdata['express'] = '无';
                     }else {
                         $msgdata['express'] = $express['name'];
+                        $msgdata['express_no']=$order['express_no'];
                     }
                 }
                 $msgdata['page']='/pages/member/order-detail?id='.$order['order_id'];
-                
+                //$msgdata['url'] = url('/','',true,true).'?path=/member/order/detail?id='.$order['order_id'];
             }
             
             //小程序下如果未获得form_id，需要从支付信息中获取 prepay_id
@@ -640,6 +667,7 @@ class OrderModel extends BaseOrderModel
                     $amount = round($amount,2);
                     if ($amount > 0) {
                         self::award_log($parents[$i]['id'], $amount, '消费分佣' . ($i + 1) . '代', 'commission', $order);
+                        self::sendCommissionMessage($parents[$i], $member, $order, $amount, '消费分佣' . ($i + 1) . '代');
                         $total_rebate += $amount;
                     }
                 }
@@ -658,6 +686,24 @@ class OrderModel extends BaseOrderModel
         return $results;
     }
 
+    public static function sendCommissionMessage($member, $buyer, $order, $commission, $type = '佣金'){
+        $message = getSetting('message_commission');
+        if(!empty($message)){
+            foreach([
+                'username'=>MemberModel::showname($member),
+                'userid'=>$member['id'],
+                'buyer'=>MemberModel::showname($buyer),
+                'amount'=>number_format($order['payamount'], 2),
+                'type'=>$type,
+                'commission'=>number_format($commission, 2)
+            ] as $k=>$v){
+                $message = str_replace("[$k]", $v, $message);
+            }
+
+            MessageService::sendWechatMessage($member['id'],$message);
+        }
+    }
+
     public function refund($order = null, $reason = '', $type = ''){
         if(empty($order)){
             $order = $this->getOrigin();
@@ -671,6 +717,24 @@ class OrderModel extends BaseOrderModel
         }else{
             return PayOrderModel::refund($order['order_id'],'order',$reason);
         }
+    }
+
+    public function comment($data, $order = null){
+        if(empty($order)){
+            $order = $this->getOrigin();
+        }
+        if(empty($order['order_id'])){
+            throw new \Exception('order error');
+        }
+        
+        foreach($data as $row){
+            $row['order_id']=$order['order_id'];
+            ProductCommentModel::create($row);
+        }
+
+        $this->updateStatus(['status'=>ORDER_STATUS_FINISH],['order_id'=>$order['order_id']]);
+
+        return true;
     }
 
 }

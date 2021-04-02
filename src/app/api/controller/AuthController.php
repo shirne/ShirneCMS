@@ -7,12 +7,19 @@ use app\common\model\MemberModel;
 use app\common\model\MemberOauthModel;
 use app\common\model\OauthAppModel;
 use app\common\model\WechatModel;
+use app\common\service\CheckcodeService;
 use app\common\validate\MemberValidate;
 use EasyWeChat\Factory;
 use EasyWeChat\OfficialAccount\Application;
 use shirne\captcha\Captcha;
 use shirne\common\ValidateHelper;
+<<<<<<< HEAD:src/app/api/controller/AuthController.php
 use think\facade\Db;
+=======
+use shirne\sdk\OAuthFactory;
+use shirne\third\Aliyun;
+use think\Db;
+>>>>>>> v2:src/application/api/controller/AuthController.php
 use think\facade\Cache;
 use think\facade\Env;
 use think\facade\Log;
@@ -46,7 +53,7 @@ class AuthController extends BaseController
             }
         }
         if(empty($this->accessToken) &&
-            !in_array($this->request->action(), ['token','wxlogin','refresh'])
+            !in_array($this->request->action(), ['token','wxsign','wxauth','wxlogin','refresh'])
             ){
             $this->error('未授权访问',ERROR_LOGIN_FAILED);
         }
@@ -169,6 +176,10 @@ class AuthController extends BaseController
             }
             if($member['status']==1) {
                 if (compare_password($member, $password)) {
+                    $agentid = isset($this->accessSession['agent'])?intval($this->accessSession['agent']):0;
+                    if($agentid > 0 && !$member['referer']) {
+                        MemberModel::autoBindAgent($member,$agentid);
+                    }
                     $token = MemberTokenFacade::createToken($member['id'], $app['platform'], $app['appid']);
                     if (!empty($token)) {
                         cache($this->getIpKey(),NULL);
@@ -206,6 +217,72 @@ class AuthController extends BaseController
         $this->error('登录失败',ERROR_LOGIN_FAILED,$respdata);
     }
 
+    public function wxSign($wxid=''){
+        if(empty($wxid)){
+            $wechat=Db::name('wechat')->where('type','wechat')
+            ->where('is_default',1)->find();
+        }else{
+            $wechat=Db::name('wechat')->where('type','wechat')
+            ->where(is_numeric($wxid)?'id':'hash',$wxid)->find();
+        }
+        
+        if(!empty($wechat['appid'])) {
+            $app = Factory::officialAccount(WechatModel::to_config($wechat));
+            $url = $this->request->param('url');
+            if(empty($url)){
+                $url = $this->request->server('HTTP_REFERER');
+            }
+            if($url)$app->jssdk->setUrl($url);
+            $signPackage = $app->jssdk->getConfigArray([
+                'updateAppMessageShareData',
+                'updateTimelineShareData',
+                'onMenuShareTimeline',
+                'onMenuShareAppMessage',
+                'onMenuShareQQ',
+                'onMenuShareWeibo',
+                'onMenuShareQZone',
+                'checkJsApi',
+                'chooseImage',
+                'previewImage',
+                'openAddress',
+                'openLocation',
+                'getLocation',
+                'hideOptionMenu',
+                'showOptionMenu',
+                'hideMenuItems',
+                'showMenuItems'
+            ]);
+            $signPackage['url']=$url;
+            //$signPackage['debug']=true;
+            return $this->response($signPackage);
+        }
+        return $this->error('当前公众号不支持操作');
+    }
+
+    /**
+     * 获取授权跳转的url
+     */
+    public function wxAuth($wxid=''){
+        if(empty($wxid)){
+            $wechat=Db::name('wechat')->where('type','wechat')
+            ->where('is_default',1)->find();
+        }else{
+            $wechat=Db::name('wechat')->where('type','wechat')
+            ->where(is_numeric($wxid)?'id':'hash',$wxid)->find();
+        }
+        if(empty($wechat)){
+            $this->error('服务器配置错误',ERROR_LOGIN_FAILED);
+        }
+        $url = $this->request->param('url');
+        if(empty($url)){
+            $url = $this->request->server('HTTP_REFERER');
+        }
+        $oauth = OAuthFactory::getInstence($wechat['type'], $wechat['appid'], $wechat['appsecret'], $url);
+        $url=$oauth->redirect();
+
+        return $this->response(['url'=>$url->getTargetUrl()]);
+    }
+
     /**
      * 微信小程序登录
      * @return \think\response\Json
@@ -214,7 +291,7 @@ class AuthController extends BaseController
         
         $agent=$this->request->param('agent');
         $wechat=Db::name('wechat')->where('type','wechat')
-            ->where('id|hash',$wxid)->find();
+            ->where(is_numeric($wxid)?'id':'hash',$wxid)->find();
         if(empty($wechat)){
             $this->error('服务器配置错误',ERROR_LOGIN_FAILED);
         }
@@ -236,11 +313,11 @@ class AuthController extends BaseController
 
         if($weapp instanceof Application){
             $userinfo = $weapp->oauth->user()->getOriginal();
-            if(empty($userinfo)){
+            if(empty($userinfo) || empty($userinfo['openid'])){
                 $this->error('登录失败', ERROR_LOGIN_FAILED);
             }
             $rowData = json_encode($userinfo, JSON_UNESCAPED_UNICODE);
-            $session=['openid'=>$userinfo['openid'],'unionid'=>$userinfo['unionid']];
+            $session=['openid'=>$userinfo['openid'],'unionid'=>$userinfo['unionid']??''];
         }else{
             //调试模式允许mock登录
             if($wechat['is_debug'] && $code=='the code is a mock one'){
@@ -262,6 +339,7 @@ class AuthController extends BaseController
                 }
             }
         }
+        
         if(empty($userinfo)){
             $this->error('登录授权失败',ERROR_LOGIN_FAILED);
         }
@@ -299,6 +377,8 @@ class AuthController extends BaseController
                 if($member['id']){
                     $data['member_id']=$member['id'];
                 }
+            }else{
+                $this->error('请注册账号',ERROR_NEED_REGISTER, ['openid'=>$session['openid']]);
             }
             
         }else{
@@ -310,9 +390,7 @@ class AuthController extends BaseController
             if(!empty($updata)){
                 MemberModel::update($updata,array('id'=>$member['id']));
             }
-            if(empty($member['referer']) && !empty($agent) && $member['agentcode']!=$agent){
-                $member->setReferer($agent);
-            }
+            MemberModel::autoBindAgent($member,$agent);
         }
         
         if(empty($oauth)){
@@ -325,7 +403,7 @@ class AuthController extends BaseController
         if($this->isLogin){
             return $this->response(['openid'=>$session['openid']]);
         }
-
+        
         if(!empty($member)){
 
             if($member['status'] != 1){
@@ -393,9 +471,9 @@ class AuthController extends BaseController
         if(isset($userinfo['sex'])){
             $gender = $userinfo['sex'];
         }
-        return array(
+        $data = [
             'data'=>$rowData,
-            'is_follow'=>0,
+            //'is_follow'=>0,
             'nickname'=>$nickname,
             'gender'=>$gender,
             //'unionid'=>isset($userinfo['unionid'])?$userinfo['unionid']:'',
@@ -404,7 +482,16 @@ class AuthController extends BaseController
             'province'=>$userinfo['province'],
             'country'=>isset($userinfo['country'])?$userinfo['country']:'',
             'language'=>isset($userinfo['language'])?$userinfo['language']:''
-        );
+        ];
+        if(isset($userinfo['is_follow'])){
+            $data['is_follow'] = $userinfo['is_follow'];
+        }elseif(!empty($userinfo['subscribe_time'])){
+            $data['is_follow'] = 1;
+        }
+        if(isset($userinfo['unionid'])){
+            $data['unionid'] = $userinfo['unionid'];
+        }
+        return $data;
     }
 
     public function refresh($refresh_token){
@@ -412,6 +499,11 @@ class AuthController extends BaseController
         if(!empty($refresh_token)){
             $token=MemberTokenFacade::refreshToken($refresh_token);
             if(!empty($token)) {
+                $agent = $this->request->param('agent');
+                if(!empty($agent)){
+                    $member = Db::name('member')->where('id',$token['member_id'])->find();
+                    MemberModel::autoBindAgent($member,$agent);
+                }
                 return $this->response($token);
             }
         }
@@ -425,6 +517,88 @@ class AuthController extends BaseController
         $verify->fontSize = 16;
         $verify->length = 4;
         return $verify->entry('_api_'.$this->accessToken);
+    }
+
+    protected function smsverify($mobile, $type, $code)
+    {
+        switch($type){
+            case 'login':
+                $key = 'login_verify';
+            break;
+            case 'register':
+                $key = 'register_verify';
+            break;
+            /* case 'forget':
+                $key = 'forget_verify';
+            break; */
+            default:
+            return false;
+        }
+        $key .= '_'.$mobile;
+        if(!empty($this->accessSession[$key])){
+            $savecode=$this->accessSession[$key];
+            unset($this->accessSession[$key]);
+            unset($this->accessSession['verify_count']);
+            cache('verify_'.$mobile, NULL);
+            return $savecode==$code;
+        }
+        
+        return false;
+    }
+
+    public function smscode($mobile, $captcha, $type='login', $isverify=false)
+    {
+        if(!empty($this->accessSession['need_verify'])){
+            if(empty($captcha)){
+                $this->error('请填写图形验证码',ERROR_NEED_VERIFY);
+            }
+            $verify = new Captcha(array('seKey'=>config('session.sec_key')), Cache::instance());
+            $checked = $verify->check($captcha,'_api_'.$this->accessToken);
+            if(!$checked){
+                $this->error('验证码错误',ERROR_NEED_VERIFY);
+            }
+        }
+
+        $this->mobile_verify_limit($mobile);
+
+        $sesscount = $this->accessSession['verify_count']??0;
+        if($sesscount > 5){
+            $this->error('验证码发送过于频繁, 请稍候再试');
+        }
+
+
+        switch($type){
+            case 'login':
+                $key = 'login_verify';
+                $tplCode = getSetting('aliyun_dysms_login');
+            break;
+            case 'register':
+                $key = 'register_verify';
+                $tplCode = getSetting('aliyun_dysms_register');
+            break;
+            /* case 'forget':
+                $key = 'forget_verify';
+                $tplCode = getSetting('aliyun_dysms_login');
+            break; */
+            default:
+                $this->error('验证码类型错误');
+                break;
+        }
+        $key .= '_'.$mobile;
+
+        $this->accessSession['verify_count']=$sesscount+1;
+
+        $verify = random_str(6, 'number');
+        $this->accessSession[$key]=$verify;
+        $this->mobile_verify_add($mobile);
+        $aliyun = new Aliyun($this->config);
+        $result = $aliyun->sendSms($mobile, $verify, $tplCode, getSetting('aliyun_dysms_sign'));
+        if(!$result){
+            $this->error($aliyun->get_error_msg());
+        }
+
+        $this->accessSession['need_verify']=1;
+        $this->success('验证码已发送');
     }
 
     public function quit(){
@@ -549,8 +723,8 @@ class AuthController extends BaseController
         $invite_code=$this->request->post('invite_code');
         if(($this->config['m_invite']==1 && !empty($invite_code)) || $this->config['m_invite']==2) {
             if (empty($invite_code)) $this->error("请填写激活码");
-            $invite = Db::name('invite_code')->where(array('code' => $invite_code, 'is_lock' => 0, 'member_use' => 0))->find();
-            if (empty($invite) || ($invite['invalid_at'] > 0 && $invite['invalid_at'] < time())) {
+            $invite = Db::name('inviteCode')->where(array('code' => $invite_code, 'is_lock' => 0, 'member_use' => 0))->find();
+            if (empty($invite) || ($invite['invalid_time'] > 0 && $invite['invalid_time'] < time())) {
                 $this->error("激活码不正确");
             }
         }
@@ -575,7 +749,7 @@ class AuthController extends BaseController
 
         Db::startTrans();
         if(!empty($invite)) {
-            $invite = Db::name('invite_code')->lock(true)->find($invite['id']);
+            $invite = Db::name('inviteCode')->lock(true)->find($invite['id']);
             if (!empty($invite['member_use'])) {
                 Db::rollback();
                 $this->error("激活码已被使用");
@@ -621,8 +795,8 @@ class AuthController extends BaseController
         }
         if(!empty($invite)) {
             $invite['member_use'] = $model['id'];
-            $invite['use_at'] = time();
-            Db::name('invite_code')->update($invite);
+            $invite['use_time'] = time();
+            Db::name('inviteCode')->update($invite);
         }
         if(!empty($this->accessSession['openid'])){
             Db::name('memberOauth')->where('openid',$this->accessSession['openid'])

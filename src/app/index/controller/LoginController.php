@@ -50,6 +50,10 @@ class LoginController extends BaseController{
                         $this->error(lang('Account is disabled!'));
                     }else {
                         $this->setLogin($member);
+                        $remember = $this->request->post('remember');
+                        if($remember){
+                            $this->setAotuLogin($member);
+                        }
                         $redirect=redirect()->restore();
                         if(empty($redirect->getData())){
                             $url=aurl('index/member/index');
@@ -307,8 +311,8 @@ class LoginController extends BaseController{
             $invite_code=$this->request->post('invite_code');
             if(($this->config['m_invite']==1 && !empty($invite_code)) || $this->config['m_invite']==2) {
                 if (empty($invite_code)) $this->error("请填写激活码");
-                $invite = Db::name('invite_code')->where(array('code' => $invite_code, 'is_lock' => 0, 'member_use' => 0))->find();
-                if (empty($invite) || ($invite['invalid_at'] > 0 && $invite['invalid_at'] < time())) {
+                $invite = Db::name('inviteCode')->where(array('code' => $invite_code, 'is_lock' => 0, 'member_use' => 0))->find();
+                if (empty($invite) || ($invite['invalid_time'] > 0 && $invite['invalid_time'] < time())) {
                     $this->error("激活码不正确");
                 }
             }
@@ -356,7 +360,7 @@ class LoginController extends BaseController{
             }
             if(!empty($invite)) {
                 $invite['member_use'] = $model['id'];
-                $invite['use_at'] = time();
+                $invite['use_time'] = time();
                 Db::name('invite_code')->update($invite);
             }
             if(!empty($this->wechatUser)){
@@ -434,6 +438,7 @@ class LoginController extends BaseController{
     public function logout()
     {
         $this->clearLogin();
+        
         $this->success("已成功退出登陆");
 
     }

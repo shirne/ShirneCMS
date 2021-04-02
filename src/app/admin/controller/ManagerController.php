@@ -24,9 +24,9 @@ class ManagerController extends BaseController
     public function index($key="")
     {
         if($this->request->isPost()){
-            return redirect(url('',['key'=>base64_encode($key)]));
+            return redirect(url('',['key'=>base64url_encode($key)]));
         }
-        $key=empty($key)?"":base64_decode($key);
+        $key=empty($key)?"":base64url_decode($key);
         $model=Db::name('Manager');
         if(!empty($key )){
             $model->whereLike('username|email',"%$key%");
@@ -48,14 +48,14 @@ class ManagerController extends BaseController
      */
     public function log($key='',$type='',$manager_id=0){
         if($this->request->isPost()){
-            return redirect(url('',['key'=>base64_encode($key)]));
+            return redirect(url('',['key'=>base64url_encode($key)]));
         }
 
         $model=Db::view('ManagerLog','*')
             ->view('Manager',['username'],'ManagerLog.manager_id=Manager.id','LEFT');
 
         if(!empty($key)){
-            $key = base64_decode($key);
+            $key = base64url_decode($key);
             $model->whereLike('ManagerLog.remark',"%$key%");
         }
         if(!empty($type)){

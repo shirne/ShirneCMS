@@ -247,9 +247,9 @@ class PaylogController extends BaseController
      */
     public function cashin($key='',$status=''){
         if($this->request->isPost()){
-            return redirect(url('',['status'=>$status,'key'=>base64_encode($key)]));
+            return redirect(url('',['status'=>$status,'key'=>base64url_encode($key)]));
         }
-        $key=empty($key)?'':base64_decode($key);
+        $key=empty($key)?'':base64url_decode($key);
         $model=Db::view('__MEMBER_CASHIN__ mc','*')->view('__MEMBER__ m',['username','nickname','avatar','realname'],'mc.member_id=m.id','LEFT');
         
         if(!empty($key)){
@@ -343,6 +343,9 @@ class PaylogController extends BaseController
             }else{
                 $wechats=WechatModel::where('account_type','service')->select();
             }
+            if(empty($wechats)){
+                $this->error('未查询到微信服务号资料,请先设置资料');
+            }
             
             foreach($wechats as $wechat){
                 if(empty($wechat['cert_path']) || empty($wechat['key_path']))continue;
@@ -368,6 +371,9 @@ class PaylogController extends BaseController
                 $result = $payment->transfer->toBalance($paydata);
                 break;
             }
+            if(empty($result)){
+                $this->error('微信服务号配置不完整,请先设置资料');
+            }
         }elseif($paytype=='wechatpack'){
             $successed=false;
             $wechats=MemberOauthModel::getAccountsByMemberAndType($cash['member_id']);
@@ -388,6 +394,9 @@ class PaylogController extends BaseController
                 ];
                 $result = $payment->redpack->sendNormal($redpackData);
                 break;
+            }
+            if(empty($result)){
+                $this->error('小程序配置不完整,请先设置资料');
             }
         }elseif($paytype=='wechatminipack'){
             $successed=false;

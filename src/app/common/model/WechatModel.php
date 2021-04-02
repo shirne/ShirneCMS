@@ -87,13 +87,19 @@ class WechatModel extends BaseModel
         return self::to_config($this);
     }
     
-    public static function createApp($wechat, $ispay=false, $payset=[]){
-        if(is_numeric($wechat)){
+    protected static $lastWechat = null;
+    public static function getLastWechat(){
+        return static::$lastWechat;
+    }
+    public static function createApp($wechat = 'default', $ispay=false, $payset=[]){
+        if($wechat === 'default'){
+            $wechat = static::where('is_default',1)->find();
+        }elseif(is_numeric($wechat)){
             $wechat = static::get($wechat);
-        }
-        if(is_string($wechat)){
+        }elseif(is_string($wechat)){
             $wechat = static::where(['appid'=>$wechat])->find();
         }
+        static::$lastWechat = $wechat;
         if(!empty($wechat)){
             if($ispay){
                 $config=WechatModel::to_pay_config($wechat, $payset['notify']??'', $payset['use_cert']??false);

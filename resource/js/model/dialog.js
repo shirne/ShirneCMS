@@ -176,6 +176,9 @@
             }
         });
         this.box.on('shown.bs.modal',function(){
+            if(self.box && self.closed){
+                return self.box.modal('hide');
+            }
             if(self.options.onshown){
                 self.options.onshown(body,self.box);
             }
@@ -436,7 +439,9 @@
             var contentHtml='<div class="form-group">{@input}</div>';
             var title='请输入信息';
             var is_multi=false;
+            var is_textarea=false;
             var multiset={};
+            var keyboard=true;
             if(typeof message=='string'){
                 title=message;
             }else{
@@ -448,28 +453,50 @@
                     is_multi=true;
                     multiset=message.multi;
                 }
+                if(message.is_textarea){
+                    is_textarea=true;
+                }
+                if(message.keyboard !== undefined){
+                    keyboard = message.keyboard;
+                }else if(is_textarea){
+                    keyboard = false;
+                }
             }
             var inputHtml='<input type="text" name="confirm_input" class="form-control" />';
+            if(is_textarea){
+                inputHtml='<textarea name="confirm_input" class="form-control" ></textarea>';
+            }
             if(is_multi){
                 inputHtml='';
                 for(var i in multiset){
-                    inputHtml+= '<div class="input-group mt-1"><div class="input-group-prepend"><span class="input-group-text">'+multiset[i]+'</span></div><input type="text" data-key="'+i+'" name="confirm_input" class="form-control" /></div>';
+                    var label = multiset[i], value = '', sub_is_textarea=false;
+                    if(typeof label === 'object'){
+                        value = label.value?label.value:''
+                        sub_is_textarea = label.is_textarea?label.is_textarea:is_textarea;
+                        label = label.label?label.label:(label.title?label.title:i)
+                    }
+                    if(sub_is_textarea){
+                        inputHtml+= '<div class="input-group mt-2"><div class="input-group-prepend"><span class="input-group-text">'+label+'</span></div><textarea name="confirm_input" data-key="'+i+'" class="form-control" >'+value+'</textarea></div>';
+                    }else{
+                        inputHtml+= '<div class="input-group mt-2"><div class="input-group-prepend"><span class="input-group-text">'+label+'</span></div><input type="text" data-key="'+i+'" name="confirm_input" value="'+value+'" class="form-control" /></div>';
+                    }
                 }
             }
             return new Dialog({
-                'backdrop':'static',
-                'onshow':function(body){
+                backdrop:'static',
+                keyboard: keyboard,
+                onshow:function(body){
                     if(message && message.onshow){
                         message.onshow(body);
                     }
                 },
-                'onshown':function(body){
-                    body.find('[name=confirm_input]').focus();
+                onshown:function(body){
+                    body.find('[name=confirm_input]').eq(0).select();
                     if(message && message.onshown){
                         message.onshown(body);
                     }
                 },
-                'onsure':function(body){
+                onsure:function(body){
                     var inputs=body.find('[name=confirm_input]'),val=inputs.val();
                     if(is_multi){
                         val={};
@@ -479,14 +506,14 @@
                         })
                     }
                     if(typeof callback=='function'){
-                        var result = callback(val);
+                        var result = callback(val, body);
                         if(result===true){
                             called=true;
                         }
                         return result;
                     }
                 },
-                'onhide':function () {
+                onhide:function () {
                     if(called=false && typeof cancel=='function'){
                         return cancel();
                     }
@@ -497,13 +524,13 @@
             var html='<div class="list-group"  style="max-height: 70vh;overflow: auto;"><a href="javascript:" class="list-group-item list-group-item-action">'+list.join('</a><a href="javascript:" class="list-group-item list-group-item-action">')+'</a></div>';
             var actions=null;
             var dlg=new Dialog({
-                'bodyClass':'modal-action',
-                'backdrop':'static',
-                'size':'sm',
-                'btns':[
+                bodyClass:'modal-action',
+                backdrop:'static',
+                size:'sm',
+                btns:[
                     {'text':'取消','type':'secondary'}
                 ],
-                'onshow':function(body){
+                onshow:function(body){
                     actions=body.find('.list-group-item-action');
                     actions.click(function (e) {
                         actions.removeClass('active');
@@ -518,10 +545,10 @@
                         }
                     })
                 },
-                'onsure':function(body){
+                onsure:function(body){
                     return true;
                 },
-                'onhide':function () {
+                onhide:function () {
                     return true;
                 }
             }).show(html,title?title:'请选择');
@@ -564,8 +591,8 @@
             if(!config.title)config.title=title;
 
             var dlg=new Dialog({
-                'backdrop':'static',
-                'onshown':function(body){
+                backdrop:'static',
+                onshown:function(body){
                     var btn=body.find('.searchbtn');
                     var input=body.find('.searchtext');
                     var listbox=body.find('.list-group');
@@ -634,7 +661,7 @@
 
                     }).trigger('click');
                 },
-                'onsure':function(body){
+                onsure:function(body){
                     if(!current){
                         dialog.warning('没有选择'+config.name+'!');
                         return false;
@@ -647,18 +674,28 @@
             }).show(contentTpl,config.title);
             return dlg;
         },
-        pickUser:function(callback,filter){
+        pickUser:function(callback,title,filter){
+            if(typeof title=='object' && !filter){
+                filter = title;
+                title = null;
+            }
             return this.pickList({
-                'url':window.get_search_url('member'),
-                'name':'会员',
-                'searchHolder':'根据会员id或名称，电话来搜索',
-                'rowTemplate':'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action" style="line-height:30px;">{if @avatar}<img src="{@avatar}" style="width:30px;height:30px;border-radius: 100%;margin-right:10px;" />{else}<i class="ion-md-person"></i>{/if} [{@id}]&nbsp;{if @nickname}{@nickname}{else}{@username}{/if}&nbsp;&nbsp;&nbsp;{if @mobile}<small><i class="ion-md-phone-portrait"></i> {@mobile}</small>{/if}</a>'
+                url:window.get_search_url('member'),
+                title:title,
+                name:'会员',
+                searchHolder:'根据会员id或名称，电话来搜索',
+                rowTemplate:'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action" style="line-height:30px;">{if @avatar}<img src="{@avatar}" style="width:30px;height:30px;border-radius: 100%;margin-right:10px;" />{else}<i class="ion-md-person"></i>{/if} [{@id}]&nbsp;{if @nickname}{@nickname}{else}{@username}{/if}&nbsp;&nbsp;&nbsp;{if @mobile}<small><i class="ion-md-phone-portrait"></i> {@mobile}</small>{/if}</a>'
             },callback,filter);
         },
-        pickArticle:function(callback,filter){
+        pickArticle:function(callback,title,filter){
+            if(typeof title=='object' && !filter){
+                filter = title;
+                title = null;
+            }
             return this.pickList({
-                'url':window.get_search_url('article'),
+                url:window.get_search_url('article'),
                 rowTemplate:'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action">{if @cover}<div style="background-image:url({@cover})" class="imgview" ></div>{/if}<div class="text-block">[{@id}]&nbsp;{@title}&nbsp;<br />{@description}</div></a>',
+                title:title,
                 name:'文章',
                 idkey:'id',
                 extend:{
@@ -670,13 +707,18 @@
                 'searchHolder':'根据文章标题搜索'
             },callback,filter);
         },
-        pickProduct:function(callback,filter){
+        pickProduct:function(callback,title,filter){
+            if(typeof title=='object' && !filter){
+                filter = title;
+                title = null;
+            }
             var issku = filter && filter['searchtype'];
             var titletpl='<div class="text-block">[{@id}]&nbsp;{@title}&nbsp;<br />{@min_price}{if @max_price>@min_price}~{@max_price}{/if}</div>';
             if(issku)titletpl='<div class="text-block">[{@id}]&nbsp;{@title}&nbsp;<br />[{@sku_goods_no}]&nbsp;{@price}</div>';
             return this.pickList({
-                'url':window.get_search_url('product'),
+                url:window.get_search_url('product'),
                 rowTemplate:'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action">{if @image}<div style="background-image:url({@image})" class="imgview" ></div>{/if}'+titletpl+'</a>',
+                title:title,
                 name:'产品',
                 idkey:'id',
                 extend:{
@@ -692,9 +734,9 @@
             var settedLocate=null;
             var height=$(window).height()*.6
             var dlg=new Dialog({
-                'size':'lg',
-                'backdrop':'static',
-                'onshown':function(body){
+                size:'lg',
+                backdrop:'static',
+                onshown:function(body){
                     var btn=body.find('.searchbtn');
                     var input=body.find('.searchtext');
                     var mapbox=body.find('.map');
@@ -715,7 +757,7 @@
                     },500)
 
                 },
-                'onsure':function(body){
+                onsure:function(body){
                     if(!settedLocate){
                         dialog.warning('没有选择位置!');
                         return false;
@@ -733,20 +775,7 @@
         }
     };
 
-    //监控按键
-    $(document).on('keydown', function(e){
-        if(!Dialog.instance)return;
-        var dlg=Dialog.instance;
-        if (e.keyCode == 13) {
-            dlg.box.find('.modal-footer .btn[default]').trigger('click');
-        }
-        //默认已监听关闭
-        /*if (e.keyCode == 27) {
-         self.hide();
-         }*/
-    });
-
-    //暴露接口
+    // 暴露接口
     window.Dialog=$.Dialog=Dialog;
     window.dialog=$.dialog=dialog;
 })(window,jQuery||Zepto);

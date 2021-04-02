@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
+    <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>{:lang('Dashboard')}</title>
@@ -22,6 +23,7 @@
             return "{:url('admin/index/getCate',['model'=>'__MODEL__'])}".replace('__MODEL__',model);
         };
         window.get_search_url=function (model) {
+            if(model == 'product')model = 'shop.product';
             return "{:url('admin/--model--/search')}".replace('--model--',model);
         };
         window.get_view_url=function (model,id) {
@@ -108,18 +110,41 @@
                     success: function (json) {
                         //console.log(json);
                         $('.side-nav .badge').remove();
+                        if(json.total){
+                            $('#notice-icon').html('<i class="ion-md-notifications"></i> ('+json.total+')')
+                            $('#notice-box').html('')
+                        }else{
+                            $('#notice-icon').html('<i class="ion-md-notifications"></i>')
+                            $('#notice-box').html('<span class="dropdown-item">暂无提醒</span>')
+                        }
                         for (var key in json) {
                             var node = null;
+                            var notice_title = '';
+                            var args='';
+
                             switch (key) {
                                 case 'newMemberCount':
                                     node = $('[data-key=member_index]');
+                                    notice_title = '新会员'
                                     break;
                                 case 'newOrderCount':
-                                    node = $('[data-key=order_index]');
+                                    node = $('[data-key=shop_order_index]');
+                                    notice_title = '待发货订单'
+                                    args='?status=1'
+                                    break;
+                                case 'newMemberAuthen':
+                                    node = $('[data-key=member_authen_index]');
+                                    notice_title = '合伙人申请'
+                                    break;
+                                case 'newMemberCashin':
+                                    node = $('[data-key=paylog_cashin]');
+                                    notice_title = '提现申请'
                                     break;
                             }
                             if (node) {
-                                if (json[key] > 0) {
+                                if ( json[key] > 0 ) {
+                                    $('#notice-box').append('<a class="dropdown-item" href="'+node.attr('href')+args+'" >'+notice_title+'<span class="badge badge-light">' + json[key] + '</span></a>');
+                                    
                                     var badge = node.find('.badge');
                                     if (badge.length < 1) {
                                         node.append('<span class="badge badge-light">' + json[key] + '</span>');
@@ -134,6 +159,8 @@
                                             pbadge.text(json[key]);
                                         }
                                     }
+                                }else{
+                                    node.find('.badge').remove();
                                 }
                             }
                         }

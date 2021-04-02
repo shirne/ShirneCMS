@@ -50,8 +50,10 @@ class BoothController extends BaseController
         }
         $model=array('status'=>1,'type'=>'article','data'=>['type'=>0,'parent_id'=>0,'category_id'=>0]);
         $this->assign('model',$model);
+        $this->assign('modules',$this->modules);
+        $this->assign('model',$model);
         $this->assign('article_types',getArticleTypes());
-        $this->assign('booth_types',BoothModel::$booth_types);
+        $this->assign('booth_types', $this->getBoothTypes());
         $this->assign('id',0);
         return $this->fetch('update');
     }
@@ -90,10 +92,26 @@ class BoothController extends BaseController
         }
         
         $this->assign('model',$model);
+        $this->assign('modules',$this->modules);
         $this->assign('article_types',getArticleTypes());
-        $this->assign('booth_types',BoothModel::$booth_types);
+        $this->assign('booth_types', $this->getBoothTypes());
         $this->assign('id',$id);
         return $this->fetch();
+    }
+
+    protected function getBoothTypes(){
+        $types = [
+            'category'=>'栏目分类',
+            'article'=>'内容',
+        ];
+        
+        if(in_array('shop',$this->modules)!==false){
+            $types['product_category']='商品分类';
+            $types['product']='商品';
+            $types['brand']='品牌';
+        }
+        $types['ad']='广告位';
+        return $types;
     }
     
     public function lock($id){

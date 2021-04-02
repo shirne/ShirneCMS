@@ -70,7 +70,7 @@ class InstallController extends Controller
                 $args[] = $sql;
             }
             if (!empty($mode)) {
-                $args[] = '--mode';
+                $args[] = '--module';
                 $args[] = is_array($mode)?implode(',',$mode):$mode;
             }
             if ($this->request->has('admin', 'post')) {
@@ -137,7 +137,7 @@ class InstallController extends Controller
         $phpgdenv=['title'=>'PHP-gd','require'=>'*','current'=>'','pass'=>false];
         if(function_exists('gd_info')){
             $gdinfo=gd_info();
-            $phpgdenv['current']=$gdinfo['GD Verion'];
+            $phpgdenv['current']=$gdinfo['GD Version'];
             $phpgdenv['pass']=true;
         }
         $envs[]=$phpgdenv;

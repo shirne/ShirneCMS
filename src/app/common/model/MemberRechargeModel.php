@@ -7,6 +7,12 @@ use app\common\core\BaseModel;
 
 class MemberRechargeModel extends BaseModel
 {
+    public function onPayResult($paytype, $paytime, $payamount){
+        $this->updateStatus([
+            'status'=>1,
+            'audit_time'=>$paytime
+        ]);
+    }
 
     protected $name = 'member_recharge';
     protected function triggerStatus($item, $status, $newData=[])

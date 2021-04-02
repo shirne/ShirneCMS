@@ -45,6 +45,9 @@ class WechatOfficialHandler extends BaseHandler implements EventHandlerInterface
                             return $this->onSubscribe($message, $userinfo);
                         }
                         break;
+                    case 'unsubscribe':
+                        return $this->onUnSubscribe($message);
+                        break;
                     case 'SCAN':
                         return $this->onScan($message,$message['EventKey']);
                         break;

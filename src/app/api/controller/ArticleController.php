@@ -21,7 +21,7 @@ class ArticleController extends BaseController
         return $this->response(CategoryFacade::getTreedCategory());
     }
 
-    public function get_cates($pid=0, $list_count=0){
+    public function get_cates($pid=0, $list_count=0, $filters=[]){
         if($pid != '0' && preg_match('/^[a-zA-Z]\w+$/',$pid)){
             $current=CategoryFacade::findCategory($pid);
             if(empty($current)){
@@ -31,20 +31,21 @@ class ArticleController extends BaseController
         }
         $cates = CategoryFacade::getSubCategory($pid);
         if($list_count > 0){
-            $product = ArticleModel::getInstance();
+            $article = ArticleModel::getInstance();
+            $filters['limit']=$list_count;
+            if(!isset($filters['recursive'])){
+                $filters['recursive']=1;
+            }
             foreach($cates as &$cate){
-                $cate['products']=$product->tagList([
-                    'category'=>$cate['id'],
-                    'recursive'=>1,
-                    'limit'=>$list_count
-                ]);
+                $filters['category']=$cate['id'];
+                $cate['articles']=$article->tagList($filters);
             }
             unset($cate);
         }
         return $this->response($cates);
     }
 
-    public function get_list($cate='',$order='',$keyword='',$page=1, $pagesize=10){
+    public function get_list($cate='',$order='',$keyword='',$page=1,$type='', $pagesize=10){
     
         $condition=[];
         if($cate){
@@ -56,6 +57,9 @@ class ArticleController extends BaseController
         }
         if(!empty($keyword)){
             $condition['keyword']=$keyword;
+        }
+        if($type !== ''){
+            $condition['type']=$type;
         }
         $condition['page']=$page;
         $condition['pagesize']=$pagesize;

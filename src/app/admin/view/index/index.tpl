@@ -13,6 +13,61 @@
         </div>
     {/foreach}
     <div class="row">
+        <if condition="!empty($stat['channels'])">
+            <volist name="$stat['channels']" id="channel">
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="card border-info">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col flex-grow-0">
+                                <i class="ion-md-create ion-5x"></i>
+                            </div>
+                            <div class="col text-right">
+                                <p class="announcement-heading text-nowrap">{$channel['article']}</p>
+                                <p class="announcement-text">{$channel['title']}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer announcement-bottom">
+                        <nav class="nav nav-fill">
+                            <a class="nav-item nav-link" href="{:url('channel/index',['channel_id'=>$channel['id']])}"><i class="ion-md-navicon"></i> 管理{$channel['unit']} </a>
+                            <if condition="$channel['mode'] == 1">
+
+                                <else/>
+                                <a class="nav-item nav-link" href="{:url('channel/add',['channel_id'=>$channel['id']])}"><i class="ion-md-add"></i> 发布{$channel['unit']} </a>
+                            </if>
+                            <if condition="$channel['is_comment'] == 1">
+                                <a class="nav-item nav-link" href="{:url('channel/comments',['channel_id'=>$channel['id']])}"><i class="ion-md-add"></i> 新评论({$channel['comment_new']}) </a>
+                            </if>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            </volist>
+        </if>
+        <if condition="isset($stat['article'])">
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="card border-info">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col flex-grow-0">
+                                <i class="ion-md-create ion-5x"></i>
+                            </div>
+                            <div class="col text-right">
+                                <p class="announcement-heading text-nowrap">{$stat.article}</p>
+                                <p class="announcement-text">文章</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer announcement-bottom">
+                        <nav class="nav nav-fill">
+                            <a class="nav-item nav-link" href="{:url('article/index')}"><i class="ion-md-navicon"></i> 管理文章 </a>
+                            <a class="nav-item nav-link" href="{:url('article/add')}"><i class="ion-md-add"></i> 发布文章 </a>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </if>
         <div class="col-lg-3 col-md-6 mb-3">
             <div class="card border-info">
                 <div class="card-body">
@@ -29,11 +84,12 @@
                 <div class="card-footer announcement-bottom">
                     <nav class="nav nav-fill">
                         <a class="nav-item nav-link" href="{:url('feedback/index')}"><i class="ion-md-navicon"></i> 查看留言 </a>
-                        <a class="nav-item nav-link" href="{:url('feedback/statics')}"><i class="ion-md-stats-bars"></i> 留言统计 </a>
+                        <a class="nav-item nav-link" href="{:url('feedback/statics')}"><i class="ion-md-stats-bars"></i> 新留言({$stat.feedback_new}) </a>
                     </nav>
                 </div>
             </div>
         </div>
+        <if condition="!empty($member)">
         <div class="col-lg-3 col-md-6 mb-3">
             <div class="card border-info">
                 <div class="card-body">
@@ -42,7 +98,7 @@
                             <i class="ion-md-people ion-5x"></i>
                         </div>
                         <div class="col text-right">
-                            <p class="announcement-heading text-nowrap">{$stat.member}</p>
+                            <p class="announcement-heading text-nowrap">{$member.total}</p>
                             <p class="announcement-text">会员</p>
                         </div>
                     </div>
@@ -55,51 +111,36 @@
                 </div>
             </div>
         </div>
+        </if>
+        <if condition="!empty($stat['orders'])">
         <div class="col-lg-3 col-md-6 mb-3">
             <div class="card border-info">
                 <div class="card-body">
                     <div class="row">
                         <div class="col flex-grow-0">
-                            <i class="ion-md-create ion-5x"></i>
+                            <i class="ion-md-paper ion-5x"></i>
                         </div>
                         <div class="col text-right">
-                            <p class="announcement-heading text-nowrap">{$stat.article}</p>
-                            <p class="announcement-text">文章</p>
+                            <p class="announcement-heading text-nowrap">{$stat.orders}</p>
+                            <p class="announcement-text">订单</p>
                         </div>
                     </div>
                 </div>
                 <div class="card-footer announcement-bottom">
                     <nav class="nav nav-fill">
-                        <a class="nav-item nav-link" href="{:url('article/index')}"><i class="ion-md-navicon"></i> 管理文章 </a>
-                        <a class="nav-item nav-link" href="{:url('article/add')}"><i class="ion-md-add"></i> 发布文章 </a>
+                        <a class="nav-item nav-link" href="{:url('shop.order/index')}"><i class="ion-md-navicon"></i> 管理订单 </a>
+                        <a class="nav-item nav-link" href="{:url('shop.order/index')}"><i class="ion-md-navicon"></i> 待处理({$stat.order_new}) </a>
+                        <a class="nav-item nav-link" href="{:url('shop.orderstatics/statics')}"><i class="ion-md-stats-bars"></i> 订单统计 </a>
                     </nav>
                 </div>
             </div>
         </div>
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card border-info">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col flex-grow-0">
-                            <i class="ion-md-link ion-5x"></i>
-                        </div>
-                        <div class="col text-right">
-                            <p class="announcement-heading text-nowrap">{$stat.links}</p>
-                            <p class="announcement-text">链接</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer announcement-bottom">
-                    <nav class="nav nav-fill">
-                        <a class="nav-item nav-link" href="{:url('links/index')}"><i class="ion-md-navicon"></i> 管理链接 </a>
-                        <a class="nav-item nav-link" href="{:url('links/statics')}"><i class="ion-md-stats-bars"></i> 文章统计 </a>
-                    </nav>
-                </div>
-            </div>
-        </div>
+        </if>
+        
     </div>
 
     <div class="row">
+        <if condition="!empty($member)">
         <div class="col-md-6">
             <div class="card border-default">
                 <div class="card-header">
@@ -108,19 +149,21 @@
                 <table class="table table-striped">
                     <tr>
                         <th width="80">总会员</th>
-                        <td>{$mem.total}</td>
+                        <td>{$member.total}</td>
                     </tr>
                     <tr>
                         <th width="80">正常会员</th>
-                        <td>{$mem.avail}</td>
+                        <td>{$member.avail}</td>
                     </tr>
                     <tr>
                         <th width="80">总代理数</th>
-                        <td>{$mem.agent}</td>
+                        <td>{$member.agent}</td>
                     </tr>
                 </table>
             </div>
         </div>
+        </if>
+        <if condition="!empty($money)">
         <div class="col-md-6">
             <div class="card border-default">
                 <div class="card-header">
@@ -149,6 +192,7 @@
                 </table>
             </div>
         </div>
+        </if>
     </div>
 
 </div>

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>管理员登录</title>
     <meta charset="utf-8">
+    <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -61,7 +62,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="ion-md-checkmark-circle"></i> </span>
                         </div>
-                        <input type="text" name="verify" class="form-control" id="exampleInputCode" placeholder="验证码">
+                        <input type="text" name="verify" class="form-control" id="exampleInputCode" autocomplete="off" placeholder="验证码">
                     </div>
                 </div>
                 <div class="form-group text-center">
@@ -70,7 +71,16 @@
                         <figcaption class="figure-caption">看不清？点击图片刷新</figcaption>
                     </figure>
                 </div>
+<<<<<<< HEAD:src/app/admin/view/login/index.tpl
                 {/if}
+=======
+                </if>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" name="remember" value="1"> 保持登录状态
+                      </label>
+                </div>
+>>>>>>> v2:src/application/admin/view/login/index.tpl
                 <button type="submit" class="btn btn-block btn-primary">登陆</button>
                 <div class="alert fade show" role="alert">
                     <span class="alert-content"></span>

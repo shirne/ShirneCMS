@@ -4,7 +4,12 @@
 namespace app\admin\controller\shop;
 
 use app\admin\controller\BaseController;
+<<<<<<< HEAD:src/app/admin/controller/shop/OrderStaticsController.php
 use think\facade\Db;
+=======
+use think\Db;
+use think\response\Redirect;
+>>>>>>> v2:src/application/admin/controller/shop/OrderStaticsController.php
 
 /**
  * 订单统计
@@ -50,15 +55,72 @@ class OrderStaticsController extends BaseController
             if(!empty($end_date)){
                 $model->whereBetween('create_time',[strtotime($start_date),strtotime($end_date.' 23:59:59')]);
             }else{
+<<<<<<< HEAD:src/app/admin/controller/shop/OrderStaticsController.php
                 $model->where('create_time','>',strtotime($start_date));
             }
         }else{
             if(!empty($end_date)){
                 $model->where('create_time','<',strtotime($end_date.' 23:59:59'));
+=======
+                $model->where('create_time','>=',strtotime($start_date));
+            }
+        }else{
+            if(!empty($end_date)){
+                $model->where('create_time','<=',strtotime($end_date.' 23:59:59'));
+>>>>>>> v2:src/application/admin/controller/shop/OrderStaticsController.php
             }
         }
 
         $statics=$model->where('status','>',0)->group('awdate')->select();
+<<<<<<< HEAD:src/app/admin/controller/shop/OrderStaticsController.php
+=======
+
+        $this->assign('statics',$statics);
+        $this->assign('static_type',$type);
+        $this->assign('start_date',$start_date);
+        $this->assign('end_date',$end_date);
+        return $this->fetch();
+    }
+
+    /**
+     * 地区统计
+     * @param string $type 
+     * @param string $start_date 
+     * @param string $end_date 
+     * @return Redirect|string 
+     */
+    public function region($type='city',$start_date='',$end_date=''){
+        if($this->request->isPost()){
+            if(!in_array($type,['province','city']))$type='city';
+            return redirect(url('',['type'=>$type,'start_date'=>$start_date,'end_date'=>$end_date]));
+        }
+
+        $model=Db::name('order')->field('count(order_id) as order_count,sum(payamount) as order_amount,sum(rebate_total) as order_rebate,sum(cost_amount) as total_cost_amount,`'.$type.'` as region');
+        
+        if(empty($start_date)){
+            if($type=='date'){
+                $start_date=date('Y-m-01',time());
+            }elseif($type=='month'){
+                $start_date=date('Y-01-01',time());
+            }
+        }
+        
+        $start_date=format_date($start_date,'Y-m-d');
+        $end_date=format_date($end_date,'Y-m-d');
+        if(!empty($start_date)){
+            if(!empty($end_date)){
+                $model->whereBetween('create_time',[strtotime($start_date),strtotime($end_date.' 23:59:59')]);
+            }else{
+                $model->where('create_time','>=',strtotime($start_date));
+            }
+        }else{
+            if(!empty($end_date)){
+                $model->where('create_time','<=',strtotime($end_date.' 23:59:59'));
+            }
+        }
+
+        $statics=$model->where('status','>',0)->order('order_count DESC,order_amount DESC')->group('region')->select();
+>>>>>>> v2:src/application/admin/controller/shop/OrderStaticsController.php
 
         $this->assign('statics',$statics);
         $this->assign('static_type',$type);

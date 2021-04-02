@@ -14,6 +14,8 @@ class CategoryModel extends BaseModel
     protected $name = 'category';
     protected $precache='';
 
+    protected $type = ['props'=>'array'];
+
     protected $data;
     protected $treed;
 
@@ -25,7 +27,8 @@ class CategoryModel extends BaseModel
         if(empty($this->data) || $force){
             $this->data=cache($this->precache.'categories');
             if(empty($this->data) || $force){
-                $this->data=getSortedCategory($this->_get_data());
+                $tmpdata = $this->_get_data();
+                $this->data=getSortedCategory($tmpdata);
                 cache($this->precache.'categories',$this->data);
             }
         }

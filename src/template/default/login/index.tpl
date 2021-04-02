@@ -43,12 +43,17 @@
 								<div class="input-group-prepend">
 									<span class="input-group-text"><i class="ion-md-checkmark"></i></span>
 								</div>
-								<input type="text" class="form-control" name="verify" placeholder="{:lang('Verify')}" />
+								<input type="text" class="form-control" name="verify" autocomplete="off" placeholder="{:lang('Verify')}" />
 								<div class="input-group-append">
 									<a href="javascript:" class="input-group-text verifybox" style="padding:0;"><img src="{:url('index/login/verify')}" alt=""></a>
 								</div>
 							</div>
 						</div>
+						<div class="form-group">
+							<label>
+								<input type="checkbox" name="remember" value="1"> 保持登录
+							  </label>
+							</div>
 						<div class="form-group submitline">
 							<button type="submit" class="btn btn-primary btn-block create">{:lang('Sign in')}</button>
 						</div>

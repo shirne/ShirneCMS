@@ -4,6 +4,7 @@ namespace app\api\controller;
 
 use app\common\facade\MemberFavouriteFacade;
 use app\common\facade\ProductCategoryFacade;
+use app\common\model\MemberLevelModel;
 use app\common\model\PostageModel;
 use app\common\model\ProductModel;
 use app\common\model\WechatModel;
@@ -23,7 +24,7 @@ class ProductController extends BaseController
         return $this->response(ProductCategoryFacade::getTreedCategory());
     }
 
-    public function get_cates($pid=0, $goods_count=0, $withsku=0){
+    public function get_cates($pid=0, $goods_count=0, $withsku=0, $filters=[]){
         if($pid!=0 && preg_match('/^[a-zA-Z]\w+/',$pid)){
             $current=ProductCategoryFacade::findCategory($pid);
             if(empty($current)){
@@ -34,13 +35,16 @@ class ProductController extends BaseController
         $cates = ProductCategoryFacade::getSubCategory($pid);
         if($goods_count > 0){
             $product = ProductModel::getInstance();
+            $filters['limit']=$goods_count;
+            if(!isset($filters['recursive'])){
+                $filters['recursive']=1;
+            }
+            if($withsku){
+                $filters['withsku']=$withsku;
+            }
             foreach($cates as &$cate){
-                $cate['products']=$product->tagList([
-                    'category'=>$cate['id'],
-                    'recursive'=>1,
-                    'limit'=>$goods_count,
-                    'withsku'=>$withsku
-                ]);
+                $filters['category']=$cate['id'];
+                $cate['products']=$product->tagList($filters);
             }
             unset($cate);
         }
@@ -98,6 +102,14 @@ class ProductController extends BaseController
 
         $skus=ProductSkuModel::where('product_id',$product['id'])->select();
         $images=Db::name('ProductImages')->where('product_id',$product['id'])->select();
+        if(!empty($product['levels'])){
+            $levels=MemberLevelModel::getCacheData();
+            $level_names=[];
+            foreach($product['levels'] as $lvid){
+                $level_names[] = $levels[intval($lvid)]['level_name'];
+            }
+            $product['level_names']=$level_names;
+        }
 
         $isFavourite=$this->isLogin?MemberFavouriteFacade::isFavourite($this->user['id'],'product',$id):0;
 
@@ -107,6 +119,24 @@ class ProductController extends BaseController
             'postage'=>PostageModel::getDesc($product['postage_id']),
             'skus'=>$skus,
             'images'=>$images
+        ]);
+    }
+
+    public function flash($id, $date){
+        $flash = ProductModel::getFlash($id,$date);
+        if(empty($flash)){
+            return $this->error('商品快照不存在');
+        }
+        $product = json_decode($flash['product'],true);
+
+        $skus=json_decode($flash['skus'],true);
+        $images=json_decode($flash['images'],true);
+
+        return $this->response([
+            'product'=>$product,
+            'skus'=>$skus,
+            'images'=>$images,
+            'flashDate'=>$flash['timestamp']
         ]);
     }
 
@@ -180,9 +210,12 @@ class ProductController extends BaseController
 
             
             $poster = new Poster($config);
-            $poster->generate($data);
-            $poster->save($sharepath);
-            $imgurl .= '?_t='.time();
+            if($poster->generate($data)){
+                $poster->save($sharepath);
+                $imgurl .= '?_t='.time();
+            }else{
+                $this->error('分享图生成失败');
+            }
         }else{
             $imgurl .= '?_t='.filemtime($sharepath);
         }

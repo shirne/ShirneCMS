@@ -23,7 +23,7 @@ class Install extends Command
         $this->setName('install')
             ->addOption('name', NULL, Option::VALUE_OPTIONAL, "database connect args like  username:password@dataname or username:password@host:dataname")
             ->addOption('file', 'f', Option::VALUE_OPTIONAL, "script file name")
-            ->addOption('mode', 'm', Option::VALUE_REQUIRED, 'install extend model ex. shop')
+            ->addOption('module', 'm', Option::VALUE_REQUIRED, 'install extend module ex. shop')
             ->addOption('username', 'u', Option::VALUE_OPTIONAL, "Specify the super admin account")
             ->addOption('password', 'p', Option::VALUE_REQUIRED, 'Specify the super admin password')
             ->setDescription('Install db script');
@@ -91,18 +91,20 @@ class Install extends Command
                 foreach (['struct','init'] as $script){
                     $sql = $sqlpath.'/'.$script.'.sql';
                     if(file_exists($sql)){
+                        $output->writeln("Run sql $script.sql.");
                         $this->runsql($sql,$dbconfig['prefix']);
                     }else{
                         $output->warning('Sql file '.$script.'.sql not exists!');
                     }
                 }
-                if($input->hasOption('mode')){
-                    $mode=$input->getOption('mode');
+                if($input->hasOption('module')){
+                    $mode=$input->getOption('module');
                     if(!empty($mode)){
                         $modes=explode(',',$mode);
                         foreach ($modes as $mode){
                             $sql = $sqlpath.'/update_'.$mode.'.sql';
                             if(file_exists($sql)) {
+                                $output->writeln("Install module $mode.");
                                 $this->runsql($sql, $dbconfig['prefix']);
                             }else{
                                 $output->warning('Sql file update_'.$mode.'.sql not exists!');
@@ -113,22 +115,24 @@ class Install extends Command
             }
         }
 
-        $admin='admin';
+        $data = [];
         if($input->hasOption('username')){
-            $admin=$input->getOption('username');
+            $data['username']=$input->getOption('username');
         }
-        $password='123456';
+        
         if($input->hasOption('password')){
             $password=$input->getOption('password');
+            $data['salt']=random_str(8);
+            $data['password'] = encode_password($password,$data['salt']);
         }
-        $data['username']=$admin;
-        $data['salt']=random_str(8);
-        $data['password'] = encode_password($password,$data['salt']);
-        Db::name('Manager')->where('id',1)->update($data);
+        if(!empty($data)){
+            $output->writeln("Reset manager.");
+            Db::name('Manager')->where('id',1)->update($data);
+        }
 
         file_put_contents($lockfile,time());
 
-        $output->writeln("Install finished success.");
+        $output->writeln("Installation successful.");
     }
 
     protected function runsql($file,$prefix){

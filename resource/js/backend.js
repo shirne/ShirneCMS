@@ -107,14 +107,40 @@ jQuery(function ($) {
                 for (var i = 0; i < ids.length; i++) {
                     idchecks.push(ids.eq(i).val());
                 }
-                window[action](idchecks);
+                window[action].call(this, idchecks);
             }
         } else {
-            window[action]();
+            window[action].call(this);
         }
     });
 
-    //状态切换按钮
+    // 状态切换 input[hidden]
+    $('.radiostatus').click(function(e){
+        var init = $(this).data('init');
+        var hid = $(this).find('input');
+        var openText = hid.data('open');
+        var closeText = hid.data('close');
+        var value = hid.val();
+        if(!init){
+            $(this).data('init',1);
+            $(this).append('<span></span>');
+        }else{
+            value = value == '1' ? 0 : 1;
+            hid.val(value);
+        }
+        if(value == '1'){
+            $(this).find('span').text(openText)
+            $(this).prop('title','点击'+closeText);
+            $(this).removeClass('off')
+        }else{
+            $(this).find('span').text(closeText)
+            $(this).prop('title','点击'+openText);
+            $(this).addClass('off')
+        }
+
+    }).trigger('click');
+
+    // 状态切换按钮 切换后跳转
     $('.chgstatus').click(function (e) {
         if($(this).data('ajaxing'))return;
         $(this).data('ajaxing',1);
@@ -222,7 +248,7 @@ jQuery(function ($) {
     });
 
     //上传框
-    $('.custom-file .custom-file-input').on('change', function () {
+    window.fileInputHander = function () {
         var self=$(this);
         if(!this.files || !this.files[0])return;
         var inputgroup=$(this).parents('.input-group').eq(0);
@@ -278,7 +304,8 @@ jQuery(function ($) {
 
             })
         }
-    });
+    };
+    $('.custom-file .custom-file-input').on('change', window.fileInputHander);
 
     //表单Ajax提交
     $('.btn-primary[type=submit]').click(function (e) {

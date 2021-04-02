@@ -12,6 +12,8 @@
                     <div class="input-group">
                         <div class="input-group-prepend"><span class="input-group-text">商品名称</span> </div>
                         <input type="text" name="title" class="form-control" value="{$product.title}" id="product-title" placeholder="输入商品名称">
+                        <div class="input-group-prepend"><span class="input-group-text">单位</span> </div>
+                        <input type="text" name="unit" class="form-control" value="{$product.unit}" id="product-unit" style="max-width:50px;" placeholder="单位">
                     </div>
                 </div>
                 <div class="form-group">
@@ -131,6 +133,19 @@
                             </div>
                         </div>
                         <div class="form-row">
+                            <label style="width: 80px;">可用优惠券</label>
+                            <div class="form-group col">
+                                <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
+                                    <label class="btn btn-outline-secondary{$product['is_coupon']==1?' active':''}">
+                                        <input type="radio" name="is_coupon" value="1" autocomplete="off" {$product['is_coupon']==1?'checked':''}>可用
+                                    </label>
+                                    <label class="btn btn-outline-secondary{$product['is_coupon']==0?' active':''}">
+                                        <input type="radio" name="is_coupon" value="0" autocomplete="off" {$product['is_coupon']==0?'checked':''}>不可用
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
                             <label style="width: 80px;">支持分佣</label>
                             <div class="form-group col">
                                 <div class="btn-group btn-group-toggle btn-group-sm commision-groups" data-toggle="buttons">
@@ -221,6 +236,29 @@
                             <label style="width: 80px;">&nbsp;</label>
                             <div class="form-group col">
                                 <div class="text-muted">只有选中的会员组可以购买，不选则不限制</div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <label style="width: 80px;">购买数量</label>
+                            <div class="form-group mb-1 col">
+                                <div class="input-group input-group-sm">
+                                    <select name="max_buy_cycle" class="form-control">
+                                        <option value="">总计</option>
+                                        <option value="day">每天</option>
+                                        <option value="week">每周</option>
+                                        <option value="month">每月</option>
+                                        <option value="season">每季</option>
+                                        <option value="year">每年</option>
+                                    </select>
+                                    <span class="input-group-middle"><span class="input-group-text">最多购买</span></span>
+                                    <input type="text" name="max_buy" class="form-control" value="{$product['max_buy']}" placeholder="填写0不限制" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <label style="width: 80px;">&nbsp;</label>
+                            <div class="form-group col">
+                                <div class="text-muted">默认为0不限制购买数量</div>
                             </div>
                         </div>
                         <div class="form-row">

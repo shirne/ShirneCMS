@@ -22,18 +22,29 @@ use think\facade\Db;
  */
 class OrderController extends AuthedController
 {
-    public function prepare(){
+    public function prepare($from='quick'){
         $order_skus=$this->request->param('products');
         $address=$this->request->param('address');
         $skuids=array_column($order_skus,'sku_id');
-        $products=Db::view('ProductSku','*')
-            ->view('Product',['title'=>'product_title','image'=>'product_image','levels','is_discount','postage_id'],'ProductSku.product_id=Product.id','LEFT')
-            ->whereIn('ProductSku.sku_id',idArr($skuids))
-            ->select();
-        
+        if($from == 'quick'){
+            $skucounts = array_column($order_skus,'count','sku_id');
+            $products = ProductModel::getForOrder($skucounts);
+        }else{
+            $products=MemberCartFacade::getCart($this->user['id'],$skuids);
+        }
+        foreach($products as $product){
+            if(!empty($product['levels'])){
+                if (!in_array($this->user['level_id'], $product['levels'])) {
+                    $this->error('您当前会员组不允许购买商品[' . $product['product_title'] . ']');
+                }
+            }
+        }
         $result=['products'=>$products];
         if(empty($address)){
             $address = Db::name('MemberAddress')->where('member_id',$this->user['id'])->order('is_default DESC')->find();
+            $result['address']=$address;
+        }elseif(!is_array($address)){
+            $address = Db::name('MemberAddress')->where('member_id',$this->user['id'])->where('address_id',$address)->order('is_default DESC')->find();
             $result['address']=$address;
         }
         $result['express'] = PostageModel::calcolate($products,$address);
@@ -129,7 +140,7 @@ class OrderController extends AuthedController
 
     public function wechatpay($order_id, $trade_type='JSAPI', $payid=0){
         $trade_type = strtoupper($trade_type);
-        if($payid)$wechat=WechatModel::where('id|hash',$payid)->where('type','wechat')->find();
+        if($payid)$wechat=WechatModel::where(is_numeric($payid)?'id':'hash',$payid)->where('type','wechat')->find();
         if($trade_type == 'JSAPI' ) {
             if(empty($this->wechatUser) && !empty($wechat)){
                 $openid = $this->request->param('openid');
@@ -149,7 +160,7 @@ class OrderController extends AuthedController
             }
         }
         if(empty($wechat) && $payid){
-            $wechat=WechatModel::where('id|hash',$payid)
+            $wechat=WechatModel::where(is_numeric($payid)?'id':'hash', $payid)
                 ->where('type','wechat')->find();
         }
         if(empty($wechat)){

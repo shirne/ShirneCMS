@@ -18,6 +18,13 @@ return [
             'height'=>120,
         ],
         'bg'=>['type'=>'background'],
+        'qrcode'=>[
+            'type'=>'image',
+            'x'=>115,
+            'y'=>300,
+            'width'=>520,
+            'height'=>520,
+        ],
         'nickname'=>[
             'x'=>272,
             'y'=>915,

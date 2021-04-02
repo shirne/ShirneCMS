@@ -39,7 +39,9 @@ class ContentModel extends BaseModel
     protected function tagBase($hidden=null)
     {
         $this->model=ucfirst($this->name);
-        $this->cateModel=($this->model=='Article'?'':$this->model).'Category';
+        if(empty($this->cateModel)){
+            $this->cateModel=($this->model=='Article'?'':$this->model).'Category';
+        }
         if(is_null($hidden )){
             $hidden = $this->hiddenFields;
         }
@@ -203,10 +205,21 @@ class ContentModel extends BaseModel
                 $model->where($this->model.".cate_id",$cate_id);
             }
         }
-        $sortids=[];
+        
+        $needSort = false;
+        if(!empty($attrs['exclude_ids'])){
+            $model->whereNotIn($this->model . ".id",idArr($attrs['exclude_ids']));
+        }
         if(!empty($attrs['ids'])){
             $sortids=idArr($attrs['ids']);
+            if(count($sortids)>1)$needSort=true;
             $model->whereIn($this->model . ".id",$sortids);
+        }
+        if(!empty($attrs['name'])){
+            $sortnames=explode(',',trim($attrs['name']));
+            $sortnames=array_map('trim', $sortnames);
+            if(count($sortnames)>1)$needSort=true;
+            $model->whereIn($this->model . ".name",$sortnames);
         }
         if(!empty($attrs['keyword'])){
             $model->whereLike($this->getSearchFields(),"%{$attrs['keyword']}%");
@@ -254,25 +267,43 @@ class ContentModel extends BaseModel
             $list = $model->paginate($pagesize,false,['page'=>$page]);
             
         }else {
-            if (empty($attrs['limit'])) {
+            if (empty($attrs['limit']) && empty($attrs['ids'])) {
                 $attrs['limit'] = 10;
             }
-            $model->limit($attrs['limit']);
+            if(!empty($attrs['limit'])){
+                $model->limit($attrs['limit']);
+            }
     
             $list = $model->select();
             
-            if(!empty($sortids) && count($sortids)>1){
+            if(!empty($list) && $needSort){
                 $newlist=[];
-                $list = array_column($list,null,'id');
-                foreach ($sortids as $id){
-                    if(isset($list[$id]))$newlist[]=$list[$id];
+                if(!empty($sortids)){
+                    $list = array_column($list,null,'id');
+                    foreach ($sortids as $id){
+                        if(isset($list[$id]))$newlist[]=$list[$id];
+                    }
+                }
+                if(!empty($sortnames)){
+                    $list = array_column($list,null,'name');
+                    foreach ($sortnames as $name){
+                        if(isset($list[$name]))$newlist[]=$list[$name];
+                    }
                 }
                 $list=$newlist;
                 unset($newlist);
             }
         }
+        if(empty($list) || ($list instanceof Paginator && $list->isEmpty()))return $list;
         
-        return $this->afterTagList($this->analysisType($list),$attrs);
+        $list = $this->afterTagList($this->analysisType($list),$attrs);
+        if(isset($attrs['find']) && $attrs['find'] == 1){
+            if(!is_array($list)){
+                $list = $list->items();
+            }
+            return current($list);
+        }
+        return $list;
     }
 
     public function tagRelation($attrs, $filter=false)
@@ -314,6 +345,7 @@ class ContentModel extends BaseModel
         $model->limit($attrs['limit']);
     
         $list = $model->select();
+        if(empty($list))return $list;
     
         return $this->afterTagList($this->analysisType($list),$attrs);
     }
@@ -338,9 +370,10 @@ class ContentModel extends BaseModel
             $model->where($this->model.".id", '<',  $attrs['id'] );
         }
 
-        $model->order($this->model.'.'.$this->getPk().' DESC');
+        $item = $model->order($this->model.'.'.$this->getPk().' DESC')->find();
 
-        return $this->afterTagItem($this->analysisType($model->find(),false),$attrs);
+        if(empty($item))return $item;
+        return $this->afterTagItem($this->analysisType($item,false),$attrs);
     }
 
     public function tagNext($attrs)
@@ -363,8 +396,9 @@ class ContentModel extends BaseModel
             $model->where($this->model.".id", ">",  $attrs['id'] );
         }
 
-        $model->order($this->model.'.'.$this->getPk().' ASC');
+        $item = $model->order($this->model.'.'.$this->getPk().' ASC')->find();
 
-        return $this->afterTagItem($this->analysisType($model->find(),false),$attrs);
+        if(empty($item))return $item;
+        return $this->afterTagItem($this->analysisType($item,false),$attrs);
     }
 }

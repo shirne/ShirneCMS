@@ -19,21 +19,23 @@ VALUES
   (75,7,'展位管理','Booth/index','booth_index','ion-md-easel',9,0),
   (76,7,'关键字管理','Keywords/index','keywords_index','ion-md-search',9,0),
   (80,8,'会员管理','Member/index','member_index','ion-md-person',0,0),
-  (81,8,'邀请码','Invite/index','invite_index','ion-md-pricetags',3,0),
-  (82,8,'会员组','MemberLevel/index','member_level_index','ion-md-people',5,0),
-  (83,8,'佣金明细','Member/award_log','member_award_log','ion-md-paper',7,0),
-  (84,8,'余额明细','Member/money_log','member_money_log','ion-md-paper',9,0),
-  (85,8,'支付明细','Paylog/index','paylog_index','ion-md-wallet',11,0),
-  (86,8,'充值记录','Paylog/recharge','paylog_recharge','ion-md-log-in',11,0),
-  (87,8,'提现记录','Paylog/cashin','paylog_cashin','ion-md-log-out',13,0),
-  (88,8,'操作日志','Member/log','member_log','ion-md-clipboard',15,0),
+  (81,8,'升级申请','MemberAuthen/index','member_authen_index','ion-md-ribbon',2,0),
+  (82,8,'邀请码','Invite/index','invite_index','ion-md-pricetags',3,0),
+  (83,8,'会员组','MemberLevel/index','member_level_index','ion-md-people',5,0),
+  (84,8,'佣金明细','Member/award_log','member_award_log','ion-md-paper',7,0),
+  (85,8,'余额明细','Member/money_log','member_money_log','ion-md-paper',9,0),
+  (86,8,'支付明细','Paylog/index','paylog_index','ion-md-wallet',11,0),
+  (87,8,'充值记录','Paylog/recharge','paylog_recharge','ion-md-log-in',11,0),
+  (88,8,'提现记录','Paylog/cashin','paylog_cashin','ion-md-log-out',13,0),
+  (89,8,'操作日志','Member/log','member_log','ion-md-clipboard',15,0),
   (91,9,'配置管理','Setting/index','setting_index','ion-md-options',0,0),
   (92,9,'管理员','Manager/index','manager_index','ion-md-person',3,0),
   (93,9,'菜单管理','Permission/index','permission_index','ion-md-code-working',5,0),
   (94,9,'导航管理','Navigator/index','navigator_index','ion-md-reorder',7,0),
   (95,9,'操作日志','Manager/log','manager_log','ion-md-clipboard',9,0),
-  (96,9,'付款方式','Paytype/index','paytype_index','ion-md-card',11,0),
-  (97,9,'公众号管理','Wechat/index','wechat_index','ion-md-chatboxes',13,0);
+  (96,9,'付款方式','Paytype/index','paytype_index','ion-md-card',11,0);
+  
+UPDATE `sa_permission` set `is_sys`=1 where `id` > 0;
 
 TRUNCATE TABLE `sa_manager_role`;
 
@@ -47,7 +49,7 @@ TRUNCATE TABLE `sa_manager`;
 
 INSERT INTO `sa_manager` (`id`,`pid`, `username`,`realname`, `email`, `password`, `salt`, `avatar`, `create_time`, `update_time`, `login_ip`, `status`, `type`)
 VALUES
-  (1,0,'admin','','79099818@qq.com','60271966bbad6ead5faa991772a9277f', 'z5La7s0P',NULL,'1436679338','1436935104','0.0.0.0',1,1);
+  (1,0,'administrator','','79099818@qq.com','60271966bbad6ead5faa991772a9277f', 'z5La7s0P',NULL,'1436679338','1436935104','0.0.0.0',1,1);
 
 
 TRUNCATE TABLE `sa_setting`;
@@ -58,12 +60,16 @@ VALUES
   ('site-keywords','关键词','text','common',0,1,'关键词1,关键词2','关键词',''),
   ('site-description','站点描述','text','common',0,1,'站点描述信息','站点描述',''),
   ('site-weblogo','站点logo','image','common',0,1,'','站点logo',''),
+  ('site-close','关闭站点','radio','common',0,1,'0','是否关闭站点','0:开启\r\n1:关闭'),
+  ('site-close-desc','关闭说明','text','common',0,1,'系统维护中','关闭站点的说明',''),
   ('site-shareimg','默认分享图','image','common',0,1,'','默认分享图',''),
   ('site-tongji','统计代码','textarea','common',0,1,'','统计代码',''),
   ('site-icp','ICP备案号','text','common',0,1,'','ICP备案号',''),
   ('gongan-icp','公安备案号','text','common',0,1,'','公安备案号',''),
   ('site-url','站点网址','text','common',0,1,'http://www.shirne.cn','站点地址',''),
   ('site-name','公司名','text','common',0,1,'ShirneCMS','公司名',''),
+  ('site-400','400电话','text','common',0,1,'','400电话',''),
+  ('site-email','公司邮箱','text','common',0,1,'','公司邮箱',''),
   ('site-telephone','公司电话','text','common',0,1,'','公司电话',''),
   ('site-address','公司地址','text','common',0,1,'','公司地址',''),
   ('site-location','公司位置','location','common',0,1,'','location',''),
@@ -78,10 +84,10 @@ VALUES
   ( 'sms_password', '登录密码', 'text', 'third', '0',1, '', '', ''),
   ( 'kd_userid', '快递鸟用户ID', 'text', 'third', '0',1, '', '', ''),
   ( 'kd_apikey', '快递鸟API Key', 'text', 'third', '0',1, '', '', ''),
-  ( 'mapkey_baidu', '百度地图密钥', 'text', 'third', '0',1, 'rO9tOdEWFfvyGgDkiWqFjxK6', '', ''),
-  ( 'mapkey_google', '谷哥地图密钥y', 'text', 'third', '0',1, 'AIzaSyB8lorvl6EtqIWz67bjWBruOhm9NYS1e24', '', ''),
-  ( 'mapkey_tencent', '腾讯地图密钥', 'text', 'third', '0',1, '7I5BZ-QUE6R-JXLWV-WTVAA-CJMYF-7PBBI', '', ''),
-  ( 'mapkey_gaode', '高德地图密钥', 'text', 'third', '0',1, '3ec311b5db0d597e79422eeb9a6d4449', '', ''),
+  ( 'mapkey_baidu', '百度地图密钥', 'text', 'third', '0',1, '', '', ''),
+  ( 'mapkey_google', '谷哥地图密钥y', 'text', 'third', '0',1, '', '', ''),
+  ( 'mapkey_tencent', '腾讯地图密钥', 'text', 'third', '0',1, '', '', ''),
+  ( 'mapkey_gaode', '高德地图密钥', 'text', 'third', '0',1, '', '', ''),
   ( 'captcha_mode', '验证码模式', 'radio', 'third', '0',1, '0', '', '0:图形验证\r\n1:极验验证'),
   ( 'captcha_geeid', '极验ID', 'text', 'third', '0',1, '', '', ''),
   ( 'captcha_geekey', '极验密钥', 'text', 'third', '0',1, '', '', ''),
@@ -90,10 +96,15 @@ VALUES
   ( 'aliyun_oss', 'OSS Buket', 'text', 'third', '0',1, '', '', ''),
   ( 'aliyun_oss_ssl', '是否ssl', 'radio', 'third', '0',1, '1', '', '0:否\r\n1:是'),
   ( 'aliyun_oss_domain', 'OSS 域名', 'text', 'third', '0',1, '', '', ''),
+  ( 'aliyun_dysms_sign', '短信签名', 'text', 'third', '0',1, '', '', ''),
+  ( 'aliyun_dysms_register', '注册短信CODE', 'text', 'third', '0',1, '', '', ''),
+  ( 'aliyun_dysms_login', '登录短信CODE', 'text', 'third', '0',1, '', '', ''),
+  ( 'aliyun_dysms_forget', '找回密码短信CODE', 'text', 'third', '0',1, '', '', ''),
+  ( 'aliyun_dysms_verify', '通用短信CODE', 'text', 'third', '0',1, '', '', ''),
   ( 'kd_apikey', '快递鸟API Key', 'text', 'third', '0',1, '', '', ''),
   ( 'm_open', '会员系统', 'radio', 'member', '0',1, '1', '', '0:关闭\r\n1:启用'),
   ( 'm_register_open', '开启注册', 'radio', 'member', '0',1, '1', '', '0:关闭\r\n1:启用'),
-  ( 'm_register', '强制注册', 'radio', 'member', '0',1, '1', '', '0:关闭\r\n1:启用'),
+  ( 'm_register', '强制注册', 'radio', 'member', '0',1, '0', '', '0:关闭\r\n1:启用'),
   ( 'm_invite', '邀请注册', 'radio', 'member', '0',1, '1', '', '0:关闭\r\n1:启用\r\n2:强制'),
   ( 'm_checkcode', '验证码', 'radio', 'member', '0',1, '1', '', '0:关闭\r\n1:启用'),
   ( 'anonymous_comment', '匿名评论', 'radio', 'member', '0',1, '1', '', '0:关闭\r\n1:启用'),
@@ -118,5 +129,5 @@ INSERT INTO `sa_member_level`(`level_id`,`level_name`,`short_name`,`is_default`,
 
 TRUNCATE TABLE `sa_oauth_app`;
 
-INSERT INTO `sa_oauth_app`(`platform`, `appid`, `appsecret`) VALUES ('web', 'web', '111111');;
+INSERT INTO `sa_oauth_app`(`platform`, `appid`, `appsecret`) VALUES ('web', 'web', '111111');
 

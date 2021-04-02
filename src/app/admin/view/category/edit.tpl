@@ -124,6 +124,12 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label for="description">默认属性</label>
+                    <div class="form-control">
+                        <input type="text" class="taginput" value="{$model.props|implode_cmp}" placeholder="填写多个值以,分割"  />
+                    </div>
+                </div>
+                <div class="form-group">
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text">关键词</span>
@@ -144,4 +150,15 @@
             </form>
         </div>
     </div>
+<<<<<<< HEAD:src/app/admin/view/category/edit.tpl
 {/block}
+=======
+</block>
+<block name="script">
+    <script type="text/javascript">
+        jQuery(function($){
+            $('.taginput').tags('props[]');
+        })
+    </script>
+</block>
+>>>>>>> v2:src/application/admin/view/category/edit.tpl

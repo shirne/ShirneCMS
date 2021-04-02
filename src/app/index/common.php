@@ -1,8 +1,61 @@
 <?php
 
+<<<<<<< HEAD:src/app/index/common.php
 use think\facade\Db;
+=======
+use app\common\facade\CategoryFacade;
+use think\Db;
+>>>>>>> v2:src/application/index/common.php
 use think\facade\Route;
 
+function indexurl($channel_name){
+    return url('index/channel/list', ['channel_name'=>$channel_name]);
+}
+function listurl($cate_name, $channel_name = ''){
+    if(empty($channel_name)){
+        $topCate = CategoryFacade::getTopCategory($cate_name);
+        if(!empty($topCate)){
+            $channel_name = $topCate['name'];
+        }else{
+            $channel_name = $cate_name;
+        }
+    }
+    return url('index/channel/list', ['channel_name'=>$channel_name, 'cate_name'=>$cate_name]);
+}
+function viewurl($art, $channel_name = ''){
+    if(empty($channel_name)){
+        if(!empty($art['channel_name'])){
+            $channel_name = $art['channel_name'];
+        }elseif(!empty($art['category_name'])){
+            $topCate = CategoryFacade::getTopCategory($art['category_name']);
+            if(!empty($topCate)){
+                $channel_name = $topCate['name'];
+            }
+        }
+        if(empty($channel_name)){
+            $channel_name = $art['category_name'];
+        }
+    }
+
+    // name为空则取id
+    $name = empty($art['name'])?('a-'.$art['id']):$art['name'];
+    return url('index/channel/view', ['channel_name'=>$channel_name, 'cate_name'=>$art['category_name'], 'article_name'=>$name]);
+function addonurl($action = '', $controller = '', $addon = ''){
+    if(empty($action)){
+        $action = request()->param('action');
+    }
+    if(empty($controller)){
+        $controller = request()->param('controller');
+    }
+    if(empty($addon)){
+        $addon = request()->param('addon');
+    }
+    return url('index/addon/index',[
+        'addon'=>$addon,
+        'controller'=>$controller,
+        'action'=>$action
+    ]);
+}
 
 function parseNavigator(&$config,$module){
     $navigators=cache($module.'_navigator');
@@ -37,7 +90,18 @@ function parseModel($url){
         $url[0]=explode('/',$url[0]);
         $model[0]=strtolower($url[0][0]);
         if(!empty($url[1]['group']))$model[]=$url[1]['group'];
-        if(!empty($url[1]['name']))$model[]=$url[1]['name'];
+        if(!empty($url[1]['name'])){
+            if($model[0] === 'article'){
+                $category = CategoryFacade::findCategory($url[1]['name']);
+                $topCate = CategoryFacade::getTopCategory($url[1]['name']);
+                $model[]=$topCate['name'];
+                if($category['id'] != $topCate['id']){
+                    $model[]=$category['name'];
+                }
+            }else{
+                $model[]=$url[1]['name'];
+            }
+        }
     }elseif(is_string($url)) {
         if (strpos($url, 'http://') !== 0 &&
             strpos($url, 'https://') !== 0 &&
@@ -49,8 +113,26 @@ function parseModel($url){
     return implode('-',$model);
 }
 function parseNavUrl($url,$module){
+    
     if(is_array($url)){
-        $url[0]=$module.'/'.strtolower($url[0]);
+        if(count($url)>1 && strpos(strtolower($url[0]),'article/')===0 && isset($url[1]['name'])){
+                $category = CategoryFacade::findCategory($url[1]['name']);
+                $topCate = CategoryFacade::getTopCategory($url[1]['name']);
+                if($category['id'] === $topCate['id']){
+                    $url = [
+                        'index/channel/index',
+                        ['channel_name'=>$topCate['name']]
+                    ];
+                }else{
+                    $url = [
+                        'index/channel/list',
+                        ['channel_name'=>$topCate['name'],'cate_name'=>$category['name']]
+                    ];
+                }
+        }else{
+            $url[0]=$module.'/'.strtolower($url[0]);
+        }
+        
         return call_user_func_array('url',$url);
     }elseif(is_string($url)) {
         if (strpos($url, 'http://') === 0 ||
@@ -94,10 +176,15 @@ function parseNavModel($cate,$module,$modelName='Article'){
     if(!empty($model)){
         $cates=Db::name($cateModel)->where('pid',$model['id'])->select();;
         foreach ($cates as $c){
+            if(strtolower($modelName) == 'article'){
+                $url = listurl($c['name'], $cate);
+            }else{
+                $url = url($module.'/'.strtolower($modelName).'/index',['name'=>$c['name']]);
+            }
             $subs[]=array(
                 'title'=>$c['title'],
                 'icon'=>$c['icon'],
-                'url'=>url($module.'/'.strtolower($modelName).'/index',['name'=>$c['name']])
+                'url'=>$url
             );
         }
     }
@@ -140,4 +227,4 @@ function aurl($url = '', $vars = '', $suffix = true, $domain = false){
     return url(implode('/',$part),$vars,$suffix,$domain);
 }
 
-//end file
+// end file

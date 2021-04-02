@@ -25,10 +25,11 @@ class NavigatorController extends BaseController
         $navigator=include($path);
         $modules=[
             'Index'=>'首页',
-            'Page'=>'单页模块',
-            'Article'=>'文章模块',
-            'Product'=>'产品模块'
+            'Article'=>'栏目模块'
         ];
+        if(in_array('shop',$this->modules) !== false){
+            $modules['Product']='商城模块';
+        }
         if($this->request->isPost()){
             $this->checkPermision("navigator_update");
             $data=$this->request->post();
