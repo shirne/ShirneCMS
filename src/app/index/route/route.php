@@ -24,12 +24,6 @@ Route::get('index$', 'index/index');
 
 Route::get('share/:agent', 'index/share');
 
-Route::group('article',function() {
-    Route::get(':id', 'article/view');
-    Route::rule('comment/:id', 'article/comment','GET|POST');
-    Route::get('[:name]', 'article/index');
-});
-
 Route::group('product',function() {
     Route::get(':id', 'product/view');
     Route::rule('comment/:id', 'product/comment','GET|POST');
@@ -48,8 +42,6 @@ Route::group('order',function() {
     Route::rule('confirm', 'order/confirm','GET|POST');
     Route::rule('wechatpay', 'order/wechatpay','GET|POST');
 });
-
-Route::get('page/:group/[:name]','page/index');
 
 Route::get('notice/:id', 'article/notice');
 
@@ -71,3 +63,4 @@ Route::group('user',function() {
     Route::rule('agent/[:action]','member.agent/:action','GET|POST');
     Route::rule('[:action]','member/:action','GET|POST');
 });
+

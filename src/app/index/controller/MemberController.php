@@ -4,13 +4,9 @@ namespace app\index\controller;
 
 
 use app\common\validate\MemberValidate;
-<<<<<<< HEAD:src/app/index/controller/MemberController.php
-use think\facade\Db;
-=======
 use shirne\common\ValidateHelper;
 use shirne\third\Aliyun;
-use think\Db;
->>>>>>> v2:src/application/index/controller/MemberController.php
+use think\facade\Db;
 
 /**
  * Class MemberController

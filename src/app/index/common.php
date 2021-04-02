@@ -1,11 +1,7 @@
 <?php
 
-<<<<<<< HEAD:src/app/index/common.php
-use think\facade\Db;
-=======
 use app\common\facade\CategoryFacade;
-use think\Db;
->>>>>>> v2:src/application/index/common.php
+use think\facade\Db;
 use think\facade\Route;
 
 function indexurl($channel_name){

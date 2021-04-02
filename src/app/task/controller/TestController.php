@@ -9,6 +9,7 @@ use app\common\model\PostageModel;
 use shirne\common\Image;
 use think\facade\Db;
 use think\facade\Log;
+use app\BaseController as Controller;
 
 
 /**
@@ -16,7 +17,7 @@ use think\facade\Log;
  * Class TestController
  * @package app\task\controller
  */
-class TestController
+class TestController extends Controller
 {
     public function image()
     {

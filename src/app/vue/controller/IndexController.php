@@ -1,7 +1,7 @@
 <?php
 namespace app\vue\controller;
 
-use think\Controller;
+use app\BaseController as Controller;
 
 class IndexController extends Controller
 {

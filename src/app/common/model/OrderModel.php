@@ -4,12 +4,8 @@ namespace app\common\model;
 
 
 use app\common\core\BaseOrderModel;
-<<<<<<< HEAD:src/app/common/model/OrderModel.php
-use think\facade\Db;
-=======
 use app\common\service\MessageService;
-use think\Db;
->>>>>>> v2:src/application/common/model/OrderModel.php
+use think\facade\Db;
 use think\Exception;
 use think\facade\Log;
 

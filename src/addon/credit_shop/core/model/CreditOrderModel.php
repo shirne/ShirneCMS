@@ -16,6 +16,7 @@ define('CREDIT_STATUS_FINISH',4);
 
 class CreditOrderModel extends BaseOrderModel
 {
+    protected $name = 'credit_order';
     protected $pk='order_id';
     protected $type = [];
 
@@ -32,7 +33,7 @@ class CreditOrderModel extends BaseOrderModel
         }
         return $counts;
     }
-
+    
     public function onPayResult($paytype, $paytime, $payamount){
         parent::onPayResult($paytype, $paytime, $payamount);
 
@@ -42,7 +43,6 @@ class CreditOrderModel extends BaseOrderModel
             'pay_time'=>$paytime
         ]);
     }
-    
     protected function triggerStatus($item, $status, $newData=[])
     {
         parent::triggerStatus($item, $status, $newData);

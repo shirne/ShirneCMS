@@ -4,14 +4,10 @@ namespace app\admin\controller;
 
 use app\admin\validate\CategoryValidate;
 use app\common\facade\CategoryFacade;
-<<<<<<< HEAD:src/app/admin/controller/CategoryController.php
-use think\facade\Db;
-=======
 use app\common\model\CategoryModel;
 use Overtrue\Pinyin\Pinyin;
-use think\Db;
+use think\facade\Db;
 use think\facade\Log;
->>>>>>> v2:src/application/admin/controller/CategoryController.php
 
 /**
  * 文章分类管理

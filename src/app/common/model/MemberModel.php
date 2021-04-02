@@ -2,13 +2,9 @@
 namespace app\common\model;
 
 use app\common\core\BaseModel;
-<<<<<<< HEAD:src/app/common/model/MemberModel.php
-use think\facade\Db;
-=======
 use app\common\service\MessageService;
 use shirne\common\Poster;
-use think\Db;
->>>>>>> v2:src/application/common/model/MemberModel.php
+use think\facade\Db;
 use think\facade\Log;
 
 /**
@@ -17,23 +13,7 @@ use think\facade\Log;
  */
 class MemberModel extends BaseModel
 {
-<<<<<<< HEAD:src/app/common/model/MemberModel.php
     protected $name = 'member';
-    protected $insert = ['is_agent' => 0,'type'=>1,'status'=>1,'referer'=>0];
-    protected $autoWriteTimestamp = true;
-
-    public function onAfterUpdate ($model) {
-        $users=$model->where($model->getWhere())->select();
-        //代理会员组
-        if(!empty($users)) {
-            $levels = getMemberLevels();
-            foreach ($users as $user) {
-                //代理会员组
-                if (!$user['is_agent'] && $user['level_id'] > 0) {
-                    if (!empty($levels[$user['level_id']]) && $levels[$user['level_id']]['is_agent']) {
-                        self::checkAgent($user);
-=======
-
     protected $insert = ['is_agent' => 0,'type','status'=>1,'referer'];
     protected $autoWriteTimestamp = true;
 
@@ -61,7 +41,6 @@ class MemberModel extends BaseModel
                         if (!empty($levels[$user['level_id']]) && $levels[$user['level_id']]['is_agent']) {
                             self::checkAgent($user);
                         }
->>>>>>> v2:src/application/common/model/MemberModel.php
                     }
                 }
             }
@@ -141,12 +120,6 @@ class MemberModel extends BaseModel
         $referer = $this['referer'];
         if($referer){
             $this->save(['referer'=>0]);
-<<<<<<< HEAD:src/app/common/model/MemberModel.php
-            Db::name('member')->where('id',$referer)->dec('recom_count',1);
-            $parents=static::getParents($referer,0);
-            array_unshift($parents,$referer);
-            Db::name('member')->whereIn('id',$parents)->dec('team_count',1);
-=======
             Db::name('member')->where('id',$referer)->setDec('recom_total',1);
             if($this['is_agent']){
                 Db::name('member')->where('id',$referer)->setDec('recom_count',1);
@@ -154,7 +127,6 @@ class MemberModel extends BaseModel
                 array_unshift($parents,$referer);
                 Db::name('member')->whereIn('id',$parents)->setDec('team_count',1);
             }
->>>>>>> v2:src/application/common/model/MemberModel.php
         }
         return true;
     }
@@ -262,15 +234,10 @@ class MemberModel extends BaseModel
         $count= Db::name('member')->where('id',$member_id)->update($data);
         if($count){
             $parents=getMemberParents($member_id,0);
-<<<<<<< HEAD:src/app/common/model/MemberModel.php
-            Db::name('member')->where('id',$parents[0])->dec('recom_count',1);
-            Db::name('member')->whereIn('id',$parents)->dec('team_count',1);
-=======
             if(!empty($parents)){
                 Db::name('member')->where('id',$parents[0])->setDec('recom_count',1);
                 Db::name('member')->whereIn('id',$parents)->setDec('team_count',1);
             }
->>>>>>> v2:src/application/common/model/MemberModel.php
         }
         return $count;
     }
@@ -383,14 +350,9 @@ class MemberModel extends BaseModel
             return true;
         }
         
-<<<<<<< HEAD:src/app/common/model/MemberModel.php
-        $agentMember=static::where('agentcode|id',$agent)
-            ->where('is_agent','>',0)
-=======
         if(is_numeric($agent)){
             $agentMember=static::where('id',intval($agent))
             ->where('is_agent','GT',0)
->>>>>>> v2:src/application/common/model/MemberModel.php
             ->where('status',1)->find();
         }else{
             $agentMember=static::where('agentcode',$agent)

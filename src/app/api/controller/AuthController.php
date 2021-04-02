@@ -13,13 +13,9 @@ use EasyWeChat\Factory;
 use EasyWeChat\OfficialAccount\Application;
 use shirne\captcha\Captcha;
 use shirne\common\ValidateHelper;
-<<<<<<< HEAD:src/app/api/controller/AuthController.php
-use think\facade\Db;
-=======
 use shirne\sdk\OAuthFactory;
 use shirne\third\Aliyun;
-use think\Db;
->>>>>>> v2:src/application/api/controller/AuthController.php
+use think\facade\Db;
 use think\facade\Cache;
 use think\facade\Env;
 use think\facade\Log;

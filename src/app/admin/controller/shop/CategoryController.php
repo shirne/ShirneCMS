@@ -7,12 +7,8 @@ use app\admin\model\SpecificationsModel;
 use app\admin\validate\ProductCategoryValidate;
 use app\common\facade\ProductCategoryFacade;
 use app\common\model\ProductCategoryModel;
-<<<<<<< HEAD:src/app/admin/controller/shop/CategoryController.php
-use think\facade\Db;
-=======
 use Overtrue\Pinyin\Pinyin;
-use think\Db;
->>>>>>> v2:src/application/admin/controller/shop/CategoryController.php
+use think\facade\Db;
 
 /**
  * 商品分类

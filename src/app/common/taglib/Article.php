@@ -75,45 +75,6 @@ class Article extends BaseTabLib
         $parseStr .= ' ?>';
         return $parseStr;
     }
-    public function tagPages($tag){
-        $var  = isset($tag['var']) ? $tag['var'] : 'page_list';
-        $group=isset($tag['group']) ? $this->parseArg($tag['group']) : '';
-
-        $parseStr='<?php ';
-
-        $parseStr.='$'.$var.'=\think\Db::name("page")';
-        $parseStr .= '->where(\'status\',1)';
-        if(!empty($group)){
-            $parseStr .= '->where(\'group\','.$group.')';
-        }
-        if(!empty($tag['limit'])){
-            $parseStr .= '->limit('.intval($tag['limit']).')';
-        }
-        $parseStr .= '->select();';
-
-        $parseStr .= ' ?>';
-        return $parseStr;
-    }
-    public function tagPage($tag){
-        $var  = isset($tag['var']) ? $tag['var'] : 'page_model';
-        $name=isset($tag['name']) ? $this->parseArg($tag['name']) : '';
-        $group=isset($tag['group']) ? $this->parseArg($tag['group']) : '';
-
-        $parseStr='<?php ';
-
-        $parseStr.='$'.$var.'=\think\Db::name("page")';
-        $parseStr .= '->where(\'status\',1)';
-        if(!empty($name)){
-            $parseStr .= '->where(\'name\','.$name.')';
-        }
-        if(!empty($group)){
-            $parseStr .= '->where(\'group\','.$group.')';
-        }
-        $parseStr .= '->find();';
-
-        $parseStr .= ' ?>';
-        return $parseStr;
-    }
 
     public function tagCates($tag){
         $var  = isset($tag['var']) ? $tag['var'] : 'cates_list';

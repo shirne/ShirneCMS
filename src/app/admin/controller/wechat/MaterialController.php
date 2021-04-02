@@ -3,12 +3,8 @@
 namespace app\admin\controller\wechat;
 
 use EasyWeChat\OfficialAccount\Application;
-<<<<<<< HEAD:src/app/admin/controller/wechat/MaterialController.php
 use think\facade\Db;
-=======
-use think\Db;
 use think\Response;
->>>>>>> v2:src/application/admin/controller/wechat/MaterialController.php
 
 /**
  * 素材管理

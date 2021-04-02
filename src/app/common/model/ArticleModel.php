@@ -3,12 +3,8 @@ namespace app\common\model;
 
 use app\common\core\ContentModel;
 use app\common\facade\CategoryFacade;
-<<<<<<< HEAD:src/app/common/model/ArticleModel.php
-use think\facade\Db;
-=======
 use Overtrue\Pinyin\Pinyin;
-use think\Db;
->>>>>>> v2:src/application/common/model/ArticleModel.php
+use think\facade\Db;
 use think\Paginator;
 
 /**

@@ -9,12 +9,8 @@ use app\common\model\LinksModel;
 use app\common\model\MemberAgentModel;
 use app\common\model\MemberSignModel;
 use app\common\model\NoticeModel;
-<<<<<<< HEAD:src/app/api/controller/CommonController.php
-use think\facade\Db;
-=======
 use InvalidArgumentException;
-use think\Db;
->>>>>>> v2:src/application/api/controller/CommonController.php
+use think\facade\Db;
 use think\facade\Log;
 use think\Response;
 use Throwable;

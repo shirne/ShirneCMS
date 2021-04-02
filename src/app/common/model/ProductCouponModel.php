@@ -4,13 +4,9 @@ namespace app\common\model;
 
 
 use app\common\core\BaseModel;
-<<<<<<< HEAD:src/app/common/model/ProductCouponModel.php
-use think\facade\Db;
-=======
 use app\common\facade\ProductCategoryFacade;
-use think\Db;
+use think\facade\Db;
 use think\facade\Log;
->>>>>>> v2:src/application/common/model/ProductCouponModel.php
 
 class ProductCouponModel extends BaseModel
 {

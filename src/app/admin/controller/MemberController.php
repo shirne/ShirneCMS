@@ -632,21 +632,13 @@ class MemberController extends BaseController
                 $model->whereBetween('create_time',[strtotime($start_date),strtotime($end_date.' 23:59:59')]);
                 $logModel->whereBetween('create_time',[strtotime($start_date),strtotime($end_date.' 23:59:59')]);
             }else{
-<<<<<<< HEAD:src/app/admin/controller/MemberController.php
                 $model->where('create_time','>',strtotime($start_date));
+                $logModel->where('create_time','>',strtotime($start_date));
             }
         }else{
             if(!empty($end_date)){
                 $model->where('create_time','<',strtotime($end_date.' 23:59:59'));
-=======
-                $model->where('create_time','GT',strtotime($start_date));
-                $logModel->where('create_time','GT',strtotime($start_date));
-            }
-        }else{
-            if(!empty($end_date)){
-                $model->where('create_time','LT',strtotime($end_date.' 23:59:59'));
-                $logModel->where('create_time','LT',strtotime($end_date.' 23:59:59'));
->>>>>>> v2:src/application/admin/controller/MemberController.php
+                $logModel->where('create_time','<',strtotime($end_date.' 23:59:59'));
             }
         }
 

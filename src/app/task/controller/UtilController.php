@@ -7,13 +7,8 @@ use app\common\model\MemberModel;
 use app\common\model\MemberOauthModel;
 use app\common\model\WechatModel;
 use EasyWeChat\Kernel\Messages\Image;
-use think\Controller;
-<<<<<<< HEAD:src/app/task/controller/UtilController.php
+use app\BaseController as Controller;
 use think\facade\Db;
-use think\facade\Env;
-=======
-use think\Db;
->>>>>>> v2:src/application/task/controller/UtilController.php
 use think\facade\Log;
 
 class UtilController extends Controller

@@ -104,14 +104,9 @@ class Testing extends Command
                 $output->writeln('No suitable goods.');
                 break;
             }
-<<<<<<< HEAD:src/app/common/command/Testing.php
-
             $member=Db::name('member')->where('is_agent','>',0)->order(Db::raw('rand()'))->find();
-=======
-            $member=Db::name('member')->where('is_agent','GT',0)->order(Db::raw('rand()'))->find();
             if($isnew){
                 $output->writeln('User '.$member['username'].'['.$member['id'].'] recommended new member: ');
->>>>>>> v2:src/application/common/command/Testing.php
 
                 $newname='u'.random_str(mt_rand(5,8));
                 while(Db::name('member')->where('username',$newname)->count()){

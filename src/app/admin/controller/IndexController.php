@@ -50,25 +50,6 @@ class IndexController extends BaseController{
 
         $this->assign('stat',$stat);
 
-<<<<<<< HEAD:src/app/admin/controller/IndexController.php
-        //统计
-        $m['total']=Db::name('member')->count();
-        $m['avail']=Db::name('member')->where('status',1)->count();
-        $m['agent']=Db::name('member')->where('is_agent','>',0)->count();
-        $this->assign('mem',$m);
-
-        //资金
-        $a['total_charge']=Db::name('member_recharge')->where('status',1)->sum('amount');
-        $a['total_cash']=Db::name('member_cashin')->where('status',1)->sum('amount');
-        $a['total_money']=Db::name('member')->sum('money');
-
-        $a['total_reward']=Db::name('member')->sum('reward');
-        $a['system_charge']=Db::name('member_money_log')->where('type','system')
-            ->where('amount','>',0)->sum('amount');
-        $a['total_award']=Db::name('award_log')->sum('amount');
-
-        $this->assign('money',$a);
-=======
         if(in_array('member', $this->modules)){
             //统计
             $m['total']=Db::name('member')->count();
@@ -88,7 +69,6 @@ class IndexController extends BaseController{
             
             $this->assign('money',$a);
         }
->>>>>>> v2:src/application/admin/controller/IndexController.php
 
         $notices=[];
         if($this->manager['username']==config('app.test_account')){
@@ -186,13 +166,9 @@ class IndexController extends BaseController{
         $count=0;
         while(array_sum($result)==0) {
             $result['newMemberCount'] = Db::name('Member')->where('create_time', '>', $this->manager['last_view_member'])->count();
-<<<<<<< HEAD:src/app/admin/controller/IndexController.php
-            $result['newOrderCount'] = Db::name('Order')->where('status',0)->count();
-=======
             //$result['newOrderCount'] = Db::name('Order')->where('status',1)->count();
             //$result['newMemberAuthen'] = Db::name('memberAuthen')->where('status',-1)->count();
             $result['newMemberCashin'] = Db::name('memberCashin')->where('status',0)->count();
->>>>>>> v2:src/application/admin/controller/IndexController.php
             sleep(1);
             $count++;
             if($count>10)break;

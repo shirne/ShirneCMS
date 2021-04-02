@@ -5,13 +5,9 @@ namespace app\api\controller;
 use think\App;
 use app\api\facade\MemberTokenFacade;
 use app\api\middleware\AccessMiddleware;
-<<<<<<< HEAD:src/app/api/controller/BaseController.php
-use think\facade\Db;
-=======
 use shirne\common\ValidateHelper;
 use think\Controller;
-use think\Db;
->>>>>>> v2:src/application/api/controller/BaseController.php
+use think\facade\Db;
 
 
 /**
@@ -60,7 +56,6 @@ class BaseController
      * @throws \think\exception\DbException
      */
     public function initialize(){
-        parent::initialize();
         $this->config=getSettings();
 
         $this->checkLogin();

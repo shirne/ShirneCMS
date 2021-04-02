@@ -148,13 +148,9 @@ class AgentController extends AuthedController
         }
 
         return $this->response([
-<<<<<<< HEAD:src/app/api/controller/member/AgentController.php
-            'logs'=>$logs->all(),
-=======
             'types'=>$types,
             'static_data'=>$static_data,
-            'logs'=>$logs->items(),
->>>>>>> v2:src/application/api/controller/member/AgentController.php
+            'logs'=>$logs->all(),
             'total'=>$logs->total(),
             'total_page'=>$logs->lastPage(),
             'page'=>$logs->currentPage()

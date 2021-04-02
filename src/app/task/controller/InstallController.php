@@ -7,7 +7,7 @@ namespace app\task\controller;
 use think\Console;
 use think\console\Input;
 use think\console\Output;
-use think\Controller;
+use app\BaseController as Controller;
 use think\Exception;
 use think\facade\Config;
 use think\facade\Env;

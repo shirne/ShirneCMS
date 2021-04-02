@@ -5,12 +5,8 @@ namespace app\api\controller\member;
 
 use app\api\controller\AuthedController;
 use app\common\model\OrderModel;
-<<<<<<< HEAD:src/app/api/controller/member/OrderController.php
-use think\facade\Db;
-=======
 use app\common\model\OrderRefundModel;
-use think\Db;
->>>>>>> v2:src/application/api/controller/member/OrderController.php
+use think\facade\Db;
 
 class OrderController extends AuthedController
 {

@@ -4,12 +4,8 @@
 namespace app\admin\controller\shop;
 
 use app\admin\controller\BaseController;
-<<<<<<< HEAD:src/app/admin/controller/shop/OrderStaticsController.php
 use think\facade\Db;
-=======
-use think\Db;
 use think\response\Redirect;
->>>>>>> v2:src/application/admin/controller/shop/OrderStaticsController.php
 
 /**
  * 订单统计
@@ -55,25 +51,15 @@ class OrderStaticsController extends BaseController
             if(!empty($end_date)){
                 $model->whereBetween('create_time',[strtotime($start_date),strtotime($end_date.' 23:59:59')]);
             }else{
-<<<<<<< HEAD:src/app/admin/controller/shop/OrderStaticsController.php
-                $model->where('create_time','>',strtotime($start_date));
-            }
-        }else{
-            if(!empty($end_date)){
-                $model->where('create_time','<',strtotime($end_date.' 23:59:59'));
-=======
                 $model->where('create_time','>=',strtotime($start_date));
             }
         }else{
             if(!empty($end_date)){
                 $model->where('create_time','<=',strtotime($end_date.' 23:59:59'));
->>>>>>> v2:src/application/admin/controller/shop/OrderStaticsController.php
             }
         }
 
         $statics=$model->where('status','>',0)->group('awdate')->select();
-<<<<<<< HEAD:src/app/admin/controller/shop/OrderStaticsController.php
-=======
 
         $this->assign('statics',$statics);
         $this->assign('static_type',$type);
@@ -120,7 +106,6 @@ class OrderStaticsController extends BaseController
         }
 
         $statics=$model->where('status','>',0)->order('order_count DESC,order_amount DESC')->group('region')->select();
->>>>>>> v2:src/application/admin/controller/shop/OrderStaticsController.php
 
         $this->assign('statics',$statics);
         $this->assign('static_type',$type);

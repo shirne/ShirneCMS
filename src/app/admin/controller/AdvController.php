@@ -6,12 +6,8 @@ namespace app\admin\controller;
 use app\admin\validate\AdvGroupValidate;
 use app\admin\validate\AdvItemValidate;
 use app\common\model\AdvGroupModel;
-<<<<<<< HEAD:src/app/admin/controller/AdvController.php
-use think\facade\Db;
-=======
 use app\common\model\AdvItemModel;
-use think\Db;
->>>>>>> v2:src/application/admin/controller/AdvController.php
+use think\facade\Db;
 use think\Exception;
 
 /**

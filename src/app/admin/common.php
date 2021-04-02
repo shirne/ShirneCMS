@@ -1,11 +1,7 @@
 <?php
 
-<<<<<<< HEAD:src/app/admin/common.php
-use think\facade\Db;
-=======
 use app\common\facade\CategoryFacade;
-use think\Db;
->>>>>>> v2:src/application/admin/common.php
+use think\facade\Db;
 use think\facade\Request;
 
 define('SESSKEY_ADMIN_ID','adminId');

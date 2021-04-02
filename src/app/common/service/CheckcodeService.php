@@ -3,13 +3,8 @@
 namespace app\common\service;
 
 use extcore\traits\Email;
-<<<<<<< HEAD:src/app/common/service/CheckcodeService.php
-use think\facade\Db;
-use shirne\third\UmsHttp;
-=======
 use shirne\third\Aliyun;
-use think\Db;
->>>>>>> v2:src/application/common/service/CheckcodeService.php
+use think\facade\Db;
 
 /**
  * Class CheckcodeService
@@ -153,11 +148,6 @@ class CheckcodeService extends BaseService
             $this->setError($aliyun->get_error_msg());
         }
 
-
-        /* @session_write_close();
-        $content="您本次验证码为{$newcode}仅用于会员注册。请在10分钟内使用！";
-        $sms=new UmsHttp(getSettings());
-        $sended=$sms->send($mobile,$content); */
         return $sended;
     }
 

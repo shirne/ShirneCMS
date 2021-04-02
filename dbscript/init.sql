@@ -9,7 +9,6 @@ VALUES
   (9,0,'系统','','System','ion-md-cog',9,0),
   (11,2,'分类管理','Category/index','category_index','ion-md-medical',0,0),
   (12,2,'文章管理','Article/index','article_index','ion-md-paper',3,0),
-  (13,2,'单页管理','Page/index','page_index','ion-md-document',5,0),
   (14,2,'评论管理','Article/comments','article_comments','ion-md-chatboxes',3,0),
   (70,7,'公告管理','Notice/index','notice_index','ion-md-megaphone',0,0),
   (71,7,'广告管理','Adv/index','adv_index','ion-md-aperture',3,0),

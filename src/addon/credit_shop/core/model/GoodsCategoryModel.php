@@ -7,6 +7,7 @@ use think\Db;
 
 class GoodsCategoryModel extends CategoryModel
 {
+    protected $table = 'goods_category';
     protected $precache='goods_';
 
     protected function _get_data(){
