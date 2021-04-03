@@ -1,8 +1,8 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
-<include file="public/bread" menu="credit_shop_goods_index" title="图集列表" />
+{include file="public/bread" menu="credit_shop_goods_index" title="图集列表" /}
 
 <div id="page-wrapper">
     
@@ -33,7 +33,7 @@
             </tr>
         </thead>
         <tbody>
-        <foreach name="lists" item="v">
+        {foreach name="lists" item="v"}
             <tr>
                 <td>{$v.id}</td>
                 <td><figure class="figure" >
@@ -46,9 +46,9 @@
                     <a class="btn btn-outline-dark btn-sm" href="{:url('credit_shop.goods/imagedelete',array('id'=>$v['id'],'aid'=>$aid))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> 删除</a>
                 </td>
             </tr>
-        </foreach>
+        {/foreach}
         </tbody>
     </table>
     {$page|raw}
 </div>
-</block>
+{/block}

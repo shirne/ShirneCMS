@@ -13,6 +13,11 @@ class IndexController extends BaseController
         return $this->fetch();
     }
 
+    public function notice($id){
+        
+        return $this->fetch();
+    }
+
     public function subscribe()
     {
         if($this->request->isPost()){

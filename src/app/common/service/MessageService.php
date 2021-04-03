@@ -7,7 +7,7 @@ use EasyWeChat\Kernel\Exceptions\InvalidArgumentException;
 use EasyWeChat\Kernel\Exceptions\InvalidConfigException;
 use EasyWeChat\Kernel\Exceptions\RuntimeException;
 use EasyWeChat\Kernel\Messages\Text;
-use think\Db;
+use think\facade\Db;
 use think\Exception;
 use think\facade\Log;
 

@@ -3,7 +3,7 @@
 namespace addon\credit_shop\core\model;
 
 use app\common\model\CategoryModel;
-use think\Db;
+use think\facade\Db;
 
 class GoodsCategoryModel extends CategoryModel
 {

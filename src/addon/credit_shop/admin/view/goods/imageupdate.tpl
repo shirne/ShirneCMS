@@ -25,7 +25,7 @@
                         <label class="custom-file-label" for="upload_image">选择文件</label>
                     </div>
                 </div>
-                {if condition="$model['image']"}
+                {if !empty($model['image'])}
                     <figure class="figure">
                         <img src="{$model.image}" class="figure-img img-fluid rounded" alt="image">
                         <figcaption class="figure-caption text-center">{$model.image}</figcaption>

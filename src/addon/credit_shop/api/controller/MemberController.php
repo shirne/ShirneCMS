@@ -4,7 +4,7 @@ namespace addon\credit_shop\api\controller;
 
 use addon\base\AuthedController;
 use addon\credit_shop\core\model\CreditOrderModel;
-use think\Db;
+use think\facade\Db;
 
 class MemberController extends AuthedController
 {

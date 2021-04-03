@@ -53,7 +53,7 @@
                     <td>
                         {if $v['status'] == 1}
                             <span class="badge badge-success">已审核</span>
-                        {elseif condition="$v['status'] EQ -1"/}
+                        {elseif $v['status'] == -1/}
                             <span class="badge badge-warning">待审核</span>
                         {else/}
                             <span class="badge badge-secondary">已驳回</span>

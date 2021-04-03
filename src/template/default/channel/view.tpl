@@ -1,25 +1,25 @@
-<extend name="public:base" />
-<block name="header">
+{extend name="public:base" /}
+{block name="header"}
     <link href="__STATIC__/ueditor/third-party/SyntaxHighlighter/shCoreDefault.css" rel="stylesheet">
-</block>
-<block name="body">
+{/block}
+{block name="body"}
     <div class="main">
-        <include file="channel:_banner" />
+        {include file="channel:_banner" /}
         <div class="breadcrumb-box wow slideInUp" data-wow-duration="0.8s">
 			<div class="container">
 				<span class="float-right">{$article['title']}</span>
 				<nav aria-label="breadcrumb" >
 					<ol class="breadcrumb">
 						<li class="breadcrumb-item" ><i class="ion-md-pin" name="breadcrumb"></i> <a href="/">首页</a></li>
-                        <volist name="categoryTree" id="c">
+                        {volist name="categoryTree" id="c"}
 						<li class="breadcrumb-item" >
-                            <if condition="$c['id'] eq $channel['id']">
+                            {if $c['id'] eq $channel['id']}
                                 <a href="{:url('index/channel/index',['channel_name'=>$c['name']])}">{$c['title']}</a>
-                                <else/>
+                                {else/}
                                 <a href="{:url('index/channel/list',['channel_name'=>$channel['name'],'cate_name'=>$c['name']])}">{$c['title']}</a>
-                            </if>
+                            {/if}
                         </li>
-                        </volist>
+                        {/volist}
 					</ol>
 				  </nav>
 			</div>
@@ -28,7 +28,7 @@
         
         <div class="container">
 			<div class="row">
-				<include file="channel:_side" />
+				{include file="channel:_side" /}
 				<div class="col wow slideInRight"  data-wow-delay="0.5s" data-wow-duration="0.8s">
                     <div class="article-body">
                         <h1 class="article-title">{$article.title}</h1>
@@ -38,17 +38,17 @@
                             <span class="ml-2"><i class="ion-md-paper-plane"></i> {$article.views}</span>
                             <span class="ml-2"><i class="ion-md-text"></i> {$article.comment}</span>
                         </div>
-                        <if condition="!empty($images)">
+                        {if !empty($images)}
                             <div class="article-slides">
                                 <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
                                     <ol class="carousel-indicators">
-                                        <volist name="images" id="img">
+                                        {volist name="images" id="img"}
                                         <li data-target="#carouselExampleCaptions" data-slide-to="{$i-1}">
                                         </li>
-                                        </volist>
+                                        {/volist}
                                     </ol>
                                     <div class="carousel-inner">
-                                        <volist name="images" id="img">
+                                        {volist name="images" id="img"}
                                             <div class="carousel-item" style="background-image:url({$img.image})">
                                                 <img src="{$img.image}" alt="{$img.title}">
                                                 <div class="carousel-caption d-none d-md-block">
@@ -56,11 +56,11 @@
                                                     <p>{$img.title}</p>
                                                 </div>
                                             </div>
-                                        </volist>
+                                        {/volist}
                                     </div>
                                 </div>
                             </div>
-                        </if>
+                        {/if}
                         <div class="article-content">
                             <div>
                                 {$article.content|raw}
@@ -69,20 +69,20 @@
                                 <article:prev var="prev" category="$channel['id']" id="$article['id']" />
                                 <div class="float-left">
                                     上一篇：
-                                    <if condition="!empty($prev)">
+                                    {if !empty($prev)}
                                         <a class="btn btn-link" href="{:url('index/channel/view',['channel_name'=>$channel['name'],'cate_name'=>$prev['category_name'],'article_name'=>$prev['name']])}">{$prev.title}</a>
-                                        <else/>
+                                        {else/}
                                         <span>没有了</span>
-                                    </if>
+                                    {/if}
                                 </div>
                                 <article:next var="next" category="$channel['id']" id="$article['id']" />
                                 <div class="float-right">
                                     下一篇：
-                                    <if condition="!empty($next)">
+                                    {if !empty($next)}
                                         <a class="btn btn-link" href="{:url('index/channel/view',['channel_name'=>$channel['name'],'cate_name'=>$next['category_name'],'article_name'=>$next['name']])}">{$next.title}</a>
-                                        <else/>
+                                        {else/}
                                         <span>没有了</span>
-                                    </if>
+                                    {/if}
                                 </div>
                             </div>
                         </div>
@@ -91,8 +91,8 @@
             </div>
         </div>
     </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/html" id="comment_tpl">
         <div class="media mt-2">
             <img src="{@avatar|default=/static/images/avatar-default.png}" class="avatar mr-3 rounded" alt="{@nickname}">
@@ -204,4 +204,4 @@
         })
         
     </script>
-</block>
+{/block}

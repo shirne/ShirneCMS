@@ -11,14 +11,6 @@
 
 use think\facade\Route;
 
-Route::pattern([
-    'name' => '[a-zA-Z]\w*',
-    'id'   => '\d+',
-    'group'=> '[a-zA-Z]\w*',
-    'action'=> '[a-zA-Z]\w*',
-    'type'=>'\w+',
-    'agent'=>'\w{6,}'
-]);
 
 Route::get('index$', 'index/index');
 
@@ -43,7 +35,7 @@ Route::group('order',function() {
     Route::rule('wechatpay', 'order/wechatpay','GET|POST');
 });
 
-Route::get('notice/:id', 'article/notice');
+Route::get('notice/:id', 'index/notice');
 
 Route::group('auth',function() {
     Route::rule('login/[:type]', 'login/index','GET|POST');
@@ -64,3 +56,9 @@ Route::group('user',function() {
     Route::rule('[:action]','member/:action','GET|POST');
 });
 
+Route::get(':channel_name/:cate_name/:article_name/comment/[:page]', 'channel/comment');
+Route::get(':channel_name/:cate_name/:article_name', 'channel/view');
+Route::get(':channel_name/:cate_name/[:page]', 'channel/list');
+Route::get(':channel_name', 'channel/index');
+
+Route::rule('<addon>\\.<controller>/<action>', 'addon/index');

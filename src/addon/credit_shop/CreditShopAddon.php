@@ -4,7 +4,7 @@ namespace addon\credit_shop;
 
 use addon\base\BaseAddon;
 use app\common\model\CreditOrderModel;
-use think\Db;
+use think\facade\Db;
 use think\facade\Log;
 
 class CreditShopAddon extends BaseAddon{

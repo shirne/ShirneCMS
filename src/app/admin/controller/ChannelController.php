@@ -12,7 +12,7 @@ use app\common\model\AdvItemModel;
 use app\common\model\ArticleModel;
 use app\common\model\CategoryModel;
 use PhpOffice\PhpSpreadsheet\Calculation\Category;
-use think\Db;
+use think\facade\Db;
 use think\facade\Log;
 
 class ChannelController extends BaseController

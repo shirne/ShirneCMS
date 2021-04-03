@@ -5,7 +5,7 @@ namespace addon\credit_shop\api\controller;
 use addon\base\AuthedController;
 use addon\credit_shop\core\model\CreditOrderModel;
 use app\common\validate\OrderValidate;
-use think\Db;
+use think\facade\Db;
 
 
 /**

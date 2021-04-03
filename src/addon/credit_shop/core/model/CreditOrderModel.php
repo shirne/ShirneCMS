@@ -4,7 +4,7 @@ namespace addon\credit_shop\core\model;
 
 
 use app\common\core\BaseOrderModel;
-use think\Db;
+use think\facade\Db;
 
 define('CREDIT_STATUS_REFUND',-2);
 define('CREDIT_STATUS_CANCEL',-1);

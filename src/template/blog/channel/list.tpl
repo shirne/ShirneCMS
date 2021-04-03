@@ -1,22 +1,22 @@
-<extend name="public:base"/>
+{extend name="public:base"/}
 
-<block name="body">
+{block name="body"}
     <div class="main">
-        <include file="channel:_banner" />
+        {include file="channel:_banner" /}
         <div class="breadcrumb-box wow slideInUp" data-wow-duration="0.8s">
 			<div class="container">
 				<nav aria-label="breadcrumb" >
 					<ol class="breadcrumb">
 						<li class="breadcrumb-item" ><i class="ion-md-pin" name="breadcrumb"></i> <a href="/">首页</a></li>
-                        <volist name="categoryTree" id="c">
+                        {volist name="categoryTree" id="c"}
 						<li class="breadcrumb-item" >
-                            <if condition="$c['id'] eq $channel['id']">
+                            {if $c['id'] eq $channel['id']}
                                 <a href="{:url('index/channel/index',['channel_name'=>$c['name']])}">{$c['title']}</a>
-                                <else/>
+                                {else/}
                                 <a href="{:url('index/channel/list',['channel_name'=>$channel['name'],'cate_name'=>$c['name']])}">{$c['title']}</a>
-                            </if>
+                            {/if}
                         </li>
-                        </volist>
+                        {/volist}
 					</ol>
 				  </nav>
 			</div>
@@ -24,7 +24,7 @@
 
         <div class="container">
 			<div class="row">
-				<include file="channel:_side" />
+				{include file="channel:_side" /}
 				<div class="col wow slideInRight"  data-wow-delay="0.5s" data-wow-duration="0.8s">
 
                     <div class="subpage-title">
@@ -34,14 +34,14 @@
                     <div class="view-body " >
                         <div class="article-list">
                             <php>$empty='<div class="empty-box"><p class="empty">暂时没有内容</p></div>';</php>
-                            <Volist name="lists" id="art" empty="$empty">
+                            {Volist name="lists" id="art" empty="$empty"}
                                 <div class="card mb-3" >
                                     <div class="row no-gutters">
-                                        <if condition="!empty($art['cover'])">
+                                        {if !empty($art['cover'])}
                                       <a class="col-4 text-center" style="background:url('{$art['cover']}') center center no-repeat;background-size:cover;" href="{:url('index/channel/view',['channel_name'=>$channel['name'],'cate_name'=>$art['category_name'],'article_name'=>$art['name']])}">
                                         <img class="img-fluid invisible" src="{$art['cover']}" alt="{$art.title}">
                                       </a>
-                                    </if>
+                                    {/if}
                                       <div class="col">
                                         <div class="card-body">
                                           <h5 class="card-title"><a href="{:url('index/channel/view',['channel_name'=>$channel['name'],'cate_name'=>$art['category_name'],'article_name'=>$art['name']])}">{$art.title}</a></h5>
@@ -51,7 +51,7 @@
                                       </div>
                                     </div>
                                 </div>
-                            </Volist>
+                            {/Volist}
                         </div>
                         {$page|raw}
                     </div>
@@ -59,4 +59,4 @@
             </div>
         </div>
     </div>
-</block>
+{/block}

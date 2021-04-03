@@ -4,7 +4,7 @@ namespace app\index\controller;
 
 use addon\credit_shop\core\facade\GoodsCategoryFacade;
 use addon\credit_shop\core\model\GoodsModel;
-use think\Db;
+use think\facade\Db;
 
 class GoodsController extends BaseController
 {

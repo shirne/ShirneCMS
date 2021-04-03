@@ -31,7 +31,7 @@
                     <span class="form-control" >{$media.url}</span>
                 </div>
             </div>
-            {elseif condition="$media['type'] == 'voice'"/}
+            {elseif $media['type'] == 'voice'/}
             <div class="form-row">
                 <div class="col lform-group">
                     <label for="title">素材id</label>
@@ -46,7 +46,7 @@
                     <span class="form-control" >{$media.url}</span>
                 </div>
             </div>
-            {elseif condition="$media['type'] == 'video'"/}
+            {elseif $media['type'] == 'video'/}
             <div class="form-row">
                 <div class="col lform-group">
                     <label for="title">素材id</label>
@@ -61,7 +61,7 @@
                     <span class="form-control" >{$media.url}</span>
                 </div>
             </div>
-            {elseif condition="$media['type'] == 'news'"/}
+            {elseif $media['type'] == 'news'/}
             <div class="col lform-group">
                 <label for="title">素材id</label>
                 <span class="form-control" >{$media.media_id}</span>

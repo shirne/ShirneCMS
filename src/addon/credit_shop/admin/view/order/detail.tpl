@@ -42,7 +42,7 @@
                                 {/volist}
                             </td>
                         </tr>
-                        {if condition="$model['remark']"}
+                        {if $model['remark']}
                             <tr>
                                 <th colspan="4">订单备注</th>
                             </tr>
@@ -60,14 +60,14 @@
                             <th>支付金额</th>
                             <td>
                                 {$model.payamount}
-                                {if condition="!empty($model['pay_type'])"}
-                                    {if condition="$model['pay_type'] EQ 'offline'"}
+                                {if !empty($model['pay_type'])}
+                                    {if $model['pay_type'] == 'offline'}
                                         <span class="badge badge-warning">线下支付</span>
-                                        {elseif condition="$model['pay_type'] EQ 'balance'" /}
+                                        {elseif $model['pay_type'] == 'balance' /}
                                         <span class="badge badge-primary">余额支付</span>
-                                        {elseif condition="$model['pay_type'] EQ 'wechat'" /}
+                                        {elseif $model['pay_type'] == 'wechat' /}
                                         <span class="badge badge-success">微信支付</span>
-                                        {elseif condition="$model['pay_type'] EQ 'alipay'" /}
+                                        {elseif $model['pay_type'] == 'alipay' /}
                                         <span class="badge badge-info">支付宝</span>
                                         {else /}
                                         <span class="badge badge-secondary">{$model['pay_type']}</span>
@@ -79,7 +79,7 @@
                 </table>
             </div>
         </div>
-        {if condition="!empty($payorders)"}
+        {if !empty($payorders)}
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">支付信息</h3>
@@ -102,20 +102,20 @@
                                     <td>{$po.order_no}</td>
                                     <td>{$po.create_time|showdate}</td>
                                     <td>
-                                        {if condition="$po['pay_type'] == 'wechat'"}
+                                        {if $po['pay_type'] == 'wechat'}
                                             <span class="badge badge-success has-tooltip"
                                                 title="{$po.trade_type}">微信支付</span>
-                                            {elseif condition="$po['pay_type'] == 'alipay'" /}
+                                            {elseif $po['pay_type'] == 'alipay' /}
                                             <span class="badge badge-info">支付宝</span>
                                             {else /}
                                             <span class="badge badge-secondary">{$po.pay_type}</span>
                                         {/if}
                                     </td>
                                     <td>
-                                        {if condition="$po['status'] == 1"}
+                                        {if $po['status'] == 1}
                                             <span class="badge badge-success">已支付</span><br />
                                             <span class="badge badge-secondary">{$po.pay_time|showdate}</span>
-                                            {elseif condition="$po['status'] LT 0" /}
+                                            {elseif $po['status'] < 0 /}
                                             <span class="badge badge-secondary">已失效</span>
                                             {else /}
                                             <span class="badge badge-warning has-tooltip paystatus" title="查询支付状态"
@@ -125,7 +125,7 @@
                                     </td>
                                     <td>{$po.pay_bill}</td>
                                     <td>
-                                        {if condition="$po['is_refund'] == 1"}
+                                        {if $po['is_refund'] == 1}
                                             <span class="badge badge-warning">有退款</span>
                                             {$po.refund_fee}
                                             {else /}
@@ -139,7 +139,7 @@
                 </div>
             </div>
         {/if}
-        {if condition="$model['status'] GT 1"}
+        {if $model['status'] == 1}
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">发货信息</h3>
@@ -149,7 +149,7 @@
                         <tbody>
                         <tr>
                             <td>快递公司</td>
-                            <td>{if condition="!empty($model['express_code'])"}[{$model.express_code}]<php>$expresses=config('express.');</php>{$expresses[$model['express_code']]}{else/}无需物流{/if}</td>
+                            <td>{if !empty($model['express_code'])}[{$model.express_code}]<php>$expresses=config('express.');</php>{$expresses[$model['express_code']]}{else/}无需物流{/if}</td>
                             <td>快递单号</td>
                             <td>{$model.express_no}</td>
                         </tr>
@@ -179,25 +179,25 @@
                 </table>
             </div>
         </div>
-        {if condition="$model['status'] GT -1 AND $model['status'] LT 4"}
+        {if $model['status'] > -1 AND $model['status'] < 4}
             <div class="form-group submit-btn">
-                {if condition="$model['status'] EQ 0"}
+                {if $model['status'] == 0}
                     <a class="btn btn-outline-danger btn-status" title="取消订单" data-id="{$model.order_id}"
                         href="javascript:" data-status="-1"><i class="ion-md-close-circle-outline"></i> 取消订单</a>
                     <a class="btn btn-outline-warning btn-status" title="设置支付状态" data-id="{$model.order_id}"
                         href="javascript:" data-status="1"><i class="ion-md-wallet"></i> 设置支付状态</a>
-                {elseif condition="$model['status'] EQ 1" /}
+                {elseif $model['status'] == 1 /}
                     <a class="btn btn-outline-info btn-status" title="发货" href="javascript:" data-id="{$model.order_id}"
                         data-status="2" data-express="{$model.express_code}/{$model.express_no}"><i
                             class="ion-md-train"></i> 发货</a>
-                {elseif condition="$model['status'] EQ 2" /}
+                {elseif $model['status'] == 2 /}
                     <a class="btn btn-outline-secondary btn-status" title="修改发货信息" href="javascript:"
                         data-id="{$model.order_id}" data-status="2"
                         data-express="{$model.express_code}/{$model.express_no}"><i class="ion-md-subway"></i>
                         修改发货信息</a>
                     <a class="btn btn-outline-success btn-status" title="收货" href="javascript:"
                         data-id="{$model.order_id}" data-status="3"><i class="ion-md-exit"></i> 收货</a>
-                {elseif condition="$model['status'] EQ 3" /}
+                {elseif $model['status'] == 3 /}
                     <a class="btn btn-outline-success btn-status" title="完成" href="javascript:"
                         data-id="{$model.order_id}" data-status="4"><i class="ion-md-checkbox-outline"></i> 完成订单</a>
                 {/if}

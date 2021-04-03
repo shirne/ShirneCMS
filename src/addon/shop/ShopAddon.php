@@ -4,7 +4,7 @@ namespace addon\shop;
 
 use addon\base\BaseAddon;
 use app\common\model\OrderModel;
-use think\Db;
+use think\facade\Db;
 use think\facade\Log;
 
 class ShopAddon extends BaseAddon{

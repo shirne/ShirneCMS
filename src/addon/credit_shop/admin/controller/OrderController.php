@@ -7,7 +7,7 @@ use addon\credit_shop\core\model\CreditOrderModel;
 use app\common\model\PayOrderModel;
 use shirne\excel\Excel;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
-use think\Db;
+use think\facade\Db;
 
 class OrderController extends BaseController
 {

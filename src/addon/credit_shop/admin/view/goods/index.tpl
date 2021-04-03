@@ -67,7 +67,7 @@
 					<td><figure class="figure" >
 							<img src="{$v.image}?w=100" class="figure-img img-fluid rounded" alt="image">
 						</figure></td>
-					<td>{if condition="$v['type'] GT 1"}<span class="badge badge-info">{$types[$v['type']]}</span>{/if}{$v.title}</td>
+					<td>{if $v['type'] == 1}<span class="badge badge-info">{$types[$v['type']]}</span>{/if}{$v.title}</td>
 					<td>
 						{$v.price} 积分/{$v['unit']|default='件'}
 					</td>
@@ -80,7 +80,7 @@
 					<td>{$v.create_time|showdate}</td>
 					<td>{$v.category_title}</td>
 					<td>
-						{if condition="$v.status eq 1"}
+						{if $v.status == 1}
 							<span class="badge badge-success">已发布</span>
 							{else/}
 							<span class="badge badge-secondary">未发布</span>

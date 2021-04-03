@@ -12,7 +12,7 @@ namespace app\index\controller;
 use app\common\facade\CreditOrderFacade;
 use app\common\model\CreditOrderModel;
 use app\common\validate\OrderValidate;
-use think\Db;
+use think\facade\Db;
 
 class CreditOrderController extends AuthedController
 {

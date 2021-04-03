@@ -6,7 +6,7 @@ use addon\base\BaseController;
 use addon\credit_shop\admin\validate\GoodsCategoryValidate;
 use addon\credit_shop\core\facade\CategoryFacade;
 use addon\credit_shop\core\model\GoodsCategoryModel;
-use think\Db;
+use think\facade\Db;
 
 class CategoryController extends BaseController
 {

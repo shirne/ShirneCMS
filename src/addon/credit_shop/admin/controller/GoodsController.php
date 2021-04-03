@@ -1,10 +1,4 @@
 <?php
-/**
- * 商品管理
- * User: shirne
- * Date: 2018/5/11
- * Time: 17:47
- */
 
 namespace addon\credit_shop\admin\controller;
 
@@ -13,8 +7,12 @@ use addon\credit_shop\core\facade\CategoryFacade;
 use addon\credit_shop\core\model\GoodsModel;
 use addon\base\BaseController;
 use app\admin\validate\ImagesValidate;
-use think\Db;
+use think\facade\Db;
 
+/**
+ * 
+ * @package addon\credit_shop\admin\controller
+ */
 class GoodsController extends BaseController
 {
     public function index($key='',$cate_id=0){
