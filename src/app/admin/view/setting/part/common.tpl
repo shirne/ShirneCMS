@@ -39,7 +39,7 @@
     <label for="v-site-close" class="col-3 col-md-2 text-right align-middle">关闭站点</label>
     <div class="col-5">
         <div class="btn-group btn-group-toggle mregopengroup" data-toggle="buttons">
-            {foreach name="setting['site-close']['data']" item="value" key="k"}
+            {foreach $setting['site-close']['data']??[] as $k=> $value}
                 {if $k==$setting['site-close']['value']}
                     <label class="btn btn-outline-secondary active">
                         <input type="radio" name="v-site-close" value="{$k}" autocomplete="off" checked> {$value}
@@ -53,13 +53,13 @@
         </div>
     </div>
     <div class="col-4">
-        <a href="{:FU('/')}?force=1" target="_blank" class="btn btn-link">强制访问</a>
+        <a href="{:FU('/')}?force=" target="_blank" class="btn btn-link">强制访问</a>
     </div>
 </div>
 <div class="form-row form-group">
     <label for="v-site-close-desc" class="col-3 col-md-2 text-right align-middle">关闭说明</label>
     <div class="col-9 col-md-8 col-lg-6">
-        <input type="text" class="form-control" name="v-site-close-desc" value="{$setting['site-close-desc']['value']}" >
+        <input type="text" class="form-control" name="v-site-close-desc" value="{$setting['site-close-desc']['value']|default=''}" >
     </div>
 </div>
 
@@ -84,62 +84,62 @@
 <div class="form-row form-group">
     <label for="v-site-tongji" class="col-3 col-md-2 text-right align-middle">统计代码</label>
     <div class="col-9 col-md-8 col-lg-6">
-        <textarea name="v-site-tongji" class="form-control" placeholder="统计代码">{$setting['site-tongji']['value']}</textarea>
+        <textarea name="v-site-tongji" class="form-control" placeholder="统计代码">{$setting['site-tongji']['value']|default=''}</textarea>
     </div>
 </div>
 <div class="form-row form-group">
     <label for="v-site-icp" class="col-3 col-md-2 text-right align-middle">ICP备案号</label>
     <div class="col-9 col-md-8 col-lg-6">
-        <input type="text" class="form-control" name="v-site-icp" value="{$setting['site-icp']['value']}" placeholder="ICP备案号">
+        <input type="text" class="form-control" name="v-site-icp" value="{$setting['site-icp']['value']|default=''}" placeholder="ICP备案号">
     </div>
 </div>
 <div class="form-row form-group">
     <label for="v-gongan-icp" class="col-3 col-md-2 text-right align-middle">公安备案号</label>
     <div class="col-9 col-md-8 col-lg-6">
-        <input type="text" class="form-control" name="v-gongan-icp" value="{$setting['gongan-icp']['value']}" placeholder="公安备案号">
+        <input type="text" class="form-control" name="v-gongan-icp" value="{$setting['gongan-icp']['value']|default=''}" placeholder="公安备案号">
     </div>
 </div>
 <div class="form-row form-group">
     <label for="v-site-url" class="col-3 col-md-2 text-right align-middle">站点网址</label>
     <div class="col-9 col-md-8 col-lg-6">
-        <input type="text" class="form-control" name="v-site-url" value="{$setting['site-url']['value']}" placeholder="站点地址">
+        <input type="text" class="form-control" name="v-site-url" value="{$setting['site-url']['value']|default=''}" placeholder="站点地址">
     </div>
 </div>
 <div class="form-row form-group">
     <label for="v-site-name" class="col-3 col-md-2 text-right align-middle">公司名</label>
     <div class="col-9 col-md-8 col-lg-6">
-        <input type="text" class="form-control" name="v-site-name" value="{$setting['site-name']['value']}" placeholder="公司名">
+        <input type="text" class="form-control" name="v-site-name" value="{$setting['site-name']['value']|default=''}" placeholder="公司名">
     </div>
 </div>
 <div class="form-row form-group">
     <label for="v-site-400" class="col-3 col-md-2 text-right align-middle">400电话</label>
     <div class="col-9 col-md-8 col-lg-6">
-        <input type="text" class="form-control" name="v-site-400" value="{$setting['site-400']['value']}" placeholder="400电话">
+        <input type="text" class="form-control" name="v-site-400" value="{$setting['site-400']['value']|default=''}" placeholder="400电话">
     </div>
 </div>
 <div class="form-row form-group">
     <label for="v-site-telephone" class="col-3 col-md-2 text-right align-middle">联系电话</label>
     <div class="col-9 col-md-8 col-lg-6">
-        <input type="text" class="form-control" name="v-site-telephone" value="{$setting['site-telephone']['value']}" placeholder="联系电话">
+        <input type="text" class="form-control" name="v-site-telephone" value="{$setting['site-telephone']['value']|default=''}" placeholder="联系电话">
     </div>
 </div>
 <div class="form-row form-group">
     <label for="v-site-email" class="col-3 col-md-2 text-right align-middle">公司邮箱</label>
     <div class="col-9 col-md-8 col-lg-6">
-        <input type="text" class="form-control" name="v-site-email" value="{$setting['site-email']['value']}" placeholder="公司邮箱">
+        <input type="text" class="form-control" name="v-site-email" value="{$setting['site-email']['value']|default=''}" placeholder="公司邮箱">
     </div>
 </div>
 <div class="form-row form-group">
     <label for="v-site-address" class="col-3 col-md-2 text-right align-middle">公司地址</label>
     <div class="col-9 col-md-8 col-lg-6">
-        <input type="text" class="form-control" name="v-site-address" value="{$setting['site-address']['value']}" placeholder="公司地址">
+        <input type="text" class="form-control" name="v-site-address" value="{$setting['site-address']['value']|default=''}" placeholder="公司地址">
     </div>
 </div>
 <div class="form-row form-group">
     <label for="v-site-location" class="col-3 col-md-2 text-right align-middle">公司位置</label>
     <div class="col-9 col-md-8 col-lg-6">
         <div class="input-group">
-            <input type="text" class="form-control" name="v-site-location" value="{$setting['site-location']['value']}" placeholder="location">
+            <input type="text" class="form-control" name="v-site-location" value="{$setting['site-location']['value']|default=''}" placeholder="location">
             <div class="input-group-append">
                 <a href="javascript:" class="btn btn-outline-secondary locationPick">选择位置</a>
             </div>

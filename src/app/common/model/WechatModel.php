@@ -95,7 +95,7 @@ class WechatModel extends BaseModel
         if($wechat === 'default'){
             $wechat = static::where('is_default',1)->find();
         }elseif(is_numeric($wechat)){
-            $wechat = static::get($wechat);
+            $wechat = static::where('id',$wechat)->find();
         }elseif(is_string($wechat)){
             $wechat = static::where(['appid'=>$wechat])->find();
         }

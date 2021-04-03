@@ -56,13 +56,13 @@ class OrderController extends AuthedController
             ->view('Product', ['id' => 'orig_product_id', 'update_time' => 'orig_product_update'], 'OrderProduct.product_id=Product.id', 'LEFT')
             ->view('ProductSku', ['sku_id' => 'orig_sku_id', 'price' => 'orig_product_price'], 'ProductSku.sku_id=OrderProduct.sku_id', 'LEFT')
             ->where('OrderProduct.order_id', $order['order_id'])
-            ->select();
+            ->select()->all();
         $order['product_count']=empty($order['products'])?0:array_sum(array_column($order['products'],'count'));
         return $this->response($order);
     }
     
     public function cancel($id, $reason=''){
-        $order=OrderModel::get(intval($id));
+        $order=OrderModel::where('order_id',intval($id))->find();
         if(empty($order) || $order['member_id']!=$this->user['id'] || $order['delete_time']>0){
             $this->error('订单不存在或已删除',0);
         }
@@ -78,7 +78,7 @@ class OrderController extends AuthedController
     }
     
     public function refund($id){
-        $order=OrderModel::get(intval($id));
+        $order=OrderModel::where('order_id',intval($id))->find();
         if(empty($order) || $order['delete_time']>0){
             $this->error('订单不存在或已删除',0);
         }
@@ -108,7 +108,7 @@ class OrderController extends AuthedController
     }
     
     public function express($id){
-        $order=OrderModel::get(intval($id));
+        $order=OrderModel::where('order_id',intval($id))->find();
         if(empty($order) || $order['member_id']!=$this->user['id'] || $order['delete_time']>0){
             $this->error('订单不存在或已删除',0);
         }
@@ -125,11 +125,11 @@ class OrderController extends AuthedController
             'express_no'=>$order->express_no
         ];
         if(!empty($returnData['express_code'])){
-            $companies=config('express.');
+            $companies=config('express');
             $returnData['express']=$companies[$returnData['express_code']]?:'其它';
         }
         
-        $products=Db::name('OrderProduct')->where('order_id', $order['order_id'])->select();
+        $products=Db::name('OrderProduct')->where('order_id', $order['order_id'])->select()->all();
         
         if(!empty($products)) {
             $product = current($products);
@@ -153,7 +153,7 @@ class OrderController extends AuthedController
     }
     
     public function confirm($id){
-        $order=OrderModel::get(intval($id));
+        $order=OrderModel::where('order_id',intval($id))->find();
         if(empty($order) || $order['member_id']!=$this->user['id'] || $order['delete_time']>0){
             $this->error('订单不存在或已删除',0);
         }
@@ -169,7 +169,7 @@ class OrderController extends AuthedController
     }
     
     public function delete($id){
-        $order=OrderModel::get(intval($id));
+        $order=OrderModel::where('order_id',intval($id))->find();
         if(empty($order) || $order['member_id']!=$this->user['id'] || $order['delete_time']>0){
             $this->error('订单不存在或已删除',0);
         }

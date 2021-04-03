@@ -7,39 +7,39 @@
     <div id="page-content">
     <form method="post" action="" enctype="multipart/form-data">
         <div class="form-row form-group">
-            <label for="v-message_bind_agent" class="form-label w-100px text-right align-middle">{$setting['message_bind_agent']['title']}</label>
+            <label for="v-message_bind_agent" class="form-label w-100px text-right align-middle">{$setting['message_bind_agent']['title']|default=''}</label>
             <div class="col-5">
-                <textarea name="v-message_bind_agent" class="form-control">{$setting['message_bind_agent']['value']}</textarea>
+                <textarea name="v-message_bind_agent" class="form-control">{$setting['message_bind_agent']['value']|default=''}</textarea>
             </div>
             <div class="col-5">
-                <span class="text-muted">{$setting['message_bind_agent']['description']}</span>
-            </div>
-        </div>
-        <div class="form-row form-group">
-            <label for="v-message_become_agent" class="form-label w-100px text-right align-middle">{$setting['message_become_agent']['title']}</label>
-            <div class="col-5">
-                <textarea name="v-message_become_agent" class="form-control">{$setting['message_become_agent']['value']}</textarea>
-            </div>
-            <div class="col-5">
-                <span class="text-muted">{$setting['message_become_agent']['description']}</span>
+                <span class="text-muted">{$setting['message_bind_agent']['description']|default=''}</span>
             </div>
         </div>
         <div class="form-row form-group">
-            <label for="v-message_upgrade_agent" class="form-label w-100px text-right align-middle">{$setting['message_upgrade_agent']['title']}</label>
+            <label for="v-message_become_agent" class="form-label w-100px text-right align-middle">{$setting['message_become_agent']['title']|default=''}</label>
             <div class="col-5">
-                <textarea name="v-message_upgrade_agent" class="form-control">{$setting['message_upgrade_agent']['value']}</textarea>
+                <textarea name="v-message_become_agent" class="form-control">{$setting['message_become_agent']['value']|default=''}</textarea>
             </div>
             <div class="col-5">
-                <span class="text-muted">{$setting['message_upgrade_agent']['description']}</span>
+                <span class="text-muted">{$setting['message_become_agent']['description']|default=''}</span>
             </div>
         </div>
         <div class="form-row form-group">
-            <label for="v-message_commission" class="form-label w-100px text-right align-middle">{$setting['message_commission']['title']}</label>
+            <label for="v-message_upgrade_agent" class="form-label w-100px text-right align-middle">{$setting['message_upgrade_agent']['title']|default=''}</label>
             <div class="col-5">
-                <textarea name="v-message_commission" class="form-control">{$setting['message_commission']['value']}</textarea>
+                <textarea name="v-message_upgrade_agent" class="form-control">{$setting['message_upgrade_agent']['value']|default=''}</textarea>
             </div>
             <div class="col-5">
-                <span class="text-muted">{$setting['message_commission']['description']}</span>
+                <span class="text-muted">{$setting['message_upgrade_agent']['description']|default=''}</span>
+            </div>
+        </div>
+        <div class="form-row form-group">
+            <label for="v-message_commission" class="form-label w-100px text-right align-middle">{$setting['message_commission']['title']|default=''}</label>
+            <div class="col-5">
+                <textarea name="v-message_commission" class="form-control">{$setting['message_commission']['value']|default=''}</textarea>
+            </div>
+            <div class="col-5">
+                <span class="text-muted">{$setting['message_commission']['description']|default=''}</span>
             </div>
         </div>
 
@@ -47,7 +47,7 @@
     </form>
     </div>
 </div>
-    {/block}
+{/block}
 {block name="script"}
 <script type="text/javascript">
     jQuery(function ($) {

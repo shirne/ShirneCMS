@@ -26,7 +26,7 @@ class OrderModel extends BaseOrderModel
     protected $name = 'order';
     protected $pk='order_id';
 
-    public function onAfterWrite($model)
+    public static function onAfterWrite($model)
     {
         $where=$model->getWhere();if(empty($where))return;
         $orders=$model->where($where)->select();
@@ -423,7 +423,7 @@ class OrderModel extends BaseOrderModel
         }
         try{
             Log::record("创建订单：".var_export($orderdata,true));
-            $result= $this->insert($orderdata,false,true);
+            $result= $this->insert($orderdata,true);
         }catch(\Exception $e){
             $this->rollback();
             $this->setError($e->getMessage());

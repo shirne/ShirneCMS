@@ -11,7 +11,7 @@ use app\common\service\CheckcodeService;
 use app\common\validate\MemberValidate;
 use EasyWeChat\Factory;
 use EasyWeChat\OfficialAccount\Application;
-use shirne\captcha\Captcha;
+use think\captcha\Captcha;
 use shirne\common\ValidateHelper;
 use shirne\sdk\OAuthFactory;
 use shirne\third\Aliyun;
@@ -102,7 +102,7 @@ class AuthController extends BaseController
         $this->accessSession['appid']=$appid;
 
         if($agent){
-            $agentMember = Db('member')->where('agentcode',$agent)
+            $agentMember = Db::name('member')->where('agentcode',$agent)
                 ->where('status',1)
                 ->where('is_agent','>',0)->find();
             if(!empty($agentMember)){
@@ -145,9 +145,7 @@ class AuthController extends BaseController
             if(empty($data['verify'])){
                 $this->error('请填写验证码',ERROR_NEED_VERIFY);
             }
-            $verify = new Captcha(array('seKey'=>config('session.sec_key')), Cache::instance());
-            $checked = $verify->check($data['verify'],'_api_'.$this->accessToken);
-            if(!$checked){
+            if(!api_captcha('_api_'.$this->accessToken)->check($data['verify'])){
                 $this->error('验证码错误',ERROR_NEED_VERIFY);
             }
         }
@@ -155,7 +153,7 @@ class AuthController extends BaseController
         if(empty($username) || empty($password)){
             $this->error('请填写登录账号及密码',ERROR_LOGIN_FAILED);
         }
-        $errcount = $this->accessSession['error_count'];
+        $errcount = $this->accessSession['error_count']??0;
         if($errcount > 4){
             $this->error('登录尝试次数过多',ERROR_LOGIN_FAILED);
         }
@@ -507,12 +505,7 @@ class AuthController extends BaseController
     }
 
     public function captcha(){
-
-        $verify = new Captcha(array('seKey'=>config('session.sec_key')), Cache::instance());
-
-        $verify->fontSize = 16;
-        $verify->length = 4;
-        return $verify->entry('_api_'.$this->accessToken);
+        return api_captcha('_api_'.$this->accessToken)->create();
     }
 
     protected function smsverify($mobile, $type, $code)
@@ -548,7 +541,7 @@ class AuthController extends BaseController
             if(empty($captcha)){
                 $this->error('请填写图形验证码',ERROR_NEED_VERIFY);
             }
-            $verify = new Captcha(array('seKey'=>config('session.sec_key')), Cache::instance());
+            $verify = api_captcha('_api_'.$this->accessToken);
             $checked = $verify->check($captcha,'_api_'.$this->accessToken);
             if(!$checked){
                 $this->error('验证码错误',ERROR_NEED_VERIFY);
@@ -701,14 +694,12 @@ class AuthController extends BaseController
             if(empty($verifycode)){
                 $this->error('请填写验证码',ERROR_NEED_VERIFY);
             }
-            $verify = new Captcha(array('seKey'=>config('session.sec_key')), Cache::instance());
-            $checked = $verify->check($verifycode,'_api_'.$this->accessToken);
-            if(!$checked){
+            if(!api_captcha('_api_'.$this->accessToken)->check($verifycode)){
                 $this->error('验证码错误',ERROR_NEED_VERIFY);
             }
         }
 
-        $data=$this->request->only('username,password,repassword,email,realname,mobile,mobilecheck','post');
+        $data=$this->request->only(['username','password','repassword','email','realname','mobile','mobilecheck']);
 
         $validate=new MemberValidate();
         $validate->setId();
@@ -759,7 +750,7 @@ class AuthController extends BaseController
         }else{
             $agentid = isset($this->accessSession['agent'])?intval($this->accessSession['agent']):0;
             if($agent){
-                $agentMember = Db('member')->where('agentcode',$agent)
+                $agentMember = Db::name('member')->where('agentcode',$agent)
                     ->where('status',1)
                     ->where('is_agent','>',0)->find();
                 if(!empty($agentMember)){

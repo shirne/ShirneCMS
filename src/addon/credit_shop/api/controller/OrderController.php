@@ -68,7 +68,7 @@ class OrderController extends AuthedController
             $this->error('下单商品价格已变动');
         }
 
-        $data=$this->request->only('address_id,pay_type,remark,form_id','put');
+        $data=$this->request->only(['address_id','pay_type','remark','form_id'],'put');
 
         $validate=new OrderValidate();
         if(!$validate->check($data)){

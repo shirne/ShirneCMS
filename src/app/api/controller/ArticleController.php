@@ -78,7 +78,7 @@ class ArticleController extends BaseController
 
     public function view($id){
         $id=intval($id);
-        $article = ArticleModel::get($id);
+        $article = ArticleModel::find($id);
         if(empty($article)){
             $this->error('文章不存在',0);
         }
@@ -105,7 +105,7 @@ class ArticleController extends BaseController
 
     public function digg($id,$type='up'){
         $id=intval($id);
-        $article = ArticleModel::get($id);
+        $article = ArticleModel::find($id);
         if(empty($article)){
             $this->error('文章不存在',0);
         }
@@ -172,7 +172,7 @@ class ArticleController extends BaseController
             $this->error(lang('Arguments error!'));
         }
         
-        $data=$this->request->only('email,is_anonymous,content,reply_id','put');
+        $data=$this->request->only(['email','is_anonymous','content','reply_id']);
         if($this->config['anonymous_comment']==0 && !$this->isLogin){
             $this->error('请登陆后评论');
         }

@@ -20,6 +20,7 @@ return [
     'Confirm password'=>'确认密码',
     'Pls login first'=>'请先登录',
 
+    'Page not found!'=>'页面不存在！',
 
     'News'=>'新闻中心',
     'Article not exists!'=>'文章不存在！',

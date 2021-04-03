@@ -66,10 +66,10 @@
                         <th>{$f}</th>
                         {foreach name="orderTypes" item="t" key="tk"}
                             {if $tk NEQ 'all'}
-                            <td>{$statics[$fk][$tk]|showmoney}</td>
+                            <td>{$statics[$fk][$tk]|default=0|showmoney}</td>
                             {/if}
                         {/foreach}
-                        <td>{$statics[$fk]['sum']|showmoney}</td>
+                        <td>{$statics[$fk]['sum']|default=0|showmoney}</td>
                     </tr>
                     {/if}
                 {/foreach}

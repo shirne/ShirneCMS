@@ -68,7 +68,7 @@ class GoodsController extends BaseController
     }
 
     public function view($id){
-        $goods = GoodsModel::get($id);
+        $goods = GoodsModel::find($id);
         if(empty($goods)){
             $this->error('商品不存在');
         }

@@ -33,7 +33,7 @@ class BrandController extends BaseController
         $key=empty($key)?"":base64url_decode($key);
         $model = Db::name('productBrand');
         if(!empty($key)){
-            $model->whereLike('title|url',"%$key%")
+            $model->whereLike('title|url',"%$key%");
         }
         $lists=$model->order('ID DESC')->paginate(15);
         $this->assign('lists',$lists);
@@ -63,7 +63,7 @@ class BrandController extends BaseController
 
                 $cates = $data['cates'];
                 unset($data['cates']);
-                $insertid=Db::name('productBrand')->insert($data,false,true);
+                $insertid=Db::name('productBrand')->insert($data,true);
                 if ($insertid) {
                     if(!empty($cates)){
                         foreach($cates as $cid){

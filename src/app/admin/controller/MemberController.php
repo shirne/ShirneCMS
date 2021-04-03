@@ -62,8 +62,8 @@ class MemberController extends BaseController
             return redirect(url('',['referer'=>$referer,'start_date'=>$start_date,'end_date'=>$end_date,'type'=>$type,'keyword'=>base64url_encode($keyword)]));
         }
         $keyword=empty($keyword)?"":base64url_decode($keyword);
-        $model = Db::view('__MEMBER__ m','*')
-            ->view('__MEMBER__ rm',['username'=> 'refer_name','nickname'=> 'refer_nickname','realname'=> 'refer_realname','avatar'=> 'refer_avatar','is_agent'=> 'refer_agent'],'m.referer=rm.id','LEFT');
+        $model = Db::view('member m','*')
+            ->view('member rm',['username'=> 'refer_name','nickname'=> 'refer_nickname','realname'=> 'refer_realname','avatar'=> 'refer_avatar','is_agent'=> 'refer_agent'],'m.referer=rm.id','LEFT');
         if(!empty($keyword)){
             $model->whereLike('m.username|m.nickname|m.email|m.realname',"%$keyword%");
         }
@@ -120,7 +120,7 @@ class MemberController extends BaseController
         $id=intval($id);
         $level_id=intval($level_id);
 
-        $member = MemberModel::get($id);
+        $member = MemberModel::find($id);
         if(empty($member))$this->error('会员不存在');
         
         $result=$member->save(['level_id'=>$level_id]);
@@ -137,7 +137,7 @@ class MemberController extends BaseController
         $id=intval($id);
         $referer=intval($referer);
 
-        $member = MemberModel::get($id);
+        $member = MemberModel::find($id);
         if(empty($member))$this->error('会员不存在');
         
         $result=$member->setReferer($referer);
@@ -153,7 +153,7 @@ class MemberController extends BaseController
         if(empty($id) )$this->error('参数错误');
         $id=intval($id);
         
-        $member=MemberModel::get($id);
+        $member=MemberModel::find($id);
         if(empty($member))$this->error('会员不存在');
         
         $result=$member->clrReferer();
@@ -272,7 +272,7 @@ class MemberController extends BaseController
         $types=getLogTypes();
         $allstatus=['-1'=>'已取消','0'=>'待发放','1'=>'已发放'];
         
-        $stacrows=$model->group('mlog.status,mlog.type')->setOption('field',[])->setOption('order','mlog.status')->field('mlog.status,mlog.type,sum(mlog.amount) as total_amount')->select();
+        $stacrows=$model->group('mlog.status,mlog.type')->setOption('field',[])->setOption('order',['mlog.status'])->field('mlog.status,mlog.type,sum(mlog.amount) as total_amount')->select()->all();
         $statics=[];
         foreach ($stacrows as $row){
             $statics[$row['status']][$row['type']]=$row['total_amount'];
@@ -358,7 +358,7 @@ class MemberController extends BaseController
         $types=getLogTypes();
         $fields=getMoneyFields();
 
-        $stacrows=$model->group('mlog.field,mlog.type')->setOption('field',[])->setOption('order','mlog.field')->field('mlog.field,mlog.type,sum(mlog.amount) as total_amount')->select();
+        $stacrows=$model->group('mlog.field,mlog.type')->setOption('field',[])->setOption('order',['mlog.field'])->field('mlog.field,mlog.type,sum(mlog.amount) as total_amount')->select();
         $statics=[];
         foreach ($stacrows as $row){
             $statics[$row['field']][$row['type']]=$row['total_amount'];
@@ -512,7 +512,7 @@ class MemberController extends BaseController
                 }
 
                 // 更新
-                $member=MemberModel::get($id);
+                $member=MemberModel::find($id);
                 if(empty($member)){
                     $this->error('会员资料错误');
                 }
@@ -520,7 +520,7 @@ class MemberController extends BaseController
                 if($member['mobile_bind'] == 1 && empty($data['mobile'])){
                     $data['mobile_bind'] = 0;
                 }
-                if ($member->allowField(true)->save($data)) {
+                if ($member->save($data)) {
                     user_log($this->mid,'updateuser',1,'修改会员资料'.$id ,'manager');
                     $this->success(lang('Update success!'), url('member/index'));
                 } else {
@@ -588,7 +588,7 @@ class MemberController extends BaseController
     
             foreach ($tables as $row){
                 $columns=Db::query('show columns in '.$row[$field]);
-                $fields=array_column($columns,'Field');
+                $fields=array_column($columns->all(),'Field');
                 if(in_array('member_id',$fields)){
                     Db::table($row[$field])->whereIn('member_id',$id)->delete();
                 }
@@ -632,13 +632,13 @@ class MemberController extends BaseController
                 $model->whereBetween('create_time',[strtotime($start_date),strtotime($end_date.' 23:59:59')]);
                 $logModel->whereBetween('create_time',[strtotime($start_date),strtotime($end_date.' 23:59:59')]);
             }else{
-                $model->where('create_time','>',strtotime($start_date));
-                $logModel->where('create_time','>',strtotime($start_date));
+                $model->where('create_time','>=',strtotime($start_date));
+                $logModel->where('create_time','>=',strtotime($start_date));
             }
         }else{
             if(!empty($end_date)){
-                $model->where('create_time','<',strtotime($end_date.' 23:59:59'));
-                $logModel->where('create_time','<',strtotime($end_date.' 23:59:59'));
+                $model->where('create_time','<=',strtotime($end_date.' 23:59:59'));
+                $logModel->where('create_time','<=',strtotime($end_date.' 23:59:59'));
             }
         }
 

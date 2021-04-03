@@ -32,7 +32,7 @@ class ManagerRoleController extends BaseController
 
         $lists=$model->order('type ASC')->paginate(15);
         $counts = Db::name('manager')->group('type')->field('count(id) as total_count,type')->select();
-        $this->assign('counts',array_column($counts,'total_count','type'));
+        $this->assign('counts',array_column($counts->all(),'total_count','type'));
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
         return $this->fetch();
@@ -67,7 +67,7 @@ class ManagerRoleController extends BaseController
         $maxtype=(int)Db::name('ManagerRole')->max('type');
         $model=array('type'=>$maxtype+1,'global'=>[],'detail'=>[]);
         $this->assign('model',$model);
-        $this->assign('perms',config('permisions.'));
+        $this->assign('perms',config('permisions'));
         $this->assign('styles',getTextStyles());
         return $this->fetch('update');
     }
@@ -81,7 +81,7 @@ class ManagerRoleController extends BaseController
     {
         $id=intval($id);
         if($id==0)$this->error('参数错误');
-        $model=ManagerRoleModel::get($id);
+        $model=ManagerRoleModel::find($id);
         if($this->manager['type']>$model['type']){
             $this->error('您没有权限查看该角色');
         }
@@ -99,7 +99,7 @@ class ManagerRoleController extends BaseController
                 }
                 
                 //更新
-                if ($model->allowField(true)->update($data)) {
+                if ($model->update($data)) {
                     user_log($this->mid,'editmanagerrole',1,'修改管理员'.$model->id ,'manager');
                     $this->success(lang('Update success!'), url('manager_role/index'));
                 } else {
@@ -109,7 +109,7 @@ class ManagerRoleController extends BaseController
         }
         
         $this->assign('model',$model);
-        $this->assign('perms',config('permisions.'));
+        $this->assign('perms',config('permisions'));
         $this->assign('styles',getTextStyles());
         return $this->fetch();
     }
@@ -125,7 +125,7 @@ class ManagerRoleController extends BaseController
             $this->error("不可删除!");
         }
         
-        $role = ManagerRoleModel::get($id);
+        $role = ManagerRoleModel::find($id);
         if ($this->manager['type']>=$role['type']) {
             $this->error('您不能删除该角色');
         }

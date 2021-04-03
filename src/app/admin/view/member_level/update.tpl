@@ -4,7 +4,7 @@
     {include  file="public/bread" menu="member_level_index" title="会员组配置" /}
 
     <div id="page-wrapper">
-        <div class="page-header">{$model['level_id']>0?'编辑':'添加'}等级</div>
+        <div class="page-header">{if empty($model['level_id']) }添加{else/}编辑{/if}等级</div>
         <div class="page-content">
             <form method="post">
                 <div class="row">
@@ -19,7 +19,7 @@
                                             <span class="input-group-text">等级名称</span>
                                         </div>
                                         <input type="text" name="level_name" class="form-control"
-                                               value="{$model.level_name}"
+                                               value="{$model.level_name|default=''}"
                                                placeholder="输入名称">
                                     </div>
                                 </div>
@@ -29,7 +29,7 @@
                                             <span class="input-group-text">简称</span>
                                         </div>
                                         <input type="text" name="short_name" class="form-control"
-                                               value="{$model.short_name}"
+                                               value="{$model.short_name|default=''}"
                                                placeholder="名称简写">
                                     </div>
                                 </div>
@@ -41,10 +41,10 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">样式</span>
                                         </div>
-                                        <select name="style" class="form-control text-{$model.style}"
+                                        <select name="style" class="form-control text-{$model.style|default='secondary'}"
                                                 onchange="$(this).attr('class','form-control text-'+$(this).val())">
                                             {foreach name="styles" id="style"}
-                                                <option value="{$style}" {$model['style']==$style?'selected':''}
+                                                <option value="{$style}" {if !empty($model['style']) && $model['style']}selected{/if}
                                                         class="text-{$style}">██████████
                                                 </option>
                                             {/foreach}
@@ -56,7 +56,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">排序</span>
                                         </div>
-                                        <input type="text" name="sort" class="form-control" value="{$model.sort}"
+                                        <input type="text" name="sort" class="form-control" value="{$model.sort|default=''}"
                                                placeholder="越小越靠前">
                                     </div>
                                 </div>
@@ -108,13 +108,13 @@
                                     <label for="is_default">升级方式</label>
                                     <div class="col">
                                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                            <label class="btn btn-outline-primary {$model['upgrade_type']=='1'?"active":""}">
+                                            <label class="btn btn-outline-primary {if !empty($model['upgrade_type']) && $model['upgrade_type']=='1'}active{/if}">
                                                 <input type="radio" name="upgrade_type" value="1"
-                                                    autocomplete="off" {$model['upgrade_type']=='1'?"checked":""}> 自动升级
+                                                    autocomplete="off" {if !empty($model['upgrade_type']) && $model['upgrade_type']=='1'}checked{/if}> 自动升级
                                             </label>
-                                            <label class="btn btn-outline-secondary {$model['upgrade_type']==0?"active":""}">
+                                            <label class="btn btn-outline-secondary {if empty($model['upgrade_type']) }active{/if}">
                                                 <input type="radio" name="upgrade_type" value="0"
-                                                    autocomplete="off" {$model['upgrade_type']==0?"checked":""}> 手动或绑定
+                                                    autocomplete="off" {if empty($model['upgrade_type']) }checked{/if}> 手动或绑定
                                             </label>
                                         </div>
                                     </div>
@@ -125,7 +125,7 @@
                                             <span class="input-group-text">消费额度</span>
                                         </div>
                                         <input type="text" name="level_price" class="form-control"
-                                            value="{$model.level_price}"
+                                            value="{$model.level_price|default=''}"
                                             placeholder="输入消费额度">
                                     </div>
                                 </div>
@@ -138,13 +138,13 @@
                                     <label for="is_default">自定义价格</label>
                                     <div class="col">
                                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                            <label class="btn btn-outline-primary {$model['diy_price']=='1'?"active":""}">
+                                            <label class="btn btn-outline-primary {if !empty($model['diy_price'])}active{/if}">
                                                 <input type="radio" name="diy_price" value="1"
-                                                    autocomplete="off" {$model['diy_price']=='1'?"checked":""}> 是
+                                                    autocomplete="off" {if !empty($model['diy_price'])}checked{/if}> 是
                                             </label>
-                                            <label class="btn btn-outline-secondary {$model['diy_price']==0?"active":""}">
+                                            <label class="btn btn-outline-secondary {if empty($model['diy_price'])}active{/if}">
                                                 <input type="radio" name="diy_price" value="0"
-                                                    autocomplete="off" {$model['diy_price']==0?"checked":""}> 否
+                                                    autocomplete="off" {if empty($model['diy_price'])}checked{/if}> 否
                                             </label>
                                         </div>
                                     </div>
@@ -154,7 +154,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">会员折扣</span>
                                         </div>
-                                        <input type="text" name="discount" class="form-control" value="{$model.discount}"
+                                        <input type="text" name="discount" class="form-control" value="{$model.discount|default=100}"
                                             placeholder="百分比折扣">
                                         <div class="input-group-append">
                                             <span class="input-group-text">%</span>
@@ -186,7 +186,7 @@
                                     <span class="input-group-text">本金上限</span>
                                 </div>
                                 <input type="text" name="commission_limit" class="form-control"
-                                       value="{$model.commission_limit}">
+                                       value="{$model.commission_limit|default=''}">
                             </div>
                             <div class="row">
                                 <div class="col form-text text-muted">代数修改需保存后才能再修改比例</div>
@@ -196,26 +196,26 @@
                         <div class="form-group">
                             <label for="cc">推荐比例</label>
                             <div class="row">
-                                <for start="0" end="$model['commission_layer']">
+                                {for start="0" end="$model['commission_layer']"}
                                     <div class="input-group col">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">第 {$i+1} 代</span>
                                         </div>
                                         <input type="text" name="commission_percent[{$i}]"
-                                               value="{$model['commission_percent'][$i]}"
+                                               value="{$model['commission_percent'][$i]|default=''}"
                                                class="form-control"/>
                                         <div class="input-group-append">
                                             <span class="input-group-text">%</span>
                                         </div>
                                     </div>
-                                </for>
+                                {/for}
                             </div>
                             <span class="form-text text-muted">佣金本金 = 本金上限 > 0 ? min(销售价-成本价,本金上限) : (销售价-成本价) &nbsp;|&nbsp; 佣金金额 = 佣金本金 * 消费会员相对本会员的层级的比例</span>
                         </div>
                     </div>
                 </div>
                 <div class="form-group mt-3">
-                    <input type="hidden" name="level_id" value="{$model.level_id}"/>
+                    <input type="hidden" name="level_id" value="{$model.level_id|default=''}"/>
                     <button type="submit" class="btn btn-primary">提交</button>
                 </div>
             </form>

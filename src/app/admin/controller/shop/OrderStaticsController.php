@@ -59,7 +59,7 @@ class OrderStaticsController extends BaseController
             }
         }
 
-        $statics=$model->where('status','>',0)->group('awdate')->select();
+        $statics=$model->where('status','>',0)->group('awdate')->select()->all();
 
         $this->assign('statics',$statics);
         $this->assign('static_type',$type);
@@ -107,7 +107,7 @@ class OrderStaticsController extends BaseController
 
         $statics=$model->where('status','>',0)->order('order_count DESC,order_amount DESC')->group('region')->select();
 
-        $this->assign('statics',$statics);
+        $this->assign('statics',$statics->all());
         $this->assign('static_type',$type);
         $this->assign('start_date',$start_date);
         $this->assign('end_date',$end_date);

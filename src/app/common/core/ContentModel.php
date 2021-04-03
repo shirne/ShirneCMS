@@ -274,7 +274,7 @@ class ContentModel extends BaseModel
                 $model->limit($attrs['limit']);
             }
     
-            $list = $model->select();
+            $list = $model->select()->all();
             
             if(!empty($list) && $needSort){
                 $newlist=[];

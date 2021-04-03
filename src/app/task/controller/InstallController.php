@@ -4,7 +4,7 @@
 namespace app\task\controller;
 
 
-use think\Console;
+use think\facade\Console;
 use think\console\Input;
 use think\console\Output;
 use app\BaseController as Controller;
@@ -35,7 +35,7 @@ class InstallController extends Controller
             
             $db = $this->request->post('db');
             if(!empty($db) && !empty($db['hostname'])){
-                $dbconfig=config('database.');
+                $dbconfig=config('database');
                 $needupdate=false;
 
                 foreach($db as $k=>$v){
@@ -45,15 +45,44 @@ class InstallController extends Controller
                     }
                 }
                 if($needupdate){
-                    $config = env('config_path').'database.php';
+                    $config = env('config_path').'/../.env';
+                    if(!is_file($config)){
+                        $example = env('config_path').'/../.env.example';
+                        if(is_file($example)){
+                            copy($example,$config);
+                        }else{
+                            $configstr=<<<'ENVDATA'
+APP_DEBUG = false
+
+[APP]
+DEFAULT_TIMEZONE = Asia/Shanghai
+
+[DATABASE]
+TYPE = mysql
+HOSTNAME = localhost
+DATABASE = shirnecms
+USERNAME = root
+PASSWORD = 123456
+PREFIX = sa_
+HOSTPORT = 3306
+CHARSET = utf8mb4
+DEBUG = false
+
+[LANG]
+default_lang = zh-cn
+ENVDATA;
+                            file_put_contents($config, $configstr);
+                        }
+                    }
                     if(!is_writable($config)){
                         $this->error('数据库配置文件不可写,请修改权限或手动配置');
                     }
                     $content = file_get_contents($config);
-                    $content = preg_replace_callback('/\'([\w\d]+)\'(\s*)=>(\s*)\'[^\']+\'/',function($matches)use($db,&$dbconfig){
-                        if(isset($db[$matches[1]])){
-                            $dbconfig[$matches['1']]=$db[$matches['1']];
-                            return "'{$matches['1']}'{$matches['2']}=>{$matches['3']}'{$db[$matches['1']]}'";
+                    $content = preg_replace_callback('/\'([\w\d]+)\'(\s*)=(\s*)\'[^\']+\'/',function($matches)use($db,&$dbconfig){
+                        $key = strtolower($matches[1]);
+                        if(isset($db[$key])){
+                            $dbconfig[$matches['1']]=$db[$key];
+                            return "'{$matches['1']}'{$matches['2']}={$matches['3']}'{$db[$key]}'";
                         }
                         return $matches[0];
                     },$content);
@@ -62,7 +91,7 @@ class InstallController extends Controller
                     Config::set($dbconfig, 'database');
                 }
             }
-            $console = Console::init(false);
+            $console = app()->console;
             $output = new Output('buffer');
             $args = ['install'];
             if (!empty($sql)) {
@@ -95,10 +124,13 @@ class InstallController extends Controller
         
         $envs=[];
         $mysqlenv=['title'=>'Mysql','require'=>MYSQL_MIN_VERSION,'current'=>'','pass'=>null];
-        $dbcfg=config('database.');
+        $dbcfg=config('database');
         try{
-            if(!empty($dbcfg['hostname'])){
-                $version=Db::connect($dbcfg)->query('select version()');
+            $default = $dbcfg['default']??'mysql';
+            $connections = $dbcfg['connections']??[];
+            if(!empty($connections[$default])){
+                $dbcfg = $connections[$default];
+                $version=Db::connect($default)->query('select version()');
                 $mysqlenv['current']=$version[0]['version()'];
                 if($mysqlenv['current'] && version_compare($mysqlenv['require'],$mysqlenv['current'],'<=')){
                     $mysqlenv['pass']=true;
@@ -107,7 +139,7 @@ class InstallController extends Controller
                 }
             }
         }catch(Exception $e){
-            
+            Log::record($e->getMessage());
         }
         $envs[]=$mysqlenv;
 
@@ -169,6 +201,7 @@ class InstallController extends Controller
                 break;
             }
         }
+        $this->assign('dbcfg',$dbcfg);
         $this->assign('envs',$envs);
         $this->assign('pass',$pass);
         return $this->fetch();
@@ -180,12 +213,19 @@ class InstallController extends Controller
         }
         $db['type']='mysql';
         try{
-            $version=Db::connect($db)->query('select version()');
+            $tmpConfig = config('database');
+            $key = 'db'.time();
+            $default = $tmpConfig['connections'][$tmpConfig['default']];
+            $tmpConfig['connections'][$key]=array_merge($default, $db);
+            
+            Config::set($tmpConfig,'database');
+            
+            $version=Db::connect($key)->query('select version()');
             $versionstr=$version[0]['version()'];
             
         }catch(\Throwable $e){
             $message=$e->getMessage();
-            Log::record($message);
+            Log::record($message.$e->getTraceAsString());
             $this->error('数据库连接失败');
         }
 

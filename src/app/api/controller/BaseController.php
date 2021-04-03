@@ -6,7 +6,6 @@ use think\App;
 use app\api\facade\MemberTokenFacade;
 use app\api\middleware\AccessMiddleware;
 use shirne\common\ValidateHelper;
-use think\Controller;
 use think\facade\Db;
 
 
@@ -44,7 +43,7 @@ class BaseController
     {
         $this->app     = $app;
         $this->request = $this->app->request;
-
+       
         // 控制器初始化
         $this->initialize();
     }
@@ -57,7 +56,6 @@ class BaseController
      */
     public function initialize(){
         $this->config=getSettings();
-
         $this->checkLogin();
     }
     

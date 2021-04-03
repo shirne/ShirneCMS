@@ -5,6 +5,7 @@
 *.log
 /src/thinkphp
 .env
+!.env.example
 
 /config/cert/*
 !/config/cert/cacert.pem

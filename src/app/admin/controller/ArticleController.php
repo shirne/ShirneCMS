@@ -156,9 +156,9 @@ class ArticleController extends BaseController
                 if(empty($data['description']))$data['description']=cutstr($data['content'],240);
                 if(!empty($data['create_time']))$data['create_time']=strtotime($data['create_time']);
                 if(empty($data['create_time']))unset($data['create_time']);
-                $model=ArticleModel::get($id);
+                $model=ArticleModel::find($id);
                 try {
-                    $model->allowField(true)->save($data);
+                    $model->save($data);
                     delete_image($delete_images);
                     user_log($this->mid, 'updatearticle', 1, '修改文章 ' . $id, 'manager');
                 }catch(\Exception $err){
@@ -169,7 +169,7 @@ class ArticleController extends BaseController
             }
         }else{
 
-            $model = ArticleModel::get($id);
+            $model = ArticleModel::find($id);
             if(empty($model)){
                 $this->error('文章不存在');
             }

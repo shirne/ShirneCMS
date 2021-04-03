@@ -53,6 +53,18 @@ function addonurl($action = '', $controller = '', $addon = ''){
     ]);
 }
 
+function delete_image($images){
+    if(is_array($images)){
+        foreach ($images as $image){
+            delete_image($image);
+        }
+    }else{
+        if(!empty($images) && strpos($images,'/uploads/')===0){
+            @unlink('.'.$images);
+        }
+    }
+}
+
 function parseNavigator(&$config,$module){
     $navigators=cache($module.'_navigator');
     if(empty($navigators) && !empty($config)){
@@ -137,7 +149,7 @@ function parseNavUrl($url,$module){
             return $url;
         } else {
             $url=$module.'/'.strtolower($url);
-            return url($url);
+            return url($url)->build();
         }
     }
     return $url;
@@ -154,7 +166,7 @@ function parseNavPage($group,$module){
     foreach ($pages as $page){
         $subs[]=array(
             'title'=>$page['title'],
-            'url'=>url($module.'/page/index',['name'=>$page['name'],'group'=>$page['group']])
+            'url'=>url($module.'/page/index',['name'=>$page['name'],'group'=>$page['group']])->build()
         );
     }
     return $subs;
@@ -220,7 +232,7 @@ function aurl($url = '', $vars = '', $suffix = true, $domain = false){
     if(!is_array($vars))$vars=[];
     $vars['action']=$part[2];
     $part[2]=':action';
-    return url(implode('/',$part),$vars,$suffix,$domain);
+    return url(implode('/',$part),$vars,$suffix,$domain)->build();
 }
 
 // end file

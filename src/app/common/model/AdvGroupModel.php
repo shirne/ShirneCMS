@@ -44,8 +44,14 @@ class AdvGroupModel extends BaseModel
         $lists =  Db::name('AdvItem')
             ->where('group_id',$model->id)
             ->where('status',1)
-            ->where('start_date',['=',0],['<=',$time],'OR')
-            ->where('end_date',['=',0],['>=',$time],'OR')
+            ->where(function($query) use ($time){
+                $query->where('start_date', 0)
+                    ->whereOr('start_date', '<=', $time);
+            })
+            ->where(function($query) use ($time){
+                $query->where('end_date', 0)
+                    ->whereOr('end_date', '>=', $time);
+            })
             ->order('sort ASC, id DESC')
             ->limit($limit)
             ->select();

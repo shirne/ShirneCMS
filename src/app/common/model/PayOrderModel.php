@@ -55,7 +55,7 @@ class PayOrderModel extends BaseModel
         }elseif(strpos($orderno,'UL_')===0){
             $ordertype = 'upgrade';
             $orderno = intval(substr($orderno, 3));
-            $order = MemberLevelLogModel::get($orderno);
+            $order = MemberLevelLogModel::find($orderno);
             if(!empty($order)) {
                 $orderid = $order['id'];
             }
@@ -68,7 +68,7 @@ class PayOrderModel extends BaseModel
             }
         }else {
             $ordertype = 'order';
-            $order = OrderModel::get($orderno);
+            $order = OrderModel::find($orderno);
             if(!empty($order)) {
                 $orderid = $order['order_id'];
             }
@@ -148,7 +148,7 @@ class PayOrderModel extends BaseModel
                 if($apps[$appid]){
                     $refund_id = PayOrderRefundModel::createFromPayOrder($payorder, $reason);
                     if($refund_id > 0){
-                        $refund = PayOrderRefundModel::get($refund_id);
+                        $refund = PayOrderRefundModel::find($refund_id);
                         $result = $apps[$appid]->refund->byOutTradeNumber($payorder['order_no'], $refund['refund_no'], $payorder['pay_amount'], $refund['refund_fee']*100, [
                             'refund_desc' => $reason,
                         ]);
@@ -248,7 +248,7 @@ class PayOrderModel extends BaseModel
         }
 
         if($this['pay_type']=='wechat'){
-            $wechat = WechatModel::get($this['pay_id']);
+            $wechat = WechatModel::find($this['pay_id']);
             $config = WechatModel::to_pay_config($wechat);
             $app = Factory::payment($config);
             

@@ -1,5 +1,6 @@
 <?php
 
+
 define('ERROR_NEED_LOGIN',99);//需要登录
 define('ERROR_LOGIN_FAILED',101);//登录失败
 define('ERROR_NEED_VERIFY',104);//需要验证码
@@ -11,6 +12,12 @@ define('ERROR_REFRESH_TOKEN_INVAILD',105);//refresh_token失效
 
 define('ERROR_NEED_OPENID',112);
 define('ERROR_MEMBER_DISABLED',113);
+
+function api_captcha($prefix){
+    static $session = null;
+    if(is_null($session)) $session = new \app\common\core\ApiSession(app(),$prefix);
+    return new \think\captcha\Captcha(config('captcha'), $session);
+}
 
 function empty2null($arr, $keys, $islist = true)
 {

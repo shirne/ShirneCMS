@@ -107,7 +107,7 @@ class WechatController extends BaseController
                 }
             }
         }
-        $model=array();
+        $model=array('account_type'=>'','type'=>'');
         $this->assign('model',$model);
         $this->assign('id',0);
         return $this->fetch('edit');
@@ -147,11 +147,11 @@ class WechatController extends BaseController
                 }/*else{
                     $data['is_default']=0;
                 }*/
-                $model=WechatModel::get($id);
+                $model=WechatModel::find($id);
                 if(empty($model['hash'])){
                     $data['hash']=$this->createHash();
                 }
-                if ($model->allowField(true)->save($data)) {
+                if ($model->save($data)) {
                     delete_image($this->deleteFiles);
                     if($data['is_default']){
                         Db::name('wechat')->where('type', $data['type'])

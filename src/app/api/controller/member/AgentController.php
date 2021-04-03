@@ -150,7 +150,7 @@ class AgentController extends AuthedController
         return $this->response([
             'types'=>$types,
             'static_data'=>$static_data,
-            'logs'=>$logs->all(),
+            'logs'=>$logs->items(),
             'total'=>$logs->total(),
             'total_page'=>$logs->lastPage(),
             'page'=>$logs->currentPage()
@@ -178,7 +178,7 @@ class AgentController extends AuthedController
             $products=array_index($products,'order_id',true);
             
             $awards = Db::name('awardLog')->whereIn('order_id',$order_ids)->field('order_id,sum(amount) as commision')->group('order_id')->select();
-            $awards = array_column($awards,'commision','order_id');
+            $awards = array_column($awards->all(),'commision','order_id');
             
             $orders->each(function($item) use ($products,$awards){
                 $item['product_count']=isset($products[$item['order_id']])?array_sum(array_column($products[$item['order_id']],'count')):0;

@@ -95,7 +95,7 @@ class ProductController extends BaseController
     }
 
     public function view($id){
-        $product = ProductModel::get($id);
+        $product = ProductModel::find($id);
         if(empty($product)){
             $this->error('商品不存在');
         }
@@ -141,7 +141,7 @@ class ProductController extends BaseController
     }
 
     public function share($id, $type='url'){
-        $product = ProductModel::get($id);
+        $product = ProductModel::find($id);
         if(empty($product)){
             $this->error('商品不存在');
         }
@@ -176,7 +176,7 @@ class ProductController extends BaseController
             $sharepath = './uploads/pshare/'.$id.'/share-'.$type.'.png';
         }
         $imgurl = media(ltrim($sharepath,'.'));
-        $config=config('share.');
+        $config=config('share');
         if(empty($config) || empty($config['background'])){
             $this->error('请配置产品海报生成样式(config/share.php)');
         }
@@ -238,7 +238,7 @@ class ProductController extends BaseController
 
 
     public function comments($id){
-        $product = ProductModel::get($id);
+        $product = ProductModel::find($id);
         if(empty($product)){
             $this->error('参数错误');
         }

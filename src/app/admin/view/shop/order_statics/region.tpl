@@ -53,7 +53,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                    {foreach name="statics" id="item"}
+                    {foreach $statics as $item }
                         <tr>
                             <th>{$item['region']}</th>
                             <td>{$item['order_count']}</td>

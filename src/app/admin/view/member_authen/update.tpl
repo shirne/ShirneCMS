@@ -89,9 +89,9 @@
                                     <input type="radio" name="status" value="0"
                                            autocomplete="off" {$model['status']?"":"checked"}> 驳回
                                 </label>
-                                <label class="btn btn-outline-warning {$model['status']==-1?"":"active"}">
+                                <label class="btn btn-outline-warning {$model['status']==-1?"active":""}">
                                     <input type="radio" name="status" value="-1"
-                                           autocomplete="off" {$model['status']==-1?"":"checked"}> 审核中
+                                           autocomplete="off" {$model['status']==-1?"checked":""}> 审核中
                                 </label>
                             </div>
                         </th>

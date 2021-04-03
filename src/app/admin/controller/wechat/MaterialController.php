@@ -88,7 +88,7 @@ class MaterialController extends WechatBaseController
                     }
                     if(empty($exist)){
                         $data['media_id']=$item['media_id'];
-                        $result = Db::name('wechatMaterial')->insert($data,false,true);
+                        $result = Db::name('wechatMaterial')->insert($data,true);
                         $exist = ['id'=>$result];
                     }else{
                         $result = Db::name('wechatMaterial')->where('id',$exist['id'])
@@ -110,7 +110,7 @@ class MaterialController extends WechatBaseController
                                 $news['wechat_id'] = $this->wid;
                                 $news['material_id'] = $exist['id'];
                                 $news['create_time']=time();
-                                $aid = Db::name('wechatMaterialArticle')->insert($news,false,true);
+                                $aid = Db::name('wechatMaterialArticle')->insert($news,true);
                                 $updateids[]=$aid;
                             }
                         }

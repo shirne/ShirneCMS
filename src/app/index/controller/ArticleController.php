@@ -8,7 +8,7 @@ use app\common\model\ArticleModel;
 use app\common\model\MemberFavouriteModel;
 use app\common\validate\ArticleCommentValidate;
 use shirne\third\Aliyun;
-use \think\Db;
+use \think\facade\Db;
 /**
  * 文章
  */
@@ -62,7 +62,7 @@ class ArticleController extends BaseController{
     }
 
     public function view($id){
-        $article = ArticleModel::get($id);
+        $article = ArticleModel::find($id);
         if(empty($article)){
             return $this->errorPage(lang('Article not exists!'));
         }
@@ -115,7 +115,7 @@ class ArticleController extends BaseController{
         }
         if($this->request->isPost()){
             $this->checkSubmitRate(2);
-            $data=$this->request->only('email,is_anonymous,content,reply_id','POST');
+            $data=$this->request->post(['email','is_anonymous','content','reply_id']);
             if($this->config['anonymous_comment']==0 && !$this->isLogin){
                 $this->error('请登陆后评论');
             }
@@ -214,7 +214,7 @@ class ArticleController extends BaseController{
         $this->categoryTree=CategoryFacade::getCategoryTree($name);
         $this->categries=CategoryFacade::getTreedCategory();
         if(empty($this->category)){
-            $this->category=['id'=>0,'title'=>'新闻中心'];
+            $this->category=['id'=>0,'title'=>'新闻中心','keywords'=>'','description'=>''];
             $this->topCategory=$this->category;
         }else{
             $this->topCategory=$this->categoryTree[0];

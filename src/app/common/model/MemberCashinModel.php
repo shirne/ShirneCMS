@@ -13,7 +13,7 @@ class MemberCashinModel extends BaseModel
     protected $name = 'member_cashin';
     protected $autoWriteTimestamp = true;
     
-    public function onAfterInsert($order)
+    public static function onAfterInsert($order)
     {
         Db::name('member')->where('id',$order['member_id'])->inc('froze_reward',$order['amount']);
         static::sendCashMessage($order['id'],'cash_apply');

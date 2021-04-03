@@ -118,7 +118,7 @@ class CategoryController extends BaseController
             }
         }
 
-        $model = ProductCategoryModel::get($id);
+        $model = ProductCategoryModel::find($id);
         if(empty($model) || empty($model['id'])){
             $this->error('分类不存在');
         }

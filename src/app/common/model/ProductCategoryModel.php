@@ -21,7 +21,7 @@ class ProductCategoryModel extends CategoryModel
     }
 
     public function getBrandsCategories($brandid){
-        $catebrand = Db::name('productCategoryBrand')->where('brand_id',$brandid)->select();
+        $catebrand = Db::name('productCategoryBrand')->where('brand_id',$brandid)->select()->all();
         return array_column($catebrand,'cate_id');
     }
 

@@ -91,7 +91,7 @@ class PageController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
-                $model=PageModel::get($id);
+                $model=PageModel::find($id);
                 $delete_images=[];
                 $uploaded = $this->upload('page', 'upload_icon');
                 if (!empty($uploaded)) {
@@ -100,7 +100,7 @@ class PageController extends BaseController
                 }elseif($this->uploadErrorCode>102){
                     $this->error($this->uploadErrorCode.':'.$this->uploadError);
                 }
-                if ($model->allowField(true)->save($data)) {
+                if ($model->save($data)) {
                     delete_image($delete_images);
                     $this->success(lang('Update success!'), url('page/index'));
                 } else {
@@ -322,7 +322,7 @@ class PageController extends BaseController
         $id = idArr($id);
         $groups=Db::name('PageGroup')->where('id','in',$id)->select();
         if(!empty($groups)) {
-            $groups=array_column($groups,'group');
+            $groups=array_column($groups->all(),'group');
             $exists = Db::name('page')->where('group', 'in', $groups)->count();
             if ($exists > 0) {
                 $this->error("选中的页面组还有内容");

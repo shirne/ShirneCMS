@@ -396,19 +396,19 @@
                     <div class="empty">请选择展位类型</div>
                 </div>
             </div>
-            <div class="form-group submit-btn">
-                <input type="hidden" name="id" value="{$model.id}">
-                <button type="submit" class="btn btn-primary">{$id>0?'保存':'添加'}</button>
-            </div>
-        </form>
         </div>
+        <div class="form-group submit-btn">
+            <input type="hidden" name="id" value="{$model.id|default=''}">
+            <button type="submit" class="btn btn-primary">{$id>0?'保存':'添加'}</button>
+        </div>
+    </form>
     </div>
-    {/block}
+{/block}
 
 {block name="script"}
     <script type="text/plain" id="category_json">{:json_encode(\\app\\common\\facade\\CategoryFacade::getCategories())}</script>
     <script type="text/plain" id="product_category_json">{:json_encode(\\app\\common\\facade\\ProductCategoryFacade::getCategories())}</script>
-    <script type="text/plain" id="cur_list">{:json_encode($model['id']>0?$model->fetchData():'')}</script>
+    <script type="text/plain" id="cur_list">{:json_encode(empty($model['id'])?'':$model->fetchData())}</script>
     <script type="text/javascript" src="__STATIC__/vue/2.6/vue.min.js"></script>
     <script type="text/javascript">
         var app = new Vue({

@@ -12,10 +12,10 @@
                     <div class="col form-group">
                         <label for="title">名称</label>
                         <div class="input-group">
-                            <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="输入公众号名称">
+                            <input type="text" name="title" class="form-control" value="{$model.title|default=''}" placeholder="输入公众号名称">
                             <div class="input-group-append">
                                 <label class="input-group-text">
-                                    <input type="checkbox" name="is_default" value="1" {$model['is_default']?'checked':''}>
+                                    <input type="checkbox" name="is_default" value="1" {if !empty($model['is_default'])}checked{/if}}>
                                     默认
                                 </label>
                             </div>
@@ -25,11 +25,11 @@
                         <label for="title">调试模式</label>
                         <div>
                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                            <label class="btn btn-outline-primary{$model['is_debug']=='1'?' active':''}">
-                                <input type="radio" name="is_debug" value="1" autocomplete="off" {$model['is_debug']=='1'?'checked':''}>是
+                            <label class="btn btn-outline-primary{if !empty($model['is_debug'])} active{/if}">
+                                <input type="radio" name="is_debug" value="1" autocomplete="off" {if !empty($model['is_debug'])}checked{/if}>是
                             </label>
-                            <label class="btn btn-outline-secondary{$model['is_debug']!='1'?' active':''}">
-                                <input type="radio" name="is_debug" value="0" autocomplete="off" {$model['is_debug']!='1'?'checked':''}>否
+                            <label class="btn btn-outline-secondary{if empty($model['is_debug'])} active{/if}">
+                                <input type="radio" name="is_debug" value="0" autocomplete="off" {if empty($model['is_debug'])}checked{/if}>否
                             </label>
                         </div>
                         </div>
@@ -55,18 +55,18 @@
                 <div class="form-group">
                     <label for="token">接口地址</label>
                     <div class="input-group">
-                        <input type="text" readonly class="form-control" value="{:url('api/wechat/index',['hash'=>$model['hash']],false,true)}">
+                        <input type="text" readonly class="form-control" value="{:url('api/wechat/index',['hash'=>$model['hash']??''],false,true)}">
                         <div class="input-group-append"><a href="javascript:" class="btn btn-outline-secondary gener-url">修改URL</a> </div>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="col form-group">
                         <label for="account">账号</label>
-                        <input type="text" name="account" class="form-control" value="{$model.account}">
+                        <input type="text" name="account" class="form-control" value="{$model.account|default=''}">
                     </div>
                     <div class="col form-group">
                         <label for="original">原始账号</label>
-                        <input type="text" name="original" class="form-control" value="{$model.original}" >
+                        <input type="text" name="original" class="form-control" value="{$model.original|default=''}" >
                     </div>
                 </div>
                 <div class="form-row">
@@ -78,7 +78,7 @@
                                 <label class="custom-file-label" for="upload_logo">选择文件</label>
                             </div>
                         </div>
-                        {if $model['logo']}
+                        {if !empty($model['logo'])}
                             <figure class="figure">
                                 <img src="{$model.logo}" class="figure-img img-fluid rounded" alt="image">
                                 <figcaption class="figure-caption text-center">{$model.logo}</figcaption>
@@ -94,7 +94,7 @@
                                 <label class="custom-file-label" for="upload_qrcode">选择文件</label>
                             </div>
                         </div>
-                        {if $model['qrcode']}
+                        {if !empty($model['qrcode'])}
                             <figure class="figure">
                                 <img src="{$model.qrcode}" accept="image/*" class="figure-img img-fluid rounded" alt="image">
                                 <figcaption class="figure-caption text-center">{$model.qrcode}</figcaption>
@@ -110,7 +110,7 @@
                                 <label class="custom-file-label" for="upload_shareimg">选择文件</label>
                             </div>
                         </div>
-                        {if $model['shareimg']}
+                        {if !empty($model['shareimg'])}
                             <figure class="figure">
                                 <img src="{$model.shareimg}" class="figure-img img-fluid rounded" alt="image">
                                 <figcaption class="figure-caption text-center">{$model.shareimg}</figcaption>
@@ -131,32 +131,32 @@
                 <div class="form-row">
                     <div class="col form-group">
                         <label for="appid">APPID</label>
-                        <input type="text" name="appid" class="form-control" value="{$model.appid}">
+                        <input type="text" name="appid" class="form-control" value="{$model.appid|default=''}">
                     </div>
                     <div class="col form-group">
                         <label for="appsecret">APPSecret</label>
-                        <input type="text" name="appsecret" class="form-control" value="{$model.appsecret}">
+                        <input type="text" name="appsecret" class="form-control" value="{$model.appsecret|default=''}">
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="col form-group">
                         <label for="token">Token</label>
                         <div class="input-group">
-                        <input type="text" name="token" class="form-control" value="{$model.token}">
+                        <input type="text" name="token" class="form-control" value="{$model.token|default=''}">
                         <div class="input-group-append"><a href="javascript:" class="btn btn-outline-secondary gener-token">随机生成</a> </div>
                         </div>
                     </div>
                     <div class="col form-group">
                         <label for="encodingaeskey">AESKey</label>
                         <div class="input-group">
-                        <input type="text" name="encodingaeskey" class="form-control" value="{$model.encodingaeskey}">
+                        <input type="text" name="encodingaeskey" class="form-control" value="{$model.encodingaeskey|default=''}">
                             <div class="input-group-append"><a href="javascript:" class="btn btn-outline-secondary gener-aeskey">随机生成</a> </div>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="subscribeurl">订阅链接</label>
-                    <input type="text" name="subscribeurl" class="form-control" value="{$model.subscribeurl}">
+                    <input type="text" name="subscribeurl" class="form-control" value="{$model.subscribeurl|default=''}">
                 </div>
                 <h3>支付参数</h3>
                 <hr/>
@@ -164,13 +164,13 @@
                     <div class="col form-group">
                         <label for="token">商户ID</label>
                         <div class="input-group">
-                            <input type="text" name="mch_id" class="form-control" value="{$model.mch_id}">
+                            <input type="text" name="mch_id" class="form-control" value="{$model.mch_id|default=''}">
                         </div>
                     </div>
                     <div class="col form-group">
                         <label for="encodingaeskey">支付密钥</label>
                         <div class="input-group">
-                            <input type="text" name="key" class="form-control" value="{$model.key}">
+                            <input type="text" name="key" class="form-control" value="{$model.key|default=''}">
                         </div>
                     </div>
                 </div>
@@ -183,7 +183,7 @@
                                 <label class="custom-file-label" for="upload_cert_path">选择文件</label>
                             </div>
                         </div>
-                        {if $model['cert_path']}
+                        {if !empty($model['cert_path'])}
                             <figure class="figure">
                                 <figcaption class="figure-caption text-center">{$model.cert_path}</figcaption>
                             </figure>
@@ -198,7 +198,7 @@
                                 <label class="custom-file-label" for="upload_key_path">选择文件</label>
                             </div>
                         </div>
-                        {if $model['key_path']}
+                        {if !empty($model['key_path'])}
                             <figure class="figure">
                                 <figcaption class="figure-caption text-center">{$model.key_path}</figcaption>
                             </figure>
@@ -207,8 +207,8 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <input type="hidden" name="id" value="{$model.id}">
-                    <button type="submit" class="btn btn-primary">{$model['id']>0?'保存':'添加'}</button>
+                    <input type="hidden" name="id" value="{$model.id|default=''}">
+                    <button type="submit" class="btn btn-primary">{if empty($model['id'])}添加{else}保存{/if}</button>
                 </div>
             </form>
         </div>
@@ -235,7 +235,7 @@
                     $(this).trigger('click');
                 }
             });
-            var hash='{$model.hash}';
+            var hash="{$model.hash|default=''}";
             $('.gener-url').click(function () {
                 if($(this).data('ajaxing'))return;
                 var btn=$(this);
@@ -250,7 +250,7 @@
                             type: 'POST',
                             dataType: 'JSON',
                             data: {
-                                'id': '{$model.id}',
+                                'id': "{$model.id|default=''}",
                                 'field': 'hash',
                                 'value': newtoken
                             },

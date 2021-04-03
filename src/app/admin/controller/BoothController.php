@@ -67,7 +67,7 @@ class BoothController extends BaseController
     public function update($id)
     {
         $id = intval($id);
-        $model=BoothModel::get($id);
+        $model=BoothModel::find($id);
         if(empty($model) ){
             $this->error('展位不存在');
         }
@@ -83,7 +83,7 @@ class BoothController extends BaseController
                 if(!isset($data['ext_set']))$data['ext_set']=[];
                 
                 try {
-                    $model->allowField(true)->save($data);
+                    $model->save($data);
                 }catch(\Exception $err){
                     $this->error(lang('Update failed: %',[$err->getMessage()]));
                 }
@@ -115,7 +115,7 @@ class BoothController extends BaseController
     }
     
     public function lock($id){
-        $booth=BoothModel::get(intval($id));
+        $booth=BoothModel::find(intval($id));
         if(empty($booth)){
             $this->error('展位不存在');
         }
@@ -124,7 +124,7 @@ class BoothController extends BaseController
     }
     
     public function unlock($id){
-        $booth=BoothModel::get(intval($id));
+        $booth=BoothModel::find(intval($id));
         if(empty($booth)){
             $this->error('展位不存在');
         }

@@ -10,7 +10,7 @@
     <form method="post" class="page-form" action="" enctype="multipart/form-data">
         <div class="form-group">
             <label for="title">名称</label>
-            <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="名称">
+            <input type="text" name="title" class="form-control" value="{$model.title|default=''}" placeholder="名称">
         </div>
         {if $group['type'] == 1}
             <div class="form-row">
@@ -66,6 +66,7 @@
             </div>
         {/if}
         
+        {if !empty($group['ext_set'])}
         <div class="form-row">
             {foreach name="group['ext_set']['key']" item="ikey"}
                 <div class="col-6 form-group">
@@ -74,6 +75,7 @@
                 </div>
             {/foreach}
         </div>
+        {/if}
         {if $group['type'] == 0}
             <div class="form-group">
                 <label for="image">元件</label>
@@ -93,13 +95,13 @@
                     <div class="input-group-prepend">
                     <span class="input-group-text">从</span>
                     </div>
-                    <input type="text" name="start_date" class="form-control fromdate" value="{$model.start_date|showdate=''}" />
+                    <input type="text" name="start_date" class="form-control fromdate" value="{$model.start_date|default=''|showdate=''}" />
                 </div>
                 <div class="input-group col">
                     <div class="input-group-prepend">
                     <span class="input-group-text">至</span>
                     </div>
-                    <input type="text" name="end_date" class="form-control todate" value="{$model.end_date|showdate=''}" />
+                    <input type="text" name="end_date" class="form-control todate" value="{$model.end_date|default=''|showdate=''}" />
                 </div>
             </div>
 
@@ -107,11 +109,11 @@
         <div class="form-row">
             <div class="col form-group">
                 <label for="url">链接</label>
-                <input type="text" name="url" class="form-control" value="{$model.url}" />
+                <input type="text" name="url" class="form-control" value="{$model.url|default=''}" />
             </div>
             <div class="col form-group">
                 <label for="image">排序</label>
-                <input type="text" name="sort" class="form-control" value="{$model.sort}" />
+                <input type="text" name="sort" class="form-control" value="{$model.sort|default=''}" />
             </div>
         </div>
 
@@ -481,4 +483,4 @@
             }
         });
     </script>
-    {/block}
+{/block}

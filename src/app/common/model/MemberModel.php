@@ -27,20 +27,16 @@ class MemberModel extends BaseModel
         return intval($value);
     }
 
-    public static function init()
-    {
-        parent::init();
-        self::afterUpdate(function ($model) {
-            $users=$model->where($model->getWhere())->select();
-            //代理会员组
-            if(!empty($users)) {
-                $levels = getMemberLevels();
-                foreach ($users as $user) {
-                    //代理会员组
-                    if (!$user['is_agent'] && $user['level_id'] > 0) {
-                        if (!empty($levels[$user['level_id']]) && $levels[$user['level_id']]['is_agent']) {
-                            self::checkAgent($user);
-                        }
+    public function onAfterUpdate ($model) {
+        $users=$model->where($model->getWhere())->select();
+        //代理会员组
+        if(!empty($users)) {
+            $levels = getMemberLevels();
+            foreach ($users as $user) {
+                //代理会员组
+                if (!$user['is_agent'] && $user['level_id'] > 0) {
+                    if (!empty($levels[$user['level_id']]) && $levels[$user['level_id']]['is_agent']) {
+                        self::checkAgent($user);
                     }
                 }
             }
@@ -92,17 +88,17 @@ class MemberModel extends BaseModel
             return false;
         }
         if($this['referer']>0){
-            Db::name('member')->where('id',$this['referer'])->setDec('recom_total',1);
+            Db::name('member')->where('id',$this['referer'])->dec('recom_total',1);
             if($this['is_agent']){
-                Db::name('member')->where('id',$this['referer'])->setDec('recom_count',1);
+                Db::name('member')->where('id',$this['referer'])->dec('recom_count',1);
                 $mparents=static::getParents($this['referer'],0);
                 $mparents = array_unshift($mparents, $this['referer']);
-                Db::name('member')->whereIn('id',$mparents)->setDec('team_count',1);
+                Db::name('member')->whereIn('id',$mparents)->dec('team_count',1);
             }
         }
         $this->save(['referer'=>$rmember['id']]);
 
-        Db::name('member')->where('id',$this['referer'])->setInc('recom_total',1);
+        Db::name('member')->where('id',$this['referer'])->inc('recom_total',1);
         if($this['is_agent']){
             static::updateRecommend($this['referer']);
         }
@@ -120,12 +116,16 @@ class MemberModel extends BaseModel
         $referer = $this['referer'];
         if($referer){
             $this->save(['referer'=>0]);
+<<<<<<< HEAD
             Db::name('member')->where('id',$referer)->setDec('recom_total',1);
+=======
+            Db::name('member')->where('id',$referer)->dec('recom_total',1);
+>>>>>>> 77cd89888a427b18866316edb6b376d990ccf243
             if($this['is_agent']){
-                Db::name('member')->where('id',$referer)->setDec('recom_count',1);
+                Db::name('member')->where('id',$referer)->dec('recom_count',1);
                 $parents=static::getParents($referer,0);
                 array_unshift($parents,$referer);
-                Db::name('member')->whereIn('id',$parents)->setDec('team_count',1);
+                Db::name('member')->whereIn('id',$parents)->dec('team_count',1);
             }
         }
         return true;
@@ -235,8 +235,8 @@ class MemberModel extends BaseModel
         if($count){
             $parents=getMemberParents($member_id,0);
             if(!empty($parents)){
-                Db::name('member')->where('id',$parents[0])->setDec('recom_count',1);
-                Db::name('member')->whereIn('id',$parents)->setDec('team_count',1);
+                Db::name('member')->where('id',$parents[0])->dec('recom_count',1);
+                Db::name('member')->whereIn('id',$parents)->dec('team_count',1);
             }
         }
         return $count;
@@ -319,7 +319,7 @@ class MemberModel extends BaseModel
     public static function getSons($userid,$level=1,$getid=true)
     {
         $sons=[];
-        $users=Db::name('Member')->where('referer',$userid)->field('id,level_id,is_agent,username,nickname,mobile,referer')->select();
+        $users=Db::name('Member')->where('referer',$userid)->field('id,level_id,is_agent,username,nickname,mobile,referer')->select()->all();
         $layer=0;
         while(!empty($users)){
             $layer++;
@@ -330,7 +330,7 @@ class MemberModel extends BaseModel
             }
             $sons = array_merge($sons, $getid?$userids:$users);
             if($level>0 && $layer>=$level)break;
-            $users=Db::name('Member')->whereIn('referer',$userids)->field('id,level_id,is_agent,username,nickname,mobile,referer')->select();
+            $users=Db::name('Member')->whereIn('referer',$userids)->field('id,level_id,is_agent,username,nickname,mobile,referer')->select()->all();
         }
         return $sons;
     }
@@ -352,11 +352,15 @@ class MemberModel extends BaseModel
         
         if(is_numeric($agent)){
             $agentMember=static::where('id',intval($agent))
+<<<<<<< HEAD
             ->where('is_agent','GT',0)
+=======
+            ->where('is_agent','>',0)
+>>>>>>> 77cd89888a427b18866316edb6b376d990ccf243
             ->where('status',1)->find();
         }else{
             $agentMember=static::where('agentcode',$agent)
-            ->where('is_agent','GT',0)
+            ->where('is_agent','>',0)
             ->where('status',1)->find();
         }
         if(empty($agentMember) || $agentMember['id']==$member['id'] || !$agentMember['is_agent']){

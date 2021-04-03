@@ -21,7 +21,7 @@ define('PRO_TYPE_UPGRADE',2);
 define('PRO_TYPE_BIND',4);
 
 function writelog($message,$type=\think\Log::INFO){
-    if(config('app_debug')==true){
+    if(config('app.app_debug')==true){
         \think\facade\Log::record($message,$type);
     }
 }
@@ -62,7 +62,7 @@ function local_media($src){
     if(empty($src))return $src;
     $src = ltrim($src,'.');
     if(strpos($src,'/')===0 || strpos($src,'://')===false){
-        return url('/','',false,true).$src;
+        return url('/', [], false, true).$src;
     }
     return $src;
 }
@@ -689,7 +689,7 @@ function user_log($uid, $action, $result, $remark = '', $tbl = 'member')
         'remark' => json_encode(is_array($remark)?$remark:[$remark],JSON_UNESCAPED_UNICODE)
     ];
     if($tbl==='member'){
-        $data['model']=request()->module();
+        $data['model']=app('http')->getName();
     }
     if(is_array($other_id)){
         foreach ($other_id as $id){
@@ -830,7 +830,7 @@ function money_force_log($uid, $money, $reson, $type='',$from_id=0,$field='money
 
     }
     if($result) {
-        return \think\facade\Db::name('memberMoneyLog')->insert($log,false,true);
+        return \think\facade\Db::name('memberMoneyLog')->insert($log,true);
     }else{
         return false;
     }
@@ -928,7 +928,7 @@ function current_url($withqry=true){
 }
 
 function current_domain(){
-    return rtrim(url('/','',false,true),'/');
+    return rtrim(url('/', [], false, true)->build(), '/');
 }
 
 /**
@@ -988,6 +988,9 @@ function weight_random($array, $wfield='weight',$order=true){
 
     $row=[];
     if(empty($array))return $row;
+    if($array instanceof \think\Collection){
+        $array = $array->all();
+    }
     if(!$order){
         $max = max(array_column($array,$wfield));
         $pow = pow(10,ceil(log10($max)));
@@ -1194,11 +1197,17 @@ function fix_in_array($val,$arr){
 
 function array_max($arr,$column){
     if(empty($arr))return 0;
+    if($arr instanceof \think\Collection){
+        $arr = $arr->all();
+    }
     $data=array_column($arr,$column);
     return max($data);
 }
 function array_min($arr,$column){
     if(empty($arr))return 0;
+    if($arr instanceof \think\Collection){
+        $arr = $arr->all();
+    }
     $data=array_column($arr,$column);
     return min($data);
 }

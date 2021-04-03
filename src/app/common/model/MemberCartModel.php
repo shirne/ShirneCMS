@@ -104,7 +104,7 @@ class MemberCartModel extends BaseModel
         $carts = $model->order('sort DESC')->select();
         $lists = [];
         if(!empty($carts)) {
-            $datas = ProductModel::getForOrder(array_column($carts, 'count', 'sku_id'));
+            $datas = ProductModel::getForOrder(array_column($carts->all(), 'count', 'sku_id'));
             $datas = array_column($datas, NULL, 'sku_id');
             foreach ($carts as $cart) {
                 

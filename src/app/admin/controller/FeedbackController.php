@@ -53,15 +53,15 @@ class FeedbackController extends BaseController
                 $this->error($validate->getError());
             }else{
                 $data['reply_at']=time();
-                $model=FeedbackModel::get($id);
-                if ($model->allowField(true)->save($data)) {
+                $model=FeedbackModel::find($id);
+                if ($model->save($data)) {
                     $this->success(lang('Update success!'), url('feedback/index'));
                 } else {
                     $this->error(lang('Update failed!'));
                 }        
             }
         }
-        $model = FeedbackModel::get($id);
+        $model = FeedbackModel::find($id);
         $this->assign('model',$model);
         $this->assign('member',Db::name('member')->where('id',$model['member_id'])->find());
         return $this->fetch();
@@ -104,7 +104,7 @@ class FeedbackController extends BaseController
     public function delete($id)
     {
         $id = intval($id);
-        $model=FeedbackModel::get($id);
+        $model=FeedbackModel::find($id);
         $result = $model->delete();
         if($result){
             $this->success(lang('Delete success!'), url('feedback/index'));

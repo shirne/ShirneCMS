@@ -82,7 +82,7 @@ class AdvController extends BaseController
     public function update($id)
     {
         $id = intval($id);
-        $model=AdvGroupModel::get($id);
+        $model=AdvGroupModel::find($id);
         if(empty($model) ){
             $this->error('广告组不存在');
         }
@@ -97,7 +97,7 @@ class AdvController extends BaseController
             }else{
                 if(!isset($data['ext_set']))$data['ext_set']=[];
                 try{
-                    $model->allowField(true)->save($data);
+                    $model->save($data);
 
                 }catch(\Exception $err){
                     $this->error(lang('Update failed: %s',[$err->getMessage()]));
@@ -112,7 +112,7 @@ class AdvController extends BaseController
     }
     
     public function lock($id){
-        $booth=AdvGroupModel::get(intval($id));
+        $booth=AdvGroupModel::find(intval($id));
         if(empty($booth)){
             $this->error('广告位不存在');
         }
@@ -121,7 +121,7 @@ class AdvController extends BaseController
     }
     
     public function unlock($id){
-        $booth=AdvGroupModel::get(intval($id));
+        $booth=AdvGroupModel::find(intval($id));
         if(empty($booth)){
             $this->error('广告位不存在');
         }
@@ -185,7 +185,7 @@ class AdvController extends BaseController
      * @throws \Throwable
      */
     public function itemadd($gid){
-        $group = AdvGroupModel::get($gid);
+        $group = AdvGroupModel::find($gid);
         if(empty($group)){
             $this->error('广告组不存在');
         }
@@ -247,7 +247,7 @@ class AdvController extends BaseController
             $this->error('广告项不存在');
         }
         $model = AdvGroupModel::fixAdItem($model);
-        $group = AdvGroupModel::get($model['group_id']);
+        $group = AdvGroupModel::find($model['group_id']);
         if(empty($group)){
             $this->error('广告组不存在');
         }
@@ -288,7 +288,7 @@ class AdvController extends BaseController
                     $data['elements'] = $this->filterElements($data['elements']);
                 }
                 
-                if ($model->allowField(true)->save($data)) {
+                if ($model->save($data)) {
                     delete_image($delete_images);
                     $this->success(lang('Update success!'), $url);
                 } else {

@@ -94,7 +94,7 @@ class CommonController extends BaseController
                     return null;
                 }
                 try{
-                    $controller = \container()->make('\\app\\api\\controller\\' . $m[0] . 'Controller');
+                    $controller = Container::getInstance()->make('\\app\\api\\controller\\' . $m[0] . 'Controller');
                 }catch(\Exception $e){
                     Log::record($e->getMessage(),'error');
                     return null;

@@ -56,7 +56,7 @@ class OrderController extends AuthedController
         }
 
         if($this->request->isPost()){
-            $data=$this->request->only('address_id,remark,pay_type,total_price','post');
+            $data=$this->request->post(['address_id','remark','pay_type','total_price']);
             $validate=new OrderValidate();
             if(!$validate->check($data)){
                 $this->error($validate->getError());
@@ -160,7 +160,7 @@ class OrderController extends AuthedController
         return $this->fetch();
     }
     public function balancepay($order_id){
-        $order=OrderModel::get($order_id);
+        $order=OrderModel::find($order_id);
         if(empty($order)|| $order['status']!=0){
             $this->error('订单已支付或不存在!');
         }

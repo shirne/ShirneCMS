@@ -79,7 +79,7 @@ class OrderController extends BaseController
         $this->assign('status',$status);
         $this->assign('orderids',empty($orderids)?0:implode(',',$orderids));
         $this->assign('audit',$audit);
-        $this->assign('expresscodes',config('express.'));
+        $this->assign('expresscodes',config('express'));
         $this->assign('lists',$lists);
         $this->assign('levels',getMemberLevels());
         $this->assign('page',$lists->render());
@@ -246,7 +246,7 @@ class OrderController extends BaseController
     }
 
     public function setcancel($id){
-        $order = OrderModel::get($id);
+        $order = OrderModel::find($id);
         if(empty($id) || empty($order)){
             $this->error('订单不存在');
         }
@@ -258,7 +258,7 @@ class OrderController extends BaseController
         $this->success('操作成功');
     }
     public function setpayed($id){
-        $order = OrderModel::get($id);
+        $order = OrderModel::find($id);
         if(empty($id) || empty($order)){
             $this->error('订单不存在');
         }
@@ -282,7 +282,7 @@ class OrderController extends BaseController
         $this->success('操作成功');
     }
     public function setdelivery($id){
-        $order = OrderModel::get($id);
+        $order = OrderModel::find($id);
         if(empty($id) || empty($order)){
             $this->error('订单不存在');
         }
@@ -307,7 +307,7 @@ class OrderController extends BaseController
         $this->success('操作成功');
     }
     public function setreceive($id){
-        $order = OrderModel::get($id);
+        $order = OrderModel::find($id);
         if(empty($id) || empty($order)){
             $this->error('订单不存在');
         }
@@ -326,7 +326,7 @@ class OrderController extends BaseController
     }
 
     public function setcomplete($id){
-        $order = OrderModel::get($id);
+        $order = OrderModel::find($id);
         if(empty($id) || empty($order)){
             $this->error('订单不存在');
         }
@@ -362,7 +362,7 @@ class OrderController extends BaseController
      */
     public function reprice($id,$price)
     {
-        $order = OrderModel::get($id);
+        $order = OrderModel::find($id);
         if(empty($id) || empty($order)){
             $this->error('订单不存在');
         }
@@ -385,7 +385,7 @@ class OrderController extends BaseController
      * @param $id
      */
     public function paystatus($id){
-        $order = OrderModel::get($id);
+        $order = OrderModel::find($id);
         if(empty($id) || empty($order)){
             $this->error('订单不存在');
         }
@@ -408,7 +408,7 @@ class OrderController extends BaseController
      * @param $payid
      */
     public function payquery($payid){
-        $payorder = PayOrderModel::get($payid);
+        $payorder = PayOrderModel::find($payid);
         if(empty($payorder)){
             $this->error('支付订单不存在');
         }
@@ -429,7 +429,7 @@ class OrderController extends BaseController
      * @param $id
      */
     public function audit($id){
-        $order = OrderModel::get($id);
+        $order = OrderModel::find($id);
         if(empty($id) || empty($order)){
             $this->error('订单不存在');
         }

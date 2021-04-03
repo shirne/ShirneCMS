@@ -75,7 +75,7 @@ class OrderController extends AuthedController
         //todo 邮费模板
 
 
-        $data=$this->request->only('address_id,pay_type,remark,form_id,total_price,total_postage','put');
+        $data=$this->request->only(['address_id','pay_type','remark','form_id','total_price','total_postage'],'put');
 
         $validate=new OrderValidate();
         if(!$validate->check($data)){
@@ -226,7 +226,7 @@ class OrderController extends AuthedController
         if(!compare_secpassword($this->user,$secpassword)){
             $this->error('安全密码错误');
         }
-        $order=OrderModel::get($order_id);
+        $order=OrderModel::find($order_id);
         if(empty($order)|| $order['status']!=0){
             $this->error('订单已支付或不存在!',0,['order_id'=>$order_id]);
         }

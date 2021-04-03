@@ -8,6 +8,7 @@ use app\common\service\CheckcodeService;
 use app\common\validate\MemberValidate;
 use shirne\sdk\OAuthFactory;
 use shirne\captcha\Captcha;
+use think\captcha\facade\Captcha as FacadeCaptcha;
 use think\facade\Db;
 use think\Exception;
 use think\facade\Log;
@@ -55,10 +56,9 @@ class LoginController extends BaseController{
                             $this->setAotuLogin($member);
                         }
                         $redirect=redirect()->restore();
-                        if(empty($redirect->getData())){
+                        $url = $redirect->getData();
+                        if(empty($url)){
                             $url=aurl('index/member/index');
-                        }else{
-                            $url=$redirect->getTargetUrl();
                         }
 
                         if(!empty($this->wechatUser)){
@@ -148,7 +148,7 @@ class LoginController extends BaseController{
                 $model->save($data);
             }
             if($this->isLogin){
-                $this->success('绑定成功',redirect()->restore(aurl('index/member/index'))->getTargetUrl());
+                $this->success('绑定成功',redirect()->restore(aurl('index/member/index'))->getData());
             }
             
             if (empty($model['member_id'])) {
@@ -300,7 +300,7 @@ class LoginController extends BaseController{
 
         if($this->request->isPost()){
             $this->checkSubmitRate(2);
-            $data=$this->request->only('username,password,repassword,email,realname,mobile,mobilecheck','post');
+            $data=$this->request->only(['username','password','repassword','email','realname','mobile','mobilecheck'],'post');
 
             $validate=new MemberValidate();
             $validate->setId();
@@ -370,10 +370,9 @@ class LoginController extends BaseController{
             Db::commit();
             $this->setLogin($model);
             $redirect=redirect()->restore();
-            if(empty($redirect->getData())){
+            $url=$redirect->getData();
+            if(empty($url)){
                 $url=aurl('index/member/index');
-            }else{
-                $url=$redirect->getTargetUrl();
             }
             $this->success("注册成功",$url);
         }
@@ -424,15 +423,10 @@ class LoginController extends BaseController{
     }
 
     public function verify(){
-        $verify = new Captcha(array('seKey'=>config('session.sec_key')));
-
-        $verify->fontSize = 13;
-        $verify->length = 4;
-        return $verify->entry('foreign');
+        return FacadeCaptcha::create();
     }
     protected function check_verify($code){
-        $verify = new Captcha(array('seKey'=>config('session.sec_key')));
-        return $verify->check($code,'foreign');
+        return FacadeCaptcha::check($code);
     }
 
     public function logout()

@@ -5,6 +5,7 @@ namespace addon\credit_shop\core\model;
 
 use app\common\core\BaseOrderModel;
 use think\facade\Db;
+use think\facade\Log;
 
 define('CREDIT_STATUS_REFUND',-2);
 define('CREDIT_STATUS_CANCEL',-1);
@@ -79,16 +80,16 @@ class CreditOrderModel extends BaseOrderModel
     }
     
     protected function afterPay($item=null){
-        return true;
+        Log::record('credit order afterPay:'.var_export($item,true));
     }
     protected function afterDeliver($item=null){
-        return true;
+        Log::record('credit order afterDeliver:'.var_export($item,true));
     }
     protected function afterReceive($item=null){
-        return true;
+        Log::record('credit order afterReceive:'.var_export($item,true));
     }
     protected function afterComplete($item=null){
-        return true;
+        Log::record('credit order afterComplete:'.var_export($item,true));
     }
     
     /**
@@ -169,7 +170,7 @@ class CreditOrderModel extends BaseOrderModel
             'express_code'=>''
         );
 
-        $result= $this->insert($orderdata,false,true);
+        $result= $this->insert($orderdata,true);
 
         if($result){
             $i=0;
