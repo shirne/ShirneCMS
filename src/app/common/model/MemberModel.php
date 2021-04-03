@@ -116,11 +116,7 @@ class MemberModel extends BaseModel
         $referer = $this['referer'];
         if($referer){
             $this->save(['referer'=>0]);
-<<<<<<< HEAD
-            Db::name('member')->where('id',$referer)->setDec('recom_total',1);
-=======
             Db::name('member')->where('id',$referer)->dec('recom_total',1);
->>>>>>> 77cd89888a427b18866316edb6b376d990ccf243
             if($this['is_agent']){
                 Db::name('member')->where('id',$referer)->dec('recom_count',1);
                 $parents=static::getParents($referer,0);
@@ -352,11 +348,7 @@ class MemberModel extends BaseModel
         
         if(is_numeric($agent)){
             $agentMember=static::where('id',intval($agent))
-<<<<<<< HEAD
-            ->where('is_agent','GT',0)
-=======
             ->where('is_agent','>',0)
->>>>>>> 77cd89888a427b18866316edb6b376d990ccf243
             ->where('status',1)->find();
         }else{
             $agentMember=static::where('agentcode',$agent)
