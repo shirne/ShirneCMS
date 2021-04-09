@@ -140,4 +140,14 @@ function aurl($url = '', $vars = '', $suffix = true, $domain = false){
     return url(implode('/',$part),$vars,$suffix,$domain);
 }
 
+function showstar($star, $max = 5){
+    return implode('',[
+        '<span class="stars">',
+        str_repeat('<i class="ion-md-star"></i>',intval($star)),
+        str_repeat('<i class="ion-md-star-half"></i>',ceil($star)-intval($star)),
+        str_repeat('<i class="ion-md-star-outline"></i>',intval($max - $star)),
+        '</span>'
+    ]);
+}
+
 //end file
