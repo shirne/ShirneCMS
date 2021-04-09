@@ -244,7 +244,8 @@ class Poster
 
                     //限制宽度
                     if(!empty($set['width'])){
-                        $text = $this->autoWrap($text, $set['size'],$set['width']);
+                        $textSize = $this->transTextSize($set['font'], $set['size']);
+                        $text = $this->autoWrap($text, $textSize[0],$set['width']);
                     }
                     //是否多行打印
                     if(mb_strpos($text,"\n")!==false){
@@ -270,6 +271,13 @@ class Poster
                             
                             $set['width']=max($set['width'],$newset['width']);
                             $set['height']+= $newset['height'];
+
+                            if(isset($set['style'])){
+                                if($set['style'] == 'line-through'){
+                                    imageline($this->bg, $set['x']-1, $set['y']+$set['height']/2+1, $set['x']+$newset['width']+1, $set['y']+$set['height']/2+1, $color);
+                                }
+                            }
+                            
                             $lineSet['x'] = $start_x;
                             $lineSet['y'] = $start_y+$set['height']+$set['linespace'];
                         }
@@ -279,6 +287,12 @@ class Poster
                         $set['y']=$newset['lt_y'];
                         $set['width'] = max($set['width'],$newset['width']);
                         $set['height'] = $newset['height'];
+
+                        if(isset($set['style'])){
+                            if($set['style'] == 'line-through'){
+                                imageline($this->bg, $set['x']-1, $set['y']+$set['height']/2+1, $set['x']+$newset['width']+1, $set['y']+$set['height']/2+1, $color);
+                            }
+                        }
                     }
                     
                 }
@@ -400,6 +414,11 @@ class Poster
             return curl_file_get_contents($file);
         }
         return file_get_contents($file);
+    }
+
+    protected function transTextSize($font, $size){
+        $textBox = imagettfbbox($size, 0, $font, '我');
+        return [$textBox[2]-$textBox[0], $textBox[1]- $textBox[6]];
     }
 
     protected function autoWrap($text, $textSize, $width){
