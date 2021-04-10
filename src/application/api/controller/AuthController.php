@@ -14,10 +14,8 @@ use EasyWeChat\OfficialAccount\Application;
 use shirne\captcha\Captcha;
 use shirne\common\ValidateHelper;
 use shirne\sdk\OAuthFactory;
-use shirne\third\Aliyun;
 use think\Db;
 use think\facade\Cache;
-use think\facade\Env;
 use think\facade\Log;
 
 /**
@@ -555,42 +553,11 @@ class AuthController extends BaseController
             }
         }
 
-        $this->mobile_verify_limit($mobile);
-
-        $sesscount = $this->accessSession['verify_count']??0;
-        if($sesscount > 5){
-            $this->error('验证码发送过于频繁, 请稍候再试');
-        }
-
-
-        switch($type){
-            case 'login':
-                $key = 'login_verify';
-                $tplCode = getSetting('aliyun_dysms_login');
-            break;
-            case 'register':
-                $key = 'register_verify';
-                $tplCode = getSetting('aliyun_dysms_register');
-            break;
-            /* case 'forget':
-                $key = 'forget_verify';
-                $tplCode = getSetting('aliyun_dysms_login');
-            break; */
-            default:
-                $this->error('验证码类型错误');
-                break;
-        }
-        $key .= '_'.$mobile;
-
-        $this->accessSession['verify_count']=$sesscount+1;
-
-        $verify = random_str(6, 'number');
-        $this->accessSession[$key]=$verify;
-        $this->mobile_verify_add($mobile);
-        $aliyun = new Aliyun($this->config);
-        $result = $aliyun->sendSms($mobile, $verify, $tplCode, getSetting('aliyun_dysms_sign'));
+        
+        $service = new CheckcodeService();
+        $result = $service->sendCode('mobile', $mobile, $type);
         if(!$result){
-            $this->error($aliyun->get_error_msg());
+            $this->error($service->getError());
         }
 
         $this->accessSession['need_verify']=1;

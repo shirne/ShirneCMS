@@ -3,6 +3,7 @@
 namespace app\common\service;
 
 use extcore\traits\Email;
+use shirne\common\ValidateHelper;
 use shirne\third\Aliyun;
 use think\Db;
 
@@ -23,7 +24,7 @@ class CheckcodeService extends BaseService
         ]
     ];
 
-    public function sendCode($type,$sendto, $codetype='verify'){
+    public function sendCode($type, $sendto, $codetype='verify'){
         $ip=request()->ip();
         $limit=isset($this->limits[$type])?$this->limits[$type]:[];
         if(!empty($limit)) {
@@ -104,7 +105,11 @@ class CheckcodeService extends BaseService
         return false;
     }
 
-    protected function sendMobileCode($mobile,$timeLimit, $tpltype){
+    public function sendMobileCode($mobile,$timeLimit, $tpltype){
+        if(! ValidateHelper::isMobile($mobile)){
+            $this->setError('手机号码格式错误');
+            return false;
+        }
         $exist=Db::name('Checkcode')->where('type',0)
             ->where('sendto',$mobile)
             ->where('is_check',0)->find();
@@ -156,7 +161,11 @@ class CheckcodeService extends BaseService
         return $sended;
     }
 
-    protected function sendEmailCode($email,$timeLimit){
+    public function sendEmailCode($email,$timeLimit){
+        if(! ValidateHelper::isEmail($email)){
+            $this->setError('邮箱地址格式错误');
+            return false;
+        }
         $exist=Db::name('Checkcode')->where('type',1)
             ->where('sendto',$email)
             ->where('is_check',0)->find();

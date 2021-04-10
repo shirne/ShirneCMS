@@ -8,7 +8,9 @@ use app\api\facade\MemberTokenFacade;
 use app\common\model\MemberAgentModel;
 use app\common\model\MemberLevelLogModel;
 use app\common\model\MemberLevelModel;
+use app\common\service\CheckcodeService;
 use extcore\traits\Upload;
+use shirne\common\ValidateHelper;
 use think\Db;
 use think\Loader;
 
@@ -70,6 +72,123 @@ class MemberController extends AuthedController
             user_log($this->user['id'],'update_profile',1,'修改个人资料');
             $this->success('保存成功');
         }
+    }
+
+    public function mobile_register($mobile='', $code='', $nickname='', $areas=''){
+        if(empty($mobile) || empty($code)){
+            $this->error('请填写手机号及验证码');
+        }
+        $unbindKey = 'unbind_'.$this->user['mobile'].'_'.$this->user['id'];
+        if(!ValidateHelper::isMobile($mobile)){
+            $this->error('手机号码错误');
+        }
+        
+        if($this->user['mobile_bind']){
+            $unbined = cache($unbindKey);
+            if(empty($unbined)){
+                $this->error('请先解绑旧手机号码');
+            }
+        }
+        $service = new CheckcodeService();
+        $result = $service->verifyCode($mobile, $code);
+        if(!$result){
+            $this->error('验证码错误');
+        }
+        $data=[
+            'mobile'=>$mobile,
+            'mobile_bind'=>1
+        ];
+        if(!empty($nickname)){
+            $data['nickname']=$nickname;
+        }
+        if(!empty($areas)){
+            if(!is_array($areas)){
+                $areas = explode('/',$areas);
+            }
+            $data['province']=$areas[0];
+            $data['city']=$areas[1];
+            $data['county']=$areas[2];
+        }
+        Db::name('Member')->where('id',$this->user['id'])->update($data);
+        cache($unbindKey, NULL);
+        user_log($this->user['id'],'update_mobile',1,'绑定手机号');
+        $this->user = Db::name('Member')->where('id',$this->user['id'])->find();
+
+        // 绑定手机号码升级为初级代言人
+        $seted = MemberModel::autoUpdateBeginner($this->user);
+
+        $this->success(['is_set_agent'=>($seted==2)?1:0,'image'=>getSetting('beginner_reward_image')],1,'绑定成功');
+    }
+
+    public function bind_mobile($mobile, $code, $step = 0){
+        $unbindKey = 'unbind_'.$this->user['mobile'].'_'.$this->user['id'];
+        if(!ValidateHelper::isMobile($mobile)){
+            $this->error('手机号码错误');
+        }
+        
+        if($step == 0){
+            if(!$this->user['mobile_bind']){
+                $this->error('未绑定手机');
+            }
+            if($mobile != $this->user['mobile']){
+                $this->error('手机号码非绑定的手机号');
+            }
+            $service = new CheckcodeService();
+            $result = $service->verifyCode($mobile, $code);
+            if($result){
+                cache($unbindKey, 1, ['expire'=>10*60]);
+                $this->success('验证通过');
+            }
+            $this->error('验证失败');
+        }else{
+            if($this->user['mobile_bind']){
+                $unbined = cache($unbindKey);
+                if(empty($unbined)){
+                    $this->error('请先解绑旧手机号码');
+                }
+            }
+            $service = new CheckcodeService();
+            $result = $service->verifyCode($mobile, $code);
+            if(!$result){
+                $this->error('验证码错误');
+            }
+            Db::name('Member')->where('id',$this->user['id'])->update([
+                'mobile'=>$mobile,
+                'mobile_bind'=>1
+            ]);
+            cache($unbindKey, NULL);
+            user_log($this->user['id'],'update_mobile',1,'修改绑定手机号');
+            $this->user = Db::name('Member')->where('id',$this->user['id'])->find();
+            
+            // 绑定手机号码升级为初级代言人
+            $seted = MemberModel::autoUpdateBeginner($this->user);
+
+            $this->success(['is_set_agent'=>($seted==2)?1:0,'image'=>getSetting('beginner_reward_image')],1,'绑定成功');
+        }
+    }
+
+    public function smscode($mobile='')
+    {
+        //绑定手机号
+        if(!empty($mobile)){
+            
+            if(! ValidateHelper::isMobile($mobile)){
+                $this->error('手机号码格式错误');
+            }
+        }else{
+            $mobile = $this->user['mobile'];
+            if(empty($mobile)){
+                $this->error('您的账号未绑定手机号码');
+            }
+        }
+
+        $service = new CheckcodeService();
+        $result = $service->sendCode('mobile', $mobile, 'verify');
+        if(!$result){
+            $this->error($service->getError());
+        }
+
+        $this->success('验证码已发送');
     }
 
     public function avatar(){
