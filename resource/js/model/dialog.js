@@ -514,7 +514,7 @@
                     }
                 },
                 onhide:function () {
-                    if(called=false && typeof cancel=='function'){
+                    if(called==false && typeof cancel=='function'){
                         return cancel();
                     }
                 }
