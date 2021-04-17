@@ -19,7 +19,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text">关键字</span>
                             </div>
-                            <input type="text" class="form-control" value="{$keyword}" name="keyword" placeholder="填写会员id或昵称">
+                            <input type="text" class="form-control" value="{$keyword}" name="keyword" placeholder="填写昵称或Openid">
                             <div class="input-group-append">
                                 <button class="btn btn-outline-secondary" type="submit"><i class="ion-md-search"></i></button>
                             </div>
