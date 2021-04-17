@@ -32,9 +32,9 @@
 
         </div>
     </foreach>
-    <div class="panel panel-default" id="loginBar">
-        <div class="panel-heading" role="tab" id="headinglog">
-            <h4 class="panel-title">
+    <div class="card" id="loginBar">
+        <div class="card-header" role="tab" id="headinglog">
+            <h4 class="card-title">
                 <a data-parent="#accordion" href="{:url('login/logout')}"  aria-expanded="false">
                     <i class="ion-md-power-off"></i>&nbsp;退出
                 </a>
