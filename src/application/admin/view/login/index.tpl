@@ -87,21 +87,21 @@
                 <div class="mb-3"><b>双核</b>浏览器请切换到<b>极速模式</b>使用</div>
                 <h3 class="text-success mb-3">推荐使用</h3>
                 <div class="browser-list">
-                    <a class="browser-item" href="https://www.google.cn/chrome/" target="_blank">
-                        <div class="browser-icon" style="background-image:url(/static/admin/images/chrome-logo.svg)"></div>
+                    <a class="col" href="https://www.google.cn/chrome/" target="_blank">
+                        <div class="browser-icon" style="background-image:url(/static/admin/images/chrome-logo.png)"></div>
                         <div class="browser-text">谷哥</div>
                     </a>
-                    <a class="browser-item" href="https://www.mozilla.org/zh-CN/firefox/new/" target="_blank">
+                    <a class="col" href="https://www.mozilla.org/zh-CN/firefox/new/" target="_blank">
                         <div class="browser-icon" style="background-image:url(/static/admin/images/firefox-logo.png)"></div>
                         <div class="browser-text">火狐</div>
                     </a>
-                    <a class="browser-item" href="https://browser.360.cn/ee/" target="_blank">
+                    <a class="col" href="https://browser.360.cn/ee/" target="_blank">
                         <div class="browser-icon" style="background-image:url(/static/admin/images/360-logo.png)"></div>
                         <div class="browser-text">360极速</div>
                     </a>
-                    <a class="browser-item" href="https://www.opera.com/zh-cn" target="_blank">
-                        <div class="browser-icon" style="background-image:url(/static/admin/images/opera-logo.png)"></div>
-                        <div class="browser-text">Opera</div>
+                    <a class="col" href="https://www.microsoft.com/zh-cn/edge" target="_blank">
+                        <div class="browser-icon" style="background-image:url(/static/admin/images/edge-logo.png)"></div>
+                        <div class="browser-text">Edge</div>
                     </a>
                     <div class="clear-fix"></div>
                 </div>
@@ -111,7 +111,7 @@
     </div>
     <div class="row justify-content-md-center">
         <div class="col-md-4 copy">
-            <p>&copy;原设软件 2015-2017</p>
+            <p>&copy;原设软件 2015-{:date('Y')}</p>
         </div>
     </div>
 </div>
