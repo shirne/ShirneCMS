@@ -112,7 +112,7 @@ function getMoneyFields($withall=true){
     return $fields;
 }
 
-function getLogTypes($withall=true){
+function getLogTypes($withall=true, $filter = null){
     $fields = [
         'all'=>lang('All'),
         'system'=>lang('System Opt.'),
@@ -120,6 +120,17 @@ function getLogTypes($withall=true){
         'recharge'=>lang('Recharge'),
     ];
     if(!$withall)unset($fields['all']);
+    if($filter !== null){
+        if(is_string($filter)){
+            $filter = array_map('trim',explode(',', $filter));
+        }
+        foreach($fields as $k=>$v){
+            if($k == 'all')continue;
+            if(!in_array($k, $filter)){
+                unset($fields[$k]);
+            }
+        }
+    }
     return $fields;
 }
 function getMemberTypes(){
