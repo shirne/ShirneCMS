@@ -486,10 +486,11 @@ function wrap_label($text,$type='secondary'){
 
 function print_remark($data){
     if(!empty($data) && !is_array($data)){
-        $data=@json_decode($data);
+        $datarr = @json_decode($data);
     }
-    if(is_array($data)){
-        return call_user_func_array('lang',$data);
+    if(is_array($datarr)){
+        $temp = array_shift($datarr);
+        return call_user_func('lang', $temp, $datarr);
     }
     return $data;
 }
