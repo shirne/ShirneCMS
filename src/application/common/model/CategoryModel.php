@@ -13,7 +13,7 @@ class CategoryModel extends BaseModel
 {
     protected $precache='';
 
-    protected $type = ['props'=>'array'];
+    protected $type = ['props'=>'array', 'fields'=>'array'];
 
     protected $data;
     protected $treed;
@@ -34,6 +34,16 @@ class CategoryModel extends BaseModel
         return $this->data;
     }
 
+    public function findCategoryByAttr($attr, $value){
+        $this->getCategories();
+        foreach ($this->data as $cate){
+            if($cate[$attr]==$value){
+                return $cate;
+            }
+        }
+        return NULL;
+    }
+
     public function findCategory($idorname){
         $this->getCategories();
         foreach ($this->data as $cate){
@@ -43,6 +53,19 @@ class CategoryModel extends BaseModel
         }
         return NULL;
     }
+    public function findCategories($idornames){
+        $this->getCategories();
+        if(!is_array($idornames)){
+            $idornames = array_map('trim', explode(',', $idornames));
+        }
+        $cates = [];
+        foreach ($this->data as $cate){
+            if(in_array($cate['id'], $idornames) || in_array($cate['name'], $idornames)){
+                $cates[] = $cate;
+            }
+        }
+        return $cates;
+    }
     public function getCategoryId($idorname){
         if(preg_match('/^[a-zA-Z]\w*$/',$idorname)) {
             $cate = $this->findCategory( $idorname);
@@ -51,9 +74,18 @@ class CategoryModel extends BaseModel
             } else {
                 return 0;
             }
-        }else{
-            return intval($idorname);
         }
+        
+        return intval($idorname);
+    }
+
+    public function getCategoryIds($idornames){
+        $cates = $this->findCategories( $idornames );
+        if (!empty($cates)) {
+            return array_column($cates, 'id');
+        }
+
+        return [];
     }
 
     public function getCategoryTree($idorname){
@@ -117,28 +149,69 @@ class CategoryModel extends BaseModel
         return [];
     }
 
-    public function getSubCateIds($pid,$recursive=false)
+    public function getSubCateNames($pid, $recursive=false, $includeSelf = true)
     {
-        $ids=[];
+        $names = [];
         $treedCategories=$this->getTreedCategory();
+        if($includeSelf){
+            $cates = $this->findCategories($pid);
+            $names = array_column($cates, 'name');
+        }
 
         if(is_array($pid)){
-            if(!$recursive)$ids=$pid;
+            foreach($pid as $p){
+                if(isset($treedCategories[$p]) && !empty($treedCategories[$p])) {
+                    $sons = $treedCategories[$p];
+                    $sonids = array_column($sons, 'id');
+                    $sonNames = array_column($sons, 'name');
+                    $names = array_merge($names, $sonNames);
+                    if($recursive){
+                        $names = array_merge($names, $this->getSubCateNames($sonids, true, false));
+                    }
+                }
+            }
+        }else{
+            if(isset($treedCategories[$pid]) && !empty($treedCategories[$pid])) {
+                $sons = $treedCategories[$pid];
+                $sonids = array_column($sons, 'id');
+                $sonNames = array_column($sons, 'name');
+                $names = array_merge($names, $sonNames);
+                if($recursive){
+                    $names = array_merge($names, $this->getSubCateNames($sonids, true, false));
+                }
+            }
+        }
+
+        return $names;
+    }
+
+    public function getSubCateIds($pid, $recursive=false, $includeSelf = true)
+    {
+        $ids = [];
+        $treedCategories = $this->getTreedCategory();
+        if($includeSelf){
+            $ids = (array)$pid;
+        }
+
+        if(is_array($pid)){
             foreach($pid as $p){
                 if(isset($treedCategories[$p]) && !empty($treedCategories[$p])) {
                     $sons = $treedCategories[$p];
                     $sonids = array_column($sons, 'id');
                     $ids = array_merge($ids, $sonids);
-                    $ids = array_merge($ids, $this->getSubCateIds($sonids, true));
+                    if($recursive){
+                        $ids = array_merge($ids, $this->getSubCateIds($sonids, true, false));
+                    }
                 }
             }
         }else{
-            if(!$recursive)$ids=[$pid];
             if(isset($treedCategories[$pid]) && !empty($treedCategories[$pid])) {
                 $sons = $treedCategories[$pid];
                 $sonids = array_column($sons, 'id');
                 $ids = array_merge($ids, $sonids);
-                $ids = array_merge($ids, $this->getSubCateIds($sonids, true));
+                if($recursive){
+                    $ids = array_merge($ids, $this->getSubCateIds($sonids, true, false));
+                }
             }
         }
 
