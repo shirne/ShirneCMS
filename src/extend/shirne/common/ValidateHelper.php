@@ -101,7 +101,7 @@ class ValidateHelper{
     }
 
     public static function isEmail($email){
-        if (preg_match('/^[\w]+@[\w]+(.[\w]+)+$/', $email)) {
+        if (preg_match('/^[\w]+@[\w]+(\.[\w]+)+$/', $email)) {
             return true;
         }
         return false;
