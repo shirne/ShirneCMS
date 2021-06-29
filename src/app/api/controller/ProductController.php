@@ -9,9 +9,17 @@ use app\common\model\PostageModel;
 use app\common\model\ProductModel;
 use app\common\model\WechatModel;
 use app\common\model\ProductSkuModel;
+use DomainException;
+use Endroid\QrCode\Exception\InvalidWriterException;
+use EasyWeChat\Kernel\Exceptions\InvalidConfigException;
+use InvalidArgumentException;
+use Exception;
+use GuzzleHttp\Exception\GuzzleException;
+use RuntimeException;
 use shirne\common\Poster;
 use think\facade\Db;
 use think\facade\Log;
+use think\response\Json;
 
 /**
  * 产品操作接口
@@ -20,10 +28,26 @@ use think\facade\Log;
  */
 class ProductController extends BaseController
 {
+    /**
+     * 获取全部商品分类
+     * 格式
+     *   0 => 顶级类列表
+     *   id => 子类列表
+     *   ...
+     * @return Json 
+     */
     public function get_all_cates(){
         return $this->response(ProductCategoryFacade::getTreedCategory());
     }
 
+    /**
+     * 获取指定id的子类，可携带指定数量和筛选条件的商品
+     * @param int $pid 
+     * @param int $goods_count 商品数量
+     * @param int $withsku 是否携带sku信息
+     * @param array $filters 携带商品列表的筛选条件
+     * @return Json 
+     */
     public function get_cates($pid=0, $goods_count=0, $withsku=0, $filters=[]){
         if($pid!=0 && preg_match('/^[a-zA-Z]\w+/',$pid)){
             $current=ProductCategoryFacade::findCategory($pid);
@@ -51,6 +75,17 @@ class ProductController extends BaseController
         return $this->response($cates);
     }
 
+    /**
+     * 获取商品列表，可分页
+     * @param string $cate 指定所属的分类，默认包含子类
+     * @param string $type 指定商品类型
+     * @param string $order 指定排序
+     * @param string $keyword 指定关键字
+     * @param int $withsku 是否携带sku信息
+     * @param int $page 指定分页
+     * @param int $pagesize 指定获取数量，分页时为每页大小
+     * @return Json 
+     */
     public function get_list($cate='',$type='',$order='',$keyword='',$withsku=0,$page=1, $pagesize=10){
         $condition=[];
         if($cate){
@@ -94,6 +129,11 @@ class ProductController extends BaseController
         ]);
     }
 
+    /**
+     * 获取商品详情
+     * @param int $id 
+     * @return Json 
+     */
     public function view($id){
         $product = ProductModel::find($id);
         if(empty($product)){
@@ -122,6 +162,12 @@ class ProductController extends BaseController
         ]);
     }
 
+    /**
+     * 获取商品快照，快照根据时间戳生成，即订单下单时间
+     * @param int $id 
+     * @param int $date 
+     * @return void|Json 
+     */
     public function flash($id, $date){
         $flash = ProductModel::getFlash($id,$date);
         if(empty($flash)){
@@ -140,6 +186,12 @@ class ProductController extends BaseController
         ]);
     }
 
+    /**
+     * 获取商品分享海报，支持web，公众号，小程序
+     * @param mixed $id 
+     * @param string $type 
+     * @return Json 
+     */
     public function share($id, $type='url'){
         $product = ProductModel::find($id);
         if(empty($product)){
@@ -223,6 +275,13 @@ class ProductController extends BaseController
         return $this->response(['share_url'=>$imgurl]);
     }
 
+    /**
+     * 生成小程序码
+     * @param mixed $wechatid 
+     * @param mixed $params 
+     * @param mixed $size 
+     * @return string|void 
+     */
     private function miniprogramQrcode($wechatid, $params, $size){
         $app = WechatModel::createApp($wechatid);
         if(!$app){
@@ -236,8 +295,14 @@ class ProductController extends BaseController
         $this->error('小程序码生成失败');
     }
 
-
-    public function comments($id){
+    /**
+     * 获取评论列表
+     * @param int $id 商品id
+     * @param int $pagesize 默认10
+     * @param int $page 
+     * @return Json 
+     */
+    public function comments($id, $pagesize = 10){
         $product = ProductModel::find($id);
         if(empty($product)){
             $this->error('参数错误');
@@ -246,7 +311,7 @@ class ProductController extends BaseController
             ->view('member',['username','realname','avatar'],'member.id=productComment.member_id','LEFT')
             ->where('productComment.status',1)
             ->where('product_id',$id)
-            ->order('productComment.create_time desc')->paginate(10);
+            ->order('productComment.create_time desc')->paginate($pagesize);
 
         return $this->response([
             'lists'=>$comments->all(),

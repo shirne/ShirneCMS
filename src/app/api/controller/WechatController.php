@@ -70,7 +70,11 @@ class WechatController{
         return $account;
     }
 
-    //微信入口文件
+    /**
+     * 微信通知入口
+     * @param string $hash 
+     * @return never 
+     */
     public function index($hash=''){
         Log::record('收到消息'.$hash);
         $account=$this->getAccount($hash);
@@ -118,6 +122,11 @@ class WechatController{
         exit;
     }
     
+    /**
+     * 退款通知入口
+     * @param string $hash 
+     * @return never 
+     */
     public function refund($hash=''){
         $account=$this->getAccount($hash);
         $config = WechatModel::to_pay_config($account);
@@ -168,6 +177,11 @@ class WechatController{
         exit;
     }
 
+    /**
+     * 支付通知入口
+     * @param string $hash 
+     * @return never 
+     */
     public function payresult($hash=''){
         $account=$this->getAccount($hash);
         $config = WechatModel::to_pay_config($account);
@@ -223,6 +237,12 @@ class WechatController{
         $response->send();
         exit;
     }
+
+    /**
+     * 扫码支付通知入口
+     * @param string $hash 
+     * @return never 
+     */
     public function scanpay($hash=''){
         $account=$this->getAccount($hash);
         $config = WechatModel::to_pay_config($account);

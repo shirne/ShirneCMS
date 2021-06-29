@@ -386,12 +386,12 @@ class LoginController extends BaseController{
         if(!in_array($type,array('username','email','mobile'))){
             $this->error('参数不合法');
         }
-        $member=Db::name('member');
-        $val=$this->request->get('value');
-        $m=$member->where($type,$val)->find();
-        $json=array();
-        $json['error']=0;
-        if(!empty($m))$json['error']=1;
+        $member = Db::name('member');
+        $val = $this->request->param('value');
+        $m = $member->where($type,$val)->find();
+        $json = array();
+        $json['error'] = 0;
+        if(!empty($m)) $json['error'] = 1;
         return json($json);
     }
 
@@ -413,8 +413,8 @@ class LoginController extends BaseController{
             $this->error('该手机号码已注册');
         }
 
-        $service=new CheckcodeService();
-        $sended=$service->sendCode('mobile',$mobile);
+        $service = new CheckcodeService();
+        $sended = $service->sendCode('mobile',$mobile);
         if($sended) {
             $this->success('验证码发送成功！');
         }else{

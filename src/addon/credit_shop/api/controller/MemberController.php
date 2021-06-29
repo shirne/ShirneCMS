@@ -8,6 +8,12 @@ use think\facade\Db;
 
 class MemberController extends AuthedController
 {
+    /**
+     * 订单列表
+     * @param string $status 
+     * @param int $pagesize 
+     * @return Json 
+     */
     public function index($status='',$pagesize=10){
         $model=Db::name('creditOrder')->where('member_id',$this->user['id'])
             ->where('delete_time',0);
@@ -39,11 +45,20 @@ class MemberController extends AuthedController
         ]);
     }
     
+    /**
+     * 获取各状态订单数量
+     * @return Json 
+     */
     public function counts(){
         $counts = CreditOrderModel::getCounts($this->user['id']);
         return $this->response($counts);
     }
 
+    /**
+     * 获取订单详情
+     * @param mixed $id 
+     * @return Json 
+     */
     public function view($id){
         $order=Db::name('creditOrder')->where('order_id',intval($id))->find();
         if(empty($order) || $order['delete_time']>0){
@@ -57,6 +72,12 @@ class MemberController extends AuthedController
         return $this->response($order);
     }
     
+    /**
+     * 取消订单
+     * @param mixed $id 
+     * @param string $reason 
+     * @return void 
+     */
     public function cancel($id, $reason=''){
         $order=CreditOrderModel::find(intval($id));
         if(empty($order) || $order['delete_time']>0){
@@ -73,6 +94,12 @@ class MemberController extends AuthedController
         }
     }
     
+    /**
+     * 退款申请
+     * @param mixed $id 
+     * @param string $reason 
+     * @return void 
+     */
     public function refund($id, $reason=''){
         $order=CreditOrderModel::find(intval($id));
         if(empty($order) || $order['delete_time']>0){
@@ -92,6 +119,11 @@ class MemberController extends AuthedController
         }
     }
     
+    /**
+     * 获取订单快递信息
+     * @param mixed $id 
+     * @return Json 
+     */
     public function express($id){
         $order=CreditOrderModel::find(intval($id));
         if(empty($order) || $order['delete_time']>0){
@@ -137,6 +169,11 @@ class MemberController extends AuthedController
         return $this->response($returnData);
     }
     
+    /**
+     * 确认收货
+     * @param mixed $id 
+     * @return void 
+     */
     public function confirm($id){
         $order=CreditOrderModel::find(intval($id));
         if(empty($order) || $order['delete_time']>0){
@@ -153,6 +190,11 @@ class MemberController extends AuthedController
         }
     }
     
+    /**
+     * 删除订单
+     * @param mixed $id 
+     * @return void 
+     */
     public function delete($id){
         $order=CreditOrderModel::find(intval($id));
         if(empty($order) || $order['delete_time']>0){
@@ -169,7 +211,10 @@ class MemberController extends AuthedController
         }
     }
     
-    //todo 订单评论
+    /**
+     * 订单评论 todo
+     * @return void 
+     */
     public function comment(){
     
     }

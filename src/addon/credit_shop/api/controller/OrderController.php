@@ -15,16 +15,21 @@ use think\facade\Db;
  */
 class OrderController extends AuthedController
 {
-    public function prepare(){
-        $order_skus=$this->request->param('goods');
-        $skuids=array_column($order_skus,'sku_id');
-        $goods=Db::view('GoodsSku','*')
+    /**
+     * 初始化订单信息
+     * @param array $goods 需要购买的商品列表，每个item包含sku_id 和count,count默认1
+     * @return Json 
+     */
+    public function prepare($goods){
+        
+        $skuids=array_column($goods,'sku_id');
+        $goodsData=Db::view('GoodsSku','*')
             ->view('Goods',['title'=>'product_title','image'=>'product_image','levels','is_discount'],'GoodsSku.product_id=Goods.id','LEFT')
             ->whereIn('GoodsSku.sku_id',idArr($skuids))
             ->select();
 
         return $this->response([
-            'goods'=>$goods,
+            'goods'=>$goodsData,
             'address'=>Db::name('MemberAddress')->where('member_id',$this->user['id'])->order('is_default DESC')->find(),
             'express'=>[
                 'fee'=>0,
@@ -33,15 +38,25 @@ class OrderController extends AuthedController
         ]);
 
     }
-    public function confirm(){
-        $input_goods=$this->request->param('goods');
-        if(empty($input_goods))$this->error('未选择下单商品');
-        $goods_ids = array_column($input_goods,'id');
-        $goods=Db::view('Goods','*')
+
+    /**
+     * 确认下单
+     * @param array $goods 商品信息，每个包含sku_id和count count默认为1
+     * @param int $address_id 收货地址id
+     * @param string $pay_type 支付类型
+     * @param string $remark 订单备注
+     * @param string $form_id 小程序中下单可获取到form_id 用以发送模板消息
+     * @return mixed 
+     */
+    public function confirm($goods){
+        
+        if(empty($goods))$this->error('未选择下单商品');
+        $goods_ids = array_column($goods,'id');
+        $goodsData=Db::view('Goods','*')
             ->whereIn('Goods.id',idArr($goods_ids))
             ->select();
-        $counts=array_index($input_goods,'id,count');
-        foreach ($goods as $k=>&$item){
+        $counts=array_index($goods,'id,count');
+        foreach ($goodsData as $k=>&$item){
             if(isset($counts[$item['id']])){
                 $item['count']=$counts[$item['id']];
             }else{
@@ -58,7 +73,7 @@ class OrderController extends AuthedController
         
 
         $total_price=0;
-        foreach ($goods as $item){
+        foreach ($goodsData as $item){
             $total_price += $item['price']*$item['count'];
             
         }
@@ -95,7 +110,7 @@ class OrderController extends AuthedController
             }
 
             $orderModel=new CreditOrderModel();
-            $result=$orderModel->makeOrder($this->user,$goods,$address,$data['remark'],$balancepay);
+            $result=$orderModel->makeOrder($this->user,$goodsData,$address,$data['remark'],$balancepay);
             if($result){
                 if($balancepay) {
                     return $this->response(['order_id'=>$result],1,'下单成功');

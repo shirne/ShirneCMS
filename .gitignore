@@ -1,6 +1,7 @@
 .sass-cache
-/.idea
-/.vscode
+.idea
+.vscode
+.phpdoc
 /src/vendor
 *.log
 /src/thinkphp

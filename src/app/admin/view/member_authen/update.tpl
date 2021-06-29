@@ -4,9 +4,9 @@
     {include file="public/bread" menu="member_authen_index" title="升级申请" /}
 
     <div id="page-wrapper" class="page-form">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">会员信息</h3>
+        <div class="card mb-3">
+            <div class="card-header">
+                <h3 class="card-title">会员信息</h3>
             </div>
             <div class="panel-body">
                 <table class="table">
@@ -33,33 +33,33 @@
                                     </div>
                                 </div>
                             </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>会员等级</td>
-                        <td>{$member->getLevelName()}</td>
-                        <td>代理等级</td>
-                        <td>{$member->getAgentName()}</td>
-                    </tr>
-                    <tr>
-                        <td>直推人数</td>
-                        <td>{$member.recom_count|number_format}</td>
-                        <td>团队人数</td>
-                        <td>{$member.team_count|number_format}</td>
-                    </tr>
-                    <tr>
-                        <td>直推业绩</td>
-                        <td>{$member.recom_performance|showmoney}</td>
-                        <td>团队业绩</td>
-                        <td>{$member.total_performance|showmoney}</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>会员等级</td>
+                    <td>{$member->getLevelName()}</td>
+                    <td>代理等级</td>
+                    <td>{$member->getAgentName()}</td>
+                </tr>
+                <tr>
+                    <td>直推人数</td>
+                    <td>{$member.recom_count|number_format}</td>
+                    <td>团队人数</td>
+                    <td>{$member.team_count|number_format}</td>
+                </tr>
+                <tr>
+                    <td>直推业绩</td>
+                    <td>{$member.recom_performance|showmoney}</td>
+                    <td>团队业绩</td>
+                    <td>{$member.total_performance|showmoney}</td>
+                </tr>
+                </tbody>
+            </table>
         </div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">申请信息</h3>
+        <div class="card mb-3">
+            <div class="card-heading">
+                <h3 class="card-title">申请信息</h3>
             </div>
             <div class="panel-body">
                 <form method="post">
@@ -106,17 +106,16 @@
                             </textarea>
                         </td>
                     </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="4">
-                                <button type="submit" class="btn btn-primary">提交</button>
-                            </td>
-                        </tr>
-                    </tfoot>
-                </table>
-                </form>
-            </div>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4">
+                            <button type="submit" class="btn btn-primary">提交</button>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+            </form>
         </div>
     </div>
 {/block}

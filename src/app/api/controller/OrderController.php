@@ -22,6 +22,12 @@ use think\facade\Db;
  */
 class OrderController extends AuthedController
 {
+    /**
+     * 初始化订单信息
+     * @param string $from 下单来源，购物车或直接下单
+     * @param array $goods 需要购买的商品列表，每个item包含sku_id 和count,count默认1
+     * @return Json 
+     */
     public function prepare($from='quick'){
         $order_skus=$this->request->param('products');
         $address=$this->request->param('address');
@@ -51,6 +57,17 @@ class OrderController extends AuthedController
         return $this->response($result);
 
     }
+
+    /**
+     * 确认下单
+     * @param string $from 下单来源，购物车或直接下单，购物车下单会移除下单成功的商品
+     * @param array $goods 商品信息，每个包含sku_id和count count默认为1
+     * @param int $address_id 收货地址id
+     * @param string $pay_type 支付类型
+     * @param string $remark 订单备注
+     * @param string $form_id 小程序中下单可获取到form_id 用以发送模板消息
+     * @return mixed 
+     */
     public function confirm($from='quick'){
         $this->check_submit_rate();
         

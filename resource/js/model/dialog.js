@@ -1,5 +1,5 @@
 (function(window,$){
-    var dialogTpl='<div class="modal fade" id="{@id}" {if tabindex}tabindex="{@tabindex}"{/if} role="dialog" aria-labelledby="{@id}Label" aria-hidden="true">\n' +
+    var dialogTpl='<div class="modal shirne-modal fade" id="{@id}" {if tabindex}tabindex="{@tabindex}"{/if} role="dialog" aria-labelledby="{@id}Label" aria-hidden="true">\n' +
         '    <div class="modal-dialog {@size}">\n' +
         '        <div class="modal-content {@contentClass}">\n' +
         '            <div class="modal-header">\n' +
@@ -442,6 +442,7 @@
             var is_textarea=false;
             var multiset={};
             var keyboard=true;
+            var dftValue = '';
             if(typeof message=='string'){
                 title=message;
             }else{
@@ -460,6 +461,9 @@
                     keyboard = message.keyboard;
                 }else if(is_textarea){
                     keyboard = false;
+                }
+                if(message.default){
+                    dftValue=message.default.toString();
                 }
             }
             var inputHtml='<input type="text" name="confirm_input" class="form-control" />';
@@ -491,7 +495,11 @@
                     }
                 },
                 onshown:function(body){
-                    body.find('[name=confirm_input]').eq(0).select();
+                    var firstInput = body.find('[name=confirm_input]').eq(0);
+                    if(dftValue){
+                        firstInput.val(dftValue);
+                    }
+                    firstInput.select();
                     if(message && message.onshown){
                         message.onshown(body);
                     }
@@ -514,7 +522,7 @@
                     }
                 },
                 onhide:function () {
-                    if(called=false && typeof cancel=='function'){
+                    if(called==false && typeof cancel=='function'){
                         return cancel();
                     }
                 }
@@ -774,6 +782,15 @@
             return dlg;
         }
     };
+
+    $(document).on('keydown', function(e){
+        if (e.keyCode == 13) {
+            var currentModal = $('.shirne-modal').eq(-1);
+            if(currentModal && currentModal.data('keyboard') !== false){
+                currentModal.find('.modal-footer .btn[default]').trigger('click');
+            }
+        }
+    });
 
     // 暴露接口
     window.Dialog=$.Dialog=Dialog;

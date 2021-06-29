@@ -9,9 +9,18 @@ use app\common\model\MemberAuthenModel;
 use app\common\model\MemberModel;
 use app\common\model\OrderModel;
 use app\common\model\WechatModel;
+use DomainException;
+use PDOException;
+use Exception;
+use GuzzleHttp\Exception\GuzzleException;
+use InvalidArgumentException;
 use shirne\common\Poster;
 use think\facade\Db;
 
+/**
+ * 代理相关操作
+ * @package app\api\controller\member
+ */
 class AgentController extends AuthedController
 {
     public function initialize()
@@ -22,6 +31,10 @@ class AgentController extends AuthedController
         }
     }
     
+    /**
+     * 代理统计信息
+     * @return Json 
+     */
     public function generic(){
         $data=[];
         $data['order_count']=Db::name('awardLog')->where('member_id',$this->user['id'])
@@ -36,6 +49,11 @@ class AgentController extends AuthedController
         return $this->response($data);
     }
 
+    /**
+     * 升级申请
+     * @param int $level_id 
+     * @return Json 
+     */
     public function upgrade($level_id=2){
         $authen= MemberAuthenModel::where('level_id',$level_id)
             ->where('member_id',$this->user['id'])
@@ -64,6 +82,11 @@ class AgentController extends AuthedController
         ]);
     }
     
+    /**
+     * 代理分享海报
+     * @param string $page 
+     * @return Json 
+     */
     public function poster($page = 'pages/index/index'){
     
         $platform=$this->request->tokenData['platform'];
@@ -82,6 +105,11 @@ class AgentController extends AuthedController
         return $this->response(['poster_url'=>$url,'qr_url'=>$qrurl]);
     }
     
+    /**
+     * 代理排行
+     * @param string $mode 
+     * @return Json 
+     */
     public function rank($mode='month'){
         
         $list=AwardLogModel::ranks($mode);
@@ -89,7 +117,13 @@ class AgentController extends AuthedController
         return $this->response(['ranks'=>$list]);
     }
     
-    
+    /**
+     * 佣金明细
+     * @param string $type 
+     * @param string $status 
+     * @param string $daterange 
+     * @return Json 
+     */
     public function award_log($type='',$status='',$daterange=''){
         $model=Db::view('awardLog mlog','*')
             ->view('Member m',['username','level_id','nickname','avatar'],'m.id=mlog.from_member_id','LEFT')
@@ -157,6 +191,12 @@ class AgentController extends AuthedController
         ]);
     }
     
+    /**
+     * 分佣订单明细
+     * @param string $status 
+     * @param int $pagesize 
+     * @return Json 
+     */
     public function orders($status='',$pagesize=10){
         $level = $this->userLevel();
         $sonids=getMemberSons($this->user['id'],$level['commission_layer']);
@@ -199,6 +239,10 @@ class AgentController extends AuthedController
         ]);
     }
     
+    /**
+     * 获取各种状态订单数量
+     * @return Json 
+     */
     public function counts(){
         $counts = OrderModel::getCounts($this->user['id']);
         return $this->response($counts);

@@ -6,7 +6,7 @@
     <div id="page-wrapper">
         <div class="card border-default">
             <div class="card-header">
-                <h5 class="panel-title">概况</h5>
+                <h5 class="card-title">概况</h5>
             </div>
             <table class="table table-striped text-right">
                 <thead>

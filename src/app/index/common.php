@@ -36,6 +36,7 @@ function viewurl($art, $channel_name = ''){
     // name为空则取id
     $name = empty($art['name'])?('a-'.$art['id']):$art['name'];
     return url('index/channel/view', ['channel_name'=>$channel_name, 'cate_name'=>$art['category_name'], 'article_name'=>$name]);
+}
 function addonurl($action = '', $controller = '', $addon = ''){
     if(empty($action)){
         $action = request()->param('action');
@@ -235,4 +236,14 @@ function aurl($url = '', $vars = '', $suffix = true, $domain = false){
     return url(implode('/',$part),$vars,$suffix,$domain)->build();
 }
 
-// end file
+function showstar($star, $max = 5){
+    return implode('',[
+        '<span class="stars">',
+        str_repeat('<i class="ion-md-star"></i>',intval($star)),
+        str_repeat('<i class="ion-md-star-half"></i>',ceil($star)-intval($star)),
+        str_repeat('<i class="ion-md-star-outline"></i>',intval($max - $star)),
+        '</span>'
+    ]);
+}
+
+//end file

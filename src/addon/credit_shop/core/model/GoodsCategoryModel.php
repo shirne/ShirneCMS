@@ -10,6 +10,8 @@ class GoodsCategoryModel extends CategoryModel
     protected $table = 'goods_category';
     protected $precache='goods_';
 
+    protected $type = ['props'=>'array'];
+
     protected function _get_data(){
         return Db::name('GoodsCategory')->order('pid ASC,sort ASC,id ASC')->select();
     }

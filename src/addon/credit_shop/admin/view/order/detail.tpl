@@ -4,27 +4,46 @@
     {include file="public/bread" menu="credit_shop_order_index" section="积分商城" title="订单管理" /}
 
     <div id="page-wrapper" class="page-form">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">订单信息</h3>
+        <div class="card mb-3">
+            <div class="card-header">
+                <h3 class="card-title">订单信息</h3>
             </div>
-            <div class="panel-body">
-                <table class="table">
-                    <tbody>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td>订单号</td>
+                        <td>{$model.order_no}</td>
+                        <td>下单会员</td>
+                        <td>[{$member.id}]{$member.username}</td>
+                    </tr>
+                    <tr>
+                        <td>下单日期</td>
+                        <td>{$model.create_time|showdate}</td>
+                        <td>订单状态</td>
+                        <td>{$model.status|order_status|raw}</td>
+                    </tr>
+                    <tr>
+                        <th colspan="4">订单商品</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <volist name="goodss" id="p">
+                                <div class="media">
+                                    <div class="media-left">
+                                        <img class="media-object" src="{$p['goods_image']}"
+                                            alt="{$p['goods_title']}">
+                                    </div>
+                                    <div class="media-body">
+                                        <h4 class="media-heading">{$p['goods_title']}</h4>
+                                        <div>￥{$p['goods_price']} &times; {$p['count']}件</div>
+                                    </div>
+                                </div>
+                            </volist>
+                        </td>
+                    </tr>
+                    <if condition="$model['remark']">
                         <tr>
-                            <td>订单号</td>
-                            <td>{$model.order_no}</td>
-                            <td>下单会员</td>
-                            <td>[{$member.id}]{$member.username}</td>
-                        </tr>
-                        <tr>
-                            <td>下单日期</td>
-                            <td>{$model.create_time|showdate}</td>
-                            <td>订单状态</td>
-                            <td>{$model.status|order_status|raw}</td>
-                        </tr>
-                        <tr>
-                            <th colspan="4">订单商品</th>
+                            <th colspan="4">订单备注</th>
                         </tr>
                         <tr>
                             <td>
@@ -47,6 +66,8 @@
                                 <th colspan="4">订单备注</th>
                             </tr>
                             <tr>
+                                <td>{$po.order_no}</td>
+                                <td>{$po.create_time|showdate}</td>
                                 <td>
                                     {$model.remark}
                                 </td>
@@ -80,11 +101,11 @@
             </div>
         </div>
         {if !empty($payorders)}
-            <div class="panel panel-default">
-                <div class="panel-heading">
+            <div class="card">
+                <div class="card-header">
                     <h3 class="panel-title">支付信息</h3>
                 </div>
-                <div class="panel-body">
+                <div class="card-body">
                     <table class="table">
                         <thead>
                             <tr>
@@ -140,11 +161,11 @@
             </div>
         {/if}
         {if $model['status'] == 1}
-            <div class="panel panel-default">
-                <div class="panel-heading">
+            <div class="card">
+                <div class="card-header">
                     <h3 class="panel-title">发货信息</h3>
                 </div>
-                <div class="panel-body">
+                <div class="card-body">
                     <table class="table">
                         <tbody>
                         <tr>
@@ -158,26 +179,41 @@
                 </div>
             </div>
         {/if}
-        <div class="panel panel-default">
-            <div class="panel-heading">
+        <div class="card">
+            <div class="card-header">
                 <h3 class="panel-title">收货信息</h3>
             </div>
-            <div class="panel-body">
+            <div class="card-body">
                 <table class="table">
                     <tbody>
-                        <tr>
-                            <td>收货人</td>
-                            <td>{$model.recive_name}</td>
-                            <td>电话</td>
-                            <td>{$model.mobile}</td>
-                        </tr>
-                        <tr>
-                            <td>地址</td>
-                            <td colspan="3">{$model.province} {$model.city} {$model.area} {$model.address}</td>
-                        </tr>
+                    <tr>
+                        <td>快递公司</td>
+                        <td><if condition="!empty($model['express_code'])">[{$model.express_code}]<php>$expresses=config('express.');</php>{$expresses[$model['express_code']]}<else/>无需物流</if></td>
+                        <td>快递单号</td>
+                        <td>{$model.express_no}</td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
+        </if>
+        <div class="card mb-3">
+            <div class="card-header">
+                <h3 class="card-title">收货信息</h3>
+            </div>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <td>收货人</td>
+                        <td>{$model.recive_name}</td>
+                        <td>电话</td>
+                        <td>{$model.mobile}</td>
+                    </tr>
+                    <tr>
+                        <td>地址</td>
+                        <td colspan="3">{$model.province} {$model.city} {$model.area} {$model.address}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
         {if $model['status'] > -1 AND $model['status'] < 4}
             <div class="form-group submit-btn">

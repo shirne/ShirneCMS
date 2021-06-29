@@ -144,7 +144,7 @@
         <div class="col-md-6">
             <div class="card border-default">
                 <div class="card-header">
-                    <h5 class="panel-title">会员统计</h5>
+                    <h5 class="card-title">会员统计</h5>
                 </div>
                 <table class="table table-striped">
                     <tr>
@@ -168,7 +168,7 @@
             <div class="card border-default">
                 <div class="card-header">
                     <a href="{:url('settle')}" class="float-right">账务统计</a>
-                    <h5 class="panel-title">资金统计</h5>
+                    <h5 class="card-title">资金统计</h5>
                 </div>
                 <table class="table table-striped">
                     <tr>

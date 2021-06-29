@@ -8,6 +8,10 @@ use app\api\controller\AuthedController;
 use app\common\model\MemberSignModel;
 use think\facade\Db;
 
+/**
+ * 签到管理
+ * @package app\api\controller\member
+ */
 class SignController extends AuthedController
 {
     /**
@@ -20,6 +24,11 @@ class SignController extends AuthedController
         $this->model = MemberSignModel::getInstance();
     }
     
+    /**
+     * 签到
+     * @param string $mood 心情
+     * @return void 
+     */
     public function dosign($mood=''){
         
         $result = $this->model->sign($this->user['id'],$mood,time());
@@ -31,6 +40,12 @@ class SignController extends AuthedController
         }
     }
     
+    /**
+     * 补签
+     * @param mixed $date 
+     * @param string $mood 
+     * @return void 
+     */
     public function dosupsign($date, $mood=''){
         $result = $this->model->sign($this->user['id'],$mood,$date,true);
         if($result){
@@ -40,12 +55,22 @@ class SignController extends AuthedController
         }
     }
 
+    /**
+     * 获取最后一次签到
+     * @return Json 
+     */
     public function getlastsign()
     {
         $sign = $this->model->getLastSign($this->user['id']);
         return $this->response($sign);
     }
     
+    /**
+     * 获取签到记录
+     * @param mixed|null $from_date 
+     * @param mixed|null $to_date 
+     * @return Json 
+     */
     public function getsigns($from_date=NULL, $to_date=NULL){
         $dates=time();
         if(!is_null($from_date)){
@@ -58,6 +83,11 @@ class SignController extends AuthedController
         return $this->response($list);
     }
     
+    /**
+     * 签到总天数
+     * @param string $fromdate 
+     * @return Json 
+     */
     public function totaldays($fromdate='')
     {
         $model = Db::name('signLog')->where('member_id',$this->user['id']);
@@ -69,6 +99,11 @@ class SignController extends AuthedController
         return $this->response(intval($total));
     }
 
+    /**
+     * 签到得到的总积分
+     * @param string $fromdate 
+     * @return Json 
+     */
     public function totalcredit($fromdate='')
     {
         $model = Db::name('memberMoneyLog')->where('member_id',$this->user['id'])->where('type','sign');
