@@ -79,25 +79,25 @@
             <hr class="mb-3">
             <div class="mb-3">
                 <label for="email">服务器地址 </label>
-                <input type="text" class="form-control" name="db[hostname]" value="{:config('database.hostname')}" >
+                <input type="text" class="form-control" name="db[hostname]" value="{$dbcfg['hostname']}" >
                 <div class="invalid-feedback">
                 </div>
             </div>
             <div class="mb-3">
                 <label for="address">数据库名</label>
-                <input type="text" class="form-control" name="db[database]" value="{:config('database.database')}">
+                <input type="text" class="form-control" name="db[database]" value="{$dbcfg['database']}">
                 <div class="invalid-feedback">
                 </div>
             </div>
             <div class="mb-3">
                 <label for="address">用户名</label>
-                <input type="text" class="form-control" name="db[username]" value="{:config('database.username')}">
+                <input type="text" class="form-control" name="db[username]" value="{$dbcfg['username']}">
                 <div class="invalid-feedback">
                 </div>
             </div>
             <div class="mb-3">
                 <label for="address">密码</label>
-                <input type="text" class="form-control" name="db[password]" value="{:config('database.password')}">
+                <input type="text" class="form-control" name="db[password]" value="{$dbcfg['password']}">
                 <div class="invalid-feedback">
                 </div>
             </div>

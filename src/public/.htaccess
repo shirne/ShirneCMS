@@ -18,9 +18,9 @@
 
   RewriteCond   %{REQUEST_FILENAME} -f
   RewriteCond   %{QUERY_STRING} ^(w|h)\=.+
-  RewriteRule   ^(uploads/.+?\.(jpg|png)) index.php/task/util/cropimage?img=$1 [NC,L,QSA]
+  RewriteRule   ^(uploads/.+?\.(jpe?g|png)) index.php/task/util/cropimage?img=$1 [NC,L,QSA]
 
   RewriteCond   %{REQUEST_URI} ^/uploads/
   RewriteCond   %{REQUEST_FILENAME} !-f
-  RewriteRule   ^(uploads/.+?\.(jpg|png)) index.php/task/util/cacheimage?img=$1 [NC,L,QSA]
+  RewriteRule   ^(uploads/.+?\.(jpe?g|png)) index.php/task/util/cacheimage?img=$1 [NC,L,QSA]
 </IfModule>

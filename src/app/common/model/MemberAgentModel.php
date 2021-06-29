@@ -15,7 +15,7 @@ class MemberAgentModel extends CacheableModel
     protected $name = 'member_agent';
     protected $pk="id";
 
-    public function onAfterWrite($userAgent)
+    public static function onAfterWrite($userAgent)
     {
         if($userAgent->is_default) {
             Db::name('MemberAgent')->where('id','NEQ', $userAgent->id)

@@ -1,4 +1,6 @@
-
+INSERT INTO `sa_permission` (`parent_id`,`name`, `url`,`key`, `icon`, `sort_id`, `disable`)
+VALUES
+  (9,'公众号管理','Wechat/index','wechat_index','ion-md-chatboxes',13,0);
 
 DROP TABLE IF EXISTS `sa_wechat`;
 CREATE TABLE `sa_wechat` (
@@ -12,6 +14,7 @@ CREATE TABLE `sa_wechat` (
   `logo` varchar(150) DEFAULT '',
   `qrcode` varchar(150) DEFAULT '',
   `shareimg` varchar(150) DEFAULT '',
+  `share_poster_url` VARCHAR(150) DEFAULT '',
   `account` varchar(100) DEFAULT '',
   `original` varchar(50) DEFAULT '',
   `appid` varchar(50) DEFAULT '',
@@ -56,6 +59,7 @@ CREATE TABLE `sa_wechat_material` (
   `title` VARCHAR(60) NULL,
   `keyword` VARCHAR(50) NULL,
   `description` VARCHAR(200) NULL,
+  `url` VARCHAR(300) NULL,
   `create_time` INT NULL,
   `update_time` INT NULL,
   PRIMARY KEY (`id`)

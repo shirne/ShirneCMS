@@ -27,16 +27,18 @@
                 <th width="50">编号</th>
                 <th>名称</th>
                 <th>调用标识</th>
+                <th>推荐尺寸</th>
                 <th width="180">&nbsp;</th>
             </tr>
         </thead>
         <tbody>
-        <empty name="lists">{:list_empty(4)}</empty>
+        {empty name="lists"}{:list_empty(4)}{/empty}
         {volist name="lists" id="v" }
             <tr>
                 <td>{$v.id}</td>
                 <td>{$v.title}</td>
                 <td>{$v.flag}</td>
+                <td>{$v.width}px &times; {$v.height}px</td>
                 <td class="operations">
                     {if $v['locked']}
                         <a class="btn btn-outline-primary" title="解锁" href="{:url('adv/unlock',array('id'=>$v['id']))}"><i class="ion-md-unlock"></i></a>

@@ -21,19 +21,17 @@ class FeedbackController extends BaseController
     public function index($key="")
     {
         if($this->request->isPost()){
-            return redirect(url('',['key'=>base64_encode($key)]));
+            return redirect(url('',['key'=>base64url_encode($key)]));
         }
-        $key=empty($key)?"":base64_decode($key);
+        $key=empty($key)?"":base64url_decode($key);
         $model=Db::view('Feedback','*')
-            ->view('Member',['username','realname'],'Feedback.member_id=Member.id','LEFT')
+            ->view('Member',['username','realname'=>'member_realname','nickname','avatar'],'Feedback.member_id=Member.id','LEFT')
             ->view('Manager',['username'=>'manager_username','realname'=>'manager_realname'],'Feedback.manager_id=Manager.id','LEFT');
-        $where=array();
+            
         if(!empty($key)){
-            $where['feedback.email'] = array('like',"%$key%");
-            $where['feedback.content'] = array('like',"%$key%");
-            $where['_logic'] = 'or';
+            $model->whereLike('feedback.email|feedback.content|member.nickname|member.username',"%$key%");
         }
-        $lists=$model->where($where)->paginate(15);
+        $lists=$model->order('Feedback.id desc')->paginate(15);
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
         return $this->fetch();
@@ -55,15 +53,15 @@ class FeedbackController extends BaseController
                 $this->error($validate->getError());
             }else{
                 $data['reply_at']=time();
-                $model=FeedbackModel::get($id);
-                if ($model->allowField(true)->save($data)) {
+                $model=FeedbackModel::find($id);
+                if ($model->save($data)) {
                     $this->success(lang('Update success!'), url('feedback/index'));
                 } else {
                     $this->error(lang('Update failed!'));
                 }        
             }
         }
-        $model = FeedbackModel::get($id);
+        $model = FeedbackModel::find($id);
         $this->assign('model',$model);
         $this->assign('member',Db::name('member')->where('id',$model['member_id'])->find());
         return $this->fetch();
@@ -106,7 +104,7 @@ class FeedbackController extends BaseController
     public function delete($id)
     {
         $id = intval($id);
-        $model=FeedbackModel::get($id);
+        $model=FeedbackModel::find($id);
         $result = $model->delete();
         if($result){
             $this->success(lang('Delete success!'), url('feedback/index'));

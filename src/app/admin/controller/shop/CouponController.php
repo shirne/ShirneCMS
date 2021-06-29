@@ -71,7 +71,7 @@ class CouponController extends BaseController
     public function update($id)
     {
         $id = intval($id);
-        $model = ProductCouponModel::get($id);
+        $model = ProductCouponModel::find($id);
 
         if ($this->request->isPost()) {
             $data=$this->request->post();
@@ -151,21 +151,26 @@ class CouponController extends BaseController
      * @param $gid
      * @return mixed
      */
-    public function itemlist($gid,$key=''){
-        $model = Db::name('MemberCoupon');
+    public function itemlist($gid,$key='',$member_id=0){
         $gid=intval($gid);
         $group=Db::name('ProductCoupon')->find($gid);
         if(empty($group)){
             $this->error('优惠券不存在');
         }
-        $model->where('coupon_id',$gid);
+        $model = Db::view('MemberCoupon mc','*')
+            ->view('__MEMBER__ m',['username','realname','nickname','avatar','mobile','level_id'],'m.id = mc.member_id','LEFT')
+            ->where('coupon_id',$gid);
+        if($member_id > 0){
+            $model->where('member_id',$member_id);
+        }
         if(!empty($key)){
             $model->whereLike('title|url',"%$key%");
         }
-        $lists=$model->order('sort ASC,id DESC')->paginate(15);
+        $lists=$model->order('id DESC')->paginate(15);
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
         $this->assign('gid',$gid);
+        $this->assign('levels',getMemberLevels());
         return $this->fetch();
     }
 

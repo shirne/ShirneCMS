@@ -13,13 +13,13 @@
                 </div>
             </div>
             <div class="col col-6">
-                <form action="{:url('wechat.fans/index')}" method="post">
+                <form action="{:url('wechat.fans/index',['wid'=>$wid])}" method="post">
                     <div class="form-row">
                         <div class="form-group col input-group input-group-sm">
                             <div class="input-group-prepend">
                                 <span class="input-group-text">关键字</span>
                             </div>
-                            <input type="text" class="form-control" value="{$keyword}" name="keyword" placeholder="填写会员id或昵称">
+                            <input type="text" class="form-control" value="{$keyword|default=''}" name="keyword" placeholder="填写昵称或Openid">
                             <div class="input-group-append">
                                 <button class="btn btn-outline-secondary" type="submit"><i class="ion-md-search"></i></button>
                             </div>
@@ -57,7 +57,11 @@
                     <td>[{$v.member_id}]{$v.username}</td>
                     <td>{$v.subscribe_time|showdate}<br />{$v.create_time|showdate}</td>
                     <td>
-                        <span class="badge badge-{$levels[$v['level_id']]['style']}">{$levels[$v['level_id']]['level_name']}</span>
+                        {if $v['is_follow']}
+                            <span class="badge badge-success">已关注</span>
+                            {else/}
+                            <span class="badge badge-secondary">未关注</span>
+                        {/if}
                     </td>
                     <td class="operations">
                         {if $support_message}
@@ -87,7 +91,7 @@
                     '发送素材'
                 ],function (type) {
                     if(type==0){
-                        dialog.prompt('请填写发送内容',function (text) {
+                        dialog.prompt({title:'请填写发送内容',is_textarea:true},function (text) {
                             if(text){
                                 sendMessage(openid,'text',text)
                             }

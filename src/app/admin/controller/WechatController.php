@@ -40,9 +40,9 @@ class WechatController extends BaseController
     public function index($key="")
     {
         if($this->request->isPost()){
-            return redirect(url('',['key'=>base64_encode($key)]));
+            return redirect(url('',['key'=>base64url_encode($key)]));
         }
-        $key=empty($key)?"":base64_decode($key);
+        $key=empty($key)?"":base64url_decode($key);
         $model = Db::name('wechat');
         if(!empty($key)){
             $model->whereLike('title|appid',"%$key%");
@@ -107,7 +107,7 @@ class WechatController extends BaseController
                 }
             }
         }
-        $model=array();
+        $model=array('account_type'=>'','type'=>'');
         $this->assign('model',$model);
         $this->assign('id',0);
         return $this->fetch('edit');
@@ -147,11 +147,11 @@ class WechatController extends BaseController
                 }/*else{
                     $data['is_default']=0;
                 }*/
-                $model=WechatModel::get($id);
+                $model=WechatModel::find($id);
                 if(empty($model['hash'])){
                     $data['hash']=$this->createHash();
                 }
-                if ($model->allowField(true)->save($data)) {
+                if ($model->save($data)) {
                     delete_image($this->deleteFiles);
                     if($data['is_default']){
                         Db::name('wechat')->where('type', $data['type'])

@@ -28,12 +28,12 @@ class BrandController extends BaseController
     public function index($key="")
     {
         if($this->request->isPost()){
-            return redirect(url('',['key'=>base64_encode($key)]));
+            return redirect(url('',['key'=>base64url_encode($key)]));
         }
-        $key=empty($key)?"":base64_decode($key);
+        $key=empty($key)?"":base64url_decode($key);
         $model = Db::name('productBrand');
         if(!empty($key)){
-            $model->whereLike('title|url',"%$key%")
+            $model->whereLike('title|url',"%$key%");
         }
         $lists=$model->order('ID DESC')->paginate(15);
         $this->assign('lists',$lists);
@@ -63,7 +63,7 @@ class BrandController extends BaseController
 
                 $cates = $data['cates'];
                 unset($data['cates']);
-                $insertid=Db::name('productBrand')->insert($data,false,true);
+                $insertid=Db::name('productBrand')->insert($data,true);
                 if ($insertid) {
                     if(!empty($cates)){
                         foreach($cates as $cid){
@@ -109,9 +109,9 @@ class BrandController extends BaseController
                 }elseif($this->uploadErrorCode>102){
                     $this->error($this->uploadErrorCode.':'.$this->uploadError);
                 }
-                unset($data['delete_image']);
+                unset($data['delete_logo']);
 
-                $cates = $data['cates'];
+                $cates = empty($data['cates'])?[]:$data['cates'];
                 unset($data['cates']);
                 $data['id']=$id;
                 try{

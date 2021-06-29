@@ -1,13 +1,32 @@
 <?php
 
+use app\common\facade\CategoryFacade;
 use think\facade\Db;
 use think\facade\Request;
 
 define('SESSKEY_ADMIN_ID','adminId');
 define('SESSKEY_ADMIN_NAME','adminname');
 define('SESSKEY_ADMIN_LAST_TIME','adminLTime');
+define('SESSKEY_ADMIN_AUTO_LOGIN','adminlogin');
 
-function setLogin($user){
+function addonurl($action = '', $controller = '', $addon = ''){
+    if(empty($action)){
+        $action = request()->param('action');
+    }
+    if(empty($controller)){
+        $controller = request()->param('controller');
+    }
+    if(empty($addon)){
+        $addon = request()->param('addon');
+    }
+    return url('admin/addon/index',[
+        'addon'=>$addon,
+        'controller'=>$controller,
+        'action'=>$action
+    ]);
+}
+
+function setLogin($user, $logintype = 1){
     $time=time();
     session(SESSKEY_ADMIN_ID,$user['id']);
     session(SESSKEY_ADMIN_LAST_TIME,$time);
@@ -16,7 +35,11 @@ function setLogin($user){
         'login_ip'=>Request::ip(),
         'logintime'=>$time
     ));
-    user_log($user['id'],'login',1,'登录成功' ,'manager');
+    if($logintype == 1){
+        user_log($user['id'],'login',1,'登录成功' ,'manager');
+    }else{
+        user_log($user['id'],'login',1,'自动登录成功' ,'manager');
+    }
 }
 
 function clearLogin($log=true){
@@ -28,6 +51,7 @@ function clearLogin($log=true){
     session(SESSKEY_ADMIN_ID,null);
     session(SESSKEY_ADMIN_NAME,null);
     session(SESSKEY_ADMIN_LAST_TIME,null);
+    cookie(SESSKEY_ADMIN_AUTO_LOGIN,null);
 }
 function filterurl($url){
     //只保留本站url
@@ -44,6 +68,21 @@ function getMenus(){
         $menus=array();
         foreach ($list as $item){
             $menus[$item['parent_id']][]=$item;
+        }
+        if(config('channel_mode')){
+            $menus[2]=[];
+            $topCates = CategoryFacade::getSubCategory(0);
+            foreach($topCates as $cate){
+                $menus[2][]=[
+                    'parent_id'=>2,
+                    'name'=>$cate['title'],
+                    'url'=>'Channel/index?channel_id='.$cate['id'],
+                    'key'=>'channel_index_'.$cate['id'],
+                    'icon'=>'ion-md-apps',
+                    'sort_id'=>$cate['sort'],
+                    'disable'=>0
+                ];
+            }
         }
 
         cache('menus',$menus,1800);
@@ -65,11 +104,11 @@ function check_password($password){
     }
 }
 
-function FU($url='',$vars=''){
+function FU($url='',$vars=[]){
 
     $link=url($url,$vars);
 
-    return str_replace(app()->getModulePath(),'',$link);
+    return str_replace('admin','',$link);
 }
 
 function delete_image($images){

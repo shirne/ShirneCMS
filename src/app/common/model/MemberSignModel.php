@@ -60,7 +60,7 @@ class MemberSignModel extends BaseModel
             $month = date('Y-m',$time);
             $model->whereRaw(' INSTR(signdate, \''.$month.'\') = 1 ');
         }
-        $list = $model->order('signdate ASC')->select();
+        $list = $model->order('signdate ASC')->select()->all();
         return array_column($list, NULL, 'signdate');
     }
 

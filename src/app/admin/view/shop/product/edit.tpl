@@ -11,19 +11,21 @@
                 <div class="form-group">
                     <div class="input-group">
                         <div class="input-group-prepend"><span class="input-group-text">商品名称</span> </div>
-                        <input type="text" name="title" class="form-control" value="{$product.title}" id="product-title" placeholder="输入商品名称">
+                        <input type="text" name="title" class="form-control" value="{$product.title|default=''}" id="product-title" placeholder="输入商品名称">
+                        <div class="input-group-prepend"><span class="input-group-text">单位</span> </div>
+                        <input type="text" name="unit" class="form-control" value="{$product.unit|default=''}" id="product-unit" style="max-width:50px;" placeholder="单位">
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="input-group">
                         <div class="input-group-prepend"><span class="input-group-text">商品特性</span> </div>
-                        <input type="text" name="vice_title" class="form-control" value="{$product.vice_title}" id="product-vice_title" placeholder="简要概括文字">
+                        <input type="text" name="vice_title" class="form-control" value="{$product.vice_title|default=''}" id="product-vice_title" placeholder="简要概括文字">
                     </div>
                 </div>
                 <div class="form-group">
                     <div class="input-group">
                         <div class="input-group-prepend"><span class="input-group-text">商品货号</span> </div>
-                        <input type="text" name="goods_no" class="form-control" value="{$product.goods_no}" id="product-goods_no" placeholder="输入商品货号">
+                        <input type="text" name="goods_no" class="form-control" value="{$product.goods_no|default=''}" id="product-goods_no" placeholder="输入商品货号">
                     </div>
                 </div>
                 <div class="form-group">
@@ -42,7 +44,7 @@
                         <select name="brand_id" id="product-brand" class="form-control">
                             <option value="0" >--无--</option>
                             {foreach name="brands" item="v"}
-                                <option value="{$v.id}" {$product['brand_id'] == $v['id']?'selected="selected"':""}>{$v.title}</option>
+                                <option value="{$v.id}" {$product['brand_id']??0 == $v['id']?'selected="selected"':""}>{$v.title}</option>
                             {/foreach}
                         </select>
                     </div>
@@ -57,7 +59,7 @@
                             <label class="custom-file-label" for="upload_image">选择文件</label>
                         </div>
                     </div>
-                    {if $product['image']}
+                    {if !empty($product['image'])}
                         <figure class="figure">
                             <img src="{$product.image}" class="figure-img img-fluid rounded" alt="image">
                             <figcaption class="figure-caption text-center">{$product.image}</figcaption>
@@ -87,9 +89,9 @@
                             <label style="width: 80px;">商品销量</label>
                             <div class="form-group col">
                                 <div class="input-group input-group-sm">
-                                    <input type="text" class="form-control" readonly value="{$product['sale']}" />
+                                    <input type="text" class="form-control" readonly value="{$product['sale']|default=0}" />
                                     <span class="input-group-middle"><span class="input-group-text">+</span></span>
-                                    <input type="text" class="form-control" name="v_sale" title="虚拟销量" value="{$product['v_sale']}" />
+                                    <input type="text" class="form-control" name="v_sale" title="虚拟销量" value="{$product['v_sale']|default=0}" />
                                 </div>
                             </div>
                         </div>
@@ -110,8 +112,8 @@
                             <div class="form-group col">
                                 <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
                                     {volist name="levels" id="lv" key="k"}
-                                        <label class="btn btn-outline-secondary{$k==$product['level_id']?' active':''}">
-                                            <input type="radio" name="level_id" value="{$k}" autocomplete="off" {$k==$product['level_id']?'checked':''}>{$lv.level_name}
+                                        <label class="btn btn-outline-secondary{if isset($product['level_id']) && $k==$product['level_id']} active{/if}}">
+                                            <input type="radio" name="level_id" value="{$k}" autocomplete="off" {if isset($product['level_id']) && $k==$product['level_id']} checked{/if}}>{$lv.level_name}
                                         </label>
                                     {/volist}
                                 </div>
@@ -126,6 +128,19 @@
                                     </label>
                                     <label class="btn btn-outline-secondary{$product['is_discount']==0?' active':''}">
                                         <input type="radio" name="is_discount" value="0" autocomplete="off" {$product['is_discount']==0?'checked':''}>不支持
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <label style="width: 80px;">可用优惠券</label>
+                            <div class="form-group col">
+                                <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
+                                    <label class="btn btn-outline-secondary{$product['is_coupon']==1?' active':''}">
+                                        <input type="radio" name="is_coupon" value="1" autocomplete="off" {$product['is_coupon']==1?'checked':''}>可用
+                                    </label>
+                                    <label class="btn btn-outline-secondary{$product['is_coupon']==0?' active':''}">
+                                        <input type="radio" name="is_coupon" value="0" autocomplete="off" {$product['is_coupon']==0?'checked':''}>不可用
                                     </label>
                                 </div>
                             </div>
@@ -156,33 +171,33 @@
                         {php}$layercounts = array_column($levels,'commission_layer');$layercount = max($layercounts);{/php}
                         <div class="form-row commission_box cbox2">
                             <div class="form-group mb-0 col">
-                                <for start="0" end="$layercount">
+                                {for start="0" end="$layercount"}
                                     <div class="input-group input-group-sm mb-2 col">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">第 {$i+1} 代</span>
                                         </div>
                                         <input type="text" name="commission_percent[{$i}]"
-                                               value="{$product['commission_percent'][$i]|ignore_array}"
+                                               value="{$product['commission_percent'][$i]|default=[]|ignore_array}"
                                                class="form-control"/>
                                         <div class="input-group-append">
                                             <span class="input-group-text">%</span>
                                         </div>
                                     </div>
-                                </for>
+                                {/for}
                             </div>
                         </div>
                         <div class="form-row commission_box cbox3">
                             <div class="form-group mb-0 col">
-                                <for start="0" end="$layercount">
+                                {for start="0" end="$layercount"}
                                     <div class="input-group input-group-sm mb-2 col">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">第 {$i+1} 代</span>
                                         </div>
                                         <input type="text" name="commission_amount[{$i}]"
-                                               value="{$product['commission_percent'][$i]|ignore_array}"
+                                               value="{$product['commission_percent'][$i]|default=[]|ignore_array}"
                                                class="form-control"/>
                                     </div>
-                                </for>
+                                {/for}
                             </div>
                         </div>
                         <div class="form-row commission_box cbox4">
@@ -194,7 +209,7 @@
                                     </div>
                                     <for start="0" end="$layercount">
                                             <input type="text" name="commission_levels[{$k}][{$i}]"
-                                                   value="{$product['commission_percent'][$k][$i]?:''}"
+                                                   value="{$product['commission_percent'][$k][$i]??''}"
                                                    class="form-control"/>
                                             <div class="input-group-append">
                                                 <span class="input-group-text">/</span>
@@ -210,8 +225,8 @@
                             <div class="form-group mb-1 col">
                                 <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
                                     {volist name="levels" id="lv" key="k"}
-                                        <label class="btn btn-outline-secondary{:fix_in_array($k,$product['levels'])?' active':''}">
-                                            <input type="checkbox" name="levels[]" value="{$k}" autocomplete="off" {:fix_in_array($k,$product['levels'])?'checked':''}>{$lv.level_name}
+                                        <label class="btn btn-outline-secondary{:fix_in_array($k,$product['levels']??[])?' active':''}">
+                                            <input type="checkbox" name="levels[]" value="{$k}" autocomplete="off" {:fix_in_array($k,$product['levels']??[])?'checked':''}>{$lv.level_name}
                                         </label>
                                     {/volist}
                                 </div>
@@ -221,6 +236,29 @@
                             <label style="width: 80px;">&nbsp;</label>
                             <div class="form-group col">
                                 <div class="text-muted">只有选中的会员组可以购买，不选则不限制</div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <label style="width: 80px;">购买数量</label>
+                            <div class="form-group mb-1 col">
+                                <div class="input-group input-group-sm">
+                                    <select name="max_buy_cycle" class="form-control">
+                                        <option value="">总计</option>
+                                        <option value="day">每天</option>
+                                        <option value="week">每周</option>
+                                        <option value="month">每月</option>
+                                        <option value="season">每季</option>
+                                        <option value="year">每年</option>
+                                    </select>
+                                    <span class="input-group-middle"><span class="input-group-text">最多购买</span></span>
+                                    <input type="text" name="max_buy" class="form-control" value="{$product['max_buy']}" placeholder="填写0不限制" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <label style="width: 80px;">&nbsp;</label>
+                            <div class="form-group col">
+                                <div class="text-muted">默认为0不限制购买数量</div>
                             </div>
                         </div>
                         <div class="form-row">
@@ -248,6 +286,7 @@
             <label class="col-2" style="max-width: 80px;">自定义属性</label>
             <div class="form-group col">
                 <div class="prop-groups">
+                    {if !empty($product['prop_data'])}
                     {foreach name="product['prop_data']" item="prop" key="k"}
                         <div class="input-group mb-2" >
                             <input type="text" class="form-control" style="max-width:120px;" name="prop_data[keys][]" value="{$k}"/>
@@ -255,6 +294,7 @@
                             <div class="input-group-append delete"><a href="javascript:" class="btn btn-outline-secondary"><i class="ion-md-trash"></i> </a> </div>
                         </div>
                     {/foreach}
+                    {/if}
                 </div>
                 <a href="javascript:" class="btn btn-outline-dark btn-sm addpropbtn"><i class="ion-md-add"></i> 添加属性</a>
             </div>
@@ -263,6 +303,7 @@
             <label class="col-2" style="max-width: 80px;">商品规格</label>
             <div class="form-group col">
                 <div class="spec-groups">
+                    {if !empty($product['spec_data'])}
                     {foreach name="product['spec_data']" item="spec" key="k"}
                     <div class="d-flex spec-row spec-{$k}" data-specid="{$k}">
                         <input type="hidden" name="spec_data[{$k}][title]" value="{$spec['title']}"/>
@@ -271,6 +312,7 @@
                         <div class="delete"><a href="javascript:" class="btn btn-outline-secondary"><i class="ion-md-trash"></i> </a> </div>
                     </div>
                     {/foreach}
+                    {/if}
                 </div>
                 <a href="javascript:" class="btn btn-outline-dark btn-sm addspecbtn"><i class="ion-md-add"></i> 添加规格</a>
             </div>
@@ -279,9 +321,11 @@
             <table class="table table-hover spec-table">
                 <thead>
                 <tr>
+                    {if !empty($product['spec_data'])}
                     {foreach name="product['spec_data']" item="spec" key="k"}
                         <th class="specth">{$spec['title']}</th>
                     {/foreach}
+                    {/if}
                     <th class="first" scope="col">规格货号&nbsp;<a class="batch-set" title="批量设置" href="javascript:" data-field="goods_no"><i class="ion-md-create"></i> </a> </th>
                     <th scope="col">规格图片</th>
                     <th scope="col">重量(克)&nbsp;<a class="batch-set" title="批量设置" href="javascript:" data-field="weight"><i class="ion-md-create"></i> </a> </th>
@@ -296,16 +340,18 @@
                 <tbody>
                     {foreach name="skus" item="sku" key="k"}
                     <tr data-idx="{$k}">
+                        {if !empty($product['spec_data'])}
                         {foreach name="product['spec_data']" item="spec" key="sk"}
                             <td><input type="hidden" class="spec-val" data-specid="{$sk}" name="skus[{$k}][specs][{$sk}]" value="{$sku['specs'][$sk]}" />{$sku['specs'][$sk]}</td>
                         {/foreach}
+                        {/if}
                         <td>
-                            <input type="hidden" class="field-sku_id" name="skus[{$k}][sku_id]" value="{$sku.sku_id}"/>
-                            <input type="text" class="form-control field-goods_no" name="skus[{$k}][goods_no]" value="{$sku.goods_no}">
+                            <input type="hidden" class="field-sku_id" name="skus[{$k}][sku_id]" value="{$sku.sku_id|default=''}"/>
+                            <input type="text" class="form-control field-goods_no" name="skus[{$k}][goods_no]" value="{$sku.goods_no|default=''}">
                         </td>
-                        <td><input type="hidden" class="field-sku_id" name="skus[{$k}][image]" value="{$sku.image}"/><img class="imgupload rounded" src="{$sku.image|default='/static/images/noimage.png'}" /> </td>
-                        <td><input type="text" class="form-control field-weight" name="skus[{$k}][weight]" value="{$sku.weight}"> </td>
-                        <td><input type="text" class="form-control field-price" name="skus[{$k}][price]" value="{$sku.price}"> </td>
+                        <td><input type="hidden" class="field-sku_id" name="skus[{$k}][image]" value="{$sku.image|default=''}"/><img class="imgupload rounded" src="{$sku.image|default='/static/images/noimage.png'}" /> </td>
+                        <td><input type="text" class="form-control field-weight" name="skus[{$k}][weight]" value="{$sku.weight|default=''}"> </td>
+                        <td><input type="text" class="form-control field-price" name="skus[{$k}][price]" value="{$sku.price|default=''}"> </td>
                         <td>
                             {if !empty($price_levels)}
                                 {foreach name="price_levels" id="plv"}
@@ -315,9 +361,9 @@
                                 -
                             {/if}
                         </td>
-                        <td><input type="text" class="form-control field-market_price" name="skus[{$k}][market_price]" value="{$sku.market_price}"> </td>
-                        <td><input type="text" class="form-control field-cost_price" name="skus[{$k}][cost_price]" value="{$sku.cost_price}"> </td>
-                        <td><input type="text" class="form-control field-storage" name="skus[{$k}][storage]" value="{$sku.storage}"> </td>
+                        <td><input type="text" class="form-control field-market_price" name="skus[{$k}][market_price]" value="{$sku.market_price|default=''}"> </td>
+                        <td><input type="text" class="form-control field-cost_price" name="skus[{$k}][cost_price]" value="{$sku.cost_price|default=''}"> </td>
+                        <td><input type="text" class="form-control field-storage" name="skus[{$k}][storage]" value="{$sku.storage|default=''}"> </td>
                         <td><a href="javascript:" class="btn btn-outline-secondary delete-btn"><i class="ion-md-trash"></i> </a> </td>
                     </tr>
                     {/foreach}
@@ -327,10 +373,10 @@
 
         <div class="form-group">
             <label for="product-content">商品介绍</label>
-            <script id="product-content" name="content" type="text/plain">{$product.content|raw}</script>
+            <script id="product-content" name="content" type="text/plain">{$product.content|default=''|raw}</script>
         </div>
         <div class="form-group submit-btn">
-            <input type="hidden" name="id" value="{$product.id}">
+            <input type="hidden" name="id" value="{$product.id|default=''}">
             <button type="submit" class="btn btn-primary">{$id>0?'保存':'添加'}</button>
         </div>
     </form>

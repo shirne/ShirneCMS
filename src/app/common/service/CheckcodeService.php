@@ -1,19 +1,20 @@
 <?php
 
 namespace app\common\service;
+
 use extcore\traits\Email;
+use shirne\common\ValidateHelper;
+use shirne\third\Aliyun;
 use think\facade\Db;
-use shirne\third\UmsHttp;
 
 /**
  * Class CheckcodeService
  * @package app\common\service
  */
-class CheckcodeService
+class CheckcodeService extends BaseService
 {
     use Email;
 
-    protected $errMsg;
     protected $limits=[
         'email'=>[],
         'mobile'=>[
@@ -23,11 +24,7 @@ class CheckcodeService
         ]
     ];
 
-    public function getError(){
-        return $this->errMsg;
-    }
-
-    public function sendCode($type,$sendto){
+    public function sendCode($type, $sendto, $codetype='verify'){
         $ip=request()->ip();
         $limit=isset($this->limits[$type])?$this->limits[$type]:[];
         if(!empty($limit)) {
@@ -41,7 +38,7 @@ class CheckcodeService
                         ->update(['create_time' => time(), 'count' => 0]);
                 } else {
                     if ($ipcount['count'] >= $limit['ip_limit']) {
-                        $this->errMsg='验证码发送过于频繁';
+                        $this->setError('验证码发送过于频繁');
                         return false;
                     }
                 }
@@ -56,7 +53,7 @@ class CheckcodeService
                         ->update(['create_time' => time(), 'count' => 0]);
                 } else {
                     if ($phonecount['count'] >= $limit['item_limit']) {
-                        $this->errMsg='验证码发送过于频繁';
+                        $this->setError('验证码发送过于频繁');
                         return false;
                     }
                 }
@@ -67,7 +64,7 @@ class CheckcodeService
         $sec_limit=isset($limit['second_limit'])?$limit['second_limit']:0;
         switch ($type){
             case 'mobile':
-                $result=$this->sendMobileCode($sendto,$sec_limit);
+                $result=$this->sendMobileCode($sendto,$sec_limit, $codetype);
                 break;
             case 'email':
                 $result=$this->sendEmailCode($sendto,$sec_limit);
@@ -108,7 +105,11 @@ class CheckcodeService
         return false;
     }
 
-    protected function sendMobileCode($mobile,$timeLimit){
+    public function sendMobileCode($mobile,$timeLimit, $tpltype){
+        if(! ValidateHelper::isMobile($mobile)){
+            $this->setError('手机号码格式错误');
+            return false;
+        }
         $exist=Db::name('Checkcode')->where('type',0)
             ->where('sendto',$mobile)
             ->where('is_check',0)->find();
@@ -126,21 +127,40 @@ class CheckcodeService
 
             //验证发送时间间隔
             if(time()-$exist['create_time']<$timeLimit){
-                $this->errMsg='验证码发送过于频繁';
+                $this->setError('验证码发送过于频繁');
                 return false;
             }
 
             Db::name('Checkcode')->where('type',0)->where('sendto',$mobile)
                 ->update(['code'=>$newcode,'create_time'=>time()]);
         }
-        @session_write_close();
-        $content="您本次验证码为{$newcode}仅用于会员注册。请在10分钟内使用！";
-        $sms=new UmsHttp(getSettings());
-        $sended=$sms->send($mobile,$content);
+
+        $config = getSettings();
+        if(isset($config['aliyun_dysms_'.$tpltype])){
+            $tplCode = $config['aliyun_dysms_'.$tpltype];
+        }
+        if(empty($tplCode) && $tpltype != 'verify'){
+            $tplCode = $config['aliyun_dysms_verify'];
+        }
+        if(empty($tplCode)){
+            $this->setError('模板消息未设置');
+            return false;
+        }
+        
+        $aliyun = new Aliyun($config);
+        $sended = $aliyun->sendSms($mobile, $newcode, $tplCode, $config['aliyun_dysms_sign']);
+        if(!$sended){
+            $this->setError($aliyun->get_error_msg());
+        }
+
         return $sended;
     }
 
-    protected function sendEmailCode($email,$timeLimit){
+    public function sendEmailCode($email,$timeLimit){
+        if(! ValidateHelper::isEmail($email)){
+            $this->setError('邮箱地址格式错误');
+            return false;
+        }
         $exist=Db::name('Checkcode')->where('type',1)
             ->where('sendto',$email)
             ->where('is_check',0)->find();
@@ -158,7 +178,7 @@ class CheckcodeService
 
             //验证发送时间间隔
             if(time()-$exist['create_time']<$timeLimit){
-                $this->errMsg='验证码发送过于频繁';
+                $this->setError('验证码发送过于频繁');
                 return false;
             }
 
@@ -176,7 +196,7 @@ class CheckcodeService
     public function verifyCode($sendto,$code){
         $crow = Db::name('checkcode')
             ->where('sendto' , $sendto)
-            ->where('checkcode', $code)
+            ->where('code', $code)
             ->where( 'is_check', 0)
             ->order('create_time DESC')->find();
         $time = time();

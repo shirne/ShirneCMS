@@ -6,6 +6,7 @@ namespace app\admin\controller;
 use app\admin\validate\AdvGroupValidate;
 use app\admin\validate\AdvItemValidate;
 use app\common\model\AdvGroupModel;
+use app\common\model\AdvItemModel;
 use think\facade\Db;
 use think\Exception;
 
@@ -81,7 +82,7 @@ class AdvController extends BaseController
     public function update($id)
     {
         $id = intval($id);
-        $model=AdvGroupModel::get($id);
+        $model=AdvGroupModel::find($id);
         if(empty($model) ){
             $this->error('广告组不存在');
         }
@@ -96,7 +97,7 @@ class AdvController extends BaseController
             }else{
                 if(!isset($data['ext_set']))$data['ext_set']=[];
                 try{
-                    $model->allowField(true)->save($data);
+                    $model->save($data);
 
                 }catch(\Exception $err){
                     $this->error(lang('Update failed: %s',[$err->getMessage()]));
@@ -111,7 +112,7 @@ class AdvController extends BaseController
     }
     
     public function lock($id){
-        $booth=AdvGroupModel::get(intval($id));
+        $booth=AdvGroupModel::find(intval($id));
         if(empty($booth)){
             $this->error('广告位不存在');
         }
@@ -120,7 +121,7 @@ class AdvController extends BaseController
     }
     
     public function unlock($id){
-        $booth=AdvGroupModel::get(intval($id));
+        $booth=AdvGroupModel::find(intval($id));
         if(empty($booth)){
             $this->error('广告位不存在');
         }
@@ -184,7 +185,7 @@ class AdvController extends BaseController
      * @throws \Throwable
      */
     public function itemadd($gid){
-        $group = AdvGroupModel::get($gid);
+        $group = AdvGroupModel::find($gid);
         if(empty($group)){
             $this->error('广告组不存在');
         }
@@ -196,21 +197,31 @@ class AdvController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             }else{
-                $uploaded=$this->upload('adv','upload_image');
+                $uploaded=$this->upload('banner','upload_image');
                 if(!empty($uploaded)){
                     $data['image']=$uploaded['url'];
                 }elseif($this->uploadErrorCode>102){
                     $this->error($this->uploadErrorCode.':'.$this->uploadError);
                 }
-                $model = Db::name("AdvItem");
+                $uploaded=$this->uploadFile('banner','upload_video',2);
+                if(!empty($uploaded)){
+                    $data['video']=$uploaded['url'];
+                }elseif($this->uploadErrorCode>102){
+                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
+                }
+                
                 $url=url('adv/itemlist',array('gid'=>$gid));
                 $data['start_date']=empty($data['start_date'])?0:strtotime($data['start_date']);
                 $data['end_date']=empty($data['end_date'])?0:strtotime($data['end_date']);
                 if(isset($data['ext'])) {
-                    $data['ext_data'] = json_encode($data['ext'], JSON_UNESCAPED_UNICODE);
+                    $data['ext_data'] = $data['ext'];
                     unset($data['ext']);
                 }
-                if ($model->insert($data)) {
+                if(isset($data['elements'])){
+                    $data['elements'] = $this->filterElements($data['elements']);
+                }
+                $model = AdvItemModel::create($data);
+                if ($model['id']) {
                     $this->success(lang('Add success!'),$url);
                 } else {
                     delete_image($data['image']);
@@ -236,7 +247,7 @@ class AdvController extends BaseController
             $this->error('广告项不存在');
         }
         $model = AdvGroupModel::fixAdItem($model);
-        $group = AdvGroupModel::get($model['group_id']);
+        $group = AdvGroupModel::find($model['group_id']);
         if(empty($group)){
             $this->error('广告组不存在');
         }
@@ -248,10 +259,10 @@ class AdvController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             }else{
-                $model = Db::name("AdvItem");
+                $model = AdvItemModel::where('id',$id)->find();
                 $url=url('adv/itemlist',array('gid'=>$data['group_id']));
                 $delete_images=[];
-                $uploaded=$this->upload('adv','upload_image');
+                $uploaded=$this->upload('banner','upload_image');
                 if(!empty($uploaded)){
                     $data['image']=$uploaded['url'];
                     $delete_images[]=$data['delete_image'];
@@ -259,14 +270,25 @@ class AdvController extends BaseController
                     $this->error($this->uploadErrorCode.':'.$this->uploadError);
                 }
                 unset($data['delete_image']);
+
+                $uploaded=$this->uploadFile('banner','upload_video',2);
+                if(!empty($uploaded)){
+                    $data['video']=$uploaded['url'];
+                }elseif($this->uploadErrorCode>102){
+                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
+                }
+                
                 $data['start_date']=empty($data['start_date'])?0:strtotime($data['start_date']);
                 $data['end_date']=empty($data['end_date'])?0:strtotime($data['end_date']);
                 if(isset($data['ext'])) {
-                    $data['ext_data'] = json_encode($data['ext'], JSON_UNESCAPED_UNICODE);
+                    $data['ext_data'] = $data['ext'];
                     unset($data['ext']);
                 }
-                $data['id']=$id;
-                if ($model->update($data)) {
+                if(isset($data['elements'])){
+                    $data['elements'] = $this->filterElements($data['elements']);
+                }
+                
+                if ($model->save($data)) {
                     delete_image($delete_images);
                     $this->success(lang('Update success!'), $url);
                 } else {
@@ -280,8 +302,29 @@ class AdvController extends BaseController
         $this->assign('model',$model);
         $this->assign('id',$id);
         return $this->fetch();
-
     }
+
+    private function filterElements($elements){
+        $fields=[];
+        foreach($elements as $k=>$item){
+            if($item['type']=='image'){
+                $fields[]="elements_{$k}_image";
+            }
+        }
+        
+        $uploaded = $this->batchUpload('banner',$fields);
+        if(!empty($uploaded)){
+            foreach($uploaded as $k=>$file){
+                $newkey = explode('_',$k.'_');
+                $newkey = $newkey[1];
+                $elements[$newkey]['image']=$file;
+            }
+        }elseif($this->uploadErrorCode>102){
+            $this->error($this->uploadErrorCode.':'.$this->uploadError);
+        }
+        return array_values($elements);
+    }
+
     /**
      * 删除广告
      */

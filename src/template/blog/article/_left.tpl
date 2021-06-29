@@ -1,10 +1,10 @@
 <div class="col-lg-3 sidecolumn">
     {php}
-        $catelist=$categories[$topCategory['id']];
+        $catelist=$categories[$topCategory['id']??0];
     {/php}
     <div class="card">
         <div class="card-header">
-            {$topCategory.title}
+            {$topCategory.title|default=''}
         </div>
         <div class="card-body">
             <div class="list-group">

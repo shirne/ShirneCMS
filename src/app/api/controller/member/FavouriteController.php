@@ -7,13 +7,28 @@ use app\api\controller\AuthedController;
 use app\common\model\MemberFavouriteModel;
 use think\facade\Db;
 
+/**
+ * 会员收藏管理
+ * @package app\api\controller\member
+ */
 class FavouriteController extends AuthedController
 {
+    /**
+     * 获取收藏列表
+     * @param mixed $type 
+     * @return void 
+     */
     public function index($type){
         $model=new MemberFavouriteModel();
         $this->response($model->getFavourites($type));
     }
 
+    /**
+     * 添加到收藏
+     * @param mixed $type 
+     * @param mixed $id 
+     * @return void 
+     */
     public function add($type,$id){
         $model=new MemberFavouriteModel();
         if($model->addFavourite($this->user['id'],$type,$id)){
@@ -23,6 +38,12 @@ class FavouriteController extends AuthedController
         }
     }
 
+    /**
+     * 移出收藏
+     * @param mixed $type 
+     * @param mixed $ids 
+     * @return void 
+     */
     public function remove($type,$ids){
         $model=Db::name('memberFavourite')
         ->where('member_id',$this->user['id']);

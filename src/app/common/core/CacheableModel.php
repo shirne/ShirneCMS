@@ -28,6 +28,9 @@ class CacheableModel extends BaseModel
             if(!$force)$this->cacheData=cache($this->cacheKey);
             if(empty($this->cacheData)){
                 $this->cacheData = $this->get_cache_data();
+                if($this->cacheData instanceof \think\Collection){
+                    $this->cacheData = $this->cacheData->all();
+                }
                 cache($this->cacheKey,$this->cacheData);
             }
         }

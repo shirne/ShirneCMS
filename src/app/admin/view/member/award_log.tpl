@@ -9,7 +9,7 @@
                 <form action="{:url('member/award_log',searchKey('fromdate,todate',''))}" class="form-inline" method="post">
                     <div class="btn-group">
                         <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {$fields[$field]} <span class="caret"></span>
+                            {$allstatus[$status]|default='全部'} <span class="caret"></span>
                         </button>
                         <div class="dropdown-menu">
                             {foreach name="allstatus" item="t" key="k"}
@@ -75,10 +75,10 @@
                         <th>{$f}</th>
                         {foreach name="types" item="t" key="tk"}
                             {if $tk NEQ 'all'}
-                            <td>{$statics[$fk][$tk]|showmoney}</td>
+                            <td>{$statics[$fk][$tk]|default=0|showmoney}</td>
                             {/if}
                         {/foreach}
-                        <td>{$statics[$fk]['sum']|showmoney}</td>
+                        <td>{$statics[$fk]['sum']|default=0|showmoney}</td>
                     </tr>
                     {/if}
                 {/foreach}
@@ -103,7 +103,7 @@
                     <td>{$v.id}</td>
                     <td>
                         {if $v['member_id']}
-                            <a href="{:url('money_log',array('id'=>$v['member_id'],'fromdate'=>$fromdate,'todate'=>$todate,'from_id'=>$from_id,'type'=>$type))}" class="media">
+                            <a href="{:url('award_log',array('id'=>$v['member_id'],'fromdate'=>$fromdate,'todate'=>$todate,'from_id'=>$from_id,'type'=>$type))}" class="media">
                                 {if !empty($v['avatar'])}
                                     <img src="{$v.avatar}" class="mr-2 rounded" width="30"/>
                                 {/if}
@@ -127,7 +127,7 @@
                     <td class="{$v['amount']>0?'text-success':'text-danger'}">{$v.status|award_status|raw}&nbsp;{$v.amount|showmoney}</td>
                     <td>
                         {if $v['from_member_id']}
-                            <a href="{:url('money_log',array('id'=>$id,'fromdate'=>$fromdate,'todate'=>$todate,'from_id'=>$v['from_member_id'],'type'=>$type))}" class="media">
+                            <a href="{:url('award_log',array('id'=>$id,'fromdate'=>$fromdate,'todate'=>$todate,'from_id'=>$v['from_member_id'],'type'=>$type))}" class="media">
                                 {if !empty($v['from_avatar'])}
                                     <img src="{$v.from_avatar}" class="mr-2 rounded" width="30"/>
                                 {/if}

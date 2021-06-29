@@ -15,6 +15,25 @@ class AdvGroupModel extends BaseModel
     protected $name = 'adv_group';
     protected $type = ['ext_set'=>'array'];
     
+    public static function getAdPosition($flag,$limit=10)
+    {
+        $model=self::get(['flag'=>$flag]);
+        if(empty($model)){
+            return [];
+        }
+        $time=strtotime(date('Y-m-d'));
+        $lists =  Db::name('AdvItem')
+            ->where('group_id',$model->id)
+            ->where('status',1)
+            ->where('start_date',['=',0],['<=',$time],'OR')
+            ->where('end_date',['=',0],['>=',$time],'OR')
+            ->order('sort ASC, id DESC')
+            ->limit($limit)
+            ->select();
+        $model['lists'] = self::fixAdItem($lists, true);
+        return $model;
+    }
+
     public static function getAdList($flag,$limit=10)
     {
         $model=self::where(['flag'=>$flag])->find();
@@ -25,8 +44,14 @@ class AdvGroupModel extends BaseModel
         $lists =  Db::name('AdvItem')
             ->where('group_id',$model->id)
             ->where('status',1)
-            ->where('start_date',['=',0],['<=',$time],'OR')
-            ->where('end_date',['=',0],['>=',$time],'OR')
+            ->where(function($query) use ($time){
+                $query->where('start_date', 0)
+                    ->whereOr('start_date', '<=', $time);
+            })
+            ->where(function($query) use ($time){
+                $query->where('end_date', 0)
+                    ->whereOr('end_date', '>=', $time);
+            })
             ->order('sort ASC, id DESC')
             ->limit($limit)
             ->select();
@@ -58,6 +83,7 @@ class AdvGroupModel extends BaseModel
             return $item;
         }
         $item['ext'] = force_json_decode($item['ext_data']);
+        $item['elements'] = force_json_decode($item['elements']);
         return $item;
     }
 }

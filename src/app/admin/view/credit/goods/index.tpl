@@ -60,7 +60,7 @@
 			</tr>
 		</thead>
 		<tbody>
-		<empty name="lists">{:list_empty(10)}</empty>
+		{empty name="lists"}{:list_empty(10)}{/empty}
 			{foreach name="lists" item="v" }
 				<tr>
 					<td><input type="checkbox" name="id" value="{$v.id}" /></td>

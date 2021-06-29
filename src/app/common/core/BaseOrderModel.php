@@ -67,13 +67,14 @@ class BaseOrderModel extends BaseModel
         $maps=[
             'order_no'=>['单号','订单号','订单编号','订单号码'],
             'amount'=>['待付金额','订单金额','订单总价'],
-            'goods'=>['商品详情','物品名称','商品名称','物品详情'],
+            'goods'=>['商品详情','物品名称','商品名','商品名称','物品详情','订单详情'],
             'pay_notice'=>['支付提醒'],
-            'status'=>['订单状态'],
+            'status'=>['订单状态','状态'],
             'create_date'=>['下单时间','购买时间'],
-            'express'=>['快递公司'],
+            'express'=>['快递公司','物流公司'],
+            'express_no'=>['快递单号'],
             'deliver_date'=>['发货时间'],
-            'confirm_date'=>['确认时间'],
+            'confirm_date'=>['确认时间','完成时间'],
             'reason'=>['取消原因']
         ];
         if(!is_array($keywords)){
@@ -90,6 +91,10 @@ class BaseOrderModel extends BaseModel
         return $keywords;
     }
 
+    public function onPayResult($paytype, $paytime, $payamount){
+        return false;
+    }
+
     /**
      * @param bool $force
      * @return array
@@ -98,14 +103,18 @@ class BaseOrderModel extends BaseModel
     {
     
         $data=[];
+        $expsetting=[
+            'appid' => getSetting('kd_userid'),
+            'appsecret' => getSetting('kd_apikey')
+        ];
+        if(empty($expsetting['appid']) || empty($expsetting['appsecret'])){
+            return $data;
+        }
         if(!empty($this->express_no) && !empty($this->express_code)) {
             $cacheData = Db::name('expressCache')->where('express_code',$this->express_code)
                 ->where('express_no',$this->express_no)->find();
             if(empty($cacheData) || $force || $cacheData['update_time']<time()-3600) {
-                $express = new KdExpress([
-                    'appid' => getSetting('kd_userid'),
-                    'appsecret' => getSetting('kd_apikey')
-                ]);
+                $express = new KdExpress($expsetting);
                 $data = $express->QueryExpressTraces($this->express_code, $this->express_no);
                 if(!empty($data)) {
                     $newData = ['data' => json_encode($data, JSON_UNESCAPED_UNICODE)];

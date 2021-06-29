@@ -5,6 +5,8 @@ namespace app\api\controller;
 use think\App;
 use app\api\facade\MemberTokenFacade;
 use app\api\middleware\AccessMiddleware;
+use InvalidArgumentException;
+use shirne\common\ValidateHelper;
 use think\facade\Db;
 
 
@@ -42,7 +44,7 @@ class BaseController
     {
         $this->app     = $app;
         $this->request = $this->app->request;
-
+       
         // 控制器初始化
         $this->initialize();
     }
@@ -54,19 +56,13 @@ class BaseController
      * @throws \think\exception\DbException
      */
     public function initialize(){
-        parent::initialize();
         $this->config=getSettings();
-
-        /**
-         * @deprecated DO NOT use this property
-         */
-        $this->input=$this->request->put();
-
         $this->checkLogin();
     }
     
     
     /**
+     * 获取当前登录用户的级别信息
      * @return array
      */
     protected function userLevel(){
@@ -101,6 +97,39 @@ class BaseController
             $this->error('操作过于频繁');
         }
     }
+
+    /**
+     * 手机验证限制
+     * @param mixed $mobile 
+     * @return bool 
+     * @throws InvalidArgumentException 
+     */
+    protected function mobile_verify_limit($mobile){
+        if(!ValidateHelper::isMobile($mobile)){
+            $this->error('手机号码格式错误');
+            return false;
+        }
+        $sended = cache('mobile_limit_'.$mobile);
+        if($sended){
+            return false;
+        }
+        $count = cache('mobile_limit_hour_'.$mobile);
+        if($count >= 5){
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 增加验证次数
+     * @param mixed $mobile 
+     * @return void 
+     */
+    protected function mobile_verify_add($mobile){
+        cache('mobile_limit_'.$mobile,1,['expire'=>50]);
+        $counted = max(0,cache('mobile_limit_hour_'.$mobile));
+        cache('mobile_limit_hour_'.$mobile,$counted+1,['expire'=>60*60]);
+    }
     
     /**
      * 检查登录状态
@@ -118,6 +147,11 @@ class BaseController
         }
     }
     
+    /**
+     * 空操作输出
+     * @return void 
+     * @throws InvalidArgumentException 
+     */
     public function _empty(){
         $static_file=DOC_ROOT.DIRECTORY_SEPARATOR.$this->request->action(true);
         if(file_exists($static_file)){
@@ -126,12 +160,31 @@ class BaseController
         $this->error('接口不存在');
     }
 
+    /**
+     * 输出API错误信息
+     * @param string $msg 
+     * @param string|int $code 
+     * @param mixed $data 
+     * @param int $wait 
+     * @param array $header 
+     * @return void 
+     */
     protected function error($msg = '', $code = 0, $data = '', $wait = 3, array $header = [])
     {
         $this->response($data,$code,$msg)->send();
         exit;
     }
 
+    /**
+     * 输出API成功数据
+     * @param mixed $data 
+     * @param string|int $code 
+     * @param mixed $msg 
+     * @param int $wait 
+     * @param array $header 
+     * @return void 
+     * @throws InvalidArgumentException 
+     */
     protected function success($data = '', $code = 1, $msg = '', $wait = 3, array $header = [])
     {
         if(empty($msg) && is_string($data)){

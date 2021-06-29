@@ -22,24 +22,52 @@ use think\facade\Db;
  */
 class OrderController extends AuthedController
 {
-    public function prepare(){
+    /**
+     * 初始化订单信息
+     * @param string $from 下单来源，购物车或直接下单
+     * @param array $goods 需要购买的商品列表，每个item包含sku_id 和count,count默认1
+     * @return Json 
+     */
+    public function prepare($from='quick'){
         $order_skus=$this->request->param('products');
         $address=$this->request->param('address');
         $skuids=array_column($order_skus,'sku_id');
-        $products=Db::view('ProductSku','*')
-            ->view('Product',['title'=>'product_title','image'=>'product_image','levels','is_discount','postage_id'],'ProductSku.product_id=Product.id','LEFT')
-            ->whereIn('ProductSku.sku_id',idArr($skuids))
-            ->select();
-        
+        if($from == 'quick'){
+            $skucounts = array_column($order_skus,'count','sku_id');
+            $products = ProductModel::getForOrder($skucounts);
+        }else{
+            $products=MemberCartFacade::getCart($this->user['id'],$skuids);
+        }
+        foreach($products as $product){
+            if(!empty($product['levels'])){
+                if (!in_array($this->user['level_id'], $product['levels'])) {
+                    $this->error('您当前会员组不允许购买商品[' . $product['product_title'] . ']');
+                }
+            }
+        }
         $result=['products'=>$products];
         if(empty($address)){
             $address = Db::name('MemberAddress')->where('member_id',$this->user['id'])->order('is_default DESC')->find();
+            $result['address']=$address;
+        }elseif(!is_array($address)){
+            $address = Db::name('MemberAddress')->where('member_id',$this->user['id'])->where('address_id',$address)->order('is_default DESC')->find();
             $result['address']=$address;
         }
         $result['express'] = PostageModel::calcolate($products,$address);
         return $this->response($result);
 
     }
+
+    /**
+     * 确认下单
+     * @param string $from 下单来源，购物车或直接下单，购物车下单会移除下单成功的商品
+     * @param array $goods 商品信息，每个包含sku_id和count count默认为1
+     * @param int $address_id 收货地址id
+     * @param string $pay_type 支付类型
+     * @param string $remark 订单备注
+     * @param string $form_id 小程序中下单可获取到form_id 用以发送模板消息
+     * @return mixed 
+     */
     public function confirm($from='quick'){
         $this->check_submit_rate();
         
@@ -64,7 +92,7 @@ class OrderController extends AuthedController
         //todo 邮费模板
 
 
-        $data=$this->request->only('address_id,pay_type,remark,form_id,total_price,total_postage','put');
+        $data=$this->request->only(['address_id','pay_type','remark','form_id','total_price','total_postage'],'put');
 
         $validate=new OrderValidate();
         if(!$validate->check($data)){
@@ -129,7 +157,7 @@ class OrderController extends AuthedController
 
     public function wechatpay($order_id, $trade_type='JSAPI', $payid=0){
         $trade_type = strtoupper($trade_type);
-        if($payid)$wechat=WechatModel::where('id|hash',$payid)->where('type','wechat')->find();
+        if($payid)$wechat=WechatModel::where(is_numeric($payid)?'id':'hash',$payid)->where('type','wechat')->find();
         if($trade_type == 'JSAPI' ) {
             if(empty($this->wechatUser) && !empty($wechat)){
                 $openid = $this->request->param('openid');
@@ -149,7 +177,7 @@ class OrderController extends AuthedController
             }
         }
         if(empty($wechat) && $payid){
-            $wechat=WechatModel::where('id|hash',$payid)
+            $wechat=WechatModel::where(is_numeric($payid)?'id':'hash', $payid)
                 ->where('type','wechat')->find();
         }
         if(empty($wechat)){
@@ -215,7 +243,7 @@ class OrderController extends AuthedController
         if(!compare_secpassword($this->user,$secpassword)){
             $this->error('安全密码错误');
         }
-        $order=OrderModel::get($order_id);
+        $order=OrderModel::find($order_id);
         if(empty($order)|| $order['status']!=0){
             $this->error('订单已支付或不存在!',0,['order_id'=>$order_id]);
         }

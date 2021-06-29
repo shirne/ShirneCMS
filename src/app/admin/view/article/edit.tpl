@@ -8,8 +8,8 @@
     <form method="post" class="page-form" action="" enctype="multipart/form-data">
         <div class="form-row">
             <div class="col form-group">
-                <label for="article-title">文章标题</label>
-                <input type="text" name="title" class="form-control" value="{$article.title|default=''}" id="article-title" placeholder="输入文章标题">
+                <label for="title">文章标题</label>
+                <input type="text" name="title" class="form-control" value="{$article.title|default=''}" placeholder="输入文章标题">
             </div>
             <div class="col form-group">
                 <label for="vice_title">副标题</label>
@@ -18,8 +18,8 @@
         </div>
         <div class="form-row">
             <div class="col form-group">
-                <label for="article-cate">文章分类</label>
-                <select name="cate_id" id="article-cate" class="form-control">
+                <label for="cate_id">文章分类</label>
+                <select name="cate_id" class="form-control">
                     {foreach name="category" item="v"}
                         <option value="{$v.id}" {$article['cate_id'] == $v['id']?'selected="selected"':""}>{$v.html} {$v.title}</option>
                     {/foreach}
@@ -29,6 +29,10 @@
                 <label for="create_time">发布时间</label>
                 <input type="text" name="create_time" class="form-control datepicker" data-format="YYYY-MM-DD hh:mm:ss" value="{$article.create_time|default=0|showdate}" placeholder="默认取当前系统时间" >
             </div>
+        </div>
+        <div class="form-group">
+            <label for="source">文章来源</label>
+            <input type="text" name="source" class="form-control" value="{$article.source}" >
         </div>
         <div class="form-group">
             <label for="image">封面图</label>
@@ -121,11 +125,7 @@
     });
     jQuery(function ($) {
         $('.addpropbtn').click(function (e) {
-            $('.prop-groups').append('<div class="input-group mb-2" >\n' +
-                '                            <input type="text" class="form-control" style="max-width:120px;" name="prop_data[keys][]" />\n' +
-                '                            <input type="text" class="form-control" name="prop_data[values][]" />\n' +
-                '                            <div class="input-group-append delete"><a href="javascript:" class="btn btn-outline-secondary"><i class="ion-md-trash"></i> </a> </div>\n' +
-                '                        </div>');
+            addProp();
         });
         $('.prop-groups').on('click','.delete .btn',function (e) {
             var self=$(this);
@@ -133,6 +133,59 @@
                 self.parents('.input-group').remove();
             })
         });
+        function addProp(key,value) {
+            $('.prop-groups').append('<div class="input-group mb-2" >\n' +
+                '                            <input type="text" class="form-control" style="max-width:120px;" name="prop_data[keys][]" value="'+(key?key:'')+'" />\n' +
+                '                            <input type="text" class="form-control" name="prop_data[values][]" value="'+(value?value:'')+'" />\n' +
+                '                            <div class="input-group-append delete"><a href="javascript:" class="btn btn-outline-secondary"><i class="ion-md-trash"></i> </a> </div>\n' +
+                '                        </div>');
+        }
+        function mergeArray(arr, newArr){
+            if(newArr && newArr.length>0){
+                for(var i=0;i<newArr.length;i++){
+                    if(arr.indexOf(newArr[i]) < 0){
+                        arr.push(newArr[i])
+                    }
+                }
+            }
+            return arr;
+        }
+        function changeCategory(select,force) {
+            var option=$(select).find('option:selected');
+            var curProps=[];
+            var props=$(option).data('props') || [];
+            var pid = $(option).data('pid');
+            while(pid > 0){
+                var parentnode=$(select).find('option[value='+pid+']');
+                if(!parentnode || !parentnode.length)break;
+                props = mergeArray(props, $(parentnode).data('props'));
+                pid = $(parentnode).data('pid');
+            }
+            $('.prop-groups .input-group').each(function () {
+                var input=$(this).find('input');
+                var prop=input.val().trim();
+                if(input.eq(1).val().trim()===''){
+                    if(props.indexOf(prop)<0){
+                        $(this).remove();
+                    }else{
+                        curProps.push(prop);
+                    }
+                }else {
+                    curProps.push(prop);
+                }
+            });
+            for(var i=0;i<props.length;i++){
+                if(curProps.indexOf(props[i])<0){
+                    addProp(props[i]);
+                }
+            }
+        }
+        $('#article-cate').change(function (e) {
+            changeCategory(this);
+        });
+        if('add'==="{$article['id']?'':'add'}"){
+            changeCategory($('#article-cate'),true);
+        }
     });
 </script>
 {/block}

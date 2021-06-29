@@ -4,13 +4,19 @@ namespace app\api\controller;
 
 use app\common\model\AdvGroupModel;
 use app\common\model\BoothModel;
+use app\common\model\FeedbackModel;
 use app\common\model\LinksModel;
 use app\common\model\MemberAgentModel;
 use app\common\model\MemberSignModel;
 use app\common\model\NoticeModel;
+use Exception;
+use InvalidArgumentException;
 use think\facade\Db;
 use think\facade\Log;
+use think\Model;
 use think\Response;
+use think\response\Json;
+use Throwable;
 
 /**
  * 通用接口
@@ -38,19 +44,21 @@ class CommonController extends BaseController
                 $data[$method] = $this->call_api($method, $params);
             }
         }else{
+            $input = $this->request->put();
+            if(!empty($input)){
+                foreach ($input as $method=>$arguments) {
+                    if($method == 'token')continue;
 
-            foreach ($this->input as $method=>$arguments) {
-                if($method == 'token')continue;
+                    if(!is_array($arguments)){
+                        if(empty($arguments))$arguments=[];
+                        else continue;
+                    } 
+                    
+                    if(isset($arguments['call']))$calls=$arguments['call'];
+                    else $calls=$method;
 
-                if(!is_array($arguments)){
-                    if(empty($arguments))$arguments=[];
-                    else continue;
-                } 
-                
-                if(isset($arguments['call']))$calls=$arguments['call'];
-                else $calls=$method;
-
-                $data[$method] = $this->call_api($calls, $arguments);
+                    $data[$method] = $this->call_api($calls, $arguments);
+                }
             }
         }
         return $this->response($data);
@@ -59,10 +67,23 @@ class CommonController extends BaseController
     private function call_api($calls, $arguments = [])
     {
         $m = explode('.', $calls);
+        $modules = explode('|', ADDONS);
         if (count($m) > 1) {
+            $method = array_pop($m);
             if(strtolower($m[0])=='common'){
                 $controller = $this;
-            }else {
+            } else {
+                if (in_array($m[0], $modules)){
+                    $module = array_shift($m);
+                    $arguments = [
+                        'addon'=>$module,
+                        'controller'=>implode('.', $m),
+                        'action'=>$method,
+                        'arguments'=>$arguments
+                    ];
+                    $method = 'index';
+                    $m = ['Addon'];
+                }
                 if(strpos($m[0],'/')>0 || strpos($m[0],'\\')>0){
                     $m[0] = str_replace('\\','/',$m[0]);
                     $layers = explode('/',strtolower($m[0]));
@@ -76,40 +97,38 @@ class CommonController extends BaseController
                     return null;
                 }
                 try{
-                    $controller = \container()->make('\\app\\api\\controller\\' . $m[0] . 'Controller');
+                    $controller = Container::getInstance()->make('\\app\\api\\controller\\' . $m[0] . 'Controller');
                 }catch(\Exception $e){
                     Log::record($e->getMessage(),'error');
                     return null;
                 }
             }
-            $m = $m[1];
         } else {
             $controller = $this;
-            $m = $m[0];
+            $method = $m[0];
         }
 
-        if (method_exists($controller, $m)) {
+        if (method_exists($controller, $method)) {
             try {
                 $args = [];
-                $reflect = new \ReflectionMethod($controller, $m);
+                $reflect = new \ReflectionMethod($controller, $method);
                 foreach ($reflect->getParameters() as $param) {
                     if (isset($arguments[$param->name])) {
                         $args[] = $arguments[$param->name];
-                    } elseif ($this->request->has($param->name, 'get')) {
-                        $args[] = $this->request->get($param->name);
-                    } else {
+                    } elseif ($this->request->has($param->name)) {
+                        $args[] = $this->request->param($param->name);
+                    } elseif ($param->isDefaultValueAvailable()) {
                         $args[] = $param->getDefaultValue();
                     }
                 }
-                //call_user_func_array([$controller, $m],$args);
+                
                 $response = $reflect->invokeArgs($controller, $args);
                 if($response instanceof Response) {
                     $curData = $response->getData();
     
                     return $curData['data'];
                 }else{
-                    echo var_dump($response);
-                    exit;
+                    return null;
                 }
             }catch (\ReflectionException $e){
                 Log::record($e->getMessage(),'error');
@@ -218,10 +237,6 @@ class CommonController extends BaseController
         return $this->response($model->order('sort ASC,create_time DESC')->limit($count)->select());
     }
     
-    //todo
-    public function feedback(){
-    
-    }
     
     public function feedbacks($pagesize=10){
         $model = Db::view('feedback','*')
@@ -239,12 +254,44 @@ class CommonController extends BaseController
         ]);
     }
     
-    //todo
+    /**
+     * 反馈提交接口
+     * @return void 
+     * @throws InvalidArgumentException 
+     * @throws Throwable 
+     */
     public function do_feedback(){
         $this->check_submit_rate();
-        
+        $content = $this->request->param('content');
+        $realname = $this->request->param('realname');
+        $mobile = $this->request->param('mobile');
+        $email = $this->request->param('email');
+        $type = $this->request->param('type');
+        $data=array();
+        $data['content']=htmlspecialchars($content);
+        $data['email']=htmlspecialchars($email);
+        $data['realname']=htmlspecialchars($realname);
+        $data['mobile']=htmlspecialchars($mobile);
+        $data['member_id']= $this->isLogin?$this->user['id']:0;
+        $data['type']=empty($type)?1:intval($type);
+        $data['ip']=$this->request->ip();
+        $data['status']=0;
+        $data['reply_time']=0;
+        try{
+            $feeded=FeedbackModel::create($data);
+            if(!$feeded || !$feeded['id']){
+                $this->error('系统错误');
+            }
+        }catch(\Exception $e){
+            $this->error($e->getMessage());
+        }
+        $this->success('反馈成功');
     }
 
+    /**
+     * 获取网站通用配置
+     * @return Json 
+     */
     public function siteinfo(){
         $settings=getSettings(false,true);
         $data=[];
@@ -258,32 +305,54 @@ class CommonController extends BaseController
         return $this->response($data);
     }
 
+    
     /**
-     * 获取配置
+     * 获取配置信息，系统不会输出第三方配置（一般包含授权码之类）获取配置信息，系统不会输出第三方配置（一般包含授权码之类）
+     * @param mixed $group 
+     * @return Json 
      */
     public function config($group){
+        $rdata = new \stdClass();
         if(!empty($group) && $group != 'third'){
             $settings = getSettings(false,true);
             if(strpos($group,',')===false){
-                return $this->response(isset($settings[$group])?$settings[$group]:new \stdClass());
+                if($group == 'wechat'){
+                    $rdata = $this->getDefaultWechat();
+                }elseif(isset($settings[$group])){
+                    $rdata = $settings[$group];
+                }
             }else{
                 $groups = explode(',',$group);
                 $rdata=[];
                 foreach($groups as $g){
                     $g = trim(strtolower($g));
-                    if($g != 'third'){
-                        $rdata[$g] = isset($settings[$group])?$settings[$group]:new \stdClass();
+                    if($g == 'wechat'){
+                        $rdata[$g] = $this->getDefaultWechat();
+                    }elseif($g != 'third' && isset($settings[$g])){
+                        $rdata[$g] = $settings[$g];
+                    }else{
+                        $rdata[$g] = new \stdClass();
                     }
                 }
-
-                return $this->response($rdata);
             }
         }
-        return $this->response(new \stdClass());
+        return $this->response($rdata);
+    }
+
+    /**
+     * 获取默认微信账号，一般为公众号
+     * @return array|stdClass 
+     */
+    private function getDefaultWechat(){
+        $wechat = Db::name('wechat')->where('is_default',1)->field('type,account_type,title,logo,qrcode,shareimg,appid,subscribeurl')->find();
+        if(!empty($wechat)){
+            return $wechat;
+        }
+        return new \stdClass();
     }
     
     /**
-     * 签到排名
+     * 获取签到排名
      * @param int $date
      * @return \think\response\Json
      */
@@ -295,7 +364,14 @@ class CommonController extends BaseController
     }
     
     /**
-     * 公共数据
+     * 获取公用数据
+     * 银行列表-banklist
+     * 日志类型-log_types
+     * 财务字段-money_fields
+     * 会员等级-levels
+     * 代理等级-agents
+     * @param string $keys 可指定一个或多个数据类型
+     * @return Json 
      */
     public function data($keys){
         $datas=[];

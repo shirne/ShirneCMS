@@ -5,9 +5,10 @@ namespace app\index\controller;
 use app\common\facade\CategoryFacade;
 use app\common\model\ArticleCommentModel;
 use app\common\model\ArticleModel;
+use app\common\model\MemberFavouriteModel;
 use app\common\validate\ArticleCommentValidate;
 use shirne\third\Aliyun;
-use \think\Db;
+use \think\facade\Db;
 /**
  * 文章
  */
@@ -33,7 +34,7 @@ class ArticleController extends BaseController{
 
         $model->where('article.status',1);
         if(!empty($this->category)){
-            $this->seo($this->category['title']);
+            $this->seo($this->category['title'],$this->category['keywords'],$this->category['description']);
             $model->whereIn('article.cate_id',CategoryFacade::getSubCateIds($this->category['id']));
         }else{
             $this->seo(lang('News'));
@@ -42,9 +43,8 @@ class ArticleController extends BaseController{
         $lists=$model->order('article.create_time DESC,article.id DESC')->paginate($this->pagesize);
         $lists->each(function($item){
             if(!empty($item['prop_data'])){
-                $item['prop_data']=json_decode($item['prop_data'],true);
+                $item['prop_data']=force_json_decode($item['prop_data'],true);
             }
-            $item['prop_data']=[];
             return $item;
         });
 
@@ -62,7 +62,7 @@ class ArticleController extends BaseController{
     }
 
     public function view($id){
-        $article = ArticleModel::get($id);
+        $article = ArticleModel::find($id);
         if(empty($article)){
             return $this->errorPage(lang('Article not exists!'));
         }
@@ -84,6 +84,22 @@ class ArticleController extends BaseController{
         }
         return $this->fetch();
     }
+    public function favourite($id, $cancel = 0){
+        if(!$this->isLogin){
+            $this->error('请先登录');
+        }
+        $model=new MemberFavouriteModel();
+        if($cancel){
+            if($model->removeFavourite($this->user['id'],'article',$id)){
+                $this->success('已取消收藏');
+            }else{
+                $this->error('未收藏该产品');
+            }
+        }elseif($model->addFavourite($this->user['id'],'article',$id)){
+            $this->success('已添加收藏');
+        }
+        $this->error($model->getError());
+    }
     public function notice($id){
         $article = Db::name('notice')->find($id);
         $this->seo($article['title']);
@@ -99,7 +115,7 @@ class ArticleController extends BaseController{
         }
         if($this->request->isPost()){
             $this->checkSubmitRate(2);
-            $data=$this->request->only('email,is_anonymous,content,reply_id','POST');
+            $data=$this->request->post(['email','is_anonymous','content','reply_id']);
             if($this->config['anonymous_comment']==0 && !$this->isLogin){
                 $this->error('请登陆后评论');
             }
@@ -198,7 +214,7 @@ class ArticleController extends BaseController{
         $this->categoryTree=CategoryFacade::getCategoryTree($name);
         $this->categries=CategoryFacade::getTreedCategory();
         if(empty($this->category)){
-            $this->category=['id'=>0,'title'=>'新闻中心'];
+            $this->category=['id'=>0,'title'=>'新闻中心','keywords'=>'','description'=>''];
             $this->topCategory=$this->category;
         }else{
             $this->topCategory=$this->categoryTree[0];

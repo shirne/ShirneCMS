@@ -1,8 +1,10 @@
 <?php
 
 namespace app\admin\controller\wechat;
+
 use EasyWeChat\OfficialAccount\Application;
 use think\facade\Db;
+use think\Response;
 
 /**
  * 素材管理
@@ -32,20 +34,24 @@ class MaterialController extends WechatBaseController
      * @param int $page
      * @return mixed
      */
-    public function index($key='',$type='news'){
+    public function index($key='',$type=''){
         if($this->request->isPost()){
-            return redirect(url('',['wid'=>$this->wid,'key'=>base64_encode($key),'type'=>$type]));
+            return redirect(url('',['wid'=>$this->wid,'key'=>base64url_encode($key),'type'=>$type]));
         }
         if(!$this->wechatApp instanceof Application){
             $this->error('该类型账号不支持素材管理功能');
         }
-        $key=empty($key)?"":base64_decode($key);
+        $key=empty($key)?"":base64url_decode($key);
         $model = Db::name('wechatMaterial');
-        $where=array();
+        
         if(!empty($key)){
-            $where[] = array('title|keyword','like',"%$key%");
+            $model->whereLike('title|keyword',"%$key%");
         }
-        $lists=$model->where($where)->order('update_time DESC')->paginate(15);
+        if(!empty($type)){
+            $model->where('type',$type);
+        }
+        $lists=$model->order('update_time DESC')->paginate(15);
+        $this->assign('type',$type);
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
         return $this->fetch();
@@ -82,7 +88,7 @@ class MaterialController extends WechatBaseController
                     }
                     if(empty($exist)){
                         $data['media_id']=$item['media_id'];
-                        $result = Db::name('wechatMaterial')->insert($data,false,true);
+                        $result = Db::name('wechatMaterial')->insert($data,true);
                         $exist = ['id'=>$result];
                     }else{
                         $result = Db::name('wechatMaterial')->where('id',$exist['id'])
@@ -104,7 +110,7 @@ class MaterialController extends WechatBaseController
                                 $news['wechat_id'] = $this->wid;
                                 $news['material_id'] = $exist['id'];
                                 $news['create_time']=time();
-                                $aid = Db::name('wechatMaterialArticle')->insert($news,false,true);
+                                $aid = Db::name('wechatMaterialArticle')->insert($news,true);
                                 $updateids[]=$aid;
                             }
                         }
@@ -120,6 +126,27 @@ class MaterialController extends WechatBaseController
             }
         }
         $this->success('同步成功 '.$total_count);
+    }
+
+    public function view($media_id){
+        $media = Db::name('wechatMaterial')->where('media_id',$media_id)->find();
+
+        if(empty($media)){
+            $this->error('素材不存在，请先同步');
+        }
+        if($media['type'] == 'news'){
+            $articles = Db::name('wechatMaterialArticle')->where('material_id',$media['id'])->select();
+            $this->assign('articles',$articles);
+        }
+
+        $this->assign('media',$media);
+        return $this->fetch();
+    }
+
+    public function thumb($media_id){
+        $response = $this->wechatApp->material->get($media_id);
+
+        return Response::create($response->getBody()->getContents(), 'image/jpeg');
     }
 
     /**

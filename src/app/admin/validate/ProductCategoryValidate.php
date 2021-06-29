@@ -15,7 +15,7 @@ class ProductCategoryValidate extends BaseUniqueValidate
     protected $rule=array(
         'title'=>'require',
         'short'=>'max:20',
-        'name'=>'require|unique:productCategory,%id%'
+        'name'=>['require','unique'=>'productCategory,%id%', 'regex' => '/^[a-zA-Z]\w+$/']
     );
     protected $message=array(
         'title.require'=>'请填写分类标题',

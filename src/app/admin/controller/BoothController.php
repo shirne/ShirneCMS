@@ -50,8 +50,10 @@ class BoothController extends BaseController
         }
         $model=array('status'=>1,'type'=>'article','data'=>['type'=>0,'parent_id'=>0,'category_id'=>0]);
         $this->assign('model',$model);
+        $this->assign('modules',$this->modules);
+        $this->assign('model',$model);
         $this->assign('article_types',getArticleTypes());
-        $this->assign('booth_types',BoothModel::$booth_types);
+        $this->assign('booth_types', $this->getBoothTypes());
         $this->assign('id',0);
         return $this->fetch('update');
     }
@@ -65,7 +67,7 @@ class BoothController extends BaseController
     public function update($id)
     {
         $id = intval($id);
-        $model=BoothModel::get($id);
+        $model=BoothModel::find($id);
         if(empty($model) ){
             $this->error('展位不存在');
         }
@@ -81,7 +83,7 @@ class BoothController extends BaseController
                 if(!isset($data['ext_set']))$data['ext_set']=[];
                 
                 try {
-                    $model->allowField(true)->save($data);
+                    $model->save($data);
                 }catch(\Exception $err){
                     $this->error(lang('Update failed: %',[$err->getMessage()]));
                 }
@@ -90,14 +92,30 @@ class BoothController extends BaseController
         }
         
         $this->assign('model',$model);
+        $this->assign('modules',$this->modules);
         $this->assign('article_types',getArticleTypes());
-        $this->assign('booth_types',BoothModel::$booth_types);
+        $this->assign('booth_types', $this->getBoothTypes());
         $this->assign('id',$id);
         return $this->fetch();
     }
+
+    protected function getBoothTypes(){
+        $types = [
+            'category'=>'栏目分类',
+            'article'=>'内容',
+        ];
+        
+        if(in_array('shop',$this->modules)!==false){
+            $types['product_category']='商品分类';
+            $types['product']='商品';
+            $types['brand']='品牌';
+        }
+        $types['ad']='广告位';
+        return $types;
+    }
     
     public function lock($id){
-        $booth=BoothModel::get(intval($id));
+        $booth=BoothModel::find(intval($id));
         if(empty($booth)){
             $this->error('展位不存在');
         }
@@ -106,7 +124,7 @@ class BoothController extends BaseController
     }
     
     public function unlock($id){
-        $booth=BoothModel::get(intval($id));
+        $booth=BoothModel::find(intval($id));
         if(empty($booth)){
             $this->error('展位不存在');
         }

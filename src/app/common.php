@@ -21,7 +21,7 @@ define('PRO_TYPE_UPGRADE',2);
 define('PRO_TYPE_BIND',4);
 
 function writelog($message,$type=\think\Log::INFO){
-    if(config('app_debug')==true){
+    if(config('app.app_debug')==true){
         \think\facade\Log::record($message,$type);
     }
 }
@@ -62,7 +62,7 @@ function local_media($src){
     if(empty($src))return $src;
     $src = ltrim($src,'.');
     if(strpos($src,'/')===0 || strpos($src,'://')===false){
-        return url('/','',false,true).$src;
+        return url('/', [], false, true).$src;
     }
     return $src;
 }
@@ -111,7 +111,7 @@ function getMoneyFields($withall=true){
     return $fields;
 }
 
-function getLogTypes($withall=true){
+function getLogTypes($withall=true, $filter = null){
     $fields = [
         'all'=>lang('All'),
         'system'=>lang('System Opt.'),
@@ -119,6 +119,17 @@ function getLogTypes($withall=true){
         'recharge'=>lang('Recharge'),
     ];
     if(!$withall)unset($fields['all']);
+    if($filter !== null){
+        if(is_string($filter)){
+            $filter = array_map('trim',explode(',', $filter));
+        }
+        foreach($fields as $k=>$v){
+            if($k == 'all')continue;
+            if(!in_array($k, $filter)){
+                unset($fields[$k]);
+            }
+        }
+    }
     return $fields;
 }
 function getMemberTypes(){
@@ -406,7 +417,8 @@ function get_order_status($status){
             return lang('Unevaluate');
         case "4":
             return lang('Completed');
-
+        default:
+            return lang('Unknown');
     }
     return lang('Unknown');
 }
@@ -417,7 +429,7 @@ function get_order_status($status){
  * @return string
  */
 function order_status($status,$wrap=true){
-    $style='default';
+    $style='secondary';
     switch ($status){
         case "0":
             $style='warning';
@@ -434,6 +446,8 @@ function order_status($status,$wrap=true){
         case "4":
             $style='success';
             break;
+        default:
+            $style='secondary';
 
     }
     return $wrap?wrap_label(get_order_status($status),$style):get_order_status($status);
@@ -446,9 +460,11 @@ function money_type($type,$wrap=true){
             return $wrap?wrap_label(lang('Credit'),'info'):lang('Credit');
         case "reward":
             return $wrap?wrap_label(lang('Reward'),'warning'):lang('Reward');
+        default:
+            return $wrap?wrap_label(lang('Unknown'),'secondary'):lang('Unknown');
 
     }
-    return $wrap?wrap_label(lang('Unknown'),'default'):lang('Unknown');
+    return $wrap?wrap_label(lang('Unknown'),'secondary'):lang('Unknown');
 }
 function award_status($status,$wrap=true){
     switch ($status){
@@ -458,7 +474,8 @@ function award_status($status,$wrap=true){
             return $wrap?wrap_label(lang('Canceled'),'secondary'):lang('Canceled');
         case "0":
             return $wrap?wrap_label(lang('Waiting'),'warning'):lang('Waiting');
-        
+        default:
+            $wrap?wrap_label(lang('Unknown'),'default'):lang('Unknown');
     }
     return $wrap?wrap_label(lang('Unknown'),'default'):lang('Unknown');
 }
@@ -468,10 +485,11 @@ function wrap_label($text,$type='secondary'){
 
 function print_remark($data){
     if(!empty($data) && !is_array($data)){
-        $data=@json_decode($data);
+        $datarr = @json_decode($data);
     }
-    if(is_array($data)){
-        return call_user_func_array('lang',$data);
+    if(is_array($datarr)){
+        $temp = array_shift($datarr);
+        return call_user_func('lang', $temp, $datarr);
     }
     return $data;
 }
@@ -500,16 +518,32 @@ function getWeek($d){
 /**
  * 过滤emoji字符
  * @param $str
+ * @param $replace
  * @return mixed
  */
-function filter_emoji($str)
+function filter_emoji($str, $replace = '')
 {
     $str = preg_replace_callback( '/./u',
-        function (array $match) {
-            return strlen($match[0]) >= 4 ? '' : $match[0];
+        function (array $match) use ($replace) {
+            return strlen($match[0]) >= 4 ? $replace : $match[0];
         },
         $str);
     return $str;
+}
+
+/**
+ * 转换CamelCase格式为小写下划线
+ * @param mixed $input 
+ * @param string $delimiter 
+ * @return string 
+ */
+function from_camel_case($input, $delimiter = '_') {
+    preg_match_all('!([A-Z][A-Z0-9]*(?=$|[A-Z][a-z0-9])|[A-Za-z][a-z0-9]+)!', $input, $matches);
+    $ret = $matches[0];
+    foreach ($ret as &$match) {
+        $match = $match == strtoupper($match) ? strtolower($match) : lcfirst($match);
+    }
+    return implode($delimiter, $ret);
 }
 
 /**
@@ -565,6 +599,19 @@ function cutstr($str,$len,$dot='...'){
     }
     $strcut = str_replace(array('"', '<', '>'), array( '&quot;', '&lt;', '&gt;'), $strcut);
     return $strcut . $dot;
+}
+
+/**
+ * 普通文本转换为段落
+ * @param mixed $string 
+ * @return string|string[] 
+ */
+function nl2p($string){
+    if(empty($string))return '';
+
+    $html = "<p>".implode("</p><p>", array_map('trim', explode("\n", trim($string))))."</p>";
+
+    return str_replace('<p></p>','',$html);
 }
 
 /** =====================================  数据类函数  ===================================== **/
@@ -654,7 +701,7 @@ function user_log($uid, $action, $result, $remark = '', $tbl = 'member')
         'remark' => json_encode(is_array($remark)?$remark:[$remark],JSON_UNESCAPED_UNICODE)
     ];
     if($tbl==='member'){
-        $data['model']=request()->module();
+        $data['model']=app('http')->getName();
     }
     if(is_array($other_id)){
         foreach ($other_id as $id){
@@ -795,7 +842,7 @@ function money_force_log($uid, $money, $reson, $type='',$from_id=0,$field='money
 
     }
     if($result) {
-        return \think\facade\Db::name('memberMoneyLog')->insert($log,false,true);
+        return \think\facade\Db::name('memberMoneyLog')->insert($log,true);
     }else{
         return false;
     }
@@ -893,7 +940,53 @@ function current_url($withqry=true){
 }
 
 function current_domain(){
-    return rtrim(url('/','',false,true),'/');
+    return rtrim(url('/', [], false, true)->build(), '/');
+}
+
+/**
+ * 判断当前是否在某控制器内,并且不是某些action
+ * @param string $controller 
+ * @param array|string $except_methods 
+ * @return bool 
+ */
+function is_controller($controller, $except_actions=[]){
+    if(is_string($except_actions)){
+        $except_actions=explode(',',$except_actions);
+    }
+    return strcasecmp(request()->controller(), $controller) == 0 && !in_array(request()->action(),$except_actions);
+}
+
+/**
+ * 判断当前是否在某个控制器内的某些action
+ * @param string $controller 
+ * @param array|string $actions 
+ * @return bool 
+ */
+function is_action($controller,$actions){
+    if(is_string($actions)){
+        $actions = explode(',', $actions);
+    }
+    return strcasecmp(request()->controller(), $controller) == 0 &&
+        in_array(request()->action(),$actions);
+}
+
+/**
+ * 用于url的base64编码和解码功能
+ * @param mixed $text 
+ * @return string 
+ */
+function base64url_encode($text) {
+    if(empty($text))return '';
+    $base64 = base64_encode($text);
+    $base64url = strtr($base64, '+/=', '-_,');
+    return $base64url;
+}
+
+function base64url_decode($text) {
+    if(empty($text))return '';
+    $base64url = strtr($text, '-_,', '+/=');
+    $base64 = base64_decode($base64url);
+    return $base64;
 }
 
 /**
@@ -907,6 +1000,9 @@ function weight_random($array, $wfield='weight',$order=true){
 
     $row=[];
     if(empty($array))return $row;
+    if($array instanceof \think\Collection){
+        $array = $array->all();
+    }
     if(!$order){
         $max = max(array_column($array,$wfield));
         $pow = pow(10,ceil(log10($max)));
@@ -915,6 +1011,7 @@ function weight_random($array, $wfield='weight',$order=true){
         foreach ($array as &$row){
             $row[$wfield]=$row[$ofield]==0?$pow:($pow/$row[$ofield]);
         }
+        unset($row);
     }
     $total = array_sum(array_column($array,$wfield));
     $randmax = min($total * 1000, mt_getrandmax());
@@ -1112,11 +1209,17 @@ function fix_in_array($val,$arr){
 
 function array_max($arr,$column){
     if(empty($arr))return 0;
+    if($arr instanceof \think\Collection){
+        $arr = $arr->all();
+    }
     $data=array_column($arr,$column);
     return max($data);
 }
 function array_min($arr,$column){
     if(empty($arr))return 0;
+    if($arr instanceof \think\Collection){
+        $arr = $arr->all();
+    }
     $data=array_column($arr,$column);
     return min($data);
 }
@@ -1151,7 +1254,11 @@ function random_str($length = 6, $type = 'string', $convert = 0)
     $code = '';
     $strlen = strlen($string) - 1;
     for ($i = 0; $i < $length; $i++) {
-        $code .= $string{mt_rand(0, $strlen)};
+        if($type != 'number' && $i==0){
+            $code .= $config['letter'][mt_rand(0, $strlen-8)];
+        }else{
+            $code .= $string[mt_rand(0, $strlen)];
+        }
     }
     if (!empty($convert)) {
         $code = ($convert > 0) ? strtoupper($code) : strtolower($code);
@@ -1203,6 +1310,23 @@ function format_date($date_str, $format){
 function number_empty($val){
     $tval = floatval($val);
     return empty($tval)?'':$val;
+}
+
+/**
+ * curl下载文件
+ * @param mixed $durl 
+ * @return string|bool 
+ */
+function curl_file_get_contents($durl, $timeout = 3, $referer = ''){
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $durl);
+    curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36');
+    curl_setopt($ch, CURLOPT_REFERER,$referer);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    $r = curl_exec($ch);
+    curl_close($ch);
+    return $r;
 }
 
 /**

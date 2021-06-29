@@ -58,7 +58,7 @@
 			</tr>
 		</thead>
 		<tbody>
-		<empty name="lists">{:list_empty(8)}</empty>
+		{empty name="lists"}{:list_empty(8)}{/empty}
 			{volist name="lists" id="v" }
 				<tr>
 					<td><input type="checkbox" name="id" value="{$v.id}" /></td>
@@ -70,6 +70,8 @@
 					<td>
 						{if $v['type'] GT 1}<span class="badge badge-warning">{$types[$v['type']]}</span>{/if}
 						<a href="{:url('index/product/view',['id'=>$v['id']])}" target="_blank">{$v.title}</a>
+						{if !empty($v['unit'])}<span class="badge badge-info">{$v.unit}</span>{/if}
+						<span class="text-muted">销量: {$v.sale}</span>
 					</td>
 					<td>
 						{foreach name="v['skus']" item="sku"}
@@ -82,6 +84,9 @@
 									<span class="input-group-text">库存</span>
 								</span>
 								<span class="form-control">{$sku.storage}</span>
+								<span class="input-group-append">
+									<a href="javascript:" data-price="{$sku.price}" data-skuid="{$sku.sku_id}" data-storage="{$sku.storage}" class="btn btn-outline-primary btn-edit-sku"><i class="ion-md-create"></i></a>
+								</span>
 							</div>
 						{/foreach}
 					</td>
@@ -250,6 +255,47 @@
 						body.find('form').submit();
 					}
 				}).show(html,'生成二维码');
+			})
+			$('.btn-edit-sku').click(function(e){
+				e.preventDefault();
+				var sku_id = $(this).data('skuid');
+				var price = $(this).data('price');
+				var storage = $(this).data('storage');
+				var pdlg = dialog.prompt({title:'编辑库存价格',multi:{
+					price:{title:'价格',value:price},
+					storage:{title:'库存',value:storage}
+				}},function(data){
+					data.price = parseFloat(data.price)
+					data.storage = parseInt(data.storage)
+					if(!data.price){
+						dialog.alert('请填写价格')
+						return false;
+					}
+					if(isNaN(data.storage)){
+						dialog.alert('请填写库存')
+						return false;
+					}
+					$.ajax({
+						url:"{:url('shop.product/editsku')}",
+						dataType:'json',
+						type:'POST',
+						data:{
+							sku_id:sku_id,
+							price:data.price,
+							storage:data.storage
+						},
+						success:function(json){
+							if(json.code == 1){
+								dialog.alert(json.msg,function(){
+									location.reload();
+								})
+							}else{
+								dialog.error(json.msg);
+							}
+						}
+					});
+					return false;
+				})
 			})
 		})
 	</script>

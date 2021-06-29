@@ -10,7 +10,7 @@
     <form method="post" class="page-form" action="">
         <div class="form-group">
             <label for="title">优惠券名称</label>
-            <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="优惠券名称">
+            <input type="text" name="title" class="form-control" value="{$model.title|default=''}" placeholder="优惠券名称">
         </div>
         <div class="form-row">
             <label for="title" class="col-3 col-md-2 col-lg-1">类型</label>
@@ -39,7 +39,7 @@
             <div class="input-group">
                 <select name="cate_id" class="form-control" >
                     {foreach name="category" item="v"}
-                        <option value="{$v.id}" data-pid="{$v['pid']}" {$model['cate_id'] == $v['id']?'selected="selected"':""}>{$v.html} {$v.title}</option>
+                        <option value="{$v.id}" data-pid="{$v['pid']}" {$model['cate_id']??0 == $v['id']?'selected="selected"':""}>{$v.html} {$v.title}</option>
                     {/foreach}
                 </select>
             </div>
@@ -47,8 +47,8 @@
         <div class="form-group bindtype btype_2">
             <label for="title">品牌</label>
             <div class="input-group">
-                <span class="form-control">{$brand.title}</span>
-                <input type="hidden" name="brand_id" value="{$model.brand_id|number_empty}">
+                <span class="form-control">{$brand.title|default=''}</span>
+                <input type="hidden" name="brand_id" value="{$model.brand_id|default=''|number_empty}">
                 <div class="input-group-append">
                     <a href="javascript:" class="btn btn-outline-secondary btn-pick-brand">选择品牌</a>
                 </div>
@@ -57,8 +57,8 @@
         <div class="form-group bindtype btype_3">
             <label for="title">商品</label>
             <div class="input-group">
-                <span class="form-control">{$product.title}</span>
-                <input type="hidden" name="product_id" value="{$model.product_id|number_empty}">
+                <span class="form-control">{$product.title|default=''}</span>
+                <input type="hidden" name="product_id" value="{$model.product_id|default=''|number_empty}">
                 <div class="input-group-append">
                     <a href="javascript:" class="btn btn-outline-secondary btn-pick-product">选择商品</a>
                 </div>
@@ -67,8 +67,8 @@
         <div class="form-group bindtype btype_4">
             <label for="title">SKU</label>
             <div class="input-group">
-                <span class="form-control">{$product.title}/{$sku.goods_no}</span>
-                <input type="hidden" name="sku_id" value="{$model.sku_id|number_empty}">
+                <span class="form-control">{$product.title|default=''}/{$sku.goods_no|default=''}</span>
+                <input type="hidden" name="sku_id" value="{$model.sku_id|default=''|number_empty}">
                 <div class="input-group-append">
                     <a href="javascript:" class="btn btn-outline-secondary btn-pick-sku">选择SKU</a>
                 </div>
@@ -93,17 +93,17 @@
                 <div class="input-group-prepend">
                     <div class="input-group-text">满</div>
                 </div>
-                <input type="text" class="form-control" name="limit" value="{$model.limit|number_empty}">
+                <input type="text" class="form-control" name="limit" value="{$model.limit|default=''|number_empty}">
                 <div class="input-group-middle">
                     <div class="input-group-text">减</div>
                 </div>
-                <input type="text" class="form-control" name="amount" value="{$model.amount|showmoney|number_empty}">
+                <input type="text" class="form-control" name="amount" value="{$model.amount|default=0|showmoney|number_empty}">
             </div>
         </div>
         <div class="form-group cptype cptype_1">
             <label for="disount">优惠折扣</label>
             <div class="input-group">
-                <input type="text" class="form-control" name="discount" value="{$model.discount|number_empty}">
+                <input type="text" class="form-control" name="discount" value="{$model.discount|default=''|number_empty}">
                 <div class="input-group-append">
                     <div class="input-group-text">%</div>
                 </div>
@@ -117,13 +117,13 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text">从</span>
                     </div>
-                    <input type="text" name="start_date" class="form-control fromdate" value="{$model.start_date|showdate=''}" />
+                    <input type="text" name="start_date" class="form-control fromdate" value="{$model.start_date|default=''|showdate=''}" />
                 </div>
                 <div class="input-group col">
                     <div class="input-group-prepend">
                         <span class="input-group-text">至</span>
                     </div>
-                    <input type="text" name="end_date" class="form-control todate" value="{$model.end_date|showdate=''}" />
+                    <input type="text" name="end_date" class="form-control todate" value="{$model.end_date|default=''|showdate=''}" />
                 </div>
             </div>
         </div>
@@ -133,8 +133,8 @@
             <div class="form-group col">
                 <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
                     {volist name="levels" id="lv" key="k"}
-                        <label class="btn btn-outline-secondary{:fix_in_array($k,$model['levels_limit'])?' active':''}">
-                            <input type="checkbox" id="level_{$k}" name="levels_limit[]" value="{$k}" autocomplete="off" {:fix_in_array($k,$model['levels_limit'])?'checked':''}>{$lv.level_name}
+                        <label class="btn btn-outline-secondary{:fix_in_array($k,$model['levels_limit']??[])?' active':''}">
+                            <input type="checkbox" id="level_{$k}" name="levels_limit[]" value="{$k}" autocomplete="off" {:fix_in_array($k,$model['levels_limit']??[])?'checked':''}>{$lv.level_name}
                         </label>
                     {/volist}
                 </div>
@@ -142,23 +142,23 @@
         </div>
 
         <div class="form-group">
-            <label for="count_limit">数量限制</label>
+            <label for="count_limit">领取限制</label>
             <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text">每会员最多领取</span>
                 </div>
-                <input type="text" name="count_limit" class="form-control" value="{$model.count_limit|number_empty}" placeholder="不填写(或0)则不限制领取数量" />
+                <input type="text" name="count_limit" class="form-control" value="{$model.count_limit|default=''|number_empty}" placeholder="不填写(或0)则不限制领取数量" />
             </div>
         </div>
 
         <div class="form-row">
             <div class="col form-group">
-                <label for="stock">数量</label>
-                <input type="text" name="stock" class="form-control" value="{$model.stock}" placeholder="填写 -1 不限制数量" />
+                <label for="stock">总数量</label>
+                <input type="text" name="stock" class="form-control" value="{$model.stock|default=''}" placeholder="填写 -1 不限制数量" />
             </div>
             <div class="col form-group">
                 <label for="sort">排序</label>
-                <input type="text" name="sort" class="form-control" value="{$model.sort}" />
+                <input type="text" name="sort" class="form-control" value="{$model.sort|default=''}" />
             </div>
         </div>
 
@@ -178,7 +178,7 @@
         <div class="form-group exptype exptype_1">
             <label for="expiry_time">有效期</label>
             <div class="input-group">
-                <input type="text" class="form-control datepicker"  name="expiry_time" value="{$model.expiry_time|showdate}">
+                <input type="text" class="form-control datepicker"  name="expiry_time" value="{$model.expiry_time|default=''|showdate}">
                 <div class="input-group-append">
                     <div class="input-group-text">前</div>
                 </div>
@@ -187,7 +187,7 @@
         <div class="form-group exptype exptype_0">
             <label for="expiry_day">有效期</label>
             <div class="input-group">
-                <input type="number" class="form-control " name="expiry_day" value="{$model.expiry_day}">
+                <input type="number" class="form-control " name="expiry_day" value="{$model.expiry_day|default=''}">
                 <div class="input-group-append">
                     <div class="input-group-text">天</div>
                 </div>
@@ -204,7 +204,7 @@
             </label>
         </div>
         <div class="form-group submit-btn">
-            <input type="hidden" name="id" value="{$model.id}">
+            <input type="hidden" name="id" value="{$model.id|default=''}">
             <button type="submit" class="btn btn-primary">{$id>0?'保存':'添加'}</button>
         </div>
     </form>

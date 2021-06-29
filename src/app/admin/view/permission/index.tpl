@@ -45,6 +45,7 @@
                     <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('permission/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
                 </td>
             </tr>
+            {if isset($model[$v['id']])}
             {php}$soncount=empty($model[$v['id']])?0:count($model[$v['id']]);{/php}
             {foreach name="model[$v['id']]" item="sv"}
                 <tr>
@@ -65,6 +66,7 @@
                         <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('permission/delete',array('id'=>$sv['id']))}" onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i class="ion-md-trash"></i> </a>
                     </td>
                 </tr>
+                {if isset($model[$sv['id']])}
                 {foreach name="model[$sv['id']]" item="mv"}
                     <tr>
                         <td>{$mv.id}</td>
@@ -84,11 +86,12 @@
                         </td>
                     </tr>
                 {/foreach}
+                {/if}
             {/foreach}
+            {/if}
         {/foreach}
         </tbody>
     </table>
-    {$page|raw}
 </div>
 
 {/block}

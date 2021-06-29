@@ -42,9 +42,9 @@
     <div class="col-9 col-md-8 col-lg-6">
         <div class="input-group">
             <span class="input-group-prepend"><span class="input-group-text">扣除积分</span></span>
-            <input type="text" class="form-control" name="v-sup_sign_rule[credit]" value="{$setting['sup_sign_rule']['value']['credit']}" placeholder="">
+            <input type="text" class="form-control" name="v-sup_sign_rule[credit]" value="{$setting['sup_sign_rule']['value']['credit']|default=0}" placeholder="">
             <span class="input-group-middle"><span class="input-group-text">每月次数</span></span>
-            <input type="text" class="form-control" name="v-sup_sign_rule[times]" value="{$setting['sup_sign_rule']['value']['times']}" placeholder="">
+            <input type="text" class="form-control" name="v-sup_sign_rule[times]" value="{$setting['sup_sign_rule']['value']['times']|default=0}" placeholder="">
         </div>
     </div>
 </div>
@@ -72,9 +72,9 @@
     <div class="col-9 col-md-8 col-lg-6">
         <div class="input-group">
             <span class="input-group-prepend"><span class="input-group-text">首次签到</span></span>
-            <input type="text" class="form-control" name="v-sign_award[first]" value="{$setting['sign_award']['value']['first']}" placeholder="">
+            <input type="text" class="form-control" name="v-sign_award[first]" value="{$setting['sign_award']['value']['first']|default='0'}" placeholder="">
             <span class="input-group-middle"><span class="input-group-text">普通签到</span></span>
-            <input type="text" class="form-control" name="v-sign_award[normal]" value="{$setting['sign_award']['value']['normal']}" placeholder="">
+            <input type="text" class="form-control" name="v-sign_award[normal]" value="{$setting['sign_award']['value']['normal']|default='0'}" placeholder="">
         </div>
     </div>
 </div>

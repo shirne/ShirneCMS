@@ -8,6 +8,7 @@ use app\common\service\CheckcodeService;
 use app\common\validate\MemberValidate;
 use shirne\sdk\OAuthFactory;
 use shirne\captcha\Captcha;
+use think\captcha\facade\Captcha as FacadeCaptcha;
 use think\facade\Db;
 use think\Exception;
 use think\facade\Log;
@@ -50,11 +51,14 @@ class LoginController extends BaseController{
                         $this->error(lang('Account is disabled!'));
                     }else {
                         $this->setLogin($member);
+                        $remember = $this->request->post('remember');
+                        if($remember){
+                            $this->setAotuLogin($member);
+                        }
                         $redirect=redirect()->restore();
-                        if(empty($redirect->getData())){
+                        $url = $redirect->getData();
+                        if(empty($url)){
                             $url=aurl('index/member/index');
-                        }else{
-                            $url=$redirect->getTargetUrl();
                         }
 
                         if(!empty($this->wechatUser)){
@@ -144,7 +148,7 @@ class LoginController extends BaseController{
                 $model->save($data);
             }
             if($this->isLogin){
-                $this->success('绑定成功',redirect()->restore(aurl('index/member/index'))->getTargetUrl());
+                $this->success('绑定成功',redirect()->restore(aurl('index/member/index'))->getData());
             }
             
             if (empty($model['member_id'])) {
@@ -296,7 +300,7 @@ class LoginController extends BaseController{
 
         if($this->request->isPost()){
             $this->checkSubmitRate(2);
-            $data=$this->request->only('username,password,repassword,email,realname,mobile,mobilecheck','post');
+            $data=$this->request->only(['username','password','repassword','email','realname','mobile','mobilecheck'],'post');
 
             $validate=new MemberValidate();
             $validate->setId();
@@ -307,8 +311,8 @@ class LoginController extends BaseController{
             $invite_code=$this->request->post('invite_code');
             if(($this->config['m_invite']==1 && !empty($invite_code)) || $this->config['m_invite']==2) {
                 if (empty($invite_code)) $this->error("请填写激活码");
-                $invite = Db::name('invite_code')->where(array('code' => $invite_code, 'is_lock' => 0, 'member_use' => 0))->find();
-                if (empty($invite) || ($invite['invalid_at'] > 0 && $invite['invalid_at'] < time())) {
+                $invite = Db::name('inviteCode')->where(array('code' => $invite_code, 'is_lock' => 0, 'member_use' => 0))->find();
+                if (empty($invite) || ($invite['invalid_time'] > 0 && $invite['invalid_time'] < time())) {
                     $this->error("激活码不正确");
                 }
             }
@@ -356,7 +360,7 @@ class LoginController extends BaseController{
             }
             if(!empty($invite)) {
                 $invite['member_use'] = $model['id'];
-                $invite['use_at'] = time();
+                $invite['use_time'] = time();
                 Db::name('invite_code')->update($invite);
             }
             if(!empty($this->wechatUser)){
@@ -366,10 +370,9 @@ class LoginController extends BaseController{
             Db::commit();
             $this->setLogin($model);
             $redirect=redirect()->restore();
-            if(empty($redirect->getData())){
+            $url=$redirect->getData();
+            if(empty($url)){
                 $url=aurl('index/member/index');
-            }else{
-                $url=$redirect->getTargetUrl();
             }
             $this->success("注册成功",$url);
         }
@@ -383,12 +386,12 @@ class LoginController extends BaseController{
         if(!in_array($type,array('username','email','mobile'))){
             $this->error('参数不合法');
         }
-        $member=Db::name('member');
-        $val=$this->request->get('value');
-        $m=$member->where($type,$val)->find();
-        $json=array();
-        $json['error']=0;
-        if(!empty($m))$json['error']=1;
+        $member = Db::name('member');
+        $val = $this->request->param('value');
+        $m = $member->where($type,$val)->find();
+        $json = array();
+        $json['error'] = 0;
+        if(!empty($m)) $json['error'] = 1;
         return json($json);
     }
 
@@ -410,8 +413,8 @@ class LoginController extends BaseController{
             $this->error('该手机号码已注册');
         }
 
-        $service=new CheckcodeService();
-        $sended=$service->sendCode('mobile',$mobile);
+        $service = new CheckcodeService();
+        $sended = $service->sendCode('mobile',$mobile);
         if($sended) {
             $this->success('验证码发送成功！');
         }else{
@@ -420,20 +423,16 @@ class LoginController extends BaseController{
     }
 
     public function verify(){
-        $verify = new Captcha(array('seKey'=>config('session.sec_key')));
-
-        $verify->fontSize = 13;
-        $verify->length = 4;
-        return $verify->entry('foreign');
+        return FacadeCaptcha::create();
     }
     protected function check_verify($code){
-        $verify = new Captcha(array('seKey'=>config('session.sec_key')));
-        return $verify->check($code,'foreign');
+        return FacadeCaptcha::check($code);
     }
 
     public function logout()
     {
         $this->clearLogin();
+        
         $this->success("已成功退出登陆");
 
     }

@@ -19,9 +19,9 @@ class KeywordsController extends BaseController
     public function index($key="")
     {
         if($this->request->isPost()){
-            return redirect(url('',['key'=>base64_encode($key)]));
+            return redirect(url('',['key'=>base64url_encode($key)]));
         }
-        $key=empty($key)?"":base64_decode($key);
+        $key=empty($key)?"":base64url_decode($key);
         $model = Db::name('keywords');
         
         if(!empty($key)){
@@ -104,7 +104,7 @@ class KeywordsController extends BaseController
         $groups = Db::name('keywords')->where('group','<>','')->distinct('group')->field('group')->select();
 
         if(!empty($groups)){
-            return array_column($groups,'group');
+            return array_column($groups->all(),'group');
         }
         return ['global','product','article'];
     }

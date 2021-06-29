@@ -72,7 +72,7 @@
                             <td>
                                 <select class="form-control subpicker" name="navs[{$key}][subnavtype]">
                                     <option value="customer" >手动设置</option>
-                                    <option value="module" {$item['subnavtype']=='module'?'selected':''}>自动调用</option>
+                                    <option value="module" {if isset($item['subnavtype']) && $item['subnavtype']=='module')selected{/if}>自动调用</option>
                                 </select>
                             </td>
                             <td class="operations">
@@ -82,7 +82,7 @@
                                 <a href="javascript:" class="btn btn-outline-danger rowdelete" title="删除"><i class="ion-md-trash"></i> </a>
                             </td>
                         </tr>
-                        {if $item['subnavtype'] EQ 'customer' && !empty($item['subnav'])}
+                        {if isset($item['subnavtype']) && $item['subnavtype'] == 'customer' && !empty($item['subnav'])}
                             {foreach name="item['subnav']" item="subnav" key="index"}
                                 <tr class="subrow row-{$key}-{$index}" data-key="{$key}" data-index="{$index}">
                                     <td><i class="ion-md-apps"></i> </td>

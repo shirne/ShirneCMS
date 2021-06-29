@@ -67,6 +67,8 @@
             </div>
             <div class="tab-content"></div>
         </div>
+        {/if}
+        
     </div>
 {/block}
 

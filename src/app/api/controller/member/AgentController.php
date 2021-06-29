@@ -4,11 +4,23 @@ namespace app\api\controller\member;
 
 use app\api\controller\AuthedController;
 use app\common\model\AwardLogModel;
+use app\common\model\MemberAgentModel;
+use app\common\model\MemberAuthenModel;
+use app\common\model\MemberModel;
 use app\common\model\OrderModel;
 use app\common\model\WechatModel;
+use DomainException;
+use PDOException;
+use Exception;
+use GuzzleHttp\Exception\GuzzleException;
+use InvalidArgumentException;
 use shirne\common\Poster;
 use think\facade\Db;
 
+/**
+ * 代理相关操作
+ * @package app\api\controller\member
+ */
 class AgentController extends AuthedController
 {
     public function initialize()
@@ -19,6 +31,10 @@ class AgentController extends AuthedController
         }
     }
     
+    /**
+     * 代理统计信息
+     * @return Json 
+     */
     public function generic(){
         $data=[];
         $data['order_count']=Db::name('awardLog')->where('member_id',$this->user['id'])
@@ -32,79 +48,68 @@ class AgentController extends AuthedController
             ->where('status',1)->sum('amount');
         return $this->response($data);
     }
+
+    /**
+     * 升级申请
+     * @param int $level_id 
+     * @return Json 
+     */
+    public function upgrade($level_id=2){
+        $authen= MemberAuthenModel::where('level_id',$level_id)
+            ->where('member_id',$this->user['id'])
+            ->find();
+        if($this->request->isPost()){
+            if($authen['status'] == 1){
+                $this->error('申请已审核通过,不能修改');
+            }
+            $data = $this->request->only(['realname','mobile','province','city']);
+            try{
+                $data['status']=-1;
+                if(empty($authen)){
+                    $data['member_id']=$this->user['id'];
+                    $data['level_id']=$level_id;
+                    MemberAuthenModel::insert($data);
+                }else{
+                    $authen->save($data);
+                }
+            }catch(\Exception $err){
+                $this->error('保存失败: %s',[$err->getMessage()]);
+            }
+            $this->error('申请已提交');
+        }
+        return $this->response([
+            'authen'=>$authen
+        ]);
+    }
     
+    /**
+     * 代理分享海报
+     * @param string $page 
+     * @return Json 
+     */
     public function poster($page = 'pages/index/index'){
     
         $platform=$this->request->tokenData['platform'];
         
         try{
-            $url = $this->get_share_img($platform,$page);
+            $userModel = MemberModel::where('id',$this->user['id'])->find();
+            $url = $userModel->getSharePoster($platform,$page);
         }catch(\Exception $e){
             $this->error($e->getMessage());
         }
-        
-        return $this->response(['poster_url'=>$url]);
-    }
-    private function get_share_img($platform,$page){
-    
-        $sharepath = './uploads/share/'.($this->user['id']%100).'/'.$this->user['agentcode'].'-'.$platform.'.jpg';
-        $config=config('poster.');
-        if(empty($config) || empty($config['background'])){
-            $this->error('请配置海报生成样式(config/poster.php)');
-        }
-        if(!file_exists($config['background'])){
-            $this->error('分享图生成失败(bg)');
-        }
-        if(file_exists($sharepath)){
-            $fileatime=filemtime($sharepath);
-            if($this->user['update_time']<$fileatime &&
-                filemtime($config['background'])<$fileatime
-            ){
-                return media(ltrim($sharepath,'.'));
-            }
-        }
-        $this->create_share_img($config,$sharepath,$page);
-        return media(ltrim($sharepath,'.'));
-    }
-    private function create_share_img($config,$sharepath,$page){
-        $appid=$this->request->tokenData['appid'];
-        $wechat=WechatModel::where('appid',$appid)->find();
-        if(empty($wechat)){
-            $this->error('分享图生成失败(wechat)');
-        }
-    
-        $qrpath=dirname($sharepath);
-        $qrfile = $this->user['agentcode'].'-appcode.png';
-        $filename=$qrpath.'/'.$qrfile;
-        if(!file_exists($filename)) {
-            $app = WechatModel::createApp($wechat);
-            if (empty($app)) {
-                $this->error('分享图生成失败(app)');
-            }
-    
-            $response = $app->app_code->getUnlimit('agent=' . $this->user['agentcode'], [
-                'page' => $page,
-                'width' => 520
-            ]);
-            if ($response instanceof \EasyWeChat\Kernel\Http\StreamResponse) {
-                $genername = $response->saveAs($qrpath, $this->user['agentcode'] . '-appcode.png');
-            }
-            if(empty($genername)){
-                $this->error('小程序码生成失败');
-            }
+        if(!$url){
+            $this->error($userModel->getError());
         }
         
-        //$config['background']=$bgpath;
-        $poster = new Poster($config);
-        $poster->generate([
-            'appcode'=>$filename,
-            'avatar'=>$this->user['avatar'],
-            'bg'=>1,
-            'nickname'=>$this->user['nickname']
-        ]);
-        $poster->save($sharepath);
+        $qrurl = str_replace('-'.$platform.'.jpg','-qrcode.png',$url);
+        return $this->response(['poster_url'=>$url,'qr_url'=>$qrurl]);
     }
     
+    /**
+     * 代理排行
+     * @param string $mode 
+     * @return Json 
+     */
     public function rank($mode='month'){
         
         $list=AwardLogModel::ranks($mode);
@@ -112,28 +117,86 @@ class AgentController extends AuthedController
         return $this->response(['ranks'=>$list]);
     }
     
-    
-    
-    public function award_log($type='',$status=''){
+    /**
+     * 佣金明细
+     * @param string $type 
+     * @param string $status 
+     * @param string $daterange 
+     * @return Json 
+     */
+    public function award_log($type='',$status='',$daterange=''){
         $model=Db::view('awardLog mlog','*')
             ->view('Member m',['username','level_id','nickname','avatar'],'m.id=mlog.from_member_id','LEFT')
             ->where('mlog.member_id',$this->user['id']);
+        
+        $static=Db::name('awardLog')->where('member_id',$this->user['id']);
         if(!empty($type) && $type!='all'){
             $model->where('mlog.type',$type);
+            $static->where('type',$type);
         }
         if($status!==''){
             $model->where('mlog.status',$status);
+            $static->where('status',$status);
+        }
+        if($daterange != ''){
+            $end_date = 0;
+            if($daterange == 'week'){
+                $start_date = strtotime('last Monday');
+            }elseif($daterange == 'month'){
+                $start_date = strtotime('first day of this month midnight');
+            }elseif(preg_match('/^(\d{4})\-(\d{1,2})$/',$daterange,$matches)){
+                $start_date = strtotime($daterange);
+                $month = $matches[2]+1;
+                $year = $matches[1];
+                if($month>12){
+                    $month = 1;
+                    $year += 1;
+                }
+                $end_date = strtotime($year.'-'.$month)-1;
+            }else{
+                $dateranges = explode('~',$daterange);
+                $start_date = strtotime($dateranges[0]);
+                if(isset($dateranges[1]))$end_date = strtotime($dateranges[1]);
+            }
+            if($start_date > 0){
+                if($end_date > 0){
+                    $static->whereBetween('create_time',[$start_date,$end_date]);
+                    $model->whereBetween('mlog.create_time',[$start_date,$end_date]);
+                }else{
+                    $static->where('create_time','>=',$start_date);
+                    $model->where('mlog.create_time','>=',$start_date);
+                }
+            }
         }
         
         $logs = $model->order('mlog.id DESC')->paginate(10);
+        $static_data=$static->field('count(distinct order_id) as order_count, sum(amount) as total_amount')->find();
         
+        $types = getLogTypes(false, 'award');
+        $level = $this->userLevel();
+        if($level['partner_sale_award'] <= 0){
+            unset($types['partner_sale']);
+        }
+        if($level['partner_new_award'] <= 0){
+            unset($types['partner_share']);
+        }
+
         return $this->response([
-            'logs'=>$logs->all(),
+            'types'=>$types,
+            'static_data'=>$static_data,
+            'logs'=>$logs->items(),
             'total'=>$logs->total(),
+            'total_page'=>$logs->lastPage(),
             'page'=>$logs->currentPage()
         ]);
     }
     
+    /**
+     * 分佣订单明细
+     * @param string $status 
+     * @param int $pagesize 
+     * @return Json 
+     */
     public function orders($status='',$pagesize=10){
         $level = $this->userLevel();
         $sonids=getMemberSons($this->user['id'],$level['commission_layer']);
@@ -155,7 +218,7 @@ class AgentController extends AuthedController
             $products=array_index($products,'order_id',true);
             
             $awards = Db::name('awardLog')->whereIn('order_id',$order_ids)->field('order_id,sum(amount) as commision')->group('order_id')->select();
-            $awards = array_column($awards,'commision','order_id');
+            $awards = array_column($awards->all(),'commision','order_id');
             
             $orders->each(function($item) use ($products,$awards){
                 $item['product_count']=isset($products[$item['order_id']])?array_sum(array_column($products[$item['order_id']],'count')):0;
@@ -176,6 +239,10 @@ class AgentController extends AuthedController
         ]);
     }
     
+    /**
+     * 获取各种状态订单数量
+     * @return Json 
+     */
     public function counts(){
         $counts = OrderModel::getCounts($this->user['id']);
         return $this->response($counts);
@@ -242,13 +309,23 @@ class AgentController extends AuthedController
                 }
             }
             
-            $users->each(function ($item) use ($soncounts,$levels) {
+            $agents = MemberAgentModel::getCacheData();
+            
+            $users->each(function ($item) use ($soncounts, $levels, $agents) {
                 if(isset($soncounts[$item['id']])) {
                     $item['soncount'] = $soncounts[$item['id']];
                 }else{
                     $item['soncount'] = 0;
                 }
-                $item['level_name']=$levels[$item['level_id']]['level_name']?:'-';
+                if(isset($levels[$item['level_id']])){
+                    $item['level_name']=$levels[$item['level_id']]['level_name']?:'-';
+                    $item['level_style']=$levels[$item['level_id']]['style']?:'-';
+                }
+                if(isset($agents[$item['is_agent']])){
+                    $item['agent_name']=$agents[$item['is_agent']]['name']?:'-';
+                    $item['agent_short_name']=$agents[$item['is_agent']]['short_name']?:'-';
+                    $item['agent_style']=$agents[$item['is_agent']]['style']?:'-';
+                }
                 return $item;
             });
         }

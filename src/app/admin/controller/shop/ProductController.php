@@ -81,9 +81,9 @@ class ProductController extends BaseController
      */
     public function index($key='',$cate_id=0){
         if($this->request->isPost()){
-            return redirect(url('',['cate_id'=>$cate_id,'key'=>base64_encode($key)]));
+            return redirect(url('',['cate_id'=>$cate_id,'key'=>base64url_encode($key)]));
         }
-        $key=empty($key)?"":base64_decode($key);
+        $key=empty($key)?"":base64url_decode($key);
         $model = Db::view('product','*')
             ->view('productCategory',['name'=>'category_name','title'=>'category_title'],'product.cate_id=productCategory.id','LEFT');
         
@@ -125,13 +125,13 @@ class ProductController extends BaseController
     }
 
     public function qrcode($id, $qrtype='url', $size=430, $miniprogram=0){
-        $product=ProductModel::get($id);
+        $product=ProductModel::find($id);
         if($qrtype=='url'){
-            $url = url('index/shop.product/view',['id'=>$id], true, true);
+            $url = url('index/product/view',['id'=>$id], true, true);
             $content=gener_qrcode($url, $size);
         }else{
             if($size>1280)$size=1280;
-            $content = $this->miniprogramQrcode($miniprogram, ['path'=>'pages/shop.product/detail?id='.$id], $qrtype, $size);
+            $content = $this->miniprogramQrcode($miniprogram, ['path'=>'pages/product/detail?id='.$id], $qrtype, $size);
         }
         return download($content,$product['title'].'-qrcode.png',true);
     }
@@ -155,7 +155,7 @@ class ProductController extends BaseController
         $data['max_price']=array_max($skus,'price');
         $data['min_price']=array_min($skus,'price');
         $data['market_price']=array_max($skus,'market_price');
-        $data['storage']=array_sum(array_column($skus,'storage'));
+        $data['storage']=array_sum(array_column($skus->all(),'storage'));
         if(!empty($data['prop_data'])){
             $data['prop_data']=array_combine($data['prop_data']['keys'],$data['prop_data']['values']);
         }else{
@@ -231,7 +231,7 @@ class ProductController extends BaseController
                 }
             }
         }
-        $model=array('type'=>1,'status'=>1,'cate_id'=>$cid,'is_discount'=>1,'is_commission'=>1,'sale'=>0);
+        $model=array('type'=>1,'status'=>1,'cate_id'=>$cid,'is_discount'=>1,'is_commission'=>1,'commission_percent'=>[],'sale'=>0);
         
         $levels=getMemberLevels();
         $this->assign("category",ProductCategoryFacade::getCategories());
@@ -288,12 +288,12 @@ class ProductController extends BaseController
                 }elseif($this->uploadErrorCode>102){
                     $this->error($this->uploadErrorCode.':'.$this->uploadError);
                 }
-                $model=ProductModel::get($id);
+                $model=ProductModel::find($id);
                 $skus=$data['skus'];
     
                 $data = $this->processData($data);
                 try{
-                    $model->allowField(true)->save($data);
+                    $model->save($data);
                     //不删除图片，可能会导致订单数据图片不显示
                     //delete_image($delete_images);
                     $existsIds=[];
@@ -319,7 +319,7 @@ class ProductController extends BaseController
             }
         }
 
-        $model = ProductModel::get($id);
+        $model = ProductModel::find($id);
         if(empty($model)){
             $this->error('商品不存在');
         }
@@ -402,6 +402,29 @@ class ProductController extends BaseController
         } else {
             $this->error("操作失败");
         }
+    }
+
+    /**
+     * 更新价格表
+     */
+    public function editsku($sku_id){
+        $sku=Db::name('ProductSku')->where('sku_id',$sku_id)->find();
+        if(empty($sku)){
+            $this->error('价格表不存在');
+        }
+        $price = $this->request->param('price');
+        $storage = $this->request->param('storage');
+
+        Db::name('ProductSku')->where('sku_id',$sku_id)->update([
+            'price'=>$price,
+            'storage'=>$storage
+        ]);
+        $product = Db::name('Product')->where('id',$sku['product_id'])->find();
+        if(!empty($product)){
+            $skutotal = Db::name('ProductSku')->where('product_id',$sku['product_id'])->field('min(price) as min_price,max(price) as max_price,sum(storage) as storage')->find();
+            Db::name('Product')->where('id',$sku['product_id'])->update($skutotal);
+        }
+        $this->success("更新成功");
     }
 
     /**

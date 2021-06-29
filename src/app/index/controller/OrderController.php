@@ -48,10 +48,15 @@ class OrderController extends AuthedController
         $total_price=0;
         foreach ($products as $item){
             $total_price += $item['product_price']*$item['count'];
+            if(!empty($item['levels'])){
+                if (!in_array($this->user['level_id'], $item['levels'])) {
+                    $this->error('您当前会员组不允许购买商品[' . $item['product_title'] . ']');
+                }
+            }
         }
 
         if($this->request->isPost()){
-            $data=$this->request->only('address_id,remark,pay_type,total_price','post');
+            $data=$this->request->post(['address_id','remark','pay_type','total_price']);
             $validate=new OrderValidate();
             if(!$validate->check($data)){
                 $this->error($validate->getError());
@@ -155,7 +160,7 @@ class OrderController extends AuthedController
         return $this->fetch();
     }
     public function balancepay($order_id){
-        $order=OrderModel::get($order_id);
+        $order=OrderModel::find($order_id);
         if(empty($order)|| $order['status']!=0){
             $this->error('订单已支付或不存在!');
         }

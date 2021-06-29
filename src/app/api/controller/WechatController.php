@@ -8,9 +8,8 @@ use app\api\handler\WechatPlatformHandler;
 use app\common\model\PayOrderModel;
 use app\common\model\PayOrderRefundModel;
 use app\common\model\WechatModel;
-use EasyWeChat\BasicService\Application;
 use EasyWeChat\Factory;
-use think\Controller;
+use think\App;
 use think\facade\Db;
 use think\facade\Log;
 
@@ -19,16 +18,37 @@ use think\facade\Log;
  * Class WeChatController
  * @package app\api\controller
  */
-class WechatController extends Controller{
+class WechatController{
+
+    /**
+     * Request实例
+     * @var \think\Request
+     */
+    protected $request;
+
+    /**
+     * 应用实例
+     * @var \think\App
+     */
+    protected $app;
 
     protected $config=array();
 
     /**
-     * @var Application
+     * 构造方法
+     * @access public
+     * @param  App  $app  应用对象
      */
+    public function __construct(App $app)
+    {
+        $this->app     = $app;
+        $this->request = $this->app->request;
+
+        // 控制器初始化
+        $this->initialize();
+    }
 
     public function initialize(){
-        parent::initialize();
         $this->config=getSettings();
     }
 
@@ -50,7 +70,11 @@ class WechatController extends Controller{
         return $account;
     }
 
-    //微信入口文件
+    /**
+     * 微信通知入口
+     * @param string $hash 
+     * @return never 
+     */
     public function index($hash=''){
         Log::record('收到消息'.$hash);
         $account=$this->getAccount($hash);
@@ -98,6 +122,11 @@ class WechatController extends Controller{
         exit;
     }
     
+    /**
+     * 退款通知入口
+     * @param string $hash 
+     * @return never 
+     */
     public function refund($hash=''){
         $account=$this->getAccount($hash);
         $config = WechatModel::to_pay_config($account);
@@ -148,6 +177,11 @@ class WechatController extends Controller{
         exit;
     }
 
+    /**
+     * 支付通知入口
+     * @param string $hash 
+     * @return never 
+     */
     public function payresult($hash=''){
         $account=$this->getAccount($hash);
         $config = WechatModel::to_pay_config($account);
@@ -203,6 +237,12 @@ class WechatController extends Controller{
         $response->send();
         exit;
     }
+
+    /**
+     * 扫码支付通知入口
+     * @param string $hash 
+     * @return never 
+     */
     public function scanpay($hash=''){
         $account=$this->getAccount($hash);
         $config = WechatModel::to_pay_config($account);

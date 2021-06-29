@@ -24,9 +24,9 @@ class ManagerController extends BaseController
     public function index($key="")
     {
         if($this->request->isPost()){
-            return redirect(url('',['key'=>base64_encode($key)]));
+            return redirect(url('',['key'=>base64url_encode($key)]));
         }
-        $key=empty($key)?"":base64_decode($key);
+        $key=empty($key)?"":base64url_decode($key);
         $model=Db::name('Manager');
         if(!empty($key )){
             $model->whereLike('username|email',"%$key%");
@@ -48,14 +48,14 @@ class ManagerController extends BaseController
      */
     public function log($key='',$type='',$manager_id=0){
         if($this->request->isPost()){
-            return redirect(url('',['key'=>base64_encode($key)]));
+            return redirect(url('',['key'=>base64url_encode($key)]));
         }
 
         $model=Db::view('ManagerLog','*')
             ->view('Manager',['username'],'ManagerLog.manager_id=Manager.id','LEFT');
 
         if(!empty($key)){
-            $key = base64_decode($key);
+            $key = base64url_decode($key);
             $model->whereLike('ManagerLog.remark',"%$key%");
         }
         if(!empty($type)){
@@ -152,7 +152,7 @@ class ManagerController extends BaseController
     {
         $id=intval($id);
         if($id==0)$this->error('参数错误');
-        $model=ManagerModel::get($id);
+        $model=ManagerModel::find($id);
         if($this->manager['type']>$model['type']){
             $this->error('您没有权限查看该管理员');
         }
@@ -197,7 +197,7 @@ class ManagerController extends BaseController
                 $updatePermission=false;
                 if($data['type']!=$model['type'])$updatePermission=true;
                 //更新
-                if ($model->allowField(true)->update($data)) {
+                if ($model->update($data)) {
                     if($updatePermission)$this->updatePermission($id,$data['type']);
                     user_log($this->mid,'addmanager',1,'修改管理员'.$model->id ,'manager');
                     $this->success(lang('Update success!'), url('manager/index'));
@@ -235,7 +235,7 @@ class ManagerController extends BaseController
     public function permision($id){
         $id=intval($id);
         if($id==0)$this->error('参数错误');
-        $manager=ManagerModel::get($id);
+        $manager=ManagerModel::find($id);
         if(empty($manager)){
             $this->error('管理员资料错误');
         }
@@ -266,7 +266,7 @@ class ManagerController extends BaseController
         $model['global']=explode(',',$model['global']);
         $model['detail']=explode(',',$model['detail']);
         $this->assign('model',$model);
-        $this->assign('perms',config('permisions.'));
+        $this->assign('perms',config('permisions'));
         $this->assign('role',$role);
         return $this->fetch();
     }
@@ -278,7 +278,7 @@ class ManagerController extends BaseController
             $this->error("创始人不可禁用!");
         }
         
-        $manager = ManagerModel::get($id);
+        $manager = ManagerModel::find($id);
         if (!$manager->hasPermission($this->mid)) {
             $this->error('您不能设置该管理员的状态');
         }
@@ -304,7 +304,7 @@ class ManagerController extends BaseController
             $this->error("创始人不可删除!");
         }
         
-    	$manager = ManagerModel::get($id);
+    	$manager = ManagerModel::find($id);
         if (!$manager->hasPermission($this->mid)) {
             $this->error('您不能删除该管理员');
         }

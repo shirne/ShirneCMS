@@ -5,6 +5,7 @@ namespace app\index\controller;
 use app\common\model\PostageModel;
 use app\common\model\ProductModel;
 use app\common\facade\ProductCategoryFacade;
+use app\common\model\MemberFavouriteModel;
 use app\common\model\ProductCommentModel;
 use app\common\model\ProductSkuModel;
 use app\common\validate\ProductCommentValidate;
@@ -26,6 +27,7 @@ class ProductController extends BaseController
     {
         parent::initialize();
         $this->assign('navmodel','product');
+        $this->seo($this->config['shop_pagetitle'],$this->config['shop_keyword'],$this->config['shop_description']);
     }
 
     public function index($name=""){
@@ -38,10 +40,8 @@ class ProductController extends BaseController
                 'LEFT');
 
         if(!empty($this->category)){
-            $this->seo($this->category['title']);
+            $this->seo($this->category['title'],$this->category['keywords'],$this->category['description']);
             $model->whereIn('product.cate_id',ProductCategoryFacade::getSubCateIds($this->category['id']));
-        }else{
-            $this->seo("产品中心");
         }
 
         $lists=$model->where('product.status',1)
@@ -62,7 +62,7 @@ class ProductController extends BaseController
     }
 
     public function view($id){
-        $product = ProductModel::get($id);
+        $product = ProductModel::find($id);
         if(empty($product)){
             return $this->errorPage('商品不存在');
         }
@@ -74,15 +74,60 @@ class ProductController extends BaseController
         $this->assign('postage',PostageModel::getDesc($product['postage_id']));
         $this->assign('skus', ProductSkuModel::where('product_id',$product['id'])->select());
         $this->assign('images',Db::name('ProductImages')->where('product_id',$product['id'])->select());
+        $this->assign('isFavourite',(new MemberFavouriteModel())->isFavourite($this->userid, 'product', $id));
         return $this->fetch();
     }
+
+    public function favourite($id, $cancel = 0){
+        if(!$this->isLogin){
+            $this->error('请先登录');
+        }
+        $model=new MemberFavouriteModel();
+        if($cancel){
+            if($model->removeFavourite($this->user['id'],'product',$id)){
+                $this->success('已取消收藏');
+            }else{
+                $this->error('未收藏该产品');
+            }
+        }elseif($model->addFavourite($this->user['id'],'product',$id)){
+            $this->success('已添加收藏');
+        }
+        $this->error($model->getError());
+    }
+
+    public function flash($id, $date){
+        $flash = ProductModel::getFlash($id,$date);
+        if(empty($flash)){
+            return $this->errorPage('商品快照不存在');
+        }
+        $product = json_decode($flash['product'],true);
+
+        $product['sale']+=$product['v_sale'];
+        $this->seo($product['title']);
+        $this->category($product['cate_id']);
+
+        $images= json_decode($flash['images'],true);
+        if(empty($images)){
+            $images = [
+                ['image'=>$product['image']]
+            ];
+        }
+        $this->assign('product', $product);
+        $this->assign('brand', json_decode($flash['brand'],true));
+        $this->assign('skus', json_decode($flash['images'],true));
+        $this->assign('images',$images);
+        $this->assign('isFlash',1);
+        $this->assign('flashDate',$flash['timestamp']);
+        return $this->fetch('product/view');
+    }
+    
     public function comment($id){
-        $product = ProductModel::get($id);
+        $product = ProductModel::find($id);
         if(empty($product)){
             $this->error('参数错误');
         }
         if($this->request->isPost()){
-            $data=$this->request->only('product_id,email,is_anonymous,content','POST');
+            $data=$this->request->only(['product_id','email','is_anonymous','content'],'POST');
             $validate=new ProductCommentValidate();
             if(!$validate->check($data)){
                 $this->error($validate->getError());

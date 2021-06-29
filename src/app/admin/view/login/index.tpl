@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>管理员登录</title>
     <meta charset="utf-8">
+    <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -61,7 +62,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="ion-md-checkmark-circle"></i> </span>
                         </div>
-                        <input type="text" name="verify" class="form-control" id="exampleInputCode" placeholder="验证码">
+                        <input type="text" name="verify" class="form-control" id="exampleInputCode" autocomplete="off" placeholder="验证码">
                     </div>
                 </div>
                 <div class="form-group text-center">
@@ -71,6 +72,11 @@
                     </figure>
                 </div>
                 {/if}
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" name="remember" value="1"> 保持登录状态
+                      </label>
+                </div>
                 <button type="submit" class="btn btn-block btn-primary">登陆</button>
                 <div class="alert fade show" role="alert">
                     <span class="alert-content"></span>
@@ -81,21 +87,21 @@
                 <div class="mb-3"><b>双核</b>浏览器请切换到<b>极速模式</b>使用</div>
                 <h3 class="text-success mb-3">推荐使用</h3>
                 <div class="browser-list">
-                    <a class="browser-item" href="https://www.google.cn/chrome/" target="_blank">
-                        <div class="browser-icon" style="background-image:url(/static/admin/images/chrome-logo.svg)"></div>
+                    <a class="col" href="https://www.google.cn/chrome/" target="_blank">
+                        <div class="browser-icon" style="background-image:url(/static/admin/images/chrome-logo.png)"></div>
                         <div class="browser-text">谷哥</div>
                     </a>
-                    <a class="browser-item" href="https://www.mozilla.org/zh-CN/firefox/new/" target="_blank">
+                    <a class="col" href="https://www.mozilla.org/zh-CN/firefox/new/" target="_blank">
                         <div class="browser-icon" style="background-image:url(/static/admin/images/firefox-logo.png)"></div>
                         <div class="browser-text">火狐</div>
                     </a>
-                    <a class="browser-item" href="https://browser.360.cn/ee/" target="_blank">
+                    <a class="col" href="https://browser.360.cn/ee/" target="_blank">
                         <div class="browser-icon" style="background-image:url(/static/admin/images/360-logo.png)"></div>
                         <div class="browser-text">360极速</div>
                     </a>
-                    <a class="browser-item" href="https://www.opera.com/zh-cn" target="_blank">
-                        <div class="browser-icon" style="background-image:url(/static/admin/images/opera-logo.png)"></div>
-                        <div class="browser-text">Opera</div>
+                    <a class="col" href="https://www.microsoft.com/zh-cn/edge" target="_blank">
+                        <div class="browser-icon" style="background-image:url(/static/admin/images/edge-logo.png)"></div>
+                        <div class="browser-text">Edge</div>
                     </a>
                     <div class="clear-fix"></div>
                 </div>
@@ -105,7 +111,7 @@
     </div>
     <div class="row justify-content-md-center">
         <div class="col-md-4 copy">
-            <p>&copy;原设软件 2015-2017</p>
+            <p>&copy;原设软件 2015-{:date('Y')}</p>
         </div>
     </div>
 </div>

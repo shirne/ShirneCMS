@@ -4,13 +4,22 @@ namespace app\api\controller;
 
 use app\common\facade\MemberFavouriteFacade;
 use app\common\facade\ProductCategoryFacade;
+use app\common\model\MemberLevelModel;
 use app\common\model\PostageModel;
 use app\common\model\ProductModel;
 use app\common\model\WechatModel;
 use app\common\model\ProductSkuModel;
+use DomainException;
+use Endroid\QrCode\Exception\InvalidWriterException;
+use EasyWeChat\Kernel\Exceptions\InvalidConfigException;
+use InvalidArgumentException;
+use Exception;
+use GuzzleHttp\Exception\GuzzleException;
+use RuntimeException;
 use shirne\common\Poster;
 use think\facade\Db;
 use think\facade\Log;
+use think\response\Json;
 
 /**
  * 产品操作接口
@@ -19,11 +28,27 @@ use think\facade\Log;
  */
 class ProductController extends BaseController
 {
+    /**
+     * 获取全部商品分类
+     * 格式
+     *   0 => 顶级类列表
+     *   id => 子类列表
+     *   ...
+     * @return Json 
+     */
     public function get_all_cates(){
         return $this->response(ProductCategoryFacade::getTreedCategory());
     }
 
-    public function get_cates($pid=0, $goods_count=0, $withsku=0){
+    /**
+     * 获取指定id的子类，可携带指定数量和筛选条件的商品
+     * @param int $pid 
+     * @param int $goods_count 商品数量
+     * @param int $withsku 是否携带sku信息
+     * @param array $filters 携带商品列表的筛选条件
+     * @return Json 
+     */
+    public function get_cates($pid=0, $goods_count=0, $withsku=0, $filters=[]){
         if($pid!=0 && preg_match('/^[a-zA-Z]\w+/',$pid)){
             $current=ProductCategoryFacade::findCategory($pid);
             if(empty($current)){
@@ -34,19 +59,33 @@ class ProductController extends BaseController
         $cates = ProductCategoryFacade::getSubCategory($pid);
         if($goods_count > 0){
             $product = ProductModel::getInstance();
+            $filters['limit']=$goods_count;
+            if(!isset($filters['recursive'])){
+                $filters['recursive']=1;
+            }
+            if($withsku){
+                $filters['withsku']=$withsku;
+            }
             foreach($cates as &$cate){
-                $cate['products']=$product->tagList([
-                    'category'=>$cate['id'],
-                    'recursive'=>1,
-                    'limit'=>$goods_count,
-                    'withsku'=>$withsku
-                ]);
+                $filters['category']=$cate['id'];
+                $cate['products']=$product->tagList($filters);
             }
             unset($cate);
         }
         return $this->response($cates);
     }
 
+    /**
+     * 获取商品列表，可分页
+     * @param string $cate 指定所属的分类，默认包含子类
+     * @param string $type 指定商品类型
+     * @param string $order 指定排序
+     * @param string $keyword 指定关键字
+     * @param int $withsku 是否携带sku信息
+     * @param int $page 指定分页
+     * @param int $pagesize 指定获取数量，分页时为每页大小
+     * @return Json 
+     */
     public function get_list($cate='',$type='',$order='',$keyword='',$withsku=0,$page=1, $pagesize=10){
         $condition=[];
         if($cate){
@@ -90,14 +129,27 @@ class ProductController extends BaseController
         ]);
     }
 
+    /**
+     * 获取商品详情
+     * @param int $id 
+     * @return Json 
+     */
     public function view($id){
-        $product = ProductModel::get($id);
+        $product = ProductModel::find($id);
         if(empty($product)){
             $this->error('商品不存在');
         }
 
         $skus=ProductSkuModel::where('product_id',$product['id'])->select();
         $images=Db::name('ProductImages')->where('product_id',$product['id'])->select();
+        if(!empty($product['levels'])){
+            $levels=MemberLevelModel::getCacheData();
+            $level_names=[];
+            foreach($product['levels'] as $lvid){
+                $level_names[] = $levels[intval($lvid)]['level_name'];
+            }
+            $product['level_names']=$level_names;
+        }
 
         $isFavourite=$this->isLogin?MemberFavouriteFacade::isFavourite($this->user['id'],'product',$id):0;
 
@@ -110,8 +162,38 @@ class ProductController extends BaseController
         ]);
     }
 
+    /**
+     * 获取商品快照，快照根据时间戳生成，即订单下单时间
+     * @param int $id 
+     * @param int $date 
+     * @return void|Json 
+     */
+    public function flash($id, $date){
+        $flash = ProductModel::getFlash($id,$date);
+        if(empty($flash)){
+            return $this->error('商品快照不存在');
+        }
+        $product = json_decode($flash['product'],true);
+
+        $skus=json_decode($flash['skus'],true);
+        $images=json_decode($flash['images'],true);
+
+        return $this->response([
+            'product'=>$product,
+            'skus'=>$skus,
+            'images'=>$images,
+            'flashDate'=>$flash['timestamp']
+        ]);
+    }
+
+    /**
+     * 获取商品分享海报，支持web，公众号，小程序
+     * @param mixed $id 
+     * @param string $type 
+     * @return Json 
+     */
     public function share($id, $type='url'){
-        $product = ProductModel::get($id);
+        $product = ProductModel::find($id);
         if(empty($product)){
             $this->error('商品不存在');
         }
@@ -146,7 +228,7 @@ class ProductController extends BaseController
             $sharepath = './uploads/pshare/'.$id.'/share-'.$type.'.png';
         }
         $imgurl = media(ltrim($sharepath,'.'));
-        $config=config('share.');
+        $config=config('share');
         if(empty($config) || empty($config['background'])){
             $this->error('请配置产品海报生成样式(config/share.php)');
         }
@@ -180,9 +262,12 @@ class ProductController extends BaseController
 
             
             $poster = new Poster($config);
-            $poster->generate($data);
-            $poster->save($sharepath);
-            $imgurl .= '?_t='.time();
+            if($poster->generate($data)){
+                $poster->save($sharepath);
+                $imgurl .= '?_t='.time();
+            }else{
+                $this->error('分享图生成失败');
+            }
         }else{
             $imgurl .= '?_t='.filemtime($sharepath);
         }
@@ -190,6 +275,13 @@ class ProductController extends BaseController
         return $this->response(['share_url'=>$imgurl]);
     }
 
+    /**
+     * 生成小程序码
+     * @param mixed $wechatid 
+     * @param mixed $params 
+     * @param mixed $size 
+     * @return string|void 
+     */
     private function miniprogramQrcode($wechatid, $params, $size){
         $app = WechatModel::createApp($wechatid);
         if(!$app){
@@ -203,9 +295,15 @@ class ProductController extends BaseController
         $this->error('小程序码生成失败');
     }
 
-
-    public function comments($id){
-        $product = ProductModel::get($id);
+    /**
+     * 获取评论列表
+     * @param int $id 商品id
+     * @param int $pagesize 默认10
+     * @param int $page 
+     * @return Json 
+     */
+    public function comments($id, $pagesize = 10){
+        $product = ProductModel::find($id);
         if(empty($product)){
             $this->error('参数错误');
         }
@@ -213,7 +311,7 @@ class ProductController extends BaseController
             ->view('member',['username','realname','avatar'],'member.id=productComment.member_id','LEFT')
             ->where('productComment.status',1)
             ->where('product_id',$id)
-            ->order('productComment.create_time desc')->paginate(10);
+            ->order('productComment.create_time desc')->paginate($pagesize);
 
         return $this->response([
             'lists'=>$comments->all(),

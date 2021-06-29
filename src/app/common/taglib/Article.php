@@ -11,7 +11,8 @@ use app\common\core\BaseTabLib;
 class Article extends BaseTabLib
 {
     protected $tags =[
-        'list'=>['attr'=>'var,category,type,ids,order,limit,cover,withimgs,recursive','close'=>0],
+        'list'=>['attr'=>'var,category,type,ids,exclude_ids,order,limit,cover,withimgs,recursive','close'=>0],
+        'find'=>['attr'=>'var,category,name,cover,withimgs,recursive','close'=>0],
         'relation'=>['attr'=>'var,category,id,limit,withimgs','close'=>0],
         'prev'=>['attr'=>'var,category,id','close'=>0],
         'next'=>['attr'=>'var,category,id','close'=>0],
@@ -25,6 +26,19 @@ class Article extends BaseTabLib
     public function tagList($tag){
         $var  = isset($tag['var']) ? $tag['var'] : 'article_list';
 
+        $parseStr = '<?php ';
+
+        $parseStr .= '$'.$var.'=\app\common\model\ArticleModel::getInstance()->tagList('.$this->exportArg($tag).');';
+
+        $parseStr .= ' ?>';
+        return $parseStr;
+    }
+    public function tagFind($tag){
+        $var  = isset($tag['var']) ? $tag['var'] : 'article';
+
+        $tag['limit'] = 1;
+        $tag['find'] = 1;
+        $tag['hidden'] = '';
         $parseStr = '<?php ';
 
         $parseStr .= '$'.$var.'=\app\common\model\ArticleModel::getInstance()->tagList('.$this->exportArg($tag).');';
@@ -57,45 +71,6 @@ class Article extends BaseTabLib
         $parseStr = '<?php ';
 
         $parseStr .= '$'.$var.'=\app\common\model\ArticleModel::getInstance()->tagNext('.$this->exportArg($tag).');';
-
-        $parseStr .= ' ?>';
-        return $parseStr;
-    }
-    public function tagPages($tag){
-        $var  = isset($tag['var']) ? $tag['var'] : 'page_list';
-        $group=isset($tag['group']) ? $this->parseArg($tag['group']) : '';
-
-        $parseStr='<?php ';
-
-        $parseStr.='$'.$var.'=\think\Db::name("page")';
-        $parseStr .= '->where(\'status\',1)';
-        if(!empty($group)){
-            $parseStr .= '->where(\'group\','.$group.')';
-        }
-        if(!empty($tag['limit'])){
-            $parseStr .= '->limit('.intval($tag['limit']).')';
-        }
-        $parseStr .= '->select();';
-
-        $parseStr .= ' ?>';
-        return $parseStr;
-    }
-    public function tagPage($tag){
-        $var  = isset($tag['var']) ? $tag['var'] : 'page_model';
-        $name=isset($tag['name']) ? $this->parseArg($tag['name']) : '';
-        $group=isset($tag['group']) ? $this->parseArg($tag['group']) : '';
-
-        $parseStr='<?php ';
-
-        $parseStr.='$'.$var.'=\think\Db::name("page")';
-        $parseStr .= '->where(\'status\',1)';
-        if(!empty($name)){
-            $parseStr .= '->where(\'name\','.$name.')';
-        }
-        if(!empty($group)){
-            $parseStr .= '->where(\'group\','.$group.')';
-        }
-        $parseStr .= '->find();';
 
         $parseStr .= ' ?>';
         return $parseStr;

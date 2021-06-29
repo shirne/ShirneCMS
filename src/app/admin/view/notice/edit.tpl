@@ -9,16 +9,16 @@
     <form method="post" action="">
         <div class="form-group">
             <label for="title">公告标题</label>
-            <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="输入公告标题">
+            <input type="text" name="title" class="form-control" value="{$model.title|default=''}" placeholder="输入公告标题">
         </div>
         <div class="form-group">
             <label for="page">调用标志</label>
-            <input type="text" name="page" class="form-control" value="{$model.page}" >
+            <input type="text" name="page" class="form-control" value="{$model.page|default=''}" >
             <div class="text-muted">此处内容由设计师设定，请勿改动！</div>
         </div>
         <div class="form-group">
             <label for="bb">链接地址</label>
-            <input type="text" name="url" class="form-control" value="{$model.url}" placeholder="输入链接地址">
+            <input type="text" name="url" class="form-control" value="{$model.url|default=''}" placeholder="输入链接地址">
         </div>
         <div class="form-group">
             <label for="status1">公告状态</label>
@@ -31,14 +31,14 @@
         </div>
         <div class="form-group">
             <label for="summary">公告摘要</label>
-            <textarea name="summary" class="form-control" >{$model.summary}</textarea>
+            <textarea name="summary" class="form-control" >{$model.summary|default=''}</textarea>
         </div>
         <div class="form-group">
             <label for="post-content">公告内容</label>
-            <script id="post-content" name="content" type="text/plain">{$model.content|raw}</script>
+            <script id="post-content" name="content" type="text/plain">{$model.content|default=''|raw}</script>
         </div>
         <div class="form-group">
-            <input type="hidden" name="id" value="{$model.id}">
+            <input type="hidden" name="id" value="{$model.id|default=''}">
             <button type="submit" class="btn btn-primary">保存</button>
         </div>
     </form>

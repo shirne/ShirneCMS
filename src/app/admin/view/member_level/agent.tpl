@@ -19,7 +19,8 @@
             <tr>
                 <th width="50">编号</th>
                 <th>名称</th>
-                <th>简称</th>
+                <th width="80">简称</th>
+                <th>样式</th>
                 <th>默认</th>
                 <th>条件</th>
                 <th>奖励比例</th>
@@ -32,6 +33,16 @@
                     <td>{$v.id}</td>
                     <td><input type="text" class="form-control" name="agents[{$v.id}][name]" value="{$v.name}"></td>
                     <td><input type="text" class="form-control" name="agents[{$v.id}][short_name]" value="{$v.short_name}"></td>
+                    <td>
+                        <select name="agents[{$v.id}][style]" class="form-control text-{$v.style}"
+                                onchange="$(this).attr('class','form-control text-'+$(this).val())">
+                            {foreach name="styles" id="style"}
+                                <option value="{$style}" {$v['style']==$style?'selected':''}
+                                        class="text-{$style}">██████████
+                                </option>
+                            {/foreach}
+                        </select>
+                    </td>
                     <td><input type="radio" name="is_default" value="{$v.id}" {$v['is_default']?'checked':''}></td>
                     <td>
                         <div class="input-group">

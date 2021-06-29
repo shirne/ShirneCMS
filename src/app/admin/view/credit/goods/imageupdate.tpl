@@ -10,11 +10,11 @@
     <form method="post" action="" enctype="multipart/form-data">
         <div class="form-group">
             <label for="title">名称</label>
-            <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="名称">
+            <input type="text" name="title" class="form-control" value="{$model.title|default=''}" placeholder="名称">
         </div>
         <div class="form-group">
             <label for="text">说明</label>
-            <input type="text" name="description" class="form-control" value="{$model.description}" placeholder="图片说明">
+            <input type="text" name="description" class="form-control" value="{$model.description|default=''}" placeholder="图片说明">
         </div>
         <div class="form-row">
             <div class="col form-group">
@@ -25,7 +25,7 @@
                         <label class="custom-file-label" for="upload_image">选择文件</label>
                     </div>
                 </div>
-                {if $model['image']}
+                {if !empty($model['image'])}
                     <figure class="figure">
                         <img src="{$model.image}" class="figure-img img-fluid rounded" alt="image">
                         <figcaption class="figure-caption text-center">{$model.image}</figcaption>
@@ -35,7 +35,7 @@
             </div>
             <div class="col form-group">
                 <label for="image">排序</label>
-                <input type="text" name="sort" class="form-control" value="{$model.sort}" />
+                <input type="text" name="sort" class="form-control" value="{$model.sort|default=''}" />
             </div>
         </div>
         <div class="form-group">

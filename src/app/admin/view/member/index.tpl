@@ -5,7 +5,7 @@
 
 <div id="page-wrapper">
     <div class="row list-header">
-        <div class="col col-6">
+        <div class="col col-5">
             <div class="btn-toolbar list-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                 <div class="btn-group btn-group-sm mr-2" role="group" aria-label="check action group">
                     <a href="javascript:" class="btn btn-outline-secondary checkall-btn" data-toggle="button" aria-pressed="false">全选</a>
@@ -20,7 +20,7 @@
                 <a href="javascript:" class="btn btn-outline-warning btn-sm action-btn" data-need-checks="false" data-action="increment"><i class="ion-md-add"></i> 设置起始ID</a>
             </div>
         </div>
-        <div class="col col-6">
+        <div class="col col-7">
             <form action="{:url('member/index')}" method="post">
                 <div class="form-row">
                     <div class="form-group col input-group input-group-sm">
@@ -28,6 +28,14 @@
                         <span class="input-group-text">上级</span>
                         </div>
                         <input type="text" class="form-control" name="referer" placeholder="填写id或会员名" value="{$referer}">
+                    </div>
+                    <div class="form-group col input-group input-group-sm date-range">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">注册时间</span>
+                        </div>
+                        <input type="text" class="form-control fromdate" name="start_date" placeholder="选择开始日期" value="{$start_date}">
+                        <div class="input-group-middle"><span class="input-group-text">-</span></div>
+                        <input type="text" class="form-control todate" name="end_date" placeholder="选择结束日期" value="{$end_date}">
                     </div>
                     <div class="form-group col input-group input-group-sm">
                         <div class="input-group-prepend">
@@ -96,7 +104,7 @@
                     {/foreach}
                 </td>
                 <td>
-                    <empty name="v.refer_name">
+                    {empty name="v.refer_name"}
                         <a href="javascript:" data-id="{$v.id}" class="bindreferer">设置</a>
                         {else/}
                         <div class="media">
@@ -118,13 +126,14 @@
                                 </div>
                             </div>
                         </div>
-                    </empty>
+                    {/empty}
                 </td>
                 <td class="operations text-left">
                     {if $v.is_agent neq 0}
                         <a class="btn btn-outline-primary" title="查看下线" href="{:url('member/index',array('referer'=>$v['id']))}"><i class="ion-md-people"></i> </a>
                         <a class="btn btn-outline-danger link-confirm" data-confirm="取消代理不能更改已注册的用户!!!" title="取消代理" href="{:url('member/cancel_agent',array('id'=>$v['id']))}" ><i class="ion-md-log-out"></i> </a><br />
                         <a class="btn btn-sm pl-1 pr-1 pt-0 pb-0 mt-2 btn-{$agents[$v['is_agent']]['style']} btn-setagent" title="更改级别" data-id="{$v.id}" data-agent="{$v.is_agent}" href="{:url('member/set_agent',array('id'=>$v['id']))}" >{$agents[$v['is_agent']]['name']}&nbsp;<i class="ion-md-create"></i></a>
+                        <span class="badge badge-info">{$v.agentcode}</span>
                     {else/}
                         <a class="btn btn-sm btn-outline-primary"  data-id="{$v.id}" data-agent="0" title="设置代理" href="{:url('member/set_agent',array('id'=>$v['id']))}" ><i class="ion-md-medal"></i> </a>
                     {/if}

@@ -18,11 +18,12 @@ trait Upload
         //允许的文件后缀
         'allow_exts'     =>  array(
             'jpg','jpeg','png','gif','bmp','tif',
-            'swf','mp4','mp3','flv',
+            'swf','mp4','mp3','flv','avi',
             'txt','csv','xls','xlsx','doc','docx','ppt','pptx','pdf',
             'zip','rar','json','pem'
         ),
         'img_exts'       =>  array('gif','jpg','jpeg','bmp','png','swf','tif'),
+        'media_exts'       =>  array('gif','jpg','jpeg','bmp','png','swf','tif','swf','mp4','mp3','flv','avi'),
         'root_path'      =>  './uploads/',
         'save_path'      =>  '',
         'save_rule'      =>  'file_rule',
@@ -37,7 +38,7 @@ trait Upload
     protected $uploadErrorCode;
 
     protected function setUploadDriver(){
-        $config=config('upload.');
+        $config=config('upload');
         $this->uploadConfig=array_merge($this->uploadConfig,$config);
         $uploadDriver = '\\extcore\\upload\\' . ucfirst($this->uploadConfig['driver'] ).'Driver';
         $this->uploader = new $uploadDriver($this->uploadConfig);
@@ -75,7 +76,12 @@ trait Upload
             return false;
         }
         // 如果是图像文件 检测文件格式
-        if($isImg && !in_array($file['extension'], $this->uploadConfig['img_exts'])){
+        if($isImg > 1 ){
+            if(!in_array($file['extension'], $this->uploadConfig['media_exts'])){
+                $this->uploadError = '只能上传媒体文件！';
+                return false;
+            }
+        }elseif($isImg && !in_array($file['extension'], $this->uploadConfig['img_exts'])){
             $this->uploadError = '只能上传图片！';
             return false;
         }

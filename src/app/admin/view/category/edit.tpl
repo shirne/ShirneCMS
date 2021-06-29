@@ -2,7 +2,7 @@
 
 {block name="body"}
 
-    {include  file="public/bread" menu="category_index" title="{:lang('Category update')}" /}
+    {include  file="public/bread" menu="category_index" title="分类管理" /}
 
     <div id="page-wrapper">
         <div class="page-header">{:lang($id>0?'Edit':'Add')}{:lang('Category')}</div>
@@ -14,7 +14,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text">{:lang('Category Title')}</span>
                             </div>
-                            <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="输入分类名称"/>
+                            <input type="text" name="title" class="form-control" value="{$model.title|default=''}" placeholder="输入分类名称"/>
                         </div>
                     </div>
                     <div class="form-group col">
@@ -22,7 +22,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text">简称</span>
                             </div>
-                            <input type="text" name="short" class="form-control" value="{$model.short}"/>
+                            <input type="text" name="short" class="form-control" value="{$model.short|default=''}"/>
                         </div>
                     </div>
                 </div>
@@ -47,7 +47,7 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text">分类别名</span>
                         </div>
-                    <input type="text" name="name" class="form-control" value="{$model.name}" placeholder="输入分类别名,不能和其他分类别名重复">
+                    <input type="text" name="name" class="form-control" value="{$model.name|default=''}" placeholder="输入分类别名,不能和其他分类别名重复">
                     </div>
                 </div>
                 </div>
@@ -62,7 +62,7 @@
                             <label class="custom-file-label" for="upload_icon">选择文件</label>
                         </div>
                     </div>
-                    {if $model['icon']}
+                    {if !empty($model['icon'])}
                         <figure class="figure">
                             <img src="{$model.icon}" class="figure-img img-fluid rounded" alt="icon">
                             <figcaption class="figure-caption text-center">{$model.icon}</figcaption>
@@ -80,7 +80,7 @@
                             <label class="custom-file-label" for="upload_image">选择文件</label>
                         </div>
                     </div>
-                    {if $model['image']}
+                    {if !empty($model['image'])}
                         <figure class="figure">
                             <img src="{$model.image}" class="figure-img img-fluid rounded" alt="image">
                             <figcaption class="figure-caption text-center">{$model.image}</figcaption>
@@ -95,7 +95,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text">排序</span>
                             </div>
-                        <input type="text" name="sort" class="form-control" value="{$model.sort}" placeholder="排序按从小到大">
+                        <input type="text" name="sort" class="form-control" value="{$model.sort|default=''}" placeholder="排序按从小到大">
                         </div>
                     </div>
                     <div class="form-group col">
@@ -103,7 +103,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text">分页</span>
                             </div>
-                        <input type="text" name="pagesize" class="form-control" value="{$model.pagesize}" placeholder="列表页分页数量">
+                        <input type="text" name="pagesize" class="form-control" value="{$model.pagesize|default=''}" placeholder="列表页分页数量">
                         </div>
                     </div>
                 </div>
@@ -124,24 +124,37 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label for="description">默认属性</label>
+                    <div class="form-control">
+                        <input type="text" class="taginput" value="{$model.props|implode_cmp}" placeholder="填写多个值以,分割"  />
+                    </div>
+                </div>
+                <div class="form-group">
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text">关键词</span>
                         </div>
-                    <input type="text" name="keywords" class="form-control" value="{$model.keywords}"
+                    <input type="text" name="keywords" class="form-control" value="{$model.keywords|default=''}"
                            placeholder="请输入SEO关键词(选填)">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="description">描述信息</label>
                     <textarea name="description" cols="30" rows="10" class="form-control"
-                              placeholder="请输入分类描述(选填)">{$model.description}</textarea>
+                              placeholder="请输入分类描述(选填)">{$model.description|default=''}</textarea>
                 </div>
                 <div class="form-group submit-btn">
-                    <input type="hidden" name="id" value="{$model.id}">
+                    <input type="hidden" name="id" value="{$model.id|default=''}">
                     <button type="submit" class="btn btn-primary">{$id>0?'保存':'添加'}</button>
                 </div>
             </form>
         </div>
     </div>
+{/block}
+{block name="script"}
+    <script type="text/javascript">
+        jQuery(function($){
+            $('.taginput').tags('props[]');
+        })
+    </script>
 {/block}
