@@ -9,10 +9,18 @@ use app\common\model\LinksModel;
 use app\common\model\MemberAgentModel;
 use app\common\model\MemberSignModel;
 use app\common\model\NoticeModel;
+use Exception;
 use InvalidArgumentException;
+use PDOStatement;
+use stdClass;
 use think\Db;
+use think\exception\DbException;
+use think\db\exception\ModelNotFoundException;
+use think\db\exception\DataNotFoundException;
 use think\facade\Log;
+use think\Model;
 use think\Response;
+use think\response\Json;
 use Throwable;
 
 /**
@@ -271,6 +279,10 @@ class CommonController extends BaseController
         $this->success('反馈成功');
     }
 
+    /**
+     * 获取网站通用配置
+     * @return Json 
+     */
     public function siteinfo(){
         $settings=getSettings(false,true);
         $data=[];
@@ -286,7 +298,9 @@ class CommonController extends BaseController
 
     
     /**
-     * 获取配置
+     * 获取配置信息，系统不会输出第三方配置（一般包含授权码之类）获取配置信息，系统不会输出第三方配置（一般包含授权码之类）
+     * @param mixed $group 
+     * @return Json 
      */
     public function config($group){
         $rdata = new \stdClass();
@@ -316,6 +330,10 @@ class CommonController extends BaseController
         return $this->response($rdata);
     }
 
+    /**
+     * 获取默认微信账号，一般为公众号
+     * @return array|stdClass 
+     */
     private function getDefaultWechat(){
         $wechat = Db::name('wechat')->where('is_default',1)->field('type,account_type,title,logo,qrcode,shareimg,appid,subscribeurl')->find();
         if(!empty($wechat)){
@@ -325,7 +343,7 @@ class CommonController extends BaseController
     }
     
     /**
-     * 签到排名
+     * 获取签到排名
      * @param int $date
      * @return \think\response\Json
      */
@@ -337,7 +355,14 @@ class CommonController extends BaseController
     }
     
     /**
-     * 公共数据
+     * 获取公用数据
+     * 银行列表-banklist
+     * 日志类型-log_types
+     * 财务字段-money_fields
+     * 会员等级-levels
+     * 代理等级-agents
+     * @param string $keys 可指定一个或多个数据类型
+     * @return Json 
      */
     public function data($keys){
         $datas=[];

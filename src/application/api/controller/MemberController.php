@@ -9,10 +9,22 @@ use app\common\model\MemberAgentModel;
 use app\common\model\MemberLevelLogModel;
 use app\common\model\MemberLevelModel;
 use app\common\service\CheckcodeService;
+use Exception as GlobalException;
 use extcore\traits\Upload;
+use InvalidArgumentException;
+use PDOException as GlobalPDOException;
+use PHPMailer\PHPMailer\Exception as PHPMailerException;
 use shirne\common\ValidateHelper;
 use think\Db;
+use think\db\exception\BindParamException;
+use think\exception\DbException;
+use think\db\exception\ModelNotFoundException;
+use think\db\exception\DataNotFoundException;
+use think\Exception;
+use think\exception\PDOException;
 use think\Loader;
+use think\response\Json;
+use Throwable;
 
 /**
  * 会员操作接口
@@ -74,6 +86,14 @@ class MemberController extends AuthedController
         }
     }
 
+    /**
+     * 登记手机号
+     * @param string $mobile 
+     * @param string $code 
+     * @param string $nickname 
+     * @param string $areas 
+     * @return void 
+     */
     public function mobile_register($mobile='', $code='', $nickname='', $areas=''){
         if(empty($mobile) || empty($code)){
             $this->error('请填写手机号及验证码');
@@ -120,6 +140,13 @@ class MemberController extends AuthedController
         $this->success(['is_set_agent'=>($seted==2)?1:0,'image'=>getSetting('beginner_reward_image')],1,'绑定成功');
     }
 
+    /**
+     * 绑定手机号
+     * @param mixed $mobile 
+     * @param mixed $code 
+     * @param int $step 
+     * @return void 
+     */
     public function bind_mobile($mobile, $code, $step = 0){
         $unbindKey = 'unbind_'.$this->user['mobile'].'_'.$this->user['id'];
         if(!ValidateHelper::isMobile($mobile)){
@@ -167,6 +194,11 @@ class MemberController extends AuthedController
         }
     }
 
+    /**
+     * 发送用于绑定的验证码
+     * @param string $mobile 
+     * @return void 
+     */
     public function smscode($mobile='')
     {
         //绑定手机号
@@ -191,6 +223,10 @@ class MemberController extends AuthedController
         $this->success('验证码已发送');
     }
 
+    /**
+     * 更新头像
+     * @return void 
+     */
     public function avatar(){
         $data=[];
         $uploaded=$this->upload('avatar','upload_avatar');
@@ -208,6 +244,11 @@ class MemberController extends AuthedController
         }
     }
 
+    /**
+     * 上传会员图片，如：头像图
+     * @return Json 
+     * @throws GlobalException 
+     */
     public function uploadImage(){
         $uploaded=$this->upload('member','file_upload');
 
@@ -216,6 +257,10 @@ class MemberController extends AuthedController
         ]);
     }
 
+    /**
+     * 升级申请
+     * @return void 
+     */
     public function upgrade(){
         $target = $this->request->post('level_id');
         $balance_pay = $this->request->post('balance_pay') == '1';
@@ -247,6 +292,10 @@ class MemberController extends AuthedController
         }
     }
     
+    /**
+     * 修改密码
+     * @return void 
+     */
     public function change_password(){
         $password=$this->request->post('password');
         if(!compare_password($this->user,$password)){
@@ -263,6 +312,10 @@ class MemberController extends AuthedController
         $this->success('密码修改成功');
     }
 
+    /**
+     * 修改二级密码
+     * @return void 
+     */
     public function sec_password(){
         $password=$this->request->post('password');
         if(empty($this->user['secpassword'])){
@@ -285,6 +338,11 @@ class MemberController extends AuthedController
         $this->success('安全密码修改成功');
     }
 
+    /**
+     * 精确搜索会员资料
+     * @param string $keyword 会员名或手机号
+     * @return Json 
+     */
     public function search($keyword){
         if(empty($keyword)){
             $this->error('请输入会员名或手机号');
@@ -303,6 +361,10 @@ class MemberController extends AuthedController
         ]);
     }
     
+    /**
+     * 退出登录，清除token
+     * @return void 
+     */
     public function quit(){
         if($this->isLogin){
             MemberTokenFacade::clearToken($this->token);
@@ -310,40 +372,4 @@ class MemberController extends AuthedController
         $this->success('退出成功');
     }
 
-    public function addresses(){
-        return action('member.address/index');
-    }
-
-    public function get_address($id){
-        return action('member.address/view',['id'=>$id]);
-    }
-    public function edit_address($id=0){
-        return action('member.address/save',['id'=>$id]);
-    }
-    public function del_address($id){
-        return action('member.address/delete',['id'=>$id]);
-    }
-    public function set_default_address($id){
-        return action('member.address/set_default',['id'=>$id]);
-    }
-
-    public function orders($status=''){
-        return action('member.order/index',['status'=>$status]);
-    }
-
-    public function order_view($id){
-        return action('member.order/view',['id'=>$id]);
-    }
-
-    public function favourite($type){
-        return action('member.favourite/index',['type'=>$type]);
-    }
-
-    public function add_favourite($type,$id){
-        return action('member.favourite/add',['type'=>$type,'id'=>$id]);
-    }
-
-    public function del_favourite($type,$ids){
-        return action('member.favourite/remove',['type'=>$type,'ids'=>$ids]);
-    }
 }

@@ -7,8 +7,20 @@ use app\common\facade\MemberFavouriteFacade;
 use app\common\model\ArticleCommentModel;
 use app\common\model\ArticleModel;
 use app\common\validate\ArticleCommentValidate;
+use DomainException;
+use InvalidArgumentException;
+use PDOException;
+use Exception as GlobalException;
 use shirne\third\Aliyun;
 use think\Db;
+use think\db\exception\BindParamException;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\ModelNotFoundException;
+use think\Exception;
+use think\exception\DbException;
+use think\exception\PDOException as ExceptionPDOException;
+use think\response\Json;
+use Throwable;
 
 /**
  * 文章操作接口
@@ -17,10 +29,25 @@ use think\Db;
  */
 class ArticleController extends BaseController
 {
+    /**
+     * 获取全部文章分类
+     * 格式
+     *   0 => 顶级类列表
+     *   id => 子类列表
+     *   ...
+     * @return Json 
+     */
     public function get_all_cates(){
         return $this->response(CategoryFacade::getTreedCategory());
     }
 
+    /**
+     * 获取指定id的子类，可携带指定数量和筛选条件的文章
+     * @param int $pid 
+     * @param int $list_count 
+     * @param array $filters 
+     * @return Json 
+     */
     public function get_cates($pid=0, $list_count=0, $filters=[]){
         if($pid != '0' && preg_match('/^[a-zA-Z]\w+$/',$pid)){
             $current=CategoryFacade::findCategory($pid);
@@ -45,6 +72,16 @@ class ArticleController extends BaseController
         return $this->response($cates);
     }
 
+    /**
+     * 获取文章列表
+     * @param string $cate 指定所属的分类，默认包含子类
+     * @param string $order 指定排序
+     * @param string $keyword 指定关键字
+     * @param int $page 指定分页
+     * @param string $type 指定文章类型
+     * @param int $pagesize 指定获取数量，分页时为每页大小
+     * @return Json 
+     */
     public function get_list($cate='',$order='',$keyword='',$page=1,$type='', $pagesize=10){
     
         $condition=[];
@@ -76,6 +113,11 @@ class ArticleController extends BaseController
         ]);
     }
 
+    /**
+     * 获取指定文章详情
+     * @param mixed $id 
+     * @return Json 
+     */
     public function view($id){
         $id=intval($id);
         $article = ArticleModel::get($id);
@@ -103,6 +145,12 @@ class ArticleController extends BaseController
         ]);
     }
 
+    /**
+     * 点赞指定文章，需要登录才能操作
+     * @param mixed $id 
+     * @param string $type 
+     * @return Json 
+     */
     public function digg($id,$type='up'){
         $id=intval($id);
         $article = ArticleModel::get($id);
@@ -143,7 +191,14 @@ class ArticleController extends BaseController
         ]);
     }
 
-    public function comments($id){
+    /**
+     * 获取指定文章的评论，可分页
+     * @param int $id 
+     * @param int $pagesize
+     * @param int $page
+     * @return Json 
+     */
+    public function comments($id, $pagesize = 10){
         $model = Db::view('articleComment','*')
         ->view('member',['username','realname','avatar'],'member.id=articleComment.member_id','LEFT')
         ->where('article_id',$id);
@@ -155,7 +210,7 @@ class ArticleController extends BaseController
         }else{
             $model->where('articleComment.status',1);
         }
-        $comments=$model->order('articleComment.create_time desc')->paginate(10);
+        $comments=$model->order('articleComment.create_time desc')->paginate($pagesize);
 
         return $this->response([
             'lists'=>$comments->items(),
@@ -165,14 +220,20 @@ class ArticleController extends BaseController
         ]);
     }
 
-    public function do_comment($id){
+    /**
+     * 提交评论 可指定要回复的评论
+     * @param int $id 
+     * @param int $reply_id 
+     * @return void 
+     */
+    public function do_comment($id, $reply_id = 0){
         $this->check_submit_rate();
         $article = Db::name('article')->find($id);
         if(empty($article)){
             $this->error(lang('Arguments error!'));
         }
         
-        $data=$this->request->only('email,is_anonymous,content,reply_id','put');
+        $data=$this->request->only('email,is_anonymous,content','put');
         if($this->config['anonymous_comment']==0 && !$this->isLogin){
             $this->error('请登陆后评论');
         }
@@ -199,11 +260,12 @@ class ArticleController extends BaseController
             if(!$check){
                 $this->error('系统繁忙,请稍后再提交评论');
             }
-            if(!empty($data['reply_id'])){
+            if(!empty($reply_id)){
                 $reply=Db::name('ArticleComment')->find($data['reply_id']);
                 if(empty($reply)){
                     $this->error('回复的评论不存在');
                 }
+                $data['reply_id'] = $reply_id;
                 $data['group_id']=empty($reply['group_id'])?$reply['id']:$reply['group_id'];
             }
             $data['content']=preg_replace_callback('/\[([^\]]+)\]\([^\)]+\)/',function($matches){

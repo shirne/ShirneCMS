@@ -4,7 +4,12 @@ namespace app\api\controller;
 
 use app\common\facade\GoodsCategoryFacade;
 use app\common\model\GoodsModel;
+use InvalidArgumentException;
 use think\Db;
+use think\exception\DbException;
+use think\db\exception\ModelNotFoundException;
+use think\db\exception\DataNotFoundException;
+use think\response\Json;
 
 /**
  * 产品操作接口
@@ -13,10 +18,25 @@ use think\Db;
  */
 class GoodsController extends BaseController
 {
+    /**
+     * 获取所有积分商品分类
+     * 格式
+     *   0 => 顶级类列表
+     *   id => 子类列表
+     *   ...
+     * @return Json 
+     */
     public function get_all_cates(){
         return $this->response(GoodsCategoryFacade::getTreedCategory());
     }
 
+    /**
+     * 获取指定id的子类，可携带指定数量和筛选条件的文章
+     * @param int $pid 
+     * @param int $goods_count 携带积分商品数量
+     * @param array $filters 携带积分商品筛选条件
+     * @return Json 
+     */
     public function get_cates($pid=0, $goods_count=0, $filters=[]){
         if($pid!=0 && preg_match('/^[a-zA-Z]\w+/',$pid)){
             $current=GoodsCategoryFacade::findCategory($pid);
@@ -41,6 +61,15 @@ class GoodsController extends BaseController
         return $this->response($cates);
     }
 
+    /**
+     * 获取积分商品列表，可分页
+     * @param string $cate 指定所属的分类，默认包含子类
+     * @param string $order 指定排序
+     * @param string $keyword 指定关键字
+     * @param int $page 指定分页
+     * @param int $pagesize 指定获取数量，分页时为每页大小
+     * @return Json 
+     */
     public function get_list($cate='',$order='',$keyword='',$page=1, $pagesize=10){
         $condition=[];
         if($cate){
@@ -66,6 +95,11 @@ class GoodsController extends BaseController
         ]);
     }
 
+    /**
+     * 获取积分商品详情
+     * @param mixed $id 
+     * @return Json 
+     */
     public function view($id){
         $goods = GoodsModel::get($id);
         if(empty($goods)){

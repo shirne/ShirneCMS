@@ -9,14 +9,34 @@ use app\common\model\MemberCashinModel;
 use app\common\model\MemberOauthModel;
 use app\common\validate\MemberCardValidate;
 use app\common\model\WechatModel;
+use DomainException;
+use Exception as GlobalException;
 use extcore\traits\Upload;
+use InvalidArgumentException;
+use PDOException as GlobalPDOException;
 use shirne\common\ValidateHelper;
 use think\Db;
+use think\db\exception\BindParamException;
+use think\response\Json;
+use think\exception\DbException;
+use think\db\exception\ModelNotFoundException;
+use think\db\exception\DataNotFoundException;
+use think\Exception;
+use think\exception\PDOException;
+use Throwable;
 
+/**
+ * 会员账号相关操作
+ * @package app\api\controller\member
+ */
 class AccountController extends AuthedController
 {
     use Upload;
     
+    /**
+     * 会员银行卡列表
+     * @return Json 
+     */
     public function cards(){
         $cards=Db::name('MemberCard')->where('member_id',$this->user['id'])->limit(20)->select();
         
@@ -25,6 +45,12 @@ class AccountController extends AuthedController
             'banklist'=>banklist()
         ]);
     }
+
+    /**
+     * 会员银行卡详细
+     * @param int $id 
+     * @return Json 
+     */
     public function card_view($id){
         $card = Db::name('MemberCard')->where('id' , $id)
             ->where('member_id',$this->user['id'])->find();
@@ -39,10 +65,9 @@ class AccountController extends AuthedController
     }
     
     /**
+     * 提交银行卡资料
      * @param array $card cardno,bankname,cardname,bank,is_default
      * @param int $id
-     * @throws \think\Exception
-     * @throws \think\exception\PDOException
      */
     public function card_save($card,$id=0){
         
@@ -71,6 +96,10 @@ class AccountController extends AuthedController
         $this->success('保存成功');
     }
     
+    /**
+     * 获取充值信息列表
+     * @return Json 
+     */
     public function recharge_types(){
         $types=Db::name('paytype')->where('status',1)->order('id ASC')->select();
         return $this->response([
@@ -79,7 +108,7 @@ class AccountController extends AuthedController
     }
     
     /**
-     * 充值
+     * 提交充值信息
      * @return mixed
      */
     public function recharge(){
@@ -138,6 +167,10 @@ class AccountController extends AuthedController
         $this->error('提交失败');
     }
     
+    /**
+     * 充值明细
+     * @return Json 
+     */
     public function recharge_list(){
         $model=Db::name('memberRecharge')->where('member_id',$this->user['id']);
         
@@ -151,6 +184,11 @@ class AccountController extends AuthedController
         ]);
     }
     
+    /**
+     * 取消充值
+     * @param mixed $order_id 
+     * @return void 
+     */
     public function recharge_cancel($order_id){
         $result=Db::name('memberRecharge')->where('id',$order_id)->update(['status'=>2]);
         if($result){
@@ -160,6 +198,10 @@ class AccountController extends AuthedController
         }
     }
     
+    /**
+     * 获取提现配置
+     * @return Json 
+     */
     public function cash_config(){
         $wechats=WechatModel::where('account_type','service')->select();
         $user = $this->user;
@@ -190,6 +232,11 @@ class AccountController extends AuthedController
         ]);
     }
     
+    /**
+     * 提现明细
+     * @param string $status 
+     * @return Json 
+     */
     public function cash_list($status=''){
         $model=Db::name('memberCashin')->where('member_id',$this->user['id']);
         if($status !== ''){
@@ -204,6 +251,16 @@ class AccountController extends AuthedController
             'total_page'=>$cashes->lastPage()
         ]);
     }
+
+    /**
+     * 提交提现申请
+     * @param double $amount 提金额
+     * @param int $card_id 银行卡id
+     * @param string $remark 备注
+     * @param string $cashtype 提现类型
+     * @param string $form_id 小程序中获取的form_id ，用于模板消息发送
+     * @return void 
+     */
     public function cash(){
         $hascash=Db::name('memberCashin')->where('member_id',$this->user['id'])
         ->where('status',0)->count();
@@ -320,6 +377,12 @@ class AccountController extends AuthedController
         }
     }
     
+    /**
+     * 余额明细
+     * @param string $type 
+     * @param string $field 
+     * @return Json 
+     */
     public function money_log($type='',$field=''){
         $model=Db::view('MemberMoneyLog mlog','*')
             ->view('Member m',['username','level_id'],'m.id=mlog.from_member_id','LEFT')
@@ -341,7 +404,12 @@ class AccountController extends AuthedController
     }
     
     /**
-     * 会员转账
+     * 会员转账，可转出到其它会员，或多种余额间互转
+     * @param string $action 转移类型
+     * @param double $field 转移余额类型
+     * @param double $member_id 接受会员id
+     * @param double $amount 转移金额
+     * @return void 
      */
     public function transfer($action){
         $secpassword=$this->request->param('secpassword');
@@ -392,6 +460,11 @@ class AccountController extends AuthedController
         }
     }
     
+    /**
+     * 余额解冻
+     * @param mixed $amount 
+     * @return true 
+     */
     private function unfreeze($amount){
         $amount=$amount*100;
         $freezes=Db::name('memberFreeze')->where('member_id',$this->user['id'])

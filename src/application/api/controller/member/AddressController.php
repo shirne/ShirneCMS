@@ -7,6 +7,10 @@ use app\api\controller\AuthedController;
 use app\common\validate\MemberAddressValidate;
 use think\Db;
 
+/**
+ * 会员地址管理接口
+ * @package app\api\controller\member
+ */
 class AddressController extends AuthedController
 {
     public function index(){

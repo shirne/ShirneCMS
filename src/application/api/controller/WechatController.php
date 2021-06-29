@@ -10,8 +10,14 @@ use app\common\model\PayOrderRefundModel;
 use app\common\model\WechatModel;
 use EasyWeChat\BasicService\Application;
 use EasyWeChat\Factory;
+use EasyWeChat\Kernel\Exceptions\Exception;
+use Pimple\Exception\UnknownIdentifierException;
+use InvalidArgumentException;
 use think\Controller;
 use think\Db;
+use think\exception\DbException;
+use think\db\exception\ModelNotFoundException;
+use think\db\exception\DataNotFoundException;
 use think\facade\Log;
 
 /**
@@ -50,7 +56,11 @@ class WechatController extends Controller{
         return $account;
     }
 
-    //微信入口文件
+    /**
+     * 微信通知入口
+     * @param string $hash 
+     * @return never 
+     */
     public function index($hash=''){
         Log::record('收到消息'.$hash);
         $account=$this->getAccount($hash);
@@ -98,6 +108,11 @@ class WechatController extends Controller{
         exit;
     }
     
+    /**
+     * 退款通知入口
+     * @param string $hash 
+     * @return never 
+     */
     public function refund($hash=''){
         $account=$this->getAccount($hash);
         $config = WechatModel::to_pay_config($account);
@@ -148,6 +163,11 @@ class WechatController extends Controller{
         exit;
     }
 
+    /**
+     * 支付通知入口
+     * @param string $hash 
+     * @return never 
+     */
     public function payresult($hash=''){
         $account=$this->getAccount($hash);
         $config = WechatModel::to_pay_config($account);
@@ -203,6 +223,12 @@ class WechatController extends Controller{
         $response->send();
         exit;
     }
+
+    /**
+     * 扫码支付通知入口
+     * @param string $hash 
+     * @return never 
+     */
     public function scanpay($hash=''){
         $account=$this->getAccount($hash);
         $config = WechatModel::to_pay_config($account);

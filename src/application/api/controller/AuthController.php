@@ -10,13 +10,35 @@ use app\common\model\WechatModel;
 use app\common\service\CheckcodeService;
 use app\common\validate\MemberValidate;
 use EasyWeChat\Factory;
+use EasyWeChat\Kernel\Exceptions\InvalidArgumentException as ExceptionsInvalidArgumentException;
+use EasyWeChat\Kernel\Exceptions\InvalidConfigException;
+use EasyWeChat\Kernel\Exceptions\RuntimeException;
 use EasyWeChat\OfficialAccount\Application;
+use Exception as GlobalException;
+use GuzzleHttp\Exception\GuzzleException;
+use InvalidArgumentException;
+use Overtrue\Socialite\InvalidStateException;
+use Overtrue\Socialite\AuthorizeFailedException;
+use PDOException as GlobalPDOException;
+use PHPMailer\PHPMailer\Exception as PHPMailerException;
+use ReflectionException;
 use shirne\captcha\Captcha;
 use shirne\common\ValidateHelper;
 use shirne\sdk\OAuthFactory;
+use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use think\Db;
+use think\db\exception\BindParamException;
+use think\Exception;
+use think\exception\DbException;
+use think\db\exception\ModelNotFoundException;
+use think\db\exception\DataNotFoundException;
+use think\exception\ClassNotFoundException;
+use think\exception\PDOException;
 use think\facade\Cache;
 use think\facade\Log;
+use think\Response;
+use think\response\Json;
+use Throwable;
 
 /**
  * 授权相关操作
@@ -67,11 +89,20 @@ class AuthController extends BaseController
         }
     }
 
+    /**
+     * 根据id生成一个会话key
+     */
     private function getIpKey(){
         $ip = $this->request->ip();
         return 'access_'.str_replace([':','.'],'_',$ip);
     }
 
+    /**
+     * 获取临时会话token
+     * @param mixed $appid 
+     * @param string $agent 
+     * @return Json 
+     */
     public function token($appid, $agent = ''){
         $app=$this->getApp($appid);
         if(empty($app)){
@@ -110,6 +141,11 @@ class AuthController extends BaseController
 
         return $this->response($this->accessToken);
     }
+
+    /**
+     * 生成临时会话token
+     * @return string 
+     */
     private function createToken(){
         $token = md5(config('app.app_key').time().microtime().mt_rand(999,9999));
         
@@ -119,6 +155,11 @@ class AuthController extends BaseController
         return $token;
     }
 
+    /**
+     * 获取指定的微信账号实体
+     * @param int|string $appid 
+     * @return false|OauthAppModel 
+     */
     private function getApp($appid){
         if(empty($appid)){
             return false;
@@ -130,21 +171,29 @@ class AuthController extends BaseController
         return $app;
     }
 
-    public function login($username, $password){
+    /**
+     * 用户名/手机号+密码登录接口
+     * 首次登录失败后启用验证码模式，需要提交验证码才能继续做登录验证
+     * @param string $username 用户名或手机号
+     * @param string $password 密码
+     * @param string $verify 验证码
+     * @return Json|void 
+     */
+    public function login($username, $password, $verify = ''){
         
         $this->check_submit_rate(2,'global',md5($username));
-        $data = $this->request->put();
+        
         $app=$this->getApp($this->accessSession['appid']);
         if(empty($app)){
             $this->error('未授权APP',ERROR_LOGIN_FAILED);
         }
         
         if(!empty($this->accessSession['need_verify'])){
-            if(empty($data['verify'])){
+            if(empty($verify)){
                 $this->error('请填写验证码',ERROR_NEED_VERIFY);
             }
-            $verify = new Captcha(array('seKey'=>config('session.sec_key')), Cache::instance());
-            $checked = $verify->check($data['verify'],'_api_'.$this->accessToken);
+            $captchaVerify = new Captcha(array('seKey'=>config('session.sec_key')), Cache::instance());
+            $checked = $captchaVerify->check($verify,'_api_'.$this->accessToken);
             if(!$checked){
                 $this->error('验证码错误',ERROR_NEED_VERIFY);
             }
@@ -211,6 +260,11 @@ class AuthController extends BaseController
         $this->error('登录失败',ERROR_LOGIN_FAILED,$respdata);
     }
 
+    /**
+     * 生成微信公众号签名配置
+     * @param string $wxid 
+     * @return Json|void 
+     */
     public function wxSign($wxid=''){
         if(empty($wxid)){
             $wechat=Db::name('wechat')->where('type','wechat')
@@ -254,7 +308,9 @@ class AuthController extends BaseController
     }
 
     /**
-     * 获取授权跳转的url
+     * 获取微信公众号授权跳转的url
+     * @param string $wxid 
+     * @return Json 
      */
     public function wxAuth($wxid=''){
         if(empty($wxid)){
@@ -279,7 +335,9 @@ class AuthController extends BaseController
 
     /**
      * 微信小程序登录
-     * @return \think\response\Json
+     * @param string $wxid 小程序对应的系统id或hash
+     * @param string $code 客户端获取到的授权码
+     * @return Json|void 
      */
     public function wxLogin($wxid, $code){
         
@@ -306,7 +364,11 @@ class AuthController extends BaseController
         }
 
         if($weapp instanceof Application){
-            $userinfo = $weapp->oauth->user()->getOriginal();
+            try{
+                $userinfo = $weapp->oauth->user()->getOriginal();
+            }catch(Exception $e){
+                $this->error('登录失败:'.$e->getMessage(), ERROR_LOGIN_FAILED);
+            }
             if(empty($userinfo) || empty($userinfo['openid'])){
                 $this->error('登录失败', ERROR_LOGIN_FAILED);
             }
@@ -319,7 +381,11 @@ class AuthController extends BaseController
                 $userinfo = json_decode($rowData, TRUE);
                 $session=['openid'=>md5($userinfo['nickName']),'unionid'=>''];
             }else {
-                $session = $weapp->auth->session($code);
+                try{
+                    $session = $weapp->auth->session($code);
+                }catch(Exception $e){
+                    $this->error('登录失败:'.$e->getMessage(), ERROR_LOGIN_FAILED);
+                }
                 if (empty($session) || empty($session['openid'])) {
                     $this->error('登录失败', ERROR_LOGIN_FAILED);
                 }
@@ -419,6 +485,11 @@ class AuthController extends BaseController
         $this->error('登录失败',ERROR_LOGIN_FAILED);
     }
     
+    /**
+     * 根据推荐码获取推荐人id，如果推荐人已失效则返回0
+     * @param string $agent 推荐码
+     * @return int 
+     */
     private function getAgentId($agent){
         $referid=0;
         if(!empty($agent)){
@@ -488,6 +559,11 @@ class AuthController extends BaseController
         return $data;
     }
 
+    /**
+     * 刷新API token
+     * @param string $refresh_token 
+     * @return Json|void 
+     */
     public function refresh($refresh_token){
         
         if(!empty($refresh_token)){
@@ -504,6 +580,10 @@ class AuthController extends BaseController
         $this->error('刷新失败',ERROR_REFRESH_TOKEN_INVAILD);
     }
 
+    /**
+     * 输出验证码
+     * @return Response 
+     */
     public function captcha(){
 
         $verify = new Captcha(array('seKey'=>config('session.sec_key')), Cache::instance());
@@ -513,6 +593,13 @@ class AuthController extends BaseController
         return $verify->entry('_api_'.$this->accessToken);
     }
 
+    /**
+     * 判断验证码是否有效
+     * @param string $mobile 
+     * @param string $type 
+     * @param string $code 
+     * @return bool 
+     */
     protected function smsverify($mobile, $type, $code)
     {
         switch($type){
@@ -540,6 +627,14 @@ class AuthController extends BaseController
         return false;
     }
 
+    /**
+     * 发送验证码，前端需要同时提交手机号码和图形验证码
+     * @param string $mobile 
+     * @param string $captcha 
+     * @param string $type 
+     * @param bool $isverify 
+     * @return void 
+     */
     public function smscode($mobile, $captcha, $type='login', $isverify=false)
     {
         if(!empty($this->accessSession['need_verify'])){
@@ -564,6 +659,10 @@ class AuthController extends BaseController
         $this->success('验证码已发送');
     }
 
+    /**
+     * 退出登录，清除token 未登录状态不作操作
+     * @return void 
+     */
     public function quit(){
         if($this->isLogin){
             MemberTokenFacade::clearToken($this->token);
@@ -654,6 +753,18 @@ class AuthController extends BaseController
 
     /**
      * 注册会员
+     * @param string $agent 推荐码
+     * @param string $username 注册用户名
+     * @param string $password 登录密码
+     * @param string $repassword 登录密码确认
+     * @param string $email 邮箱
+     * @param string $realname 真实姓名
+     * @param string $mobile 手机号码
+     * @param string $mobilecheck 手机验证码，与图形验证码二选一
+     * @param string $verify 图形验证码
+     * @param string $invite_code 激活码，预生成的激活码，可绑定激活码所属会员作为推荐人
+     * @param string $openid 微信生态内已获取的openid，注册时提交此信息会绑定对应的会员
+     * @return void 
      */
     public function register($agent = ''){
         $this->check_submit_rate(2);

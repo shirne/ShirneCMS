@@ -3,7 +3,12 @@
 namespace app\api\controller;
 
 use app\common\facade\MemberCartFacade;
+use InvalidArgumentException;
 use think\Db;
+use think\exception\DbException;
+use think\db\exception\ModelNotFoundException;
+use think\db\exception\DataNotFoundException;
+use think\response\Json;
 
 /**
  * 购物车操作接口
@@ -12,16 +17,30 @@ use think\Db;
  */
 class CartController extends AuthedController
 {
+    /**
+     * 获取购物车全部列表
+     * @return Json 
+     */
     public function getall(){
         $list = MemberCartFacade::getCart($this->user['id']);
         $list = empty2null($list,'spec_data,specs');
         return $this->response($list);
     }
 
+    /**
+     * 获取购物车内商品数量
+     * @return Json 
+     */
     public function getcount(){
         return $this->response(MemberCartFacade::getCount($this->user['id']));
     }
 
+    /**
+     * 添加到购物车
+     * @param mixed $sku_id 
+     * @param int $count 
+     * @return void 
+     */
     public function add($sku_id,$count=1){
         $sku=Db::name('ProductSku')->where('sku_id',$sku_id)->find();
         if(empty($sku)){
@@ -45,6 +64,13 @@ class CartController extends AuthedController
         $this->success('成功添加到购物车');
     }
 
+    /**
+     * 更新购物车
+     * @param mixed $sku_id 
+     * @param int $count 
+     * @param int $id 
+     * @return void 
+     */
     public function update($sku_id,$count=1,$id=0){
         $sku=Db::name('ProductSku')->where('sku_id',$sku_id)->find();
         if(empty($sku)){
@@ -66,11 +92,20 @@ class CartController extends AuthedController
         $this->success('购物车已更新');
     }
 
+    /**
+     * 删除购物车内指定的商品
+     * @param mixed $sku_id 
+     * @return void 
+     */
     public function delete($sku_id){
         MemberCartFacade::delCart($sku_id,$this->user['id']);
         $this->success('购物车已更新');
     }
 
+    /**
+     * 清空购物车
+     * @return void 
+     */
     public function clear(){
         MemberCartFacade::clearCart($this->user['id']);
         $this->success('购物车已清空');
