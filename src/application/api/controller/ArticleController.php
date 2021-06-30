@@ -7,20 +7,9 @@ use app\common\facade\MemberFavouriteFacade;
 use app\common\model\ArticleCommentModel;
 use app\common\model\ArticleModel;
 use app\common\validate\ArticleCommentValidate;
-use DomainException;
-use InvalidArgumentException;
-use PDOException;
-use Exception as GlobalException;
 use shirne\third\Aliyun;
 use think\Db;
-use think\db\exception\BindParamException;
-use think\db\exception\DataNotFoundException;
-use think\db\exception\ModelNotFoundException;
-use think\Exception;
-use think\exception\DbException;
-use think\exception\PDOException as ExceptionPDOException;
 use think\response\Json;
-use Throwable;
 
 /**
  * 文章操作接口

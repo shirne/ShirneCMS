@@ -2,12 +2,8 @@
 
 namespace app\api\controller;
 
-use InvalidArgumentException;
 use think\Db;
 use think\response\Json;
-use think\exception\DbException;
-use think\db\exception\ModelNotFoundException;
-use think\db\exception\DataNotFoundException;
 
 /**
  * 单页数据接口

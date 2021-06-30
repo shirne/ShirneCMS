@@ -9,18 +9,8 @@ use app\common\model\PostageModel;
 use app\common\model\ProductModel;
 use app\common\model\WechatModel;
 use app\common\model\ProductSkuModel;
-use DomainException;
-use Endroid\QrCode\Exception\InvalidWriterException;
-use EasyWeChat\Kernel\Exceptions\InvalidConfigException;
-use InvalidArgumentException;
-use Exception;
-use GuzzleHttp\Exception\GuzzleException;
-use RuntimeException;
 use shirne\common\Poster;
 use think\Db;
-use think\exception\DbException;
-use think\db\exception\ModelNotFoundException;
-use think\db\exception\DataNotFoundException;
 use think\facade\Log;
 use think\response\Json;
 

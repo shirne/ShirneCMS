@@ -10,35 +10,16 @@ use app\common\model\WechatModel;
 use app\common\service\CheckcodeService;
 use app\common\validate\MemberValidate;
 use EasyWeChat\Factory;
-use EasyWeChat\Kernel\Exceptions\InvalidArgumentException as ExceptionsInvalidArgumentException;
-use EasyWeChat\Kernel\Exceptions\InvalidConfigException;
-use EasyWeChat\Kernel\Exceptions\RuntimeException;
 use EasyWeChat\OfficialAccount\Application;
-use Exception as GlobalException;
-use GuzzleHttp\Exception\GuzzleException;
-use InvalidArgumentException;
-use Overtrue\Socialite\InvalidStateException;
-use Overtrue\Socialite\AuthorizeFailedException;
-use PDOException as GlobalPDOException;
-use PHPMailer\PHPMailer\Exception as PHPMailerException;
-use ReflectionException;
 use shirne\captcha\Captcha;
 use shirne\common\ValidateHelper;
 use shirne\sdk\OAuthFactory;
-use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use think\Db;
-use think\db\exception\BindParamException;
 use think\Exception;
-use think\exception\DbException;
-use think\db\exception\ModelNotFoundException;
-use think\db\exception\DataNotFoundException;
-use think\exception\ClassNotFoundException;
-use think\exception\PDOException;
 use think\facade\Cache;
 use think\facade\Log;
 use think\Response;
 use think\response\Json;
-use Throwable;
 
 /**
  * 授权相关操作

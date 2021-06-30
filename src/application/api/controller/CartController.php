@@ -3,11 +3,7 @@
 namespace app\api\controller;
 
 use app\common\facade\MemberCartFacade;
-use InvalidArgumentException;
 use think\Db;
-use think\exception\DbException;
-use think\db\exception\ModelNotFoundException;
-use think\db\exception\DataNotFoundException;
 use think\response\Json;
 
 /**

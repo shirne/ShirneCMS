@@ -11,20 +11,9 @@ use app\common\model\MemberLevelModel;
 use app\common\service\CheckcodeService;
 use Exception as GlobalException;
 use extcore\traits\Upload;
-use InvalidArgumentException;
-use PDOException as GlobalPDOException;
-use PHPMailer\PHPMailer\Exception as PHPMailerException;
 use shirne\common\ValidateHelper;
 use think\Db;
-use think\db\exception\BindParamException;
-use think\exception\DbException;
-use think\db\exception\ModelNotFoundException;
-use think\db\exception\DataNotFoundException;
-use think\Exception;
-use think\exception\PDOException;
-use think\Loader;
 use think\response\Json;
-use Throwable;
 
 /**
  * 会员操作接口

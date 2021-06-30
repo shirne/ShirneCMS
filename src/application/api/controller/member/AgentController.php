@@ -8,20 +8,8 @@ use app\common\model\MemberAgentModel;
 use app\common\model\MemberAuthenModel;
 use app\common\model\MemberModel;
 use app\common\model\OrderModel;
-use app\common\model\WechatModel;
-use DomainException;
-use PDOException;
-use Exception;
-use GuzzleHttp\Exception\GuzzleException;
-use InvalidArgumentException;
-use shirne\common\Poster;
 use think\Db;
 use think\response\Json;
-use think\exception\DbException;
-use think\db\exception\BindParamException;
-use think\db\exception\ModelNotFoundException;
-use think\db\exception\DataNotFoundException;
-use Throwable;
 
 /**
  * 代理相关操作

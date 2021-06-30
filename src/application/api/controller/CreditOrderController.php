@@ -5,18 +5,8 @@ namespace app\api\controller;
 
 use app\common\model\CreditOrderModel;
 use app\common\validate\OrderValidate;
-use Exception as GlobalException;
-use InvalidArgumentException;
-use PDOException;
 use think\Db;
-use think\db\exception\BindParamException;
 use think\response\Json;
-use think\Exception;
-use think\exception\DbException;
-use think\db\exception\ModelNotFoundException;
-use think\db\exception\DataNotFoundException;
-use Throwable;
-use think\exception\PDOException as ExceptionPDOException;
 
 /**
  * 积分订单操作

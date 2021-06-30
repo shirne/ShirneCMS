@@ -9,21 +9,10 @@ use app\common\model\MemberCashinModel;
 use app\common\model\MemberOauthModel;
 use app\common\validate\MemberCardValidate;
 use app\common\model\WechatModel;
-use DomainException;
-use Exception as GlobalException;
 use extcore\traits\Upload;
-use InvalidArgumentException;
-use PDOException as GlobalPDOException;
 use shirne\common\ValidateHelper;
 use think\Db;
-use think\db\exception\BindParamException;
 use think\response\Json;
-use think\exception\DbException;
-use think\db\exception\ModelNotFoundException;
-use think\db\exception\DataNotFoundException;
-use think\Exception;
-use think\exception\PDOException;
-use Throwable;
 
 /**
  * 会员账号相关操作

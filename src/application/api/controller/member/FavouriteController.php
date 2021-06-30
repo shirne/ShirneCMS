@@ -5,14 +5,7 @@ namespace app\api\controller\member;
 
 use app\api\controller\AuthedController;
 use app\common\model\MemberFavouriteModel;
-use Exception;
-use InvalidArgumentException;
 use think\Db;
-use think\db\exception\ModelNotFoundException;
-use think\db\exception\DataNotFoundException;
-use think\Exception as ThinkException;
-use think\exception\DbException;
-use think\exception\PDOException;
 
 /**
  * 会员收藏管理
