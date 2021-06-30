@@ -13,6 +13,10 @@ use think\Db;
  */
 class AddressController extends AuthedController
 {
+    /**
+     * 会员地址列表
+     * @return Json 
+     */
     public function index(){
         $lists=Db::name('memberAddress')
             ->where('member_id',$this->user['id'])
@@ -20,6 +24,11 @@ class AddressController extends AuthedController
         return $this->response($lists);
     }
 
+    /**
+     * 会员地址详细
+     * @param int $id 
+     * @return Json 
+     */
     public function view($id){
         $id=intval($id);
         $address=Db::name('memberAddress')
@@ -29,6 +38,11 @@ class AddressController extends AuthedController
         return $this->response($address);
     }
     
+    /**
+     * 会员地址保存
+     * @param int $id 为0时新增地址
+     * @return void 
+     */
     public function save($id=0){
         $data=$this->request->param('address');
         $data['is_default']=empty($data['is_default'])?0:1;
@@ -58,11 +72,17 @@ class AddressController extends AuthedController
         }
 
     }
+
+    /**
+     * 删除地址
+     * @param int|string|array $id 
+     * @return void 
+     */
     public function delete($id){
-        $id=intval($id);
+        $id=idArr($id);
         $deleted=Db::name('memberAddress')
             ->where('member_id',$this->user['id'])
-            ->where('address_id',$id)
+            ->whereIn('address_id',$id)
             ->delete();
         if($deleted){
             $this->success('删除成功');
@@ -70,6 +90,12 @@ class AddressController extends AuthedController
             $this->success('删除失败');
         }
     }
+
+    /**
+     * 设置默认地址
+     * @param int $id 
+     * @return void 
+     */
     public function set_default($id){
         $id=intval($id);
         $updated=Db::name('memberAddress')
