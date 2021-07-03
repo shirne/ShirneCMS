@@ -136,6 +136,7 @@ class CategoryModel extends BaseModel
             foreach ($data as $cate){
                 $this->treed[$cate['pid']][]=$cate;
             }
+            $this->treed[-1]=[];
             cache($this->precache.'categorietree',$this->treed);
         }
         return $this->treed;
