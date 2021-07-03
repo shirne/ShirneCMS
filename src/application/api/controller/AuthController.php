@@ -34,13 +34,15 @@ class AuthController extends BaseController
     public function initialize(){
         parent::initialize();
 
+        $tokenInvaild = false;
         $this->accessToken = request()->header('access_token');
         if(!$this->accessToken){
             $this->accessToken = request()->param('access_token');
         }
-        if($this->accessToken){
+        if(!empty($this->accessToken)){
             $session = cache('access_'.$this->accessToken);
             if(!empty($session)){
+                $tokenInvaild = true;
                 $sessData = json_decode($session, true);
                 if(!empty($sessData)){
                     $this->accessSession = $sessData;
@@ -49,10 +51,15 @@ class AuthController extends BaseController
                 }
             }
         }
+        Log::record(['access:', $this->accessToken, $this->accessSession]);
         if(empty($this->accessToken) &&
             !in_array($this->request->action(), ['token','wxsign','wxauth','wxlogin','refresh'])
             ){
-            $this->error('未授权访问',ERROR_LOGIN_FAILED);
+            if($tokenInvaild){
+                $this->error('临时Token过期',ERROR_TMP_TOKEN_EXPIRE);
+            }else{
+                $this->error('未授权访问',ERROR_LOGIN_FAILED);
+            }
         }
     }
 
@@ -67,6 +74,7 @@ class AuthController extends BaseController
                 json_encode($this->accessSession, JSON_UNESCAPED_UNICODE),
                 ['expire'=>60*10]
             );
+            Log::record(['access cache:', $this->accessToken, $this->accessSession]);
         }
     }
 
@@ -137,7 +145,7 @@ class AuthController extends BaseController
     }
 
     /**
-     * 获取指定的微信账号实体
+     * 获取指定的客户端账号
      * @param int|string $appid 
      * @return false|OauthAppModel 
      */
@@ -183,7 +191,7 @@ class AuthController extends BaseController
         if(empty($username) || empty($password)){
             $this->error('请填写登录账号及密码',ERROR_LOGIN_FAILED);
         }
-        $errcount = $this->accessSession['error_count'];
+        $errcount = $this->accessSession['error_count'] ?? 0;
         if($errcount > 4){
             $this->error('登录尝试次数过多',ERROR_LOGIN_FAILED);
         }
