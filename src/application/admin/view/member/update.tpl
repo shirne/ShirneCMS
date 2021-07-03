@@ -29,13 +29,23 @@
                                 <div class="form-group form-row">
                                     <label class="form-label">邮箱</label>
                                     <div class="col">
-                                        <input class="form-control" type="text" name="email" value="{$model.email}" />
+                                        <div class="input-group">
+                                            <input class="form-control" type="text" name="email" value="{$model.email}" />
+                                            <div class="input-group-append">
+                                                <label class="input-group-text"><input type="checkbox" name="email_bind" value="1" {$model['email_bind']?'checked':''}>&nbsp;绑定</label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group form-row">
                                     <label class="form-label">手机号</label>
                                     <div class="col">
-                                        <input class="form-control" type="text" name="mobile" value="{$model.mobile}" />
+                                        <div class="input-group">
+                                            <input class="form-control" type="text" name="mobile" value="{$model.mobile}" />
+                                            <div class="input-group-append">
+                                                <label class="input-group-text"><input type="checkbox" name="mobile_bind" value="1" {$model['mobile_bind']?'checked':''}>&nbsp;绑定</label>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <if condition="$model.id GT 0">

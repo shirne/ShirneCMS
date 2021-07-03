@@ -516,10 +516,19 @@ class MemberController extends BaseController
                 if(empty($member)){
                     $this->error('会员资料错误');
                 }
-
-                if($member['mobile_bind'] == 1 && empty($data['mobile'])){
-                    $data['mobile_bind'] = 0;
+                if(isset($data['mobile'])){
+                    $data['mobile_bind'] = intval($data['mobile_bind']);
+                    if( empty($data['mobile'])){
+                        $data['mobile_bind'] = 0;
+                    }
                 }
+                if(isset($data['email'])){
+                    $data['email_bind'] = intval($data['email_bind']);
+                    if( empty($data['email'])){
+                        $data['email_bind'] = 0;
+                    }
+                }
+                
                 if ($member->allowField(true)->save($data)) {
                     user_log($this->mid,'updateuser',1,'修改会员资料'.$id ,'manager');
                     $this->success(lang('Update success!'), url('member/index'));
