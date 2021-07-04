@@ -137,7 +137,7 @@ class BaseController extends Controller
         $this->assign('description',$description);
         if(empty($redirect))$redirect=url('index/index/index');
         $this->assign('redirect',$redirect);
-        return $this->fetch('public/empty');
+        return $this->fetch('public/empty')->code(404);
     }
     
     /**
