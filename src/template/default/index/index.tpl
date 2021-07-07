@@ -121,7 +121,7 @@
     <div class="index-card index-bg">
         <div class="container">
             <div class="index-card-title">
-                <h2>关于原设</h2>
+                <h2>关于语辰</h2>
                 <p>ABOUT ORIGIN SOFTWARE</p>
             </div>
             <div class="index-card-body about-body">

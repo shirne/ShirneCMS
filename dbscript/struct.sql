@@ -909,6 +909,7 @@ CREATE TABLE `sa_article` (
   `user_id` INT(11) DEFAULT 0,
   `digg` INT(11) DEFAULT '0',
   `v_digg` INT(11) DEFAULT '0',
+  `close_comment` tinyint(4) NOT NULL DEFAULT '0',
   `comment` INT(11) DEFAULT '0',
   `views` INT(11) DEFAULT '0',
   `v_views` INT(11) DEFAULT '0',
