@@ -160,7 +160,7 @@
                 <tbody>
                     <tr>
                         <td>收货人</td>
-                        <td>{$model.recive_name}</td>
+                        <td>{$model.receive_name}</td>
                         <td>电话</td>
                         <td>{$model.mobile}</td>
                     </tr>

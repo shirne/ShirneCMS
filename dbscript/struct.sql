@@ -99,12 +99,12 @@ CREATE TABLE `sa_manager_log` (
 DROP TABLE IF EXISTS `sa_category`;
 CREATE TABLE `sa_category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `pid` int(11) DEFAULT NULL COMMENT '父分类ID',
-  `title` varchar(100) DEFAULT NULL COMMENT '分类名称',
-  `short` varchar(20) DEFAULT NULL COMMENT '分类简称',
-  `name` varchar(50) DEFAULT NULL COMMENT '分类别名',
-  `icon` varchar(150) DEFAULT NULL COMMENT '图标',
-  `image` varchar(100) DEFAULT NULL COMMENT '大图',
+  `pid` int(11) DEFAULT 0 COMMENT '父分类ID',
+  `title` varchar(100) DEFAULT '' COMMENT '分类名称',
+  `short` varchar(20) DEFAULT '' COMMENT '分类简称',
+  `name` varchar(50) DEFAULT '' COMMENT '分类别名',
+  `icon` varchar(150) DEFAULT '' COMMENT '图标',
+  `image` varchar(100) DEFAULT '' COMMENT '大图',
   `sort` int(11) DEFAULT 0 COMMENT '排序',
   `props` TEXT COMMENT '默认属性',
   `fields` TEXT COMMENT '开启的字段',
@@ -115,8 +115,8 @@ CREATE TABLE `sa_category` (
   `is_comment` tinyint(11) DEFAULT 0 COMMENT '是否开启评论',
   `is_images` tinyint(11) DEFAULT 0 COMMENT '是否有图集',
   `is_attachments` tinyint(11) DEFAULT 0 COMMENT '是否有附件',
-  `keywords` varchar(255) DEFAULT NULL COMMENT '分类关键词',
-  `description` varchar(255) DEFAULT NULL COMMENT '分类描述',
+  `keywords` varchar(255) DEFAULT '' COMMENT '分类关键词',
+  `description` varchar(255) DEFAULT '' COMMENT '分类描述',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -605,7 +605,7 @@ DROP TABLE IF EXISTS `sa_member_address`;
 CREATE TABLE `sa_member_address` (
   `address_id` INT NOT NULL AUTO_INCREMENT,
   `member_id` INT NULL,
-  `recive_name` VARCHAR(50) NULL,
+  `receive_name` VARCHAR(50) NULL,
   `mobile` VARCHAR(30) NULL,
   `province` VARCHAR(50) NULL,
   `city` VARCHAR(50) NULL,

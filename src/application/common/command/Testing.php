@@ -164,7 +164,7 @@ class Testing extends Command
         }else{
             for($i=0;$i<$count;$i++){
                 $sufix=str_pad($i,strlen($count),'0',STR_PAD_LEFT);
-                $address['recive_name']=$username.$sufix;
+                $address['receive_name']=$username.$sufix;
                 $this->createUser($output,$username.$sufix,$password,$parent,$product);
             }
         }
@@ -210,7 +210,7 @@ class Testing extends Command
         $address=Db::name('MemberAddress')->where('member_id',$user['referer'])->find();
         if(empty($address)){
             $address=[
-                'recive_name'=>$user['nickname']?:$user['username'],
+                'receive_name'=>$user['nickname']?:$user['username'],
                 'mobile'=>$user['mobile']?:'13866888866',
                 'province'=>$user['province']?:'广东省',
                 'city'=>$user['city']?:'中山市',
@@ -221,7 +221,7 @@ class Testing extends Command
             ];
         }else{
             $address['is_default']=1;
-            $address['recive_name']=$user['nickname']?:$user['username'];
+            $address['receive_name']=$user['nickname']?:$user['username'];
             if(!empty($user['mobile']))$address['mobile']=$user['mobile'];
             if(!empty($user['province']))$address['province']=$user['province'];
             if(!empty($user['city']))$address['city']=$user['city'];
@@ -229,7 +229,7 @@ class Testing extends Command
             if(!empty($user['address']))$address['address']=$user['address'];
             unset($address['address_id']);
         }
-        $address['recive_name'] = filter_emoji($address['recive_name']);
+        $address['receive_name'] = filter_emoji($address['receive_name']);
         $address['member_id'] = $user['id'];
         Db::name('MemberAddress')->insert($address);
     }

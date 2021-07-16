@@ -38,7 +38,7 @@ class OrderController extends BaseController
             ->where('order.delete_time',0);
 
         if(!empty($keyword)){
-            $model->whereLike('order.order_no|member.username|member.nickname|member.realname|order.recive_name|order.mobile',"%$keyword%");
+            $model->whereLike('order.order_no|member.username|member.nickname|member.realname|order.receive_name|order.mobile',"%$keyword%");
         }
         if($status!==''){
             $model->where('order.status',$status);
@@ -103,7 +103,7 @@ class OrderController extends BaseController
             ->where('order.delete_time',0);
         if(empty($order_ids)){
             if(!empty($keyword)){
-                $model->whereLike('order.order_no|member.username|member.realname|order.recive_name|order.mobile',"%$keyword%");
+                $model->whereLike('order.order_no|member.username|member.realname|order.receive_name|order.mobile',"%$keyword%");
             }
             if($status!==''){
                 $model->where('order.status',$status);
@@ -159,7 +159,7 @@ class OrderController extends BaseController
             }
             $excel->addRow(array(
                 $row['order_no'],order_status($row['status'],false),date('Y/m/d H:i:s',$row['create_time']),$row['member_id'],$username,
-                $prodata['product_title'],$row['payamount'],$row['recive_name'],$row['mobile'],$row['province'],$row['city'],$row['area'],$row['address']
+                $prodata['product_title'],$row['payamount'],$row['receive_name'],$row['mobile'],$row['province'],$row['city'],$row['area'],$row['address']
             ));
         }
 
@@ -189,7 +189,7 @@ class OrderController extends BaseController
                 $prods[]=$prod['product_title'];
             }
             $excel->addRow(array(
-                $row['order_no'],$row['recive_name'],$row['mobile'],$row['province'].$row['city'].$row['area'].$row['address'],
+                $row['order_no'],$row['receive_name'],$row['mobile'],$row['province'].$row['city'].$row['area'].$row['address'],
                 '食品',implode('、',$prods),''
             ));
         }

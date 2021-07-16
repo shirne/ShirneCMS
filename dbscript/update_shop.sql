@@ -304,7 +304,7 @@ CREATE TABLE `sa_order` (
   `form_id` VARCHAR(45) NULL,
   `remark` VARCHAR(250) NULL,
   `address_id` INT NULL,
-  `recive_name` VARCHAR(45) NULL,
+  `receive_name` VARCHAR(45) NULL,
   `mobile` VARCHAR(45) NULL,
   `province` VARCHAR(45) NULL,
   `city` VARCHAR(45) NULL,

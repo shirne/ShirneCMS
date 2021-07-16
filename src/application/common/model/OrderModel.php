@@ -402,7 +402,7 @@ class OrderModel extends BaseOrderModel
             'isaudit'=>getSetting('autoaudit')==1?1:0,
             //'remark'=>$remark,
             'address_id'=>$address['address_id'],
-            'recive_name'=>$address['recive_name'],
+            'receive_name'=>$address['receive_name'],
             'mobile'=>$address['mobile'],
             'province'=>$address['province'],
             'city' =>$address['city'],
