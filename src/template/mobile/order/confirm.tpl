@@ -36,7 +36,7 @@
                                 <i class="weui-icon-checked"></i>
                             </div>
                             <div class="weui-cell__bd">
-                                <p>{$address.recive_name} / {$address.mobile}</p>
+                                <p>{$address.receive_name} / {$address.mobile}</p>
                                 <p>{$address.province}&nbsp;{$address.city}&nbsp;{$address.area}&nbsp;{$address.address}</p>
                             </div>
                         </label>
@@ -113,7 +113,7 @@
                 '                                <i class="weui-icon-checked"></i>\n' +
                 '                            </div>\n' +
                 '                            <div class="weui-cell__bd">\n' +
-                '                                <p>[@recive_name] / [@mobile]</p>\n' +
+                '                                <p>[@receive_name] / [@mobile]</p>\n' +
                 '<p>[@province]&nbsp;[@city]&nbsp;[@area]&nbsp;[@address]</p>\n'+
                 '                            </div>\n' +
                 '                        </label>';
@@ -125,7 +125,7 @@
                         if(issending)return false;
                         issending=true;
                         var data={
-                            recive_name : res.userName, // 收货人姓名
+                            receive_name : res.userName, // 收货人姓名
                             mobile : res.telNumber, // 收货人手机号码
                             code : res.postalCode, // 邮编
                             province : res.provinceName, // 国标收货地址第一级地址（省）

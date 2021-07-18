@@ -20,8 +20,8 @@ class AddressController extends AuthedController
     public function index(){
         $lists=Db::name('memberAddress')
             ->where('member_id',$this->user['id'])
-            ->select();
-        return $this->response($lists);
+            ->paginate(10);
+        return $this->respList($lists);
     }
 
     /**

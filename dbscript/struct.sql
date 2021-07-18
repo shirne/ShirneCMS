@@ -610,6 +610,7 @@ CREATE TABLE `sa_member_address` (
   `province` VARCHAR(50) NULL,
   `city` VARCHAR(50) NULL,
   `area` VARCHAR(50) NULL,
+  `street` VARCHAR(50) NULL,
   `address` VARCHAR(150) NULL,
   `code` VARCHAR(10) NULL,
   `locate` VARCHAR(100) NULL,

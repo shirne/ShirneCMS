@@ -4,7 +4,7 @@
         <div class="page-header"><h1>修改密码</h1></div>
     <form class="form-horizontal registerForm" role="form" method="post" onsubmit="return checkForm(this)" action="{:aurl('index/member/password')}">
         <div class="form-group">
-            <label for="recive_name" class="col-sm-2 control-label">登录账号：</label>
+            <label for="receive_name" class="col-sm-2 control-label">登录账号：</label>
             <div class="col-sm-10">
                 <input type="text" class="form-control" name="username" readonly value="{$user.username}"/>
             </div>

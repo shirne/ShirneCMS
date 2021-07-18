@@ -177,6 +177,22 @@ class BaseController extends Controller
     }
 
     /**
+     * 输出分页列表数据
+     * @param Paginator $lists 
+     * @param array $exts 
+     * @return Json 
+     */
+    protected function respList($lists, $exts = []){
+        $result = array_merge([
+            'lists'=>$lists->items(),
+            'page'=>$lists->currentPage(),
+            'count'=>$lists->total(),
+            'total_page'=>$lists->lastPage(),
+        ], $exts);
+        return $this->response($result);
+    }
+
+    /**
      * ajax输出
      * @param $data
      * @param int $code

@@ -6,9 +6,9 @@
         </div>
         <form role="form" method="post" action="">
             <div class="form-row form-group">
-                <label for="recive_name" class="col-2 control-label">收货人：</label>
+                <label for="receive_name" class="col-2 control-label">收货人：</label>
                 <div class="col-10">
-                    <input type="text" class="form-control" name="recive_name" value="{$address.recive_name}"/>
+                    <input type="text" class="form-control" name="receive_name" value="{$address.receive_name}"/>
                 </div>
             </div>
             <div class="form-row form-group">

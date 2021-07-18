@@ -24,7 +24,7 @@
                         <foreach name="address" item="add">
                             <li class="list-group-item">
                                 <label>
-                                    <input type="radio" name="address_id" value="{$add.address_id}" {$add.is_default?'checked':''}/> <span>{$add.recive_name} / {$add.mobile}</span>
+                                    <input type="radio" name="address_id" value="{$add.address_id}" {$add.is_default?'checked':''}/> <span>{$add.receive_name} / {$add.mobile}</span>
                                     <div class="text-muted">{$add.province}&nbsp;{$add.city}&nbsp;{$add.area}&nbsp;{$add.address}</div>
                                 </label>
                             </li>
@@ -57,8 +57,8 @@
     <script type="text/plain" id="addressTpl">
         <form>
         <div class="form-group">
-            <label for="recive_name">收货人</label>
-            <input type="text" name="recive_name" class="form-control" placeholder="收货人姓名">
+            <label for="receive_name">收货人</label>
+            <input type="text" name="receive_name" class="form-control" placeholder="收货人姓名">
         </div>
         <div class="form-group">
             <label for="mobile">联系电话</label>
@@ -128,7 +128,7 @@
                     return false;
                 }
             }else {
-                if (!$('[name=recive_name]').val() || !$('[name=mobile]').val() || !$('[name=address]').val()) {
+                if (!$('[name=receive_name]').val() || !$('[name=mobile]').val() || !$('[name=address]').val()) {
                     alert('请填写收货信息');
                     return false;
                 }

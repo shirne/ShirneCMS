@@ -12,7 +12,7 @@
                 <li class="list-group-item">
                     <div>
                         <if condition="$v.is_default"><span class="float-right badge badge-info">默认</span></if>
-                        <span class="text-dark">{$v.recive_name}</span>  /  <span class="text-secondary">{$v.mobile}</span>
+                        <span class="text-dark">{$v.receive_name}</span>  /  <span class="text-secondary">{$v.mobile}</span>
                     </div>
                     <div>
                         {$v.province}&nbsp;{$v.city}&nbsp;{$v.area}&nbsp;{$v.address}

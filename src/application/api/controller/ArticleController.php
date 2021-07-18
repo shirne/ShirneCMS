@@ -224,7 +224,7 @@ class ArticleController extends BaseController
         
         $data=$this->request->only('email,is_anonymous,content','put');
         if($this->config['anonymous_comment']==0 && !$this->isLogin){
-            $this->error('请登陆后评论');
+            $this->error('请登录后评论', ERROR_NEED_LOGIN);
         }
         $data['article_id']=$id;
         $validate=new ArticleCommentValidate();
