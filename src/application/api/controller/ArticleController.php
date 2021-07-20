@@ -128,9 +128,10 @@ class ArticleController extends BaseController
         }
         return $this->response([
             'article'=>$article,
+            'url'=>url('index/article/index',['id'=>$article['id']],true,true),
             'images'=>$images,
             'digged'=>$digg?1:0,
-            'is_favourite'=>$isFavourite?0:1
+            'is_favourite'=>$isFavourite?1:0
         ]);
     }
 
