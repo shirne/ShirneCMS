@@ -36,31 +36,20 @@ $maxwidth = intval($maxwidth);
 
 $urls = parse_url(strtolower($source));
 $scheme = $urls['scheme ']?:'http';
-if(empty($refurl)){
-    
-    if($urls){
-        $refurl = $scheme.'://'.$urls['host '];
-        if($scheme == 'http' && (!empty($urls['port']) && $urls['port']!='80')){
-            $refurl .= ':'.$urls['port'];
+if(in_array($scheme,['http','https','ftp'])){
+    if(empty($refurl)){
+        
+        if($urls){
+            $refurl = $scheme.'://'.$urls['host '];
+            if($scheme == 'http' && (!empty($urls['port']) && $urls['port']!='80')){
+                $refurl .= ':'.$urls['port'];
+            }
+            if($scheme == 'https' && (!empty($urls['port']) && $urls['port']!='443')){
+                $refurl .= ':'.$urls['port'];
+            }
+            $refurl .= '/';
         }
-        if($scheme == 'https' && (!empty($urls['port']) && $urls['port']!='443')){
-            $refurl .= ':'.$urls['port'];
-        }
-        $refurl .= '/';
     }
-}
-$context=stream_context_create([
-    $scheme=>array(
-        'method'=>"GET",
-        'header'=>"User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36\r\n".
-            "Referer: $refurl\r\n"
-    )
-]);
-
-
-$data = file_get_contents($source,false, $context);
-if(strlen($data)< 50 && $scheme == 'http'){
-    $scheme = 'https';
     $context=stream_context_create([
         $scheme=>array(
             'method'=>"GET",
@@ -68,42 +57,55 @@ if(strlen($data)< 50 && $scheme == 'http'){
                 "Referer: $refurl\r\n"
         )
     ]);
+
+
     $data = file_get_contents($source,false, $context);
-}
+    if(strlen($data)< 50 && $scheme == 'http'){
+        $scheme = 'https';
+        $context=stream_context_create([
+            $scheme=>array(
+                'method'=>"GET",
+                'header'=>"User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36\r\n".
+                    "Referer: $refurl\r\n"
+            )
+        ]);
+        $data = file_get_contents($source,false, $context);
+    }
 
-if(strlen($data) > 100){
-    header("Content-type: image/jpeg");
-    if($maxwidth > 0){
-        $image = imagecreatefromstring($data);
-        if($image){
-            $width = imagesx($image);
-            $height = imagesy($image);
+    if(strlen($data) > 100){
+        header("Content-type: image/jpeg");
+        if($maxwidth > 0){
+            $image = imagecreatefromstring($data);
+            if($image){
+                $width = imagesx($image);
+                $height = imagesy($image);
 
-            $sw=0;
-            if($width > $height){
-                if($width > $maxwidth){
-                    $sw = $maxwidth;
-                    $sh = $height * $sw / $width;
+                $sw=0;
+                if($width > $height){
+                    if($width > $maxwidth){
+                        $sw = $maxwidth;
+                        $sh = $height * $sw / $width;
+                    }
+                }else{
+                    if($height > $maxwidth){
+                        $sh = $maxwidth;
+                        $sw = $width * $sh / $height;
+                    }
                 }
-            }else{
-                if($height > $maxwidth){
-                    $sh = $maxwidth;
-                    $sw = $width * $sh / $height;
+                if($sw > 0){
+                    $newimage = imagecreatetruecolor($sw,$sh);
+                    imagecopyresampled($newimage, $image, 0, 0, 0, 0, $sw, $sh, $width, $height);
+                    
+                    imagejpeg($newimage,null,70);
+                    imagedestroy($newimage);
+                }else{
+                    imagejpeg($image,null,70);
                 }
+                imagedestroy($image);
             }
-            if($sw > 0){
-                $newimage = imagecreatetruecolor($sw,$sh);
-                imagecopyresampled($newimage, $image, 0, 0, 0, 0, $sw, $sh, $width, $height);
-                
-                imagejpeg($newimage,null,70);
-                imagedestroy($newimage);
-            }else{
-                imagejpeg($image,null,70);
-            }
-            imagedestroy($image);
+        }else{
+            echo $data;
         }
-    }else{
-        echo $data;
     }
 }
 header("Content-type: image/png");
