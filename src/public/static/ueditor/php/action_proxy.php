@@ -35,7 +35,12 @@ $maxwidth = intval($maxwidth);
 
 
 $urls = parse_url(strtolower($source));
-$scheme = $urls['scheme ']?:'http';
+if(empty($urls['scheme'])){
+    $scheme = 'http';
+    $source = $scheme.'://'.ltrim($source,'\t\n\r\0\x0B:/');
+}else{
+    $scheme = $urls['scheme'];
+}
 if(in_array($scheme,['http','https','ftp'])){
     if(empty($refurl)){
         
