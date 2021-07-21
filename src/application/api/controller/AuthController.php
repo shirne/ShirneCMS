@@ -667,7 +667,50 @@ class AuthController extends BaseController
     }
 
     /**
-     * todo 忘记密码
+     * 忘记密码
+     */
+    public function forgot($account, $password, $verify){
+        $app=$this->getApp($this->accessSession['appid']);
+        if(empty($app)){
+            $this->error('未授权APP',ERROR_LOGIN_FAILED);
+        }
+        
+        if (empty($verify)) {
+            $this->error(' 请填写验证码');
+        }
+        if (empty($password)) {
+            $this->error(' 请填写新密码');
+
+            // todo 密码强度验证
+        }
+        $account_type = $this->request->param('type');
+        $model = Db::name('member')->where('status',1);
+        if($account_type == 'mobile'){
+            $model->where('mobile',$account)->where('mobile_bind',1);
+        }elseif($account_type=='email'){
+            $model->where('email',$account)->where('email_bind',1);
+        }else{
+            $this->error('账号类型错误');
+        }
+        $member = $model->find();
+        if(empty($member)){
+            $this->error('账号错误');
+        }
+
+        $service=new CheckcodeService();
+        $verifyed=$service->verifyCode($account,$verify);
+        if(!$verifyed){
+            $this->error('验证码填写错误');
+        }
+        $data['salt']=random_str(8);
+        $data['password']=encode_password($password,$data['salt']);
+        Db::name('member')->where('id',$member['id'])->update($data);
+        $this->success('密码重置成功!');
+    }
+
+    /**
+     * 忘记密码
+     * @deprecated
      */
     public function forget($step = 0){
         $app=$this->getApp($this->accessSession['appid']);
