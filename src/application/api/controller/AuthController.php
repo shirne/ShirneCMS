@@ -871,7 +871,7 @@ class AuthController extends BaseController
         Db::commit();
         $token = MemberTokenFacade::createToken($model['id'], $app['platform'], $app['appid']);
 
-        $this->success("注册成功",1,$token);
+        $this->success($token, 1, "注册成功");
     }
 
 }

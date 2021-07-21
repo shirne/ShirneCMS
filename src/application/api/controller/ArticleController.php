@@ -233,7 +233,6 @@ class ArticleController extends BaseController
             $this->error($validate->getError(),0);
         }else{
             $data['member_id']=$this->isLogin?$this->user['id']:0;
-            $data['member_id']=$this->userid;
             if(!empty($data['member_id'])){
                 $data['email']=$this->user['email'];
                 $data['nickname']=$this->user['nickname']?:$this->user['username'];

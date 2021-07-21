@@ -2,12 +2,10 @@
 
 namespace app\api\controller;
 
-use app\api\facade\MemberTokenFacade;
 use app\api\middleware\AccessMiddleware;
 use InvalidArgumentException;
 use shirne\common\ValidateHelper;
 use think\Controller;
-use think\Db;
 
 
 /**
@@ -114,11 +112,9 @@ class BaseController extends Controller
     
     /**
      * 检查登录状态
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
+     * 已登录时注册会员资料，未登录直接输出错误
      */
-    public function checkLogin(){
+    protected function checkLogin(){
         if($this->request->isLogin){
             $this->token = $this->request->token;
             $this->isLogin = $this->request->isLogin;
@@ -131,7 +127,6 @@ class BaseController extends Controller
     /**
      * 空操作输出
      * @return void 
-     * @throws InvalidArgumentException 
      */
     public function _empty(){
         $static_file=DOC_ROOT.DIRECTORY_SEPARATOR.$this->request->action(true);
@@ -145,7 +140,7 @@ class BaseController extends Controller
      * 输出API错误信息
      * @param string $msg 
      * @param string|int $code 
-     * @param mixed $data 
+     * @param array $data 
      * @param int $wait 
      * @param array $header 
      * @return void 
@@ -158,9 +153,9 @@ class BaseController extends Controller
 
     /**
      * 输出API成功数据
-     * @param mixed $data 
+     * @param string|array $data 
      * @param string|int $code 
-     * @param mixed $msg 
+     * @param string $msg 
      * @param int $wait 
      * @param array $header 
      * @return void 
