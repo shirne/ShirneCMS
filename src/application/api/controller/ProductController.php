@@ -123,6 +123,18 @@ class ProductController extends BaseController
     }
 
     /**
+     * 获取品牌列表
+     * @param int $id 
+     * @return Json 
+     */
+    public function brands($cate = 0){
+        $lists = Db::name('productBrand')->order('sort asc')->select();
+        return $this->response([
+            'lists'=>$lists,
+        ]);
+    }
+
+    /**
      * 获取商品详情
      * @param int $id 
      * @return Json 
