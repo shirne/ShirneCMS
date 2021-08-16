@@ -18,6 +18,7 @@ VALUES
   (74,7,'订阅管理','Subscribe/index','subscribe_index','ion-md-mail',9,0),
   (75,7,'展位管理','Booth/index','booth_index','ion-md-easel',9,0),
   (76,7,'关键字管理','Keywords/index','keywords_index','ion-md-search',9,0),
+  (77,7,'版权署名','Copyrights/index','copyrights_index','ion-logo-closed-captioning',9,0),
   (80,8,'会员管理','Member/index','member_index','ion-md-person',0,0),
   (81,8,'升级申请','MemberAuthen/index','member_authen_index','ion-md-ribbon',2,0),
   (82,8,'邀请码','Invite/index','invite_index','ion-md-pricetags',3,0),

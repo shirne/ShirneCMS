@@ -240,6 +240,25 @@ CREATE TABLE `sa_adv_item` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
+-- Table structure for table `sa_copyrights`
+--
+
+DROP TABLE IF EXISTS `sa_copyrights`;
+CREATE TABLE `sa_copyrights` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `lang` varchar(10) DEFAULT NULL COMMENT '语言',
+  `main_id` int(11) DEFAULT NULL COMMENT '主id',
+  `title` varchar(100) DEFAULT '',
+  `name` varchar(100) DEFAULT '',
+  `content` TEXT,
+  `sort` int(11) DEFAULT 0,
+  `status` int(11) DEFAULT 0,
+  `create_time` int(11) DEFAULT 0,
+  `update_time` int(11) DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
 -- Table structure for table `sa_links`
 --
 
@@ -895,6 +914,8 @@ CREATE TABLE `sa_article` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `lang` varchar(10) DEFAULT NULL COMMENT '语言',
   `main_id` int(11) DEFAULT NULL COMMENT '主id',
+  `user_id` INT(11) DEFAULT 0,
+  `copyright_id` INT(11) DEFAULT 0,
   `name` varchar(100) DEFAULT '',
   `title` varchar(100) DEFAULT '',
   `vice_title` varchar(200) DEFAULT '',
@@ -907,7 +928,6 @@ CREATE TABLE `sa_article` (
   `create_time` INT(11) DEFAULT '0',
   `update_time` INT(11) DEFAULT '0',
   `cate_id` INT(11) DEFAULT 0,
-  `user_id` INT(11) DEFAULT 0,
   `digg` INT(11) DEFAULT '0',
   `v_digg` INT(11) DEFAULT '0',
   `close_comment` tinyint(4) NOT NULL DEFAULT '0',
