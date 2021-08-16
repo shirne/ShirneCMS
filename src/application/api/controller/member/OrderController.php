@@ -40,6 +40,10 @@ class OrderController extends AuthedController
                 ->view('ProductSku', ['sku_id' => 'orig_sku_id', 'price' => 'orig_product_price'], 'ProductSku.sku_id=OrderProduct.sku_id', 'LEFT')
                 ->whereIn('OrderProduct.order_id', $order_ids)
                 ->select();
+            foreach($products as &$pitem){
+                $pitem['sku_specs'] = force_json_decode($pitem['sku_specs']);
+            }
+            unset($pitem);
             $products=array_index($products,'order_id',true);
             $orders->each(function($item) use ($products){
                 $item['product_count']=isset($products[$item['order_id']])?array_sum(array_column($products[$item['order_id']],'count')):0;
