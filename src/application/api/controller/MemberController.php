@@ -9,7 +9,6 @@ use app\common\model\MemberAgentModel;
 use app\common\model\MemberLevelLogModel;
 use app\common\model\MemberLevelModel;
 use app\common\service\CheckcodeService;
-use Exception as GlobalException;
 use extcore\traits\Upload;
 use shirne\common\ValidateHelper;
 use think\Db;
@@ -248,18 +247,18 @@ class MemberController extends AuthedController
 
     /**
      * 升级申请
+     * @param $level_id
+     * @param $balance_pay
      * @return void 
      */
-    public function upgrade(){
-        $target = $this->request->post('level_id');
-        $balance_pay = $this->request->post('balance_pay') == '1';
+    public function upgrade($level_id = 0, $balance_pay = 0){
         $levels = MemberLevelModel::getCacheData();
-        if($target<=0 || !isset($levels[$target])){
+        if($level_id<=0 || !isset($levels[$level_id])){
             $this->error('升级级别错误',0);
         }
 
         $curLevel = $this->user['level_id']?$levels[$this->user['level_id']]:null;
-        $level = $levels[$target];
+        $level = $levels[$level_id];
         if(!$curLevel || $curLevel['sort'] >= $level['sort']){
             $this->error('升级级别错误',0);
         }
@@ -283,15 +282,15 @@ class MemberController extends AuthedController
     
     /**
      * 修改密码
+     * @param mixed $password 
+     * @param mixed $newpassword 
      * @return void 
      */
-    public function change_password(){
-        $password=$this->request->post('password');
+    public function change_password($password, $newpassword){
         if(!compare_password($this->user,$password)){
             $this->error('密码输入错误',0);
         }
         
-        $newpassword=$this->request->post('newpassword');
         $salt=random_str(8);
         $data=array(
             'password'=>encode_password($newpassword,$salt),
@@ -302,11 +301,12 @@ class MemberController extends AuthedController
     }
 
     /**
-     * 修改二级密码
+     * 修改或设置二级密码
+     * @param mixed $password 
+     * @param mixed $newpassword 
      * @return void 
      */
-    public function sec_password(){
-        $password=$this->request->post('password');
+    public function sec_password($password, $newpassword){
         if(empty($this->user['secpassword'])){
             if(!compare_password($this->user,$password)){
                 $this->error('当前密码输入错误',0);
@@ -317,7 +317,6 @@ class MemberController extends AuthedController
             }
         }
         
-        $newpassword=$this->request->post('newpassword');
         $salt=random_str(8);
         $data=array(
             'secpassword'=>encode_password($newpassword,$salt),

@@ -233,9 +233,10 @@ class CommonController extends BaseController
         $list = $model->paginate($pagesize);
         
         return $this->response([
-            'list'=>$list,
+            'lists'=>$list,
             'total'=>$list->total(),
-            'page'=>$list->currentPage()
+            'page'=>$list->currentPage(),
+            'total_page'=>$list->lastPage(),
         ]);
     }
     

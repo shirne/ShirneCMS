@@ -95,7 +95,7 @@ class ArticleController extends BaseController
         
         return $this->response([
             'lists'=>$lists->items(),
-            'category'=>$category?:[],
+            'category'=>$category?:new \stdClass(),
             'page'=>$lists->currentPage(),
             'total'=>$lists->total(),
             'total_page'=>$lists->lastPage(),

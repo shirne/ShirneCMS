@@ -170,11 +170,11 @@ class ProductController extends BaseController
     /**
      * 获取商品快照，快照根据时间戳生成，即订单下单时间
      * @param int $id 
-     * @param int $date 
+     * @param int $time 
      * @return void|Json 
      */
-    public function flash($id, $date){
-        $flash = ProductModel::getFlash($id,$date);
+    public function flash($id, $time){
+        $flash = ProductModel::getFlash($id,$time);
         if(empty($flash)){
             return $this->error('商品快照不存在');
         }
@@ -187,7 +187,7 @@ class ProductController extends BaseController
             'product'=>$product,
             'skus'=>$skus,
             'images'=>$images,
-            'flashDate'=>$flash['timestamp']
+            'flash_date'=>$flash['timestamp']
         ]);
     }
 
