@@ -98,6 +98,7 @@ class AccountController extends AuthedController
     
     /**
      * 提交充值信息
+     * TODO 优化在线支付的设置
      * @return mixed
      */
     public function recharge(){
@@ -388,7 +389,8 @@ class AccountController extends AuthedController
         return $this->response([
             'logs'=>$logs->items(),
             'total'=>$logs->total(),
-            'page'=>$logs->currentPage()
+            'page'=>$logs->currentPage(),
+            'total_page'=>$logs->lastPage(),
         ]);
     }
     
