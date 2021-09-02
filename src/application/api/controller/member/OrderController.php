@@ -245,10 +245,19 @@ class OrderController extends AuthedController
     }
     
     /**
-     * 订单评论 todo
+     * 订单评价
      * @return void 
      */
     public function comment(){
-    
+        $order=OrderModel::get(intval($id));
+        if(empty($order) || $order['delete_time']>0){
+            $this->error('订单不存在或已删除',0);
+        }
+        $success = $order->comment($this->request->param('comments'));
+        if($success){
+            $this->success('评价提交成功');
+        }else{
+            $this->error('提交失败');
+        }
     }
 }
