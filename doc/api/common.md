@@ -10,7 +10,7 @@
 Json格式的Put参数或键值对参数二选一
 
 #### PUT 参数
-```
+```json
 {
     "method": {
         ... // 参数列表
@@ -31,7 +31,7 @@ Json格式的Put参数或键值对参数二选一
 
 ### 返回值
 Json  (data 代表单独请求接口时接口返回的data字段值)
-```
+```json
 {
     "code": 1,
     "msg": "",
@@ -50,7 +50,7 @@ Json  (data 代表单独请求接口时接口返回的data字段值)
 methods=advs,article.get_cates&flag=banner&pid=1
 
 返回结果
-```
+```json
 {
     "code": 1,
     "msg": "",
@@ -75,7 +75,8 @@ methods=advs,article.get_cates&flag=banner&pid=1
                 "sort": 0,
                 "status": 1,
                 "ext": []
-            }
+            },
+            ...
         ],
         "article.get_cates": [
             {
@@ -101,105 +102,14 @@ methods=advs,article.get_cates&flag=banner&pid=1
                 "description": null,
                 "html": "│　├─"
             },
-            {
-                "id": 5,
-                "pid": 1,
-                "title": "Flutter",
-                "short": "Flutter",
-                "name": "Flutter",
-                "icon": null,
-                "image": null,
-                "sort": 2,
-                "props": null,
-                "fields": null,
-                "list_sort": null,
-                "pagesize": 12,
-                "use_template": 0,
-                "template_dir": "0",
-                "channel_mode": 0,
-                "is_comment": 0,
-                "is_images": 0,
-                "is_attachments": 0,
-                "keywords": null,
-                "description": null,
-                "html": "│　├─"
-            },
-            {
-                "id": 6,
-                "pid": 1,
-                "title": "前端",
-                "short": "前端",
-                "name": "qianduan",
-                "icon": null,
-                "image": null,
-                "sort": 3,
-                "props": null,
-                "fields": null,
-                "list_sort": null,
-                "pagesize": 12,
-                "use_template": 0,
-                "template_dir": "0",
-                "channel_mode": 0,
-                "is_comment": 0,
-                "is_images": 0,
-                "is_attachments": 0,
-                "keywords": null,
-                "description": null,
-                "html": "│　├─"
-            },
-            {
-                "id": 7,
-                "pid": 1,
-                "title": "数据库",
-                "short": "数据库",
-                "name": "shujuku",
-                "icon": null,
-                "image": null,
-                "sort": 4,
-                "props": null,
-                "fields": null,
-                "list_sort": null,
-                "pagesize": 12,
-                "use_template": 0,
-                "template_dir": "0",
-                "channel_mode": 0,
-                "is_comment": 0,
-                "is_images": 0,
-                "is_attachments": 0,
-                "keywords": null,
-                "description": null,
-                "html": "│　├─"
-            },
-            {
-                "id": 8,
-                "pid": 1,
-                "title": "网络安全",
-                "short": "网络安全",
-                "name": "wangluoanquan",
-                "icon": null,
-                "image": null,
-                "sort": 5,
-                "props": null,
-                "fields": null,
-                "list_sort": null,
-                "pagesize": 12,
-                "use_template": 0,
-                "template_dir": "0",
-                "channel_mode": 0,
-                "is_comment": 0,
-                "is_images": 0,
-                "is_attachments": 0,
-                "keywords": null,
-                "description": null,
-                "html": "│　└─"
-            }
+            ...
         ]
     }
 }
 
 ```
 * PUT 请求参数
-```
+```json
 { 
     "advs" => { "flag" => "banner"},
     "article.get_cates" => {
@@ -212,7 +122,7 @@ methods=advs,article.get_cates&flag=banner&pid=1
 }
 ```
 返回结果
-```
+```json
 {
     "code": 1,
     "msg": "",
@@ -237,7 +147,8 @@ methods=advs,article.get_cates&flag=banner&pid=1
                 "sort": 0,
                 "status": 1,
                 "ext": []
-            }
+            },
+            ...
         ],
         "article.get_cates": [
             {
@@ -263,52 +174,7 @@ methods=advs,article.get_cates&flag=banner&pid=1
                 "description": null,
                 "html": "├─"
             },
-            {
-                "id": 2,
-                "pid": 0,
-                "title": "作品",
-                "short": "作品",
-                "name": "works",
-                "icon": null,
-                "image": null,
-                "sort": 2,
-                "props": null,
-                "fields": null,
-                "list_sort": null,
-                "pagesize": 12,
-                "use_template": 0,
-                "template_dir": "0",
-                "channel_mode": 0,
-                "is_comment": 0,
-                "is_images": 0,
-                "is_attachments": 0,
-                "keywords": null,
-                "description": null,
-                "html": "├─"
-            },
-            {
-                "id": 3,
-                "pid": 0,
-                "title": "相册",
-                "short": "相册",
-                "name": "ablums",
-                "icon": null,
-                "image": null,
-                "sort": 3,
-                "props": null,
-                "fields": null,
-                "list_sort": null,
-                "pagesize": 12,
-                "use_template": 0,
-                "template_dir": "0",
-                "channel_mode": 0,
-                "is_comment": 0,
-                "is_images": 0,
-                "is_attachments": 0,
-                "keywords": null,
-                "description": null,
-                "html": "└─"
-            }
+            ...
         ],
         "subcates": [
             {
@@ -334,98 +200,7 @@ methods=advs,article.get_cates&flag=banner&pid=1
                 "description": null,
                 "html": "│　├─"
             },
-            {
-                "id": 5,
-                "pid": 1,
-                "title": "Flutter",
-                "short": "Flutter",
-                "name": "Flutter",
-                "icon": null,
-                "image": null,
-                "sort": 2,
-                "props": null,
-                "fields": null,
-                "list_sort": null,
-                "pagesize": 12,
-                "use_template": 0,
-                "template_dir": "0",
-                "channel_mode": 0,
-                "is_comment": 0,
-                "is_images": 0,
-                "is_attachments": 0,
-                "keywords": null,
-                "description": null,
-                "html": "│　├─"
-            },
-            {
-                "id": 6,
-                "pid": 1,
-                "title": "前端",
-                "short": "前端",
-                "name": "qianduan",
-                "icon": null,
-                "image": null,
-                "sort": 3,
-                "props": null,
-                "fields": null,
-                "list_sort": null,
-                "pagesize": 12,
-                "use_template": 0,
-                "template_dir": "0",
-                "channel_mode": 0,
-                "is_comment": 0,
-                "is_images": 0,
-                "is_attachments": 0,
-                "keywords": null,
-                "description": null,
-                "html": "│　├─"
-            },
-            {
-                "id": 7,
-                "pid": 1,
-                "title": "数据库",
-                "short": "数据库",
-                "name": "shujuku",
-                "icon": null,
-                "image": null,
-                "sort": 4,
-                "props": null,
-                "fields": null,
-                "list_sort": null,
-                "pagesize": 12,
-                "use_template": 0,
-                "template_dir": "0",
-                "channel_mode": 0,
-                "is_comment": 0,
-                "is_images": 0,
-                "is_attachments": 0,
-                "keywords": null,
-                "description": null,
-                "html": "│　├─"
-            },
-            {
-                "id": 8,
-                "pid": 1,
-                "title": "网络安全",
-                "short": "网络安全",
-                "name": "wangluoanquan",
-                "icon": null,
-                "image": null,
-                "sort": 5,
-                "props": null,
-                "fields": null,
-                "list_sort": null,
-                "pagesize": 12,
-                "use_template": 0,
-                "template_dir": "0",
-                "channel_mode": 0,
-                "is_comment": 0,
-                "is_images": 0,
-                "is_attachments": 0,
-                "keywords": null,
-                "description": null,
-                "html": "│　└─"
-            }
+            ...
         ]
     }
 }
@@ -442,7 +217,7 @@ methods=advs,article.get_cates&flag=banner&pid=1
 * page 页码
 
 ### 返回值
-```
+```json
 {
     "code": 1,
     "msg": "",
@@ -465,7 +240,7 @@ methods=advs,article.get_cates&flag=banner&pid=1
 * flags  展位标识,可以是一个或多个，多个用 **,** 分割
 
 ### 返回值
-```
+```json
 {
     "code": 1,
     "msg": "",
@@ -488,7 +263,7 @@ methods=advs,article.get_cates&flag=banner&pid=1
 * flag 广告位标识
 
 ### 返回值
-```
+```json
 {
     "code": 1,
     "msg": "",
@@ -527,7 +302,7 @@ methods=advs,article.get_cates&flag=banner&pid=1
 * id 公告id 指定`id`后`flag`参数无效
 
 ### 返回值
-```
+```json
 {
     "code": 1,
     "msg": "",
@@ -557,7 +332,7 @@ methods=advs,article.get_cates&flag=banner&pid=1
 * count 调用条数，默认 10
 
 ### 返回值
-```
+```json
 {
     "code": 1,
     "msg": "",
@@ -565,17 +340,6 @@ methods=advs,article.get_cates&flag=banner&pid=1
     "data": [
         {
             "id":1,
-            "title": "公告标题",
-            "page": "",
-            "url": "",
-            "status": "",
-            "manager_id": 1,
-            "summary": "公告摘要",
-            "create_time":1475412326,
-            "update_time":1475412326
-        },
-        {
-            "id":2,
             "title": "公告标题",
             "page": "",
             "url": "",
@@ -601,7 +365,7 @@ methods=advs,article.get_cates&flag=banner&pid=1
 * count 调用数量
 
 ### 返回值
-```
+```json
 {
     "code": 1,
     "msg": "",
@@ -609,17 +373,6 @@ methods=advs,article.get_cates&flag=banner&pid=1
     "data": [
         {
             "id":1,
-            "title": "链接名称",
-            "group": "",
-            "logo": "",
-            "status": "",
-            "url": "链接地址",
-            "sort": 1,
-            "create_time":1475412326,
-            "update_time":1475412326
-        },
-        {
-            "id":2,
             "title": "链接名称",
             "group": "",
             "logo": "",
@@ -647,7 +400,7 @@ methods=advs,article.get_cates&flag=banner&pid=1
 * type
 
 ### 返回值
-```
+```json
 {
     "code": 1,
     "msg": "提交成功",
@@ -665,7 +418,7 @@ methods=advs,article.get_cates&flag=banner&pid=1
 * page 页码
 
 ### 返回值
-```
+```json
 {
     "code": 1,
     "msg": "",
@@ -689,7 +442,7 @@ methods=advs,article.get_cates&flag=banner&pid=1
 无
 
 ### 返回值
-```
+```json
 {
     "code": 1,
     "msg": "",
@@ -727,7 +480,7 @@ methods=advs,article.get_cates&flag=banner&pid=1
 
 ### 返回值
 单个分组的请求
-```
+```json
 // 请求参数 group=common
 {
     "code": 1,
@@ -755,7 +508,7 @@ methods=advs,article.get_cates&flag=banner&pid=1
 }
 ```
 多个分组的请求
-```
+```json
 // 请求参数 group=common,member
 {
     "code": 1,
@@ -814,7 +567,7 @@ methods=advs,article.get_cates&flag=banner&pid=1
 * date 日期 格式 2021-08-28  默认获取当天
 
 ### 返回值
-```
+```json
 {
     "code":1,
     "msg":"",
@@ -839,7 +592,7 @@ methods=advs,article.get_cates&flag=banner&pid=1
   * agents 获取代理级别列表
 
 ### 返回值
-```
+```json
 {
     "code": 1,
     "msg": "",
