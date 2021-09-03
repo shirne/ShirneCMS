@@ -309,6 +309,7 @@ CREATE TABLE `sa_keywords` (
   `title` varchar(60) DEFAULT '',
   `description` varchar(200) DEFAULT '',
   `group` varchar(20) DEFAULT '',
+  `image` varchar(150) DEFAULT '',
   `v_hot` int(11) DEFAULT 0,
   `hot` int(11) DEFAULT 0,
   `status` int(11) DEFAULT 0,
