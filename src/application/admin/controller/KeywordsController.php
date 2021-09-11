@@ -53,7 +53,6 @@ class KeywordsController extends BaseController
                 }elseif($this->uploadErrorCode>102){
                     $this->error($this->uploadErrorCode.':'.$this->uploadError);
                 }
-                
 
                 if (Db::name('keywords')->insert($data)) {
                     $this->success(lang('Add success!'), url('keywords/index'));

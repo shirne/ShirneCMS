@@ -436,21 +436,26 @@ class MemberModel extends BaseModel
      * 从第三方授权接口的用户资料创建会员
      * @param $data
      * @param int $referer
+     * @param string $mobile 绑定的手机
      * @return static
      */
-    public static function createFromOauth($data,$referer=0)
+    public static function createFromOauth($data,$referer=0, $mobile = '')
     {
         $data=[
             'username' => '#'.$data['openid'],
             'nickname' => $data['nickname'],
             'password' => '',
-            'salt'=>'',
-            'level_id'=>getDefaultLevel(),
+            'salt'     => '',
+            'level_id' => getDefaultLevel(),
             'gender'   => $data['gender'],
             'avatar'   => $data['avatar'],
             'referer'  => 0,
-            'is_agent'=>0
+            'is_agent' => 0
         ];
+        if(!empty($mobile)){
+            $data['mobile'] = $mobile;
+            $data['mobile_bind'] = 1;
+        }
         $member = self::create($data);
         if($member && !empty($member['id'])){
             $member->setReferer($referer);

@@ -8,7 +8,9 @@ use app\api\facade\MemberTokenFacade;
 use app\common\model\MemberAgentModel;
 use app\common\model\MemberLevelLogModel;
 use app\common\model\MemberLevelModel;
+use app\common\model\WechatModel;
 use app\common\service\CheckcodeService;
+use EasyWeChat\Factory;
 use extcore\traits\Upload;
 use shirne\common\ValidateHelper;
 use think\Db;
@@ -72,6 +74,59 @@ class MemberController extends AuthedController
             user_log($this->user['id'],'update_profile',1,'修改个人资料');
             $this->success('保存成功');
         }
+    }
+
+    /**
+     * 小程序授权绑定手机号
+     * @param string $wxid 
+     * @param string $code 
+     * @param string $phoneData 
+     * @param string $phoneIv 
+     * @return void 
+     */
+    public function wxBindMobile($wxid, $code, $phoneData = null, $phoneIv = null){
+        $wechat=Db::name('wechat')->where('type','wechat')
+            ->where(is_numeric($wxid)?'id':'hash',$wxid)->find();
+        if(empty($wechat)){
+            $this->error('服务器配置错误');
+        }
+        $options=WechatModel::to_config($wechat);
+        switch ($wechat['account_type']) {
+            case 'miniprogram':
+            case 'minigame':
+                $weapp=Factory::miniProgram($options);
+                break;
+            default:
+                $this->error('公众号类型不支持');
+                break;
+        }
+        try{
+            $session = $weapp->auth->session($code);
+        }catch(\Exception $e){
+            $this->error('授权失败:'.$e->getMessage());
+        }
+        if (empty($session) || empty($session['openid'])) {
+            $this->error('授权失败');
+        }
+
+        if(!empty($phoneData)){
+            if(empty($phoneIv))$this->error('参数错误');
+            $mobileData = $this->decodeAES($phoneData, $session['session_key'], $phoneIv);
+            if(!empty($mobileData['purePhoneNumber'])){
+                $data['mobile'] = $mobileData['purePhoneNumber'];
+                $data['mobile_bind'] = 1;
+                Db::name('Member')->where('id',$this->user['id'])->update($data);
+                if(!empty($this->user['mobile_bind'])){
+                    $this->user = Db::name('Member')->where('id',$this->user['id'])->find();
+
+                    // 绑定手机号码升级为初级代言人
+                    $seted = MemberModel::autoUpdateBeginner($this->user);
+                }
+                user_log($this->user['id'],'update_mobile',1,'通过小程序授权绑定手机号');
+                $this->success(['is_set_agent'=>($seted==2)?1:0,'image'=>getSetting('beginner_reward_image')],1,'绑定成功');
+            }
+        }
+        $this->error('绑定失败');
     }
 
     /**

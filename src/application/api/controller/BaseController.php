@@ -123,6 +123,14 @@ class BaseController extends Controller
             $this->error("登录失效",$this->request->auth_error);
         }
     }
+
+    protected function decodeAES($phoneData, $session_key, $phoneIv){
+        $aesKey = base64_decode($session_key);
+        $aesIv = base64_decode($phoneIv);
+        $datastr = base64_decode($phoneData);
+        $decrypted = openssl_decrypt($datastr, 'AES-128-CBC', $aesKey, 1, $aesIv);
+        return @json_decode($decrypted, true) ?? [];
+    }
     
     /**
      * 空操作输出

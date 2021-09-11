@@ -323,12 +323,15 @@ class AuthController extends BaseController
     }
 
     /**
-     * 微信小程序登录
+     * 微信公众号/小程序登录
      * @param string $wxid 小程序对应的系统id或hash
      * @param string $code 客户端获取到的授权码
+     * @param string $rawData 客户端获取到的用户资料
+     * @param string $phoneData 客户端获取到的手机号码加密串
+     * @param string $phoneIv 客户端获取到的手机号码加密向量
      * @return Json|void 
      */
-    public function wxLogin($wxid, $code){
+    public function wxLogin($wxid, $code, $rawData = null, $phoneData = null, $phoneIv = null){
         
         $agent=$this->request->param('agent');
         $wechat=Db::name('wechat')->where('type','wechat')
@@ -351,7 +354,7 @@ class AuthController extends BaseController
                 $this->error('配置错误',ERROR_LOGIN_FAILED);
                 break;
         }
-
+        $mobileData = [];
         if($weapp instanceof Application){
             try{
                 $userinfo = $weapp->oauth->user()->getOriginal();
@@ -361,13 +364,12 @@ class AuthController extends BaseController
             if(empty($userinfo) || empty($userinfo['openid'])){
                 $this->error('登录失败', ERROR_LOGIN_FAILED);
             }
-            $rowData = json_encode($userinfo, JSON_UNESCAPED_UNICODE);
+            $rawData = json_encode($userinfo, JSON_UNESCAPED_UNICODE);
             $session=['openid'=>$userinfo['openid'],'unionid'=>$userinfo['unionid']??''];
         }else{
             //调试模式允许mock登录
             if($wechat['is_debug'] && $code=='the code is a mock one'){
-                $rowData = $this->request->param('rawData');
-                $userinfo = json_decode($rowData, TRUE);
+                $userinfo = json_decode($rawData, TRUE);
                 $session=['openid'=>md5($userinfo['nickName']),'unionid'=>''];
             }else {
                 try{
@@ -379,12 +381,16 @@ class AuthController extends BaseController
                     $this->error('登录失败', ERROR_LOGIN_FAILED);
                 }
 
-                $rowData = $this->request->param('rawData');
-                if (!empty($rowData)) {
+                if (!empty($rawData)) {
                     $signature = $this->request->param('signature');
-                    if (sha1($rowData . $session['session_key']) == $signature) {
-                        $userinfo = json_decode($rowData, TRUE);
+                    if (sha1($rawData . $session['session_key']) == $signature) {
+                        $userinfo = json_decode($rawData, TRUE);
                     }
+                }
+
+                if(!empty($phoneData)){
+                    if(empty($phoneIv))$this->error('参数错误');
+                    $mobileData = $this->decodeAES($phoneData, $session['session_key'], $phoneIv);
                 }
             }
         }
@@ -408,20 +414,20 @@ class AuthController extends BaseController
             }
         }
     
-        $data=$this->wxMapdata($userinfo,$rowData);
+        $data=$this->wxMapdata($userinfo,$rawData);
         $data['type']=$type;
         $data['type_id']=$typeid;
         if(!empty($session['unionid']))$data['unionid']=$session['unionid'];
         
         if(empty($member)){
             $register=getSetting('m_register');
-            if($register!='1'){
+            if($register != '1' || !empty($mobileData['purePhoneNumber'])){
             
                 //自动注册
                 $data['openid']=$session['openid'];
                 
                 $referid = $this->getAgentId($agent);
-                $member = MemberModel::createFromOauth($data, $referid);
+                $member = MemberModel::createFromOauth($data, $referid, $mobileData['purePhoneNumber'] ?? '');
                 
                 if($member['id']){
                     $data['member_id']=$member['id'];
@@ -434,6 +440,10 @@ class AuthController extends BaseController
             //更新资料
             if(empty($oauth['member_id'])){
                 $data['member_id'] = $member['id'];
+            }
+            if(!empty($mobileData['purePhoneNumber'])){
+                $data['mobile'] = $mobileData['purePhoneNumber'];
+                $data['mobile_bind'] = 1;
             }
             $updata=MemberModel::checkUpdata($data, $member);
             if(!empty($updata)){
@@ -496,10 +506,10 @@ class AuthController extends BaseController
     /**
      * 第三方登录数据转换
      * @param $userinfo
-     * @param $rowData
+     * @param $rawData
      * @return array
      */
-    private function wxMapdata($userinfo,$rowData){
+    private function wxMapdata($userinfo,$rawData){
         $nickname = '';
         if(isset($userinfo['nickName'])){
             $nickname = $userinfo['nickName'];
@@ -526,7 +536,7 @@ class AuthController extends BaseController
             $gender = $userinfo['sex'];
         }
         $data = [
-            'data'=>$rowData,
+            'data'=>$rawData,
             //'is_follow'=>0,
             'nickname'=>$nickname,
             'gender'=>$gender,
