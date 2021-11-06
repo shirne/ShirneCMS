@@ -495,6 +495,12 @@ function print_remark($data){
     return $data;
 }
 
+function masktext($text, $prelen=3,$suflen=4,$midmax=4){
+    $l=mb_strlen($text);
+    $masklen=min($l-$prelen-$suflen,$midmax);
+    return mb_substr($text,0,$prelen).str_repeat('*',$masklen).mb_substr($text,$l-$suflen);
+}
+
 function maskphone($phone){
     $l=strlen($phone);
     $masklen=min($l-7,4);
