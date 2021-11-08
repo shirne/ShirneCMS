@@ -11,9 +11,14 @@
             <label for="title">公告标题</label>
             <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="输入公告标题">
         </div>
-        <div class="form-group">
+        <div class="form-group {:empty($flags)?'d-none':''}">
             <label for="page">调用标志</label>
-            <input type="text" name="page" class="form-control" value="{$model.page}" >
+            <select name="page" class="form-control">
+                <option value="">无</option>
+                <foreach name="$flags" item="v" key="flag">
+                    <option value="{$flag}" {$flag==$model['page']?'selected':''}>{$v}({$flag})</option>
+                </foreach>
+            </select>
             <div class="text-muted">此处内容由设计师设定，请勿改动！</div>
         </div>
         <div class="form-group">

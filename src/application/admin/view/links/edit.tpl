@@ -19,15 +19,12 @@
         <div class="form-row">
             <div class="form-group col">
                 <label for="group">分组</label>
-                <div class="input-group">
-                    <input type="text" name="group" class="form-control" value="{$model.group}" placeholder="链接分组" >
-                    <select class="form-control" onchange="var val=$(this).val();if(val)this.form.group.value=val;">
-                        <option value="">选择分组</option>
-                        <volist name="groups" id="group">
-                            <option value="{$group}">{$group}</option>
-                        </volist>
-                    </select>
-                </div>
+                <select class="form-control" name="group">
+                    <option value="">无</option>
+                    <foreach name="groups" item="title" key="group">
+                        <option value="{$group}" {$group==$model['group']?'selected':''}>{$title}({$group})</option>
+                    </foreach>
+                </select>
             </div>
             <div class="form-group col">
                 <label for="sort">优先级</label>
