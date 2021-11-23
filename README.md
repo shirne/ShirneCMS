@@ -130,6 +130,8 @@ ShirneCMS
 >Apache2.2以上 + mod_rewrite <br />
 >Nginx + php-fpm
 
+[微信相关的配置](doc/WECHAT.md)
+
 [Windows配置说明](doc/WINDOWS.md)
 
 [CentOS配置说明](doc/CENTOS.md)
@@ -142,7 +144,7 @@ ShirneCMS
 
 ## Docker
 配置参见Dockerfile
-注：仅初步配置成功环境参数，具体运行过程中还有一些文件权限和挂载问题未搞清楚
+注：若runtime目录内文件权限有问题，可以删除里面的几个缓存目录重试(原因是在主机上运行过系统，由主机的web账号生成的缓存文件，无法分配权限)
 
 ```
 // 创建镜像
@@ -150,6 +152,7 @@ cd ./docker-php-apache
 docker build -t shirnecms .
 
 // 运行
+cd /path/to/shirnecms
 docker run -itd -p 8080:80/tcp -v $PWD/src:/data/wwwroot/shirnecms:rw shirnecms --privileged=true
 
 // 需要在线导入sql，则把dbscript拷贝到容器中
