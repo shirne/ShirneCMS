@@ -161,6 +161,9 @@ docker cp dbscript <容器ID>:/data/wwwroot/shirnecms/
 // macos中mysql使用宿主机的话主机填写
 docker.for.mac.host.internal
 
+// 默认未开启apache的mod_rewrite，可在/etc/apaches/apache2.conf中开启
+IncludeOptional mods-available/rewrite.load
+
 ```
 
 ## 演示
