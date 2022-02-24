@@ -19,11 +19,11 @@ class BaseModel extends Model
             return parent::getRelationAttribute($name, $item);
         }catch (\InvalidArgumentException $e){
             $traces = static::getTempFile($e->getTrace());
-            Log::error($e->getMessage().' '.$traces['file'].':'.$traces['line'],\think\Log::NOTICE);
+            Log::notice($e->getMessage().' '.$traces['file'].':'.$traces['line']);
             return null;
         }catch (\Exception $e){
             $traces = static::getTempFile($e->getTrace());
-            Log::error($e->getMessage().' '.$traces['file'].':'.$traces['line'],\think\Log::NOTICE);
+            Log::notice($e->getMessage().' '.$traces['file'].':'.$traces['line']);
             return null;
         }
     }

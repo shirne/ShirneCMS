@@ -300,7 +300,7 @@ class MemberModel extends BaseModel
             $currentid=$user['referer'];
             if(!$currentid)break;
             if(in_array($currentid, $ids)!==false){
-                Log::error('会员 '.$userid.' 在查找上级时在第 '.$layer.' 层出现递归',\think\Log::ERROR);
+                Log::warning('会员 '.$userid.' 在查找上级时在第 '.$layer.' 层出现递归');
                 break;
             }
             $user=Db::name('Member')->where('id',$currentid)->field('id,level_id,is_agent,username,nickname,mobile,referer')->find();
@@ -326,7 +326,7 @@ class MemberModel extends BaseModel
             $layer++;
             $userids=array_column($users,'id');
             if(in_array($userid ,$userids)){
-                Log::error('会员 '.$userid.' 在查找下级时在第 '.$layer.' 层出现递归',\think\Log::ERROR);
+                Log::warning('会员 '.$userid.' 在查找下级时在第 '.$layer.' 层出现递归');
                 break;
             }
             $sons = array_merge($sons, $getid?$userids:$users);
