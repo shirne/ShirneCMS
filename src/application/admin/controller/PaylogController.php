@@ -416,7 +416,7 @@ class PaylogController extends BaseController
         }else{
             $paytype='handle';
         }
-        Log::record('提现:'.var_export($result,true));
+        Log::info('提现:'.var_export($result,true));
         if(!empty($result)){
             if($result['return_code']!='SUCCESS'){
                 $this->error($result['return_msg']);

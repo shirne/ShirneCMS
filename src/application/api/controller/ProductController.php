@@ -296,7 +296,7 @@ class ProductController extends BaseController
         if ($response instanceof \EasyWeChat\Kernel\Http\StreamResponse) {
             return $response->getBody()->getContents();
         }
-        Log::record(var_export($response,true));
+        Log::warning(var_export($response,true));
         $this->error('小程序码生成失败');
     }
 

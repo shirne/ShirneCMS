@@ -102,7 +102,7 @@ class BaseHandler
         try {
             $result = $model->find();
         } catch (\Exception $e) {
-            Log::record($e->getMessage());
+            Log::error($e->getMessage());
         }
 
         if (empty($result)) {
@@ -169,7 +169,7 @@ class BaseHandler
                     $processor = BaseProcessor::factory($processor, $this->app, $this);
                     return $processor->process($config);
                 }
-                Log::record($reply['content']);
+                Log::info($reply['content']);
                 return 'error';
             default:
                 return $reply['content'];

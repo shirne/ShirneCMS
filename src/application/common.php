@@ -21,12 +21,6 @@ define('PRO_TYPE_NORMAL',1);
 define('PRO_TYPE_UPGRADE',2);
 define('PRO_TYPE_BIND',4);
 
-function writelog($message,$type=\think\Log::INFO){
-    if(config('app_debug')==true){
-        \think\facade\Log::record($message,$type);
-    }
-}
-
 function force_json_decode($string){
     if(is_array($string))return $string;
     if(empty($string))return [];

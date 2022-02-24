@@ -37,6 +37,14 @@ class TestController
     }
     
     public function model(){
+        MemberModel::where('referer',1)->update(['froze_credit'=>10]);
+        MemberModel::create([
+            'username'=>'test01',
+            'password'=>'123456',
+            'referer'=>1,
+            'level_id'=>1,
+        ]);
+        exit;
         $parents=getMemberParents(request()->param('id'),0,false);
         var_dump($parents);
         exit;
@@ -51,8 +59,8 @@ class TestController
         try {
             $paymodel->updateStatus($data);
         }catch(\Exception $e){
-            Log::record($e->getMessage());
-            Log::record($e->getTraceAsString());
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
         }
         
         OrderModel::sendOrderMessage(5,'order_deliver');

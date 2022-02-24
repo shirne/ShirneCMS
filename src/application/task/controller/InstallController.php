@@ -185,7 +185,7 @@ class InstallController extends Controller
             
         }catch(\Throwable $e){
             $message=$e->getMessage();
-            Log::record($message);
+            Log::error($message);
             $this->error('数据库连接失败');
         }
 

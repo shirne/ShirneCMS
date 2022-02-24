@@ -208,12 +208,12 @@ class OrderController extends AuthedController
                 'openid' => empty($this->wechatUser)?'':$this->wechatUser['openid'],
             ]);
         }catch(\Exception $e){
-            Log::record($e->getMessage());
-            Log::record($e->getTraceAsString());
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             $this->error('支付发起失败');
         }
         if(empty($result) || $result['return_code']!='SUCCESS' || $result['result_code']!='SUCCESS'){
-            Log::record(json_encode($result,JSON_UNESCAPED_UNICODE));
+            Log::warning(json_encode($result,JSON_UNESCAPED_UNICODE));
             $this->error('支付发起失败');
         }
         $data=['payorder'=>$payorder];

@@ -96,7 +96,7 @@ class CategoryModel extends BaseModel
         while($idorname!='0'){
             $current=$this->findCategory($idorname);
             if(empty($current)){
-                Log::record('Category error at '.$idorname.'\'s parent');
+                Log::error('Category error at '.$idorname.'\'s parent');
                 break;
             }
             array_unshift($tree,$current);
@@ -114,7 +114,7 @@ class CategoryModel extends BaseModel
         while($idorname!='0'){
             $current=$this->findCategory($idorname);
             if(empty($current)){
-                Log::record('Category error at '.$idorname.'\'s parent');
+                Log::error('Category error at '.$idorname.'\'s parent');
                 $current=[];
                 break;
             }

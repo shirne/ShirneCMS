@@ -138,7 +138,7 @@ class PayOrderModel extends BaseModel
                 static $apps=[];
                 $appid = $payorder['pay_id'];
                 if(!$appid){
-                    Log::record('订单 '.$order_type.' '.$orderid.'退款失败,退款配置错误');
+                    Log::error('订单 '.$order_type.' '.$orderid.'退款失败,退款配置错误');
                     return false;
                 }
                 if(!isset($apps[$appid])){
@@ -163,17 +163,17 @@ class PayOrderModel extends BaseModel
                             Db::name('payOrderRefund')->where('id',$refund_id)->update(['status'=>-1,'refund_result'=>$result['return_msg']]);
                         }
                     }else{
-                        Log::record('订单 '.$order_type.' '.$orderid.'退款失败,退款单创建失败');
+                        Log::error('订单 '.$order_type.' '.$orderid.'退款失败,退款单创建失败');
                     }
                 }else{
-                    Log::record('订单 '.$order_type.' '.$orderid.'退款失败,退款配置错误');
+                    Log::error('订单 '.$order_type.' '.$orderid.'退款失败,退款配置错误');
                     return false;
                 }
             }else{
-                Log::record('订单 '.$order_type.' '.$orderid.'退款失败,暂不支持支付方式 '.$payorder['pay_type']);
+                Log::error('订单 '.$order_type.' '.$orderid.'退款失败,暂不支持支付方式 '.$payorder['pay_type']);
             }
         }else{
-            Log::record('订单 '.$order_type.' '.$orderid.'退款失败,未找到支付单');
+            Log::error('订单 '.$order_type.' '.$orderid.'退款失败,未找到支付单');
         }
         return false;
     }

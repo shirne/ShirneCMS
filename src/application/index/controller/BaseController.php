@@ -90,7 +90,7 @@ class BaseController extends Controller
         if(!empty($agent)){
             $agent=preg_replace('/[^a-zA-Z0-9_-]*/','',$agent);
             if($agent) {
-                Log::record('With Agent code: ' . $agent );
+                Log::info('With Agent code: ' . $agent );
                 session('agent', $agent);
             }
         }

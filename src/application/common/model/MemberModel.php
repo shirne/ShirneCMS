@@ -31,6 +31,7 @@ class MemberModel extends BaseModel
     {
         parent::init();
         self::afterUpdate(function ($model) {
+            Log::info(var_export($model,true));
             $users=$model->where($model->getWhere())->select();
             //代理会员组
             if(!empty($users)) {
@@ -46,6 +47,7 @@ class MemberModel extends BaseModel
             }
         });
         self::afterInsert(function ( $model) {
+            Log::info(var_export($model,true));
             if ($model['referer']) {
                 Db::name('member')->where('id',$model->referer)->setInc('recom_total',1);
             }
@@ -298,7 +300,7 @@ class MemberModel extends BaseModel
             $currentid=$user['referer'];
             if(!$currentid)break;
             if(in_array($currentid, $ids)!==false){
-                Log::record('会员 '.$userid.' 在查找上级时在第 '.$layer.' 层出现递归',\think\Log::ERROR);
+                Log::error('会员 '.$userid.' 在查找上级时在第 '.$layer.' 层出现递归',\think\Log::ERROR);
                 break;
             }
             $user=Db::name('Member')->where('id',$currentid)->field('id,level_id,is_agent,username,nickname,mobile,referer')->find();
@@ -324,7 +326,7 @@ class MemberModel extends BaseModel
             $layer++;
             $userids=array_column($users,'id');
             if(in_array($userid ,$userids)){
-                Log::record('会员 '.$userid.' 在查找下级时在第 '.$layer.' 层出现递归',\think\Log::ERROR);
+                Log::error('会员 '.$userid.' 在查找下级时在第 '.$layer.' 层出现递归',\think\Log::ERROR);
                 break;
             }
             $sons = array_merge($sons, $getid?$userids:$users);

@@ -51,7 +51,7 @@ class AuthController extends BaseController
                 }
             }
         }
-        Log::record(['access:', $this->accessToken, $this->accessSession]);
+        Log::info(['access:', $this->accessToken, $this->accessSession]);
         if(empty($this->accessToken) &&
             !in_array($this->request->action(), ['token','wxsign','wxauth','wxlogin','refresh'])
             ){
@@ -74,7 +74,7 @@ class AuthController extends BaseController
                 json_encode($this->accessSession, JSON_UNESCAPED_UNICODE),
                 ['expire'=>60*10]
             );
-            Log::record(['access cache:', $this->accessToken, $this->accessSession]);
+            Log::info(['access cache:', $this->accessToken, $this->accessSession]);
         }
     }
 
@@ -496,7 +496,7 @@ class AuthController extends BaseController
                 ->where('agentcode',$agent)
                 ->where('status',1)->find();
             if(!empty($amem)){
-                Log::record('With Agent code: '.$agent.','.$amem['id']);
+                Log::info('With Agent code: '.$agent.','.$amem['id']);
                 $referid = $amem['id'];
             }
         }

@@ -248,7 +248,7 @@ class ProductCouponModel extends BaseModel
      * @param bool $strict
      */
     public static function matchMemberCoupons($products,$member_id,$strict=true){
-        Log::record(var_export($products,true));
+        Log::info(var_export($products,true));
         $cates=[];
         $brands=[];
         $prods=[];
