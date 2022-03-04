@@ -96,7 +96,7 @@ class SignController extends AuthedController
             $model->where('signdate','>=', date('Y-m-d', $fromtime));
         }
         $total = $model->count();
-        return $this->response(intval($total));
+        return $this->response(['count'=>intval($total)]);
     }
 
     /**
@@ -112,6 +112,6 @@ class SignController extends AuthedController
             $model->where('create_time','>=', $fromtime);
         }
         $total = $model->sum('amount');
-        return $this->response(intval($total*.01));
+        return $this->response(['total'=>intval($total*.01)]);
     }
 }

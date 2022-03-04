@@ -42,6 +42,12 @@ return [
     'Top'=>'置顶',
     'Hot'=>'热门',
     'Recommend'=>'推荐',
+
+    'Just now'=>'刚刚',
+    'seconds ago'=>'秒前',
+    'minutes ago'=>'分钟前',
+    'hours ago'=>'小时前',
+    'days ago'=>'天前',
     
     'Price Upgrade'=>'按价格升级',
     'Bind Upgrade'=>'绑定升级',

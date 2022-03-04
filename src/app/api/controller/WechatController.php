@@ -56,12 +56,12 @@ class WechatController{
         if(!empty($hash)){
             $account=Db::name('wechat')->where('hash',$hash)->find();
             if(empty($account)){
-                Log::record('公众号['.$hash.']不存在','Wechat');
+                Log::warning('公众号['.$hash.']不存在','Wechat');
             }
         }else{
             $account=Db::name('wechat')->where('is_default',1)->where('type','wechat')->find();
             if(empty($account)){
-                Log::record('没有设置默认公众号','Wechat');
+                Log::warning('没有设置默认公众号','Wechat');
             }
         }
         if(empty($account)){
@@ -76,7 +76,7 @@ class WechatController{
      * @return never 
      */
     public function index($hash=''){
-        Log::record('收到消息'.$hash);
+        Log::info('收到消息'.$hash);
         $account=$this->getAccount($hash);
         
         $app = WechatModel::createApp($account);
@@ -100,13 +100,13 @@ class WechatController{
                 case 'openwork':
                 case 'micromerchant':
                 default:
-                    Log::record('不支持的公众号类型：'.$account['account_type']);
+                    Log::warning('不支持的公众号类型：'.$account['account_type']);
                     exit;
                     break;
             }
         }catch(\Exception $e){
-            Log::record($e->getMessage());
-            Log::record($e->getTraceAsString());
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             exit;
         }
         
@@ -114,7 +114,7 @@ class WechatController{
         try {
             $response = $app->server->serve();
         }catch(\Exception $e){
-            Log::record('消息回复错误:'.$e->getMessage());
+            Log::error('消息回复错误:'.$e->getMessage());
             exit;
         }
 
@@ -133,7 +133,7 @@ class WechatController{
     
         $app = Factory::payment($config);
         $response = $app->handleRefundedNotify(function ($message, $reqInfo, $fail){
-            Log::record(var_export($message,TRUE),'refund');
+            Log::info(var_export($message,TRUE),'refund');
             
             $order = PayOrderRefundModel::where('refund_no',$message['out_refund_no'])->find();
 
@@ -166,8 +166,8 @@ class WechatController{
                 try {
                     $order->updateStatus($data);
                 }catch(\Exception $e){
-                    Log::record($e->getMessage());
-                    Log::record($e->getTraceAsString());
+                    Log::error($e->getMessage());
+                    Log::error($e->getTraceAsString());
                 }
             }
             
@@ -190,7 +190,7 @@ class WechatController{
 
         $response = $app->handlePaidNotify(function ($message, $fail) {
             // 记录日志
-            Log::record(var_export($message,TRUE),'pay');
+            Log::info(var_export($message,TRUE),'pay');
 
             /**
              * @var $order PayOrderModel
@@ -226,8 +226,8 @@ class WechatController{
                 try {
                     $order->updateStatus($data);
                 }catch(\Exception $e){
-                    Log::record($e->getMessage());
-                    Log::record($e->getTraceAsString());
+                    Log::error($e->getMessage());
+                    Log::error($e->getTraceAsString());
                 }
             }
 
@@ -251,7 +251,7 @@ class WechatController{
 
         $response = $app->handlePaidNotify(function ($message, $fail) {
             // 记录日志
-            Log::record(var_export($message,TRUE),'scanpay');
+            Log::info(var_export($message,TRUE),'scanpay');
 
             return true;
         });

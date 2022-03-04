@@ -27,7 +27,9 @@ class CartController extends AuthedController
      * @return Json 
      */
     public function getcount(){
-        return $this->response(MemberCartFacade::getCount($this->user['id']));
+        return $this->response([
+            'count'=> MemberCartFacade::getCount($this->user['id'])
+        ]);
     }
 
     /**

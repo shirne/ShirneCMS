@@ -10,6 +10,8 @@ define('ERROR_TOKEN_INVAILD',102);//token无效
 define('ERROR_TOKEN_EXPIRE',103);//token过期
 define('ERROR_REFRESH_TOKEN_INVAILD',105);//refresh_token失效
 
+define('ERROR_TMP_TOKEN_EXPIRE', 115);
+
 define('ERROR_NEED_OPENID',112);
 define('ERROR_MEMBER_DISABLED',113);
 

@@ -34,6 +34,10 @@ class OrderController extends AuthedController
                 ->view('ProductSku', ['sku_id' => 'orig_sku_id', 'price' => 'orig_product_price'], 'ProductSku.sku_id=OrderProduct.sku_id', 'LEFT')
                 ->whereIn('OrderProduct.order_id', $order_ids)
                 ->select();
+            foreach($products as &$pitem){
+                $pitem['sku_specs'] = force_json_decode($pitem['sku_specs']);
+            }
+            unset($pitem);
             $products=array_index($products,'order_id',true);
             $orders->each(function($item) use ($products){
                 $item['product_count']=isset($products[$item['order_id']])?array_sum(array_column($products[$item['order_id']],'count')):0;
@@ -235,10 +239,19 @@ class OrderController extends AuthedController
     }
     
     /**
-     * 订单评论 todo
+     * 订单评价
      * @return void 
      */
     public function comment(){
-    
+        $order=OrderModel::get(intval($id));
+        if(empty($order) || $order['delete_time']>0){
+            $this->error('订单不存在或已删除',0);
+        }
+        $success = $order->comment($this->request->param('comments'));
+        if($success){
+            $this->success('评价提交成功');
+        }else{
+            $this->error('提交失败');
+        }
     }
 }

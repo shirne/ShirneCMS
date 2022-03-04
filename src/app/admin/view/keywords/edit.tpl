@@ -35,17 +35,17 @@
             </div>
         </div>
         <div class="form-group">
-            <label for="image">LOGO</label>
+            <label for="image">题图</label>
             <div class="input-group">
                 <div class="custom-file">
-                    <input type="file" class="custom-file-input" name="upload_logo"/>
-                    <label class="custom-file-label" for="upload_logo">选择文件</label>
+                    <input type="file" class="custom-file-input" name="upload_image"/>
+                    <label class="custom-file-label" for="upload_image">选择文件</label>
                 </div>
             </div>
-            {if $model['logo']}
+            {if !empty($model['logo'])}
                 <figure class="figure">
-                    <img src="{$model.logo}" class="figure-img img-fluid rounded" alt="image">
-                    <figcaption class="figure-caption text-center">{$model.logo}</figcaption>
+                    <img src="{$model.image}" class="figure-img img-fluid rounded" alt="image">
+                    <figcaption class="figure-caption text-center">{$model.image}</figcaption>
                 </figure>
                 <input type="hidden" name="delete_logo" value="{$model.logo}"/>
             {/if}

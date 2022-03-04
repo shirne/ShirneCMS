@@ -352,6 +352,35 @@ function showdate($time,$replace='-',$format='Y-m-d H:i:s'){
     return $time==0?$replace:date($format,$time);
 }
 
+
+/**
+ * 时间对比
+ * @param $time int    对比的时间（时间戳）
+ * @param $nowTime int 目前时间（时间戳）
+ * @param $empty string 时间为空时的替换字符串
+ * @return string
+ */
+function friendlytime($time = 0, $nowTime = 0, $empty='-') {
+    if(!$time)return $empty;
+    if (!$nowTime) $nowTime = time();
+    $dif = $nowTime - $time;
+    if ($dif < 60)
+        return lang('Just now');
+    $dif = $dif / 60;
+    if (1 <= $dif && $dif < 60)
+        return intval($dif) .' '. lang('minutes ago');
+    $dif = $dif / 60;
+    if (1 <= $dif && $dif < 24)
+        return intval($dif) .' '. lang('hours ago');
+    //最多显示3天前
+    $dif = $dif / 24;
+    if (1 <= $dif && $dif <= 3)
+        return intval($dif) .' '. lang('days ago');
+    if (date('Y',$time) == date('Y',$nowTime))
+        return date('m-d', $time);
+    return date('Y-m-d', $time);
+}
+
 /**
  * 留言状态
  * @param $status int
@@ -492,6 +521,12 @@ function print_remark($data){
         return call_user_func('lang', $temp, $datarr);
     }
     return $data;
+}
+
+function masktext($text, $prelen=3,$suflen=4,$midmax=4){
+    $l=mb_strlen($text);
+    $masklen=min($l-$prelen-$suflen,$midmax);
+    return mb_substr($text,0,$prelen).str_repeat('*',$masklen).mb_substr($text,$l-$suflen);
 }
 
 function maskphone($phone){

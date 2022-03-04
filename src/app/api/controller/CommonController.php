@@ -9,11 +9,9 @@ use app\common\model\LinksModel;
 use app\common\model\MemberAgentModel;
 use app\common\model\MemberSignModel;
 use app\common\model\NoticeModel;
-use Exception;
 use InvalidArgumentException;
 use think\facade\Db;
 use think\facade\Log;
-use think\Model;
 use think\Response;
 use think\response\Json;
 use Throwable;
@@ -99,7 +97,7 @@ class CommonController extends BaseController
                 try{
                     $controller = Container::getInstance()->make('\\app\\api\\controller\\' . $m[0] . 'Controller');
                 }catch(\Exception $e){
-                    Log::record($e->getMessage(),'error');
+                    Log::error($e->getMessage(),'error');
                     return null;
                 }
             }
@@ -131,9 +129,9 @@ class CommonController extends BaseController
                     return null;
                 }
             }catch (\ReflectionException $e){
-                Log::record($e->getMessage(),'error');
+                Log::error($e->getMessage(),'error');
             }catch (\Exception $e){
-                Log::record($e->getMessage(),'error');
+                Log::error($e->getMessage(),'error');
             }
         }
         return null;
@@ -248,9 +246,10 @@ class CommonController extends BaseController
         $list = $model->paginate($pagesize);
         
         return $this->response([
-            'list'=>$list,
+            'lists'=>$list,
             'total'=>$list->total(),
-            'page'=>$list->currentPage()
+            'page'=>$list->currentPage(),
+            'total_page'=>$list->lastPage(),
         ]);
     }
     

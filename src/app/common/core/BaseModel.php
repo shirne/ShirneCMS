@@ -19,12 +19,22 @@ class BaseModel extends Model
         try{
             return parent::getRelationAttribute($name, $item);
         }catch (\InvalidArgumentException $e){
-            Log::record($e->getMessage(),\think\Log::NOTICE);
+            $traces = static::getTempFile($e->getTrace());
+            Log::notice($e->getMessage().' '.$traces['file'].':'.$traces['line']);
             return null;
-        }catch (Exception $e){
-            Log::record($e->getMessage(),\think\Log::NOTICE);
+        }catch (\Exception $e){
+            $traces = static::getTempFile($e->getTrace());
+            Log::notice($e->getMessage().' '.$traces['file'].':'.$traces['line']);
             return null;
         }
+    }
+    protected static function getTempFile($traces){
+        foreach($traces as $trace){
+            if(strpos($trace['file'],'\\temp\\') > 0){
+                return $trace;
+            }
+        }
+        return $traces[0];
     }
     
     protected $errno;
@@ -86,7 +96,7 @@ class BaseModel extends Model
                     $this->triggerStatus($odata, $data['status'], $data);
                 }
             }else{
-                throw new Exception('Update status with No data exists');
+                throw new \Exception('Update status with No data exists');
             }
         }else {
             $lists = Db::name($this->name)->where($where)->select();

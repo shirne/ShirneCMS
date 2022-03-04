@@ -18,7 +18,9 @@ iis下新建站点, 物理路径指向到  src/public
 ### 数据库配置
 
 **命令行导入和网页安装,需要事先把数据库配置填写好**
-> 数据库配置文件在 src/config/database.php
+> 数据库配置示例文件: src/.env.example
+> 将此文件复制或更名为  src/.env
+> 然后再修改文件中的配置参数
 
 ### 导入数据库
 
@@ -34,9 +36,9 @@ scripts/update_wechat.sql 微信模块
 scripts/update_sign.sql 会员签到
 ```
 
-> 也可以在命令行导入
+> 也可以在命令行导入, m参数指定多个模块名
 ```shell
-php think install
+php think install -m shop,wechat
 ```
 
 > 网页安装( 域名/task/install ) 服务器配置不高的情况下,安装全部功能, 有可能出现超时错误

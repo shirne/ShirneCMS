@@ -8,7 +8,7 @@ use think\Validate;
 class MemberAddressValidate extends Validate
 {
     protected $rule=[
-        'recive_name|收货人姓名'=>'require',
+        'receive_name|收货人姓名'=>'require',
         'mobile|联系电话'=>'require|telephone',
         'province|所在省份'=>'require',
         'city|所在城市'=>'require',

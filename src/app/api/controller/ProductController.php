@@ -9,13 +9,6 @@ use app\common\model\PostageModel;
 use app\common\model\ProductModel;
 use app\common\model\WechatModel;
 use app\common\model\ProductSkuModel;
-use DomainException;
-use Endroid\QrCode\Exception\InvalidWriterException;
-use EasyWeChat\Kernel\Exceptions\InvalidConfigException;
-use InvalidArgumentException;
-use Exception;
-use GuzzleHttp\Exception\GuzzleException;
-use RuntimeException;
 use shirne\common\Poster;
 use think\facade\Db;
 use think\facade\Log;
@@ -130,6 +123,18 @@ class ProductController extends BaseController
     }
 
     /**
+     * 获取品牌列表
+     * @param int $id 
+     * @return Json 
+     */
+    public function brands($cate = 0){
+        $lists = Db::name('productBrand')->order('sort asc')->select();
+        return $this->response([
+            'lists'=>$lists,
+        ]);
+    }
+
+    /**
      * 获取商品详情
      * @param int $id 
      * @return Json 
@@ -165,11 +170,11 @@ class ProductController extends BaseController
     /**
      * 获取商品快照，快照根据时间戳生成，即订单下单时间
      * @param int $id 
-     * @param int $date 
+     * @param int $time 
      * @return void|Json 
      */
-    public function flash($id, $date){
-        $flash = ProductModel::getFlash($id,$date);
+    public function flash($id, $time){
+        $flash = ProductModel::getFlash($id,$time);
         if(empty($flash)){
             return $this->error('商品快照不存在');
         }
@@ -182,7 +187,7 @@ class ProductController extends BaseController
             'product'=>$product,
             'skus'=>$skus,
             'images'=>$images,
-            'flashDate'=>$flash['timestamp']
+            'flash_date'=>$flash['timestamp']
         ]);
     }
 
@@ -291,7 +296,7 @@ class ProductController extends BaseController
         if ($response instanceof \EasyWeChat\Kernel\Http\StreamResponse) {
             return $response->getBody()->getContents();
         }
-        Log::record(var_export($response,true));
+        Log::warning(var_export($response,true));
         $this->error('小程序码生成失败');
     }
 

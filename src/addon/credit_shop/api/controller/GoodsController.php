@@ -5,7 +5,7 @@ namespace addon\credit_shop\api\controller;
 use addon\base\BaseController;
 use addon\credit_shop\core\facade\CategoryFacade;
 use addon\credit_shop\core\model\GoodsModel;
-use think\facade\Db;
+use think\Db;
 
 /**
  * 产品操作接口

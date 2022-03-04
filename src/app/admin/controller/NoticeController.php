@@ -30,6 +30,7 @@ class NoticeController extends BaseController
         $lists=$model->order('ID DESC')->paginate(15);
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
+        $this->assign('flags',NoticeModel::getFlags());
         return $this->fetch();
     }
 
@@ -56,6 +57,7 @@ class NoticeController extends BaseController
         $model=array('status'=>1);
         $this->assign('model',$model);
         $this->assign('id',0);
+        $this->assign('flags',NoticeModel::getFlags());
         return $this->fetch('edit');
     }
 
@@ -87,6 +89,7 @@ class NoticeController extends BaseController
         }
         $this->assign('model',$model);
         $this->assign('id',$id);
+        $this->assign('flags',NoticeModel::getFlags());
         return $this->fetch();
     }
 

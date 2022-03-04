@@ -47,8 +47,12 @@ class KeywordsController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
-                
-                
+                $uploaded=$this->upload('keywords','upload_image');
+                if(!empty($uploaded)){
+                    $data['image']=$uploaded['url'];
+                }elseif($this->uploadErrorCode>102){
+                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
+                }
 
                 if (Db::name('keywords')->insert($data)) {
                     $this->success(lang('Add success!'), url('keywords/index'));
@@ -80,9 +84,19 @@ class KeywordsController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
+                $delete_images=[];
+                $uploaded=$this->upload('keywords','upload_image');
+                if(!empty($uploaded)){
+                    $data['image']=$uploaded['url'];
+                    $delete_images[]=$data['delete_image'];
+                }elseif($this->uploadErrorCode>102){
+                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
+                }
+                unset($data['delete_image']);
 
                 $data['id']=$id;
-                if (Db::name('Links')->update($data)) {
+                if (Db::name('keywords')->update($data)) {
+                    delete_image($delete_images);
                     $this->success(lang('Update success!'), url('keywords/index'));
                 } else {
                     $this->error(lang('Update failed!'));

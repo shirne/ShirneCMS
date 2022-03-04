@@ -222,7 +222,11 @@ class ContentModel extends BaseModel
             $model->whereIn($this->model . ".name",$sortnames);
         }
         if(!empty($attrs['keyword'])){
-            $model->whereLike($this->getSearchFields(),"%{$attrs['keyword']}%");
+            if(strpos($attrs['keyword'],'|')>0){
+                $model->where($this->getSearchFields(),'REGEXP',$attrs['keyword']);
+            }else{
+                $model->whereLike($this->getSearchFields(),"%{$attrs['keyword']}%");
+            }
         }
         if(!empty($attrs['brand'])){
             if(strpos($attrs['brand'],',')>0){

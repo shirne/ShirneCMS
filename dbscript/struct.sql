@@ -116,8 +116,8 @@ CREATE TABLE `sa_category` (
   `is_comment` tinyint(11) DEFAULT 0 COMMENT '是否开启评论',
   `is_images` tinyint(11) DEFAULT 0 COMMENT '是否有图集',
   `is_attachments` tinyint(11) DEFAULT 0 COMMENT '是否有附件',
-  `keywords` varchar(255) DEFAULT NULL COMMENT '分类关键词',
-  `description` varchar(255) DEFAULT NULL COMMENT '分类描述',
+  `keywords` varchar(255) DEFAULT '' COMMENT '分类关键词',
+  `description` varchar(255) DEFAULT '' COMMENT '分类描述',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -241,6 +241,25 @@ CREATE TABLE `sa_adv_item` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
+-- Table structure for table `sa_copyrights`
+--
+
+DROP TABLE IF EXISTS `sa_copyrights`;
+CREATE TABLE `sa_copyrights` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `lang` varchar(10) DEFAULT NULL COMMENT '语言',
+  `main_id` int(11) DEFAULT NULL COMMENT '主id',
+  `title` varchar(100) DEFAULT '',
+  `name` varchar(100) DEFAULT '',
+  `content` TEXT,
+  `sort` int(11) DEFAULT 0,
+  `status` int(11) DEFAULT 0,
+  `create_time` int(11) DEFAULT 0,
+  `update_time` int(11) DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
 -- Table structure for table `sa_links`
 --
 
@@ -291,6 +310,7 @@ CREATE TABLE `sa_keywords` (
   `title` varchar(60) DEFAULT '',
   `description` varchar(200) DEFAULT '',
   `group` varchar(20) DEFAULT '',
+  `image` varchar(150) DEFAULT '',
   `v_hot` int(11) DEFAULT 0,
   `hot` int(11) DEFAULT 0,
   `status` int(11) DEFAULT 0,
@@ -606,11 +626,12 @@ DROP TABLE IF EXISTS `sa_member_address`;
 CREATE TABLE `sa_member_address` (
   `address_id` INT NOT NULL AUTO_INCREMENT,
   `member_id` INT NULL,
-  `recive_name` VARCHAR(50) NULL,
+  `receive_name` VARCHAR(50) NULL,
   `mobile` VARCHAR(30) NULL,
   `province` VARCHAR(50) NULL,
   `city` VARCHAR(50) NULL,
   `area` VARCHAR(50) NULL,
+  `street` VARCHAR(50) NULL,
   `address` VARCHAR(150) NULL,
   `code` VARCHAR(10) NULL,
   `locate` VARCHAR(100) NULL,
@@ -841,6 +862,8 @@ CREATE TABLE `sa_article` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `lang` varchar(10) DEFAULT NULL COMMENT '语言',
   `main_id` int(11) DEFAULT NULL COMMENT '主id',
+  `user_id` INT(11) DEFAULT 0,
+  `copyright_id` INT(11) DEFAULT 0,
   `name` varchar(100) DEFAULT '',
   `title` varchar(100) DEFAULT '',
   `vice_title` varchar(200) DEFAULT '',
@@ -854,9 +877,9 @@ CREATE TABLE `sa_article` (
   `content` text,
   `create_time` INT(11) DEFAULT '0',
   `update_time` INT(11) DEFAULT '0',
-  `user_id` INT(11) DEFAULT 0,
   `digg` INT(11) DEFAULT '0',
   `v_digg` INT(11) DEFAULT '0',
+  `close_comment` tinyint(4) NOT NULL DEFAULT '0',
   `comment` INT(11) DEFAULT '0',
   `views` INT(11) DEFAULT '0',
   `v_views` INT(11) DEFAULT '0',
@@ -864,6 +887,7 @@ CREATE TABLE `sa_article` (
   `template` varchar(100) NOT NULL DEFAULT '',
   `status` tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`),
+  KEY `channel_id` (`channel_id`),
   KEY `cate_id` (`cate_id`),
   KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

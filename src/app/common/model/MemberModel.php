@@ -295,7 +295,7 @@ class MemberModel extends BaseModel
             $currentid=$user['referer'];
             if(!$currentid)break;
             if(in_array($currentid, $ids)!==false){
-                Log::record('会员 '.$userid.' 在查找上级时在第 '.$layer.' 层出现递归',\think\Log::ERROR);
+                Log::warning('会员 '.$userid.' 在查找上级时在第 '.$layer.' 层出现递归');
                 break;
             }
             $user=Db::name('Member')->where('id',$currentid)->field('id,level_id,is_agent,username,nickname,mobile,referer')->find();
@@ -321,7 +321,7 @@ class MemberModel extends BaseModel
             $layer++;
             $userids=array_column($users,'id');
             if(in_array($userid ,$userids)){
-                Log::record('会员 '.$userid.' 在查找下级时在第 '.$layer.' 层出现递归',\think\Log::ERROR);
+                Log::warning('会员 '.$userid.' 在查找下级时在第 '.$layer.' 层出现递归');
                 break;
             }
             $sons = array_merge($sons, $getid?$userids:$users);
@@ -433,21 +433,26 @@ class MemberModel extends BaseModel
      * 从第三方授权接口的用户资料创建会员
      * @param $data
      * @param int $referer
+     * @param string $mobile 绑定的手机
      * @return static
      */
-    public static function createFromOauth($data,$referer=0)
+    public static function createFromOauth($data,$referer=0, $mobile = '')
     {
         $data=[
             'username' => '#'.$data['openid'],
             'nickname' => $data['nickname'],
             'password' => '',
-            'salt'=>'',
-            'level_id'=>getDefaultLevel(),
+            'salt'     => '',
+            'level_id' => getDefaultLevel(),
             'gender'   => $data['gender'],
             'avatar'   => $data['avatar'],
             'referer'  => 0,
-            'is_agent'=>0
+            'is_agent' => 0
         ];
+        if(!empty($mobile)){
+            $data['mobile'] = $mobile;
+            $data['mobile_bind'] = 1;
+        }
         $member = self::create($data);
         if($member && !empty($member['id'])){
             $member->setReferer($referer);

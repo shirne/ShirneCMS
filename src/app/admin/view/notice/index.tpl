@@ -26,16 +26,25 @@
                 <th width="50">编号</th>
                 <th>标题</th>
                 <th>链接</th>
+                <th>调用位置</th>
                 <th>状态</th>
                 <th width="160">&nbsp;</th>
             </tr>
         </thead>
         <tbody>
+            {php}$empty=list_empty(6);{/php}
         {volist name="lists" id="v" empty="$empty"}
             <tr>
                 <td>{$v.id}</td>
                 <td>{$v.title}</td>
                 <td>{$v.url}</td>
+                <td>
+                    <if condition="isset($flags[$v['page']])">
+                        {$flags[$v['page']]}({$v['page']})
+                        <else/>
+                        {$v.page|default='-'}
+                    </if>
+                </td>
                 <td data-id="{$v.id}" data-url="{:url('status')}">
                     {if $v['status'] EQ 1}
                         <span class="chgstatus" data-status="0" title="点击隐藏">显示</span>

@@ -10,9 +10,6 @@ use app\common\model\WechatModel;
 use app\common\service\CheckcodeService;
 use app\common\validate\MemberValidate;
 use EasyWeChat\Factory;
-use EasyWeChat\Kernel\Exceptions\InvalidArgumentException as ExceptionsInvalidArgumentException;
-use EasyWeChat\Kernel\Exceptions\InvalidConfigException;
-use EasyWeChat\Kernel\Exceptions\RuntimeException;
 use EasyWeChat\OfficialAccount\Application;
 use think\captcha\Captcha;
 use shirne\common\ValidateHelper;
@@ -23,7 +20,6 @@ use think\facade\Cache;
 use think\facade\Log;
 use think\Response;
 use think\response\Json;
-use Throwable;
 
 /**
  * 授权相关操作
@@ -38,13 +34,15 @@ class AuthController extends BaseController
     public function initialize(){
         parent::initialize();
 
+        $tokenInvaild = false;
         $this->accessToken = request()->header('access_token');
         if(!$this->accessToken){
             $this->accessToken = request()->param('access_token');
         }
-        if($this->accessToken){
+        if(!empty($this->accessToken)){
             $session = cache('access_'.$this->accessToken);
             if(!empty($session)){
+                $tokenInvaild = true;
                 $sessData = json_decode($session, true);
                 if(!empty($sessData)){
                     $this->accessSession = $sessData;
@@ -53,10 +51,15 @@ class AuthController extends BaseController
                 }
             }
         }
+        Log::info(['access:', $this->accessToken, $this->accessSession]);
         if(empty($this->accessToken) &&
             !in_array($this->request->action(), ['token','wxsign','wxauth','wxlogin','refresh'])
             ){
-            $this->error('未授权访问',ERROR_LOGIN_FAILED);
+            if($tokenInvaild){
+                $this->error('临时Token过期',ERROR_TMP_TOKEN_EXPIRE);
+            }else{
+                $this->error('未授权访问',ERROR_LOGIN_FAILED);
+            }
         }
     }
 
@@ -71,6 +74,7 @@ class AuthController extends BaseController
                 json_encode($this->accessSession, JSON_UNESCAPED_UNICODE),
                 ['expire'=>60*10]
             );
+            Log::info(['access cache:', $this->accessToken, $this->accessSession]);
         }
     }
 
@@ -141,7 +145,7 @@ class AuthController extends BaseController
     }
 
     /**
-     * 获取指定的微信账号实体
+     * 获取指定的客户端账号
      * @param int|string $appid 
      * @return false|OauthAppModel 
      */
@@ -185,7 +189,7 @@ class AuthController extends BaseController
         if(empty($username) || empty($password)){
             $this->error('请填写登录账号及密码',ERROR_LOGIN_FAILED);
         }
-        $errcount = $this->accessSession['error_count']??0;
+        $errcount = $this->accessSession['error_count'] ?? 0;
         if($errcount > 4){
             $this->error('登录尝试次数过多',ERROR_LOGIN_FAILED);
         }
@@ -317,12 +321,15 @@ class AuthController extends BaseController
     }
 
     /**
-     * 微信小程序登录
+     * 微信公众号/小程序登录
      * @param string $wxid 小程序对应的系统id或hash
      * @param string $code 客户端获取到的授权码
+     * @param string $rawData 客户端获取到的用户资料
+     * @param string $phoneData 客户端获取到的手机号码加密串
+     * @param string $phoneIv 客户端获取到的手机号码加密向量
      * @return Json|void 
      */
-    public function wxLogin($wxid, $code){
+    public function wxLogin($wxid, $code, $rawData = null, $phoneData = null, $phoneIv = null){
         
         $agent=$this->request->param('agent');
         $wechat=Db::name('wechat')->where('type','wechat')
@@ -345,7 +352,7 @@ class AuthController extends BaseController
                 $this->error('配置错误',ERROR_LOGIN_FAILED);
                 break;
         }
-
+        $mobileData = [];
         if($weapp instanceof Application){
             try{
                 $userinfo = $weapp->oauth->user()->getOriginal();
@@ -355,13 +362,12 @@ class AuthController extends BaseController
             if(empty($userinfo) || empty($userinfo['openid'])){
                 $this->error('登录失败', ERROR_LOGIN_FAILED);
             }
-            $rowData = json_encode($userinfo, JSON_UNESCAPED_UNICODE);
+            $rawData = json_encode($userinfo, JSON_UNESCAPED_UNICODE);
             $session=['openid'=>$userinfo['openid'],'unionid'=>$userinfo['unionid']??''];
         }else{
             //调试模式允许mock登录
             if($wechat['is_debug'] && $code=='the code is a mock one'){
-                $rowData = $this->request->param('rawData');
-                $userinfo = json_decode($rowData, TRUE);
+                $userinfo = json_decode($rawData, TRUE);
                 $session=['openid'=>md5($userinfo['nickName']),'unionid'=>''];
             }else {
                 try{
@@ -373,12 +379,16 @@ class AuthController extends BaseController
                     $this->error('登录失败', ERROR_LOGIN_FAILED);
                 }
 
-                $rowData = $this->request->param('rawData');
-                if (!empty($rowData)) {
+                if (!empty($rawData)) {
                     $signature = $this->request->param('signature');
-                    if (sha1($rowData . $session['session_key']) == $signature) {
-                        $userinfo = json_decode($rowData, TRUE);
+                    if (sha1($rawData . $session['session_key']) == $signature) {
+                        $userinfo = json_decode($rawData, TRUE);
                     }
+                }
+
+                if(!empty($phoneData)){
+                    if(empty($phoneIv))$this->error('参数错误');
+                    $mobileData = $this->decodeAES($phoneData, $session['session_key'], $phoneIv);
                 }
             }
         }
@@ -402,20 +412,20 @@ class AuthController extends BaseController
             }
         }
     
-        $data=$this->wxMapdata($userinfo,$rowData);
+        $data=$this->wxMapdata($userinfo,$rawData);
         $data['type']=$type;
         $data['type_id']=$typeid;
         if(!empty($session['unionid']))$data['unionid']=$session['unionid'];
         
         if(empty($member)){
             $register=getSetting('m_register');
-            if($register!='1'){
+            if($register != '1' || !empty($mobileData['purePhoneNumber'])){
             
                 //自动注册
                 $data['openid']=$session['openid'];
                 
                 $referid = $this->getAgentId($agent);
-                $member = MemberModel::createFromOauth($data, $referid);
+                $member = MemberModel::createFromOauth($data, $referid, $mobileData['purePhoneNumber'] ?? '');
                 
                 if($member['id']){
                     $data['member_id']=$member['id'];
@@ -428,6 +438,10 @@ class AuthController extends BaseController
             //更新资料
             if(empty($oauth['member_id'])){
                 $data['member_id'] = $member['id'];
+            }
+            if(!empty($mobileData['purePhoneNumber'])){
+                $data['mobile'] = $mobileData['purePhoneNumber'];
+                $data['mobile_bind'] = 1;
             }
             $updata=MemberModel::checkUpdata($data, $member);
             if(!empty($updata)){
@@ -480,7 +494,7 @@ class AuthController extends BaseController
                 ->where('agentcode',$agent)
                 ->where('status',1)->find();
             if(!empty($amem)){
-                Log::record('With Agent code: '.$agent.','.$amem['id']);
+                Log::info('With Agent code: '.$agent.','.$amem['id']);
                 $referid = $amem['id'];
             }
         }
@@ -490,10 +504,10 @@ class AuthController extends BaseController
     /**
      * 第三方登录数据转换
      * @param $userinfo
-     * @param $rowData
+     * @param $rawData
      * @return array
      */
-    private function wxMapdata($userinfo,$rowData){
+    private function wxMapdata($userinfo,$rawData){
         $nickname = '';
         if(isset($userinfo['nickName'])){
             $nickname = $userinfo['nickName'];
@@ -520,7 +534,7 @@ class AuthController extends BaseController
             $gender = $userinfo['sex'];
         }
         $data = [
-            'data'=>$rowData,
+            'data'=>$rawData,
             //'is_follow'=>0,
             'nickname'=>$nickname,
             'gender'=>$gender,
@@ -656,7 +670,50 @@ class AuthController extends BaseController
     }
 
     /**
-     * todo 忘记密码
+     * 忘记密码
+     */
+    public function forgot($account, $password, $verify){
+        $app=$this->getApp($this->accessSession['appid']);
+        if(empty($app)){
+            $this->error('未授权APP',ERROR_LOGIN_FAILED);
+        }
+        
+        if (empty($verify)) {
+            $this->error(' 请填写验证码');
+        }
+        if (empty($password)) {
+            $this->error(' 请填写新密码');
+
+            // todo 密码强度验证
+        }
+        $account_type = $this->request->param('type');
+        $model = Db::name('member')->where('status',1);
+        if($account_type == 'mobile'){
+            $model->where('mobile',$account)->where('mobile_bind',1);
+        }elseif($account_type=='email'){
+            $model->where('email',$account)->where('email_bind',1);
+        }else{
+            $this->error('账号类型错误');
+        }
+        $member = $model->find();
+        if(empty($member)){
+            $this->error('账号错误');
+        }
+
+        $service=new CheckcodeService();
+        $verifyed=$service->verifyCode($account,$verify);
+        if(!$verifyed){
+            $this->error('验证码填写错误');
+        }
+        $data['salt']=random_str(8);
+        $data['password']=encode_password($password,$data['salt']);
+        Db::name('member')->where('id',$member['id'])->update($data);
+        $this->success('密码重置成功!');
+    }
+
+    /**
+     * 忘记密码
+     * @deprecated
      */
     public function forget($step = 0){
         $app=$this->getApp($this->accessSession['appid']);
@@ -858,7 +915,7 @@ class AuthController extends BaseController
         Db::commit();
         $token = MemberTokenFacade::createToken($model['id'], $app['platform'], $app['appid']);
 
-        $this->success("注册成功",1,$token);
+        $this->success($token, 1, "注册成功");
     }
 
 }

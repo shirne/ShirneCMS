@@ -22,7 +22,7 @@ class ImageCrop
      * @return \think\Response
      */
     public function crop($savepath=null,$opts=[]){
-        $opts=array_merge($opts, $this->options);
+        $opts=array_merge($this->options, $opts);
         $img = $this->file;
         $imgWidth = (int)$opts['w'];
         $imgHeight = (int)$opts['h'];
@@ -38,7 +38,7 @@ class ImageCrop
         if($imgQuality<1){
             $imgQuality = config('upload.default_quality');
         }
-
+        
         $imgData=$this->getImgData($img);
 
         if($imgData!==false && !empty($imgData)) {
@@ -48,57 +48,52 @@ class ImageCrop
             $photoWidth = $imageinfo[0];
             $photoHeight = $imageinfo[1];
 
-            if ($photoWidth > 0 And $photoHeight > 0) {
+            if ($photoWidth > 0 && $photoHeight > 0) {
                 if ($photoWidth > $imgWidth Or $photoHeight > $imgHeight) {
                     $photoScale = $photoWidth / $photoHeight;
-                    if ($imgWidth > 0 And $imgHeight > 0) {
+                    if ($imgWidth > 0 && $imgHeight > 0) {
                         $imgScale = $imgWidth / $imgHeight;
                     } else {
                         $imgScale = $photoScale;
                     }
                     $clipLeft = 0;
                     $clipTop = 0;
-                    switch ($imgMode) {
-                        case "o":
-                        case "1":
-                        case "outer":
-                            if ($photoScale == $imgScale) {
-                                if ($imgWidth > 0) {
-                                    $tempWidth = $photoWidth;
-                                    $tempHeight = $tempWidth / $imgScale;
-                                } else {
+                    if ($photoScale == $imgScale) {
+                        if ($imgWidth > 0) {
+                            $tempWidth = $imgWidth;
+                            $tempHeight = $imgWidth / $imgScale;
+                        } else {
+                            $tempHeight = $imgHeight;
+                            $tempWidth = $imgHeight * $imgScale;
+                        }
+                    }else{
+                        switch ($imgMode) {
+                            case "o":
+                            case "1":
+                            case "outer":
+                            case "fill":
+                                if ($photoScale > $imgScale) {
                                     $tempHeight = $photoHeight;
                                     $tempWidth = $tempHeight * $imgScale;
+                                    $clipLeft = ($photoWidth - $tempWidth) * .5;
+                                } else {
+                                    $tempWidth = $photoWidth;
+                                    $tempHeight = $tempWidth / $imgScale;
+                                    $clipTop = ($photoHeight - $tempHeight) * .5;
                                 }
-                            } elseif ($photoScale > $imgScale) {
-                                $tempHeight = $photoHeight;
-                                $tempWidth = $tempHeight * $imgScale;
-                                $clipLeft = ($photoWidth - $tempWidth) * .5;
-                            } else {
-                                $tempWidth = $photoWidth;
-                                $tempHeight = $tempWidth / $imgScale;
-                                $clipTop = ($photoHeight - $tempHeight) * .5;
-                            }
-                            break;
-                        default:
-                            if ($photoScale == $imgScale) {
-                                if ($imgWidth > 0) {
+                                break;
+                            default: // inner lfit
+                                if ($photoScale > $imgScale) {
                                     $tempWidth = $imgWidth;
-                                    $tempHeight = $imgWidth / $imgScale;
+                                    $tempHeight = $imgWidth / $photoScale;
                                 } else {
                                     $tempHeight = $imgHeight;
-                                    $tempWidth = $imgHeight * $imgScale;
+                                    $tempWidth = $imgHeight * $photoScale;
                                 }
-                            } elseif ($photoScale > $imgScale) {
-                                $tempWidth = $imgWidth;
-                                $tempHeight = $imgWidth / $photoScale;
-                            } else {
-                                $tempHeight = $imgHeight;
-                                $tempWidth = $imgHeight * $photoScale;
-                            }
+                        }
                     }
 
-                    if ($clipLeft > 0 Or $clipTop > 0) {
+                    if ($clipLeft > 0 || $clipTop > 0) {
                         $newimg = $this->createImage($imgWidth, $imgHeight);
                         imagecopyresampled($newimg, $image, 0, 0, $clipLeft, $clipTop, $imgWidth, $imgHeight, $tempWidth, $tempHeight);
                         //imagecopyresized($newimg, $image, 0, 0, $clipLeft, $clipTop, $imgWidth, $imgHeight, $tempWidth, $tempHeight);

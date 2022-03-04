@@ -7,10 +7,6 @@ use app\common\facade\MemberFavouriteFacade;
 use app\common\model\ArticleCommentModel;
 use app\common\model\ArticleModel;
 use app\common\validate\ArticleCommentValidate;
-use DomainException;
-use InvalidArgumentException;
-use PDOException;
-use Exception as GlobalException;
 use shirne\third\Aliyun;
 use think\facade\Db;
 
@@ -98,7 +94,7 @@ class ArticleController extends BaseController
         
         return $this->response([
             'lists'=>$lists->all(),
-            'category'=>$category?:[],
+            'category'=>$category?:new \stdClass(),
             'page'=>$lists->currentPage(),
             'total'=>$lists->total(),
             'total_page'=>$lists->lastPage(),
@@ -131,9 +127,10 @@ class ArticleController extends BaseController
         }
         return $this->response([
             'article'=>$article,
+            'url'=>url('index/article/index',['id'=>$article['id']],true,true),
             'images'=>$images,
             'digged'=>$digg?1:0,
-            'is_favourite'=>$isFavourite?0:1
+            'is_favourite'=>$isFavourite?1:0
         ]);
     }
 
@@ -227,7 +224,7 @@ class ArticleController extends BaseController
         
         $data=$this->request->only(['email','is_anonymous','content','reply_id']);
         if($this->config['anonymous_comment']==0 && !$this->isLogin){
-            $this->error('请登陆后评论');
+            $this->error('请登录后评论', ERROR_NEED_LOGIN);
         }
         $data['article_id']=$id;
         $validate=new ArticleCommentValidate();
@@ -235,7 +232,6 @@ class ArticleController extends BaseController
             $this->error($validate->getError(),0);
         }else{
             $data['member_id']=$this->isLogin?$this->user['id']:0;
-            $data['member_id']=$this->userid;
             if(!empty($data['member_id'])){
                 $data['email']=$this->user['email'];
                 $data['nickname']=$this->user['nickname']?:$this->user['username'];
