@@ -119,6 +119,7 @@ class ArticleController extends BaseController
         $this->assign("category",CategoryFacade::getCategories());
         $this->assign('article',$model);
         $this->assign('types',getArticleTypes());
+        $this->assign('copyrights',Db::name('copyrights')->order('sort asc')->select());
         $this->assign('id',0);
         return $this->fetch('edit');
     }
@@ -167,18 +168,19 @@ class ArticleController extends BaseController
                 }
                 $this->success(lang('Update success!'), url('Article/index'));
             }
-        }else{
-
-            $model = ArticleModel::find($id);
-            if(empty($model)){
-                $this->error('文章不存在');
-            }
-            $this->assign("category",CategoryFacade::getCategories());
-            $this->assign('article',$model);
-            $this->assign('types',getArticleTypes());
-            $this->assign('id',$id);
-            return $this->fetch();
         }
+
+        $model = ArticleModel::find($id);
+        if(empty($model)){
+            $this->error('文章不存在');
+        }
+        $this->assign("category",CategoryFacade::getCategories());
+        $this->assign('article',$model);
+        $this->assign('types',getArticleTypes());
+        $this->assign('copyrights',Db::name('copyrights')->order('sort asc')->select());
+        $this->assign('id',$id);
+        return $this->fetch();
+        
     }
 
     /**

@@ -183,7 +183,7 @@ class OrderModel extends BaseOrderModel
             $this->setError('指定的下单用户资料错误');
             return false;
         }
-        //Log::record('create order:'.var_export(func_get_args(),true));
+        //Log::info('create order:'.var_export(func_get_args(),true));
         
         //折扣
         $levels=getMemberLevels();
@@ -384,7 +384,7 @@ class OrderModel extends BaseOrderModel
         }
         $time=time();
         $orderno=$this->create_no();
-        Log::record('order no:'.$orderno);
+        Log::info('order no:'.$orderno);
         $orderdata=array(
             'order_no'=>$orderno,
             'member_id'=>$member['id'],
@@ -400,7 +400,7 @@ class OrderModel extends BaseOrderModel
             'isaudit'=>getSetting('autoaudit')==1?1:0,
             //'remark'=>$remark,
             'address_id'=>$address['address_id'],
-            'recive_name'=>$address['recive_name'],
+            'receive_name'=>$address['receive_name'],
             'mobile'=>$address['mobile'],
             'province'=>$address['province'],
             'city' =>$address['city'],
@@ -553,7 +553,7 @@ class OrderModel extends BaseOrderModel
                     if(!empty($payorder) && !empty($payorder['prepay_id'])){
                         $msgdata['form_id'] = $payorder['prepay_id'];
                     }else{
-                        Log::record('支付信息未查询到');
+                        Log::error('支付信息未查询到');
                         continue;
                     }
                 }

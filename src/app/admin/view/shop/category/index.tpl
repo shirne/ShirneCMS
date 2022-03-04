@@ -35,6 +35,7 @@
             </tr>
         </thead>
         <tbody>
+            {php}$empty=list_empty(6);{/php}
         {volist name="model" id="v" empty="$empty"}
             <tr>
                 <td>{$v.id}</td>

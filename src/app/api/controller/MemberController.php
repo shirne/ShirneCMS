@@ -8,13 +8,13 @@ use app\api\facade\MemberTokenFacade;
 use app\common\model\MemberAgentModel;
 use app\common\model\MemberLevelLogModel;
 use app\common\model\MemberLevelModel;
+use app\common\model\WechatModel;
 use app\common\service\CheckcodeService;
-use Exception as GlobalException;
+use EasyWeChat\Factory;
 use extcore\traits\Upload;
 use think\facade\Db;
 use think\Loader;
 use think\response\Json;
-use Throwable;
 
 /**
  * 会员操作接口
@@ -74,6 +74,59 @@ class MemberController extends AuthedController
             user_log($this->user['id'],'update_profile',1,'修改个人资料');
             $this->success('保存成功');
         }
+    }
+
+    /**
+     * 小程序授权绑定手机号
+     * @param string $wxid 
+     * @param string $code 
+     * @param string $phoneData 
+     * @param string $phoneIv 
+     * @return void 
+     */
+    public function wxBindMobile($wxid, $code, $phoneData = null, $phoneIv = null){
+        $wechat=Db::name('wechat')->where('type','wechat')
+            ->where(is_numeric($wxid)?'id':'hash',$wxid)->find();
+        if(empty($wechat)){
+            $this->error('服务器配置错误');
+        }
+        $options=WechatModel::to_config($wechat);
+        switch ($wechat['account_type']) {
+            case 'miniprogram':
+            case 'minigame':
+                $weapp=Factory::miniProgram($options);
+                break;
+            default:
+                $this->error('公众号类型不支持');
+                break;
+        }
+        try{
+            $session = $weapp->auth->session($code);
+        }catch(\Exception $e){
+            $this->error('授权失败:'.$e->getMessage());
+        }
+        if (empty($session) || empty($session['openid'])) {
+            $this->error('授权失败');
+        }
+
+        if(!empty($phoneData)){
+            if(empty($phoneIv))$this->error('参数错误');
+            $mobileData = $this->decodeAES($phoneData, $session['session_key'], $phoneIv);
+            if(!empty($mobileData['purePhoneNumber'])){
+                $data['mobile'] = $mobileData['purePhoneNumber'];
+                $data['mobile_bind'] = 1;
+                Db::name('Member')->where('id',$this->user['id'])->update($data);
+                if(!empty($this->user['mobile_bind'])){
+                    $this->user = Db::name('Member')->where('id',$this->user['id'])->find();
+
+                    // 绑定手机号码升级为初级代言人
+                    $seted = MemberModel::autoUpdateBeginner($this->user);
+                }
+                user_log($this->user['id'],'update_mobile',1,'通过小程序授权绑定手机号');
+                $this->success(['is_set_agent'=>($seted==2)?1:0,'image'=>getSetting('beginner_reward_image')],1,'绑定成功');
+            }
+        }
+        $this->error('绑定失败');
     }
 
     /**
@@ -249,18 +302,18 @@ class MemberController extends AuthedController
 
     /**
      * 升级申请
+     * @param $level_id
+     * @param $balance_pay
      * @return void 
      */
-    public function upgrade(){
-        $target = $this->request->post('level_id');
-        $balance_pay = $this->request->post('balance_pay') == '1';
+    public function upgrade($level_id = 0, $balance_pay = 0){
         $levels = MemberLevelModel::getCacheData();
-        if($target<=0 || !isset($levels[$target])){
+        if($level_id<=0 || !isset($levels[$level_id])){
             $this->error('升级级别错误',0);
         }
 
         $curLevel = $this->user['level_id']?$levels[$this->user['level_id']]:null;
-        $level = $levels[$target];
+        $level = $levels[$level_id];
         if(!$curLevel || $curLevel['sort'] >= $level['sort']){
             $this->error('升级级别错误',0);
         }
@@ -284,15 +337,15 @@ class MemberController extends AuthedController
     
     /**
      * 修改密码
+     * @param mixed $password 
+     * @param mixed $newpassword 
      * @return void 
      */
-    public function change_password(){
-        $password=$this->request->post('password');
+    public function change_password($password, $newpassword){
         if(!compare_password($this->user,$password)){
             $this->error('密码输入错误',0);
         }
         
-        $newpassword=$this->request->post('newpassword');
         $salt=random_str(8);
         $data=array(
             'password'=>encode_password($newpassword,$salt),
@@ -303,11 +356,12 @@ class MemberController extends AuthedController
     }
 
     /**
-     * 修改二级密码
+     * 修改或设置二级密码
+     * @param mixed $password 
+     * @param mixed $newpassword 
      * @return void 
      */
-    public function sec_password(){
-        $password=$this->request->post('password');
+    public function sec_password($password, $newpassword){
         if(empty($this->user['secpassword'])){
             if(!compare_password($this->user,$password)){
                 $this->error('当前密码输入错误',0);
@@ -318,7 +372,6 @@ class MemberController extends AuthedController
             }
         }
         
-        $newpassword=$this->request->post('newpassword');
         $salt=random_str(8);
         $data=array(
             'secpassword'=>encode_password($newpassword,$salt),

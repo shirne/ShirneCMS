@@ -55,14 +55,16 @@ class CategoryModel extends BaseModel
         return NULL;
     }
     public function findCategories($idornames){
-        $this->getCategories();
-        if(!is_array($idornames)){
-            $idornames = array_map('trim', explode(',', $idornames));
-        }
         $cates = [];
-        foreach ($this->data as $cate){
-            if(in_array($cate['id'], $idornames) || in_array($cate['name'], $idornames)){
-                $cates[] = $cate;
+        if(!empty($idornames)){
+            $this->getCategories();
+            if(!is_array($idornames)){
+                $idornames = array_map('trim', explode(',', $idornames));
+            }
+            foreach ($this->data as $cate){
+                if(in_array($cate['id'], $idornames) || in_array($cate['name'], $idornames)){
+                    $cates[] = $cate;
+                }
             }
         }
         return $cates;
@@ -95,7 +97,7 @@ class CategoryModel extends BaseModel
         while($idorname!='0'){
             $current=$this->findCategory($idorname);
             if(empty($current)){
-                Log::record('Category error at '.$idorname.'\'s parent');
+                Log::error('Category error at '.$idorname.'\'s parent');
                 break;
             }
             array_unshift($tree,$current);
@@ -113,7 +115,7 @@ class CategoryModel extends BaseModel
         while($idorname!='0'){
             $current=$this->findCategory($idorname);
             if(empty($current)){
-                Log::record('Category error at '.$idorname.'\'s parent');
+                Log::error('Category error at '.$idorname.'\'s parent');
                 $current=[];
                 break;
             }
@@ -137,6 +139,7 @@ class CategoryModel extends BaseModel
             foreach ($data as $cate){
                 $this->treed[$cate['pid']][]=$cate;
             }
+            $this->treed[-1]=[];
             cache($this->precache.'categorietree',$this->treed);
         }
         return $this->treed;

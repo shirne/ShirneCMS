@@ -10,7 +10,7 @@
                 <div class="weui-cell">
                     <div class="weui-cell__hd"><label class="weui-label">收货人</label></div>
                     <div class="weui-cell__bd">
-                        <input class="weui-input" type="number" name="recive_name"  value="{$address.recive_name}">
+                        <input class="weui-input" type="number" name="receive_name"  value="{$address.receive_name}">
                     </div>
                 </div>
                 <div class="weui-cell weui-cells_form">

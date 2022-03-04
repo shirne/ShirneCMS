@@ -2,6 +2,7 @@
 namespace app\admin\controller;
 
 use app\admin\validate\LinksValidate;
+use app\common\model\LinksModel;
 use think\facade\Db;
 
 /**
@@ -30,6 +31,7 @@ class LinksController extends BaseController
         $lists=$model->where($where)->order('ID DESC')->paginate(15);
         $this->assign('lists',$lists);
         $this->assign('page',$lists->render());
+        $this->assign('groups',$this->getGroups());
         return $this->fetch();
     }
 
@@ -113,12 +115,7 @@ class LinksController extends BaseController
     }
 
     private function getGroups(){
-        $groups = Db::name('Links')->where('group','<>','')->distinct('group')->field('group')->select();
-
-        if(!empty($groups)){
-            return array_column($groups->all(),'group');
-        }
-        return ['友情链接','合作伙伴'];
+        return LinksModel::getGroups();
     }
 
     /**

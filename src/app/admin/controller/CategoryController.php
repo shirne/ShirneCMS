@@ -106,7 +106,7 @@ class CategoryController extends BaseController
                     }
                 }catch(\Exception $e){
                     throw $e;
-                    Log::record($e->getMessage());
+                    Log::error($e->getMessage());
                     delete_image([$data['icon'],$data['image']]);
                     $this->error(lang('Update failed!'));
                 }

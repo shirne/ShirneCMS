@@ -51,7 +51,7 @@ class EncryptService extends BaseService
             $this->publicKey = $details['key'];
             $this->inited = true;
         }else{
-            Log::record('private key load error');
+            Log::error('private key load error');
         }
     }
 

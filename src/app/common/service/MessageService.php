@@ -20,7 +20,7 @@ class MessageService{
         if(is_null(static::$wechatApp)){
             static::$wechatApp = WechatModel::createApp();
             if(!static::$wechatApp){
-                Log::record('未设置默认微信公众号');
+                Log::warning('未设置默认微信公众号');
                 static::$wechatApp = false;
             }
             static::$wechat = WechatModel::getLastWechat();

@@ -111,7 +111,7 @@
     </div>
     <div class="row justify-content-md-center">
         <div class="col-md-4 copy">
-            <p>&copy;原设软件 2015-{:date('Y')}</p>
+            <p>&copy;语辰软件 2015-{:date('Y')}</p>
         </div>
     </div>
 </div>

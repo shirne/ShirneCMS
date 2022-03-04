@@ -25,12 +25,19 @@ class FavouriteController extends AuthedController
 
     /**
      * 添加到收藏
-     * @param mixed $type 
-     * @param mixed $id 
+     * @param string $type product/article
+     * @param int|string|array $id 
      * @return void 
      */
     public function add($type,$id){
         $model=new MemberFavouriteModel();
+        $ids = idArr($id);
+        if(count($ids) > 1){
+            foreach($ids as $id){
+                $model->addFavourite($this->user['id'],$type,$id);
+            }
+            $this->success('处理成功');
+        }
         if($model->addFavourite($this->user['id'],$type,$id)){
             $this->success('已添加收藏');
         }else{

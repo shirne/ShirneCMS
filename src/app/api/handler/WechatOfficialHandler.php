@@ -16,7 +16,7 @@ class WechatOfficialHandler extends BaseHandler implements EventHandlerInterface
      */
     public function handle($message = null)
     {
-        Log::record('接收到消息:'.var_export($message,true),'Wechat');
+        Log::info('接收到消息:'.var_export($message,true),'Wechat');
         if(empty($message) || !isset($message['MsgType'])){
             return '';
         }

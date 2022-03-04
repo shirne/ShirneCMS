@@ -4,10 +4,10 @@
 
 #  SSL
 #  RewriteCond %{SERVER_NAME} !^www.gdyhjk.cn$
-#  RewriteRule ^.*$ https://www.gdyhjk.cn%{REQUEST_URI} [L,R]
+#  RewriteRule ^.*$ https://www.gdyhjk.cn%{REQUEST_URI} [L,R=301]
 
 #  RewriteCond %{SERVER_PORT} !^443$
-#  RewriteRule ^.*$ https://www.gdyhjk.cn%{REQUEST_URI} [L,R]
+#  RewriteRule ^.*$ https://www.gdyhjk.cn%{REQUEST_URI} [L,R=301]
 
   RewriteCond %{REQUEST_URI} !^/(uploads|static)/
   RewriteCond %{REQUEST_FILENAME} !-d

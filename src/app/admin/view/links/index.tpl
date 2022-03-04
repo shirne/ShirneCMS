@@ -47,7 +47,13 @@
                         -
                     {/if}
                 </td>
-                <td>{$v.group|default='无'}</td>
+                <td>
+                    <if condition="isset($groups[$v['group']])">
+                        {$groups[$v['group']]}($v['group'])
+                        <else/>
+                        {$v.group|default='-'}
+                    </if>
+                </td>
                 <td>{$v.title}</td>
                 <td><a href="{$v.url}" target="_blank">{$v.url}</a> </td>
                 <td>{$v.sort}</td> 

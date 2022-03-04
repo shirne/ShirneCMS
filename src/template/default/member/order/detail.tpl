@@ -25,7 +25,7 @@
                 </div>
             </div>
             <div class="card-body">
-                <div>{$order.recive_name}&nbsp;/&nbsp;{$order.mobile}</div>
+                <div>{$order.receive_name}&nbsp;/&nbsp;{$order.mobile}</div>
                 <div>{$order.province}&nbsp;/&nbsp;{$order.city}&nbsp;/&nbsp;{$order.area}</div>
                 <div>{$order.address}</div>
                 {if $order['express_no']}

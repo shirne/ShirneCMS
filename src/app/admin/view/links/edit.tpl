@@ -24,7 +24,7 @@
                     <select class="form-control" onchange="var val=$(this).val();if(val)this.form.group.value=val;">
                         <option value="">选择分组</option>
                         {volist name="groups" id="group"}
-                            <option value="{$group}">{$group}</option>
+                            <option value="{$group}" {$group==$model['group']?'selected':''}>{$title}({$group})</option>
                         {/volist}
                     </select>
                 </div>

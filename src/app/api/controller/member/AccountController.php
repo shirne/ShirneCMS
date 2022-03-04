@@ -9,11 +9,7 @@ use app\common\model\MemberCashinModel;
 use app\common\model\MemberOauthModel;
 use app\common\validate\MemberCardValidate;
 use app\common\model\WechatModel;
-use DomainException;
-use Exception as GlobalException;
 use extcore\traits\Upload;
-use InvalidArgumentException;
-use PDOException as GlobalPDOException;
 use shirne\common\ValidateHelper;
 use think\facade\Db;
 
@@ -101,6 +97,7 @@ class AccountController extends AuthedController
     
     /**
      * 提交充值信息
+     * TODO 优化在线支付的设置
      * @return mixed
      */
     public function recharge(){
@@ -391,7 +388,8 @@ class AccountController extends AuthedController
         return $this->response([
             'logs'=>$logs->all(),
             'total'=>$logs->total(),
-            'page'=>$logs->currentPage()
+            'page'=>$logs->currentPage(),
+            'total_page'=>$logs->lastPage(),
         ]);
     }
     

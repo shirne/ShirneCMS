@@ -762,6 +762,7 @@
         pickLocate:function(type, callback, locate){
             var settedLocate=null;
             var height=$(window).height()*.6
+            if(!type)type='tencent';
             var dlg=new Dialog({
                 size:'lg',
                 backdrop:'static',
@@ -772,7 +773,7 @@
                     var mapinfo=body.find('.mapinfo');
                     var isloading=false;
                     setTimeout(function () {
-                        var map=InitMap('tencent',mapbox,function(address,locate){
+                        var map=InitMap(type,mapbox,function(address,locate){
                             mapinfo.html(address+'&nbsp;'+locate.lng+','+locate.lat);
                             settedLocate=locate;
                         },locate);

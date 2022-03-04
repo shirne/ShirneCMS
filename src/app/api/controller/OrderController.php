@@ -208,12 +208,12 @@ class OrderController extends AuthedController
                 'openid' => empty($this->wechatUser)?'':$this->wechatUser['openid'],
             ]);
         }catch(\Exception $e){
-            Log::record($e->getMessage());
-            Log::record($e->getTraceAsString());
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             $this->error('支付发起失败');
         }
         if(empty($result) || $result['return_code']!='SUCCESS' || $result['result_code']!='SUCCESS'){
-            Log::record(json_encode($result,JSON_UNESCAPED_UNICODE));
+            Log::warning(json_encode($result,JSON_UNESCAPED_UNICODE));
             $this->error('支付发起失败');
         }
         $data=['payorder'=>$payorder];
@@ -250,7 +250,7 @@ class OrderController extends AuthedController
         $debit = money_log($order['member_id'], -$order['payamount']*100, "下单支付", 'consume',0,'money');
         if ($debit){
             $order->save(['status'=>1,'pay_type'=>$type,'pay_time'=>time()]);
-            $this->success('支付成功!',1,['order_id'=>$order_id]);
+            $this->success(['order_id'=>$order_id], 1, '支付成功!');
         }
         $this->error('支付失败!',0,['order_id'=>$order_id]);
     }

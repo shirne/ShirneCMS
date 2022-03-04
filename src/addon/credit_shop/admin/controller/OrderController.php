@@ -21,7 +21,7 @@ class OrderController extends BaseController
             ->where('creditOrder.delete_time',0);
 
         if(!empty($key)){
-            $model->whereLike('creditOrder.order_no|member.username|member.nickname|member.realname|creditOrder.recive_name|creditOrder.mobile',"%$key%");
+            $model->whereLike('creditOrder.order_no|member.username|member.nickname|member.realname|creditOrder.receive_name|creditOrder.mobile',"%$key%");
         }
         if($status!==''){
             $model->where('creditOrder.status',$status);
@@ -70,7 +70,7 @@ class OrderController extends BaseController
             ->where('creditOrder.delete_time',0);
         if(empty($order_ids)){
             if(!empty($key)){
-                $model->whereLike('creditOrder.order_no|member.username|member.realname|creditOrder.recive_name|creditOrder.mobile',"%$key%");
+                $model->whereLike('creditOrder.order_no|member.username|member.realname|creditOrder.receive_name|creditOrder.mobile',"%$key%");
             }
             if($status!==''){
                 $model->where('creditOrder.status',$status);
@@ -102,7 +102,7 @@ class OrderController extends BaseController
             $prodata = Db::name('creditOrderGoods')->where('order_id', $row['order_id'])->find();
             $excel->addRow(array(
                 $row['order_id'],order_status($row['status'],false),date('Y/m/d H:i:s',$row['create_time']),$row['member_id'],$row['username'],
-                $prodata['goods_title'],$row['payamount'],$row['recive_name'],$row['mobile'],$row['province'],$row['city'],$row['area'],$row['address']
+                $prodata['goods_title'],$row['payamount'],$row['receive_name'],$row['mobile'],$row['province'],$row['city'],$row['area'],$row['address']
             ));
         }
 

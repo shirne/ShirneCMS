@@ -30,9 +30,20 @@
                 <input type="text" name="create_time" class="form-control datepicker" data-format="YYYY-MM-DD hh:mm:ss" value="{$article.create_time|default=0|showdate}" placeholder="默认取当前系统时间" >
             </div>
         </div>
-        <div class="form-group">
-            <label for="source">文章来源</label>
-            <input type="text" name="source" class="form-control" value="{$article.source}" >
+        <div class="form-row">
+            <div class="col form-group">
+                <label for="source">文章来源</label>
+                <input type="text" name="source" class="form-control" value="{$article.source}" >
+            </div>
+            <div class="col form-group">
+                <label for="article-cate">文章版权</label>
+                <select name="copyright_id" class="form-control">
+                    <foreach name="copyrights" item="v">
+                        <option value="0">无</option>
+                        <option value="{$v.id}" {$article['copyright_id'] == $v['id']?'selected="selected"':""} >{$v.title}</option>
+                    </foreach>
+                </select>
+            </div>
         </div>
         <div class="form-group">
             <label for="image">封面图</label>

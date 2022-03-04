@@ -13,7 +13,7 @@
                 <div class="weui-panel">
                     <div class="weui-panel__bd">
                         <div class="weui-media-box weui-media-box_text">
-                            <h4 class="weui-media-box__title">{$v.recive_name}  /  <span class="text-secondary">{$v.mobile}</span></h4>
+                            <h4 class="weui-media-box__title">{$v.receive_name}  /  <span class="text-secondary">{$v.mobile}</span></h4>
                             <p class="weui-media-box__desc">{$v.province}&nbsp;{$v.city}&nbsp;{$v.area}&nbsp;{$v.address}</p>
                             <div class="weui-media-box__info">
                                 {if $v.is_default}<span class="weui-media-box__info__meta">默认</span>{/if}

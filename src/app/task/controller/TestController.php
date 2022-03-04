@@ -55,8 +55,8 @@ class TestController extends Controller
         try {
             $paymodel->updateStatus($data);
         }catch(\Exception $e){
-            Log::record($e->getMessage());
-            Log::record($e->getTraceAsString());
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
         }
         
         OrderModel::sendOrderMessage(5,'order_deliver');
