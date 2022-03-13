@@ -120,7 +120,7 @@ trait Upload
         } else {
             $files[$field] = $_FILES[$field];
         }
-        if(empty($files[$field])) {
+        if(empty($files[$field]) || empty($files[$field]['tmp_name'])) {
             $this->uploadError = '没有文件上传！';
             $this->uploadErrorCode= 102;
             return false;
