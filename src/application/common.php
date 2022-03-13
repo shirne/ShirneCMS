@@ -568,52 +568,28 @@ function filter_emoji($str, $replace = '')
  * @param string $dot
  * @return mixed|string
  */
-function cutstr($str,$len,$dot='...'){
-    $str=html_entity_decode($str);
-    $str=strip_tags($str,'');
+function cutstr($str,$len,$dot='...', $triptags = true){
+    if($triptags){
+        $str=trim(strip_tags($str,''));
+    }
 
-    $charset = 'utf-8';
-    if (strlen($str) <= $len) {
+    if (mb_strlen($str) <= $len+2) {
         return $str;
     }
-
-    $str = str_replace(array( '&nbsp;', '&amp;', '&quot;', '&lt;', '&gt;'), array(' ','&', '"', '<', '>'), $str);
-    $str = preg_replace('/\s+/',' ',$str);
-    $strcut = '';
-    if (strtolower($charset) == 'utf-8') {
-        $n = $tn = $noc = 0;
-        while ($n < strlen($str)) {
-            $t = ord($str[$n]);
-            if ($t == 9 || $t == 10 || (32 <= $t && $t <= 126)) {
-                $tn = 1; $n++; $noc++;
-            } elseif (194 <= $t && $t <= 223) {
-                $tn = 2; $n += 2; $noc += 2;
-            } elseif (224 <= $t && $t <= 239) {
-                $tn = 3; $n += 3; $noc += 2;
-            } elseif (240 <= $t && $t <= 247) {
-                $tn = 4; $n += 4; $noc += 2;
-            } elseif (248 <= $t && $t <= 251) {
-                $tn = 5; $n += 5; $noc += 2;
-            } elseif ($t == 252 || $t == 253) {
-                $tn = 6; $n += 6; $noc += 2;
-            } else {
-                $n++;
-            }
-            if($noc >= $len) {
-                break;
-            }
-        }
-        if ($noc > $len) {
-            $n -= $tn;
-        }
-        $strcut = substr($str, 0, $n);
-    } else {
-        for ($i = 0; $i < $len; $i++) {
-            $strcut.= ord($str[$i]) > 127 ? $str[$i] . $str[++$i] : $str[$i];
-        }
+    
+    $dstr = html_entity_decode($str);
+    if(mb_strlen($dstr) <= $len+2){
+        return $str;
     }
-    $strcut = str_replace(array('"', '<', '>'), array( '&quot;', '&lt;', '&gt;'), $strcut);
-    return $strcut . $dot;
+    $hasDecode = mb_strlen($dstr) != mb_strlen($str);
+    if(strpos($dstr,' ')!== false || strpos($dstr,'\t')!== false|| strpos($dstr,"\n")!== false|| strpos($dstr,"\r")!== false){
+        $dstr = preg_replace('/\s+/',' ',$dstr);
+    }
+    $substr = mb_substr($dstr, 0, $len);
+    if($hasDecode){
+        $substr = htmlentities($substr);
+    }
+    return $substr .$dot;
 }
 
 /**
