@@ -214,14 +214,15 @@ jQuery(function ($) {
                 url:url,
                 dataType:'JSON',
                 success:function (json) {
-                    dialog.alert(json.msg);
-                    if(json.code==1){
-                        if(json.url){
-                            location.href=json.url;
-                        }else{
-                            location.reload();
+                    dialog.alert(json.msg,function(){
+                        if(json.code==1){
+                            if(json.url){
+                                location.href=json.url;
+                            }else{
+                                location.reload();
+                            }
                         }
-                    }
+                    });
                 },
                 error:function () {
                     dialog.alert(lang('Server error.'));
