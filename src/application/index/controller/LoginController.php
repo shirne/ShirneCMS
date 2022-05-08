@@ -56,7 +56,8 @@ class LoginController extends BaseController{
                         }
                         $redirect=redirect()->restore();
                         if(empty($redirect->getData())){
-                            $url=aurl('index/member/index');
+                            $url=session('?before-login')?session('before-login'):aurl('index/member/index');
+                            session('before-login',null);
                         }else{
                             $url=$redirect->getTargetUrl();
                         }
@@ -72,6 +73,10 @@ class LoginController extends BaseController{
                     user_log($member['id'],'login',0,'密码错误:'.$password);
                     $this->error(lang('Account or password incorrect!'));
                 }
+            }
+            $referurl = request()->server('HTTP_REFERER');
+            if(strpos($referurl,url('index/login/index'))=== false){
+                session('before-login',$referurl);
             }
             return $this->fetch();
         }else {
@@ -179,7 +184,9 @@ class LoginController extends BaseController{
             Log::error($e->getMessage()."\n".$e->getFile().$e->getLine().$e->getCode(),'error');
             $this->error('登录失败',url('index/login/index'));
         }
-        return redirect()->restore(aurl('index/member/index'));
+        $url=session('?before-login')?session('before-login'):aurl('index/member/index');
+        session('before-login',null);
+        return redirect()->restore($url);
     }
 
     private function parseGender($gender){
