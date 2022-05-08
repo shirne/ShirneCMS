@@ -77,6 +77,10 @@ function delete_image($images){
             delete_image($image);
         }
     }else{
+        $images = str_replace('\\','/',$images);
+
+        if(strpos($images,'../') !== false)return;
+        
         if(!empty($images) && strpos($images,'/uploads/')===0){
             @unlink('.'.$images);
         }
