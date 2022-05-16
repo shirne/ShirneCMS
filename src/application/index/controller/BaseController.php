@@ -204,7 +204,7 @@ class BaseController extends Controller
         cookie('login', null);
     }
 
-    protected function setAotuLogin($member, $days = 7){
+    protected function setAutoLogin($member, $days = 7){
 
         $expire = $days * 24 * 60 * 60;
         $timestamp = time() + $expire;
@@ -232,7 +232,7 @@ class BaseController extends Controller
                         $member = MemberModel::where('id',$this->userid)->find();
                         $this->setLogin($member, 0);
                         $this->user = $member;
-                        $this->setAotuLogin($member);
+                        $this->setAutoLogin($member);
                     }
                 }
             }

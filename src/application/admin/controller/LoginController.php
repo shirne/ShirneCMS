@@ -106,7 +106,7 @@ class LoginController extends BaseController
         setLogin($user);
         $remember = $this->request->post('remember');
         if($remember){
-            $this->setAotuLogin($user);
+            $this->setAutoLogin($user);
         }
 
         $this->success(lang('Login success!'),url('Index/index'));

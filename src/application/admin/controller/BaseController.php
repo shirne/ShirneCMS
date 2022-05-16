@@ -103,14 +103,14 @@ class BaseController extends Controller {
                         $this->manager = Db::name('Manager')->where('id',$this->mid)->find();
                         setLogin($this->manager, 0);
                         $this->manager['logintime'] = session(SESSKEY_ADMIN_LAST_TIME);
-                        $this->setAotuLogin($this->manager);
+                        $this->setAutoLogin($this->manager);
                     }
                 }
             }
         }
     }
 
-    protected function setAotuLogin($manager, $days = 7){
+    protected function setAutoLogin($manager, $days = 7){
         $expire = $days * 24 * 60 * 60;
         $timestamp = time() + $expire;
         $data = EncryptService::getInstance()->encrypt(json_encode(['id'=>$manager['id'],'time'=>$timestamp]));

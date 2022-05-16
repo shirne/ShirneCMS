@@ -52,7 +52,7 @@ class LoginController extends BaseController{
                         $this->setLogin($member);
                         $remember = $this->request->post('remember');
                         if($remember){
-                            $this->setAotuLogin($member);
+                            $this->setAutoLogin($member);
                         }
                         $redirect=redirect()->restore();
                         if(empty($redirect->getData())){
