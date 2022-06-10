@@ -2,6 +2,7 @@
 namespace app\index\controller;
 
 use app\common\model\MemberLevelModel;
+use app\common\model\MemberLoginModel;
 use app\common\model\MemberModel;
 use app\common\model\WechatModel;
 use app\common\service\EncryptService;
@@ -201,15 +202,38 @@ class BaseController extends Controller
         session('username',null);
         session('logintime',null);
         
-        cookie('login', null);
+        cookie(SESSKEY_USER_AUTO_LOGIN, null);
     }
 
-    protected function setAutoLogin($member, $days = 7){
+    protected function setAutoLogin($member, $login_id = 0,$days = 7){
 
         $expire = $days * 24 * 60 * 60;
         $timestamp = time() + $expire;
-        $data = EncryptService::getInstance()->encrypt(json_encode(['id'=>$member['id'],'time'=>$timestamp]));
-        cookie('login', $data, $expire);
+        $hash = MemberLoginModel::createHash($member['id']);
+        $data = EncryptService::getInstance()->encrypt(json_encode(['hash'=>$hash,'time'=>$timestamp]));
+        cookie(SESSKEY_USER_AUTO_LOGIN, $data, $expire);
+        $data = [
+            'hash'=>$hash,
+            'update_time'=>time(),
+            'login_time'=>time(),
+            'login_ip'=>$this->request->ip(),
+            'login_user_agent'=>$this->request->server('user_agent'),
+        ];
+        if($login_id > 0){
+            MemberLoginModel::where('id',$login_id)->update($data);
+        }else{
+            $data['manager_id']=$member['id'];
+            $data['create_time']=$data['update_time'];
+            $data['device']=$this->parseDevice($data['login_user_agent']);
+            $data['create_ip']=$data['login_ip'];
+            $data['create_user_agent']=$data['login_user_agent'];
+            MemberLoginModel::create($data);
+        }
+    }
+
+    private function parseDevice($userAgent){
+        
+        return $this->request->isMobile()?'mobile':'pc';
     }
 
     /**
@@ -219,20 +243,23 @@ class BaseController extends Controller
     protected function checkLogin(){
         $this->userid = session('userid');
 
-        $loginsession = $this->request->cookie('login');
+        $loginsession = $this->request->cookie(SESSKEY_USER_AUTO_LOGIN);
         if(!empty($loginsession)){
-            cookie('login',null);
+            cookie(SESSKEY_USER_AUTO_LOGIN,null);
             $data = EncryptService::getInstance()->decrypt($loginsession);
             if(!empty($data)){
                 $json = json_decode($data, true);
-                if(!empty($json['id'])){
-                    $timestamp = $json['time'];
-                    if($timestamp >= time()){
-                        $this->userid = $json['id'];
-                        $member = MemberModel::where('id',$this->userid)->find();
-                        $this->setLogin($member, 0);
-                        $this->user = $member;
-                        $this->setAutoLogin($member);
+                if(!empty($json['hash'])){
+                    $login = MemberLoginModel::where('hash',$json['hash'])->find();
+                    if(!empty($login)){
+                        $timestamp = $json['time'];
+                        if($timestamp >= time()){
+                            $this->userid = $json['id'];
+                            $member = MemberModel::where('id',$this->userid)->find();
+                            $this->setLogin($member, 0);
+                            $this->user = $member;
+                            $this->setAutoLogin($member, $login['id']);
+                        }
                     }
                 }
             }

@@ -3,6 +3,7 @@
 use think\Db;
 use think\facade\Route;
 
+define('SESSKEY_USER_AUTO_LOGIN','login');
 
 function parseNavigator(&$config,$module){
     $navigators=cache($module.'_navigator');

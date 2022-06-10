@@ -43,6 +43,23 @@ CREATE TABLE `sa_manager` (
   UNIQUE KEY `username` (`username`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `sa_manager_login`;
+CREATE TABLE `sa_manager_login` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `manager_id` int(11) DEFAULT '0',
+  `hash` varchar(50) NOT NULL,
+  `create_time` int(11) DEFAULT '0',
+  `update_time` int(11) DEFAULT '0',
+  `device` varchar(50) DEFAULT '',
+  `create_ip` varchar(50) DEFAULT '',
+  `create_user_agent` varchar(300) DEFAULT '',
+  `login_time` INT(11) NULL DEFAULT 0,
+  `login_ip` varchar(50) DEFAULT '',
+  `login_user_agent` varchar(300) DEFAULT '',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --
 -- Table structure for table `sa_manager_role`
 --
@@ -411,6 +428,23 @@ CREATE TABLE `sa_member` (
   KEY `mobile` (`mobile`),
   KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `sa_member_login`;
+CREATE TABLE `sa_member_login` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `member_id` int(11) DEFAULT '0',
+  `hash` varchar(50) NOT NULL,
+  `create_time` int(11) DEFAULT '0',
+  `update_time` int(11) DEFAULT '0',
+  `device` varchar(50) DEFAULT '',
+  `create_ip` varchar(50) DEFAULT '',
+  `create_user_agent` varchar(300) DEFAULT '',
+  `login_time` INT(11) NULL DEFAULT 0,
+  `login_ip` varchar(50) DEFAULT '',
+  `login_user_agent` varchar(300) DEFAULT '',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `sa_member_authen`;
 

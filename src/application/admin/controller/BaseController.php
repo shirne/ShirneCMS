@@ -2,6 +2,7 @@
 
 namespace app\admin\controller;
 
+use app\admin\model\ManagerLoginModel;
 use app\common\service\EncryptService;
 use extcore\traits\Upload;
 use think\Controller;
@@ -96,25 +97,51 @@ class BaseController extends Controller {
             $data = EncryptService::getInstance()->decrypt($loginsession);
             if(!empty($data)){
                 $json = json_decode($data, true);
-                if(!empty($json['id'])){
-                    $timestamp = $json['time'];
-                    if($timestamp >= time()){
-                        $this->mid = $json['id'];
-                        $this->manager = Db::name('Manager')->where('id',$this->mid)->find();
-                        setLogin($this->manager, 0);
-                        $this->manager['logintime'] = session(SESSKEY_ADMIN_LAST_TIME);
-                        $this->setAutoLogin($this->manager);
+                if(!empty($json['hash'])){
+                    $login = ManagerLoginModel::where('hash',$json['hash'])->find();
+                    if(!empty($login)){
+                        $timestamp = $json['time'];
+                        if($timestamp >= time()){
+                            $this->mid = $login['manager_id'];
+                            $this->manager = Db::name('Manager')->where('id',$this->mid)->find();
+                            setLogin($this->manager, 0);
+                            $this->manager['logintime'] = session(SESSKEY_ADMIN_LAST_TIME);
+                            $this->setAutoLogin($this->manager, $login['id']);
+                        }
                     }
                 }
             }
         }
     }
 
-    protected function setAutoLogin($manager, $days = 7){
+    protected function setAutoLogin($manager, $login_id = 0,$days = 7){
         $expire = $days * 24 * 60 * 60;
         $timestamp = time() + $expire;
-        $data = EncryptService::getInstance()->encrypt(json_encode(['id'=>$manager['id'],'time'=>$timestamp]));
+        $hash = ManagerLoginModel::createHash($manager['id']);
+        $data = EncryptService::getInstance()->encrypt(json_encode(['hash'=>$hash,'time'=>$timestamp]));
         cookie(SESSKEY_ADMIN_AUTO_LOGIN, $data, $expire);
+        $data = [
+            'hash'=>$hash,
+            'update_time'=>time(),
+            'login_time'=>time(),
+            'login_ip'=>$this->request->ip(),
+            'login_user_agent'=>$this->request->server('user_agent'),
+        ];
+        if($login_id > 0){
+            ManagerLoginModel::where('id',$login_id)->update($data);
+        }else{
+            $data['manager_id']=$manager['id'];
+            $data['create_time']=$data['update_time'];
+            $data['device']=$this->parseDevice($data['login_user_agent']);
+            $data['create_ip']=$data['login_ip'];
+            $data['create_user_agent']=$data['login_user_agent'];
+            ManagerLoginModel::create($data);
+        }
+    }
+
+    private function parseDevice($userAgent){
+        
+        return $this->request->isMobile()?'mobile':'pc';
     }
     
     public function _empty(){
