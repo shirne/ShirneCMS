@@ -57,7 +57,7 @@ CREATE TABLE `sa_manager_login` (
   `login_ip` varchar(50) DEFAULT '',
   `login_user_agent` varchar(300) DEFAULT '',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `username` (`username`) USING BTREE
+  UNIQUE KEY `hash` (`hash`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -443,7 +443,7 @@ CREATE TABLE `sa_member_login` (
   `login_ip` varchar(50) DEFAULT '',
   `login_user_agent` varchar(300) DEFAULT '',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `username` (`username`) USING BTREE
+  UNIQUE KEY `hash` (`hash`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `sa_member_authen`;
