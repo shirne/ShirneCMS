@@ -38,7 +38,7 @@ class ArticleController extends BaseController
      * @return Json 
      */
     public function get_cates($pid=0, $list_count=0, $filters=[]){
-        if($pid != '0' && preg_match('/^[a-zA-Z]\w+$/',$pid)){
+        if($pid != '0' || preg_match('/^[a-zA-Z]\w+$/',$pid)){
             $current=CategoryFacade::findCategory($pid);
             if(empty($current)){
                 return $this->response([]);

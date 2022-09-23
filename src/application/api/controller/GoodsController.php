@@ -34,7 +34,7 @@ class GoodsController extends BaseController
      * @return Json 
      */
     public function get_cates($pid=0, $goods_count=0, $filters=[]){
-        if($pid!=0 && preg_match('/^[a-zA-Z]\w+/',$pid)){
+        if($pid!=0 || preg_match('/^[a-zA-Z]\w+/',$pid)){
             $current=GoodsCategoryFacade::findCategory($pid);
             if(empty($current)){
                 return $this->response([]);
