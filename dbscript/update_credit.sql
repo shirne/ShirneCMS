@@ -47,6 +47,7 @@ CREATE TABLE `sa_goods` (
   `update_time` int(11) DEFAULT '0',
   `levels` varchar(100) DEFAULT '',
   `storage` int(11) DEFAULT '0',
+  `limit` int(11) DEFAULT '0' COMMENT '兑换次数',
   `sort` int(11) DEFAULT '0',
   `sale` int(11) DEFAULT '0' COMMENT '总销量',
   `type` tinyint(4) DEFAULT '1',

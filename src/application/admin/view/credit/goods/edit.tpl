@@ -131,6 +131,17 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="form-row">
+                            <label class="col-3">兑换数量</label>
+                            <div class="form-group col">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="limit" value="{$goods.limit}" />
+                                </div>
+                                <div class="help-block text-muted">
+                                    填写0不限制
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
