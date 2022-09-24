@@ -86,6 +86,17 @@
                             </div>
                         </div>
                         <div class="form-row">
+                            <label class="col-3">市场价格</label>
+                            <div class="form-group col">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">￥</span>
+                                    </div>
+                                    <input type="text" class="form-control" name="market_price" value="{$goods.market_price}" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
                             <label class="col-3">库存</label>
                             <div class="form-group col">
                                 <div class="input-group">

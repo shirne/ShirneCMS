@@ -41,6 +41,7 @@ CREATE TABLE `sa_goods` (
   `image` varchar(150) DEFAULT NULL,
   `prop_data` text,
   `price` DECIMAL(10,2) DEFAULT 0 COMMENT '兑换价格',
+  `market_price` DECIMAL(10,2) DEFAULT 0 COMMENT '市场价格',
   `content` text,
   `create_time` int(11) DEFAULT '0',
   `update_time` int(11) DEFAULT '0',
