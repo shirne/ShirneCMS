@@ -77,6 +77,7 @@ CREATE TABLE `sa_product_category` (
   `specs` varchar(200) DEFAULT NULL COMMENT '绑定规格',
   `props` TEXT COMMENT '绑定属性',
   `sort` int(11) DEFAULT NULL COMMENT '排序',
+  `is_hot` tinyint(4) DEFAULT NULL COMMENT '热门',
   `keywords` varchar(255) DEFAULT NULL COMMENT '分类关键词',
   `description` varchar(255) DEFAULT NULL COMMENT '分类描述',
   PRIMARY KEY (`id`)

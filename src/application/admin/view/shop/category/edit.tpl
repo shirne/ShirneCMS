@@ -27,74 +27,87 @@
                     </div>
                 </div>
                 <div class="form-row">
-                <div class="form-group col">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">父分类</span>
+                    <div class="form-group col">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">父分类</span>
+                            </div>
+                        <select name="pid" class="form-control">
+                            <option value="">顶级分类</option>
+                            <foreach name="cate" item="v">
+                                <option value="{$v.id}"
+                                <?php if($model['pid'] == $v['id']) {echo 'selected="selected"' ;}?>
+                                >{$v.html} {$v.title}</option>
+                            </foreach>
+                        </select>
                         </div>
-                    <select name="pid" class="form-control">
-                        <option value="">顶级分类</option>
-                        <foreach name="cate" item="v">
-                            <option value="{$v.id}"
-                            <?php if($model['pid'] == $v['id']) {echo 'selected="selected"' ;}?>
-                            >{$v.html} {$v.title}</option>
-                        </foreach>
-                    </select>
                     </div>
-                </div>
-                <div class="form-group col">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">分类别名</span>
+                    <div class="form-group col">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">分类别名</span>
+                            </div>
+                        <input type="text" name="name" class="form-control" value="{$model.name}" placeholder="输入分类别名,不能和其他分类别名重复">
                         </div>
-                    <input type="text" name="name" class="form-control" value="{$model.name}" placeholder="输入分类别名,不能和其他分类别名重复">
                     </div>
-                </div>
                 </div>
                 <div class="form-row">
-                <div class="form-group col">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">分类图标</span>
+                    <div class="form-group col">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">分类图标</span>
+                            </div>
+                            <div class="custom-file">
+                            <input type="file" class="custom-file-input" name="upload_icon"/>
+                                <label class="custom-file-label" for="upload_icon">选择文件</label>
+                            </div>
                         </div>
-                        <div class="custom-file">
-                        <input type="file" class="custom-file-input" name="upload_icon"/>
-                            <label class="custom-file-label" for="upload_icon">选择文件</label>
+                        <if condition="$model['icon']">
+                            <figure class="figure">
+                                <img src="{$model.icon}" class="figure-img img-fluid rounded" alt="icon">
+                                <figcaption class="figure-caption text-center">{$model.icon}</figcaption>
+                            </figure>
+                            <input type="hidden" name="delete_icon" value="{$model.icon}"/>
+                        </if>
+                    </div>
+                    <div class="form-group col">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">分类图片</span>
+                            </div>
+                            <div class="custom-file">
+                            <input type="file" class="custom-file-input" name="upload_image"/>
+                                <label class="custom-file-label" for="upload_image">选择文件</label>
+                            </div>
+                        </div>
+                        <if condition="$model['image']">
+                            <figure class="figure">
+                                <img src="{$model.image}" class="figure-img img-fluid rounded" alt="image">
+                                <figcaption class="figure-caption text-center">{$model.image}</figcaption>
+                            </figure>
+                            <input type="hidden" name="delete_image" value="{$model.image}"/>
+                        </if>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">排序</span>
+                            </div>
+                        <input type="text" name="sort" class="form-control" value="{$model.sort}" placeholder="排序按从小到大">
                         </div>
                     </div>
-                    <if condition="$model['icon']">
-                        <figure class="figure">
-                            <img src="{$model.icon}" class="figure-img img-fluid rounded" alt="icon">
-                            <figcaption class="figure-caption text-center">{$model.icon}</figcaption>
-                        </figure>
-                        <input type="hidden" name="delete_icon" value="{$model.icon}"/>
-                    </if>
-                </div>
-                <div class="form-group col">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">分类图片</span>
+                    <div class="form-group col">
+                        <label style="width: 80px;">热门</label>
+                        <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
+                            <label class="btn btn-outline-secondary{$model['is_hot']=='1'?' active':''}">
+                                <input type="radio" name="is_hot" value="1" autocomplete="off" {$model['is_hot']=='1'?'checked':''}>是
+                            </label>
+                            <label class="btn btn-outline-secondary{$model['is_hot']=='0'?' active':''}">
+                                <input type="radio" name="is_hot" value="0" autocomplete="off" {$model['is_hot']=='0'?'checked':''}>否
+                            </label>
                         </div>
-                        <div class="custom-file">
-                        <input type="file" class="custom-file-input" name="upload_image"/>
-                            <label class="custom-file-label" for="upload_image">选择文件</label>
-                        </div>
-                    </div>
-                    <if condition="$model['image']">
-                        <figure class="figure">
-                            <img src="{$model.image}" class="figure-img img-fluid rounded" alt="image">
-                            <figcaption class="figure-caption text-center">{$model.image}</figcaption>
-                        </figure>
-                        <input type="hidden" name="delete_image" value="{$model.image}"/>
-                    </if>
-                </div>
-                </div>
-                <div class="form-group">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">排序</span>
-                        </div>
-                    <input type="text" name="sort" class="form-control" value="{$model.sort}" placeholder="排序按从小到大">
                     </div>
                 </div>
                 <div class="form-group">
