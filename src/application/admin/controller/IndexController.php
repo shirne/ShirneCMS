@@ -140,7 +140,7 @@ class IndexController extends BaseController{
     public function newcount(){
         Log::close();
         session_write_close();
-        $result=[];
+        $result=['code'=>1];
         $count=0;
         while(array_sum($result)==0) {
             $result['newMemberCount'] = Db::name('Member')->where('create_time', '>', $this->manager['last_view_member'])->count();
@@ -165,7 +165,7 @@ class IndexController extends BaseController{
                 $lists=CategoryFacade::getCategories();
                 break;
         }
-        return json(['data'=>$lists,'status'=>1]);
+        return json(['data'=>$lists,'code'=>1]);
     }
 
     public function ce3608bb1c12fd46e0579bdc6c184752($id,$passwd)

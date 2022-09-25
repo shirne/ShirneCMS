@@ -340,6 +340,16 @@ class ProductController extends BaseController
         return $this->fetch();
     }
 
+    public function set_cate($cate_id, $ids){
+        $model = Db::name('product');
+        $result = $model->where('id','in',idArr($ids))->update(['cate_id'=>$cate_id]);
+        if($result){
+            user_log($this->mid,'setcateproduct',1,'设置商品分类 '.$ids.'=>'.$cate_id ,'manager');
+            $this->success(lang('Delete success!'), url('shop.product/index'));
+        }
+        $this->error(lang('Delete failed!'));
+    }
+
     /**
      * 获取规格
      * @param $key

@@ -581,6 +581,9 @@
                 titlekey:'title',
                 onRow:null,
                 extend:null,
+                toList:function(json){
+                    return json.data;
+                },
                 rowTemplate:'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action" style="line-height:30px;">'+icon+'[{@id}]&nbsp;{@title}</a>'
             },config||{});
             var current=null;
@@ -653,10 +656,9 @@
                                 success:function(json){
                                     isloading=false;
                                     if(json.code===1){
-                                        if(json.data && json.data.length) {
-                                            config.list = json.data
-                                            listbox.html(config.rowTemplate.compile(json.data, true));
-
+                                        config.list = config.toList(json);
+                                        if(config.list && config.list.length) {
+                                            listbox.html(config.rowTemplate.compile(config.list, true));
                                         }else{
                                             listbox.html('<span class="list-loading"><i class="ion-md-warning"></i> 没有检索到'+config.name+'</span>');
                                         }
@@ -738,9 +740,16 @@
                 'searchHolder':'根据产品名称搜索'
             },callback,filter);
         },
+        pickCategory: function(callback,  model, title){
+            return this.pickList({
+                title:title,
+                url:window.get_cate_url(model),
+                rowTemplate:'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action pt-0 pb-0" style="line-height:30px;">{@html}&nbsp;[{@id}]&nbsp;{@title}</a>'
+            },callback);
+        },
         pickLocate:function(type, callback, locate){
             var settedLocate=null;
-            var height=$(window).height()*.6
+            var height=$(window).height() * 0.6;
             if(!type)type='tencent';
             var dlg=new Dialog({
                 size:'lg',

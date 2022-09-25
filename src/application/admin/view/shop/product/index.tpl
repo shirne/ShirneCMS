@@ -14,6 +14,7 @@
 				<div class="btn-group btn-group-sm mr-2" role="group" aria-label="action button group">
 					<a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="publish">发布</a>
 					<a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="cancel">撤销</a>
+					<a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="setcate">设置分类</a>
 					<a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="delete">删除</a>
 				</div>
 				<a href="{:url('shop.product/add')}" class="btn btn-outline-primary btn-sm mr-2"><i class="ion-md-add"></i> 添加商品</a>
@@ -182,11 +183,36 @@
                     });
                 });
             };
+			w.actionSetcate=function(ids){
+				dialog.pickCategory(function(category) {
+                    $.ajax({
+                        url:"{:url('shop.product/set_cate')}",
+                        type:'POST',
+						data:{
+							'cate_id':category.id,
+							'ids':ids.join(',')
+						},
+                        dataType:'JSON',
+                        success:function(json){
+                            if(json.code==1){
+                                dialog.alert(json.msg,function() {
+                                    location.reload();
+                                });
+                            }else{
+                                dialog.warning(json.msg);
+                            }
+                        }
+                    });
+                },'product');
+			};
             w.actionDelete=function(ids){
                 dialog.confirm('确定删除选中的产品？',function() {
                     $.ajax({
-                        url:"{:url('shop.product/delete',['id'=>'__id__'])}".replace('__id__',ids.join(',')),
-                        type:'GET',
+                        url:"{:url('shop.product/delete')}",
+                        type:'POST',
+						data:{
+							'id':ids.join(',')
+						},
                         dataType:'JSON',
                         success:function(json){
                             if(json.code==1){
