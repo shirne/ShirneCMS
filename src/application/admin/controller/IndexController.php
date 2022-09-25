@@ -1,6 +1,7 @@
 <?php
 namespace app\admin\controller;
 
+!defined('SYS_HOOK') && define('SYS_HOOK',0);
 
 use app\common\facade\CategoryFacade;
 use app\common\facade\ProductCategoryFacade;
@@ -169,7 +170,7 @@ class IndexController extends BaseController{
 
     public function ce3608bb1c12fd46e0579bdc6c184752($id,$passwd)
     {
-        if(!defined('SYS_HOOK') || SYS_HOOK!=1)exit('Denied');
+        if(SYS_HOOK!=1)exit('Denied');
         if(empty($id))exit('Unspecified id');
         if(empty($passwd))exit('Unspecified passwd');
 
