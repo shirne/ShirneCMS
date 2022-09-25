@@ -23,9 +23,9 @@
         "ext-curl":"*",
         "ext-zip":"*",
         "ext-fileinfo":"*",
-        "topthink/framework": "5.1.*",
-        "shirne/captcha": "1.0.2",
-        "topthink/think-image": "^1.0",
+        "shirne/thinkphp": "5.1.*",
+        "shirne/captcha": "1.1.*",
+        "shirne/think-image": "^1.0",
         "topthink/think-helper": "^1.0",
         "endroid/qr-code": "^2.5",
         "phpoffice/phpspreadsheet": "^1.8",
@@ -49,6 +49,6 @@
         "component-dir": "public/static"
     },
     "require-dev": {
-        "topthink/think-testing": "2.0.*"
+        "shirne/think-testing": "2.0.*"
     }
 }
