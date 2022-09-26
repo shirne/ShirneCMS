@@ -158,10 +158,10 @@ class WechatController extends BaseController
                             ->where('is_default', 1)
                             ->where('id','NEQ',$id)->update(['is_default'=>0]);
                     }
-                    $this->success(lang('Update success!').$this->uploadError, url('wechat/index'));
+                    $this->success(lang('Update success!'), url('wechat/index'));
                 } else {
                     delete_image($uploads);
-                    $this->error(lang('Update failed!').$this->uploadError);
+                    $this->error(lang('Update failed!'));
                 }
             }
         }
