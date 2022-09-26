@@ -465,15 +465,28 @@ class MemberModel extends BaseModel
         return $member;
     }
 
-    public static function checkUpdata($data, $member){
-        $updata=array();
-        if(!empty($data)){
-            if(isset($data['gender']) && (!isset($member['gender']) || $member['gender']!=$data['gender']))$updata['gender']=$data['gender'];
-            if(empty($member['province']) && !empty($data['province']))$updata['province']=$data['province'];
-            if(empty($member['city']) && !empty($data['city']))$updata['city']=$data['city'];
-            //if(empty($member['county']) && !empty($data['county']))$updata['county']=$data['county'];
-            if(empty($member['nickname']))$updata['nickname']=$data['nickname'];
-            if(empty($member['avatar']) || is_wechat_avatar($member['avatar']))$updata['avatar']=$data['avatar'];
+    public static function checkUpdata($data, $member)
+    {
+        $updata = array();
+        if (!empty($data)) {
+            if (isset($data['gender']) && (!isset($member['gender']) || $member['gender'] != $data['gender'])) {
+                $updata['gender'] = $data['gender'];
+            }
+            if (empty($member['province']) && !empty($data['province'])) {
+                $updata['province'] = $data['province'];
+            }
+            if (empty($member['city']) && !empty($data['city'])) {
+                $updata['city'] = $data['city'];
+            }
+            // if (empty($member['county']) && !empty($data['county'])) {
+            //     $updata['county'] = $data['county'];
+            // }
+            if (empty($member['nickname'])) {
+                $updata['nickname'] = $data['nickname'];
+            }
+            if ((empty($member['avatar']) || is_wechat_avatar($member['avatar'])) && !is_empty_avatar($data['avatar'])) {
+                $updata['avatar'] = $data['avatar'];
+            }
         }
         return $updata;
     }

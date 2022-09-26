@@ -914,6 +914,17 @@ function is_wechat_avatar($avatar){
     return false;
 }
 
+function is_empty_avatar($avatar){
+    if(empty($avatar)){
+        return true;
+    }
+    // wechat default avatar
+    if(strpos($avatar,'POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg') !==false){
+        return true;
+    }
+    return false;
+}
+
 /**
  * tp中已支持restore传入默认参数
  * @param string $default
