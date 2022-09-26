@@ -21,7 +21,10 @@ return [
     // 应用名称
     'app_name'               => 'shirnecms',
     // 应用地址
-    'app_host'               => '',
+    'app_host'               => Env::get('app_host',''),
+
+    'is_https'               => Env::get('is_ssl',''),
+    'hide_port'              => Env::get('hide_port',''),
     // 应用版本
     'app_release'            => '20190828',
     //应用加密串
