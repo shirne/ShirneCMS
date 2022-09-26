@@ -181,7 +181,7 @@ class LoginController extends BaseController{
                 $this->setLogin($member);
             }
         }catch(Exception $e){
-            Log::error($e->getMessage()."\n".$e->getFile().$e->getLine().$e->getCode(),'error');
+            Log::error($e->getMessage()."\n".$e->getFile().$e->getLine().$e->getCode());
             $this->error('登录失败',url('index/login/index'));
         }
         $url=session('?before-login')?session('before-login'):aurl('index/member/index');

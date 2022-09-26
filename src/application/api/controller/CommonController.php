@@ -83,7 +83,7 @@ class CommonController extends BaseController
                 try{
                     $controller = \container()->make('\\app\\api\\controller\\' . $m[0] . 'Controller');
                 }catch(\Exception $e){
-                    Log::error($e->getMessage(),'error');
+                    Log::error($e->getMessage());
                     return null;
                 }
             }
@@ -116,9 +116,9 @@ class CommonController extends BaseController
                     return null;
                 }
             }catch (\ReflectionException $e){
-                Log::error($e->getMessage(),'error');
+                Log::error($e->getMessage());
             }catch (\Exception $e){
-                Log::error($e->getMessage(),'error');
+                Log::error($e->getMessage());
             }
         }
         return null;

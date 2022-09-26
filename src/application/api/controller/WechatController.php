@@ -36,12 +36,12 @@ class WechatController extends Controller{
         if(!empty($hash)){
             $account=Db::name('wechat')->where('hash',$hash)->find();
             if(empty($account)){
-                Log::warning('公众号['.$hash.']不存在','Wechat');
+                Log::warning('公众号['.$hash.']不存在');
             }
         }else{
             $account=Db::name('wechat')->where('is_default',1)->where('type','wechat')->find();
             if(empty($account)){
-                Log::warning('没有设置默认公众号','Wechat');
+                Log::warning('没有设置默认公众号');
             }
         }
         if(empty($account)){
@@ -113,7 +113,7 @@ class WechatController extends Controller{
     
         $app = Factory::payment($config);
         $response = $app->handleRefundedNotify(function ($message, $reqInfo, $fail){
-            Log::info(var_export($message,TRUE),'refund');
+            Log::info(var_export($message,TRUE));
             
             $order = PayOrderRefundModel::where(['refund_no'=>$message['out_refund_no']])->find();
 
@@ -170,7 +170,7 @@ class WechatController extends Controller{
 
         $response = $app->handlePaidNotify(function ($message, $fail) {
             // 记录日志
-            Log::info(var_export($message,TRUE),'pay');
+            Log::info(var_export($message,TRUE));
 
             /**
              * @var $order PayOrderModel
@@ -231,7 +231,7 @@ class WechatController extends Controller{
 
         $response = $app->handlePaidNotify(function ($message, $fail) {
             // 记录日志
-            Log::info(var_export($message,TRUE),'scanpay');
+            Log::info(var_export($message,TRUE));
 
             return true;
         });
