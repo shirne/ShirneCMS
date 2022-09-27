@@ -327,11 +327,10 @@ class AuthController extends BaseController
      * @param string $wxid 小程序对应的系统id或hash
      * @param string $code 客户端获取到的授权码
      * @param string $rawData 客户端获取到的用户资料
-     * @param string $phoneData 客户端获取到的手机号码加密串
-     * @param string $phoneIv 客户端获取到的手机号码加密向量
+     * @param string $phoneCode 客户端获取到的手机号码session
      * @return Json|void 
      */
-    public function wxLogin($wxid, $code, $rawData = null, $phoneData = null, $phoneIv = null){
+    public function wxLogin($wxid, $code, $rawData = null, $phoneCode = null){
         
         $agent=$this->request->param('agent');
         $wechat=Db::name('wechat')->where('type','wechat')
@@ -388,15 +387,15 @@ class AuthController extends BaseController
                     }
                 }
 
-                if(!empty($phoneData)){
-                    if(empty($phoneIv))$this->error('参数错误');
-                    $mobileData = $this->decodeAES($phoneData, $session['session_key'], $phoneIv);
+                if(!empty($phoneCode)){
+                    $mobileData = $weapp->getPhoneNumber($phoneCode);
                 }
             }
         }
         
+        // 只使用code登录，自动生成空微信信息
         if(empty($userinfo)){
-            $this->error('登录授权失败',ERROR_LOGIN_FAILED);
+            $userinfo = ["nickName"=>"微信用户","gender"=>0,"language"=>"","city"=>"","province"=>"","country"=>"","avatarUrl"=>"https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132"];
         }
         $type=$wechat['account_type'];
         $typeid=$wechat['id'];
