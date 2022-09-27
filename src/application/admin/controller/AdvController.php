@@ -185,6 +185,7 @@ class AdvController extends BaseController
      * @throws \Throwable
      */
     public function itemadd($gid){
+        $gid = intval($gid);
         $group = AdvGroupModel::get($gid);
         if(empty($group)){
             $this->error('广告组不存在');

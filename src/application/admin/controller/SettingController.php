@@ -156,6 +156,7 @@ class SettingController extends BaseController
      */
     public function edit($id)
     {
+        $id = intval($id);
         if ($this->request->isPost()) {
             $data=$this->request->post();
             $validate=new SettingValidate();
@@ -173,17 +174,16 @@ class SettingController extends BaseController
                 }
 
             }
-        }else{
-            $model = Db::name('setting')->find($id);
-            if(empty($model)){
-                $this->error('要修改的配置不存在');
-            }
-            $this->assign('model',$model);
-            $this->assign('id',$id);
-            $this->assign('groups',settingGroups());
-            $this->assign('types',settingTypes());
-            return $this->fetch();
         }
+        $model = Db::name('setting')->find($id);
+        if(empty($model)){
+            $this->error('要修改的配置不存在');
+        }
+        $this->assign('model',$model);
+        $this->assign('id',$id);
+        $this->assign('groups',settingGroups());
+        $this->assign('types',settingTypes());
+        return $this->fetch();
     }
 
     /**

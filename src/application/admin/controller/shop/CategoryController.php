@@ -78,6 +78,7 @@ class CategoryController extends BaseController
      */
     public function edit($id)
     {
+        $id = intval($id);
         if ($this->request->isPost()) {
             $data=$this->request->post();
             $validate=new ProductCategoryValidate();
@@ -135,6 +136,7 @@ class CategoryController extends BaseController
     }
 
     public function batch($pid=0){
+        $pid = intval($pid);
         $content = $this->request->post('content');
         $rows = explode("\n",$content);
         $datas = [];

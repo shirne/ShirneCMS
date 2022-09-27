@@ -125,6 +125,7 @@ class ProductController extends BaseController
     }
 
     public function qrcode($id, $qrtype='url', $size=430, $miniprogram=0){
+        $id = intval($id);
         $product=ProductModel::get($id);
         if($qrtype=='url'){
             $url = url('index/product/view',['id'=>$id], true, true);

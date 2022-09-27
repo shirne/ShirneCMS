@@ -48,6 +48,7 @@ class GoodsController extends BaseController
     }
 
     public function view($id){
+        $id = intval($id);
         $goods = GoodsModel::get($id);
         if(empty($goods)){
             return $this->errorPage('商品不存在');

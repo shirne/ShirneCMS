@@ -84,6 +84,7 @@ class PageController extends BaseController
      */
     public function edit($id)
     {
+        $id = intval($id);
         if ($this->request->isPost()) {
             $data=$this->request->post();
             $validate=new PageValidate();

@@ -121,6 +121,7 @@ class PostageModel extends CacheableModel
     }
     
     public static function getDesc($id){
+        $id = intval($id);
         if($id>0){
             $postage=static::get($id);
             if(!empty($postage)){

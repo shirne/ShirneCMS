@@ -62,6 +62,7 @@ class ProductController extends BaseController
     }
 
     public function view($id){
+        $id = intval($id);
         $product = ProductModel::get($id);
         if(empty($product)){
             return $this->errorPage('商品不存在');
@@ -122,6 +123,7 @@ class ProductController extends BaseController
     }
     
     public function comment($id){
+        $id = intval($id);
         $product = ProductModel::get($id);
         if(empty($product)){
             $this->error('参数错误');

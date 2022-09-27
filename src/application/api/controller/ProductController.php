@@ -140,6 +140,7 @@ class ProductController extends BaseController
      * @return Json 
      */
     public function view($id){
+        $id = intval($id);
         $product = ProductModel::get($id);
         if(empty($product)){
             $this->error('商品不存在');
@@ -198,6 +199,7 @@ class ProductController extends BaseController
      * @return Json 
      */
     public function share($id, $type='url'){
+        $id = intval($id);
         $product = ProductModel::get($id);
         if(empty($product)){
             $this->error('商品不存在');
@@ -308,6 +310,7 @@ class ProductController extends BaseController
      * @return Json 
      */
     public function comments($id, $pagesize = 10){
+        $id = intval($id);
         $product = ProductModel::get($id);
         if(empty($product)){
             $this->error('参数错误');

@@ -59,6 +59,7 @@ class CategoryController extends BaseController
      */
     public function edit($id)
     {
+        $id = intval($id);
         if ($this->request->isPost()) {
             $data=$this->request->post();
             $validate=new GoodsCategoryValidate();
@@ -87,22 +88,21 @@ class CategoryController extends BaseController
                 GoodsCategoryFacade::clearCache();
                 $this->success("保存成功", url('credit.category/index'));
             }
-        }else{
-            $model = GoodsCategoryModel::get($id);
-            if(empty($model) || empty($model['id'])){
-                $this->error('分类不存在');
-            }
-            $cate = GoodsCategoryFacade::getCategories();
-            if(is_null($model->specs)){
-                $model->specs=[];
-            }
-
-            $this->assign('cate',$cate);
-            $this->assign('model',$model);
-            $this->assign('specs',SpecificationsModel::getList());
-            $this->assign('id',$id);
-            return $this->fetch();
         }
+        $model = GoodsCategoryModel::get($id);
+        if(empty($model) || empty($model['id'])){
+            $this->error('分类不存在');
+        }
+        $cate = GoodsCategoryFacade::getCategories();
+        if(is_null($model->specs)){
+            $model->specs=[];
+        }
+
+        $this->assign('cate',$cate);
+        $this->assign('model',$model);
+        $this->assign('specs',SpecificationsModel::getList());
+        $this->assign('id',$id);
+        return $this->fetch();
     }
 
     /**
