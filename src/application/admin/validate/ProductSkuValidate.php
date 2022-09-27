@@ -13,16 +13,17 @@ use app\common\core\BaseUniqueValidate;
 class ProductSkuValidate extends BaseUniqueValidate
 {
     protected $rule=array(
-        'goods_no'=>'require|unique:productSku,%id%,sku_id',
-        'price'=>'require,number',
-        'market_price'=>'require,number',
-        'cost_price'=>'require,number',
-        'weight'=>'require,integer',
-        'storage'=>'require,integer'
+        'goods_no'=>'require|alphaDash|unique:productSku,%id%,sku_id',
+        'price'=>'require|float',
+        'market_price'=>'require|float',
+        'cost_price'=>'require|float',
+        'weight'=>'require|integer',
+        'storage'=>'require|integer'
     );
     protected $message=array(
         'goods_no.require'=>'请填写规格货号',
         'goods_no.unique'=>'规格货号已存在',
+        'goods_no.alphaDash'=>'商品货号只能填写字母，数字及_',
         'price.require'=>'请填写规格价格',
         'price.number'=>'价格必须填写数字',
         'market_price.require'=>'请填写规格市场价',
