@@ -129,9 +129,10 @@ CREATE TABLE `sa_category` (
   `use_template` tinyint(11) DEFAULT 0 COMMENT '独立模板',
   `template_dir` varchar(20) DEFAULT 0 COMMENT '独立模板目录',
   `channel_mode` tinyint(11) DEFAULT 0 COMMENT '频道模式',
-  `is_comment` tinyint(11) DEFAULT 0 COMMENT '是否开启评论',
-  `is_images` tinyint(11) DEFAULT 0 COMMENT '是否有图集',
-  `is_attachments` tinyint(11) DEFAULT 0 COMMENT '是否有附件',
+  `is_lock` tinyint(4) DEFAULT 0 COMMENT '是否锁定',
+  `is_comment` tinyint(4) DEFAULT 0 COMMENT '是否开启评论',
+  `is_images` tinyint(4) DEFAULT 0 COMMENT '是否有图集',
+  `is_attachments` tinyint(4) DEFAULT 0 COMMENT '是否有附件',
   `keywords` varchar(255) DEFAULT '' COMMENT '分类关键词',
   `description` varchar(255) DEFAULT '' COMMENT '分类描述',
   PRIMARY KEY (`id`)

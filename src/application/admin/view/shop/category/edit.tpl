@@ -47,7 +47,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text">分类别名</span>
                             </div>
-                        <input type="text" name="name" class="form-control" value="{$model.name}" placeholder="输入分类别名,不能和其他分类别名重复">
+                        <input type="text" name="name" class="form-control" {$model['is_lock']?'readonly="readonly"':''} value="{$model.name}" placeholder="输入分类别名,不能和其他分类别名重复">
                         </div>
                     </div>
                 </div>

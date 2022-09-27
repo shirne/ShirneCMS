@@ -194,6 +194,23 @@ class CategoryController extends BaseController
         $this->error('未提交数据');
     }
 
+    public function lock($id){
+        $updated = Db::name('ProductCategory')->whereIn('id',idArr($id))->where('is_lock',0)->update(['is_lock'=>1]);
+        if(!$updated){
+            $this->error('更新失败');
+        }
+        $this->success('锁定成功');
+    }
+    
+    public function unlock($id){
+        $updated = Db::name('ProductCategory')->whereIn('id',idArr($id))->where('is_lock',1)->update(['is_lock'=>0]);
+        if(!$updated){
+            $this->error('更新失败');
+        }
+        $this->success('解锁成功');
+    }
+
+
     /**
      * 删除
      * @param $id
@@ -202,17 +219,17 @@ class CategoryController extends BaseController
     {
         $id = idArr($id);
         //查询属于这个分类的文章
-        $posts = Db::name('Product')->where('cate_id','in',$id)->count();
+        $posts = Db::name('Product')->whereIn('cate_id',$id)->count();
         if($posts){
             $this->error("禁止删除含有产品的分类");
         }
         //禁止删除含有子分类的分类
-        $hasChild = Db::name('ProductCategory')->where('pid','in',$id)->count();
+        $hasChild = Db::name('ProductCategory')->whereIn('pid',$id)->count();
         if($hasChild){
             $this->error("禁止删除含有子分类的分类");
         }
         //验证通过
-        $result = Db::name('ProductCategory')->where('id','in',$id)->delete();
+        $result = Db::name('ProductCategory')->whereIn('id',$id)->where('is_lock',0)->delete();
         if($result){
             ProductCategoryFacade::clearCache();
             $this->success(lang('Delete success!'), url('shop.category/index'));

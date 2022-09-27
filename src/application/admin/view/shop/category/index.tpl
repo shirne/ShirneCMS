@@ -47,7 +47,9 @@
                     <a class="btn btn-outline-primary" title="发布商品" href="{:url('shop.product/add',array('cid'=>$v['id']))}"><i class="ion-md-paper-plane"></i> </a>
                     <a class="btn btn-outline-primary" title="添加子分类" href="{:url('shop.category/add',array('pid'=>$v['id']))}"><i class="ion-md-add"></i> </a>
                     <a class="btn btn-outline-primary" title="编辑" href="{:url('shop.category/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> </a>
-                    <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('shop.category/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
+                    <if condition="!$v['is_lock']">
+                        <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('shop.category/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
+                    </if>
                 </td>
             </tr>
         </volist>

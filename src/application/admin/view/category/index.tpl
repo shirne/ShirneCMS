@@ -43,7 +43,9 @@
                     <a class="btn btn-outline-primary" title="{:lang('Publish Article')}" href="{:url('article/add',array('cid'=>$v['id']))}"><i class="ion-md-paper-plane"></i> </a>
                     <a class="btn btn-outline-primary" title="{:lang('Add Sub Category')}" href="{:url('category/add',array('pid'=>$v['id']))}"><i class="ion-md-add"></i> </a>
                     <a class="btn btn-outline-primary" title="{:lang('Edit')}" href="{:url('category/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> </a>
-                    <a class="btn btn-outline-danger link-confirm" title="{:lang('Delete')}" data-confirm="{:lang('Confirm to delete? The operation can not restore!')}" href="{:url('category/delete',array('id'=>$v['id']))}"  ><i class="ion-md-trash"></i> </a>
+                    <if condition="!$v['is_lock']">
+                        <a class="btn btn-outline-danger link-confirm" title="{:lang('Delete')}" data-confirm="{:lang('Confirm to delete? The operation can not restore!')}" href="{:url('category/delete',array('id'=>$v['id']))}"  ><i class="ion-md-trash"></i> </a>
+                    </if>
                 </td>
             </tr>
         </volist>

@@ -186,6 +186,22 @@ class CategoryController extends BaseController
         $this->error('未提交数据');
     }
 
+    public function lock($id){
+        $updated = Db::name('Category')->whereIn('id',idArr($id))->where('is_lock',0)->update(['is_lock'=>1]);
+        if(!$updated){
+            $this->error('更新失败');
+        }
+        $this->success('锁定成功');
+    }
+    
+    public function unlock($id){
+        $updated = Db::name('Category')->whereIn('id',idArr($id))->where('is_lock',1)->update(['is_lock'=>0]);
+        if(!$updated){
+            $this->error('更新失败');
+        }
+        $this->success('解锁成功');
+    }
+
     /**
      * 删除分类
      * @param $id
@@ -204,7 +220,7 @@ class CategoryController extends BaseController
             $this->error("禁止删除含有子分类的分类");
         }
         //验证通过
-        $result = Db::name('Category')->whereIn('id', $id)->delete();
+        $result = Db::name('Category')->whereIn('id', $id)->where('is_lock',0)->delete();
         if($result){
             CategoryFacade::clearCache();
             $this->success(lang('Delete success!'), url('category/index'));

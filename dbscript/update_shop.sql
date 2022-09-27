@@ -68,18 +68,19 @@ DROP TABLE IF EXISTS `sa_product_category`;
 
 CREATE TABLE `sa_product_category` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `pid` int(11) DEFAULT NULL COMMENT '父分类ID',
-  `title` varchar(100) DEFAULT NULL COMMENT '分类名称',
-  `short` varchar(20) DEFAULT NULL COMMENT '分类简称',
-  `name` varchar(50) DEFAULT NULL COMMENT '分类别名',
-  `icon` varchar(100) DEFAULT NULL COMMENT '图标',
-  `image` varchar(100) DEFAULT NULL COMMENT '大图',
-  `specs` varchar(200) DEFAULT NULL COMMENT '绑定规格',
+  `pid` int(11) DEFAULT 0 COMMENT '父分类ID',
+  `title` varchar(100) DEFAULT '' COMMENT '分类名称',
+  `short` varchar(20) DEFAULT '' COMMENT '分类简称',
+  `name` varchar(50) DEFAULT '' COMMENT '分类别名',
+  `icon` varchar(100) DEFAULT '' COMMENT '图标',
+  `image` varchar(100) DEFAULT '' COMMENT '大图',
+  `specs` varchar(200) DEFAULT '' COMMENT '绑定规格',
   `props` TEXT COMMENT '绑定属性',
-  `sort` int(11) DEFAULT NULL COMMENT '排序',
-  `is_hot` tinyint(4) DEFAULT NULL COMMENT '热门',
-  `keywords` varchar(255) DEFAULT NULL COMMENT '分类关键词',
-  `description` varchar(255) DEFAULT NULL COMMENT '分类描述',
+  `sort` int(11) DEFAULT 0 COMMENT '排序',
+  `is_hot` tinyint(4) DEFAULT 0 COMMENT '热门',
+  `is_lock` tinyint(4) DEFAULT 0 COMMENT '是否锁定',
+  `keywords` varchar(255) DEFAULT '' COMMENT '分类关键词',
+  `description` varchar(255) DEFAULT '' COMMENT '分类描述',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
