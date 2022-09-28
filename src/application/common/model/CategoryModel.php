@@ -18,8 +18,17 @@ class CategoryModel extends BaseModel
     protected $data;
     protected $treed;
 
-    protected function _get_data(){
-        return Db::name('Category')->order('pid ASC,sort ASC,id ASC')->select();
+    protected function _get_data($isall=false){
+        $model= Db::name(static::parseName(static::class))->order('pid ASC,sort ASC,id ASC');
+        if(!$isall){
+            $model->where('status',1);
+        }
+        return $model->select();
+    }
+
+    public function getAllCategories(){
+        $tmpdata = $this->_get_data(true);
+        return getSortedCategory($tmpdata);
     }
 
     public function getCategories($force=false){

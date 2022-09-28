@@ -129,6 +129,7 @@ CREATE TABLE `sa_category` (
   `use_template` tinyint(11) DEFAULT 0 COMMENT '独立模板',
   `template_dir` varchar(20) DEFAULT 0 COMMENT '独立模板目录',
   `channel_mode` tinyint(11) DEFAULT 0 COMMENT '频道模式',
+  `status` tinyint(1) DEFAULT 1 COMMENT '状态 1为正常 0为关闭',
   `is_lock` tinyint(4) DEFAULT 0 COMMENT '是否锁定',
   `is_comment` tinyint(4) DEFAULT 0 COMMENT '是否开启评论',
   `is_images` tinyint(4) DEFAULT 0 COMMENT '是否有图集',

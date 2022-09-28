@@ -15,8 +15,5 @@ class HelpCategoryModel extends CategoryModel
 
     protected $type = [];
 
-    protected function _get_data(){
-        return Db::name('HelpCategory')->order('pid ASC,sort ASC,id ASC')->select();
-    }
 
 }

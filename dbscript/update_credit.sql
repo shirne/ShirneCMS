@@ -25,6 +25,7 @@ CREATE TABLE `sa_goods_category` (
   `icon` varchar(100) DEFAULT NULL COMMENT '图标',
   `image` varchar(100) DEFAULT NULL COMMENT '大图',
   `sort` int(11) DEFAULT NULL COMMENT '排序',
+  `status` tinyint(1) DEFAULT 1 COMMENT '状态 1为正常 0为关闭',
   `keywords` varchar(255) DEFAULT NULL COMMENT '分类关键词',
   `description` varchar(255) DEFAULT NULL COMMENT '分类描述',
   PRIMARY KEY (`id`)

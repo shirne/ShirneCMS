@@ -30,7 +30,9 @@ class CommonController extends BaseController
      * 1. methods = a,b,c.d ; arg1 = a ;  arg2 = b ; ...
      *    该方式不能重复调同一个接口，各接口间参数不能有冲突
      * 2. { method1 => { arg1 => a, arg2 => b}, method2 => { call => controller.method, arg1 => a, arg2 => b} }
-     *    该方式可以重复调用同一个接口，key指定不同，增加一个call来指定调用，各调用的参数互相隔离
+     *    此方法各接口的参数互相隔离，并可重复调用同一接口
+     *    重复调用同一个接口时，使用自定义key，然后增加一个call来指定调用的方法
+     *    
      * @return \think\response\Json
      */
     public function batch(){

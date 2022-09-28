@@ -77,6 +77,7 @@ CREATE TABLE `sa_product_category` (
   `specs` varchar(200) DEFAULT '' COMMENT '绑定规格',
   `props` TEXT COMMENT '绑定属性',
   `sort` int(11) DEFAULT 0 COMMENT '排序',
+  `status` tinyint(1) DEFAULT 1 COMMENT '状态 1为正常 0为关闭',
   `is_hot` tinyint(4) DEFAULT 0 COMMENT '热门',
   `is_lock` tinyint(4) DEFAULT 0 COMMENT '是否锁定',
   `keywords` varchar(255) DEFAULT '' COMMENT '分类关键词',
@@ -408,6 +409,7 @@ CREATE TABLE `sa_help_category` (
   `icon` varchar(100) DEFAULT NULL COMMENT '图标',
   `image` varchar(100) DEFAULT NULL COMMENT '大图',
   `sort` int(11) DEFAULT NULL COMMENT '排序',
+  `status` tinyint(1) DEFAULT 1 COMMENT '状态 1为正常 0为关闭',
   `keywords` varchar(255) DEFAULT NULL COMMENT '分类关键词',
   `description` varchar(255) DEFAULT NULL COMMENT '分类描述',
   PRIMARY KEY (`id`)
