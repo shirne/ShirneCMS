@@ -51,43 +51,92 @@
 </body>
 
 <if condition="$isWechat">
-<script type="text/javascript" src="{$protocol}://res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
+<script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
 <script>
-    var imageUrl='__STATIC__/images/logo.png';
-    wx.config({$signPackage|raw});
-    wx.ready(function () {
-        wx.onMenuShareTimeline({
-            title: '{$title}',
-            link:  window.location.href,
-            imgUrl: imageUrl
-        });
-        wx.onMenuShareAppMessage({
-            title: '{$title}',
-            desc: '{$description}',
-            link:  window.location.href,
-            imgUrl: imageUrl,
-            type: '',
-            dataUrl: ''
-        });
-        wx.onMenuShareQQ({
-            title: '{$title}',
-            desc: '{$description}',
-            link:  window.location.href,
-            imgUrl: imageUrl
-        });
-        wx.onMenuShareWeibo({
-            title: '{$title}',
-            desc: '{$description}',
-            link:  window.location.href,
-            imgUrl: imageUrl
+    jQuery(function($){
+        $.ajax({
+            url:"{:url('index/jssdk')}",
+            success:function(json){
+                if(json.code==1){
+                    wx.config(json.data);
+                    wx.error(function(res){
+                        console.log(res)
+                    });
+                    wx.ready(function () {
+                        var version= '1.3.2';
+                        var logo_img="{:local_media($config['site-weblogo']?:'/static/images/share_logo.jpg')}";
+                        var share_imgUrl= window.share_imgurl?window.share_imgurl: logo_img;
+                        var share_title = '{$title}';
+                        var share_desc = '{$description}';
+                        var share_url = window.location.href;
+                        var agent_code="{$isLogin && $user['is_agent']?$user['agentcode']:''}";
+                        var shareimg=new Image();
+                        shareimg.src = share_imgUrl;
+                        if(agent_code){
+                            if(share_url.indexOf('?')>0){
+                                share_url += '&';
+                            }else{
+                                share_url += '?';
+                            }
+                            share_url += 'agent='+agent_code;
+                        }
+                        if(version !== '1.4.0'){
+                            wx.onMenuShareTimeline({
+                                title: share_title,
+                                link:  share_url,
+                                imgUrl: share_imgUrl
+                            });
+                            wx.onMenuShareAppMessage({
+                                title: share_title,
+                                desc: share_desc,
+                                link:  share_url,
+                                imgUrl: share_imgUrl,
+                                type: '',
+                                dataUrl: ''
+                            });
+                            wx.onMenuShareQQ({
+                                title: share_title,
+                                desc: share_desc,
+                                link:  share_url,
+                                imgUrl: share_imgUrl
+                            });
+                            wx.onMenuShareQZone({
+                                title: share_title,
+                                desc: share_desc,
+                                link:  share_url,
+                                imgUrl: share_imgUrl
+                            });
+                        }else {
 
-        });
-        wx.onMenuShareQZone({
-            title: '{$title}',
-            desc: '{$description}',
-            link:  window.location.href,
-            imgUrl: imageUrl
-        });
+
+                            wx.updateAppMessageShareData({
+                                title: share_title,
+                                desc: share_desc,
+                                link: share_url,
+                                imgUrl: share_imgUrl,
+                                success: function () {
+                                }
+                            });
+                            wx.updateTimelineShareData({
+                                title: share_title,
+                                link: share_url,
+                                imgUrl: share_imgUrl,
+                                success: function () {
+                                }
+                            });
+                        }
+
+                        wx.onMenuShareWeibo({
+                            title: share_title,
+                            desc: share_desc,
+                            link:  share_url,
+                            imgUrl: share_imgUrl
+
+                        });
+                    });
+                }
+            }
+        })
     });
 </script>
 </if>
