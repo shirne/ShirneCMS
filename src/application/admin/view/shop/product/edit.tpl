@@ -419,6 +419,44 @@
             }
         }
         var lastPresets;
+        function setValue(i,value){
+            var field=$('[name='+i+']');
+            if(field.attr('type')=='radio'){
+                $('[name='+i+'][value='+value+']').trigger('click')
+            }else if(field.attr('type')=='checkbox' || field.length<1){
+                if(field.length<1){
+                    field=$('[name="'+i+'[]"]');
+                }
+                if(field.length<1){
+                    return;
+                }
+                if(!value){
+                    value=[];
+                }
+                if(value.join){
+                    value=value.join(',')
+                }else{
+                    value=value.toString()
+                }
+                if(typeof value == 'string'){
+                    value=value.split(',')
+                }
+                for(var j=0;j<field.length;j++){
+                    var fitem=field.eq(j)
+                    if(value.indexOf(fitem.val())>-1){
+                        if(!fitem.prop('checked')){
+                            fitem.trigger('click')
+                        }
+                    }else{
+                        if(fitem.prop('checked')){
+                            fitem.trigger('click')
+                        }
+                    }
+                }
+            }else{
+                field.val(value)
+            }
+        }
         function changeCategory(select,force) {
             var option=$(select).find('option:selected');
             var curProps=[];
@@ -426,22 +464,14 @@
             
             if(lastPresets){
                 for(var i in lastPresets){
-                    if($('[name='+i+']').attr('type')=='radio'){
-                        $('[name='+i+'][value='+presets[0][i]+']').trigger('click')
-                    }else{
-                        $('[name='+i+']').val(presets[0][i])
-                    }
+                    setValue(i, presets[0][i])
                 }
                 lastPresets=null;
             }
             if(presets[cid]){
                 lastPresets = presets[cid];
                 for(var i in presets[cid]){
-                    if($('[name='+i+']').attr('type')=='radio'){
-                        $('[name='+i+'][value='+presets[cid][i]+']').trigger('click')
-                    }else{
-                        $('[name='+i+']').val(presets[cid][i])
-                    }
+                    setValue(i, presets[cid][i])
                 }
             }
             var props=$(option).data('props') || [];
