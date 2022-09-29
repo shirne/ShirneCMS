@@ -60,7 +60,7 @@ class IndexController extends BaseController
         }
     }
 
-    public function jssdk($url){
+    public function jssdk($url=''){
         $this->success('','',$this->getShareData($url));
     }
 }
