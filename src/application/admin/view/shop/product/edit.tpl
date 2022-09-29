@@ -394,6 +394,7 @@
         var goods_no=$('[name=goods_no]').val();
         var diy_levels=JSON.parse('{$price_levels|array_values|json_encode|raw}');
         var skus=JSON.parse('{$skus|json_encode|raw}');
+        var presets = JSON.parse('{$presets|json_encode|raw}');
 
         function setSpecs(specids) {
             if(specids && specids.length) {
@@ -417,9 +418,32 @@
                 resetSkus();
             }
         }
+        var lastPresets;
         function changeCategory(select,force) {
             var option=$(select).find('option:selected');
             var curProps=[];
+            var cid=$(option).val();
+            
+            if(lastPresets){
+                for(var i in lastPresets){
+                    if($('[name='+i+']').attr('type')=='radio'){
+                        $('[name='+i+'][value='+presets[0][i]+']').trigger('click')
+                    }else{
+                        $('[name='+i+']').val(presets[0][i])
+                    }
+                }
+                lastPresets=null;
+            }
+            if(presets[cid]){
+                lastPresets = presets[cid];
+                for(var i in presets[cid]){
+                    if($('[name='+i+']').attr('type')=='radio'){
+                        $('[name='+i+'][value='+presets[cid][i]+']').trigger('click')
+                    }else{
+                        $('[name='+i+']').val(presets[cid][i])
+                    }
+                }
+            }
             var props=$(option).data('props') || [];
             $('.prop-groups .input-group').each(function () {
                 var input=$(this).find('input');

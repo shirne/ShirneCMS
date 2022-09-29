@@ -8,6 +8,16 @@ define('SESSKEY_ADMIN_NAME','adminname');
 define('SESSKEY_ADMIN_LAST_TIME','adminLTime');
 define('SESSKEY_ADMIN_AUTO_LOGIN','adminlogin');
 
+function getProductPresets($model=[]){
+    return [
+        '0'=>[
+            'type'=>isset($model['type'])?$model['type']:1,
+            'is_discount'=>isset($model['is_discount'])?$model['is_discount']:1,
+            'is_commission'=>isset($model['is_commission'])?$model['is_commission']:1,
+        ],
+    ];
+}
+
 function setLogin($user, $logintype = 1){
     $time=time();
     session(SESSKEY_ADMIN_ID,$user['id']);

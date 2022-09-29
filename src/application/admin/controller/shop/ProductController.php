@@ -232,12 +232,22 @@ class ProductController extends BaseController
                 }
             }
         }
-        $model=array('type'=>1,'status'=>1,'cate_id'=>$cid,'is_discount'=>1,'is_commission'=>1,'sale'=>0);
+        $presets = getProductPresets();
+        
+        $model=$presets['0'];
+        $model['sale']=0;
+        $model['status']=1;
+        $model['cate_id']=$cid;
+        
+        if($cid > 0 && isset($presets[$cid])){
+            $model = array_merge($model,$presets[$cid]);
+        }
         
         $levels=getMemberLevels();
         $this->assign("category",ProductCategoryFacade::getCategories());
         $this->assign("brands",ProductCategoryFacade::getBrands(0));
         $this->assign('product',$model);
+        $this->assign('presets',$presets);
         $this->assign('skus',[[]]);
         $this->assign('levels',$levels);
         $this->assign('price_levels',array_filter($levels,function($item){
@@ -334,6 +344,7 @@ class ProductController extends BaseController
             return $item['diy_price']==1;
         }));
         $this->assign('product',$model);
+        $this->assign('presets',getProductPresets($model));
         $this->assign('skus',$skus->isEmpty()?[[]]:$skus);
         $this->assign('types',getProductTypes());
         $this->assign('postages',PostageModel::getCacheData());
