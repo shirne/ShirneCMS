@@ -204,7 +204,7 @@ class Poster
                         //文本为空不打印
                         continue;
                     }
-                    //文本限宽换行
+                    //文本套变量
                     if(isset($set['text'])){
                         $text = preg_replace_callback('/\{([\w\d]+)\}/',function ($matches)use($data, $k){
                             $key = $matches[1];
@@ -223,14 +223,14 @@ class Poster
                             $text = $set['prefix'] . $text;
                         }
                     }
-                    if(isset($set['sufix'])){
-                        if(is_array($set['sufix'])){
-                            if($this->parseIf($data,$set['sufix']['if'])){
-                                $text .= $set['sufix']['text'];
+                    if(isset($set['suffix'])){
+                        if(is_array($set['suffix'])){
+                            if($this->parseIf($data,$set['suffix']['if'])){
+                                $text .= $set['suffix']['text'];
                             }
                             
                         }else {
-                            $text .= $set['sufix'];
+                            $text .= $set['suffix'];
                         }
                     }
                     //文本为空，说明是需要强制保留位置的

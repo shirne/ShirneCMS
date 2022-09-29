@@ -77,6 +77,8 @@
                     </select>
                     <span class="input-group-prepend"><span class="input-group-text">前缀</span></span>
                     <input type="text" class="form-control" name="v-poster_nickname[prefix]" value="{$setting['poster_nickname']['value']['prefix']}" placeholder="">
+                    <span class="input-group-prepend"><span class="input-group-text">后缀</span></span>
+                    <input type="text" class="form-control" name="v-poster_nickname[suffix]" value="{$setting['poster_nickname']['value']['suffix']}" placeholder="">
                     <span class="input-group-prepend"><span class="input-group-text">左边距</span></span>
                     <input type="text" class="form-control" name="v-poster_nickname[x]" value="{$setting['poster_nickname']['value']['x']}" placeholder="">
                     <span class="input-group-prepend"><span class="input-group-text">上边距</span></span>
@@ -103,6 +105,8 @@
                     </select>
                     <span class="input-group-prepend"><span class="input-group-text">前缀</span></span>
                     <input type="text" class="form-control" name="v-poster_agentcode[prefix]" value="{$setting['poster_agentcode']['value']['prefix']}" placeholder="">
+                    <span class="input-group-prepend"><span class="input-group-text">后缀</span></span>
+                    <input type="text" class="form-control" name="v-poster_agentcode[suffix]" value="{$setting['poster_agentcode']['value']['suffix']}" placeholder="">
                     <span class="input-group-prepend"><span class="input-group-text">左边距</span></span>
                     <input type="text" class="form-control" name="v-poster_agentcode[x]" value="{$setting['poster_agentcode']['value']['x']}" placeholder="">
                     <span class="input-group-prepend"><span class="input-group-text">上边距</span></span>
