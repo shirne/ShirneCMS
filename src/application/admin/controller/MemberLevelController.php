@@ -77,6 +77,7 @@ class MemberLevelController extends BaseController
             $lists=$model->order('id ASC')->select();
         }
         $this->assign('lists',$lists);
+        $this->assign('styles',getTextStyles());
         return $this->fetch();
     }
     
