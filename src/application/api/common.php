@@ -36,3 +36,19 @@ function empty2null($arr, $keys, $islist = true)
     }
     return $arr;
 }
+
+function delete_image($images){
+    if(is_array($images)){
+        foreach ($images as $image){
+            delete_image($image);
+        }
+    }else{
+        $images = str_replace('\\','/',$images);
+
+        if(strpos($images,'../') !== false)return;
+        
+        if(!empty($images) && strpos($images,'/uploads/')===0){
+            @unlink('.'.$images);
+        }
+    }
+}
