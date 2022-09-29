@@ -389,6 +389,9 @@ class AuthController extends BaseController
 
                 if(!empty($phoneCode)){
                     $mobileData = $weapp->getPhoneNumber($phoneCode);
+                    if(isset($mobileData['phone_info'])){
+                        $mobileData=$mobileData['phone_info'];
+                    }
                 }
             }
         }
