@@ -39,6 +39,13 @@ class MemberController extends AuthedController
         $profile['level']=$levels[$profile['level_id']] ?? new \stdClass();
         $agents = MemberAgentModel::getCacheData();
         $profile['agent'] = $agents[$profile['is_agent']] ?? new \stdClass();
+        if($profile['referer']>0){
+            $parent=Db::name('member')
+            ->field('id,nickname,realname,avatar,gender,level_id,is_agent,agentcode')
+            ->where('id',$profile['referer'])
+            ->find();
+        }
+        $profile['parent']=empty($parent)?new \stdClass():$parent;
         return $this->response($profile);
     }
 
