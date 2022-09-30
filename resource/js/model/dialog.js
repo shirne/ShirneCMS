@@ -694,7 +694,7 @@
                 title:title,
                 name:'会员',
                 searchHolder:'根据会员id或名称，电话来搜索',
-                rowTemplate:'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action" style="line-height:30px;">{if @avatar}<img src="{@avatar}" style="width:30px;height:30px;border-radius: 100%;margin-right:10px;" />{else}<i class="ion-md-person"></i>{/if} [{@id}]&nbsp;{if @nickname}{@nickname}{else}{@username}{/if}&nbsp;&nbsp;&nbsp;{if @mobile}<small><i class="ion-md-phone-portrait"></i> {@mobile}</small>{/if}</a>'
+                rowTemplate:'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action" style="line-height:30px;">{if @avatar}<img src="{@avatar}" style="width:30px;height:30px;border-radius: 100%;margin-right:10px;" />{else}<i class="ion-md-person"></i>{/if} <div class="flex-info"><div>[{@id}]&nbsp;{if @nickname}{@nickname}{else}{@username}{/if}&nbsp;&nbsp;&nbsp;{if @mobile}<small><i class="ion-md-phone-portrait"></i> {@mobile}</small>{/if}</div><div>{if @level}<small><i class="ion-md-people"></i> {@level.level_name}</small>{/if}&nbsp;{if @agent}<small><i class="ion-md-ribbon"></i> {@agent.name}</small>{/if}</div></div></a>'
             },callback,filter);
         },
         pickArticle:function(callback,title,filter){

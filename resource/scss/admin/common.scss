@@ -786,6 +786,7 @@ table {
   .list-group-item {
     display:flex;
     flex-direction: row;
+    align-items: center;
     .imgview {
       width:12%;
       min-width: 12%;
@@ -802,6 +803,9 @@ table {
       line-height: 1.4em;
       max-height: 4.2em;
       overflow: hidden;
+    }
+    .flex-info{
+      line-height: 1.2em;
     }
   }
 }

@@ -309,6 +309,16 @@
                 input.val(locate.lng+','+locate.lat);
             },locate);
         });
+        
+        $('.userPick').click(function () {
+            var input=$(this).parents('.input-group').find('input[type=text]');
+            
+            var userid=input.val()
+            
+            dialog.pickUser(function (user) {
+                input.val(user.id)
+            },$(this).data('filter'))
+        });
         $('.html-content').each(function (idx,item) {
             UE.getEditor($(item).attr('id'),{
                 toolbars: Toolbars.simple,
