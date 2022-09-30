@@ -484,6 +484,12 @@ class MemberModel extends BaseModel
             if (empty($member['nickname'])) {
                 $updata['nickname'] = $data['nickname'];
             }
+            if (isset($data['mobile']) && empty($member['mobile'])) {
+                $updata['mobile'] = $data['mobile'];
+            }
+            if (isset($data['mobile_bind']) && $data['mobile_bind']!=$member['mobile']) {
+                $updata['mobile_bind'] = $data['mobile_bind'];
+            }
             if ((empty($member['avatar']) || is_wechat_avatar($member['avatar'])) && !is_empty_avatar($data['avatar'])) {
                 $updata['avatar'] = $data['avatar'];
             }
@@ -580,7 +586,7 @@ class MemberModel extends BaseModel
         $poster = new Poster($config);
         $poster->generate([
             'qrcode'=>$filename,
-            'avatar'=>$this['avatar'],
+            'avatar'=>$this->_getAvatarPath(),
             'nickname'=>$this['nickname']
         ]);
         $poster->save($sharepath);
@@ -621,10 +627,21 @@ class MemberModel extends BaseModel
         $poster = new Poster($config);
         $poster->generate([
             'qrcode'=>$filename,
-            'avatar'=>$this['avatar'],
+            'avatar'=>$this->_getAvatarPath(),
             'nickname'=>$this['nickname']
         ]);
         $poster->save($sharepath);
         return true;
+    }
+
+    private function _getAvatarPath(){
+        $avatar = $this['avatar'];
+        if(strpos($avatar,'http://')===0 || strpos($avatar,'https://')===0){
+            return $avatar;
+        }
+        if(strpos($avatar,'/uploads/')===0){
+            return '.'.$avatar;
+        }
+        return $avatar;
     }
 }
