@@ -128,7 +128,38 @@
         </div>
     </div>
 </div>
-
+<div class="form-row form-group">
+    <label for="v-referer_id" class="col-3 col-md-2 text-right align-middle">默认推荐人</label>
+    <div class="col-9 col-md-8 col-lg-6">
+        <div class="input-group">
+            <input type="text" class="form-control" name="v-referer_id" value="{$setting['referer_id']['value']}" placeholder="推荐人ID">
+            <div class="input-group-append">
+                <a href="javascript:" class="btn btn-outline-secondary userPick" data-filter='{"is_agent":1}'>选择推荐人</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="form-row form-group">
+    <label for="v-agent_lock" class="col-3 col-md-2 text-right align-middle">锁客模式</label>
+    <div class="col-9 col-md-8 col-lg-6">
+        <div class="btn-group btn-group-toggle mregopengroup" data-toggle="buttons">
+            <foreach name="setting.agent_lock.data" item="value" key="k">
+                <if condition="$k==$setting['agent_lock']['value']">
+                    <label class="btn btn-outline-secondary active">
+                        <input type="radio" name="v-agent_lock" value="{$k}" autocomplete="off" checked> {$value}
+                    </label>
+                    <else />
+                    <label class="btn btn-outline-secondary">
+                        <input type="radio" name="v-agent_lock" value="{$k}" autocomplete="off"> {$value}
+                    </label>
+                </if>
+            </foreach>
+        </div>
+        <div >
+            <div class="text-muted">非分销会员也可获取推荐码，二维码，但升级分销员之前无法获得佣金</div>
+        </div>
+    </div>
+</div>
 <div class="form-row form-group">
     <label for="v-commission_type" class="col-3 col-md-2 text-right align-middle">{$setting['commission_type']['title']}</label>
     <div class="col-9 col-md-8 col-lg-6">

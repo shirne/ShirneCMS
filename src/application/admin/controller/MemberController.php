@@ -2,10 +2,10 @@
 namespace app\admin\controller;
 
 use app\common\model\MemberAgentModel;
+use app\common\model\MemberLevelModel;
 use app\common\model\MemberModel;
 use app\common\validate\MemberValidate;
 use think\Db;
-use think\Exception;
 
 /**
  * 会员管理
@@ -42,8 +42,25 @@ class MemberController extends BaseController
             $model->where('is_agent',0);
         }
 
-        $lists=$model->field('id,username,nickname,realname,mobile,avatar,level_id,is_agent,gender,email,create_time')
-            ->order('id ASC')->limit(10)->select();
+        $lists=$model->field('id,username,nickname,realname,mobile,avatar,level_id,is_agent,agentcode,gender,email,create_time')
+            ->order('id ASC')->limit(20)->select();
+        if(!empty($lists)){
+            $levels=MemberLevelModel::getCacheData();
+            $agents=MemberAgentModel::getCacheData();
+            foreach($lists as &$item){
+                if(isset($levels[$item['level_id']])){
+                    $item['level']=$levels[$item['level_id']];
+                }else{
+                    $item['level']=new \stdClass();
+                }
+                if(isset($agents[$item['is_agent']])){
+                    $item['agent']=$agents[$item['is_agent']];
+                }else{
+                    $item['agent']=new \stdClass();
+                }
+            }
+            unset($item);
+        }
         return json(['data'=>$lists,'code'=>1]);
     }
 
