@@ -429,6 +429,10 @@ class AuthController extends BaseController
                 $data['openid']=$session['openid'];
                 
                 $referid = $this->getAgentId($agent);
+                //系统配置的默认推荐人
+                if($referid <=0 && $this->config['referer_id']){
+                    $referid = intval($this->config['referer_id']);
+                }
                 $member = MemberModel::createFromOauth($data, $referid, $mobileData['purePhoneNumber'] ?? '');
                 
                 if($member['id']){
@@ -887,6 +891,10 @@ class AuthController extends BaseController
                 if(!empty($agentMember)){
                     $agentid = $agentMember['id'];
                 }
+            }
+            //系统配置的默认推荐人
+            if($agentid <=0 && $this->config['referer_id']){
+                $agentid = intval($this->config['referer_id']);
             }
             $data['referer']=$agentid;
             $data['level_id']=getDefaultLevel();

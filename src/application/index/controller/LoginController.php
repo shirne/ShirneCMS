@@ -159,7 +159,12 @@ class LoginController extends BaseController{
             if (empty($model['member_id'])) {
                 //根据设置自动生成账户
                 if($this->config['m_register']!='1') {
-                    $member = MemberModel::createFromOauth($model,session('agent'));
+                    $agentid=session('agent');
+                    //系统配置的默认推荐人
+                    if($agentid <=0 && $this->config['referer_id']){
+                        $agentid = intval($this->config['referer_id']);
+                    }
+                    $member = MemberModel::createFromOauth($model,$agentid);
                     $model->save(['member_id' => $member['id']]);
                 }
             }
@@ -353,6 +358,10 @@ class LoginController extends BaseController{
             }else{
                 $data['referer']=session('agent');
                 $data['level_id']=getDefaultLevel();
+                //系统配置的默认推荐人
+                if($data['referer'] <=0 && $this->config['referer_id']){
+                    $data['referer'] = intval($this->config['referer_id']);
+                }
             }
             $data['salt']=random_str(8);
             $data['password']=encode_password($data['password'],$data['salt']);
