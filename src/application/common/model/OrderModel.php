@@ -290,11 +290,25 @@ class OrderModel extends BaseOrderModel
                     }
                 }
             }elseif($product['is_commission'] == 2){
-                
-                if($price>$cost_price) {
+                $orig_price = intval($product['product_price'] * 100) * $product['count'];
+                $pamount =0;
+                if($commission_type==3){
+                    $pamount = $orig_price;
+                }elseif($commission_type==2){
+                    $pamount = $price;
+                }elseif($commission_type==1){
+                    if ($orig_price > $cost_price) {
+                        $pamount = $orig_price - $cost_price;
+                    }
+                }else {
+                    if ($price > $cost_price) {
+                        $pamount = $price - $cost_price;
+                    }
+                }
+                if($pamount > 0) {
                     $comm_special[]=[
                         'type'=>2,
-                        'amount'=> ($price - $cost_price)*.01,
+                        'amount'=> $pamount/100,
                         'percent'=>force_json_decode($product['commission_percent'])
                     ];
                 }
@@ -642,7 +656,7 @@ class OrderModel extends BaseOrderModel
                         if ($curLevel['commission_limit'] && $commission > $curLevel['commission_limit']) {
                             $commission = $curLevel['commission_limit'];
                         }
-                        $amount += $commission * $curPercent * .01;
+                        $amount += $commission * $curPercent / 100;
                     }
                     
                     foreach ($specials as $special) {
@@ -658,7 +672,7 @@ class OrderModel extends BaseOrderModel
                                 if ($curLevel['commission_limit'] && $commission > $curLevel['commission_limit']) {
                                     $commission = $curLevel['commission_limit'];
                                 }
-                                $amount += $commission * $curPercent * .01;
+                                $amount += $commission * $curPercent / 100;
                             }
                         }
                     }
