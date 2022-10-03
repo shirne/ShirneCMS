@@ -308,7 +308,7 @@ class OrderModel extends BaseOrderModel
                 if($pamount > 0) {
                     $comm_special[]=[
                         'type'=>2,
-                        'amount'=> $pamount/100,
+                        'amount'=> round($pamount/100,2),
                         'percent'=>force_json_decode($product['commission_percent'])
                     ];
                 }
@@ -651,7 +651,7 @@ class OrderModel extends BaseOrderModel
                     $curLevel = $levels[$parents[$i]['level_id']];
                     $amount=0;
                     if ($order['commission_amount'] > 0 && $curLevel['commission_layer'] > $i && !empty($curLevel['commission_percent'][$i])) {
-                        $curPercent = $curLevel['commission_percent'][$i];
+                        $curPercent = floatval($curLevel['commission_percent'][$i]);
                         $commission = $order['commission_amount'];
                         if ($curLevel['commission_limit'] && $commission > $curLevel['commission_limit']) {
                             $commission = $curLevel['commission_limit'];
