@@ -9,6 +9,7 @@ use app\common\core\SimpleFacade;
  * Class ProductCategoryFacade
  * @package app\common\facade
  * @see \app\common\model\ProductCategoryModel
+ * @method static array getAllCategories($force=false) 获取全部分类列表，无缓存
  * @method static array getCategories($force=false) 获取分类列表
  * @method static array findCategory($idorname) 查找分类
  * @method static array getCategoryId($idorname) 查找分类ID
