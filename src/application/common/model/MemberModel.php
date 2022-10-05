@@ -78,8 +78,12 @@ class MemberModel extends BaseModel
         if(strcmp($this['referer'], $referer) === 0){
             return true;
         }
-        $rmember=Db::name('member')->where('id|agentcode',$referer)->find();
-        if(empty($rmember) || !$rmember['is_agent']){
+        $rmember=Db::name('member')->where('id', (int)$referer)->whereOr('agentcode',$referer)->find();
+        if (empty($rmember) ) {
+            $this->setError('设置的推荐人不存在');
+            return false;
+        }
+        if(getSetting('agent_lock') != 1 && $rmember['is_agent']<1){
             $this->setError('设置的推荐人不是代理');
             return false;
         }

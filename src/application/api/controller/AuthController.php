@@ -409,7 +409,7 @@ class AuthController extends BaseController
             $member = MemberModel::where('id', $oauth['member_id'])->find();
         }elseif($this->isLogin){
             $member=MemberModel::where('id', $this->user['id'])->find();
-        }elseif($session['unionid']){
+        }elseif(!empty($session['unionid'])){
             $sameAuth=MemberOauthModel::where('unionid',$session['unionid'])->find();
             if(!empty($sameAuth)){
                 $member=MemberModel::where('id',$sameAuth['member_id'])->find();
@@ -498,12 +498,26 @@ class AuthController extends BaseController
     private function getAgentId($agent){
         $referid=0;
         if(!empty($agent)){
-            $amem=Db::name('Member')->where('is_agent','GT',0)
+            $islock=getSetting('agent_lock')=='1';
+            $amem=Db::name('Member')
                 ->where('agentcode',$agent)
                 ->where('status',1)->find();
             if(!empty($amem)){
-                Log::info('With Agent code: '.$agent.','.$amem['id']);
                 $referid = $amem['id'];
+                if(!$islock){
+                    while($amem['is_agent']<1){
+                        if($amem['referer'] < 1){
+                            break;
+                        }
+                        $amem = Db::name('Member')
+                        ->where('id',$amem['referer'])
+                        ->where('status',1)->find();
+                    }
+                }
+                Log::info('With Agent code: '.$agent.','.$referid.','.$amem['id']);
+                $referid = $amem['id'];
+            }else{
+                Log::error('With Agent code: '.$agent.' ERROR');
             }
         }
         return $referid;
