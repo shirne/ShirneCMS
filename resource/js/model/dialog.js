@@ -749,6 +749,7 @@
         },
         pickLocate:function(type, callback, locate){
             var settedLocate=null;
+            var address=null;
             var height=$(window).height() * 0.6;
             if(!type)type='tencent';
             var dlg=new Dialog({
@@ -761,9 +762,10 @@
                     var mapinfo=body.find('.mapinfo');
                     var isloading=false;
                     setTimeout(function () {
-                        var map=InitMap(type,mapbox,function(address,locate){
-                            mapinfo.html(address+'&nbsp;'+locate.lng+','+locate.lat);
+                        var map=InitMap(type,mapbox,function(formatted,locate, comp){
+                            mapinfo.html(formatted+'&nbsp;'+locate.lng+','+locate.lat);
                             settedLocate=locate;
+                            address=comp;
                         },locate);
                         btn.click(function(){
                             var search=input.val();
@@ -781,7 +783,7 @@
                         return false;
                     }
                     if(typeof callback==='function'){
-                        var result = callback(settedLocate);
+                        var result = callback(settedLocate, address);
                         return result;
                     }
                 }

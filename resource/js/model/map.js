@@ -4,7 +4,7 @@
 
     var apis = {
         'baidu': '//api.map.baidu.com/api?ak=__KEY__&v=1.5&services=false&callback=',
-        'google': '//maps.google.com/maps/api/js?key=__KEY__&callback=',
+        'google': '//maps.google.com/maps/api/js?key=__KEY__&callback=', //&language=zh
         'tencent': '//map.qq.com/api/js?v=2.exp&key=__KEY__&callback=',
         'gaode': '//webapi.amap.com/maps?v=1.3&key=__KEY__&callback='
     };
@@ -70,7 +70,7 @@
             this.marker = null;
             this.infoWindow = null;
             this.mapbox = null;
-            this.locate = {lng: 116.396795, lat: 39.933084};
+            this.locate = null;
             this.map = null;
         }
     }
@@ -90,6 +90,9 @@
     };
     BaseMap.prototype.getAddress = function (rs) {
         return "";
+    };
+    BaseMap.prototype.getAddressComponent = function (rs) {
+        return {};
     };
     BaseMap.prototype.setLocate = function (address) {
     };
@@ -139,6 +142,7 @@
 
         this.showInfo();
         var address=this.getAddress(rs);
+        var addressComponent=this.getAddressComponent(rs);
         var locate={};
         if (typeof (pt.lng) === 'function') {
             locate.lng=pt.lng();
@@ -148,7 +152,7 @@
             locate.lat=pt.lat;
         }
 
-        onPick(address,locate);
+        onPick(address,locate,addressComponent);
     };
     BaseMap.prototype.show = function () {
         this.ishide = false;
@@ -187,7 +191,9 @@
         map.addControl(new BMap.OverviewMapControl());
         map.enableScrollWheelZoom();
 
+        if(!this.locate)this.locate = this.getCenter()
         var point = this.objectToPoint(this.locate);
+        
         map.centerAndZoom(point, 15); //初始化地图中心点
         this.marker = new BMap.Marker(point); //初始化地图标记
         this.marker.enableDragging(); //标记开启拖拽
@@ -259,6 +265,9 @@
             return addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber;
         }
     };
+    BaiduMap.prototype.getAddressComponent = function (rs) {
+        return rs.addressComponents;
+    };
     BaiduMap.prototype.setLocate = function (address) {
         // 创建地址解析器实例
         var myGeo = new BMap.Geocoder();
@@ -308,6 +317,7 @@
         });
 
         //获取经纬度坐标值
+        if(!this.locate)this.locate = this.getCenter()
         var point = this.objectToPoint(this.locate);
         map.panTo(point);
         this.marker = new google.maps.Marker({position: point, map: map, draggable: true});
@@ -376,6 +386,19 @@
             return rs[0].formatted_address;
         }
     };
+    GoogleMap.prototype.getAddressComponent = function (rs, status) {
+        var result={};
+        if (rs && rs[0]) {
+            var comps=rs[0].address_components
+            if(comps[0])result.country=comps[0].long_name
+            if(comps[1])result.province=comps[1].long_name
+            if(comps[2])result.city=comps[2].long_name
+            if(comps[3])result.district=comps[3].long_name
+            if(comps[4])result.street=comps[4].long_name
+            if(comps[5])result.address=comps[5].long_name
+        }
+        return result;
+    };
     GoogleMap.prototype.setLocate = function (address) {
         // 创建地址解析器实例
         var myGeo = new google.maps.Geocoder();
@@ -429,6 +452,7 @@
         //map.enableScrollWheelZoom();
 
         //获取经纬度坐标值
+        if(!this.locate)this.locate = this.getCenter()
         var point = this.objectToPoint(this.locate);
         map.panTo(point); //初始化地图中心点
 
@@ -492,6 +516,21 @@
         if(rs && rs.detail) {
             return rs.detail.address;
         }
+        return "";
+    };
+    
+    TencentMap.prototype.getAddressComponent = function (rs) {
+        if(rs && rs.detail) {
+            var comp = rs.detail.addressComponents
+            if(!comp.province){
+                comp.province=comp.city;
+            }
+            if(comp.streetNumber){
+                comp.address=comp.streetNumber
+            }
+            return comp;
+        }
+        return {};
     };
 
     TencentMap.prototype.setLocate = function (address) {
@@ -555,6 +594,7 @@
 
 
         //获取经纬度坐标值
+        if(!this.locate)this.locate = this.getCenter()
         var point = this.objectToPoint(this.locate);
         map.setCenter(point);
 
@@ -622,6 +662,10 @@
 
     GaodeMap.prototype.getAddress = function (rs) {
         return rs.regeocode.formattedAddress;
+    };
+    GaodeMap.prototype.getAddressComponent = function (rs) {
+        var comp = rs.regeocode.addressComponent
+        return comp;
     };
 
     GaodeMap.prototype.setLocate = function (address) {
