@@ -231,7 +231,7 @@ class IndexController extends BaseController{
      */
     public function uploads(){
         $folder='alone';
-        $url=$this->uploadFile($folder,'file');
+        $url=$this->_uploadFile($folder,'file');
         if($url){
             $this->success('上传成功','',$url);
         }else{

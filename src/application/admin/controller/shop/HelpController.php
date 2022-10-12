@@ -59,7 +59,7 @@ class HelpController extends BaseController
                 $this->error($validate->getError());
             } else {
                 $delete_images=[];
-                $uploaded = $this->upload('article', 'upload_image');
+                $uploaded = $this->_upload('article', 'upload_image');
                 if (!empty($uploaded)) {
                     $data['image'] = $uploaded['url'];
                     $delete_images[]=$data['delete_image'];
@@ -112,7 +112,7 @@ class HelpController extends BaseController
                 $this->error($validate->getError());
             }else{
                 $delete_images=[];
-                $uploaded=$this->upload('shop','upload_image');
+                $uploaded=$this->_upload('shop','upload_image');
                 if(!empty($uploaded)){
                     $data['image']=$uploaded['url'];
                     $delete_images[]=$data['delete_image'];
@@ -199,12 +199,12 @@ class HelpController extends BaseController
                 $this->error($validate->getError());
             } else {
                 $delete_images=[];
-                $iconupload=$this->upload('category','upload_icon');
+                $iconupload=$this->_upload('category','upload_icon');
                 if(!empty($iconupload)){
                     $data['icon']=$iconupload['url'];
                     $delete_images[]=$data['delete_icon'];
                 }
-                $uploaded=$this->upload('category','upload_image');
+                $uploaded=$this->_upload('category','upload_image');
                 if(!empty($uploaded)){
                     $data['image']=$uploaded['url'];
                     $delete_images[]=$data['delete_image'];

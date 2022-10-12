@@ -37,7 +37,7 @@ trait Upload
     protected $uploadError;
     protected $uploadErrorCode;
 
-    protected function setUploadDriver(){
+    protected function _setUploadDriver(){
         $config=config('upload.');
         $this->uploadConfig=array_merge($this->uploadConfig,$config);
         $uploadDriver = '\\extcore\\upload\\' . ucfirst($this->uploadConfig['driver'] ).'Driver';
@@ -53,7 +53,7 @@ trait Upload
      * @param bool $isImg
      * @return boolean
      */
-    protected function checkFile($file,$isImg=false) {
+    protected function _checkFile($file,$isImg=false) {
         //文件上传失败
         if($file['error'] !== 0) {
             $this->uploadError= '文件上传失败'.($file['error']).'！';
@@ -93,7 +93,7 @@ trait Upload
         return true;
     }
 
-    protected function createSavePath($rule,$folder){
+    protected function _createSavePath($rule,$folder){
         if(!empty($rule)){
             return $folder.'/'.date($rule);
         }
@@ -106,9 +106,9 @@ trait Upload
      * @param bool $isImg
      * @return bool|array
      */
-    protected function uploadFile($folder,$field,$isImg=false){
+    protected function _uploadFile($folder,$field,$isImg=false){
         if(!$this->uploader){
-            $this->setUploadDriver();
+            $this->_setUploadDriver();
         }
         if(empty($_FILES)) {
             $this->uploadError = '没有文件上传！';
@@ -131,7 +131,7 @@ trait Upload
             return false;
         }
         //上传目录检查
-        $savePath = $this->uploadConfig['root_path'] . $this->createSavePath($this->uploadConfig['save_path'],$folder);
+        $savePath = $this->uploadConfig['root_path'] . $this->_createSavePath($this->uploadConfig['save_path'],$folder);
         if(!$this->uploader->checkPath($savePath)){
             $this->uploadError = $this->uploader->getError();
             $this->uploadErrorCode= 105;
@@ -169,7 +169,7 @@ trait Upload
             }
             
             //检查文件类型大小和合法性
-            if (!$this->checkFile($file,$isImg)) {
+            if (!$this->_checkFile($file,$isImg)) {
                 $this->uploadError = '文件类型不合法';
                 $this->uploadErrorCode= 108;
                 return false;
@@ -189,8 +189,8 @@ trait Upload
             (isset($uploadFileInfo[$field])?$uploadFileInfo[$field]:null);
     }
 
-    protected function upload($folder,$field){
-        return $this->uploadFile($folder,$field,true);
+    protected function _upload($folder,$field){
+        return $this->_uploadFile($folder,$field,true);
     }
 
     protected $deleteFiles;
@@ -202,7 +202,7 @@ trait Upload
      * @param int $warnLevel 报错等级 0 不报错, 1 非空文件报错, 2 全部报错
      * @return array
      */
-    protected function batchUpload($folder,$fields,$warnLevel=1){
+    protected function _batchUpload($folder,$fields,$warnLevel=1){
         if(!is_array($fields)){
             $fields=explode(',',$fields);
         }
@@ -216,7 +216,7 @@ trait Upload
                 $field=$fieldArr[0];
                 $isImg=in_array(strtolower($fieldArr[1]),['img','image'])?true:false;
             }
-            $uploadResult=$this->uploadFile($folder,'upload_'.$field,$isImg);
+            $uploadResult=$this->_uploadFile($folder,'upload_'.$field,$isImg);
             if($uploadResult){
                 $uploaded[$field]=$uploadResult['url'];
                 if(!empty($request['delete_'.$field])){
@@ -242,7 +242,7 @@ trait Upload
      * @param $data
      * @return mixed
      */
-    protected function removeDeleteFields($data){
+    protected function _removeDeleteFields($data){
         foreach ($data as $field=>$val){
             if(strpos($field,'delete_')===0){
                 unset($data[$field]);

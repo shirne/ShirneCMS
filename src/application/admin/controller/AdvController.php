@@ -198,13 +198,13 @@ class AdvController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             }else{
-                $uploaded=$this->upload('banner','upload_image');
+                $uploaded=$this->_upload('banner','upload_image');
                 if(!empty($uploaded)){
                     $data['image']=$uploaded['url'];
                 }elseif($this->uploadErrorCode>102){
                     $this->error($this->uploadErrorCode.':'.$this->uploadError);
                 }
-                $uploaded=$this->uploadFile('banner','upload_video',2);
+                $uploaded=$this->_uploadFile('banner','upload_video',2);
                 if(!empty($uploaded)){
                     $data['video']=$uploaded['url'];
                 }elseif($this->uploadErrorCode>102){
@@ -263,7 +263,7 @@ class AdvController extends BaseController
                 $model = AdvItemModel::where('id',$id)->find();
                 $url=url('adv/itemlist',array('gid'=>$data['group_id']));
                 $delete_images=[];
-                $uploaded=$this->upload('banner','upload_image');
+                $uploaded=$this->_upload('banner','upload_image');
                 if(!empty($uploaded)){
                     $data['image']=$uploaded['url'];
                     $delete_images[]=$data['delete_image'];
@@ -272,7 +272,7 @@ class AdvController extends BaseController
                 }
                 unset($data['delete_image']);
 
-                $uploaded=$this->uploadFile('banner','upload_video',2);
+                $uploaded=$this->_uploadFile('banner','upload_video',2);
                 if(!empty($uploaded)){
                     $data['video']=$uploaded['url'];
                 }elseif($this->uploadErrorCode>102){
@@ -313,7 +313,7 @@ class AdvController extends BaseController
             }
         }
         
-        $uploaded = $this->batchUpload('banner',$fields);
+        $uploaded = $this->_batchUpload('banner',$fields);
         if(!empty($uploaded)){
             foreach($uploaded as $k=>$file){
                 $newkey = explode('_',$k.'_');

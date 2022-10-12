@@ -39,12 +39,12 @@ class CategoryController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
-                $iconupload=$this->upload('category','upload_icon');
+                $iconupload=$this->_upload('category','upload_icon');
                 if(!empty($iconupload))$data['icon']=$iconupload['url'];
                 elseif($this->uploadErrorCode>102){
                     $this->error($this->uploadErrorCode.':'.$this->uploadError);
                 }
-                $uploaded=$this->upload('category','upload_image');
+                $uploaded=$this->_upload('category','upload_image');
                 if(!empty($uploaded))$data['image']=$uploaded['url'];
                 elseif($this->uploadErrorCode>102){
                     delete_image($data['icon']);
@@ -86,12 +86,12 @@ class CategoryController extends BaseController
                 $this->error($validate->getError());
             } else {
                 $delete_images=[];
-                $iconupload=$this->upload('category','upload_icon');
+                $iconupload=$this->_upload('category','upload_icon');
                 if(!empty($iconupload)){
                     $data['icon']=$iconupload['url'];
                     $delete_images[]=$data['delete_icon'];
                 }
-                $uploaded=$this->upload('category','upload_image');
+                $uploaded=$this->_upload('category','upload_image');
                 if(!empty($uploaded)){
                     $data['image']=$uploaded['url'];
                     $delete_images[]=$data['delete_image'];

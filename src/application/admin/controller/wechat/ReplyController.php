@@ -61,7 +61,7 @@ class ReplyController extends WechatBaseController
                         $data['content']=json_encode($data['news'],JSON_UNESCAPED_UNICODE);
                         break;
                     case 'image':
-                        $uploaded = $this->upload('wechat', 'upload_image');
+                        $uploaded = $this->_upload('wechat', 'upload_image');
                         if (!empty($uploaded)) {
                             $data['content'] = json_encode(['image'=>$uploaded['url']]);
                         }elseif($this->uploadErrorCode>102){
@@ -130,7 +130,7 @@ class ReplyController extends WechatBaseController
                         $data['content']=json_encode($data['news'],JSON_UNESCAPED_UNICODE);
                         break;
                     case 'image':
-                        $uploaded = $this->upload('wechat', 'upload_image');
+                        $uploaded = $this->_upload('wechat', 'upload_image');
                         if (!empty($uploaded)) {
                             $data['content'] = json_encode(['image'=>$uploaded['url']]);
                         }elseif($this->uploadErrorCode>102){

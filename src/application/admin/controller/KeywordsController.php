@@ -47,7 +47,7 @@ class KeywordsController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
-                $uploaded=$this->upload('keywords','upload_image');
+                $uploaded=$this->_upload('keywords','upload_image');
                 if(!empty($uploaded)){
                     $data['image']=$uploaded['url'];
                 }elseif($this->uploadErrorCode>102){
@@ -85,7 +85,7 @@ class KeywordsController extends BaseController
                 $this->error($validate->getError());
             } else {
                 $delete_images=[];
-                $uploaded=$this->upload('keywords','upload_image');
+                $uploaded=$this->_upload('keywords','upload_image');
                 if(!empty($uploaded)){
                     $data['image']=$uploaded['url'];
                     $delete_images[]=$data['delete_image'];

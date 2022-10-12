@@ -55,7 +55,7 @@ class BrandController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
-                $uploaded=$this->upload('brand','upload_logo');
+                $uploaded=$this->_upload('brand','upload_logo');
                 if(!empty($uploaded)){
                     $data['logo']=$uploaded['url'];
                 }elseif($this->uploadErrorCode>102){
@@ -103,7 +103,7 @@ class BrandController extends BaseController
                 $this->error($validate->getError());
             } else {
                 $delete_images=[];
-                $uploaded=$this->upload('brand','upload_logo');
+                $uploaded=$this->_upload('brand','upload_logo');
                 if(!empty($uploaded)){
                     $data['logo']=$uploaded['url'];
                     $delete_images[]=$data['delete_logo'];

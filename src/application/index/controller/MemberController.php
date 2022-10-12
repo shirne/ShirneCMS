@@ -82,7 +82,7 @@ class MemberController extends AuthedController
     public function avatar(){
         if($this->request->isPost()){
             $data=[];
-            $uploaded=$this->upload('avatar','upload_avatar');
+            $uploaded=$this->_upload('avatar','upload_avatar');
             if(empty($uploaded)){
                 $this->error('请选择文件');
             }
@@ -129,7 +129,7 @@ class MemberController extends AuthedController
             }
             session('email_code',$randcode);
             session('bind_email',$email);
-            $result = $this->sendEmail($email,'绑定邮箱','您正在进行邮箱绑定操作，本次验证码 ['.$randcode.'] , 如非本人操作请忽略');
+            $result = $this->_sendEmail($email,'绑定邮箱','您正在进行邮箱绑定操作，本次验证码 ['.$randcode.'] , 如非本人操作请忽略');
             cache('verify_code_times',++$mcktimes);
             if($result){
                 $this->success('验证码已发送');

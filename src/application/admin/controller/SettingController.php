@@ -28,7 +28,7 @@ class SettingController extends BaseController
             $settings=getSettings(true,false,false);
             foreach ($settings as $k=>$row){
                 if($row['type']=='image'){
-                    $uploaded=$this->upload('setting','upload_'.$k);
+                    $uploaded=$this->_upload('setting','upload_'.$k);
                     if($uploaded){
                         $data['v-'.$k]=$uploaded['url'];
                         $delete_images[]=$data['delete_'.$k];
@@ -67,7 +67,7 @@ class SettingController extends BaseController
                 $this->error('请将配置文件内容粘贴在输入框内');
             }
         }else{
-            $file=$this->uploadFile('cache','contentFile',false);
+            $file=$this->_uploadFile('cache','contentFile',false);
             if($file){
                 $json=file_get_contents('.'.$file['url']);
                 if(empty($json)){

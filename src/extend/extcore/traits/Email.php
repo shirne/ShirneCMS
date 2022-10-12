@@ -15,12 +15,12 @@ trait Email
      */
     protected $emailConfig;
 
-    protected function setEmailConfig($config){
+    protected function _setEmailConfig($config){
         $this->emailConfig=$config;
     }
-    protected function sendEmail($user,$subject,$body,$attachment=array()){
+    protected function _sendEmail($user,$subject,$body,$attachment=array()){
         if(empty($this->emailConfig) && !empty($this->config)){
-            $this->setEmailConfig($this->config);
+            $this->_setEmailConfig($this->config);
         }
         if(!is_array($user)){
             $split=explode('@',$user);

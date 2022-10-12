@@ -43,7 +43,7 @@ class PromotionController extends BaseController
         if($this->request->isPost()){
 
             $data=$this->request->post();
-            $files = $this->batchUpload('poster',['poster_background','poster_qrlogo']);
+            $files = $this->_batchUpload('poster',['poster_background','poster_qrlogo']);
             if(!empty($files)){
                 foreach($files as $k=>$file){
                     $data['v-'.$k]=$file;

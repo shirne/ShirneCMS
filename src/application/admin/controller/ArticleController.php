@@ -85,7 +85,7 @@ class ArticleController extends BaseController
                 $this->error($validate->getError());
             } else {
                 $delete_images=[];
-                $uploaded = $this->upload('article', 'upload_cover');
+                $uploaded = $this->_upload('article', 'upload_cover');
                 if (!empty($uploaded)) {
                     $data['cover'] = $uploaded['url'];
                     $delete_images[]=$data['delete_cover'];
@@ -140,7 +140,7 @@ class ArticleController extends BaseController
                 $this->error($validate->getError());
             }else{
                 $delete_images=[];
-                $uploaded=$this->upload('article','upload_cover');
+                $uploaded=$this->_upload('article','upload_cover');
                 if(!empty($uploaded)){
                     $data['cover']=$uploaded['url'];
                     $delete_images[]=$data['delete_cover'];
@@ -259,7 +259,7 @@ class ArticleController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             }else{
-                $uploaded=$this->upload('article','upload_image');
+                $uploaded=$this->_upload('article','upload_image');
                 if(!empty($uploaded)){
                     $data['image']=$uploaded['url'];
                 }
@@ -299,7 +299,7 @@ class ArticleController extends BaseController
                 $model = Db::name("ArticleImages");
                 $url=url('article/imagelist',array('aid'=>$data['article_id']));
                 $delete_images=[];
-                $uploaded=$this->upload('article','upload_image');
+                $uploaded=$this->_upload('article','upload_image');
                 if(!empty($uploaded)){
                     $data['image']=$uploaded['url'];
                     $delete_images[]=$data['delete_image'];

@@ -279,7 +279,7 @@ class MemberController extends AuthedController
      */
     public function avatar(){
         $data=[];
-        $uploaded=$this->upload('avatar','upload_avatar');
+        $uploaded=$this->_upload('avatar','upload_avatar');
         if(empty($uploaded)){
             $this->error('请选择文件',0);
         }
@@ -300,7 +300,7 @@ class MemberController extends AuthedController
      * @throws GlobalException 
      */
     public function uploadImage(){
-        $uploaded=$this->upload('member','file_upload');
+        $uploaded=$this->_upload('member','file_upload');
 
         return $this->response([
             'url'=>$uploaded['url']

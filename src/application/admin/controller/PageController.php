@@ -55,7 +55,7 @@ class PageController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
-                $uploaded = $this->upload('page', 'upload_icon');
+                $uploaded = $this->_upload('page', 'upload_icon');
                 if (!empty($uploaded)) {
                     $data['icon'] = $uploaded['url'];
                 }elseif($this->uploadErrorCode>102){
@@ -94,7 +94,7 @@ class PageController extends BaseController
             } else {
                 $model=PageModel::get($id);
                 $delete_images=[];
-                $uploaded = $this->upload('page', 'upload_icon');
+                $uploaded = $this->_upload('page', 'upload_icon');
                 if (!empty($uploaded)) {
                     $data['icon'] = $uploaded['url'];
                     $delete_images[]=$data['delete_icon'];
@@ -186,7 +186,7 @@ class PageController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             }else{
-                $uploaded=$this->upload('page','upload_image');
+                $uploaded=$this->_upload('page','upload_image');
                 if(!empty($uploaded)){
                     $data['image']=$uploaded['url'];
                 }
@@ -226,7 +226,7 @@ class PageController extends BaseController
                 $model = Db::name("PageImages");
                 $url=url('page/imagelist',array('aid'=>$data['article_id']));
                 $delete_images=[];
-                $uploaded=$this->upload('page','upload_image');
+                $uploaded=$this->_upload('page','upload_image');
                 if(!empty($uploaded)){
                     $data['image']=$uploaded['url'];
                     $delete_images[]=$data['delete_image'];

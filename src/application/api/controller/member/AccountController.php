@@ -122,7 +122,7 @@ class AccountController extends AuthedController
                 $this->error('充值方式错误');
             }
             
-            $uploaded = $this->upload('recharge', 'pay_bill');
+            $uploaded = $this->_upload('recharge', 'pay_bill');
             if (!$uploaded) {
                 $this->error($this->uploadError);
             }

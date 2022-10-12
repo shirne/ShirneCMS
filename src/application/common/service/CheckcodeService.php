@@ -193,8 +193,8 @@ class CheckcodeService extends BaseService
         @session_write_close();
         $content="您本次验证码为{$newcode}仅用于会员注册。请在10分钟内使用！";
         $settings=getSettings();
-        $this->setEmailConfig($settings);
-        $sended=$this->sendEmail($email,$settings['site-webname'].'-验证码',$content);
+        $this->_setEmailConfig($settings);
+        $sended=$this->_sendEmail($email,$settings['site-webname'].'-验证码',$content);
         return $sended;
     }
 

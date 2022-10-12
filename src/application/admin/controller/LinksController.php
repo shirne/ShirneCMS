@@ -48,7 +48,7 @@ class LinksController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
-                $uploaded=$this->upload('links','upload_logo');
+                $uploaded=$this->_upload('links','upload_logo');
                 if(!empty($uploaded)){
                     $data['logo']=$uploaded['url'];
                 }elseif($this->uploadErrorCode>102){
@@ -85,7 +85,7 @@ class LinksController extends BaseController
                 $this->error($validate->getError());
             } else {
                 $delete_images=[];
-                $uploaded=$this->upload('links','upload_logo');
+                $uploaded=$this->_upload('links','upload_logo');
                 if(!empty($uploaded)){
                     $data['logo']=$uploaded['url'];
                     $delete_images[]=$data['delete_logo'];

@@ -205,7 +205,7 @@ class ProductController extends BaseController
                 $this->error($validate->getError());
             } else {
                 $delete_images=[];
-                $uploaded = $this->upload('product', 'upload_image');
+                $uploaded = $this->_upload('product', 'upload_image');
                 if (!empty($uploaded)) {
                     $data['image'] = $uploaded['url'];
                     $delete_images[]=$data['delete_image'];
@@ -292,7 +292,7 @@ class ProductController extends BaseController
                 $this->error($validate->getError());
             }else{
                 $delete_images=[];
-                $uploaded=$this->upload('product','upload_image');
+                $uploaded=$this->_upload('product','upload_image');
                 if(!empty($uploaded)){
                     $data['image']=$uploaded['url'];
                     $delete_images[]=$data['delete_image'];
@@ -487,7 +487,7 @@ class ProductController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             }else{
-                $uploaded=$this->upload('product','upload_image');
+                $uploaded=$this->_upload('product','upload_image');
                 if(!empty($uploaded)){
                     $data['image']=$uploaded['url'];
                 }
@@ -527,7 +527,7 @@ class ProductController extends BaseController
                 $model = Db::name("ProductImages");
                 $url=url('shop.product/imagelist',array('aid'=>$data['product_id']));
                 $delete_images=[];
-                $uploaded=$this->upload('product','upload_image');
+                $uploaded=$this->_upload('product','upload_image');
                 if(!empty($uploaded)){
                     $data['image']=$uploaded['url'];
                     $delete_images[]=$data['delete_image'];

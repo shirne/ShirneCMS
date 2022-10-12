@@ -76,7 +76,7 @@ class WechatController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
-                $uploads=$this->batchUpload('wechat',['logo','qrcode','shareimg','cert_path','key_path']);
+                $uploads=$this->_batchUpload('wechat',['logo','qrcode','shareimg','cert_path','key_path']);
                 if($uploads){
                     $data=array_merge($data,$uploads);
                 }
@@ -131,7 +131,7 @@ class WechatController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
-                $uploads=$this->batchUpload('wechat',['logo','qrcode','shareimg','cert_path','key_path']);
+                $uploads=$this->_batchUpload('wechat',['logo','qrcode','shareimg','cert_path','key_path']);
                 if($uploads){
                     $data=array_merge($data,$uploads);
                 }
