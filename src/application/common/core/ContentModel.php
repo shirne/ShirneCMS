@@ -122,23 +122,22 @@ class ContentModel extends BaseModel
     }
     
     /**
-     * 重写,标签列表之后的数据处理
+     * 重写,标签列表之后的数据处理 必须调用 appendTagData
      * @param $item array|Paginator
      * @param $attrs array
      * @return mixed
      */
     protected function afterTagList($lists,$attrs){
-        return $lists;
+        return $this->appendTagData($lists,[]);
     }
 
     protected function appendTagData($lists, $key, $vals=[], $idKey='id')
     {
         $datas = [];
         if(is_array($key)){
-            if(empty($key)){
-                return $lists;
+            if(!empty($key)){
+                $datas=$key;
             }
-            $datas=$key;
             if(is_string($vals) && !empty($vals)){
                 $idKey=$vals;
             }
