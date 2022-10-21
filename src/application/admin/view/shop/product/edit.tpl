@@ -244,11 +244,11 @@
                                 <div class="input-group input-group-sm">
                                     <select name="max_buy_cycle" class="form-control">
                                         <option value="">总计</option>
-                                        <option value="day">每天</option>
-                                        <option value="week">每周</option>
-                                        <option value="month">每月</option>
-                                        <option value="season">每季</option>
-                                        <option value="year">每年</option>
+                                        <option value="day" {$product['max_buy_cycle']=='day'?'selected':''}>每天</option>
+                                        <option value="week" {$product['max_buy_cycle']=='week'?'selected':''}>每周</option>
+                                        <option value="month" {$product['max_buy_cycle']=='month'?'selected':''}>每月</option>
+                                        <option value="season" {$product['max_buy_cycle']=='season'?'selected':''}>每季</option>
+                                        <option value="year" {$product['max_buy_cycle']=='year'?'selected':''}>每年</option>
                                     </select>
                                     <span class="input-group-middle"><span class="input-group-text">最多购买</span></span>
                                     <input type="text" name="max_buy" class="form-control" value="{$product['max_buy']}" placeholder="填写0不限制" />
