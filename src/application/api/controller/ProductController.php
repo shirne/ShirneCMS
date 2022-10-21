@@ -192,6 +192,37 @@ class ProductController extends BaseController
         ]);
     }
 
+    private function get_share_config(){
+        $config = [];
+        $sysconfig=getSettings(false,true);
+        $shareConfig=$sysconfig['share'];
+        if(empty($shareConfig) || empty($shareConfig['share_background'])){
+            return false;
+        }
+
+        $config['background']='.'.$shareConfig['share_background'];
+        $config['data']['avatar']=$shareConfig['share_avatar'];
+        $config['data']['avatar']['type']='image';
+        $config['data']['qrcode']=$shareConfig['share_qrcode'];
+        $config['data']['qrcode']['type']='image';
+        
+        $config['data']['image']=$shareConfig['share_image'];
+        $config['data']['image']['type']='image';
+
+        if($shareConfig['share_bgset'] == 1){
+            $config['data']['bg']=['type'=>'background'];
+        }
+        $config['data']['title']=$shareConfig['share_title'];
+        $config['data']['vice_title']=$shareConfig['vice_title'];
+        $config['data']['price']=$shareConfig['share_price'];
+        $config['data']['nickname']=$shareConfig['share_nickname'];
+        if(!empty($shareConfig['share_qrlogo'])){
+            $config['data']['qrlogo']=$shareConfig['share_qrcode'];
+            $config['data']['qrlogo']['type']='image';
+            $config['data']['qrlogo']['value']='.'.$shareConfig['share_qrlogo'];
+        }
+        return $config;
+    }
     /**
      * 获取商品分享海报，支持web，公众号，小程序
      * @param mixed $id 
@@ -235,7 +266,7 @@ class ProductController extends BaseController
             $sharepath = './uploads/pshare/'.$id.'/share-'.$type.'.png';
         }
         $imgurl = media(ltrim($sharepath,'.'));
-        $config=config('share.');
+        $config=$this->get_share_config();
         if(empty($config) || empty($config['background'])){
             $this->error('请配置产品海报生成样式(config/share.php)');
         }

@@ -25,12 +25,25 @@ VALUES
 INSERT INTO `sa_setting` ( `key`,`title`,`type`,`group`,`sort`,`is_sys`, `value`, `description`,`data`)
 VALUES
   ( 'poster_background', '分享图背景', 'image', 'poster', '0', 1 , '', 'png格式，建议尺寸 1080px x 1920px', ''),
-  ( 'poster_bgset','二维码/头像遮掩', 'radio', 'poster', 0, 1, '1', '需要背景图对应二维码和头的位置设计为透明，可将周边裁为圆形或其它形状', '1:开启\r\n0:关闭'),
+  ( 'poster_bgset','二维码/头像遮掩', 'radio', 'poster', 0, 1, '0', '需要背景图对应二维码和头像的位置设计为透明，可将周边裁为圆形或其它形状', '1:开启\r\n0:关闭'),
   ( 'poster_avatar', '用户头像', 'json', 'poster', '0', 1 , '', '', ''),
   ( 'poster_nickname', '用户昵称', 'json', 'poster', '0', 1 , '', '', ''),
   ( 'poster_agentcode', '推荐码', 'json', 'poster', '0', 1 , '', '', ''),
   ( 'poster_qrcode', '二维码位置', 'json', 'poster', '0', 1 , '', '', ''),
   ( 'poster_qrlogo', '二维码LOGO', 'image', 'poster', '0', 1 , '', '', '');
+
+INSERT INTO `sa_setting` ( `key`,`title`,`type`,`group`,`sort`,`is_sys`, `value`, `description`,`data`)
+VALUES
+  ( 'share_background', '分享图背景', 'image', 'share', '0', 1 , '', 'png格式，建议尺寸 1080px x 1920px', ''),
+  ( 'share_bgset','二维码/头像遮掩', 'radio', 'share', 0, 1, '0', '需要背景图对应二维码和头像，产品图的位置设计为透明，可将周边裁为圆形或其它形状', '1:开启\r\n0:关闭'),
+  ( 'share_avatar', '用户头像', 'json', 'share', '0', 1 , '', '', ''),
+  ( 'share_nickname', '用户昵称', 'json', 'share', '0', 1 , '', '', ''),
+  ( 'share_qrcode', '二维码位置', 'json', 'share', '0', 1 , '', '', ''),
+  ( 'share_qrlogo', '二维码LOGO', 'image', 'share', '0', 1 , '', '', ''),
+  ( 'share_image', '产品图', 'json', 'share', '0', 1 , '', '', ''),
+  ( 'share_title', '产品名称', 'json', 'share', '0', 1 , '', '', ''),
+  ( 'share_vice_title', '产品规格', 'json', 'share', '0', 1 , '', '', ''),
+  ( 'share_price', '产品价格', 'json', 'share', '0', 1 , '', '', '');
 
 INSERT INTO `sa_setting` ( `key`,`title`,`type`,`group`,`sort`,`is_sys`, `value`, `description`,`data`)
 VALUES
