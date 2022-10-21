@@ -201,14 +201,13 @@ class ProductController extends BaseController
         }
 
         $config['background']='.'.$shareConfig['share_background'];
+        $config['data']['image']=$shareConfig['share_image'];
+        $config['data']['image']['type']='image';
         $config['data']['avatar']=$shareConfig['share_avatar'];
         $config['data']['avatar']['type']='image';
         $config['data']['qrcode']=$shareConfig['share_qrcode'];
         $config['data']['qrcode']['type']='image';
         
-        $config['data']['image']=$shareConfig['share_image'];
-        $config['data']['image']['type']='image';
-
         if($shareConfig['share_bgset'] == 1){
             $config['data']['bg']=['type'=>'background'];
         }
