@@ -191,16 +191,19 @@ class AuthController extends BaseController
         if(empty($username) || empty($password)){
             $this->error('请填写登录账号及密码',ERROR_LOGIN_FAILED);
         }
+        $respdata=[];
         $errcount = $this->accessSession['error_count'] ?? 0;
         if($errcount > 4){
             $this->error('登录尝试次数过多',ERROR_LOGIN_FAILED);
+        }
+        if($errcount > 2){
+            $respdata['need_verify']=1;
         }
         if(ValidateHelper::isMobile($username)){
             $member = MemberModel::where('mobile',$username)->where('mobile_bind',1)->find();
         }else{
             $member = MemberModel::where('username',$username)->find();
         }
-        $respdata=[];
         if(!empty($member) ){
             $merrorcount = intval(cache('login_error_'.$member['id']));
             if($merrorcount > 4){
@@ -235,8 +238,8 @@ class AuthController extends BaseController
                     }
                 } else {
                     user_log($member['id'], 'login', 0, '登录失败');
-                    $this->accessSession['need_verify'] = 1;
-                    $this->accessSession['error_count'] = $errcount + 1;
+                    
+                    
                     $respdata['need_verify']=1;
                     $merrorcount += 1;
                     cache('login_error_'.$member['id'],$merrorcount,['expire'=>60*60]);
@@ -246,6 +249,11 @@ class AuthController extends BaseController
             }
         }
 
+        $this->accessSession['error_count'] = $errcount + 1;
+        if(!empty($respdata['need_verify'])){
+            $this->accessSession['need_verify'] = 1;
+        }
+        
         $this->error('登录失败',ERROR_LOGIN_FAILED,$respdata);
     }
 
