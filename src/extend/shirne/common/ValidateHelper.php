@@ -28,7 +28,7 @@ class ValidateHelper{
         $businesslicense15 = substr($code,14,1);
         $ints = [];
         for($i=0; $i<14;$i++){
-            $ints[$i] = intval($businesslicensePrex14{$i});
+            $ints[$i] = intval($businesslicensePrex14[$i]);
         }
         $checkcode=self::getCheckCode($ints);
         if($checkcode == $businesslicense15){
@@ -80,9 +80,9 @@ class ValidateHelper{
         $codes[1] = substr($code, strlen($code) - 1, 1);
         $sum = 0;
         for ($i = 0; $i < 17; $i++) {
-            $sum += strpos($str, $codes[0]{$i}) * $ws[$i];
+            $sum += strpos($str, $codes[0][$i]) * $ws[$i];
         }
-        $c18 = $str{31 - ($sum % 31)};
+        $c18 = $str[31 - ($sum % 31)];
         
         if ($c18 != $codes[1]) {
             return false;
@@ -164,7 +164,7 @@ class ValidateHelper{
             $arr_ch = array('1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2');
             $sign = 0;
             for ($i = 0; $i < 17; $i++) {
-                $b = (int)$idcard{$i};
+                $b = (int)$idcard[$i];
                 $w = $arr_int[$i];
                 $sign += $b * $w;
             }
