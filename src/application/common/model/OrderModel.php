@@ -660,7 +660,6 @@ class OrderModel extends BaseOrderModel
                     }
                     
                     foreach ($specials as $special) {
-                        $amount = 0;
                         if ($special['type'] == 3) {
                             $amount += ($special['amounts'][$i] ?: 0) * $special['count'];
                         } elseif ($special['type'] == 4) {
