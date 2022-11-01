@@ -131,7 +131,7 @@ class CheckcodeService extends BaseService
                 return false;
             }
 
-            Db::name('Checkcode')->where('type',0)->where('sendto',$mobile)
+            Db::name('Checkcode')->where('id',$exist['id'])
                 ->update(['code'=>$newcode,'create_time'=>time()]);
         }
 
