@@ -15,7 +15,7 @@ class AwardLogModel extends BaseModel
     /**
      * 记录奖励
      * @param $uids int|array
-     * @param $award
+     * @param $award 单位 元
      * @param $type
      * @param $remark
      * @param array|int $order

@@ -17,6 +17,7 @@ class BaseController extends Controller
 {
     protected $token;
     protected $isLogin=false;
+    protected $tokenData;
     protected $user;
     protected $input=array();
     protected $config=array();
@@ -117,6 +118,7 @@ class BaseController extends Controller
     protected function checkLogin(){
         if($this->request->isLogin){
             $this->token = $this->request->token;
+            $this->tokenData = $this->request->tokenData;
             $this->isLogin = $this->request->isLogin;
             $this->user = $this->request->user;
         }elseif($this->request->auth_error){

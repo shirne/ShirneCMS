@@ -21,6 +21,15 @@ define('PRO_TYPE_NORMAL',1);
 define('PRO_TYPE_UPGRADE',2);
 define('PRO_TYPE_BIND',4);
 
+
+define('ORDER_STATUS_REFUND',-2);
+define('ORDER_STATUS_CANCEL',-1);
+define('ORDER_STATUS_UNPAIED',0);
+define('ORDER_STATUS_PAIED',1);
+define('ORDER_STATUS_SHIPED',2);
+define('ORDER_STATUS_RECEIVED',3);
+define('ORDER_STATUS_FINISH',4);
+
 function force_json_decode($string){
     if(is_array($string))return $string;
     if(empty($string))return [];
@@ -112,6 +121,11 @@ function getLogTypes($withall=true, $filter = null){
         'system'=>lang('System Opt.'),
         'consume'=>lang('Consume'),
         'recharge'=>lang('Recharge'),
+        'commission'=>lang('Commission'),
+        'refund'=>lang('Refund'),
+        'transout'=>lang('Transfer out'),
+        'transin'=>lang('Transfer in'),
+        'consume_send'=>lang('Consume Send'),
     ];
     if(!$withall)unset($fields['all']);
     if($filter !== null){
@@ -525,6 +539,7 @@ function masktext($text, $prelen=3,$suflen=4,$midmax=4){
 }
 
 function maskphone($phone){
+    if(empty($phone))return $phone;
     $l=strlen($phone);
     $masklen=min($l-7,4);
     return substr($phone,0,3).str_repeat('*',$masklen).substr($phone,$l-4);

@@ -2,10 +2,13 @@
 
 namespace app\task\controller;
 
+use app\common\model\ArticleModel;
+use app\common\model\GoodsModel;
 use app\common\model\MemberModel;
 use app\common\model\OrderModel;
 use app\common\model\PayOrderModel;
 use app\common\model\PostageModel;
+use app\common\model\ProductModel;
 use shirne\common\Image;
 use think\Db;
 use think\facade\Log;
@@ -37,6 +40,19 @@ class TestController
     }
     
     public function model(){
+        var_export(
+            ProductModel::getInstance()->tagList(['ids'=>[10]])
+        );
+
+        var_export(
+            ArticleModel::getInstance()->tagList([])
+        );
+
+        var_export(
+            GoodsModel::getInstance()->tagList([])
+        );
+        
+        exit;
         MemberModel::where('referer',1)->update(['froze_credit'=>10]);
         MemberModel::create([
             'username'=>'test01',

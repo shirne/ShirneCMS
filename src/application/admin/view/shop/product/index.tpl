@@ -15,6 +15,7 @@
 					<a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="publish">发布</a>
 					<a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="cancel">撤销</a>
 					<a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="setcate">设置分类</a>
+					<a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="setarea">设置区域</a>
 					<a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="delete">删除</a>
 				</div>
 				<a href="{:url('shop.product/add')}" class="btn btn-outline-primary btn-sm mr-2"><i class="ion-md-add"></i> 添加商品</a>
@@ -69,10 +70,14 @@
 						</figure>
 					</td>
 					<td>
-						<if condition="$v['type'] GT 1"><span class="badge badge-warning">{$types[$v['type']]}</span></if>
-						<a href="{:url('index/product/view',['id'=>$v['id']])}" target="_blank">{$v.title}</a>
+						<div>
+							<if condition="$v['type'] GT 1"><span class="badge badge-warning">{$types[$v['type']]}</span></if>
+							<a href="{:url('index/product/view',['id'=>$v['id']])}" target="_blank">{$v.title}</a>
+						</div>
 						<if condition="!empty($v['unit'])"><span class="badge badge-info">{$v.unit}</span></if>
-						<span class="text-muted">销量: {$v.sale}</span>
+						<div>
+							<span class="text-muted">销量: {$v.sale}</span>
+						</div>
 					</td>
 					<td>
 						<foreach name="v['skus']" item="sku">
@@ -117,6 +122,7 @@
 </div>
 </block>
 <block name="script">
+	<script type="text/javascript" src="__STATIC__/js/location.min.js"></script>
 	<script type="text/html" id="qrdialog-tpl">
 		<form type="post" target="_blank" action="{:url('qrcode')}" >
 			<input type="hidden" name="id" />
@@ -146,6 +152,7 @@
 		</form>
 	</script>
 	<script type="text/javascript">
+		var locobj = new Location();
 		(function(w){
 			w.actionPublish=function(ids){
 				dialog.confirm('确定将选中产品发布到前台？',function() {
@@ -205,14 +212,55 @@
                     });
                 },'product');
 			};
+			w.actionSetarea=function(ids){
+				new Dialog({
+					backdrop:'static',
+					keyboard: false,
+					onshown:function(body){
+						body.jChinaArea({
+							aspnet: true,
+							s1:"",
+							s2:"",
+							s3:"",
+							onEmpty:function(sel){
+								sel.prepend('<option value="">全部</option>');
+							}
+						});
+						var firstInput = body.find('select').eq(0);
+						firstInput.focus()
+					},
+					onsure:function(body){
+						var inputs=body.find('input[type=hidden]'),vals=[];
+						inputs.each(function(i, item){
+							vals.push($(item).val())
+						});
+						$.ajax({
+							url:"{:url('shop.product/set_area')}",
+							type:'POST',
+							data:{
+								'areas':vals,
+								'ids':ids.join(',')
+							},
+							dataType:'JSON',
+							success:function(json){
+								if(json.code==1){
+									dialog.alert(json.msg,function() {
+										location.reload();
+									});
+								}else{
+									dialog.warning(json.msg);
+								}
+							}
+						});
+						
+					},
+				}).show('<div><div class="mt-1"><input type="hidden"/><select name="province" class="form-control"></select></div><div class="mt-1"><input type="hidden"/><select name="province" class="form-control"></select></div><div class="mt-1"><input type="hidden"/><select name="province" class="form-control"></select></div></div>','请选择地区');
+			};
             w.actionDelete=function(ids){
                 dialog.confirm('确定删除选中的产品？',function() {
                     $.ajax({
-                        url:"{:url('shop.product/delete')}",
-                        type:'POST',
-						data:{
-							'id':ids.join(',')
-						},
+                        url:"{:url('shop.product/delete',['id'=>'__id__'])}".replace('__id__',ids.join(',')),
+                        type:'GET',
                         dataType:'JSON',
                         success:function(json){
                             if(json.code==1){

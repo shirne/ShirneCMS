@@ -31,6 +31,7 @@
                 <th>名称</th>
                 <th>别名</th>
                 <th>排序</th>
+                <th>状态</th>
                 <th width="160">&nbsp;</th>
             </tr>
         </thead>
@@ -43,6 +44,21 @@
                 <td>{$v.html|raw} {$v.title}&nbsp;<span class="badge badge-info">{$v.short}</span></td>
                 <td>{$v.name}</td>
                 <td>{$v.sort}</td>
+                <td data-url="{:url('status')}" data-id="{$v.id}">
+                    <if condition="$v['is_lock']">
+                        <if condition="$v['status'] EQ 1">
+                            <span class="badge badge-success" >已启用</span>
+                            <else/>
+                            <span class="badge " >已隐藏</span>
+                        </if>
+                        <else/>
+                        <if condition="$v['status'] EQ 1">
+                            <span class="chgstatus" data-status="0" title="点击隐藏">已启用</span>
+                            <else/>
+                            <span class="chgstatus off" data-status="1" title="点击启用">已隐藏</span>
+                        </if>
+                    </if>
+                </td>
                 <td class="operations">
                     <a class="btn btn-outline-primary" title="发布商品" href="{:url('shop.product/add',array('cid'=>$v['id']))}"><i class="ion-md-paper-plane"></i> </a>
                     <a class="btn btn-outline-primary" title="添加子分类" href="{:url('shop.category/add',array('pid'=>$v['id']))}"><i class="ion-md-add"></i> </a>

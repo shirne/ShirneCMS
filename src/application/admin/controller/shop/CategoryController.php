@@ -22,7 +22,7 @@ class CategoryController extends BaseController
      * @return mixed
      */
     public function index(){
-        $this->assign('model',ProductCategoryFacade::getCategories(true));
+        $this->assign('model',ProductCategoryFacade::getAllCategories());
         return $this->fetch();
     }
 
@@ -136,7 +136,6 @@ class CategoryController extends BaseController
     }
 
     public function batch($pid=0){
-        $pid = intval($pid);
         $content = $this->request->post('content');
         $rows = explode("\n",$content);
         $datas = [];
@@ -196,6 +195,15 @@ class CategoryController extends BaseController
         $this->error('未提交数据');
     }
 
+    public function status($id,$status=0){
+        $data['status'] = $status==1?1:0;
+        $updated = Db::name('ProductCategory')->whereIn('id',idArr($id))->where('is_lock',0)->update($data);
+        if(!$updated){
+            $this->error('更新失败');
+        }
+        $this->success('更新成功');
+    }
+
     public function lock($id){
         $updated = Db::name('ProductCategory')->whereIn('id',idArr($id))->where('is_lock',0)->update(['is_lock'=>1]);
         if(!$updated){
@@ -211,7 +219,6 @@ class CategoryController extends BaseController
         }
         $this->success('解锁成功');
     }
-
 
     /**
      * 删除

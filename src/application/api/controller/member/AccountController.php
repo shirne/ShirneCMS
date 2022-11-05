@@ -9,6 +9,7 @@ use app\common\model\MemberCashinModel;
 use app\common\model\MemberOauthModel;
 use app\common\validate\MemberCardValidate;
 use app\common\model\WechatModel;
+use app\common\validate\MemberAuthenValidate;
 use extcore\traits\Upload;
 use shirne\common\ValidateHelper;
 use think\Db;
@@ -21,6 +22,33 @@ use think\response\Json;
 class AccountController extends AuthedController
 {
     use Upload;
+
+    public function authen(){
+        $authen = Db::name('memberAuthen')->where('member_id',$this->user['id'])->find();
+        if($this->request->isPost()){
+            if($authen['status']>0){
+                $this->error('您的认证已通过');
+            }
+            $data=$this->request->only(['realname','id_no','image','image2']);
+            $validate=new MemberAuthenValidate();
+            if(!$validate->check($data)){
+                $this->error($validate->getError());
+            }
+            $data['update_time']=time();
+            $data['status']=-1;
+            if(empty($authen['id'])){
+                $data['member_id']=$this->user['id'];
+                $data['create_time']=time();
+                Db::name('memberAuthen')->insert($data);
+            }else{
+                Db::name('memberAuthen')->where('id',$authen['id'])->update($data);
+            }
+            $this->success('申请已提交');
+        }
+        return $this->response([
+            'authen'=>$authen,
+        ]);
+    }
     
     /**
      * 会员银行卡列表
@@ -375,7 +403,7 @@ class AccountController extends AuthedController
      */
     public function money_log($type='',$field=''){
         $model=Db::view('MemberMoneyLog mlog','*')
-            ->view('Member m',['username','level_id'],'m.id=mlog.from_member_id','LEFT')
+            ->view('Member m',['nickname','avatar','is_agent', 'level_id'],'m.id=mlog.from_member_id','LEFT')
             ->where('mlog.member_id',$this->user['id']);
         if(!empty($type) && $type!='all'){
             $model->where('mlog.type',$type);
@@ -385,8 +413,10 @@ class AccountController extends AuthedController
         }
         
         $logs = $model->order('mlog.id DESC')->paginate(10);
+        $types = getLogTypes(false);
         
         return $this->response([
+            'types' => $types,
             'logs'=>$logs->items(),
             'total'=>$logs->total(),
             'page'=>$logs->currentPage(),
@@ -394,6 +424,26 @@ class AccountController extends AuthedController
         ]);
     }
     
+    public function search_member($mobile){
+        $member = Db::name('member')->where('mobile',$mobile)->field(['nickname','id','mobile','avatar'])->find();
+        if(empty($member)){
+            $this->error('未搜索到会员');
+        }
+        return $this->response($member);
+    }
+
+    public function get_member(){
+        $ids = Db::name('memberMoneyLog')->where('member_id',$this->user['id'])->whereIn('type','transout')->column('from_member_id');
+        if(empty($ids)){
+            $this->error('未搜索到会员');
+        }
+        $members = Db::name('member')->whereIn('id',$ids )->field(['nickname','id','mobile','avatar'])->select();
+        if(empty($members)){
+            $this->error('未搜索到会员');
+        }
+        return $this->response($members);
+    }
+
     /**
      * 会员转账，可转出到其它会员，或多种余额间互转
      * @param string $action 转移类型
@@ -413,7 +463,7 @@ class AccountController extends AuthedController
         $data=$this->request->only('action,field,member_id,amount');
         $data['amount']=floatval($data['amount']);
         if($action=='transout'){
-            if(!in_array($data['field'],['money','credit','awards'])){
+            if(!in_array($data['field'],['money','credit','reward'])){
                 $this->error('转赠积分类型错误');
             }
             $tomember=Db::name('member')->where('id|username|mobile',$data['member_id'])->find();
@@ -424,16 +474,16 @@ class AccountController extends AuthedController
                 $this->error('转赠金额错误');
             }
             if($data['amount']*100>$this->user[$data['field']]){
-                $this->error('您的余额不足');
+                $this->error('您的'.lang('Balance').'不足');
             }
-            money_log($this->user['id'],-$data['amount']*100,'转赠给会员'.$tomember['username'],'transout',$tomember['id'],$data['field']);
-            money_log($tomember['id'],$data['amount']*100,'会员'.$this->user['username'].'转入','transin',$this->user['id'],'money');
+            money_log($this->user['id'],-$data['amount']*100,'转赠给会员'.$tomember['nickname'],'transout',$tomember['id'],$data['field']);
+            money_log($tomember['id'],$data['amount']*100,'会员'.$this->user['nickname'].'转入','transin',$this->user['id'],$data['field']);
             if($data['field']=='credit'){
                 $this->unfreeze($data['amount']);
             }
             $this->success('转赠成功');
         }elseif($action=='transmoney'){
-            if(!in_array($data['field'],['credit','awards'])){
+            if(!in_array($data['field'],['credit','reward'])){
                 $this->error('转入积分类型错误');
             }
             if($data['amount']<=0){

@@ -14,7 +14,8 @@
                 <div ><span class="input-group-text">付款方式</span> </div>
                 <div class="col w-50 text-center" >
                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                    <label class="btn btn-outline-primary active"> <input type="radio" name="paytype" value="balance" autocomplete="off" checked> 从余额扣款</label>
+                    <label class="btn btn-outline-primary"> <input type="radio" name="paytype" value="balance" autocomplete="off" checked> 从{:lang('Balance')}扣款</label>
+                    <label class="btn btn-outline-primary active"> <input type="radio" name="paytype" value="reward" autocomplete="off" checked> 从{:lang('Reward')}扣款</label>
                     <label class="btn btn-outline-primary"> <input type="radio" name="paytype" value="offline" autocomplete="off" > 线下已支付</label>
                     </div>
                 </div>

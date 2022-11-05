@@ -50,6 +50,14 @@ class AddressController extends AuthedController
         if(!$validate->check($data)){
             $this->error($validate->getError(),0);
         }else{
+            // 如果会员地区未设置，则同步到会员资料中
+            if(empty($this->user['province'])){
+                Db::name('member')->where('id',$this->user['id'])->update([
+                    'province'=>$data['province'],
+                    'city'=>$data['city'],
+                    'county'=>$data['area'],
+                ]);
+            }
             if($id>0){
                 $result=Db::name('MemberAddress')->where('member_id',$this->user['id'])
                     ->where('address_id',$id)->update($data);

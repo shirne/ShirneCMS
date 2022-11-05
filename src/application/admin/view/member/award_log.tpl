@@ -44,6 +44,15 @@
                             </div>
                         </div>
                     </if>
+                    <if condition="!empty($orderid)">
+                        <div class="btn-group ml-3">
+                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">订单: {$order.order_no}<span class="caret"></span>
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="{:url('award_log',searchKey('orderid',0))}">不限订单</a>
+                            </div>
+                        </div>
+                    </if>
                     <div class="btn-group ml-3">
                         <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {$types[$type]} <span class="caret"></span>

@@ -153,7 +153,7 @@ class OrderController extends BaseController
         if($paytype == 'balance'){
             $debit = money_log($order['member_id'], -$order['payamount']*100, "积分订单支付", 'consume',0,'money');
             if(!$debit){
-                $this->error('用户余额不足');
+                $this->error('用户'.lang('Balance').'不足');
             }
         }else{
             $paytype = 'offline';

@@ -12,7 +12,9 @@ VALUES
   ( 'credit_pagetitle', '商城标题', 'text', 'credit', '0', 1 , '积分商城', '', ''),
   ( 'credit_keyword', '关键字', 'text', 'credit', '0', 1 , '', '积分商城', ''),
   ( 'credit_description', '积分商城简介', 'text', 'credit', '0', 1 , '', '', ''),
-  ( 'credit_rate', '下单赠送积分', 'text', 'credit', '0', 1 , '100', '', '');
+  ( 'credit_rate', '下单赠送积分', 'text', 'credit', '0', 1 , '100', '', ''),
+  ( 'credit_close', '关闭下单', 'radio', 'credit', '0',1, '1', '', '0:关闭\r\n1:开启'),
+  ( 'credit_close_desc', '关闭说明', 'text', 'credit', '0', 1 , '暂时不支持下单', '', '');
 
 
 DROP TABLE IF EXISTS `sa_goods_category`;
@@ -25,7 +27,6 @@ CREATE TABLE `sa_goods_category` (
   `icon` varchar(100) DEFAULT NULL COMMENT '图标',
   `image` varchar(100) DEFAULT NULL COMMENT '大图',
   `sort` int(11) DEFAULT NULL COMMENT '排序',
-  `status` tinyint(1) DEFAULT 1 COMMENT '状态 1为正常 0为关闭',
   `keywords` varchar(255) DEFAULT NULL COMMENT '分类关键词',
   `description` varchar(255) DEFAULT NULL COMMENT '分类描述',
   PRIMARY KEY (`id`)
@@ -88,7 +89,7 @@ CREATE TABLE `sa_credit_order` (
   `delete_time` INT NULL DEFAULT 0 COMMENT '删除状态',
   `remark` VARCHAR(250) NULL,
   `address_id` INT NULL,
-  `recive_name` VARCHAR(45) NULL,
+  `receive_name` VARCHAR(45) NULL,
   `mobile` VARCHAR(45) NULL,
   `province` VARCHAR(50) NULL,
   `city` VARCHAR(50) NULL,

@@ -61,8 +61,8 @@ class OrderController extends BaseController
         $lists=$model->where('order.delete_time',0)->order(Db::raw('if(order.status>-1,order.status,3) ASC,order.create_time DESC'))->paginate(15);
         if(!$lists->isEmpty()) {
             $orderids = array_column($lists->items(), 'order_id');
-            $prodata = Db::name('OrderProduct')->where('order_id', 'in', $orderids)->select();
-            $products=array_index($prodata,'order_id',true);
+            $prodata = Db::name('OrderProduct')->whereIn('order_id',  $orderids)->select();
+            $products = array_index($prodata,'order_id',true);
             $lists->each(function($item) use ($products){
                 if(isset($products[$item['order_id']])){
                     $item['products']=$products[$item['order_id']];
@@ -271,10 +271,11 @@ class OrderController extends BaseController
             $this->error('订单已支付');
         }
         $paytype=$this->request->post('paytype');
-        if($paytype == 'balance'){
-            $debit = money_log($order['member_id'], -$order['payamount']*100, "订单支付", 'consume',0,'money');
+        if($paytype == 'balance' || $paytype=='reward'){
+            $amount = ($order['payamount'] - $order['payedamount'])*100;
+            $debit = money_log($order['member_id'], -$amount, "订单支付", 'consume',0,$paytype=='balance'?'money':$paytype);
             if(!$debit){
-                $this->error('用户余额不足');
+                $this->error('用户'.lang(lcfirst($paytype)).'不足');
             }
         }else{
             $paytype = 'offline';

@@ -49,7 +49,7 @@
                         <td><input type="text" class="form-control" name="tpls[{$key}][template_id]" /></td>
                         <td><input type="text" class="form-control" name="tpls[{$key}][keywords]" readonly value="{$v['keywords']}" /></td>
                         <td class="operations">
-                            <a class="btn btn-outline-primary addbtn" href="{:url('add',['id'=>$v['title_id']])}" title="添加模板"><i class="ion-md-add"></i></a>
+                            <a class="btn btn-outline-primary addbtn" href="{:url('add',['id'=>$v['tid']])}" title="添加模板"><i class="ion-md-add"></i></a>
                         </td>
                     </tr>
                 </if>

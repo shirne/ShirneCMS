@@ -14,6 +14,7 @@ use EasyWeChat\Factory;
 use extcore\traits\Upload;
 use shirne\common\ValidateHelper;
 use think\Db;
+use think\facade\Log;
 use think\response\Json;
 
 /**
@@ -34,6 +35,13 @@ class MemberController extends AuthedController
         if(!empty($agent)){
             MemberModel::autoBindAgent($profile,$agent);
         }
+
+        // 锁客模式或者已经是代理
+        if(empty($profile['agentcode']) && ($this->config['agent_lock'] || $profile['is_agent']>0)){
+            $profile['agentcode']=MemberModel::generAgentCode();
+            Db::name('member')->where('id',$this->user['id'])->update(['agentcode'=>$profile['agentcode']]);
+            Log::info("为用户 {$profile['id']} 自动生成推荐码 {$profile['agentcode']}");
+        }
         
         $levels = getMemberLevels();
         $profile['level']=$levels[$profile['level_id']] ?? new \stdClass();
@@ -46,11 +54,13 @@ class MemberController extends AuthedController
             ->find();
         }
         $profile['parent']=empty($parent)?new \stdClass():$parent;
+
+        $profile['redpack']=0;
         return $this->response($profile);
     }
 
     public function update_profile(){
-        $data=$this->request->only(['username','nickname','realname','email','mobile','gender','birth','qq','wechat','alipay','province','city','county','address'],'put');
+        $data=$this->request->only(['username','nickname','realname','email','mobile','avatar','gender','birth','qq','wechat','alipay','province','city','county','address'],'put');
         if(isset($data['username'])){
             if(strpos($this->user['username'],'#')===false){
                 $this->error('登录名不可修改');
@@ -300,10 +310,62 @@ class MemberController extends AuthedController
      * @throws GlobalException 
      */
     public function uploadImage(){
+        $this->uploadConfig['check_exts']=false;
         $uploaded=$this->_upload('member','file_upload');
+        if(empty($uploaded)){
+            $this->error($this->uploadError);
+        }
 
         return $this->response([
             'url'=>$uploaded['url']
+        ]);
+    }
+
+    public function uploadBase64(){
+        $data = $this->request->post('data');
+        
+        //data:image/png;base64,iVBORw0KGgoAAAA
+        $start = strpos($data,':');
+        $coma = strpos($data,';');
+        $end = strpos($data,',');
+        if($start != 4 || $coma < 4 || $end < $coma){
+            $this->error('上传数据错误');
+        }
+        $type = substr($data, $start+1, $coma-$start-1);
+        $encode=substr($data, $coma+1, $end-$coma-1);
+        $types = explode('/',$type);
+        
+        if($encode != 'base64' || $types[0]!='image' || !in_array($types[1],['jpg','jpeg','png','webp','gif'])){
+            $this->error('数据格式错误');
+        }
+        $path = './uploads/member/store-cache/';
+        if(!is_dir($path)){
+            @mkdir($path,0777,true);
+        }
+        $file = time().'.'.$types[1];
+
+        $content=base64_decode(substr($data,$end+1));
+        if(empty($content)){
+            $this->error('数据错误');
+        }
+        
+        $writed = file_put_contents($path.$file,$content);
+        if($writed === false){
+            $this->error('文件保存失败');
+        }
+
+        $info = getimagesize($path.$file);
+        if($info === false){
+            unlink($path.$file);
+            Log::info($info);
+            $this->error('文件数据损坏');
+        }
+
+        return $this->response([
+            'size'=>strlen($content),
+            'width'=>$info[0],
+            'height'=>$info[1],
+            'url'=>ltrim($path.$file,'.'),
         ]);
     }
 

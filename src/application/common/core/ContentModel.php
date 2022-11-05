@@ -144,7 +144,7 @@ class ContentModel extends BaseModel
         }else{
             $datas[$key]=$vals;
         }
-
+        
         if($lists instanceof Paginator){
             $lists->each(function ($item)use($datas,$idKey){
                 foreach($datas as $key=>$values){
@@ -216,13 +216,7 @@ class ContentModel extends BaseModel
                 $model->whereLike($this->getSearchFields(),"%{$attrs['keyword']}%");
             }
         }
-        if(!empty($attrs['brand'])){
-            if(strpos($attrs['brand'],',')>0){
-                $model->whereIn($this->model . ".brand_id", idArr($attrs['brand']));
-            }else {
-                $model->where($this->model . ".brand_id", intval($attrs['brand']));
-            }
-        }
+        
         if(!empty($attrs['type'])){
             $typeint=0;
             $types=array_filter(array_map('trim',explode(',',$attrs['type'])));
@@ -237,6 +231,7 @@ class ContentModel extends BaseModel
         if(!empty($attrs['image'])){
             $model->where($this->model.".image","<>","");
         }
+        $this->onFilter($model,$attrs);
 
         if(empty($attrs['order'])){
             $attrs['order']=$this->model.'.'.$this->defaultOrder;
@@ -281,6 +276,10 @@ class ContentModel extends BaseModel
         if(empty($list))return $list;
         
         return $this->afterTagList($this->analysisType($list),$attrs);
+    }
+
+    protected function onFilter($model, $attrs){
+
     }
 
     public function tagRelation($attrs, $filter=false)

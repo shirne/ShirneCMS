@@ -49,6 +49,22 @@
                         </select>
                     </div>
                 </div>
+                <if condition="$needarea">
+                <div class="form-group areabox">
+                    <input type="hidden" name="province" />
+                    <input type="hidden" name="city" />
+                    <input type="hidden" name="county" />
+                    <div class="input-group">
+                        <div class="input-group-prepend"><span class="input-group-text">发布地</span> </div>
+                        <select name="province_id" id="province-id" class="form-control">
+                        </select>
+                        <select name="city_id" id="city-id" class="form-control">
+                        </select>
+                        <select name="county_id" id="county-id" class="form-control">
+                        </select>
+                    </div>
+                </div>
+                </if>
                 <div class="form-group">
                     <div class="input-group">
                         <div class="input-group-prepend">
@@ -243,7 +259,7 @@
                             <div class="form-group mb-1 col">
                                 <div class="input-group input-group-sm">
                                     <select name="max_buy_cycle" class="form-control">
-                                        <option value="">总计</option>
+                                        <option value="" >总计</option>
                                         <option value="day" {$product['max_buy_cycle']=='day'?'selected':''}>每天</option>
                                         <option value="week" {$product['max_buy_cycle']=='week'?'selected':''}>每周</option>
                                         <option value="month" {$product['max_buy_cycle']=='month'?'selected':''}>每月</option>
@@ -376,11 +392,11 @@
 </div>
     </block>
 <block name="script">
-<!-- 配置文件 -->
 <script type="text/javascript" src="__STATIC__/ueditor/ueditor.config.js"></script>
-<!-- 编辑器源码文件 -->
 <script type="text/javascript" src="__STATIC__/ueditor/ueditor.all.min.js"></script>
-<!-- 实例化编辑器 -->
+<if condition="$needarea">
+<script type="text/javascript" src="__STATIC__/js/location.min.js"></script>
+</if>
 <script type="text/javascript">
     var ue = UE.getEditor('product-content',{
         toolbars: Toolbars.normal,
@@ -388,6 +404,19 @@
         zIndex:100
     });
     jQuery(function ($) {
+        if(Location && $(".areabox").length>0){
+            var locobj = new Location()
+            $(".areabox").jChinaArea({
+                aspnet: true,
+                s1:"{$product.province}",
+                s2:"{$product.city}",
+                s3:"{$product.county}",
+                onEmpty:function(sel){
+                    sel.prepend('<option value="">全部</option>');
+                }
+            });
+        }
+
         var usespecs=[];
         var rows=null;
         var isready=false;

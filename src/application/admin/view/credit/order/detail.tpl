@@ -63,7 +63,7 @@
                                 <if condition="$model['pay_type'] EQ 'offline'">
                                     <span class="badge badge-warning">线下支付</span>
                                     <elseif condition="$model['pay_type'] EQ 'balance'" />
-                                    <span class="badge badge-primary">余额支付</span>
+                                    <span class="badge badge-primary">{:lang('Balance')}支付</span>
                                     <elseif condition="$model['pay_type'] EQ 'wechat'" />
                                     <span class="badge badge-success">微信支付</span>
                                     <elseif condition="$model['pay_type'] EQ 'alipay'" />

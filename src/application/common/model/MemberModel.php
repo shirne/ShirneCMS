@@ -1,4 +1,5 @@
 <?php
+
 namespace app\common\model;
 
 use app\common\core\BaseModel;
@@ -14,15 +15,15 @@ use think\facade\Log;
 class MemberModel extends BaseModel
 {
 
-    protected $insert = ['is_agent' => 0,'type','status'=>1,'referer'];
+    protected $insert = ['is_agent' => 0, 'type', 'status' => 1, 'referer'];
     protected $autoWriteTimestamp = true;
 
-    protected function setTypeAttr($value=0)
+    protected function setTypeAttr($value = 0)
     {
         return intval($value);
     }
 
-    protected function setRefererAttr($value=0)
+    protected function setRefererAttr($value = 0)
     {
         return intval($value);
     }
@@ -31,10 +32,10 @@ class MemberModel extends BaseModel
     {
         parent::init();
         self::afterUpdate(function ($model) {
-            Log::info(var_export($model,true));
-            $users=$model->where($model->getWhere())->select();
+            //Log::info(var_export($model, true));
+            $users = $model->where($model->getWhere())->select();
             //代理会员组
-            if(!empty($users)) {
+            if (!empty($users)) {
                 $levels = getMemberLevels();
                 foreach ($users as $user) {
                     //代理会员组
@@ -46,14 +47,14 @@ class MemberModel extends BaseModel
                 }
             }
         });
-        self::afterInsert(function ( $model) {
-            Log::info(var_export($model,true));
+        self::afterInsert(function ($model) {
+            //Log::info(var_export($model, true));
             if ($model['referer']) {
-                Db::name('member')->where('id',$model->referer)->setInc('recom_total',1);
+                Db::name('member')->where('id', $model->referer)->setInc('recom_total', 1);
             }
             if ($model['level_id']) {
                 $levels = getMemberLevels();
-                if (!$model['is_agent'] ) {
+                if (!$model['is_agent']) {
                     if (!empty($levels[$model['level_id']]) && $levels[$model['level_id']]['is_agent']) {
                         self::checkAgent($model);
                     }
@@ -62,23 +63,25 @@ class MemberModel extends BaseModel
         });
     }
 
-    public function setReferer($referer){
-        if(!$this['id']){
+    // 后台手动设置推荐人
+    public function setReferer($referer)
+    {
+        if (!$this['id']) {
             $this->setError('会员未初始化');
             return false;
         }
-        if(empty($referer)){
-            $this->setError('推荐人不存在');
+        if (empty($referer)) {
+            $this->setError('推荐码错误');
             return false;
         }
-        if(strcmp($this['id'], $referer)===0 || strcmp($this['agentcode'],$referer)===0){
+        if (strcmp($this['id'], $referer) === 0 || strcmp($this['agentcode'], $referer) === 0) {
             $this->setError('不能将会员设为自己的推荐人');
             return false;
         }
-        if(strcmp($this['referer'], $referer) === 0){
+        if (strcmp($this['referer'], $referer) === 0) {
             return true;
         }
-        $rmember=Db::name('member')->where('id', (int)$referer)->whereOr('agentcode',$referer)->find();
+        $rmember = Db::name('member')->where('id', (int)$referer)->whereOr('agentcode',$referer)->find();
         if (empty($rmember) ) {
             $this->setError('设置的推荐人不存在');
             return false;
@@ -87,28 +90,28 @@ class MemberModel extends BaseModel
             $this->setError('设置的推荐人不是代理');
             return false;
         }
-        if(strcmp($this['referer'], $rmember['id'])===0){
+        if (strcmp($this['referer'], $rmember['id']) === 0) {
             return true;
         }
-        
+
         $parents = static::getParents($rmember['id'], 0);
-        if(in_array($this['id'], $parents)){
+        if (in_array($this['id'], $parents)) {
             $this->setError('推荐人关系冲突');
             return false;
         }
-        if($this['referer']>0){
-            Db::name('member')->where('id',$this['referer'])->setDec('recom_total',1);
-            if($this['is_agent']){
-                Db::name('member')->where('id',$this['referer'])->setDec('recom_count',1);
-                $mparents=static::getParents($this['referer'],0);
+        if ($this['referer'] > 0) {
+            Db::name('member')->where('id', $this['referer'])->setDec('recom_total', 1);
+            if ($this['is_agent']) {
+                Db::name('member')->where('id', $this['referer'])->setDec('recom_count', 1);
+                $mparents = static::getParents($this['referer'], 0);
                 $mparents = array_unshift($mparents, $this['referer']);
-                Db::name('member')->whereIn('id',$mparents)->setDec('team_count',1);
+                Db::name('member')->whereIn('id', $mparents)->setDec('team_count', 1);
             }
         }
-        $this->save(['referer'=>$rmember['id']]);
+        $this->save(['referer' => $rmember['id']]);
 
-        Db::name('member')->where('id',$this['referer'])->setInc('recom_total',1);
-        if($this['is_agent']){
+        Db::name('member')->where('id', $this['referer'])->setInc('recom_total', 1);
+        if ($this['is_agent']) {
             static::updateRecommend($this['referer']);
         }
 
@@ -117,28 +120,30 @@ class MemberModel extends BaseModel
         return true;
     }
 
-    public function clrReferer(){
-        if(!$this['id']){
+    public function clrReferer()
+    {
+        if (!$this['id']) {
             $this->setError('会员未初始化');
             return false;
         }
         $referer = $this['referer'];
-        if($referer){
-            $this->save(['referer'=>0]);
-            Db::name('member')->where('id',$referer)->setDec('recom_total',1);
-            if($this['is_agent']){
-                Db::name('member')->where('id',$referer)->setDec('recom_count',1);
-                $parents=static::getParents($referer,0);
-                array_unshift($parents,$referer);
-                Db::name('member')->whereIn('id',$parents)->setDec('team_count',1);
+        if ($referer) {
+            $this->save(['referer' => 0]);
+            Db::name('member')->where('id', $referer)->setDec('recom_total', 1);
+            if ($this['is_agent']) {
+                Db::name('member')->where('id', $referer)->setDec('recom_count', 1);
+                $parents = static::getParents($referer, 0);
+                array_unshift($parents, $referer);
+                Db::name('member')->whereIn('id', $parents)->setDec('team_count', 1);
             }
         }
         return true;
     }
-    
-    public static function checkAgent($member){
-        if($member['is_agent'])return;
-        if(self::setAgent($member['id'])){
+
+    public static function checkAgent($member)
+    {
+        if ($member['is_agent'] > 0) return;
+        if (self::setAgent($member['id'])) {
             self::updateRecommend($member['referer']);
         }
     }
@@ -147,40 +152,51 @@ class MemberModel extends BaseModel
      * 更新代理处理
      * @param $referer
      */
-    public static function updateRecommend($referer){
-        if($referer){
-            Db::name('member')->where('id',$referer)->setInc('recom_count',1);
-            $parents=getMemberParents($referer,0);
-            array_unshift($parents,$referer);
-            Db::name('member')->whereIn('id',$parents)->setInc('team_count',1);
+    public static function updateRecommend($referer)
+    {
+        if ($referer) {
+            Db::name('member')->where('id', $referer)->setInc('recom_count', 1);
+            $parents = getMemberParents($referer, 0);
+            array_unshift($parents, $referer);
+            Db::name('member')->whereIn('id', $parents)->setInc('team_count', 1);
 
             //代理等级自动升级
             self::autoCheckUpgrade($parents);
-
         }
     }
-    
-    private static function autoCheckUpgrade($parents){
+
+    private static function autoCheckUpgrade($parents)
+    {
         $agents = MemberAgentModel::getCacheData();
-        $needUpdates=Db::name('member')->whereIn('id',$parents)
+        $needUpdates = Db::name('member')->whereIn('id', $parents)
             ->field('id,level_id,is_agent,team_count,recom_count,recom_total,recom_performance,total_performance,agentcode,referer')
             ->select();
-        foreach($needUpdates as $parent){
-            if(!$parent['is_agent']){
+        foreach ($needUpdates as $parent) {
+            if ($parent['is_agent'] < 1) {
                 continue;
             }
-            foreach($agents as $agent){
-                if($parent['is_agent'] < $agent['id'] &&
-                    $parent['team_count']>=$agent['team_count'] &&
-                    $parent['recom_count']>=$agent['recom_count'] &&
-                    $parent['recom_performance']>=$agent['recom_performance'] &&
-                    $parent['total_performance']>=$agent['total_performance']){
-                    
-                    self::setAgent($parent,$agent['id'],'auto');
+            foreach ($agents as $agent) {
+                if (
+                    $parent['is_agent'] < $agent['id'] &&
+                    $parent['team_count'] >= $agent['team_count'] &&
+                    $parent['recom_count'] >= $agent['recom_count'] &&
+                    $parent['recom_performance'] >= $agent['recom_performance'] &&
+                    $parent['total_performance'] >= $agent['total_performance']
+                ) {
+
+                    self::setAgent($parent, $agent['id'], 'auto');
                     break;
                 }
             }
         }
+    }
+
+    public static function generAgentCode(){
+        $agentcode = random_str(10, 'string', 1);
+        while (Db::name('member')->where('agentcode', $agentcode)->count() > 0) {
+            $agentcode = random_str(10, 'string', 1);
+        }
+        return $agentcode;
     }
 
     /**
@@ -188,40 +204,38 @@ class MemberModel extends BaseModel
      * @param $member_id
      * @return int|string
      */
-    public static function setAgent($member_id, $agent_id = 1, $type='system', $remark = ''){
+    public static function setAgent($member_id, $agent_id = 1, $type = 'system', $remark = '')
+    {
         $agents = MemberAgentModel::getCacheData();
-        $agent = isset($agents[$agent_id])?$agents[$agent_id]:[];
-        $data=array();
-        if(is_array($member_id)){
+        $agent = isset($agents[$agent_id]) ? $agents[$agent_id] : [];
+        $data = array();
+        if (is_array($member_id)) {
             $member = $member_id;
             $member_id = $member['id'];
-        }else{
-            $member = Db::name('member')->where('id',$member_id)->find();
-            if(empty($member))return false;
+        } else {
+            $member = Db::name('member')->where('id', $member_id)->find();
+            if (empty($member)) return false;
         }
-        if(empty($member['agentcode'])){
-            $data['agentcode']=random_str(8,'string',1);
-            while(Db::name('member')->where('agentcode',$data['agentcode'])->count()>0){
-                $data['agentcode']=random_str(8,'string',1);
-            }
-        }elseif($member['is_agent'] == $agent_id){
+        if (empty($member['agentcode'])) {
+            $data['agentcode'] = static::generAgentCode();
+        } elseif ($member['is_agent'] == $agent_id) {
             return true;
         }
-        $data['is_agent']=$agent_id;
-        $data['update_time']=time();
-        $result = Db::name('member')->where('id',$member_id)->update($data);
-        if($result){
+        $data['is_agent'] = $agent_id;
+        $data['update_time'] = time();
+        $result = Db::name('member')->where('id', $member_id)->update($data);
+        if ($result) {
             Db::name('memberAgentLog')->insert([
-                'member_id'=>$member_id,
-                'agent_id'=>$agent_id,
-                'type'=>$type,
-                'remark'=>$remark,
-                'create_time'=>time(),
+                'member_id' => $member_id,
+                'agent_id' => $agent_id,
+                'type' => $type,
+                'remark' => $remark,
+                'create_time' => time(),
             ]);
 
-            if($member['is_agent'] < 1){
+            if ($member['is_agent'] < 1) {
                 self::sendBecomeAgentMessage($member);
-            }elseif($member['is_agent'] > 0){
+            } elseif ($member['is_agent'] > 0) {
                 self::sendUpgradeAgentMessage($member, $agent);
             }
         }
@@ -233,53 +247,58 @@ class MemberModel extends BaseModel
      * @param $member_id
      * @return int|string
      */
-    public static function cancelAgent($member_id){
-        $data=array();
-        $data['is_agent']=0;
-        $count= Db::name('member')->where('id',$member_id)->update($data);
-        if($count){
-            $parents=getMemberParents($member_id,0);
-            if(!empty($parents)){
-                Db::name('member')->where('id',$parents[0])->setDec('recom_count',1);
-                Db::name('member')->whereIn('id',$parents)->setDec('team_count',1);
+    public static function cancelAgent($member_id)
+    {
+        $data = array();
+        $data['is_agent'] = 0;
+        $count = Db::name('member')->where('id', $member_id)->update($data);
+        if ($count) {
+            $parents = getMemberParents($member_id, 0);
+            if (!empty($parents)) {
+                Db::name('member')->where('id', $parents[0])->setDec('recom_count', 1);
+                Db::name('member')->whereIn('id', $parents)->setDec('team_count', 1);
             }
         }
         return $count;
     }
 
     protected $memberLevel;
-    public function getLevel(){
-        if(!$this->memberLevel && $this->level_id){
+    public function getLevel()
+    {
+        if (!$this->memberLevel && $this->level_id) {
             $levels = MemberLevelModel::getCacheData();
             $this->memberLevel = $levels[$this->level_id];
         }
-        if(empty($this->memberLevel)){
-            $this->memberLevel=[
-                'level_id'=>0,
-                'level_name'=>'默认会员'
+        if (empty($this->memberLevel)) {
+            $this->memberLevel = [
+                'level_id' => 0,
+                'level_name' => '默认会员'
             ];
         }
         return $this->memberLevel;
     }
-    public function getLevelName(){
+    public function getLevelName()
+    {
         $this->getLevel();
         return $this->memberLevel['level_name'];
     }
     protected $memberAgent;
-    public function getAgent(){
-        if(!$this->memberAgent && $this->is_agent){
+    public function getAgent()
+    {
+        if (!$this->memberAgent && $this->is_agent) {
             $agents = MemberAgentModel::getCacheData();
             $this->memberAgent = $agents[$this->is_agent];
         }
-        if(empty($this->memberAgent)){
-            $this->memberAgent=[
-                'id'=>0,
-                'name'=>''
+        if (empty($this->memberAgent)) {
+            $this->memberAgent = [
+                'id' => 0,
+                'name' => ''
             ];
         }
         return $this->memberAgent;
     }
-    public function getAgentName(){
+    public function getAgentName()
+    {
         $this->getAgent();
         return $this->memberAgent['name'];
     }
@@ -291,25 +310,25 @@ class MemberModel extends BaseModel
      * @param bool $getid 是否只取id
      * @return array
      */
-    public static function getParents($userid,$level=5,$getid=true)
+    public static function getParents($userid, $level = 5, $getid = true)
     {
-        $parents=[];
-        $ids=[];
-        $currentid=$userid;
-        $user=Db::name('Member')->where('id',$currentid)->field('id,level_id,is_agent,username,nickname,mobile,referer')->find();
-        $layer=0;
-        while(!empty($user)){
+        $parents = [];
+        $ids = [];
+        $currentid = $userid;
+        $user = Db::name('Member')->where('id', $currentid)->field('id,level_id,is_agent,username,nickname,mobile,referer')->find();
+        $layer = 0;
+        while (!empty($user)) {
             $layer++;
-            $ids[]=$user['id'];
-            $currentid=$user['referer'];
-            if(!$currentid)break;
-            if(in_array($currentid, $ids)!==false){
-                Log::warning('会员 '.$userid.' 在查找上级时在第 '.$layer.' 层出现递归');
+            $ids[] = $user['id'];
+            $currentid = $user['referer'];
+            if (!$currentid) break;
+            if (in_array($currentid, $ids) !== false) {
+                Log::warning('会员 ' . $userid . ' 在查找上级时在第 ' . $layer . ' 层出现递归');
                 break;
             }
-            $user=Db::name('Member')->where('id',$currentid)->field('id,level_id,is_agent,username,nickname,mobile,referer')->find();
-            $parents[] = $getid?$currentid:$user;
-            if($level>0 && $layer>=$level)break;
+            $user = Db::name('Member')->where('id', $currentid)->field('id,level_id,is_agent,username,nickname,mobile,referer')->find();
+            $parents[] = $getid ? $currentid : $user;
+            if ($level > 0 && $layer >= $level) break;
         }
         return $parents;
     }
@@ -321,120 +340,130 @@ class MemberModel extends BaseModel
      * @param bool $getid
      * @return array
      */
-    public static function getSons($userid,$level=1,$getid=true)
+    public static function getSons($userid, $level = 1, $getid = true)
     {
-        $sons=[];
-        $users=Db::name('Member')->where('referer',$userid)->field('id,level_id,is_agent,username,nickname,mobile,referer')->select();
-        $layer=0;
-        while(!empty($users)){
+        $sons = [];
+        $users = Db::name('Member')->where('referer', $userid)->field('id,level_id,is_agent,username,nickname,mobile,referer')->select();
+        $layer = 0;
+        while (!empty($users)) {
             $layer++;
-            $userids=array_column($users,'id');
-            if(in_array($userid ,$userids)){
-                Log::warning('会员 '.$userid.' 在查找下级时在第 '.$layer.' 层出现递归');
+            $userids = array_column($users, 'id');
+            if (in_array($userid, $userids)) {
+                Log::warning('会员 ' . $userid . ' 在查找下级时在第 ' . $layer . ' 层出现递归');
                 break;
             }
-            $sons = array_merge($sons, $getid?$userids:$users);
-            if($level>0 && $layer>=$level)break;
-            $users=Db::name('Member')->whereIn('referer',$userids)->field('id,level_id,is_agent,username,nickname,mobile,referer')->select();
+            $sons = array_merge($sons, $getid ? $userids : $users);
+            if ($level > 0 && $layer >= $level) break;
+            $users = Db::name('Member')->whereIn('referer', $userids)->field('id,level_id,is_agent,username,nickname,mobile,referer')->select();
         }
         return $sons;
     }
-    
-    public static function autoBindAgent($member,$agent){
-        if(empty($agent) || empty($member)){
-            return false;
-        }
-        if(!is_array($member) && is_numeric($member)){
-            $member = static::where('id',$member)->find();
-            if(empty($member))return false;
-        }
-        if($member['is_agent'] || strcmp($member['agentcode'],$agent)===0 || strcmp($member['id'], $agent)===0 ){
-            return false;
-        }
-        if(strcmp($member['referer'], $agent) === 0){
-            return true;
-        }
-        
-        if(is_numeric($agent)){
-            $agentMember=static::where('id',intval($agent))
-            ->where('is_agent','GT',0)
-            ->where('status',1)->find();
-        }else{
-            $agentMember=static::where('agentcode',$agent)
-            ->where('is_agent','GT',0)
-            ->where('status',1)->find();
-        }
-        if(empty($agentMember) || $agentMember['id']==$member['id'] || !$agentMember['is_agent']){
-            return false;
-        }
-        if(strcmp($member['referer'], $agentMember['id']) === 0){
-            return true;
-        }
-        
-        static::update(['referer'=>$agentMember['id']],array('id'=>$member['id']));
 
-        Db::name('member')->where('id',$agentMember['id'])->setInc('recom_total',1);
+    // 自然绑定的推荐人
+    public static function autoBindAgent($member, $agent)
+    {
+        if (empty($agent) || empty($member)) {
+            return false;
+        }
+        if (!is_array($member) && is_numeric($member)) {
+            $member = static::where('id', $member)->find();
+            if (empty($member)) return false;
+        }
+        if ($member['referer'] > 0) {
+            return true;
+        }
+        if ($member['is_agent'] || strcmp($member['agentcode'], $agent) === 0 || strcmp($member['id'], $agent) === 0) {
+            return false;
+        }
+        if (strcmp($member['referer'], $agent) === 0) {
+            return true;
+        }
+
+        if (is_numeric($agent)) {
+            $agentMember = static::where('id', intval($agent))
+                ->where('status', 1)->find();
+        } else {
+            $agentMember = static::where('agentcode', $agent)
+                ->where('status', 1)->find();
+        }
+        if (empty($agentMember) || $agentMember['id'] == $member['id'] || !$agentMember['is_agent']) {
+            return false;
+        }
+        if (strcmp($member['referer'], $agentMember['id']) === 0) {
+            return true;
+        }
+        if(!getSetting('agent_lock') && $agentMember['is_agent']<1){
+            return false;
+        }
+
+        static::update(['referer' => $agentMember['id']], array('id' => $member['id']));
+
+        Db::name('member')->where('id', $agentMember['id'])->setInc('recom_total', 1);
 
         static::sendBindAgentMessage($member, $agentMember);
 
         return true;
     }
 
-    public static function showname($member){
-        if(!empty($member['nickname'])){
+    public static function showname($member)
+    {
+        if (!empty($member['nickname'])) {
             return $member['nickname'];
         }
-        if(!empty($member['username'])){
+        if (!empty($member['username'])) {
             return $member['username'];
         }
-        if(!empty($member['mobile'])){
+        if (!empty($member['mobile'])) {
             return $member['mobile'];
         }
         return '[匿名]';
     }
 
-    public static function sendBindAgentMessage($member, $agent){
+    public static function sendBindAgentMessage($member, $agent)
+    {
         $message = getSetting('message_bind_agent');
-        if(!empty($message)){
-            foreach([
-                'username'=>static::showname($member),
-                'agent'=>static::showname($agent),
-                'userid'=>$member['id'],
-                'agentid'=>$agent['id']
-            ] as $k=>$v){
+        if (!empty($message)) {
+            foreach ([
+                'username' => static::showname($member),
+                'agent' => static::showname($agent),
+                'userid' => $member['id'],
+                'agentid' => $agent['id']
+            ] as $k => $v) {
                 $message = str_replace("[$k]", $v, $message);
             }
 
-            MessageService::sendWechatMessage($agent['id'],$message);
+            MessageService::sendWechatMessage($agent['id'], $message);
         }
     }
 
-    public static function sendBecomeAgentMessage($member){
+    public static function sendBecomeAgentMessage($member)
+    {
         $message = getSetting('message_become_agent');
-        if(!empty($message)){
-            foreach([
-                'username'=>static::showname($member),
-                'userid'=>$member['id'],
-            ] as $k=>$v){
+        if (!empty($message)) {
+            foreach ([
+                'username' => static::showname($member),
+                'userid' => $member['id'],
+            ] as $k => $v) {
                 $message = str_replace("[$k]", $v, $message);
             }
 
-            MessageService::sendWechatMessage($member['id'],$message);
+            MessageService::sendWechatMessage($member['id'], $message);
         }
     }
 
-    public static function sendUpgradeAgentMessage($member, $agent){
+    public static function sendUpgradeAgentMessage($member, $agent)
+    {
         $message = getSetting('message_upgrade_agent');
-        if(!empty($message)){
-            foreach([
-                'username'=>static::showname($member),
-                'userid'=>$member['id'],
-                'agent'=>$agent['name']
-            ] as $k=>$v){
+        if (!empty($message)) {
+            foreach ([
+                'username' => static::showname($member),
+                'userid' => $member['id'],
+                'agent' => $agent['name']
+            ] as $k => $v) {
                 $message = str_replace("[$k]", $v, $message);
             }
 
-            MessageService::sendWechatMessage($member['id'],$message);
+            MessageService::sendWechatMessage($member['id'], $message);
         }
     }
 
@@ -445,10 +474,10 @@ class MemberModel extends BaseModel
      * @param string $mobile 绑定的手机
      * @return static
      */
-    public static function createFromOauth($data,$referer=0, $mobile = '')
+    public static function createFromOauth($data, $referer = 0, $mobile = '')
     {
-        $data=[
-            'username' => '#'.$data['openid'],
+        $data = [
+            'username' => '#' . $data['openid'],
             'nickname' => $data['nickname'],
             'password' => '',
             'salt'     => '',
@@ -458,12 +487,12 @@ class MemberModel extends BaseModel
             'referer'  => 0,
             'is_agent' => 0
         ];
-        if(!empty($mobile)){
+        if (!empty($mobile)) {
             $data['mobile'] = $mobile;
             $data['mobile_bind'] = 1;
         }
         $member = self::create($data);
-        if($member && !empty($member['id'])){
+        if ($member && !empty($member['id'])) {
             $member->setReferer($referer);
         }
         return $member;
@@ -473,7 +502,7 @@ class MemberModel extends BaseModel
     {
         $updata = array();
         if (!empty($data)) {
-            if (isset($data['gender']) && (!isset($member['gender']) || $member['gender'] != $data['gender'])) {
+            if (isset($data['gender']) && empty($member['gender']) ) {
                 $updata['gender'] = $data['gender'];
             }
             if (empty($member['province']) && !empty($data['province'])) {
@@ -498,122 +527,128 @@ class MemberModel extends BaseModel
                 $updata['avatar'] = $data['avatar'];
             }
         }
+        //Log::info(var_export($data,true).var_export($updata,true).var_export($member->getOriginal(),true));
         return $updata;
     }
 
-    
 
-    public function getSharePoster($platform, $page, $force=false){
-        if(!$this->isExists()){
+
+    public function getSharePoster($platform, $page, $force = false)
+    {
+        if (!$this->isExists()) {
             $this->setError('会员资料未初始化');
             return false;
         }
-        if(empty($this['agentcode'])){
-            $this->setError('会员不是代理');
+        if (empty($this['agentcode'])) {
+            $this->setError('会员没有推广码');
             return false;
         }
-        $sharepath = './uploads/share/'.($this['id']%100).'/'.$this['agentcode'].'-'.$platform.'.jpg';
-        
-        $config=$this->get_poster_config();
-        if(empty($config) || empty($config['background'])){
+        $sharepath = './uploads/share/' . ($this['id'] % 100) . '/' . $this['agentcode'] . '-' . $platform . '.jpg';
+
+        $config = $this->get_poster_config();
+        if (empty($config) || empty($config['background'])) {
             $this->setError('请配置海报生成样式');
             return false;
         }
-        if(!file_exists($config['background'])){
+        if (!file_exists($config['background'])) {
             $this->setError('请设置海报背景图');
             return false;
         }
-        if(file_exists($sharepath) && !$force){
-            $fileatime=filemtime($sharepath);
-            if($this['update_time'] - $fileatime < 7*24*60*60 &&
+        if (file_exists($sharepath) && !$force) {
+            $fileatime = filemtime($sharepath);
+            if (
+                $this['update_time'] - $fileatime < 7 * 24 * 60 * 60 &&
                 filemtime($config['background']) < $fileatime
-            ){
-                return media(ltrim($sharepath,'.'));
+            ) {
+                return media(ltrim($sharepath, '.'));
             }
         }
-        if(in_array($platform, ['wechat-miniprogram','wechat-minigame'])){
-            $created = $this->create_appcode_img($config,$sharepath,$page);
-        }else{
-            $created = $this->create_share_img($config,$sharepath,$page);
+        if (in_array($platform, ['wechat-miniprogram', 'wechat-minigame'])) {
+            $created = $this->create_appcode_img($config, $sharepath, $page);
+        } else {
+            $created = $this->create_share_img($config, $sharepath, $page);
         }
-        if(!$created)return $created;
-        return media(ltrim($sharepath,'.'));
+        if (!$created) return $created;
+        return media(ltrim($sharepath, '.'));
     }
 
-    private function get_poster_config(){
+    private function get_poster_config()
+    {
         $config = [];
-        $sysconfig=getSettings(false,true);
-        $posterConfig=$sysconfig['poster'];
-        if(empty($posterConfig) || empty($posterConfig['poster_background'])){
+        $sysconfig = getSettings(false, true);
+        $posterConfig = $sysconfig['poster'];
+        if (empty($posterConfig) || empty($posterConfig['poster_background'])) {
             return false;
         }
 
-        $config['background']='.'.$posterConfig['poster_background'];
-        $config['data']['avatar']=$posterConfig['poster_avatar'];
-        $config['data']['avatar']['type']='image';
-        $config['data']['qrcode']=$posterConfig['poster_qrcode'];
-        $config['data']['qrcode']['type']='image';
-        if($posterConfig['poster_bgset'] == 1){
-            $config['data']['bg']=['type'=>'background'];
+        $config['background'] = '.' . $posterConfig['poster_background'];
+        $config['data']['avatar'] = $posterConfig['poster_avatar'];
+        $config['data']['avatar']['type'] = 'image';
+        $config['data']['qrcode'] = $posterConfig['poster_qrcode'];
+        $config['data']['qrcode']['type'] = 'image';
+        if ($posterConfig['poster_bgset'] == '1') {
+            $config['data']['bg'] = ['type' => 'background'];
         }
-        $config['data']['nickname']=$posterConfig['poster_nickname'];
-        if(!empty($posterConfig['poster_qrlogo'])){
-            $config['data']['qrlogo']=$posterConfig['poster_qrcode'];
-            $config['data']['qrlogo']['type']='image';
-            $config['data']['qrlogo']['value']='.'.$posterConfig['poster_qrlogo'];
+        $config['data']['nickname'] = $posterConfig['poster_nickname'];
+        if (!empty($posterConfig['poster_qrlogo'])) {
+            $config['data']['qrlogo'] = $posterConfig['poster_qrcode'];
+            $config['data']['qrlogo']['type'] = 'image';
+            $config['data']['qrlogo']['value'] = '.' . $posterConfig['poster_qrlogo'];
         }
         return $config;
     }
 
-    private function create_share_img($config,$sharepath,$page){
-        if(strpos($page, $this['agentcode']) === false){
+    private function create_share_img($config, $sharepath, $page)
+    {
+        if (strpos($page, $this['agentcode']) === false) {
             $this->setError('分享链接错误');
             return false;
         }
-        $qrpath=dirname($sharepath);
-        $qrfile = $this['agentcode'].'-qrcode.png';
-        $filename=$qrpath.'/'.$qrfile;
+        $qrpath = dirname($sharepath);
+        $qrfile = $this['agentcode'] . '-qrcode.png';
+        $filename = $qrpath . '/' . $qrfile;
 
-        if(!file_exists($filename)) {
-            $content=gener_qrcode($page, 430);
-            if(!is_dir($qrpath)){
-                mkdir($qrpath,0777,true);
+        if (!file_exists($filename)) {
+            $content = gener_qrcode($page, 430);
+            if (!is_dir($qrpath)) {
+                mkdir($qrpath, 0777, true);
             }
-            file_put_contents($filename,$content);
-            if(!file_exists($filename)){
+            file_put_contents($filename, $content);
+            if (!file_exists($filename)) {
                 $this->setError('二维码生成失败');
                 return false;
             }
         }
-        
+
         //$config['background']=$bgpath;
         $poster = new Poster($config);
         $poster->generate([
-            'qrcode'=>$filename,
-            'avatar'=>$this->_getAvatarPath(),
-            'nickname'=>$this['nickname']
+            'qrcode' => $filename,
+            'avatar' => $this['avatar'],
+            'nickname' => $this['nickname']
         ]);
         $poster->save($sharepath);
         return true;
     }
-    private function create_appcode_img($config,$sharepath,$page){
-        $appid=request()->tokenData['appid'];
-        $wechat=WechatModel::where('appid',$appid)->find();
-        if(empty($wechat)){
+    private function create_appcode_img($config, $sharepath, $page)
+    {
+        $appid = request()->tokenData['appid'];
+        $wechat = WechatModel::where('appid', $appid)->find();
+        if (empty($wechat)) {
             $this->setError('分享图生成失败(wechat)');
             return false;
         }
-    
-        $qrpath=dirname($sharepath);
-        $qrfile = $this['agentcode'].'-appcode.png';
-        $filename=$qrpath.'/'.$qrfile;
-        if(!file_exists($filename)) {
+
+        $qrpath = dirname($sharepath);
+        $qrfile = $this['agentcode'] . '-appcode.png';
+        $filename = $qrpath . '/' . $qrfile;
+        if (!file_exists($filename)) {
             $app = WechatModel::createApp($wechat);
             if (empty($app)) {
                 $this->setError('分享图生成失败(app)');
                 return false;
             }
-    
+
             $response = $app->app_code->getUnlimit('agent=' . $this['agentcode'], [
                 'page' => $page,
                 'width' => 520
@@ -621,31 +656,20 @@ class MemberModel extends BaseModel
             if ($response instanceof \EasyWeChat\Kernel\Http\StreamResponse) {
                 $genername = $response->saveAs($qrpath, $qrfile);
             }
-            if(empty($genername)){
+            if (empty($genername)) {
                 $this->setError('小程序码生成失败');
                 return false;
             }
         }
-        
+
         //$config['background']=$bgpath;
         $poster = new Poster($config);
         $poster->generate([
-            'qrcode'=>$filename,
-            'avatar'=>$this->_getAvatarPath(),
-            'nickname'=>$this['nickname']
+            'qrcode' => $filename,
+            'avatar' => $this['avatar'],
+            'nickname' => $this['nickname']
         ]);
         $poster->save($sharepath);
         return true;
-    }
-
-    private function _getAvatarPath(){
-        $avatar = $this['avatar'];
-        if(strpos($avatar,'http://')===0 || strpos($avatar,'https://')===0){
-            return $avatar;
-        }
-        if(strpos($avatar,'/uploads/')===0){
-            return '.'.$avatar;
-        }
-        return $avatar;
     }
 }

@@ -9,7 +9,7 @@
                 <form action="{:url('member/money_log',searchKey('fromdate,todate',''))}" class="form-inline" method="post">
                     <div class="btn-group">
                         <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            余额类型:  {$fields[$field]} <span class="caret"></span>
+                            类型:  {$fields[$field]} <span class="caret"></span>
                         </button>
                         <div class="dropdown-menu">
                             <foreach name="fields" item="t" key="k">

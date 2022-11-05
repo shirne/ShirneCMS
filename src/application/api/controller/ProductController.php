@@ -79,7 +79,7 @@ class ProductController extends BaseController
      * @param int $pagesize 指定获取数量，分页时为每页大小
      * @return Json 
      */
-    public function get_list($cate='',$type='',$order='',$keyword='',$withsku=0,$page=1, $pagesize=10){
+    public function get_list($cate='',$type='',$order='',$keyword='',$province='',$city='',$withsku=0,$page=1, $pagesize=10){
         $condition=[];
         if($cate){
             $condition['category']=$cate;
@@ -93,6 +93,12 @@ class ProductController extends BaseController
         }
         if(!empty($type)){
             $condition['type']=$type;
+        }
+        if(!empty($city)){
+            $condition['province']=$province;
+        }
+        if(!empty($city)){
+            $condition['city']=$city;
         }
         if(!empty($withsku)){
             $condition['withsku']=$withsku;
@@ -144,6 +150,19 @@ class ProductController extends BaseController
         $product = ProductModel::get($id);
         if(empty($product)){
             $this->error('商品不存在');
+        }
+
+        $cateid=$product['cate_id'];
+        $product['category']=ProductCategoryFacade::findCategory($cateid);
+        $topid=0;
+        $topcate=ProductCategoryFacade::getTopCategory($cateid);
+        if(!empty($topcate)){
+            $topid=$topcate['id'];
+        }
+        $product['top_cate_id']=$topid;
+        $product['top_category']=$topcate;
+        if(!empty($product['v_sale'])){
+            $product['sale']=$product['sale']+$product['v_sale'];
         }
 
         $skus=ProductSkuModel::where('product_id',$product['id'])->select();
@@ -201,6 +220,7 @@ class ProductController extends BaseController
         }
 
         $config['background']='.'.$shareConfig['share_background'];
+        
         $config['data']['image']=$shareConfig['share_image'];
         $config['data']['image']['type']='image';
         $config['data']['avatar']=$shareConfig['share_avatar'];
@@ -222,6 +242,7 @@ class ProductController extends BaseController
         }
         return $config;
     }
+
     /**
      * 获取商品分享海报，支持web，公众号，小程序
      * @param mixed $id 
@@ -252,7 +273,7 @@ class ProductController extends BaseController
             $this->error('分享图类型错误');
         }
         $params=['id'=>$id];
-        if($this->isLogin && $this->user['is_agent'] > 0){
+        if($this->isLogin && !empty($this->user['agentcode'] )){
             $data['avatar']=$this->user['avatar'];
             $data['nickname']=$this->user['nickname'];
             $params['agent']=$this->user['agentcode'];

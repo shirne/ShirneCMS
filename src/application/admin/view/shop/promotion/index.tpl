@@ -5,7 +5,7 @@
 <div id="page-wrapper">
     <div class="page-header">
         <a href="{:url('admin/shop.promotion/poster')}" class="float-right btn btn-sm btn-outline-primary">推广海报配置</a>
-        <a href="{:url('admin/shop.promotion/share')}" class="float-right btn btn-sm btn-outline-primary">产品分享配置</a>
+        <a href="{:url('admin/shop.promotion/share')}" class="float-right btn btn-sm btn-outline-primary mr-1">产品分享配置</a>
         <a href="{:url('admin/shop.promotion/message')}" class="float-right btn btn-sm btn-outline-primary mr-1">消息配置</a>
         商城配置
     </div>
@@ -43,6 +43,35 @@
             </div>
             <div class="col">
                 <div class="text-muted">{$setting['shop_description']['description']}</div>
+            </div>
+        </div>
+        <div class="form-row form-group">
+            <label for="v-shop_close" class="form-label w-100px text-right align-middle">{$setting['shop_close']['title']}</label>
+            <div class="col-9 col-md-8 col-lg-6">
+                <div class="btn-group btn-group-toggle mregopengroup" data-toggle="buttons">
+                    <foreach name="setting.shop_close.data" item="value" key="k">
+                        <if condition="$k==$setting['shop_close']['value']">
+                            <label class="btn btn-outline-secondary active">
+                                <input type="radio" name="v-shop_close" value="{$k}" autocomplete="off" checked> {$value}
+                            </label>
+                            <else />
+                            <label class="btn btn-outline-secondary">
+                                <input type="radio" name="v-shop_close" value="{$k}" autocomplete="off"> {$value}
+                            </label>
+                        </if>
+                    </foreach>
+                </div>
+            </div>
+        </div>
+        <div class="form-row form-group">
+            <label for="v-shop_close_desc" class="form-label w-100px text-right align-middle">{$setting['shop_close_desc']['title']}</label>
+            <div class="col-5">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="v-shop_close_desc" value="{$setting['shop_close_desc']['value']}" placeholder="">
+                </div>
+            </div>
+            <div class="col">
+                <div class="text-muted">{$setting['shop_close_desc']['description']}</div>
             </div>
         </div>
 

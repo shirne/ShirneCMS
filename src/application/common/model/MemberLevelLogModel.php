@@ -71,7 +71,7 @@ class MemberLevelLogModel extends BaseModel
                 $debit = money_log($member['id'], -$price * 100, "升级订单", 'consume', 0, is_string($balance_pay) ? $balance_pay : 'money');
                 if ($debit) $status = 1;
                 else {
-                    $this->error = "余额不足";
+                    $this->error = lang('Balance')."不足";
                     $this->rollback();
                     return false;
                 }

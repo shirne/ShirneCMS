@@ -108,7 +108,6 @@ VALUES
   ( 'm_checkcode', '验证码', 'radio', 'member', '0',1, '1', '', '0:关闭\r\n1:启用'),
   ( 'anonymous_comment', '匿名评论', 'radio', 'member', '0',1, '1', '', '0:关闭\r\n1:启用'),
   ( 'autoaudit', '订单自动审核', 'radio', 'member', '0',1, '1', '', '0:关闭\r\n1:启用'),
-  ( 'referer_id','默认推荐人','user','member',0,1,'','用户ID',''),
   ( 'agent_lock', '锁客模式', 'radio', 'member', '0',1, '1', '', '0:关闭\r\n1:启用'),
   ( 'commission_type', '佣金本金计算', 'radio', 'member', '0',1, '0', '', '0:购买价-成本价\r\n1:销售价-成本价\r\n2:购买价\r\n3:销售价'),
   ( 'agent_start', '分销员佣金', 'radio', 'member', '0',1, '0', '', '0:从上级起返\r\n1:从自己起返'),

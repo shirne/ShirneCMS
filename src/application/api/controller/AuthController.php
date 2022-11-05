@@ -53,7 +53,7 @@ class AuthController extends BaseController
         }
         Log::info(['access:', $this->accessToken, $this->accessSession]);
         if(empty($this->accessToken) &&
-            !in_array($this->request->action(), ['token','wxsign','wxauth','wxlogin','refresh'])
+            !in_array($this->request->action(), ['token','wxsign','wxauth','wxautologin','wxlogin','refresh'])
             ){
             if($tokenInvaild){
                 $this->error('临时Token过期',ERROR_TMP_TOKEN_EXPIRE);
@@ -238,8 +238,8 @@ class AuthController extends BaseController
                     }
                 } else {
                     user_log($member['id'], 'login', 0, '登录失败');
-                    
-                    
+                    $this->accessSession['need_verify'] = 1;
+                    $this->accessSession['error_count'] = $errcount + 1;
                     $respdata['need_verify']=1;
                     $merrorcount += 1;
                     cache('login_error_'.$member['id'],$merrorcount,['expire'=>60*60]);
@@ -249,6 +249,7 @@ class AuthController extends BaseController
             }
         }
 
+        
         $this->accessSession['error_count'] = $errcount + 1;
         if(!empty($respdata['need_verify'])){
             $this->accessSession['need_verify'] = 1;
@@ -331,7 +332,91 @@ class AuthController extends BaseController
     }
 
     /**
-     * 微信公众号/小程序登录
+     * 自动登录
+     */
+    public function wxAutoLogin($wxid, $code){
+        $agent=$this->request->param('agent');
+        $wechat=Db::name('wechat')->where('type','wechat')
+            ->where(is_numeric($wxid)?'id':'hash',$wxid)->find();
+        if(empty($wechat)){
+            $this->error('服务器配置错误',ERROR_LOGIN_FAILED);
+        }
+        $options=WechatModel::to_config($wechat);
+        switch ($wechat['account_type']) {
+            case 'wechat':
+            case 'subscribe':
+            case 'service':
+                $weapp = Factory::officialAccount($options);
+                break;
+            case 'miniprogram':
+            case 'minigame':
+                $weapp=Factory::miniProgram($options);
+                break;
+            default:
+                $this->error('配置错误',ERROR_LOGIN_FAILED);
+                break;
+        }
+        if($weapp instanceof Application){
+            try{
+                $userinfo = $weapp->oauth->user()->getOriginal();
+            }catch(Exception $e){
+                $this->error('登录失败:'.$e->getMessage(), ERROR_LOGIN_FAILED);
+            }
+            if(empty($userinfo) || empty($userinfo['openid'])){
+                $this->error('登录失败', ERROR_LOGIN_FAILED);
+            }
+            
+            $session=['openid'=>$userinfo['openid'],'unionid'=>$userinfo['unionid']??''];
+        }else{
+            
+            try{
+                $session = $weapp->auth->session($code);
+            }catch(Exception $e){
+                $this->error('登录失败:'.$e->getMessage(), ERROR_LOGIN_FAILED);
+            }
+            if (empty($session) || empty($session['openid'])) {
+                $this->error('登录失败', ERROR_LOGIN_FAILED);
+            }
+        }
+
+        $condition=array('openid'=>$session['openid']);
+        $oauth=MemberOauthModel::where($condition)->find();
+        if(!empty($oauth) && $oauth['member_id']) {
+            $member = MemberModel::where('id', $oauth['member_id'])->find();
+        }elseif($this->isLogin){
+            $member=MemberModel::where('id', $this->user['id'])->find();
+        }elseif(!empty($session['unionid'])){
+            $sameAuth=MemberOauthModel::where('unionid',$session['unionid'])->find();
+            if(!empty($sameAuth)){
+                $member=MemberModel::where('id',$sameAuth['member_id'])->find();
+            }
+        }
+        if(!empty($member)){
+
+            if($member['status'] != 1){
+                $this->error('账户已被禁用',ERROR_MEMBER_DISABLED, ['openid'=>$session['openid']]);
+            }
+            if(!empty($agent)){
+                MemberModel::autoBindAgent($member,$agent);
+            }
+
+            $token=MemberTokenFacade::createToken($member['id'],$wechat['type'].'-'.$wechat['account_type'], $wechat['appid']);
+            if(!empty($token)) {
+                MemberModel::update([
+                    'login_ip'=>request()->ip(),
+                    'logintime'=>time()
+                ],['id'=>$member['id']]);
+                user_log($member['id'],'login',1,'登录'.$wechat['title']);
+                $token['openid']=$session['openid'];
+                return $this->response($token);
+            }
+            
+        }
+        $this->error('登录失败',ERROR_LOGIN_FAILED);
+    }
+
+    /**
+     * 微信公众号/小程序自动注册登录
      * @param string $wxid 小程序对应的系统id或hash
      * @param string $code 客户端获取到的授权码
      * @param string $rawData 客户端获取到的用户资料
@@ -400,6 +485,13 @@ class AuthController extends BaseController
                     if(isset($mobileData['phone_info'])){
                         $mobileData=$mobileData['phone_info'];
                     }
+                }else{
+                    //兼容低版本
+                    $ivdata=$this->request->param('phoneIv');
+                    $encdata=$this->request->param('phoneData');
+                    if(!empty($ivdata) && !empty($encdata)){
+                        $mobileData = $this->decodeAES($encdata,$session['session_key'],$ivdata);
+                    }
                 }
             }
         }
@@ -437,6 +529,7 @@ class AuthController extends BaseController
                 $data['openid']=$session['openid'];
                 
                 $referid = $this->getAgentId($agent);
+
                 //系统配置的默认推荐人
                 if($referid <=0 && $this->config['referer_id']){
                     $referid = intval($this->config['referer_id']);
@@ -463,7 +556,9 @@ class AuthController extends BaseController
             if(!empty($updata)){
                 MemberModel::update($updata,array('id'=>$member['id']));
             }
-            MemberModel::autoBindAgent($member,$agent);
+            if(!empty($agent)){
+                MemberModel::autoBindAgent($member,$agent);
+            }
         }
         
         if(empty($oauth)){
@@ -908,9 +1003,8 @@ class AuthController extends BaseController
             $agentid = isset($this->accessSession['agent'])?intval($this->accessSession['agent']):0;
             if($agent){
                 $agentMember = Db('member')->where('agentcode',$agent)
-                    ->where('status',1)
-                    ->where('is_agent','gt',0)->find();
-                if(!empty($agentMember)){
+                    ->where('status',1)->find();
+                if(!empty($agentMember) && ($this->config['agent_lock'] || $agentMember['is_agent']>0)){
                     $agentid = $agentMember['id'];
                 }
             }

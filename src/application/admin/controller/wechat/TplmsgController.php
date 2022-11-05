@@ -57,7 +57,7 @@ class TplmsgController extends WechatBaseController
     private function miniprogramSync(){
         $offset=(int)$this->request->param('offset');
         try {
-            $result = $this->wechatApp->template_message->getTemplates($offset,20);
+            $result = $this->wechatApp->subscribe_message->getTemplates($offset,20);
         }catch(\Exception $e){
             $this->apiException($e);
         }
@@ -147,7 +147,7 @@ class TplmsgController extends WechatBaseController
         $reserveTpls = $this->reserveTpls();
         $key='';
         foreach ($reserveTpls as $k=>$row){
-            if($row['title_id'] == $id){
+            if($row['tid'] == $id){
                 $key=$k;
                 break;
             }
@@ -169,7 +169,7 @@ class TplmsgController extends WechatBaseController
     
     private function miniprogramAdd($key,$tpl){
         try{
-            $tpllib = $this->wechatApp->template_message->get($tpl['title_id']);
+            $tpllib = $this->wechatApp->subscribe_message->get($tpl['tid']);
             if(!empty($tpllib) && empty($tpllib['errcode'])){
                 $keywords=explode('、',$tpl['keywords']);
                 $ids = [];
@@ -179,7 +179,7 @@ class TplmsgController extends WechatBaseController
                         $ids[] = $keymap[$k];
                     }
                 }
-                $result=$this->wechatApp->template_message->add($tpl['title_id'],$ids);
+                $result=$this->wechatApp->subscribe_message->add($tpl['tid'],$ids);
             }
         }catch(\Exception $e){
             $this->apiException($e);
@@ -201,7 +201,7 @@ class TplmsgController extends WechatBaseController
     
     private function serviceAdd($key,$tpl){
         try{
-            $result=$this->wechatApp->template_message->addTemplate($tpl['title_id']);
+            $result=$this->wechatApp->template_message->addTemplate($tpl['tid']);
         }catch(\Exception $e){
             $this->apiException($e);
         }

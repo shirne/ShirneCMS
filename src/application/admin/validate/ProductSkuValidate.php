@@ -33,6 +33,6 @@ class ProductSkuValidate extends BaseUniqueValidate
         'weight.require'=>'请填写规格重量',
         'weight.integer'=>'重量单位为g 只需要填写整数',
         'storage.require'=>'请填写规格库存',
-        'storage.integer'=>'库存请填写整数',
+        'storage.integer'=>'库存请填写整数'
     );
 }

@@ -107,7 +107,7 @@
                         </div>
                         </volist>
                     </td>
-                    <td>{$v.order_no}<br /><span class="text-muted">{$v.create_time|showdate}</span></td>
+                    <td>{$v.order_no}<br /><br /><span class="text-muted">{$v.create_time|showdate}</span></td>
                     <td>
                         <div class="media">
                             <if condition="!empty($v['avatar'])">
@@ -129,7 +129,11 @@
                     </td>
                     <td>
                         {$v.payamount} <if condition="$v['status'] EQ 0"><a href="javascript:" class="reprice" data-id="{$v.order_id}" data-price="{$v['payamount']}" title="改价"><i class="ion-md-create"></i> </a> </if><br />
-                        {$v.rebate_total}
+                        <if condition="$v['rebate_total'] GT 0">
+                        <a href="{:url('member/award_log',['orderid'=>$v['order_id']])}">{$v.rebate_total}</a>
+                            <else/>
+                            {$v.rebate_total}
+                        </if>
                     </td>
                     <td>
                         {$v.status|order_status|raw}
@@ -140,6 +144,9 @@
                             <span class="badge badge-success">已返奖</span>
                             <else/>
                             <span class="badge badge-warning">未返奖</span>
+                        </if>
+                        <if condition="$v['payedamount'] GT 0">
+                            <br /><span class="badge">已付: {$v['payedamount']}</span>
                         </if>
                     </td>
                     <td class="operations">

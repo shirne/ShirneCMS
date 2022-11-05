@@ -20,7 +20,7 @@ class WechatBaseController extends BaseController
     protected $currentWechat=null;
 
     /**
-     * @var ServiceContainer
+     * @var Application|OfficialAccountApplication|MiniProgramApplication|OpenPlatformApplication|WorkApplication|OpenWorkApplication|MicroMerchantApplication|null 
      */
     protected $wechatApp=null;
 
@@ -42,7 +42,7 @@ class WechatBaseController extends BaseController
 
     /**
      * @param $wid
-     * @return \EasyWeChat\OfficialAccount\Application
+     * @return Application|OfficialAccountApplication|MiniProgramApplication|OpenPlatformApplication|WorkApplication|OpenWorkApplication|MicroMerchantApplication|null 
      */
     protected function get_app($wid){
         if(is_array($wid)){

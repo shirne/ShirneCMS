@@ -15,200 +15,204 @@ use think\facade\Log;
 /**
  * 用户本地登陆和第三方登陆
  */
-class LoginController extends BaseController{
+class LoginController extends BaseController
+{
 
 
 
     public function initialize()
     {
         parent::initialize();
-        $this->assign('navmodel','member');
+        $this->assign('navmodel', 'member');
     }
 
-    public function index($type=0)
+    public function index($type = 0)
     {
-        if($this->userid){
-            $this->success('您已登录',aurl('index/member/index'));
+        if ($this->userid) {
+            $this->success('您已登录', aurl('index/member/index'));
         }
         //方式1：本地账号登陆
-        if(empty($type)){
-            if($this->request->isPost()){
+        if (empty($type)) {
+            if ($this->request->isPost()) {
                 $this->checkSubmitRate(2);
-                $code = $this->request->post('verify','','strtolower');
+                $code = $this->request->post('verify', '', 'strtolower');
                 //验证验证码是否正确
-                if(!($this->check_verify($code))){
+                if (!($this->check_verify($code))) {
                     $this->error(lang('Verify code error!'));
                 }
 
                 $data['username'] = $this->request->post('username');
                 $password = $this->request->post('password');
                 $member = Db::name('member')->where($data)->find();
-                if(!empty($member) && $member['password']==encode_password($password,$member['salt'])){
+                if (!empty($member) && $member['password'] == encode_password($password, $member['salt'])) {
 
-                    if($member['status']==0){
-                        user_log($member['id'], 'login', 0, '账号已禁用' );
+                    if ($member['status'] == 0) {
+                        user_log($member['id'], 'login', 0, '账号已禁用');
                         $this->error(lang('Account is disabled!'));
-                    }else {
+                    } else {
                         $this->setLogin($member);
                         $remember = $this->request->post('remember');
-                        if($remember){
+                        if ($remember) {
                             $this->setAutoLogin($member);
                         }
-                        $redirect=redirect()->restore();
-                        if(empty($redirect->getData())){
-                            $url=session('?before-login')?session('before-login'):aurl('index/member/index');
-                            session('before-login',null);
-                        }else{
-                            $url=$redirect->getTargetUrl();
+                        $redirect = redirect()->restore();
+                        if (empty($redirect->getData())) {
+                            $url = session('?before-login') ? session('before-login') : aurl('index/member/index');
+                            session('before-login', null);
+                        } else {
+                            $url = $redirect->getTargetUrl();
                         }
 
-                        if(!empty($this->wechatUser)){
-                            Db::name('memberOauth')->where('openid',$this->wechatUser['openid'])
-                                ->update(['member_id'=>$member['id']]);
+                        if (!empty($this->wechatUser)) {
+                            Db::name('memberOauth')->where('openid', $this->wechatUser['openid'])
+                                ->update(['member_id' => $member['id']]);
                         }
 
-                        $this->success(lang('Login success!'),$url);
+                        $this->success(lang('Login success!'), $url);
                     }
-                }else{
-                    user_log($member['id'],'login',0,'密码错误:'.$password);
+                } else {
+                    user_log($member['id'], 'login', 0, '密码错误:' . $password);
                     $this->error(lang('Account or password incorrect!'));
                 }
             }
             $referurl = request()->server('HTTP_REFERER');
-            if(strpos($referurl,url('index/login/index'))=== false){
-                session('before-login',$referurl);
+            if (strpos($referurl, url('index/login/index')) === false) {
+                session('before-login', $referurl);
             }
             return $this->fetch();
-        }else {
-            $app = Db::name('OAuth')->where('id|type',$type)->find();
+        } else {
+            $app = Db::name('OAuth')->where('id|type', $type)->find();
             if (empty($app)) {
                 $this->error("不允许使用此方式登陆");
             }
 
-            $callbackurl = url('index/login/callback', ['type' => $type], false,true);
+            $callbackurl = url('index/login/callback', ['type' => $type], false, true);
 
             // 使用第三方登陆
             $oauth = OAuthFactory::getInstence($app['type'], $app['appid'], $app['appkey'], $callbackurl);
-            $url=$oauth->redirect();
+            $url = $oauth->redirect();
 
             return redirect($url->getTargetUrl());
         }
     }
 
     //登录回调地址
-    public function callback($type = null, $code = null) 
+    public function callback($type = null, $code = null)
     {
-        if(empty($type) || empty($code)){
+        if (empty($type) || empty($code)) {
             $this->error('参数错误');
         }
-        $callbackurl = url('index/login/callback', ['type' => $type],false,true);
-        if(preg_match('/_\d+$/',$type)>0){
-            list($type,$type_id)=explode('_',$type);
-            if(!in_array($type,['wechat']))$this->error('参数错误');
-            $app = Db::name($type)->where('id',$type_id)
+        $callbackurl = url('index/login/callback', ['type' => $type], false, true);
+        if (preg_match('/_\d+$/', $type) > 0) {
+            list($type, $type_id) = explode('_', $type);
+            if (!in_array($type, ['wechat'])) $this->error('参数错误');
+            $app = Db::name($type)->where('id', $type_id)
                 ->find();
-            $oauth=OAuthFactory::getInstence($type, $app['appid'], $app['appsecret'],$callbackurl,true);
-        }else{
-            $type_id=$type;
-            $type='oauth';
+            $oauth = OAuthFactory::getInstence($type, $app['appid'], $app['appsecret'], $callbackurl, true);
+        } else {
+            $type_id = $type;
+            $type = 'oauth';
             $app = Db::name('OAuth')
-                ->where('id|type',$type_id)
+                ->where('id|type', $type_id)
                 ->find();
-            $type_id=$app['id'];
-            $oauth=OAuthFactory::getInstence($app['type'], $app['appid'], $app['appkey'],$callbackurl);
+            $type_id = $app['id'];
+            $oauth = OAuthFactory::getInstence($app['type'], $app['appid'], $app['appkey'], $callbackurl);
         }
 
         try {
             $userInfo = $oauth->user();
             $data['openid'] = $userInfo['id'];
-            $data['nickname'] =$userInfo['nickname'];
-            $data['name'] =$userInfo['name'];
-            $data['email'] =$userInfo['email'];
-            $data['avatar'] =$userInfo['avatar'];
+            $data['nickname'] = $userInfo['nickname'];
+            $data['name'] = $userInfo['name'];
+            $data['email'] = $userInfo['email'];
+            $data['avatar'] = $userInfo['avatar'];
 
-            $origin=$userInfo->getOriginal();
-            $data['gender'] = empty($origin['gender'])?0:$this->parseGender($origin['gender']);
-            $data['unionid'] = empty($origin['unionid'])?'':$origin['unionid'];
-            $data['data']=json_encode($origin);
+            $origin = $userInfo->getOriginal();
+            $data['gender'] = empty($origin['gender']) ? 0 : $this->parseGender($origin['gender']);
+            $data['unionid'] = empty($origin['unionid']) ? '' : $origin['unionid'];
+            $data['data'] = json_encode($origin);
             $data['type'] = $type;
             $data['type_id'] = $type_id;
-            if($this->isLogin) {
-                $data['member_id']=$this->userid;
-            }elseif(!empty($userInfo['unionid'])){
-                $sameAuth=MemberOauthModel::where('unionid',$userInfo['unionid'])->find();
-                if(!empty($sameAuth)){
-                    $data['member_id']=$sameAuth['member_id'];
+            if ($this->isLogin) {
+                $data['member_id'] = $this->userid;
+            } elseif (!empty($userInfo['unionid'])) {
+                $sameAuth = MemberOauthModel::where('unionid', $userInfo['unionid'])->find();
+                if (!empty($sameAuth)) {
+                    $data['member_id'] = $sameAuth['member_id'];
                 }
             }
             $model = MemberOauthModel::where('openid', $data['openid'])->find();
             if (empty($model)) {
-                if(!isset($data['member_id']))$data['member_id']=0;
+                if (!isset($data['member_id'])) $data['member_id'] = 0;
                 $model = MemberOauthModel::create($data);
             } else {
-                if($data['member_id']) {
-                    if($model['member_id'] && $model['member_id']!=$data['member_id']){
+                if ($data['member_id']) {
+                    if ($model['member_id'] && $model['member_id'] != $data['member_id']) {
                         //todo 自动生成的账户资料处理
                     }
                 }
                 $model->save($data);
             }
-            if($this->isLogin){
-                $this->success('绑定成功',redirect()->restore(aurl('index/member/index'))->getTargetUrl());
+            if ($this->isLogin) {
+                $this->success('绑定成功', redirect()->restore(aurl('index/member/index'))->getTargetUrl());
             }
-            
+
             if (empty($model['member_id'])) {
                 //根据设置自动生成账户
-                if($this->config['m_register']!='1') {
-                    $agentid=session('agent');
+                if ($this->config['m_register'] != '1') {
+                    $agentid = session('agent');
                     //系统配置的默认推荐人
-                    if($agentid <=0 && $this->config['referer_id']){
+                    if ($agentid <= 0 && $this->config['referer_id']) {
                         $agentid = intval($this->config['referer_id']);
                     }
-                    $member = MemberModel::createFromOauth($model,$agentid);
+                    $member = MemberModel::createFromOauth($model, $agentid);
                     $model->save(['member_id' => $member['id']]);
                 }
             }
-            session('openid',$data['openid']);
-            if($model['member_id']) {
+            session('openid', $data['openid']);
+            if ($model['member_id']) {
                 $member = Db::name('Member')->find($model['member_id']);
                 //更新昵称和头像
-                if(!empty($model['avatar']) &&
+                if (
+                    !empty($model['avatar']) &&
                     (empty($member['avatar']) || is_wechat_avatar($member['avatar']))
-                ){
-                    Db::name('member')->where('id',$member['id'])->update(
+                ) {
+                    Db::name('member')->where('id', $member['id'])->update(
                         [
-                            'nickname'=>$model['nickname'],
-                            'avatar'=>$model['avatar']
+                            'nickname' => $model['nickname'],
+                            'avatar' => $model['avatar']
                         ]
                     );
                 }
 
                 $this->setLogin($member);
             }
-        }catch(Exception $e){
-            Log::error($e->getMessage()."\n".$e->getFile().$e->getLine().$e->getCode());
-            $this->error('登录失败',url('index/login/index'));
+        } catch (Exception $e) {
+            Log::error($e->getMessage() . "\n" . $e->getFile() . $e->getLine() . $e->getCode());
+            $this->error('登录失败', url('index/login/index'));
         }
-        $url=session('?before-login')?session('before-login'):aurl('index/member/index');
-        session('before-login',null);
+        $url = session('?before-login') ? session('before-login') : aurl('index/member/index');
+        session('before-login', null);
         return redirect()->restore($url);
     }
 
-    private function parseGender($gender){
-        if(in_array($gender,['0','1','2'])){
+    private function parseGender($gender)
+    {
+        if (in_array($gender, ['0', '1', '2'])) {
             return $gender;
         }
-        if(strpos($gender,'男')!==false){
+        if (strpos($gender, '男') !== false) {
             return 1;
         }
-        if(strpos($gender,'女')!==false){
+        if (strpos($gender, '女') !== false) {
             return 2;
         }
         return 0;
     }
 
-    public function getpassword(){
-        if($this->request->isPost()) {
+    public function getpassword()
+    {
+        if ($this->request->isPost()) {
             $step = $this->request->post('step/d', 1);
             $username = $this->request->post('username');
             $authtype = $this->request->post('authtype');
@@ -223,28 +227,28 @@ class LoginController extends BaseController{
                 }
                 if (empty($user[$authtype . '_bind'])) $this->error("认证方式无效");
 
-                $result=[];
+                $result = [];
                 switch ($authtype) {
                     case 'email':
-                        $result['sendtoname']="邮箱";
-                        $result['sendto']=maskemail($user[$authtype]);
+                        $result['sendtoname'] = "邮箱";
+                        $result['sendto'] = maskemail($user[$authtype]);
                         break;
                     case 'mobile':
-                        $result['sendtoname']="手机";
-                        $result['sendto']=maskphone($user[$authtype]);
+                        $result['sendtoname'] = "手机";
+                        $result['sendto'] = maskphone($user[$authtype]);
                         break;
                 }
-                $service=new CheckcodeService();
-                if($step==2){
+                $service = new CheckcodeService();
+                if ($step == 2) {
                     $sendto = $user[$authtype];
                     $verify = $this->request->post('verify');
-                    if(!$this->check_verify($verify)){
+                    if (!$this->check_verify($verify)) {
                         $this->error('请填写正确的图形验证码');
                     }
-                    $result=$service->sendCode($authtype,$sendto);
-                    if($result) {
+                    $result = $service->sendCode($authtype, $sendto);
+                    if ($result) {
                         $this->success('', '', $result);
-                    }else{
+                    } else {
                         $this->success('验证码发送失败', '');
                     }
                 }
@@ -252,7 +256,7 @@ class LoginController extends BaseController{
 
                     $sendto = $user[$authtype];
                     $code = $this->request->post('checkcode');
-                    if ($service->verifyCode($sendto,$code)) {
+                    if ($service->verifyCode($sendto, $code)) {
                         session('passed', $username);
                         $this->success('验证通过');
                     } else {
@@ -280,7 +284,7 @@ class LoginController extends BaseController{
                 $data['update_time'] = time();
                 if (Db::name('member')->where('username', $passed)->update($data)) {
                     $this->success("密码设置成功", url('index/login/index'));
-                }else{
+                } else {
                     $this->error('密码设置失败');
                 }
             }
@@ -288,40 +292,42 @@ class LoginController extends BaseController{
 
         return $this->fetch();
     }
-    public function checkusername(){
+    public function checkusername()
+    {
         Log::close();
-        $username=$this->request->post('username');
-        if(empty($username))$this->error("请填写用户名");
-        $user=Db::name('member')->where('username',$username)->find();
-        if(empty($user)){
+        $username = $this->request->post('username');
+        if (empty($username)) $this->error("请填写用户名");
+        $user = Db::name('member')->where('username', $username)->find();
+        if (empty($user)) {
             $this->error("该用户不存在");
         }
-        $types=array();
-        if($user['email_bind'])$types[]='email';
-        if($user['mobile_bind'])$types[]='mobile';
-        if(empty($types)) {
+        $types = array();
+        if ($user['email_bind']) $types[] = 'email';
+        if ($user['mobile_bind']) $types[] = 'mobile';
+        if (empty($types)) {
             $this->error("您的帐户未绑定任何有效资料，请联系客服处理。");
-        }else{
-            $this->success('', '',$types);
+        } else {
+            $this->success('', '', $types);
         }
     }
 
-    public function register(){
+    public function register()
+    {
         $this->seo("会员注册");
 
 
-        if($this->request->isPost()){
+        if ($this->request->isPost()) {
             $this->checkSubmitRate(2);
-            $data=$this->request->only('username,password,repassword,email,realname,mobile,mobilecheck','post');
+            $data = $this->request->only('username,password,repassword,email,realname,mobile,mobilecheck', 'post');
 
-            $validate=new MemberValidate();
+            $validate = new MemberValidate();
             $validate->setId();
-            if(!$validate->scene('register')->check($data)){
+            if (!$validate->scene('register')->check($data)) {
                 $this->error($validate->getError());
             }
 
-            $invite_code=$this->request->post('invite_code');
-            if(($this->config['m_invite']==1 && !empty($invite_code)) || $this->config['m_invite']==2) {
+            $invite_code = $this->request->post('invite_code');
+            if (($this->config['m_invite'] == 1 && !empty($invite_code)) || $this->config['m_invite'] == 2) {
                 if (empty($invite_code)) $this->error("请填写激活码");
                 $invite = Db::name('inviteCode')->where(array('code' => $invite_code, 'is_lock' => 0, 'member_use' => 0))->find();
                 if (empty($invite) || ($invite['invalid_time'] > 0 && $invite['invalid_time'] < time())) {
@@ -329,134 +335,137 @@ class LoginController extends BaseController{
                 }
             }
 
-            if($this->config['sms_code'] == 1) {
+            if ($this->config['sms_code'] == 1) {
                 if (empty($data['mobilecheck'])) {
                     $this->error(' 请填写手机验证码');
                 }
-                $service=new CheckcodeService();
-                $verifyed=$service->verifyCode($data['mobile'],$data['mobilecheck']);
-                if(!$verifyed){
+                $service = new CheckcodeService();
+                $verifyed = $service->verifyCode($data['mobile'], $data['mobilecheck']);
+                if (!$verifyed) {
                     $this->error(' 手机验证码填写错误');
                 }
-                $data['mobile_bind']=1;
+                $data['mobile_bind'] = 1;
                 unset($data['mobilecheck']);
             }
 
             Db::startTrans();
-            if(!empty($invite)) {
+            if (!empty($invite)) {
                 $invite = Db::name('invite_code')->lock(true)->find($invite['id']);
                 if (!empty($invite['member_use'])) {
                     Db::rollback();
                     $this->error("激活码已被使用");
                 }
-                $data['referer']=$invite['member_id'];
-                if($invite['level_id']){
-                    $data['level_id']=$invite['level_id'];
-                }else{
-                    $data['level_id']=getDefaultLevel();
+                $data['referer'] = $invite['member_id'];
+                if ($invite['level_id']) {
+                    $data['level_id'] = $invite['level_id'];
+                } else {
+                    $data['level_id'] = getDefaultLevel();
                 }
-            }else{
-                $data['referer']=session('agent');
-                $data['level_id']=getDefaultLevel();
+            } else {
+                $data['referer'] = session('agent');
+                $data['level_id'] = getDefaultLevel();
                 //系统配置的默认推荐人
-                if($data['referer'] <=0 && $this->config['referer_id']){
+                if ($data['referer'] <= 0 && $this->config['referer_id']) {
                     $data['referer'] = intval($this->config['referer_id']);
                 }
             }
-            $data['salt']=random_str(8);
-            $data['password']=encode_password($data['password'],$data['salt']);
-            $data['login_ip']=$this->request->ip();
+            $data['salt'] = random_str(8);
+            $data['password'] = encode_password($data['password'], $data['salt']);
+            $data['login_ip'] = $this->request->ip();
 
             unset($data['repassword']);
-            $model=MemberModel::create($data);
+            $model = MemberModel::create($data);
 
-            if(empty($model['id'])){
+            if (empty($model['id'])) {
                 Db::rollback();
                 $this->error("注册失败");
             }
-            if(!empty($invite)) {
+            if (!empty($invite)) {
                 $invite['member_use'] = $model['id'];
                 $invite['use_time'] = time();
                 Db::name('invite_code')->update($invite);
             }
-            if(!empty($this->wechatUser)){
-                Db::name('memberOauth')->where('openid',$this->wechatUser['openid'])
-                    ->update(['member_id'=>$model['id']]);
+            if (!empty($this->wechatUser)) {
+                Db::name('memberOauth')->where('openid', $this->wechatUser['openid'])
+                    ->update(['member_id' => $model['id']]);
             }
             Db::commit();
             $this->setLogin($model);
-            $redirect=redirect()->restore();
-            if(empty($redirect->getData())){
-                $url=aurl('index/member/index');
-            }else{
-                $url=$redirect->getTargetUrl();
+            $redirect = redirect()->restore();
+            if (empty($redirect->getData())) {
+                $url = aurl('index/member/index');
+            } else {
+                $url = $redirect->getTargetUrl();
             }
-            $this->success("注册成功",$url);
+            $this->success("注册成功", $url);
         }
 
-        $this->assign('nocode',$this->config['m_invite']<1);
+        $this->assign('nocode', $this->config['m_invite'] < 1);
         return $this->fetch();
     }
 
-    public function checkunique($type='username'){
+    public function checkunique($type = 'username')
+    {
         Log::close();
-        if(!in_array($type,array('username','email','mobile'))){
+        if (!in_array($type, array('username', 'email', 'mobile'))) {
             $this->error('参数不合法');
         }
         $member = Db::name('member');
         $val = $this->request->param('value');
-        $m = $member->where($type,$val)->find();
+        $m = $member->where($type, $val)->find();
         $json = array();
         $json['error'] = 0;
-        if(!empty($m)) $json['error'] = 1;
+        if (!empty($m)) $json['error'] = 1;
         return json($json);
     }
 
-    public function send_checkcode($mobile,$code){
+    public function send_checkcode($mobile, $code)
+    {
 
         //图形验证码
-        if(!$this->check_verify($code)){
+        if (!$this->check_verify($code)) {
             $this->error('验证码错误');
         }
 
         //号码格式验证
-        if(!preg_match('/^1[2-9]\d{9}$/',$mobile)){
+        if (!preg_match('/^1[2-9]\d{9}$/', $mobile)) {
             $this->error('手机号码格式错误');
         }
 
         //已注册验证
-        $member=Db::name('member')->where('mobile',$mobile)->find();
-        if(!empty($member)){
+        $member = Db::name('member')->where('mobile', $mobile)->find();
+        if (!empty($member)) {
             $this->error('该手机号码已注册');
         }
 
         $service = new CheckcodeService();
-        $sended = $service->sendCode('mobile',$mobile);
-        if($sended) {
+        $sended = $service->sendCode('mobile', $mobile);
+        if ($sended) {
             $this->success('验证码发送成功！');
-        }else{
+        } else {
             $this->error($service->getError());
         }
     }
 
-    public function verify(){
-        $verify = new Captcha(array('seKey'=>config('session.sec_key')));
+    public function verify()
+    {
+        $verify = new Captcha(array('seKey' => config('session.sec_key')));
 
         $verify->fontSize = 13;
         $verify->length = 4;
         return $verify->entry('foreign');
     }
-    protected function check_verify($code){
-        $verify = new Captcha(array('seKey'=>config('session.sec_key')));
-        return $verify->check($code,'foreign');
+    protected function check_verify($code)
+    {
+        $verify = new Captcha(array('seKey' => config('session.sec_key')));
+        return $verify->check($code, 'foreign');
     }
 
     public function logout()
     {
         $this->clearLogin();
-        
-        $this->success("已成功退出登陆");
 
+        $this->success("已成功退出登陆");
     }
 
     /**

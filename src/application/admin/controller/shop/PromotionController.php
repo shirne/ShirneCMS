@@ -60,7 +60,6 @@ class PromotionController extends BaseController
         return $this->fetch();
     }
 
-    
     public function share()
     {
         $setting = getSettings(true,true);

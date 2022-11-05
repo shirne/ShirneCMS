@@ -20,7 +20,11 @@
                     <td>下单日期</td>
                     <td>{$model.create_time|showdate}</td>
                     <td>订单状态</td>
-                    <td>{$model.status|order_status|raw}</td>
+                    <td>{$model.status|order_status|raw}
+                        <if condition="$model['payedamount'] GT 0">
+                            <br /><span class="badge">已付: {$model['payedamount']}</span>
+                        </if>
+                    </td>
                 </tr>
                 <tr>
                     <th colspan="4">订单商品</th>
@@ -43,6 +47,9 @@
                                         默认规格
                                     </if>
                                 </div>
+                                <if condition="$p['store_id'] neq $model['store_id']">
+                                    <div class="text-muted">店铺:{$p['store_name']}</div>
+                                </if>
                                 <div>￥{$p['product_price']} &times; {$p['count']}件</div>
                             </div>
                         </div>
@@ -73,7 +80,7 @@
                             <if condition="$model['pay_type'] EQ 'offline'">
                                 <span class="badge badge-warning">线下支付</span>
                                 <elseif condition="$model['pay_type'] EQ 'balance'"/>
-                                <span class="badge badge-primary">余额支付</span>
+                                <span class="badge badge-primary">{:lang('Balance')}支付</span>
                                 <elseif condition="$model['pay_type'] EQ 'wechat'"/>
                                 <span class="badge badge-success">微信支付</span>
                                 <elseif condition="$model['pay_type'] EQ 'alipay'"/>

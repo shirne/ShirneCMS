@@ -39,6 +39,40 @@ class ProductModel extends ContentModel
     protected function tagBaseView($model){
         return $model->view('productBrand',['title'=>'brand_title','logo'=>'brand_logo'],$this->model.'.brand_id=productBrand.id','LEFT');
     }
+
+    protected function onFilter($model, $attrs){
+        if(!empty($attrs['brand'])){
+            if(strpos($attrs['brand'],',')>0){
+                $model->whereIn($this->model . ".brand_id", idArr($attrs['brand']));
+            }else {
+                $model->where($this->model . ".brand_id", intval($attrs['brand']));
+            }
+        }
+        if(!empty($attrs['shop'])){
+            if(strpos($attrs['shop'],',')>0){
+                $model->whereIn($this->model . ".shop_id", idArr($attrs['shop']));
+            }else {
+                $model->where($this->model . ".shop_id", intval($attrs['shop']));
+            }
+        }
+        if(!empty($attrs['member'])){
+            if(strpos($attrs['member'],',')>0){
+                $model->whereIn($this->model . ".member_id", idArr($attrs['member']));
+            }else {
+                $model->where($this->model . ".member_id", intval($attrs['member']));
+            }
+        }
+        if(!empty($attrs['province'])){
+            $model->where(function($query)use($attrs){
+                $query->where($this->model . ".province", $attrs['province'])->whereOr($this->model . ".province",'');
+            });
+        }
+        if(!empty($attrs['city'])){
+            $model->where(function($query)use($attrs){
+                $query->where($this->model . ".city", $attrs['city'])->whereOr($this->model . ".city",'');
+            });
+        }
+    }
     
     /**
      * @param array|Paginator $lists
@@ -75,7 +109,7 @@ class ProductModel extends ContentModel
         if(empty($skucounts))return [];
         $sku_ids = array_keys($skucounts);
         $products=Db::view('ProductSku','*')
-            ->view('Product',['title'=>'product_title','spec_data','image'=>'product_image','status','levels','is_discount','postage_id','is_commission','commission_percent','type','level_id'],'ProductSku.product_id=Product.id','LEFT')
+            ->view('Product',['title'=>'product_title','spec_data','image'=>'product_image','store_id','cate_id','status','levels','is_discount','postage_id','is_commission','commission_percent','type','level_id','max_buy','max_buy_cycle'],'ProductSku.product_id=Product.id','LEFT')
             ->whereIn('ProductSku.sku_id',idArr($sku_ids))
             ->select();
     

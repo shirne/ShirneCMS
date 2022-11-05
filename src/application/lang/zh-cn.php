@@ -11,8 +11,13 @@ return [
 
     'Balance'=>'余额',
     'Credit'=>'积分',
-    'Reward'=>'奖励',
+    'Reward'=>'佣金',
     
+    'Refund'=>'退款',
+    'Transfer out'=>'转出',
+    'Transfer in'=>'转入',
+    'Consume Send'=>'消费赠送',
+
     'Gived'=>'已发放',
     'Canceled'=>'已撤销',
     'Waiting'=>'待发放',
@@ -20,6 +25,7 @@ return [
     'System Opt.'=>'系统操作',
     'Consume'=>'消费',
     'Recharge'=>'充值',
+    'Commission'=>'佣金',
 
     'Unknown'=>'未知',
 

@@ -18,6 +18,20 @@ function getProductPresets($model=[]){
     ];
 }
 
+function showLevel($level,$isshort=false){
+    if(!empty($level) && $level['level_id']>0){
+        return '<span class="badge badge-'.$level['style'].'">'.($isshort?$level['short_name']:$level['level_name']).'</span>';
+    }
+    return '';
+}
+
+function showAgent($agent,$isshort=false){
+    if(!empty($agent) && $agent['level_id']>0){
+        return '<span class="badge badge-'.$agent['style'].'">'.($isshort?$agent['short_name']:$agent['name']).'</span>';
+    }
+    return '';
+}
+
 function setLogin($user, $logintype = 1){
     $time=time();
     session(SESSKEY_ADMIN_ID,$user['id']);

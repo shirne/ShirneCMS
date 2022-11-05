@@ -23,7 +23,7 @@
                 <th>样式</th>
                 <th>默认</th>
                 <th>条件</th>
-                <th>奖励比例</th>
+                <th>区域分红</th>
                 <th>全国分红</th>
             </tr>
             </thead>

@@ -3,6 +3,7 @@
 namespace app\api\controller;
 
 use app\common\facade\MemberCartFacade;
+use app\common\model\ProductModel;
 use think\Db;
 use think\response\Json;
 
@@ -13,6 +14,22 @@ use think\response\Json;
  */
 class CartController extends AuthedController
 {
+    /**
+     * 获取购物车全部列表
+     * @return Json 
+     */
+    public function getbyid($products){
+        $pids = array_keys($products);
+        $skus = Db::name('productSku')->whereIn('product_id',$pids)->select();
+        $newData=[];
+        foreach($skus as $row){
+            if(!isset($products[$row['product_id']]))continue;
+            $newData[$row['sku_id']]=$products[$row['product_id']];
+            unset($products[$row['product_id']]);
+        }
+        return $this->response(ProductModel::getForOrder($newData));
+    }
+
     /**
      * 获取购物车全部列表
      * @return Json 

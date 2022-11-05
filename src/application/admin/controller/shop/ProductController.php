@@ -94,7 +94,7 @@ class ProductController extends BaseController
             $model->whereIn('product.cate_id',ProductCategoryFacade::getSubCateIds($cate_id));
         }
 
-        $lists=$model->order('create_time ASC')->paginate(10);
+        $lists=$model->order('create_time DESC')->paginate(10);
         if(!$lists->isEmpty()){
             $ids=array_column($lists->items(),'id');
             $skus=Db::name('productSku')->whereIn('product_id',$ids)->select();
@@ -125,7 +125,6 @@ class ProductController extends BaseController
     }
 
     public function qrcode($id, $qrtype='url', $size=430, $miniprogram=0){
-        $id = intval($id);
         $product=ProductModel::get($id);
         if($qrtype=='url'){
             $url = url('index/product/view',['id'=>$id], true, true);
@@ -173,7 +172,25 @@ class ProductController extends BaseController
         if($data['is_commission'] < 2){
             unset($data['commission_percent']);
         }
+        if(!empty($data['province']) && strpos($data['province'],'全部') !== false){
+            $data['province']='';
+        }
+        if(!empty($data['city']) && strpos($data['city'],'全部') !== false){
+            $data['city']='';
+        }
+        if(!empty($data['county']) && strpos($data['county'],'全部') !== false){
+            $data['county']='';
+        }
         return $data;
+    }
+
+    private function checkArea($data){
+        // $topcate=ProductCategoryFacade::getTopCategory($data['cate_id']);
+        // if(!empty($topcate) && $topcate['id']==15 || $data['cate_id']==15){
+        //     if(empty($data['province'])){
+        //         $this->error('请选择商品发布省份');
+        //     }
+        // }
     }
     
     /**
@@ -184,6 +201,7 @@ class ProductController extends BaseController
     public function add($cid=0){
         if ($this->request->isPost()) {
             $data = $this->request->post();
+            $this->checkArea($data);
             $validate = new ProductValidate();
             $validate->setId();
             $skuValidate=new ProductSkuValidate();
@@ -232,6 +250,7 @@ class ProductController extends BaseController
                 }
             }
         }
+
         $presets = getProductPresets();
         
         $model=$presets['0'];
@@ -253,6 +272,7 @@ class ProductController extends BaseController
         $this->assign('price_levels',array_filter($levels,function($item){
             return $item['diy_price']==1;
         }));
+        $this->assign('needarea',true);
         $this->assign('types',getProductTypes());
         $this->assign('postages',PostageModel::getCacheData());
         $this->assign('id',0);
@@ -271,6 +291,7 @@ class ProductController extends BaseController
 
         if ($this->request->isPost()) {
             $data=$this->request->post();
+            $this->checkArea($data);
             $validate=new ProductValidate();
             $validate->setId($id);
             $skuValidate=new ProductSkuValidate();
@@ -347,6 +368,7 @@ class ProductController extends BaseController
         $this->assign('presets',getProductPresets($model));
         $this->assign('skus',$skus->isEmpty()?[[]]:$skus);
         $this->assign('types',getProductTypes());
+        $this->assign('needarea',true);
         $this->assign('postages',PostageModel::getCacheData());
         $this->assign('id',$id);
         return $this->fetch();
@@ -357,9 +379,28 @@ class ProductController extends BaseController
         $result = $model->where('id','in',idArr($ids))->update(['cate_id'=>$cate_id]);
         if($result){
             user_log($this->mid,'setcateproduct',1,'设置商品分类 '.$ids.'=>'.$cate_id ,'manager');
-            $this->success(lang('Delete success!'), url('shop.product/index'));
+            $this->success(lang('Update success!'), url('shop.product/index'));
         }
-        $this->error(lang('Delete failed!'));
+        $this->error(lang('Update failed!'));
+    }
+
+    public function set_area($areas, $ids){
+        $model = Db::name('product');
+        if(count($areas) < 3){
+            $areas[]='';
+            $areas[]='';
+        }
+        for($i=0;$i<count($areas);$i++){
+            if(!empty($areas) && strpos($areas[$i],'全部')!==false){
+                $areas[$i]='';
+            }
+        }
+        $result = $model->where('id','in',idArr($ids))->update(['province'=>$areas[0],'city'=>$areas[1],'county'=>$areas[2]]);
+        if($result){
+            user_log($this->mid,'setarea-product',1,'设置商品区域 '.$ids.'=>'.implode(',',$areas) ,'manager');
+            $this->success(lang('Update success!'), url('shop.product/index'));
+        }
+        $this->error(lang('Update failed!'));
     }
 
     /**

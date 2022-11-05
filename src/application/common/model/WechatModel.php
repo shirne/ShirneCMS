@@ -4,6 +4,13 @@ namespace app\common\model;
 
 use app\common\core\BaseModel;
 use EasyWeChat\Factory;
+use EasyWeChat\Payment\Application;
+use EasyWeChat\OfficialAccount\Application as OfficialAccountApplication;
+use EasyWeChat\MiniProgram\Application as MiniProgramApplication;
+use EasyWeChat\OpenPlatform\Application as OpenPlatformApplication;
+use EasyWeChat\Work\Application as WorkApplication;
+use EasyWeChat\OpenWork\Application as OpenWorkApplication;
+use EasyWeChat\MicroMerchant\Application as MicroMerchantApplication;
 
 /**
  * Class WechatModel
@@ -90,6 +97,14 @@ class WechatModel extends BaseModel
     public static function getLastWechat(){
         return static::$lastWechat;
     }
+
+    /**
+     * 创建一个Application对象
+     * @param string $wechat 
+     * @param bool $ispay 
+     * @param array $payset 
+     * @return false|Application|OfficialAccountApplication|MiniProgramApplication|OpenPlatformApplication|WorkApplication|OpenWorkApplication|MicroMerchantApplication|null 
+     */
     public static function createApp($wechat = 'default', $ispay=false, $payset=[]){
         if($wechat === 'default'){
             $wechat = static::where('is_default',1)->find();

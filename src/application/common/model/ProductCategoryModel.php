@@ -15,6 +15,19 @@ class ProductCategoryModel extends CategoryModel
 
     protected $type = ['specs'=>'array','props'=>'array'];
 
+    protected function _get_data($isall=false){
+        $model= Db::name('ProductCategory')->order('pid ASC,sort ASC,id ASC');
+        if(!$isall){
+            $model->where('status',1);
+        }
+        return $model->select();
+    }
+
+    public function getAllCategories(){
+        $tmpdata = $this->_get_data(true);
+        return getSortedCategory($tmpdata);
+    }
+
     public function getBrandsCategories($brandid){
         $catebrand = Db::name('productCategoryBrand')->where('brand_id',$brandid)->select();
         return array_column($catebrand,'cate_id');

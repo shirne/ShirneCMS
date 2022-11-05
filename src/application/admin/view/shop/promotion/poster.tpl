@@ -3,7 +3,7 @@
 <block name="body">
 <include file="public/bread" menu="shop_promotion_index" title="商城配置" />
 <div id="page-wrapper">
-    <div class="page-header">分享图配置</div>
+    <div class="page-header">推广海报配置</div>
     <div id="page-content">
     <form method="post" action="" enctype="multipart/form-data">
         

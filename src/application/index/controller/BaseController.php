@@ -419,17 +419,6 @@ class BaseController extends Controller
             }
         }
 
-        /**
-         * 微信JSSDK
-         * 详细用法参考：http://mp.weixin.qq.com/wiki/7/1c97470084b73f8e224fe6d9bab1625b.html
-         */
-        // if($this->isWechat ) {
-        //     $signPackage = $this->getShareData();
-
-        //     if(!empty($signPackage)) {
-        //         $this->assign('signPackage', $signPackage);
-        //     }
-        // }
     }
 
     private $currentWechats=[];

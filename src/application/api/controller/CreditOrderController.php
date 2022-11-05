@@ -17,16 +17,26 @@ class CreditOrderController extends AuthedController
 {
     /**
      * 初始化订单信息
-     * @param array $goods 需要购买的商品列表，每个item包含sku_id 和count,count默认1
+     * @param array $goods 需要购买的商品列表，每个item包含id 和count,count默认1
      * @return Json 
      */
     public function prepare($goods){
         
-        $skuids=array_column($goods,'sku_id');
-        $goodsData=Db::view('GoodsSku','*')
-            ->view('Goods',['title'=>'product_title','image'=>'product_image','levels','is_discount'],'GoodsSku.product_id=Goods.id','LEFT')
-            ->whereIn('GoodsSku.sku_id',idArr($skuids))
+        $ids=array_column($goods,'id');
+        $counts=array_column($goods,'count','id');
+        $goodsData=Db::name('Goods')->field(['id','title','unit','price','market_price','image','levels','limit','storage','type'])
+            ->whereIn('id',idArr($ids))
             ->select();
+
+        foreach($goodsData as &$goods){
+            if(!empty($goods['levels'])){
+                if (!in_array($this->user['level_id'], $goods['levels'])) {
+                    $this->error('您当前会员组不允许购买商品[' . $goods['title'] . ']');
+                }
+            }
+            $goods['count']=empty($counts[$goods['id']])?1:$counts[$goods['id']];
+        }
+        unset($goods);
 
         return $this->response([
             'goods'=>$goodsData,
@@ -49,7 +59,7 @@ class CreditOrderController extends AuthedController
      * @return mixed 
      */
     public function confirm($goods){
-        
+        if(empty($this->config['credit_close']))$this->error($this->config['credit_close_desc']);
         if(empty($goods))$this->error('未选择下单商品');
         $goods_ids = array_column($goods,'id');
         $goodsData=Db::view('Goods','*')
@@ -108,15 +118,15 @@ class CreditOrderController extends AuthedController
                     $this->error('安全密码错误');
                 }
             }
-
+            $paycredit = true;
             $orderModel=new CreditOrderModel();
-            $result=$orderModel->makeOrder($this->user,$goodsData,$address,$data['remark'],$balancepay);
+            $result=$orderModel->makeOrder($this->user,$goodsData,$address,$paycredit,$data['remark'],$balancepay);
             if($result){
-                if($balancepay) {
-                    return $this->response(['order_id'=>$result],1,'下单成功');
+                if($balancepay || $paycredit === true) {
+                    return $this->response(['order_id'=>$result,'payed'=>1],1,'下单成功');
                 }else{
-                    $method=$data['pay_type'].'pay';
-                    if(method_exists($this,$method)){
+                    $method=isset($data['pay_type'])?($data['pay_type'].'pay'):'';
+                    if($method && method_exists($this,$method)){
                         return $this->$method($result);
                     }else{
                         return $this->response(['order_id'=>$result],1,'下单成功，请尽快支付');

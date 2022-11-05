@@ -123,8 +123,12 @@ class CreditOrderModel extends BaseOrderModel
 
         $this->startTrans();
         if($paycredit){
-            $paycredit = $paycredit * 100;
-            $decpoints = money_log($member['id'], -$paycredit, lang('Credit')."支付", 'consume',0,'points');
+            if($paycredit === true){
+                $paycredit=$total_price;
+            }else{
+                $paycredit = $paycredit * 100;
+            }
+            $decpoints = money_log($member['id'], -$paycredit, lang('Credit')."支付", 'consume',0,'credit');
             if(!$decpoints){
                 $this->error=lang('Credit')."扣除失败";
                 return false;
@@ -138,7 +142,7 @@ class CreditOrderModel extends BaseOrderModel
                 $debit = money_log($member['id'], -$pay_price , lang('Credit')."商品抵扣", 'consume', 0, is_string($balance_pay) ? $balance_pay : 'money');
                 if ($debit) $status = 1;
                 else {
-                    $this->error = "余额不足";
+                    $this->error = lang('Balance')."不足";
                     $this->rollback();
                     return false;
                 }
@@ -151,8 +155,8 @@ class CreditOrderModel extends BaseOrderModel
         $orderdata=array(
             'order_no'=>$this->create_no(),
             'member_id'=>$member['id'],
-            'paycredit'=>$paycredit * .01,
-            'payamount'=>$pay_price*.01,
+            'paycredit'=>$paycredit/100,
+            'payamount'=>$pay_price/100,
             'status'=>0,
             'remark'=>$remark,
             'address_id'=>$address['address_id'],

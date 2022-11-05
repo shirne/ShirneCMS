@@ -32,7 +32,7 @@ class CommonController extends BaseController
      * 2. { method1 => { arg1 => a, arg2 => b}, method2 => { call => controller.method, arg1 => a, arg2 => b} }
      *    此方法各接口的参数互相隔离，并可重复调用同一接口
      *    重复调用同一个接口时，使用自定义key，然后增加一个call来指定调用的方法
-     *    
+     * 
      * @return \think\response\Json
      */
     public function batch(){
@@ -289,6 +289,9 @@ class CommonController extends BaseController
             }else{
                 $data[$k]=$v;
             }
+        }
+        if($this->request->param('tencent-key')=='1'){
+            $data['mapkey_tencent']=$settings['third']['mapkey_tencent'];
         }
         return $this->response($data);
     }

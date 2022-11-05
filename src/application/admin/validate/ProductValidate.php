@@ -24,4 +24,5 @@ class ProductValidate extends BaseUniqueValidate
         'goods_no.unique'=>'商品货号已存在',
         'goods_no.alphaDash'=>'商品货号只能填写字母，数字及_'
     );
+
 }

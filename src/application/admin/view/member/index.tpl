@@ -105,7 +105,7 @@
                 </td>
                 <td>
                     <empty name="v.refer_name">
-                        <a href="javascript:" data-id="{$v.id}" class="bindreferer">设置</a>
+                        <a href="javascript:" data-id="{$v.id}" class="bindreferer" title="设置推荐人">设置</a>
                         <else/>
                         <div class="media">
                             <if condition="!empty($v['refer_avatar'])">
@@ -132,10 +132,10 @@
                     <if condition="$v.is_agent neq 0">
                         <a class="btn btn-outline-primary" title="查看下线" href="{:url('member/index',array('referer'=>$v['id']))}"><i class="ion-md-people"></i> </a>
                         <a class="btn btn-outline-danger link-confirm" data-confirm="取消代理不能更改已注册的用户!!!" title="取消代理" href="{:url('member/cancel_agent',array('id'=>$v['id']))}" ><i class="ion-md-log-out"></i> </a><br />
-                        <a class="btn btn-sm pl-1 pr-1 pt-0 pb-0 mt-2 btn-{$agents[$v['is_agent']]['style']} btn-setagent" title="更改级别" data-id="{$v.id}" data-agent="{$v.is_agent}" href="{:url('member/set_agent',array('id'=>$v['id']))}" >{$agents[$v['is_agent']]['name']}&nbsp;<i class="ion-md-create"></i></a>
+                        <a class="btn btn-sm pl-1 pr-1 pt-0 pb-0 mt-2 btn-{$agents[$v['is_agent']]['style']} btn-setagent" title="更改级别" data-id="{$v.id}" data-agent="{$v.is_agent}" data-province="{$v.agent_province}" data-city="{$v.agent_city}" data-area="{$v.agent_area}" href="{:url('member/set_agent',array('id'=>$v['id']))}" >{$agents[$v['is_agent']]['name']}&nbsp;<i class="ion-md-create"></i></a>
                         <span class="badge badge-info">{$v.agentcode}</span>
                     <else/>
-                        <a class="btn btn-sm btn-outline-primary"  data-id="{$v.id}" data-agent="0" title="设置代理" href="{:url('member/set_agent',array('id'=>$v['id']))}" ><i class="ion-md-medal"></i> </a>
+                        <a class="btn btn-sm btn-outline-primary"  data-id="{$v.id}" data-agent="0" data-province="{$v.agent_province}" data-city="{$v.agent_city}" data-area="{$v.agent_area}" title="设置代理" href="{:url('member/set_agent',array('id'=>$v['id']))}" ><i class="ion-md-medal"></i> </a>
                     </if>
                 </td>
                 <td>
@@ -162,6 +162,7 @@
 
 </block>
 <block name="script">
+    <script type="text/javascript" src="__STATIC__/js/location.min.js"></script>
     <script type="text/html" id="rechargeTpl">
         <div class="row" style="margin:0 10%;">
             <div class="col-12 form-group">
@@ -245,6 +246,33 @@
         })(window);
         jQuery(function(){
             var tpl=$('#rechargeTpl').text();
+            var locobj = new Location();
+            function getArea(vals,callback){
+                new Dialog({
+					backdrop:'static',
+					keyboard: false,
+					onshown:function(body){
+						body.jChinaArea({
+							aspnet: true,
+							s1:vals[0],
+							s2:vals[1],
+							s3:vals[2],
+							onEmpty:function(sel){
+								sel.prepend('<option value="">全部</option>');
+							}
+						});
+						var firstInput = body.find('select').eq(0);
+						firstInput.focus()
+					},
+					onsure:function(body){
+						var inputs=body.find('input[type=hidden]'),vals=[];
+						inputs.each(function(i, item){
+							vals.push($(item).val())
+						});
+						callback(vals)
+					},
+				}).show('<div><div class="mt-1"><input type="hidden"/><select name="province" class="form-control"></select></div><div class="mt-1"><input type="hidden"/><select name="province" class="form-control"></select></div><div class="mt-1"><input type="hidden"/><select name="province" class="form-control"></select></div></div>','请选择地区');
+            }
             $('.btn-recharge').click(function() {
                 var id=$(this).data('id');
                 var dlg=new Dialog({
@@ -307,7 +335,7 @@
                         }
                     })
                     return false;
-                },{is_agent:1})
+                })
             })
             $('.delreferer').click(function (e) {
                 var id=$(this).data('id')
@@ -369,33 +397,48 @@
 
                 var id=$(this).data('id')
                 var agent_id=$(this).data('agent')
+                var province=$(this).data('province')
+                var city=$(this).data('city')
+                var area=$(this).data('area')
                 dialog.pickList({
                     isajax:false,
                     list:agents,
                     idkey:'id',
                     rowTemplate:'<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action" style="line-height:30px;">[{@id}]&nbsp;{@name} {@cost_credit}积分 {@total_award}收益  </a>'
                 },function(agent){
-                    if(agent.id==agent_id){
-                        dialog.warning('未修改')
-                        return false;
-                    }
-                    $.ajax({
-                        url:"{:url('set_agent')}",
-                        dataType:'json',
-                        data:{
-                            id:id,
-                            agent_id:agent.id
-                        },
-                        success:function (json) {
-                            dialog.alert(json.msg,function () {
-                                if(json.code==1){
-                                    location.reload()
-                                }
-                            })
+                    if(agent.id > 2){
+                        getArea([province,city,area],function(areas){
+                            setAgent(id, agent.id, areas)
+                        })
+                    }else{
+                        if(agent.id==agent_id){
+                            dialog.warning('未修改')
+                            return false;
                         }
-                    })
+                        setAgent(id, agent.id, [province,city,area])
+                    }
                 })
             })
+            function setAgent(id, agentid, areas){
+                $.ajax({
+                    url:"{:url('set_agent')}",
+                    dataType:'json',
+                    data:{
+                        id:id,
+                        agent_id:agentid,
+                        province:areas[0],
+                        city:areas[1],
+                        area:areas[2],
+                    },
+                    success:function (json) {
+                        dialog.alert(json.msg,function () {
+                            if(json.code==1){
+                                location.reload()
+                            }
+                        })
+                    }
+                })
+            }
         });
     </script>
 </block>

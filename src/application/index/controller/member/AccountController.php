@@ -262,7 +262,7 @@ class AccountController extends BaseController
                     $this->error('转赠金额错误');
                 }
                 if($data['amount']*100>$this->user[$data['field']]){
-                    $this->error('您的余额不足');
+                    $this->error('您的'.lang('Balance').'不足');
                 }
                 money_log($this->userid,-$data['amount']*100,'转赠给会员'.$tomember['username'],'transout',$tomember['id'],$data['field']);
                 money_log($tomember['id'],$data['amount']*100,'会员'.$this->user['username'].'转入','transin',$this->userid,'money');

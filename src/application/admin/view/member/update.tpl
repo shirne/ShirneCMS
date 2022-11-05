@@ -86,6 +86,21 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="form-group form-row agentareabox">
+                                    <label class="form-label">代理地区</label>
+                                    <div class="col">
+                                            <input type="hidden" name="agent_province" />
+                                        <select name="province-id" class="form-control" id="agent_province"></select>
+                                    </div>
+                                    <div class="col">
+                                            <input type="hidden" name="agent_city" />
+                                        <select name="city-id" class="form-control" id="agent_city"></select>
+                                    </div>
+                                    <div class="col">
+                                            <input type="hidden" name="agent_county" />
+                                        <select name="county-id" class="form-control" id="agent_county"></select>
+                                    </div>
+                                </div>
                                 <div class="form-group form-row">
                                     <label class="form-label">用户状态</label>
                                     <div class="col">
@@ -176,8 +191,8 @@
                                         <select name="city-id" class="form-control" id="city"></select>
                                     </div>
                                     <div class="col">
-                                            <input type="hidden" name="area" />
-                                        <select name="area-id" class="form-control" id="area"></select>
+                                            <input type="hidden" name="county" />
+                                        <select name="county-id" class="form-control" id="county"></select>
                                     </div>
                                 </div>
                                 <div class="form-group form-row">
@@ -212,7 +227,16 @@
                 aspnet: true,
                 s1:"{$model.province}",
                 s2:"{$model.city}",
-                s3:"{$model.area}"
+                s3:"{$model.county}"
+            });
+            $(".agentareabox").jChinaArea({
+                aspnet: true,
+                s1:"{$model.agent_province}",
+                s2:"{$model.agent_city}",
+                s3:"{$model.agent_county}",
+                onEmpty:function(s){
+                    sel.prepend('<option value="">全部</option>');
+                }
             });
         })
     </script>
