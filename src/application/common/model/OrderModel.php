@@ -591,11 +591,6 @@ class OrderModel extends BaseOrderModel
                     ->dec('storage', $product['count'])
                     ->inc('sale', $product['count'])
                     ->update();
-
-                Db::name('storeProduct')->where('product_id', $product['product_id'])
-                    ->dec('storage', $product['count'])
-                    ->inc('sale', $product['count'])
-                    ->update();
             }
             foreach ($order_stores as $ostore) {
                 $ostore['order_id'] = $result;
