@@ -45,6 +45,43 @@
                 <div class="text-muted">{$setting['shop_description']['description']}</div>
             </div>
         </div>
+        
+        <div class="form-row form-group">
+            <label for="v-shop_order_pay_limit" class="form-label w-100px text-right align-middle">{$setting['shop_order_pay_limit']['title']}</label>
+            <div class="col-5">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="v-shop_order_pay_limit" value="{$setting['shop_order_pay_limit']['value']}" placeholder="">
+                    <span class="input-group-append"><span class="input-group-text">分钟</span></span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="text-muted">{$setting['shop_order_pay_limit']['description']}</div>
+            </div>
+        </div>
+        <div class="form-row form-group">
+            <label for="v-shop_order_receive_limit" class="form-label w-100px text-right align-middle">{$setting['shop_order_receive_limit']['title']}</label>
+            <div class="col-5">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="v-shop_order_receive_limit" value="{$setting['shop_order_receive_limit']['value']}" placeholder="">
+                    <span class="input-group-append"><span class="input-group-text">天</span></span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="text-muted">{$setting['shop_order_receive_limit']['description']}</div>
+            </div>
+        </div>
+        <div class="form-row form-group">
+            <label for="v-shop_order_refund_limit" class="form-label w-100px text-right align-middle">{$setting['shop_order_refund_limit']['title']}</label>
+            <div class="col-5">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="v-shop_order_refund_limit" value="{$setting['shop_order_refund_limit']['value']}" placeholder="">
+                    <span class="input-group-append"><span class="input-group-text">天</span></span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="text-muted">{$setting['shop_order_refund_limit']['description']}</div>
+            </div>
+        </div>
         <div class="form-row form-group">
             <label for="v-shop_close" class="form-label w-100px text-right align-middle">{$setting['shop_close']['title']}</label>
             <div class="col-9 col-md-8 col-lg-6">

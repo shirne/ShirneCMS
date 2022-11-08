@@ -316,6 +316,7 @@ CREATE TABLE `sa_order` (
   `pay_type` VARCHAR(20) NULL COMMENT '付款方式',
   `pay_time` INT NULL DEFAULT 0,
   `deliver_time` INT NULL DEFAULT 0,
+  `receive_time` INT NULL DEFAULT 0,
   `confirm_time` INT NULL DEFAULT 0,
   `comment_time` INT NULL DEFAULT 0,
   `reason` VARCHAR(50) NULL COMMENT '取消/退款原因',
@@ -347,6 +348,7 @@ CREATE TABLE `sa_order` (
   `express_no` VARCHAR(100) NULL,
   `express_code` VARCHAR(20) NULL,
   `type` TINYINT NULL DEFAULT 1,
+  `islock` TINYINT NULL DEFAULT 0,
   PRIMARY KEY (`order_id`),
   UNIQUE INDEX `orderno_index` (`order_no` ASC),
   INDEX `memberid_index` (`member_id` ASC)

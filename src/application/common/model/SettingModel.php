@@ -38,7 +38,7 @@ class SettingModel extends BaseModel
         if ($group) {
             foreach (self::$settings as $set) {
                 if (empty($set['group'])) $set['group'] = 'common';
-                if (!isset($return[$set['group']])) $return[$set['group']] = array();
+                if ($group === true && !isset($return[$set['group']])) $return[$set['group']] = array();
                 if($parse) {
                     if ($set['type'] == 'check') {
                         $set['value'] = @unserialize($set['value']);
@@ -48,7 +48,11 @@ class SettingModel extends BaseModel
                         $set['value'] = self::parse_value($set['value']);
                     }
                 }
-                $return[$set['group']][$set['key']] = $all ? $set : $set['value'];
+                if($group === true){
+                    $return[$set['group']][$set['key']] = $all ? $set : $set['value'];
+                }else if($set['group'] == $group){
+                    $return[$set['key']]= $all ? $set : $set['value'];
+                }
             }
         } else {
             foreach (self::$settings as $set) {
