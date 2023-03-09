@@ -1,8 +1,8 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
-    <include file="public/bread" menu="wechat_index" title="文章图集" />
+    {include file="public/bread" menu="wechat_index" title="文章图集" /}
 
     <div id="page-wrapper">
         <div class="page-header">{$id>0?'编辑':'添加'}回复消息</div>
@@ -21,11 +21,11 @@
                 <div class="form-group">
                     <label for="text">类型</label>
                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                        <foreach name="types" id="type" key="key">
+                        {foreach $types as $key => $type}
                         <label class="btn btn-outline-secondary {$key==$model['type']?'active':''}">
                             <input type="radio" name="type" value="{$key}" autocomplete="off" {$key==$model['type']?'checked':''}> {$type}
                         </label>
-                        </foreach>
+                        {/foreach}
                     </div>
                     <div class="text-muted type-tip"></div>
                 </div>
@@ -36,11 +36,11 @@
                 <div class="form-group">
                     <label for="text">回复类型</label>
                     <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                        <foreach name="reply_types" id="type" key="key">
+                        {foreach $reply_types as $key => $type}
                             <label class="btn btn-outline-secondary {$key==$model['reply_type']?'active':''}">
                                 <input type="radio" name="reply_type" value="{$key}" autocomplete="off" {$key==$model['reply_type']?'checked':''}> {$type}
                             </label>
-                        </foreach>
+                        {/foreach}
                     </div>
                 </div>
                 <div class="form-group rtype-row rtype-text">
@@ -54,8 +54,8 @@
                     <label for="text">回复内容</label>
                     <div style="width:480px;">
                         <div class="list-group news-group">
-                            <foreach name="$model['news']" id="news" key="k">
-                                <if condition="$k EQ 0">
+                            {foreach $model['news'] as $k => $news}
+                                {if $k == 0}
                                     <a href="{$news.url}" class="list-group-item list-group-first" target="_blank" style="background-image:url({$news.image})">
                                         <div class="text-danger delbtn"><i class="ion-md-remove-circle"></i></div>
                                         <h3>{$news.title}</h3>
@@ -65,7 +65,7 @@
                                         <input type="hidden" name="news[{$k}][description]" value="{$news.description}"/>
                                         <div class="text-muted">{$news.description}</div>
                                     </a>
-                                    <else/>
+                                {else/}
                                     <a href="{$news.url}" class="list-group-item" target="_blank">
                                         <div class="text-danger delbtn"><i class="ion-md-remove-circle"></i></div>
                                         <input type="hidden" name="news[{$k}][title]" value="{$news.title}"/>
@@ -73,19 +73,19 @@
                                         <input type="hidden" name="news[{$k}][image]" value="{$news.image}"/>
                                         <input type="hidden" name="news[{$k}][description]" value="{$news.description}"/>
                                         <h3>{$news.title}</h3>
-                                        <if condition="!empty($news['image'])">
+                                        {if !empty($news['image'])}
                                             <div class="imgbox" style="background-image:url({$news.image})">
                                                 <img src="{$news.image}" />
                                             </div>
-                                        </if>
+                                        {/if}
                                     </a>
-                                </if>
-                            </foreach>
-                            <if condition="empty($model['news']) OR count($model['news']) LT 8">
+                                {/if}
+                            {/foreach}
+                            {if empty($model['news']) OR count($model['news']) < 8}
                                 <a href="javascript:" class="list-group-item list-group-add">
                                     <h3><i class="ion-md-add"></i> 添加</h3>
                                 </a>
-                            </if>
+                            {/if}
                         </div>
                     </div>
                 </div>
@@ -98,13 +98,13 @@
                                 <label class="custom-file-label" for="upload_image">选择文件</label>
                             </div>
                         </div>
-                        <if condition="$model['data']['image']">
+                        {if $model['data']['image']}
                             <figure class="figure">
                                 <img src="{$model['data']['image']}" class="figure-img img-fluid rounded" alt="image">
                                 <figcaption class="figure-caption text-center">{$model['data']['image']}</figcaption>
                             </figure>
                             <input type="hidden" name="delete_image" value="{$model['data']['image']}"/>
-                        </if>
+                        {/if}
                     </div>
                 </div>
                 <div class="form-group rtype-row rtype-custom">
@@ -131,8 +131,8 @@
             </form>
         </div>
     </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/plain" id="firstArticleTpl">
         <a href="{@url}" class="list-group-item list-group-first" target="_blank" style="background-image:url({@image})">
             <div class="text-danger delbtn"><i class="ion-md-remove-circle"></i></div>
@@ -288,4 +288,4 @@
             setBind();
         });
     </script>
-</block>
+{/block}

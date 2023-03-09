@@ -1,7 +1,7 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
-<include file="public/bread" menu="member_log" title="" />
+{block name="body"}
+{include file="public/bread" menu="member_log" title="" /}
 
 <div id="page-wrapper">
     <div class="row list-header">
@@ -33,27 +33,28 @@
             </tr>
         </thead>
         <tbody>
-        <foreach name="lists" item="v">
+        {empty name="lists"}{:list_empty(8)}{/empty}
+        {foreach $lists as $key => $v}
             <tr>
                 <td>{$v.id}</td>
                 <td>
                     <div class="media">
-                        <if condition="!empty($v['avatar'])">
+                        {if !empty($v['avatar'])}
                             <img src="{$v.avatar}" class="mr-2 rounded" width="30"/>
-                        </if>
+                        {/if}
                         <div class="media-body">
                             <h5 class="mt-0 mb-1" >
-                                <if condition="!empty($v['nickname'])">
+                                {if !empty($v['nickname'])}
                                     {$v.nickname}
-                                    <else/>
+                                {else/}
                                     {$v.username}
-                                </if>
+                                {/if}
                             </h5>
                         </div>
                     </div>
                 </td>
                 <td>{$v.action}</td>
-                <td><if condition="$v.result EQ 1"><span class="badge badge-success">成功</span><else/><span class="badge badge-danger">失败</span> </if></td>
+                <td>{if $v['result'] == 1}<span class="badge badge-success">成功</span>{else/}<span class="badge badge-danger">失败</span> {/if}</td>
                 <td>{$v.create_time|showdate}</td>
                 <td>{$v.ip}</td>
                 <td>{$v.remark|print_remark}</td>
@@ -61,10 +62,10 @@
                     <a class="btn btn-outline-primary" title="查看" data-title="查看详情" rel="ajax" href="{:url('member/logview',array('id'=>$v['id']))}"><i class="ion-md-document"></i> </a>
                 </td>
             </tr>
-        </foreach>
+        {/foreach}
         </tbody>
     </table>
     {$page|raw}
 </div>
 
-</block>
+{/block}

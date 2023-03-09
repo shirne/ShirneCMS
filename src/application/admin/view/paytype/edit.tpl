@@ -1,8 +1,8 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
-<include file="public/bread" menu="paytype_index" title="付款方式配置" />
+{include file="public/bread" menu="paytype_index" title="付款方式配置" /}
 
 <div id="page-wrapper">
     <div class="page-header">修改付款方式</div>
@@ -15,17 +15,17 @@
         <div class="form-group">
             <label for="cc">状态</label>
             <label class="radio-inline">
-                <input type="radio" name="status" id="status" value="1" <if condition="$model['status']==1">checked="checked"</if>>显示
+                <input type="radio" name="status" id="status" value="1" {if $model['status']==1}checked="checked"{/if}>显示
             </label>
             <label class="radio-inline">
-                <input type="radio" name="status" id="status" value="0" <if condition="$model['status']!=1">checked="checked"</if>>隐藏
+                <input type="radio" name="status" id="status" value="0" {if $model['status']!=1}checked="checked"{/if}>隐藏
             </label>
         </div>
         <div class="form-group">
             <label for="bb">付款方式类型</label>
-            <foreach name="paytypes" item="type">
+            {foreach $paytypes as $key => $type}
                 <label class="radio-inline"><input type="radio" name="type" value="{$key}" {$key==$model['type']?'checked="checked"':''}>&nbsp;{$type} </label>
-            </foreach>
+            {/foreach}
         </div>
         <div class="form-group typebox type-wechat type-alipay">
             <label for="cc">二维码</label>
@@ -35,13 +35,13 @@
                     <label class="custom-file-label" for="upload_qrcode">选择文件</label>
                 </div>
             </div>
-            <if condition="!empty($model['qrcode'])">
+            {if !empty($model['qrcode'])}
                 <figure class="figure">
                     <img src="{$model.qrcode}" class="figure-img img-fluid rounded" alt="image">
                     <figcaption class="figure-caption text-center">{$model.qrcode}</figcaption>
                 </figure>
                 <input type="hidden" name="delete_qrcode" value="{$model.qrcode}"/>
-            </if>
+            {/if}
         </div>
         <div class="form-group typebox type-unioncard">
             <label for="cc">银行名称</label>
@@ -49,9 +49,9 @@
                 <input type="text" name="bank" class="form-control" placeholder="请填写银行名称" value="{$model.bank}">
                 <select id="cardlist" class="form-control" onchange="if(this.value)this.form.bank.value=this.value;">
                     <option value="">从列表中选择自动填写</option>
-                    <foreach name="banklist" item="v">
+                    {foreach $banklist as $key => $v}
                     <option value="{$v}" {$v==$model['bank']?'selected':''}>{$v}</option>
-                    </foreach>
+                    {/foreach}
                 </select>
             </div>
         </div>
@@ -70,8 +70,8 @@
     </form>
     </div>
 </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
 <script type="text/javascript">
     jQuery(function($){
         $('[name=type]').click(function() {
@@ -82,4 +82,4 @@
         $('[name=type]:checked').trigger('click');
     });
 </script>
-</block>
+{/block}

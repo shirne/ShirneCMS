@@ -72,7 +72,7 @@
     
 > 示例代码(生成三个一列的列表)：
 ```
-<article:listwrap name="artlist" step="3" id="wrapedlist">
+{article:listwrap name="artlist" step="3" id="wrapedlist"}
     <div class="row">
     <volist name="wrapedlist" id="article">
         <div class="col">
@@ -80,7 +80,7 @@
         </div>
     </volist>
     </div>
-</article:listwrap>
+{/article:listwrap}
 ```
 
 ## product

@@ -1,8 +1,8 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
-<include file="public/bread" menu="setting_index" title="授权登录接口" />
+{include file="public/bread" menu="setting_index" title="授权登录接口" /}
 
 <div id="page-wrapper">
     
@@ -25,7 +25,7 @@
             </tr>
         </thead>
         <tbody>
-        <foreach name="lists" item="v">
+        {foreach $lists as $key => $v}
             <tr>
                 <td>{$v.id}</td>
                 <td>{$types[$v['type']]}</td>
@@ -36,9 +36,9 @@
                     <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('oauth/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
                 </td>
             </tr>
-        </foreach>
+        {/foreach}
         </tbody>
     </table>
     {$page|raw}
 </div>
-</block>
+{/block}

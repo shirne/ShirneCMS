@@ -1,7 +1,7 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
-<include file="public/bread" menu="shop_product_index" title="商品列表" />
+{block name="body"}
+{include file="public/bread" menu="shop_product_index" title="商品列表" /}
 <div id="page-wrapper">
 
 	<div class="row list-header">
@@ -31,9 +31,9 @@
 						</div>
 						<select name="cate_id" class="form-control">
 							<option value="0">不限分类</option>
-							<foreach name="category" item="v">
+							{foreach $category as $key => $v}
 								<option value="{$v.id}" {$cate_id == $v['id']?'selected="selected"':""}>{$v.html} {$v.title}</option>
-							</foreach>
+							{/foreach}
 						</select>
 					</div>
 					<div class="col input-group input-group-sm">
@@ -60,68 +60,68 @@
 			</tr>
 		</thead>
 		<tbody>
-		<empty name="lists">{:list_empty(8)}</empty>
-			<volist name="lists" id="v" >
-				<tr>
-					<td><input type="checkbox" name="id" value="{$v.id}" /></td>
-					<td>
-						<figure class="figure img-view" data-img="{$v.image}" >
-							<img src="{$v.image|default='/static/images/nopic.png'}?w=100" class="figure-img img-fluid rounded" alt="image">
-						</figure>
-					</td>
-					<td>
-						<div>
-							<if condition="$v['type'] GT 1"><span class="badge badge-warning">{$types[$v['type']]}</span></if>
-							<a href="{:url('index/product/view',['id'=>$v['id']])}" target="_blank">{$v.title}</a>
+		{empty name="lists"}{:list_empty(8)}{/empty}
+		{volist name="lists" id="v" }
+			<tr>
+				<td><input type="checkbox" name="id" value="{$v.id}" /></td>
+				<td>
+					<figure class="figure img-view" data-img="{$v.image}" >
+						<img src="{$v.image|default='/static/images/nopic.png'}?w=100" class="figure-img img-fluid rounded" alt="image">
+					</figure>
+				</td>
+				<td>
+					<div>
+						{if $v['type'] > 1}<span class="badge badge-warning">{$types[$v['type']]}</span>{/if}
+						<a href="{:url('index/product/view',['id'=>$v['id']])}" target="_blank">{$v.title}</a>
+					</div>
+					{if !empty($v['unit'])}<span class="badge badge-info">{$v.unit}</span>{/if}
+					<div>
+						<span class="text-muted">销量: {$v.sale}</span>
+					</div>
+				</td>
+				<td>
+					{foreach $v['skus'] as $key => $sku}
+						<div class="input-group input-group-sm mb-2">
+							<span class="input-group-prepend">
+								<span class="input-group-text">{$sku.goods_no}</span>
+							</span>
+							<span class="form-control">￥{$sku.price}</span>
+							<span class="input-group-middle">
+								<span class="input-group-text">库存</span>
+							</span>
+							<span class="form-control">{$sku.storage}</span>
+							<span class="input-group-append">
+								<a href="javascript:" data-price="{$sku.price}" data-skuid="{$sku.sku_id}" data-storage="{$sku.storage}" class="btn btn-outline-primary btn-edit-sku"><i class="ion-md-create"></i></a>
+							</span>
 						</div>
-						<if condition="!empty($v['unit'])"><span class="badge badge-info">{$v.unit}</span></if>
-						<div>
-							<span class="text-muted">销量: {$v.sale}</span>
-						</div>
-					</td>
-					<td>
-						<foreach name="v['skus']" item="sku">
-							<div class="input-group input-group-sm mb-2">
-								<span class="input-group-prepend">
-									<span class="input-group-text">{$sku.goods_no}</span>
-								</span>
-								<span class="form-control">￥{$sku.price}</span>
-								<span class="input-group-middle">
-									<span class="input-group-text">库存</span>
-								</span>
-								<span class="form-control">{$sku.storage}</span>
-								<span class="input-group-append">
-									<a href="javascript:" data-price="{$sku.price}" data-skuid="{$sku.sku_id}" data-storage="{$sku.storage}" class="btn btn-outline-primary btn-edit-sku"><i class="ion-md-create"></i></a>
-								</span>
-							</div>
-						</foreach>
-					</td>
-					<td>{$v.create_time|showdate}</td>
-					<td>{$v.category_title}</td>
-					<td data-url="{:url('push')}" data-id="{$v.id}">
-						<if condition="$v['status'] EQ 1">
-							<span class="chgstatus" data-status="0" title="点击下架">已上架</span>
-							<else/>
-							<span class="chgstatus off" data-status="1" title="点击上架">已下架</span>
-						</if>
-					</td>
-					<td class="operations">
-						<a class="btn btn-outline-primary" title="编辑" href="{:url('shop.product/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> </a>
-						<a class="btn btn-outline-primary qrcode-btn" data-id="{$v.id}" title="二维码" href="javascript:"><i class="ion-md-qr-scanner"></i> </a>
-						<a class="btn btn-outline-primary" title="图集" href="{:url('shop.product/imagelist',array('aid'=>$v['id']))}"><i class="ion-md-images"></i> </a>
-						<a class="btn btn-outline-primary" title="评论" href="{:url('shop.product/comments',array('aid'=>$v['id']))}"><i class="ion-md-chatboxes"></i> </a>
-						<a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('shop.product/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
-					</td>
-				</tr>
-			</volist>
+					{/foreach}
+				</td>
+				<td>{$v.create_time|showdate}</td>
+				<td>{$v.category_title}</td>
+				<td data-url="{:url('push')}" data-id="{$v.id}">
+					{if $v['status'] == 1}
+						<span class="chgstatus" data-status="0" title="点击下架">已上架</span>
+						{else/}
+						<span class="chgstatus off" data-status="1" title="点击上架">已下架</span>
+					{/if}
+				</td>
+				<td class="operations">
+					<a class="btn btn-outline-primary" title="编辑" href="{:url('shop.product/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> </a>
+					<a class="btn btn-outline-primary qrcode-btn" data-id="{$v.id}" title="二维码" href="javascript:"><i class="ion-md-qr-scanner"></i> </a>
+					<a class="btn btn-outline-primary" title="图集" href="{:url('shop.product/imagelist',array('aid'=>$v['id']))}"><i class="ion-md-images"></i> </a>
+					<a class="btn btn-outline-primary" title="评论" href="{:url('shop.product/comments',array('aid'=>$v['id']))}"><i class="ion-md-chatboxes"></i> </a>
+					<a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('shop.product/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
+				</td>
+			</tr>
+		{/volist}
 		</tbody>
 	</table>
 	<div class="clearfix"></div>
 	{$page|raw}
 
 </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
 	<script type="text/javascript" src="__STATIC__/js/location.min.js"></script>
 	<script type="text/html" id="qrdialog-tpl">
 		<form type="post" target="_blank" action="{:url('qrcode')}" >
@@ -373,4 +373,4 @@
 			})
 		})
 	</script>
-</block>
+{/block}

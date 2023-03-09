@@ -1,8 +1,8 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
-<include file="public/bread" menu="copyrights_index" title="版权署名信息" />
+{include file="public/bread" menu="copyrights_index" title="版权署名信息" /}
 
 <div id="page-wrapper" class="container-fluid">
     <div class="page-header">{$id>0?'编辑':'添加'}版权署名</div>
@@ -28,4 +28,4 @@
     </form>
     </div>
 </div>
-</block>
+{/block}

@@ -1,8 +1,8 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
-    <include file="public/bread" menu="wechat_index" title="公众号列表" />
+    {include file="public/bread" menu="wechat_index" title="公众号列表" /}
 
     <div id="page-wrapper">
 
@@ -33,23 +33,23 @@
             </tr>
             </thead>
             <tbody>
-            <php>$empty=list_empty(6);</php>
-            <volist name="lists" id="v" empty="$empty">
+            {php}$empty=list_empty(6);{/php}
+            {volist name="lists" id="v" empty="$empty"}
                 <tr>
                     <td>{$v.id}</td>
                     <td>{$v.type}{$v.account_type}</td>
-                    <td>{$v.title}<if condition="$v['is_default']"><span class="badge badge-info">默认</span></if></td>
+                    <td>{$v.title}{if $v['is_default']}<span class="badge badge-info">默认</span>{/if}</td>
                     <td>{$v.appid}</td>
                     <td>
                         <div class="btn-group btn-group-sm">
                             <a class="btn btn-outline-dark qrcode-btn" href="javascript:" data-qrcode="{$v.qrcode}"><i class="ion-md-expand"></i> 二维码</a>
-                            <if condition="wechat_is_official($v['account_type'])">
-                            <a class="btn btn-outline-dark" href="{:url('wechat.material/index',array('wid'=>$v['id']))}" ><i class="ion-md-appstore"></i> 素材</a></if>
+                            {if wechat_is_official($v['account_type'])}
+                            <a class="btn btn-outline-dark" href="{:url('wechat.material/index',array('wid'=>$v['id']))}" ><i class="ion-md-appstore"></i> 素材</a>{/if}
                             <a class="btn btn-outline-dark" href="{:url('wechat.fans/index',array('wid'=>$v['id']))}" ><i class="ion-md-contacts"></i> 粉丝</a>
-                            <if condition="wechat_is_official($v['account_type'])">
+                            {if wechat_is_official($v['account_type'])}
                             <a class="btn btn-outline-dark" href="{:url('wechat.reply/index',array('wid'=>$v['id']))}" ><i class="ion-md-chatboxes"></i> 回复</a>
                             <a class="btn btn-outline-dark" href="{:url('wechat.menu/edit',array('wid'=>$v['id']))}"><i class="ion-md-reorder"></i> 菜单</a>
-                            </if>
+                            {/if}
                             <a class="btn btn-outline-dark" href="{:url('wechat.tplmsg/index',array('wid'=>$v['id']))}"><i class="ion-md-notifications"></i> 模板消息</a>
                         </div>
                     </td>
@@ -59,13 +59,13 @@
                         <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('wechat/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
                     </td>
                 </tr>
-            </volist>
+            {/volist}
             </tbody>
         </table>
         {$page|raw}
     </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/html" id="configTpl">
         <div class="form-group">
             <label for="token">接口地址</label>
@@ -257,4 +257,4 @@
             })
         })
     </script>
-</block>
+{/block}

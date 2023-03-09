@@ -18,7 +18,7 @@ use think\Db;
 class CategoryController extends BaseController
 {
     public function index(){
-        $this->assign('model',GoodsCategoryFacade::getCategories(true));
+        $this->assign('lists',GoodsCategoryFacade::getCategories(true));
         return $this->fetch();
     }
     public function add($pid=0){

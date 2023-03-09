@@ -1,5 +1,5 @@
-<extend name="public:base" />
-<block name="body">
+{extend name="public:base" /}
+{block name="body"}
     <div class="container">
         <div class="page-header">
             <h1>发票资料</h1>
@@ -63,8 +63,8 @@
             </div>
         </form>
     </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script>
         jQuery(function($){
             $('[name=type]').change(function(e){
@@ -76,4 +76,4 @@
             }).trigger('change');
         })
     </script>
-</block>
+{/block}

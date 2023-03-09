@@ -1,8 +1,8 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
-<include file="public/bread" menu="keywords_index" title="关键字信息" />
+{include file="public/bread" menu="keywords_index" title="关键字信息" /}
 
 <div id="page-wrapper">
     <div class="page-header">{$id>0?'编辑':'添加'}关键字</div>
@@ -23,9 +23,9 @@
                 <input type="text" name="group" class="form-control" value="{$model.group}" placeholder="关键字分组" >
                     <select class="form-control" onchange="var val=$(this).val();if(val)this.form.group.value=val;">
                         <option value="">选择分组</option>
-                        <volist name="groups" id="group">
+                        {volist name="groups" id="group"}
                             <option value="{$group}">{$group}</option>
-                        </volist>
+                        {/volist}
                     </select>
                 </div>
             </div>
@@ -42,13 +42,13 @@
                     <label class="custom-file-label" for="upload_image">选择文件</label>
                 </div>
             </div>
-            <if condition="$model['image']">
+            {if !empty($model['image'])}
                 <figure class="figure">
                     <img src="{$model.image}" class="figure-img img-fluid rounded" alt="image">
                     <figcaption class="figure-caption text-center">{$model.image}</figcaption>
                 </figure>
                 <input type="hidden" name="delete_image" value="{$model.image}"/>
-            </if>
+            {/if}
         </div>
         <div class="form-group">
             <input type="hidden" name="id" value="{$model.id}">
@@ -57,4 +57,4 @@
     </form>
     </div>
 </div>
-</block>
+{/block}

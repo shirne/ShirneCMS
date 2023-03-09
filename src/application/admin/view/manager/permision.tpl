@@ -1,15 +1,15 @@
-<extend name="public:base" />
-<block name="header">
+{extend name="public:base" /}
+{block name="header"}
 	<style type="text/css">
 	label{font-weight:normal;}
 	div.col-sm-2{font-weight:bold;white-space: nowrap;}
 	.col-sm-10 label{width:120px;overflow: hidden;white-space:nowrap;text-overflow: ellipsis;margin-bottom:0;}
 	
 	</style>
-</block>
-<block name="body">
+{/block}
+{block name="body"}
 
-<include file="public/bread" menu="manager_index" title="管理员权限" />
+{include file="public/bread" menu="manager_index" title="管理员权限" /}
 
 <div id="page-wrapper">
 	<div class="page-header">管理员权限</div>
@@ -19,26 +19,26 @@
 	<div class="card">
 		<div class="card-header">全局权限</div>
 		<div class="card-body">
-			<label><input type="checkbox" name="global[]" value="edit" {$role->hasGlobalPerm('edit')?'':'disabled'} <if condition="in_array('edit',$model['global']) ">checked</if> />&nbsp;编辑</label>
-			<label><input type="checkbox" name="global[]" value="del" {$role->hasGlobalPerm('del')?'':'disabled'} <if condition="in_array('del',$model['global'])">checked</if> />&nbsp;删除</label>
+			<label><input type="checkbox" name="global[]" value="edit" {$role->hasGlobalPerm('edit')?'':'disabled'} {if in_array('edit',$model['global']) }checked{/if} />&nbsp;编辑</label>
+			<label><input type="checkbox" name="global[]" value="del" {$role->hasGlobalPerm('del')?'':'disabled'} {if in_array('del',$model['global'])}checked{/if} />&nbsp;删除</label>
 		</div>
 	</div>
 	<div class="card mt-4 mb-4">
 		<div class="card-header">详细权限&nbsp;&nbsp;<label><input type="checkbox" onclick="checkall(this)" />&nbsp;全选</label></div>
 
 		<ul class="list-group list-group-flush">
-		<foreach name="perms" item="perm" key="key">
+		{foreach $perms as $key => $perm}
 			<li class="list-group-item">
 				<div class="row">
 				<label class="col-2"><input type="checkbox" onclick="checkline(this)" />&nbsp;{$perm.title}</label>
 				<div class="col-10">
-					<foreach name="perm.items" item="item" key="k">
-						<label title="{$item}"><input type="checkbox" name="detail[]" {$role->hasPerm($key.'_'.$k)?'':'disabled'} value="{$key}_{$k}" <if condition="in_array($key.'_'.$k,$model['detail'])">checked</if> />&nbsp;{$item}</label>
-					</foreach>
+					{foreach $perm.items as $k => $item}
+						<label title="{$item}"><input type="checkbox" name="detail[]" {$role->hasPerm($key.'_'.$k)?'':'disabled'} value="{$key}_{$k}" {if in_array($key.'_'.$k,$model['detail'])}checked{/if} />&nbsp;{$item}</label>
+					{/foreach}
 				</div>
 				</div>
 			</li>
-		</foreach>
+		{/foreach}
 		</ul>
 	</div>
 
@@ -85,4 +85,4 @@ jQuery(function(){
 });
 </script>
 
-</block>
+{/block}

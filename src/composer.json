@@ -46,7 +46,11 @@
     },
     "config": {
         "preferred-install": "dist",
-        "component-dir": "public/static"
+        "component-dir": "public/static",
+        "allow-plugins": {
+            "shirne/think-installer": true,
+            "easywechat-composer/easywechat-composer": true
+        }
     },
     "require-dev": {
         "shirne/think-testing": "2.0.*"

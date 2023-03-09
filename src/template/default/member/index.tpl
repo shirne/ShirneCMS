@@ -1,5 +1,5 @@
-<extend name="public:base" />
-<block name="body">
+{extend name="public:base" /}
+{block name="body"}
     <div class="container user-index">
         <div class="text-center user-header">
             <a href="javascript:">
@@ -27,16 +27,16 @@
             <a class="list-group-item" href="{:aurl('index/member.account/rechargeList')}"><i class="ion-md-reorder"></i> 充值记录</a>
             <a class="list-group-item" href="{:aurl('index/member.account/recharge')}"><i class="ion-md-cash"></i> 我要充值</a>
         </div>
-        <if condition="$user['is_agent'] GT 0">
+        {if $user['is_agent'] > 0}
             <div class="list-group">
                 <a class="list-group-item" href="{:aurl('index/member.agent/team')}"><i class="ion-md-people"></i> 团队管理</a>
                 <a class="list-group-item" href="{:aurl('index/member.agent/shares')}"><i class="ion-md-share"></i> 推广二维码</a>
             </div>
-        </if>
+        {/if}
         <div class="list-group">
             <a class="list-group-item" href="{:aurl('index/member/feedback')}"><i class="ion-md-text"></i> 反馈中心</a>
             <a class="list-group-item" href="{:aurl('index/member/notice')}"><i class="ion-md-notifications"></i> 系统公告</a>
             <a class="list-group-item" href="{:aurl('index/member/logout')}"><i class="ion-md-log-out"></i> 退出登录</a>
         </div>
     </div>
-</block>
+{/block}

@@ -1,11 +1,11 @@
-<extend name="public:base" />
-<block name="header">
+{extend name="public:base" /}
+{block name="header"}
     <style type="text/css">
         .helptext{text-align:center;padding-top:10px;}
         .helptext p{color:#999;}
     </style>
-</block>
-<block name="body">
+{/block}
+{block name="body"}
     <div class="container">
         <div class="page-header"><h1>注册链接</h1></div>
         <div class="form-group">
@@ -20,8 +20,8 @@
             </div>
         </div>
     </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/javascript" src="__STATIC__/js/clipboard.min.js"></script>
     <script type="text/javascript">
         jQuery(function($){
@@ -37,4 +37,4 @@
             });
         })
     </script>
-</block>
+{/block}

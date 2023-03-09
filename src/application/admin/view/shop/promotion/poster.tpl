@@ -1,7 +1,7 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
-<include file="public/bread" menu="shop_promotion_index" title="商城配置" />
+{block name="body"}
+{include file="public/bread" menu="shop_promotion_index" title="商城配置" /}
 <div id="page-wrapper">
     <div class="page-header">推广海报配置</div>
     <div id="page-content">
@@ -16,13 +16,13 @@
                         <label class="custom-file-label" for="upload_poster_background">选择文件</label>
                     </div>
                 </div>
-                <if condition="$setting['poster_background']['value']">
+                {if $setting['poster_background']['value']}
                     <figure class="figure">
                         <img src="{$setting['poster_background']['value']}" class="figure-img img-fluid rounded" alt="image">
                         <figcaption class="figure-caption text-center">{$setting['poster_background']['value']}</figcaption>
                     </figure>
                     <input type="hidden" name="delete_poster_background" value="{$setting['poster_background']['value']}"/>
-                </if>
+                {/if}
             </div>
             <div class="col">
                 <div class="text-muted">{$setting['poster_background']['description']}</div>
@@ -32,17 +32,17 @@
             <label for="v-poster_bgset" class="form-label w-100px text-right align-middle">{$setting['poster_bgset']['title']}</label>
             <div class="col-5">
                 <div class="btn-group btn-group-toggle mregopengroup" data-toggle="buttons">
-                    <foreach name="setting['poster_bgset']['data']" item="value" key="k">
-                        <if condition="$k==$setting['poster_bgset']['value']">
+                    {foreach $setting['poster_bgset']['data'] as $k => $value}
+                        {if $k==$setting['poster_bgset']['value']}
                             <label class="btn btn-outline-secondary active">
                                 <input type="radio" name="v-poster_bgset" value="{$k}" autocomplete="off" checked> {$value}
                             </label>
-                            <else />
+                        {else /}
                             <label class="btn btn-outline-secondary">
                                 <input type="radio" name="v-poster_bgset" value="{$k}" autocomplete="off"> {$value}
                             </label>
-                        </if>
-                    </foreach>
+                        {/if}
+                    {/foreach}
                 </div>
             </div>
             <div class="col">
@@ -146,13 +146,13 @@
                         <label class="custom-file-label" for="upload_poster_qrlogo">选择文件</label>
                     </div>
                 </div>
-                <if condition="$setting['poster_qrlogo']['value']">
+                {if $setting['poster_qrlogo']['value']}
                     <figure class="figure">
                         <img src="{$setting['poster_qrlogo']['value']}" class="figure-img img-fluid rounded" alt="image">
                         <figcaption class="figure-caption text-center">{$setting['poster_qrlogo']['value']}</figcaption>
                     </figure>
                     <input type="hidden" name="delete_poster_qrlogo" value="{$setting['poster_qrlogo']['value']}"/>
-                </if>
+                {/if}
             </div>
             <div class="col">
                 <div class="text-muted">{$setting['shop_pagetitle']['description']}</div>
@@ -163,12 +163,12 @@
     </form>
     </div>
 </div>
-    </block>
-<block name="script">
+{/block}
+{block name="script"}
 <script type="text/javascript">
     jQuery(function ($) {
 
 
     });
 </script>
-</block>
+{/block}

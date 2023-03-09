@@ -1,28 +1,28 @@
 <div class="footer bg-dark text-light">
     <div class="container">
         <div class="row">
-            <volist name="navigator" id="nav">
-                <if condition="$nav['footer']">
+            {volist name="navigator" id="nav"}
+                {if $nav['footer']}
             <div class="col">
                 <dl>
                     <dt>{$nav['title']}</dt>
                     <dd>
-                        <volist name="nav['subnav']" id="nav">
+                        {volist name="nav['subnav']" id="nav"}
                         <a href="{$nav['url']}">{$nav['title']}</a>
-                        </volist>
+                        {/volist}
                     </dd>
                 </dl>
             </div>
-                </if>
-            </volist>
+                {/if}
+            {/volist}
             <div class="col">
                 <dl>
                     <dt>友情链接</dt>
                     <dd>
-                        <extendtag:links var="links" />
-                        <volist name="links" id="link">
+                        {extendtag:links var="links" /}
+                        {volist name="links" id="link"}
                             <a href="{$link.url}">{$link.title}</a>
-                        </volist>
+                        {/volist}
                     </dd>
                 </dl>
             </div>
@@ -40,10 +40,10 @@
             <div class="mt-3">
                 &copy;2014-2018 语辰软件&nbsp;<a href="https://beian.miit.gov.cn/" target="_blank">{$config['site-icp']}</a>{$config['site-tongji']|raw}
             </div>
-            <if condition="!empty($config['gongan-icp'])">
-                <php>$icpcode=preg_replace('/[^\d]+/','',$config['gongan-icp'])</php>
+            {if !empty($config['gongan-icp'])}
+                {php}$icpcode=preg_replace('/[^\d]+/','',$config['gongan-icp']){/php}
                 <div class="mt-3"> <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode={$icpcode}" target="_blank"> <img src="__STATIC__/images/beianicon.png" style="vertical-align: middle;" /> {$config['gongan-icp']}</a></div>
-            </if>
+            {/if}
         </div>
     </div>
 </div>

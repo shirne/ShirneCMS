@@ -1,6 +1,6 @@
-<extend name="public:base"/>
+{extend name="public:base"/}
 
-<block name="body">
+{block name="body"}
     <div class="card">
         <div class="card-header">
             <h3 class="text-center"><img src="__STATIC__/images/wechatpay.png" style="margin:20px 0;" /> </h3>
@@ -9,16 +9,16 @@
             <div class="pay_amount" style="padding:20px;text-align: center;color: #222;font-size:18px;">付款金额：{$payorder['pay_amount']|showmoney}</div>
             <div class="weui-btn-area" style="margin:50px;">
                 <a href="javascript:;" class="btn btn-block btn-success" id="btngopay">发起支付</a>
-                <if condition="$payorder['order_type'] EQ 'recharge'">
+                {if $payorder['order_type'] == 'recharge'}
                     <a href="{:url('index/member.account/rechargeList')}" class="btn btn-block btn-secondary orderlink" >查看订单</a>
-                    <else/>
+                    {else/}
                     <a href="{:url('index/member.order/detail',['id'=>$payorder['order_id']])}" class="btn btn-block btn-secondary orderlink" >查看订单</a>
-                </if>
+                {/if}
             </div>
         </div>
     </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/javascript">
         $('#btngopay').click(onBridgeReady);
         function onBridgeReady(){
@@ -55,4 +55,4 @@
             onBridgeReady();
         }
     </script>
-</block>
+{/block}

@@ -1,8 +1,8 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
-<include file="public/bread" menu="adv_index" title="广告列表" />
+{include file="public/bread" menu="adv_index" title="广告列表" /}
 
 <div id="page-wrapper">
     
@@ -35,7 +35,7 @@
             </tr>
         </thead>
         <tbody>
-        <foreach name="lists" item="v">
+        {foreach $lists as $key => $v}
             <tr>
                 <td>{$v.id}</td>
                 <td><figure class="figure img-view" data-img="{$v.image}" >
@@ -51,9 +51,9 @@
                     <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n\n删除后将不能恢复!" href="{:url('adv/itemdelete',array('id'=>$v['id'],'gid'=>$gid))}" ><i class="ion-md-trash"></i> </a>
                 </td>
             </tr>
-        </foreach>
+        {/foreach}
         </tbody>
     </table>
     {$page|raw}
 </div>
-</block>
+{/block}

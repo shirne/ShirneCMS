@@ -1,5 +1,5 @@
-<extend name="public:base" />
-<block name="body">
+{extend name="public:base" /}
+{block name="body"}
     <div class="container">
         <div class="page-header">
             <div class="row">
@@ -10,9 +10,9 @@
                         积分类型：{$fields[$field]} <span class="caret"></span>
                     </button>
                     <div class="dropdown-menu">
-                        <foreach name="fields" item="t" key="k">
+                        {foreach $fields as $k => $t}
                             <a class="dropdown-item"  href="{:aurl('index/member/moneylog',searchKey('field',$k))}">{$t}</a>
-                        </foreach>
+                        {/foreach}
                     </div>
                 </div>
                 <div class="btn-group ml-3">
@@ -20,9 +20,9 @@
                         记录类型：{$types[$type]} <span class="caret"></span>
                     </button>
                     <div class="dropdown-menu">
-                        <foreach name="types" item="t" key="k">
+                        {foreach $types as $k => $t}
                             <a class="dropdown-item" href="{:aurl('index/member/moneylog',array('type'=>$k))}">{$t}</a>
-                        </foreach>
+                        {/foreach}
                     </div>
                 </div>
             </div>
@@ -37,24 +37,24 @@
                 <div class="col-3">备注</div>
                 </div>
             </li>
-            <php>$empty='<li class="list-group-item col-12 empty">暂时没有记录</li>';</php>
-            <foreach name="logs" empty="$empty" item="v">
+            {php}$empty='<li class="list-group-item col-12 empty">暂时没有记录</li>';{/php}
+            {foreach name="logs" empty="$empty" item="v"}
                 <li class="list-group-item">
                     <div class="row">
                     <div class="col-3 {$v['amount']>0?'text-success':'text-danger'}">{$v.field|money_type|raw}&nbsp;{$v.amount|showmoney}</div>
                     <div class="col-3">
-                        <if condition="$v['from_member_id']">
+                        {if $v['from_member_id']}
                             [{$v['from_member_id']}]{$v['username']}
-                            <else/>
+                            {else/}
                             -
-                        </if>
+                        {/if}
                     </div>
                     <div class="col-3">{$v.create_time|showdate}</div>
                     <div class="col-3">{$v.reson}</div>
                     </div>
                 </li>
-            </foreach>
+            {/foreach}
         </ul>
         {$page|raw}
     </div>
-</block>
+{/block}

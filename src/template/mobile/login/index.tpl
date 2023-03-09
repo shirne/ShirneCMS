@@ -1,13 +1,13 @@
-<extend name="public:base"/>
+{extend name="public:base"/}
 
-<block name="body">
+{block name="body"}
     <div class="page__hd">
         <h1 class="page__title">Login</h1>
         <p class="page__desc">会员登录</p>
     </div>
     <form method="post">
     <div class="weui-cells weui-cells_form">
-        <if condition="!empty($wechatUser)">
+        {if !empty($wechatUser)}
             <div class="weui-cell">
                 <div class="weui-cell__hd" style="position: relative;margin-right: 10px;">
                     <img src="{$wechatUser['avatar']}" style="width: 50px;display: block;border-radius: 1000px;">
@@ -17,7 +17,7 @@
                     <p style="font-size: 13px;color: #888888;">登录后将与微信账号绑定</p>
                 </div>
             </div>
-        </if>
+        {/if}
         <div class="weui-cell">
             <div class="weui-cell__hd"><label class="weui-label">用户名</label></div>
             <div class="weui-cell__bd">
@@ -49,8 +49,8 @@
             </div>
         </div>
     </form>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/javascript">
         jQuery(function($){
             var verifyurl='{:url('index/login/verify')}';
@@ -61,4 +61,4 @@
             });
         });
     </script>
-</block>
+{/block}

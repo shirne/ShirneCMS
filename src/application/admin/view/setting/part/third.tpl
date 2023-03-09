@@ -2,17 +2,17 @@
     <label for="v-wechat_autologin" class="text-right align-middle">微信自动登录</label>
     <div class="pl-2 pr-2">
         <div class="btn-group btn-group-toggle" data-toggle="buttons">
-            <foreach name="setting.wechat_autologin.data" item="value" key="k">
-                <if condition="$k==$setting['wechat_autologin']['value']">
+            {foreach $setting['wechat_autologin']['data'] as $k => $value}
+                {if $k==$setting['wechat_autologin']['value']}
                     <label class="btn btn-outline-secondary active">
                         <input type="radio" name="v-wechat_autologin" value="{$k}" autocomplete="off" checked> {$value}
                     </label>
-                    <else />
+                    {else /}
                     <label class="btn btn-outline-secondary">
                         <input type="radio" name="v-wechat_autologin" value="{$k}" autocomplete="off"> {$value}
                     </label>
-                </if>
-            </foreach>
+                {/if}
+            {/foreach}
         </div>
     </div>
     <div class="col">
@@ -28,17 +28,17 @@
                     <label for="v-captcha_mode" class="text-right align-middle">验证码模式</label>
                     <div class="col">
                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                            <foreach name="setting.captcha_mode.data" item="value" key="k">
-                                <if condition="$k==$setting['captcha_mode']['value']">
+                            {foreach $setting['captcha_mode']['data'] as $k => $value}
+                                {if $k==$setting['captcha_mode']['value']}
                                     <label class="btn btn-outline-secondary active">
                                         <input type="radio" name="v-captcha_mode" value="{$k}" autocomplete="off" checked> {$value}
                                     </label>
-                                    <else />
+                                {else /}
                                     <label class="btn btn-outline-secondary">
                                         <input type="radio" name="v-captcha_mode" value="{$k}" autocomplete="off"> {$value}
                                     </label>
-                                </if>
-                            </foreach>
+                                {/if}
+                            {/foreach}
                         </div>
                     </div>
                 </div>
@@ -115,17 +115,17 @@
                     <label for="v-sms_code" class="col-3 col-md-2 text-right align-middle">短信验证</label>
                     <div class="col">
                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                            <foreach name="setting.sms_code.data" item="value" key="k">
-                                <if condition="$k==$setting['sms_code']['value']">
+                            {foreach $setting['sms_code']['data'] as $k => $value}
+                                {if $k==$setting['sms_code']['value']}
                                     <label class="btn btn-outline-secondary active">
                                         <input type="radio" name="v-sms_code" value="{$k}" autocomplete="off" checked> {$value}
                                     </label>
-                                    <else />
+                                {else /}
                                     <label class="btn btn-outline-secondary">
                                         <input type="radio" name="v-sms_code" value="{$k}" autocomplete="off"> {$value}
                                     </label>
-                                </if>
-                            </foreach>
+                                {/if}
+                            {/foreach}
                         </div>
                     </div>
                 </div>

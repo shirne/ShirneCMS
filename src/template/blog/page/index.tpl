@@ -1,13 +1,13 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 	<div class="main">
-		<php>$adimg=getAdImage($page['group']);</php>
-		<if condition="!empty($adimg)">
+		{php}$adimg=getAdImage($page['group']);{/php}
+		{if !empty($adimg)}
 			<div class="subbanner">
 				<div class="inner" style="background-image:url({$adimg})"></div>
 			</div>
-		</if>
+		{/if}
 
 		<div class="container view-body">
 			<div class="row">
@@ -25,9 +25,9 @@
 						</div>
 						<div class="card-body">
 							<div class="list-group">
-								<Volist name="lists" id="p">
+								{volist name="lists" id="p"}
 									<a class="list-group-item {$p['name']==$page['name']?'active':''}" href="{:url('index/page/index',['group'=>$p['group'],'name'=>$p['name']])}">{$p.title}</a>
-								</Volist>
+								{/volist}
 							</div>
 						</div>
 					</div>
@@ -35,4 +35,4 @@
 			</div>
 		</div>
 	</div>
-</block>
+{/block}

@@ -1,8 +1,8 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
-<include file="public/bread" menu="category_index" title="" />
+{include file="public/bread" menu="category_index" title="" /}
 
 <div id="page-wrapper">
     
@@ -33,35 +33,35 @@
             </tr>
         </thead>
         <tbody>
-        <volist name="model" id="v" empty="$empty">
+        {volist name="model" id="v" empty="$empty"}
             <tr>
                 <td>{$v.id}</td>
-                <td>{$v.html|raw} {$v.title}&nbsp;<span class="badge badge-info">{$v.short}</span><if condition="$v.use_template EQ 1">&nbsp;<span class="badge badge-warning">{:lang('Independ Template')}</span></if></td>
+                <td>{$v.html|raw} {$v.title}&nbsp;<span class="badge badge-info">{$v.short}</span>{if $v['use_template'] == 1}&nbsp;<span class="badge badge-warning">{:lang('Independ Template')}</span>{/if}</td>
                 <td>{$v.name}</td>
                 <td>{$v.sort}</td>
                 <td class="operations">
                     <a class="btn btn-outline-primary" title="{:lang('Publish Article')}" href="{:url('article/add',array('cid'=>$v['id']))}"><i class="ion-md-paper-plane"></i> </a>
                     <a class="btn btn-outline-primary" title="{:lang('Add Sub Category')}" href="{:url('category/add',array('pid'=>$v['id']))}"><i class="ion-md-add"></i> </a>
                     <a class="btn btn-outline-primary" title="{:lang('Edit')}" href="{:url('category/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> </a>
-                    <if condition="!$v['is_lock']">
+                    {if !$v['is_lock']}
                         <a class="btn btn-outline-danger link-confirm" title="{:lang('Delete')}" data-confirm="{:lang('Confirm to delete? The operation can not restore!')}" href="{:url('category/delete',array('id'=>$v['id']))}"  ><i class="ion-md-trash"></i> </a>
-                    </if>
+                    {/if}
                 </td>
             </tr>
-        </volist>
+        {/volist}
         </tbody>
     </table>
 </div>
 
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/html" id="cateselect">
         <div class="form-group">
             <select class="form-control">
                 <option value="0">顶级分类</option>
-                <volist name="model" id="cate">
+                {volist name="model" id="cate"}
                     <option value="{$cate.id}">{$cate.html|raw} {$cate.title}</option>
-                </volist>
+                {/volist}
             </select>
         </div>
         <div class="form-group text-muted">每行一个分类，每个分类以空格区分名称、简称、别名，简称、别名可依次省略，别名必须使用英文字母<br />例：分类名称 分类简称 catename</div>
@@ -103,4 +103,4 @@
             })
         })
     </script>
-</block>
+{/block}

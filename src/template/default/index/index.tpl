@@ -1,21 +1,21 @@
-<extend name="public:base"/>
+{extend name="public:base"/}
 
-<block name="body">
+{block name="body"}
 
-    <extendtag:advs var="banners" flag="banner"/>
+    {extendtag:advs var="banners" flag="banner"/}
     <div id="carouselBannerControls" class="carousel slide" data-ride="carousel">
         <ol class="carousel-indicators">
-            <volist name="banners" id="item" key="k">
+            {volist name="banners" id="item" key="k"}
                 <li data-target="#carouselBannerControls" {$k==1?'class="active"':''} data-slide-to="{$k-1}"></li>
-            </volist>
+            {/volist}
         </ol>
         <div class="carousel-inner">
-            <volist name="banners" id="item" key="k">
+            {volist name="banners" id="item" key="k"}
                 <div class="carousel-item{$k==1?' active':''}" style="background-image:url({$item.image})">
                     <img src="{$item.image}" alt="{$item.title}">
                     <p>{$item.title}</p>
                 </div>
-            </volist>
+            {/volist}
         </div>
         <a class="carousel-control-prev" href="#carouselBannerControls" role="button" data-slide="prev">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -34,8 +34,8 @@
                 <p>SERVICE SCOPE</p>
             </div>
             <div class="row index-card-body service-body">
-                <article:pages var="services" group="services"/>
-                <volist name="services" id="serv">
+                {article:pages var="services" group="services"/}
+                {volist name="services" id="serv"}
                     <a href="{:url('index/page/index',['group'=>'services','name'=>$serv['name']])}">
                         <figure class="col figure">
                             <img src="{$serv.icon}" class="figure-img img-fluid rounded" alt="{$serv.title}">
@@ -43,7 +43,7 @@
                             <figcaption class="figure-caption">{$serv.vice_title}</figcaption>
                         </figure>
                     </a>
-                </volist>
+                {/volist}
             </div>
         </div>
     </div>
@@ -54,29 +54,29 @@
                 <p>INDUSTRY SOLUTIONS</p>
             </div>
             <div class="row index-card-body solution-body">
-                <article:pages var="solutions" group="solutions" recursive="true"/>
+                {article:pages var="solutions" group="solutions" recursive="true"/}
                 <div class="col-3">
                     <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist"
                          aria-orientation="vertical">
-                        <volist name="solutions" id="pg">
+                        {volist name="solutions" id="pg"}
                             <a class="nav-link {$i<2?'active':''}" id="v-pills-{$pg.name}-tab" data-toggle="pill"
                                href="#v-pills-{$pg.name}" role="tab" aria-controls="v-pills-{$pg.name}"
                                aria-selected="true">
                                 <p class="main_title">{$pg.title}解决方案</p>
                                 <p class="vice_title">{$pg.vice_title}</p>
                             </a>
-                        </volist>
+                        {/volist}
                     </div>
                 </div>
                 <div class="col-9">
                     <div class="tab-content" id="v-pills-tabContent">
-                        <volist name="solutions" id="pg">
+                        {volist name="solutions" id="pg"}
                             <div class="tab-pane fade show {$i<2?'active':''}" id="v-pills-{$pg.name}"
                                  role="tabpanel" aria-labelledby="v-pills-{$pg.name}-tab"><img class="card-img-top"
                                                                                                src="{$pg.icon}"
                                                                                                alt="{$pg.title}">
                             </div>
-                        </volist>
+                        {/volist}
                     </div>
                 </div>
             </div>
@@ -90,8 +90,8 @@
             </div>
             <div class="index-card-body cases-body">
                 <div class="row">
-                    <article:list var="case_list" category="4" limit="9" recursive="true"/>
-                    <volist name="case_list" id="case">
+                    {article:list var="case_list" category="4" limit="9" recursive="true"/}
+                    {volist name="case_list" id="case"}
                         <div class="col-4">
                             <div class="card">
                                 <img class="card-img-top" src="{$case.cover}" alt="Card image cap">
@@ -108,13 +108,13 @@
                                 </a>
                             </div>
                         </div>
-                    </volist>
+                    {/volist}
                 </div>
-                <if condition="count($case_list) EQ 9">
+                {if count($case_list) == 9}
                     <div class="row">
                         <div class="col-1 align-self-center"><a href="{:url('index/article/index',['name'=>'cases'])}" class="btn btn-outline-secondary btn-block">MORE</a></div>
                     </div>
-                </if>
+                {/if}
             </div>
         </div>
     </div>
@@ -125,7 +125,7 @@
                 <p>ABOUT ORIGIN SOFTWARE</p>
             </div>
             <div class="index-card-body about-body">
-                <article:page var="about" name="about"/>
+                {article:page var="about" name="about"/}
                 <div class="row">
                     <div class="col-5">
                         <figure class="figure">
@@ -151,13 +151,13 @@
                 <p>NEWS AND TRENDS</p>
             </div>
             <div class="index-card-body news-body">
-                <article:list var="article_list" category="5" limit="9" recursive="true"/>
+                {article:list var="article_list" category="5" limit="9" recursive="true"/}
                 <div id="carouselNewsIndicators" class="carousel slide" data-ride="carousel">
                     <div class="carousel-inner">
                         <article:listwrap name="article_list" step="3" id="art_list">
                             <div class="carousel-item {$wrapi==0?'active':''}">
                                 <div class="row">
-                                    <volist name="art_list" id="art" >
+                                    {volist name="art_list" id="art" }
                                         <a class="col-4" target="_blank" href="{:url('index/article/view',['id'=>$art['id']])}">
                                             <div class="media">
                                                 <img class="align-self-end mr-3" src="{$art.cover}" alt="{$art.title}">
@@ -170,7 +170,7 @@
                                                 </div>
                                             </div>
                                         </a>
-                                    </volist>
+                                    {/volist}
                                 </div>
                             </div>
                         </article:listwrap>
@@ -180,9 +180,9 @@
             </div>
         </div>
     </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/javascript">
 
     </script>
-</block>
+{/block}

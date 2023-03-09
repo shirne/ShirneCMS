@@ -1,5 +1,5 @@
-<extend name="public:base" />
-<block name="body">
+{extend name="public:base" /}
+{block name="body"}
     <div class="container">
         <div class="page-header"><h1>修改密码</h1></div>
     <form class="form-horizontal registerForm" role="form" method="post" onsubmit="return checkForm(this)" action="{:aurl('index/member/password')}">
@@ -35,8 +35,8 @@
         </div>
     </form>
     </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/javascript">
         function checkForm(){
             var newpassword=$('[name=newpassword]').val();
@@ -57,4 +57,4 @@
             return true;
         }
     </script>
-</block>
+{/block}

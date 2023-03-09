@@ -1,6 +1,6 @@
-<extend name="public:base"/>
+{extend name="public:base"/}
 
-<block name="body">
+{block name="body"}
     <div class="main">
         <div class="subbanner">
             <div class="inner" style="background-image:url({:getAdImage('news')})"></div>
@@ -9,13 +9,13 @@
         <div class="nav-row">
             <div class="container">
                 <div class="row">
-                    <php>
+                    {php}
                         if(empty($category)){ $catelist=$categories[0]; }
                         else { $catelist=$categories[$category['pid']];}
-                    </php>
-                    <Volist name="catelist" id="c">
+                    {/php}
+                    {volist name="catelist" id="c"}
                         <a class="col row-item {$c['name']==$category['name']?'active':''}" href="{:url('index/article/index',['name'=>$c['name']])}">{$c.title}</a>
-                    </Volist>
+                    {/volist}
                 </div>
             </div>
         </div>
@@ -23,13 +23,13 @@
         <div class="container">
             <div class="article-list">
                 <ul class="row list-unstyled">
-                    <php>$empty='<li class="col-12 empty">暂时没有内容</li>';</php>
-                    <Volist name="lists" id="article" empty="$empty">
+                    {php}$empty='<li class="col-12 empty">暂时没有内容</li>';{/php}
+                    {volist name="lists" id="article" empty="$empty"}
                         <li class="col-6">
                             <div class="media">
-                                <if condition="!empty($article['cover'])">
+                                {if !empty($article['cover'])}
                                 <img class="media-img" src="{$article.cover}" alt="{$article.title}">
-                                </if>
+                                {/if}
                                 <div class="media-body">
                                     <h5 class="mt-0 mb-1">
                                         <a target="_blank" href="{:url('index/article/view',array('id'=>$article['id']))}">{$article.title}</a>
@@ -41,10 +41,10 @@
                                 </div>
                             </div>
                         </li>
-                    </Volist>
+                    {/volist}
                 </ul>
                 {$page|raw}
             </div>
         </div>
     </div>
-</block>
+{/block}

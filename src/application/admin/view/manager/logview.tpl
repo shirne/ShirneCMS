@@ -14,7 +14,7 @@
             </tr>
             <tr>
                 <th>结果</th>
-                <td><if condition="$model.result EQ 1"><span class="badge badge-success">成功</span><else/><span class="badge badge-danger">失败</span> </if></td>
+                <td>{if $model['result'] == 1}<span class="badge badge-success">成功</span>{else/}<span class="badge badge-danger">失败</span> {/if}</td>
             </tr>
             <tr>
                 <th>日期</th>

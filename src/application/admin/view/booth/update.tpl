@@ -1,5 +1,5 @@
-<extend name="public:base" />
-<block name="header">
+{extend name="public:base" /}
+{block name="header"}
     <style type="text/css">
         .card .close{
             position: absolute;
@@ -13,10 +13,10 @@
             top: 5px;
         }
     </style>
-</block>
-<block name="body">
+{/block}
+{block name="body"}
 
-    <include file="public/bread" menu="booth_index" title="展位设置" />
+    {include file="public/bread" menu="booth_index" title="展位设置" /}
     
     <div id="page-wrapper">
         <div class="page-header">{$id>0?'编辑':'添加'}展位</div>
@@ -37,11 +37,11 @@
                     <label class="pl-2 mr-2" for="status">展位类型</label>
                     <div class="form-group col">
                         <div class="btn-group btn-group-toggle" >
-                            <foreach name="booth_types" id="item">
+                            {foreach $booth_types as $key => $item}
                                 <label :class="'btn btn-outline-secondary'+(model.type=='{$key}'?' active':'')">
                                     <input type="radio" name="type" value="{$key}" autocomplete="off" v-model="model.type">{$item}
                                 </label>
-                            </foreach>
+                            {/foreach}
                         </div>
                     </div>
                 </div>
@@ -161,11 +161,11 @@
                                 <label :class="'btn btn-outline-secondary'+(model.data.filter_type?'':' active')">
                                     <input type="radio" name="data[filter_type]" value="" v-model="model.data.filter_type" autocomplete="off" >不限
                                 </label>
-                                <volist name="article_types" id="type" key="k">
+                                {volist name="article_types" id="type" key="k"}
                                     <label :class="'btn btn-outline-secondary'+(model.data.filter_type=={$key}?' active':'')">
                                         <input type="radio" name="data[filter_type]" :value="{$key}" v-model="model.data.filter_type" autocomplete="off" >{$type}
                                     </label>
-                                </volist>
+                                {/volist}
                             </div>
                         </div>
                     </div>
@@ -402,9 +402,9 @@
         </form>
         </div>
     </div>
-    </block>
+{/block}
 
-<block name="script">
+{block name="script"}
     <script type="text/plain" id="category_json">{:json_encode(\\app\\common\\facade\\CategoryFacade::getCategories())}</script>
     <script type="text/plain" id="product_category_json">{:json_encode(\\app\\common\\facade\\ProductCategoryFacade::getCategories())}</script>
     <script type="text/plain" id="cur_list">{:json_encode($model['id']>0?$model->fetchData():'')}</script>
@@ -532,4 +532,4 @@
             }
         });
     </script>
-</block>
+{/block}

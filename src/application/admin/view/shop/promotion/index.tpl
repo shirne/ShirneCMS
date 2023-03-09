@@ -1,7 +1,7 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
-<include file="public/bread" menu="shop_promotion_index" title="商城配置" />
+{block name="body"}
+{include file="public/bread" menu="shop_promotion_index" title="商城配置" /}
 <div id="page-wrapper">
     <div class="page-header">
         <a href="{:url('admin/shop.promotion/poster')}" class="float-right btn btn-sm btn-outline-primary">推广海报配置</a>
@@ -86,17 +86,17 @@
             <label for="v-shop_close" class="form-label w-100px text-right align-middle">{$setting['shop_close']['title']}</label>
             <div class="col-9 col-md-8 col-lg-6">
                 <div class="btn-group btn-group-toggle mregopengroup" data-toggle="buttons">
-                    <foreach name="setting.shop_close.data" item="value" key="k">
-                        <if condition="$k==$setting['shop_close']['value']">
+                    {foreach $setting['shop_close']['data'] as $k => $value}
+                        {if $k==$setting['shop_close']['value']}
                             <label class="btn btn-outline-secondary active">
                                 <input type="radio" name="v-shop_close" value="{$k}" autocomplete="off" checked> {$value}
                             </label>
-                            <else />
+                        {else /}
                             <label class="btn btn-outline-secondary">
                                 <input type="radio" name="v-shop_close" value="{$k}" autocomplete="off"> {$value}
                             </label>
-                        </if>
-                    </foreach>
+                        {/if}
+                    {/foreach}
                 </div>
             </div>
         </div>
@@ -114,14 +114,14 @@
 
         <button type="submit" class="btn btn-primary">保存配置</button>
     </form>
-        </div>
+    </div>
 </div>
-    </block>
-<block name="script">
+{/block}
+{block name="script"}
 <script type="text/javascript">
     jQuery(function ($) {
 
 
     });
 </script>
-</block>
+{/block}

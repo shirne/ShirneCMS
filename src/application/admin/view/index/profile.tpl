@@ -1,8 +1,8 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
-<include file="public/bread" menu="Board" section="主面板" title="个人资料" />
+{include file="public/bread" menu="Board" section="主面板" title="个人资料" /}
 
 <div id="page-wrapper">
 <form action="{:url('index/profile')}" class="page-form" method="post">
@@ -41,4 +41,4 @@
 <script type="text/javascript">
 
 </script>
-</block>
+{/block}

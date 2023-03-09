@@ -1,7 +1,7 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
-<include file="public/bread" menu="manager_index" title="角色列表" />
+{block name="body"}
+{include file="public/bread" menu="manager_index" title="角色列表" /}
 
 <div id="page-wrapper">
     <div class="row list-header">
@@ -31,7 +31,7 @@
             </tr>
         </thead>
         <tbody>
-        <foreach name="lists" item="v">
+        {foreach $lists as $key => $v}
             <tr>
                 <td>{$v.id}</td>
                 <td>{$v.role_name}</td>
@@ -39,14 +39,14 @@
                 <td>{$counts[$v.type]?:0}</td>
                 <td class="operations">
                     <a class="btn btn-outline-primary" title="编辑" href="{:url('manager_role/update',array('id'=>$v['id']))}"><i class="ion-md-create"></i> </a>
-                    <if condition="$v['type']!=1">
+                    {if $v['type']!=1}
                     <a class="btn btn-outline-danger" title="删除" href="{:url('manager_role/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
-                    </if>
+                    {/if}
                 </td>
             </tr>
-        </foreach>
+        {/foreach}
         </tbody>
     </table>
 </div>
 
-</block>
+{/block}

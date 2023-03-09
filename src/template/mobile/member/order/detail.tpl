@@ -1,6 +1,6 @@
-<extend name="public:base"/>
+{extend name="public:base"/}
 
-<block name="body">
+{block name="body"}
     <div class="page__hd">
         <h1 class="page__title">订单详情</h1>
     </div>
@@ -11,7 +11,7 @@
                 {$order.order_no}
             </div>
             <div class="weui-panel__bd">
-                <volist name="products" id="prod">
+                {volist name="products" id="prod"}
                     <a href="javascript:void(0);" class="weui-media-box weui-media-box_appmsg">
                         <div class="weui-media-box__hd">
                             <img class="weui-media-box__thumb" src="{$prod.product_image}" alt="">
@@ -26,39 +26,39 @@
                             {$prod.count}
                         </div>
                     </a>
-                </volist>
+                {/volist}
             </div>
             <div class="weui-panel__ft">
                 <div class="weui-flex">
-                    <if condition="$order['status'] EQ 0">
+                    {if $order['status'] == 0}
                         <a href="javascript:" data-payamount="{$order['payamount']}" class="weui-flex__item danger-btn paybtn">
                             重新支付
                         </a>
                         <a href="{:aurl('index/member.order/delete',['id'=>$order['order_id']])}" class="weui-flex__item danger-btn delete-btn">
                             <div class="weui-cell__bd">删除订单</div>
                         </a>
-                        <elseif condition="$order['status'] GT 1" />
+                        {elseif condition="$order['status'] > 1" /}
                         <a href="{:aurl('index/member.order/detail',['id'=>$order['order_id']])}" class="weui-flex__item">
                             查看物流
                         </a>
 
-                        <if condition="$order['status'] GT 2" >
+                        {if condition="$order['status'] > 2" }
                             <a href="{:aurl('index/member.order/delete',['id'=>$order['order_id']])}" class="weui-flex__item danger-btn delete-btn">
                                 <div class="weui-cell__bd">删除订单</div>
                             </a>
-                            <else/>
+                            {else/}
                             <a href="{:aurl('index/member.order/confirm',['id'=>$order['order_id']])}" class="weui-flex__item primary confirm-btn">
                                 <div class="weui-cell__bd">确认收货</div>
                             </a>
-                        </if>
-                    </if>
+                        {/if}
+                    {/if}
                 </div>
 
             </div>
         </div>
     </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/javascript">
         jQuery(function ($) {
             $('.paybtn').click(function() {
@@ -141,4 +141,4 @@
             })
         })
     </script>
-</block>
+{/block}

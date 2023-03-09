@@ -1,6 +1,6 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 	<div class="main">
 		<div class="container register">
 			<div class="row justify-content-center">
@@ -10,7 +10,7 @@
 				<div class="card-body">
 
 					<form class="form-horizontal registerForm" role="form" method="post" action="{:url('index/login/register')}">
-						<if condition="!empty($agent)">
+						{if !empty($agent)}
 							<div class="form-group">
 								<div class="row">
 									<div class="col" style="max-width: 65px;">
@@ -22,8 +22,8 @@
 									</div>
 								</div>
 							</div>
-						</if>
-						<if condition="!empty($wechatUser)">
+						{/if}
+						{if !empty($wechatUser)}
 							<div class="form-group">
 								<div class="row">
 									<div class="col" style="max-width: 65px;">
@@ -35,7 +35,7 @@
 									</div>
 								</div>
 							</div>
-						</if>
+						{/if}
 						<div class="form-group">
 							<div class="input-group">
 								<div class="input-group-prepend">
@@ -75,17 +75,17 @@
 									<span class="input-group-text"><i class="ion-md-phone-portrait"></i></span>
 								</div>
 								<input type="text" class="form-control" placeholder="{:lang('Mobile')}" name="mobile">
-								<if condition="$config['sms_code'] EQ 1">
+								{if $config['sms_code'] == 1}
 									<div class="input-group-append">
 										<a class="btn btn-outline-secondary input-group-addon sms_send_btn">发送验证码</a>
 									</div>
-								</if>
+								{/if}
 							</div>
 							<div class="col-md-10">
 								<span class="form-text text-muted">请填写11位手机号码<i>*</i></span>
 							</div>
 						</div>
-						<if condition="$config['sms_code'] EQ 1">
+						{if $config['sms_code'] == 1}
 							<div class="form-group">
 							<div class="input-group">
 								<div class="input-group-prepend">
@@ -94,9 +94,9 @@
 								<input type="text" class="form-control" placeholder="短信验证" name="mobilecheck">
 							</div>
 							</div>
-						</if>
-						<if condition="$nocode">
-							<else/>
+						{/if}
+						{if $nocode}
+						{else/}
 						<div class="form-group">
 							<div class="input-group">
 								<div class="input-group-prepend">
@@ -105,10 +105,10 @@
 								<input type="text" class="form-control" placeholder="激活码" name="invite_code">
 							</div>
 							<div class="col-md-10">
-								<span class="form-text text-muted">您的推荐人提供给你的激活码<if condition="$config['m_invite'] eq 2"><i>*</i></if></span>
+								<span class="form-text text-muted">您的推荐人提供给你的激活码{if $config['m_invite'] == 2}<i>*</i>{/if}</span>
 							</div>
 						</div>
-						</if>
+						{/if}
 						<div class="form-group submitline">
 							<button type="submit" class="btn btn-info btn-block create">{:lang('Create account')}</button>
 						</div>
@@ -124,8 +124,8 @@
 			</div>
 		</div>
 	</div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
 	<script type="text/javascript">
 		jQuery(function($){
 			var second_limit=120;
@@ -252,7 +252,7 @@
 						}else{
 							ajaxtime[fname]=new Date().getTime();
 							$.ajax({
-								url:'{:url('index/login/checkunique',array('type'=>'username'))}',
+								url:"{:url('index/login/checkunique',array('type'=>'username'))}",
 								data:{value:val},
 								dataType:'JSON',
 								type:'POST',
@@ -287,7 +287,7 @@
 						}else{
 							ajaxtime[fname]=new Date().getTime();
 							$.ajax({
-								url:'{:url('index/login/checkunique',array('type'=>'email'))}',
+								url:"{:url('index/login/checkunique',array('type'=>'email'))}",
 								data:{value:val},
 								dataType:'JSON',
 								type:'POST',
@@ -369,4 +369,4 @@
 			}
 		});
 	</script>
-</block>
+{/block}

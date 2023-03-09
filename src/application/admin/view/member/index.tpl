@@ -1,7 +1,7 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
-<include file="public/bread" menu="member_index" title=""/>
+{block name="body"}
+{include file="public/bread" menu="member_index" title=""/}
 
 <div id="page-wrapper">
     <div class="row list-header">
@@ -64,61 +64,61 @@
             </tr>
         </thead>
         <tbody>
-        <php>$empty=list_empty(10);</php>
-        <volist name="lists" id="v" empty="$empty">
+        {php}$empty=list_empty(10);{/php}
+        {volist name="lists" id="v" empty="$empty"}
             <tr>
                 <td><input type="checkbox" name="id" value="{$v.id}" /></td>
                 <td>
                     <div class="media">
-                        <if condition="!empty($v['avatar'])">
+                        {if !empty($v['avatar'])}
                             <img src="{$v.avatar}" class="mr-2 rounded" width="60"/>
-                        </if>
+                        {/if}
                         <div class="media-body">
                             <h5 class="text-nowrap mt-0 mb-1">
                                 [{$v.id}]
-                                <if condition="!empty($v['nickname'])">
+                                {if !empty($v['nickname'])}
                                     {$v.nickname}
-                                    <else/>
+                                    {else/}
                                     {$v.username}
-                                </if>
+                                {/if}
                                 <span class="badge badge-{$typestyles[$v['type']]}">{$types[$v['type']]}</span>
-                                <if condition="$v.status eq 1"><else/><span class="badge badge-danger" >禁用</span></if>
+                                {if $v['status'] == 1}{else/}<span class="badge badge-danger" >禁用</span>{/if}
                             </h5>
                             <div style="font-size:12px;">
-                            <if condition="!empty($v['realname'])">真实姓名：{$v.realname}</if>
+                            {if !empty($v['realname'])}真实姓名：{$v.realname}{/if}
                             注册时间：{$v.create_time|showdate}<br/>
-                                上次登陆：{$v.logintime|showdate} <if condition="!empty($v['login_ip'])">[{$v.login_ip}]</if>
+                                上次登陆：{$v.logintime|showdate} {if !empty($v['login_ip'])}[{$v.login_ip}]{/if}
                             </div>
                         </div>
                     </div>
                 </td>
                 <td>{$v.mobile}<br />{$v.email}</td>
                 <td>
-                    <foreach name="moneyTypes" item="mt" key="k">
+                    {foreach $moneyTypes as $k => $mt}
                         <div class="input-group input-group-sm mb-2">
 								<span class="input-group-prepend">
 									<span class="input-group-text">{$mt}</span>
 								</span>
                             <span class="form-control">{$v[$k]|showmoney}</span>
                         </div>
-                    </foreach>
+                    {/foreach}
                 </td>
                 <td>
-                    <empty name="v.refer_name">
+                    {empty name="v.refer_name"}
                         <a href="javascript:" data-id="{$v.id}" class="bindreferer" title="设置推荐人">设置</a>
-                        <else/>
+                        {else/}
                         <div class="media">
-                            <if condition="!empty($v['refer_avatar'])">
+                            {if !empty($v['refer_avatar'])}
                                 <img src="{$v.refer_avatar}" class="mr-2 rounded" width="30"/>
-                            </if>
+                            {/if}
                             <div class="media-body">
                                 <h5 class="mt-0 mb-1">
                                     [{$v.referer}]
-                                    <if condition="!empty($v['refer_nickname'])">
+                                    {if !empty($v['refer_nickname'])}
                                         {$v.refer_nickname}
-                                        <else/>
+                                        {else/}
                                         {$v.refer_name}
-                                    </if>
+                                    {/if}
                                 </h5>
                                 <div>
                                     <a href="javascript:" data-id="{$v.id}" class="bindreferer">更换</a>
@@ -126,17 +126,17 @@
                                 </div>
                             </div>
                         </div>
-                    </empty>
+                    {/empty}
                 </td>
                 <td class="operations text-left">
-                    <if condition="$v.is_agent neq 0">
+                    {if $v.is_agent != 0}
                         <a class="btn btn-outline-primary" title="查看下线" href="{:url('member/index',array('referer'=>$v['id']))}"><i class="ion-md-people"></i> </a>
                         <a class="btn btn-outline-danger link-confirm" data-confirm="取消代理不能更改已注册的用户!!!" title="取消代理" href="{:url('member/cancel_agent',array('id'=>$v['id']))}" ><i class="ion-md-log-out"></i> </a><br />
                         <a class="btn btn-sm pl-1 pr-1 pt-0 pb-0 mt-2 btn-{$agents[$v['is_agent']]['style']} btn-setagent" title="更改级别" data-id="{$v.id}" data-agent="{$v.is_agent}" data-province="{$v.agent_province}" data-city="{$v.agent_city}" data-area="{$v.agent_area}" href="{:url('member/set_agent',array('id'=>$v['id']))}" >{$agents[$v['is_agent']]['name']}&nbsp;<i class="ion-md-create"></i></a>
                         <span class="badge badge-info">{$v.agentcode}</span>
-                    <else/>
+                    {else/}
                         <a class="btn btn-sm btn-outline-primary"  data-id="{$v.id}" data-agent="0" data-province="{$v.agent_province}" data-city="{$v.agent_city}" data-area="{$v.agent_area}" title="设置代理" href="{:url('member/set_agent',array('id'=>$v['id']))}" ><i class="ion-md-medal"></i> </a>
-                    </if>
+                    {/if}
                 </td>
                 <td>
                     <a href="javascript:" class="btn btn-sm has-tooltip pl-1 pr-1 pt-0 pb-0 btn-{$levels[$v['level_id']]['style']} btn-setlevel" data-id="{$v.id}" data-level="{$v.level_id}" title="点击修改">{$levels[$v['level_id']]['level_name']}&nbsp;<i class="ion-md-create"></i></a>
@@ -146,22 +146,22 @@
                     <a class="btn btn-outline-warning btn-recharge" title="充值" href="javascript:" data-id="{$v.id}" ><i class="ion-md-card"></i> </a>
                     <a class="btn btn-outline-primary" title="资金明细" href="{:url('member/money_log',array('id'=>$v['id']))}" ><i class="ion-md-paper"></i> </a>
 
-                    <if condition="$v.status eq 1">
+                    {if $v['status'] == 1}
                         <a class="btn btn-outline-warning link-confirm" title="禁用" data-confirm="禁用后用户将不能登陆!\n请确认!!!" href="{:url('member/status',array('id'=>$v['id'],'type'=>0))}" ><i class="ion-md-remove-circle-outline"></i> </a>
-                        <else/>
+                    {else/}
                         <a class="btn btn-outline-success link-confirm" title="启用" data-confirm="确认启用用户?" href="{:url('member/status',array('id'=>$v['id'],'type'=>1))}" style="color:#50AD1E;"><i class="ion-md-checkmark-circle"></i> </a>
-                    </if>
+                    {/if}
                     <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="警告：删除会员将清除所有与会员相关的资料并且无法恢复!\n请确认!!!" href="{:url('member/delete',array('id'=>$v['id']))}" ><i class="ion-md-close"></i> </a>
                 </td>
             </tr>
-        </volist>
+        {/volist}
         </tbody>
     </table>
     {$page|raw}
 </div>
 
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/javascript" src="__STATIC__/js/location.min.js"></script>
     <script type="text/html" id="rechargeTpl">
         <div class="row" style="margin:0 10%;">
@@ -170,9 +170,9 @@
                     <div ><span class="input-group-text">充值类型</span> </div>
                     <div class="col w-50 text-center" >
                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                        <foreach name="moneyTypes" item="mt" key="k">
+                        {foreach $moneyTypes as $k => $mt}
                         <label class="btn btn-outline-primary {$k=='money'?'active':''}"> <input type="radio" name="field" value="{$k}" autocomplete="off" {$k=='money'?'checked':''}> {$mt}</label>
-                        </foreach>
+                        {/foreach}
                         </div>
                     </div>
                 </div>
@@ -441,4 +441,4 @@
             }
         });
     </script>
-</block>
+{/block}

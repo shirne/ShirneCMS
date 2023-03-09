@@ -1,8 +1,8 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
-<include file="public/bread" menu="credit_category_index" title="" />
+{include file="public/bread" menu="credit_category_index" title="" /}
 
 <div id="page-wrapper">
     
@@ -32,10 +32,11 @@
             </tr>
         </thead>
         <tbody>
-        <foreach name="model" item="v">
+        {empty name="lists"}{:list_empty(5)}{/empty}
+        {volist name="lists" id="v" }
             <tr>
                 <td>{$v.id}</td>
-                <td>{$v.html} {$v.title}&nbsp;<span class="badge badge-info">{$v.short}</span><if condition="$v.use_template EQ 1">&nbsp;<span class="badge badge-warning">独立模板</span></if></td>
+                <td>{$v.html} {$v.title}&nbsp;<span class="badge badge-info">{$v.short}</span>{if $v['use_template'] == 1}&nbsp;<span class="badge badge-warning">独立模板</span>{/if}</td>
                 <td>{$v.name}</td>
                 <td>{$v.sort}</td>
                 <td>
@@ -47,9 +48,9 @@
                     </div>
                 </td>
             </tr>
-        </foreach>
+        {/volist}
         </tbody>
     </table>
 </div>
 
-</block>
+{/block}

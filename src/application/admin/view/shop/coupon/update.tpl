@@ -1,8 +1,8 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
-<include file="public/bread" menu="shop_coupon_index" title="优惠券设置" />
+{include file="public/bread" menu="shop_coupon_index" title="优惠券设置" /}
 
 <div id="page-wrapper">
     <div class="page-header">{$id>0?'编辑':'添加'}优惠券</div>
@@ -38,9 +38,9 @@
             <label for="title">类目</label>
             <div class="input-group">
                 <select name="cate_id" class="form-control" >
-                    <foreach name="category" item="v">
+                    {foreach $category as $key => $v}
                         <option value="{$v.id}" data-pid="{$v['pid']}" {$model['cate_id'] == $v['id']?'selected="selected"':""}>{$v.html} {$v.title}</option>
-                    </foreach>
+                    {/foreach}
                 </select>
             </div>
         </div>
@@ -132,11 +132,11 @@
             <label for="level_1" class="col-3 col-md-2 col-lg-1">级别限制</label>
             <div class="form-group col">
                 <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
-                    <volist name="levels" id="lv" key="k">
+                    {volist name="levels" id="lv" key="k"}
                         <label class="btn btn-outline-secondary{:fix_in_array($k,$model['levels_limit'])?' active':''}">
                             <input type="checkbox" id="level_{$k}" name="levels_limit[]" value="{$k}" autocomplete="off" {:fix_in_array($k,$model['levels_limit'])?'checked':''}>{$lv.level_name}
                         </label>
-                    </volist>
+                    {/volist}
                 </div>
             </div>
         </div>
@@ -210,8 +210,8 @@
     </form>
     </div>
 </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/javascript">
         radio_tab('[name=bind_type]','.bindtype','btype_');
         radio_tab('[name=type]','.cptype','cptype_');
@@ -250,4 +250,4 @@
             },{searchtype:'sku'});
         });
     </script>
-</block>
+{/block}

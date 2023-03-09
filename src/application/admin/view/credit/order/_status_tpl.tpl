@@ -25,9 +25,9 @@
                 <div class="input-group-prepend"><span class="input-group-text">快递公司</span></div>
                 <select class="form-control express-code">
                     <option value="">无需快递</option>
-                    <foreach name="expresscodes" item="exp" key="k">
+                    {foreach $expresscodes as $k => $exp}
                         <option value="{$k}">{$exp}</option>
-                    </foreach>
+                    {/foreach}
                 </select>
             </div>
         </div> 

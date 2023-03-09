@@ -1,7 +1,7 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
-<include file="public/bread" menu="setting_index" title="配置详情" />
+{block name="body"}
+{include file="public/bread" menu="setting_index" title="配置详情" /}
 
 <div id="page-wrapper">
     <div class="page-header">修改配置</div>
@@ -18,25 +18,25 @@
         <div class="form-group">
             <label for="value">分组</label>
             <select name="group" class="form-control" >
-                <foreach name="groups" item="itm">
-                    <if condition="$key==$model['group']">
+                {foreach $groups as $key => $itm}
+                    {if $key==$model['group']}
                         <option value="{$key}" selected="selected">{$itm}</option>
-                    <else />
+                    {else /}
                         <option value="{$key}" >{$itm}</option>
-                    </if>
-                </foreach>
+                    {/if}
+                {/foreach}
             </select>
         </div>
         <div class="form-group">
             <label for="value">字段类型</label>
             <select name="type" class="form-control" >
-                <foreach name="types" item="itm">
-                    <if condition="$key==$model['type']">
+                {foreach $types as $key => $itm}
+                    {if $key==$model['type']}
                         <option value="{$key}" selected="selected">{$itm}</option>
-                    <else />
+                    {else /}
                         <option value="{$key}">{$itm}</option>
-                    </if>
-                </foreach>
+                    {/if}
+                {/foreach}
             </select>
         </div>
         <div class="form-group">
@@ -58,4 +58,4 @@
     </form>
     </div>
 </div>
-</block>
+{/block}

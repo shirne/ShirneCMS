@@ -1,5 +1,5 @@
-<extend name="public:base" />
-<block name="body">
+{extend name="public:base" /}
+{block name="body"}
     <div class="container">
         <div class="page-header">
             <div class="row">
@@ -8,7 +8,7 @@
             </div>
         </div>
         <ul class="list-group">
-            <foreach name="cards" item="v">
+            {foreach $cards as $key => $v}
                 <li class="list-group-item row">
                     <h4>{$v.bank}{$v['is_default']?'<span class="badge badge-info">默认</span>':''}</h4>
                     <div class="help-block">开户行：{$v.bankname}</div>
@@ -18,7 +18,7 @@
                         <a href="{:aurl('index/member.account/cardEdit',array('id'=>$v['id']))}">修改</a>
                     </div>
                 </li>
-            </foreach>
+            {/foreach}
         </ul>
     </div>
-</block>
+{/block}

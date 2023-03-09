@@ -1,8 +1,8 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
-<include file="public/bread" menu="setting_index" title="接口信息" />
+{include file="public/bread" menu="setting_index" title="接口信息" /}
 
 <div id="page-wrapper">
     <div class="page-header">{$id>0?'编辑':'添加'}接口</div>
@@ -16,11 +16,11 @@
             <label for="type">类型</label>
             <select name="type" class="form-control">
                 <option value="">请选择类型</option>
-                <foreach name="types" key="k" item="v">
+                {foreach $types as $k => $v}
                     <option value="{$k}"
                     <?php if($model['type'] == $k) {echo 'selected="selected"' ;}?>
                     >{$v}</option>
-                </foreach>
+                {/foreach}
             </select>
         </div>
         <div class="form-group">
@@ -39,13 +39,13 @@
                     <label class="custom-file-label" for="upload_image">选择文件</label>
                 </div>
             </div>
-            <if condition="$model['image']">
+            {if !empty($model['image'])}
                 <figure class="figure">
                     <img src="{$model.image}" class="figure-img img-fluid rounded" alt="image">
                     <figcaption class="figure-caption text-center">{$model.image}</figcaption>
                 </figure>
                 <input type="hidden" name="delete_image" value="{$model.image}"/>
-            </if>
+            {/if}
         </div>
         <div class="form-group">
             <input type="hidden" name="id" value="{$model.id}">
@@ -54,4 +54,4 @@
     </form>
     </div>
 </div>
-</block>
+{/block}

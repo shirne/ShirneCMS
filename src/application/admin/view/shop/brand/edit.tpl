@@ -1,8 +1,8 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
-<include file="public/bread" menu="shop_brand_index" title="品牌资料" />
+{include file="public/bread" menu="shop_brand_index" title="品牌资料" /}
 
 <div id="page-wrapper">
     <div class="page-header">{$id>0?'编辑':'添加'}品牌</div>
@@ -24,13 +24,13 @@
                     <label class="custom-file-label" for="upload_logo">选择文件</label>
                 </div>
             </div>
-            <if condition="$model['logo']">
+            {if !empty($model['logo'])}
                 <figure class="figure">
                     <img src="{$model.logo}" class="figure-img img-fluid rounded" alt="image">
                     <figcaption class="figure-caption text-center">{$model.logo}</figcaption>
                 </figure>
                 <input type="hidden" name="delete_logo" value="{$model.logo}"/>
-            </if>
+            {/if}
         </div>
         <div class="form-group">
             <label for="sort">优先级</label>
@@ -39,12 +39,12 @@
         <div class="form-group">
             <label for="url">类目</label>
             <div>
-                <volist name="cates" id="cate">
+                {volist name="cates" id="cate"}
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" name="cates[]" id="brand_cate{$cate.id}" {$cate['checked']?'checked':''} value="{$cate.id}">
                         <label class="form-check-label" for="brand_cate{$cate.id}">{$cate.title}/{$cate.short}</label>
                     </div>
-                </volist>
+                {/volist}
             </div>
         </div>
         <div class="form-group">
@@ -54,4 +54,4 @@
     </form>
     </div>
 </div>
-</block>
+{/block}

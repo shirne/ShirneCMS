@@ -1,8 +1,8 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
-<include file="public/bread" menu="adv_index" title="广告位详情" />
+{include file="public/bread" menu="adv_index" title="广告位详情" /}
 
 <div id="page-wrapper">
     <div class="page-header">{$id>0?'编辑':'添加'}广告位</div>
@@ -19,10 +19,10 @@
         <div class="form-group">
             <label for="type">类型</label>
             <label class="radio-inline">
-                <input type="radio" name="type" value="1" <if condition="$model['type'] eq 1">checked="checked"</if> >视频
+                <input type="radio" name="type" value="1" {if $model['type'] == 1}checked="checked"{/if} >视频
             </label>
             <label class="radio-inline">
-                <input type="radio" name="type" value="0" <if condition="$model['type'] eq 0">checked="checked"</if> >图片
+                <input type="radio" name="type" value="0" {if $model['type'] == 0}checked="checked"{/if} >图片
             </label>
         </div>
         <div class="form-group">
@@ -47,15 +47,15 @@
             <label >自定义字段</label>
             <div class="form-group ">
                 <div class="prop-groups">
-                    <if condition="!empty($model['ext_set']) and !empty($model['ext_set']['key'])">
-                        <foreach name="model['ext_set']['key']" item="key" key="k">
+                    {if !empty($model['ext_set']) and !empty($model['ext_set']['key'])}
+                        {foreach $model['ext_set']['key'] as $k => $key}
                             <div class="input-group mb-2" >
                                 <input type="text" class="form-control" style="max-width:120px;" name="ext_set[key][]" value="{$key}"/>
                                 <input type="text" class="form-control" name="ext_set[value][]" value="{$model['ext_set']['value'][$k]}"/>
                                 <div class="input-group-append delete"><a href="javascript:" class="btn btn-outline-secondary"><i class="ion-md-trash"></i> </a> </div>
                             </div>
-                        </foreach>
-                    </if>
+                        {/foreach}
+                    {/if}
                 </div>
                 <a href="javascript:" class="btn btn-outline-dark btn-sm addpropbtn"><i class="ion-md-add"></i> 添加字段</a>
             </div>
@@ -67,10 +67,10 @@
         <div class="form-group">
             <label for="cc">状态</label>
             <label class="radio-inline">
-                <input type="radio" name="status" value="1" <if condition="$model['status'] eq 1">checked="checked"</if> >显示
+                <input type="radio" name="status" value="1" {if $model['status'] == 1}checked="checked"{/if} >显示
             </label>
             <label class="radio-inline">
-                <input type="radio" name="status" value="0" <if condition="$model['status'] eq 0">checked="checked"</if>>隐藏
+                <input type="radio" name="status" value="0" {if $model['status'] == 0}checked="checked"{/if}>隐藏
             </label>
         </div>
         <div class="form-group submit-btn">
@@ -80,9 +80,9 @@
     </form>
     </div>
 </div>
-</block>
+{/block}
 
-<block name="script">
+{block name="script"}
     <script type="text/javascript">
         jQuery(function ($) {
             $('.addpropbtn').click(function (e) {
@@ -100,4 +100,4 @@
             });
         });
     </script>
-</block>
+{/block}

@@ -1,8 +1,8 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
-<include file="public/bread" menu="shop_category_index" title="" />
+{include file="public/bread" menu="shop_category_index" title="" /}
 
 <div id="page-wrapper">
     
@@ -36,8 +36,8 @@
             </tr>
         </thead>
         <tbody>
-            <php>$empty=list_empty(6);</php>
-        <volist name="model" id="v" empty="$empty">
+        {php}$empty=list_empty(7);{/php}
+        {volist name="model" id="v" empty="$empty"}
             <tr>
                 <td>{$v.id}</td>
                 <td><img src="{$v.icon}" class="rounded" width="60"/></td>
@@ -45,43 +45,43 @@
                 <td>{$v.name}</td>
                 <td>{$v.sort}</td>
                 <td data-url="{:url('status')}" data-id="{$v.id}">
-                    <if condition="$v['is_lock']">
-                        <if condition="$v['status'] EQ 1">
+                    {if $v['is_lock']}
+                        {if $v['status'] == 1}
                             <span class="badge badge-success" >已启用</span>
-                            <else/>
+                            {else/}
                             <span class="badge " >已隐藏</span>
-                        </if>
-                        <else/>
-                        <if condition="$v['status'] EQ 1">
+                        {/if}
+                        {else/}
+                        {if $v['status'] == 1}
                             <span class="chgstatus" data-status="0" title="点击隐藏">已启用</span>
-                            <else/>
+                            {else/}
                             <span class="chgstatus off" data-status="1" title="点击启用">已隐藏</span>
-                        </if>
-                    </if>
+                        {/if}
+                    {/if}
                 </td>
                 <td class="operations">
                     <a class="btn btn-outline-primary" title="发布商品" href="{:url('shop.product/add',array('cid'=>$v['id']))}"><i class="ion-md-paper-plane"></i> </a>
                     <a class="btn btn-outline-primary" title="添加子分类" href="{:url('shop.category/add',array('pid'=>$v['id']))}"><i class="ion-md-add"></i> </a>
                     <a class="btn btn-outline-primary" title="编辑" href="{:url('shop.category/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> </a>
-                    <if condition="!$v['is_lock']">
+                    {if !$v['is_lock']}
                         <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('shop.category/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
-                    </if>
+                    {/if}
                 </td>
             </tr>
-        </volist>
+        {/volist}
         </tbody>
     </table>
 </div>
 
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/html" id="cateselect">
         <div class="form-group">
             <select class="form-control">
                 <option value="0">顶级分类</option>
-                <volist name="model" id="cate">
+                {volist name="model" id="cate"}
                     <option value="{$cate.id}">{$cate.html|raw} {$cate.title}</option>
-                </volist>
+                {/volist}
             </select>
         </div>
         <div class="form-group text-muted">每行一个分类，每个分类以空格区分名称、简称、别名，简称、别名可依次省略，别名必须使用英文字母<br />例：分类名称 分类简称 catename</div>
@@ -123,4 +123,4 @@
             })
         })
     </script>
-</block>
+{/block}

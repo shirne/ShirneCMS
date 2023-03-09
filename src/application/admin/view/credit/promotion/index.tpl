@@ -1,8 +1,8 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
-    <include file="public/bread" menu="credit_promotion_index" title="积分策略" />
+    {include file="public/bread" menu="credit_promotion_index" title="积分策略" /}
 
     <div id="page-wrapper">
     <div class="page-header">积分商城配置</div>
@@ -45,17 +45,17 @@
             <label for="v-credit_close" class="form-label w-100px text-right align-middle">{$setting['credit_close']['title']}</label>
             <div class="col-9 col-md-8 col-lg-6">
                 <div class="btn-group btn-group-toggle mregopengroup" data-toggle="buttons">
-                    <foreach name="setting.credit_close.data" item="value" key="k">
-                        <if condition="$k==$setting['credit_close']['value']">
+                    {foreach $setting.credit_close.data as $k => $value}
+                        {if $k==$setting['credit_close']['value']}
                             <label class="btn btn-outline-secondary active">
                                 <input type="radio" name="v-credit_close" value="{$k}" autocomplete="off" checked> {$value}
                             </label>
-                            <else />
+                        {else /}
                             <label class="btn btn-outline-secondary">
                                 <input type="radio" name="v-credit_close" value="{$k}" autocomplete="off"> {$value}
                             </label>
-                        </if>
-                    </foreach>
+                        {/if}
+                    {/foreach}
                 </div>
             </div>
         </div>
@@ -90,12 +90,12 @@
     </form>
         </div>
 </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
 <script type="text/javascript">
     jQuery(function ($) {
 
 
     });
 </script>
-</block>
+{/block}

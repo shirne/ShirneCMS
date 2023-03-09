@@ -1,14 +1,14 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
-<include file="public/bread" menu="subscribe_index" title="订阅列表" />
+{include file="public/bread" menu="subscribe_index" title="订阅列表" /}
 
 <div id="page-wrapper">
     
     <div class="row list-header">
         <div class="col-6">
-            <a href="{:url('subscribe/add')}" class="btn btn-outline-primary btn-sm"><i class="ion-md-add"></i> 添加订阅</a>
+            <a href="javascript:" class="btn btn-outline-primary btn-sm btn-add-subscribe"><i class="ion-md-add"></i> 添加订阅</a>
         </div>
         <div class="col-6">
             <form action="{:url('subscribe/index')}" method="post">
@@ -32,8 +32,8 @@
             </tr>
         </thead>
         <tbody>
-            <php>$empty=list_empty(5);</php>
-        <volist name="lists" id="v" empty="$empty">
+        {php}$empty=list_empty(5);{/php}
+        {volist name="lists" id="v" empty="$empty"}
             <tr>
                 <td>{$v.id}</td>
                 <td>{$v.title}</td>
@@ -44,9 +44,19 @@
                     <a class="btn btn-outline-danger link-confirm" title="删除" data-configm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('subscribe/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
                 </td>
             </tr>
-        </volist>
+        {/volist}
         </tbody>
     </table>
     {$page|raw}
 </div>
-</block>
+{/block}
+{block name="script"}
+<script type="text/javascript">
+    jQuery(function ($) {
+        $('.btn-add-subscribe').click(function(e){
+            
+        })
+
+    });
+</script>
+{/block}

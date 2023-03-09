@@ -22,21 +22,21 @@
         <div class="page__bd" style="height: 100%;">
             <div class="weui-tab">
                 <div class="weui-tab__panel">
-                    <block name="body" ></block>
-                    <include file="public:footer" />
+                    {block name="body" }{/block}
+                    {include file="public:footer" /}
                 </div>
 
-                <include file="public:header" />
+                {include file="public:header" /}
             </div>
         </div>
     </div>
 </div>
 <script src="__STATIC__/weui/js/weui.min.js"></script>
 <script src="__STATIC__/js/mobile.min.js"></script>
-<block name="script" ></block>
+{block name="script" }{/block}
 </body>
 
-<if condition="$isWechat">
+{if $isWechat}
     <script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.4.0.js"></script>
     <script>
         jQuery(function($){
@@ -125,6 +125,6 @@
         })
     });
     </script>
-</if>
+{/if}
 
 </html>

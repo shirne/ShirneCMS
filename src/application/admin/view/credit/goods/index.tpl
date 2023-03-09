@@ -1,7 +1,7 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
-<include file="public/bread" menu="credit_goods_index" title="商品列表" />
+{block name="body"}
+{include file="public/bread" menu="credit_goods_index" title="商品列表" /}
 <div id="page-wrapper">
 
 	<div class="row list-header">
@@ -29,9 +29,9 @@
 						</div>
 						<select name="cate_id" class="form-control">
 							<option value="0">不限分类</option>
-							<foreach name="category" item="v">
+							{foreach $category as $key => $v}
 								<option value="{$v.id}" {$cate_id == $v['id']?'selected="selected"':""}>{$v.html} {$v.title}</option>
-							</foreach>
+							{/foreach}
 						</select>
 					</div>
 					<div class="col input-group input-group-sm">
@@ -60,48 +60,48 @@
 			</tr>
 		</thead>
 		<tbody>
-		<empty name="lists">{:list_empty(10)}</empty>
-			<foreach name="lists" item="v" >
-				<tr>
-					<td><input type="checkbox" name="id" value="{$v.id}" /></td>
-					<td><figure class="figure" >
-							<img src="{$v.image}?w=100" class="figure-img img-fluid rounded" alt="image">
-						</figure></td>
-					<td><if condition="$v['type'] GT 1"><span class="badge badge-info">{$types[$v['type']]}</span></if>{$v.title}</td>
-					<td>
-						{$v.price} 积分/{$v['unit']|default='件'}
-					</td>
-					<td>
-						{$v.storage}
-					</td>
-					<td>
-                        {$v.sale}
-					</td>
-					<td>{$v.create_time|showdate}</td>
-					<td>{$v.category_title}</td>
-					<td>
-						<if condition="$v.status eq 1">
-							<span class="badge badge-success">已发布</span>
-							<else/>
-							<span class="badge badge-secondary">未发布</span>
-						</if>
-					</td>
-					<td class="operations">
-					<a class="btn btn-outline-primary btn-sm" href="{:url('credit.goods/edit',array('id'=>$v['id']))}" title="编辑"><i class="ion-md-create"></i> </a>
-						<a class="btn btn-outline-primary btn-sm" href="{:url('credit.goods/imagelist',array('aid'=>$v['id']))}" title="图集"><i class="ion-md-images"></i> </a>
-						<!--a class="btn btn-outline-dark btn-sm" href="{:url('credit.goods/comments',array('aid'=>$v['id']))}"><i class="ion-md-chatboxes"></i> 评论</a-->
-					<a class="btn btn-outline-danger btn-sm link-confirm" href="{:url('credit.goods/delete',array('id'=>$v['id']))}" title="删除" data-confirm="您真的确定要删除吗？\n\n删除后将不能恢复!" ><i class="ion-md-trash"></i> </a>
-					</td>
-				</tr>
-			</foreach>
+		{empty name="lists"}{:list_empty(10)}{/empty}
+		{foreach name="lists" item="v" }
+			<tr>
+				<td><input type="checkbox" name="id" value="{$v.id}" /></td>
+				<td><figure class="figure" >
+						<img src="{$v.image}?w=100" class="figure-img img-fluid rounded" alt="image">
+					</figure></td>
+				<td>{if $v['type'] == 1}<span class="badge badge-info">{$types[$v['type']]}</span>{/if}{$v.title}</td>
+				<td>
+					{$v.price} 积分/{$v['unit']|default='件'}
+				</td>
+				<td>
+					{$v.storage}
+				</td>
+				<td>
+					{$v.sale}
+				</td>
+				<td>{$v.create_time|showdate}</td>
+				<td>{$v.category_title}</td>
+				<td>
+					{if $v['status'] == 1}
+						<span class="badge badge-success">已发布</span>
+						{else/}
+						<span class="badge badge-secondary">未发布</span>
+					{/if}
+				</td>
+				<td class="operations">
+				<a class="btn btn-outline-primary btn-sm" href="{:url('credit.goods/edit',array('id'=>$v['id']))}" title="编辑"><i class="ion-md-create"></i> </a>
+					<a class="btn btn-outline-primary btn-sm" href="{:url('credit.goods/imagelist',array('aid'=>$v['id']))}" title="图集"><i class="ion-md-images"></i> </a>
+					<!--a class="btn btn-outline-dark btn-sm" href="{:url('credit.goods/comments',array('aid'=>$v['id']))}"><i class="ion-md-chatboxes"></i> 评论</a-->
+				<a class="btn btn-outline-danger btn-sm link-confirm" href="{:url('credit.goods/delete',array('id'=>$v['id']))}" title="删除" data-confirm="您真的确定要删除吗？\n\n删除后将不能恢复!" ><i class="ion-md-trash"></i> </a>
+				</td>
+			</tr>
+		{/foreach}
 		</tbody>
 	</table>
 	<div class="clearfix"></div>
 	{$page|raw}
 
 </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
 	<script type="text/javascript">
 		(function(w){
 			w.actionPublish=function(ids){
@@ -178,4 +178,4 @@
 			}
         })(window)
 	</script>
-</block>
+{/block}

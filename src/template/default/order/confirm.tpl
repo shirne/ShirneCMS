@@ -1,5 +1,5 @@
-<extend name="public:base" />
-<block name="body">
+{extend name="public:base" /}
+{block name="body"}
     <div class="container order-body">
         <form method="post" name="orderForm" onsubmit="return checkForm(this)" action="" >
 
@@ -7,9 +7,9 @@
                 <div class="card-header">购买产品</div>
                 <div class="card-body">
                     <ul class="list-group">
-                        <volist name="products" id="prod">
+                        {volist name="products" id="prod"}
                         <li class="list-group-item"><input type="radio" name="product_id" value="{$prod.id}" checked/> {$prod.product_title} {$prod.count}&times;{$prod.product_price}</li>
-                        </volist>
+                        {/volist}
                     </ul>
                     <div class="form-group">
                         <label >订单总额</label>
@@ -21,14 +21,14 @@
                 <div class="card-header">收货地址</div>
                 <div class="card-body">
                     <ul class="list-group address_box">
-                        <foreach name="address" item="add">
+                        {foreach $address as $key => $add}
                             <li class="list-group-item">
                                 <label>
                                     <input type="radio" name="address_id" value="{$add.address_id}" {$add.is_default?'checked':''}/> <span>{$add.receive_name} / {$add.mobile}</span>
                                     <div class="text-muted">{$add.province}&nbsp;{$add.city}&nbsp;{$add.area}&nbsp;{$add.address}</div>
                                 </label>
                             </li>
-                        </foreach>
+                        {/foreach}
                     </ul>
 
                     <a href="jsvascript:" class="btn btn-block btn-outline-secondary mt-3 add-address">添加收货地址</a>
@@ -52,8 +52,8 @@
             </div>
         </form>
     </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/plain" id="addressTpl">
         <form>
         <div class="form-group">
@@ -139,4 +139,4 @@
             }
         }
     </script>
-</block>
+{/block}

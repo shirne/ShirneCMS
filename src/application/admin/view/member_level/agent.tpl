@@ -1,8 +1,8 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
-    <include file="public/bread" menu="member_level_index" title="会员组列表" />
+    {include file="public/bread" menu="member_level_index" title="会员组列表" /}
 
     <div id="page-wrapper">
 
@@ -28,7 +28,7 @@
             </tr>
             </thead>
             <tbody>
-            <foreach name="lists" item="v">
+            {foreach $lists as $key => $v}
                 <tr>
                     <td>{$v.id}</td>
                     <td><input type="text" class="form-control" name="agents[{$v.id}][name]" value="{$v.name}"></td>
@@ -36,11 +36,11 @@
                     <td>
                         <select name="agents[{$v.id}][style]" class="form-control text-{$v.style}"
                                 onchange="$(this).attr('class','form-control text-'+$(this).val())">
-                            <foreach name="styles" id="style">
+                            {foreach $styles as $style}
                                 <option value="{$style}" {$v['style']==$style?'selected':''}
                                         class="text-{$style}">██████████
                                 </option>
-                            </foreach>
+                            {/foreach}
                         </select>
                     </td>
                     <td><input type="radio" name="is_default" value="{$v.id}" {$v['is_default']?'checked':''}></td>
@@ -73,7 +73,7 @@
                         </div>
                     </td>
                 </tr>
-            </foreach>
+            {/foreach}
             </tbody>
             <tfoot>
                 <tr>
@@ -85,4 +85,4 @@
         </table>
         </form>
     </div>
-</block>
+{/block}

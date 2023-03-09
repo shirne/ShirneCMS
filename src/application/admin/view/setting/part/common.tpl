@@ -25,13 +25,13 @@
                 <label class="custom-file-label" for="upload_site-weblogo">选择文件</label>
             </div>
         </div>
-        <if condition="$setting['site-weblogo']['value']">
+        {if $setting['site-weblogo']['value']}
             <figure class="figure">
                 <img src="{$setting['site-weblogo']['value']}" class="figure-img img-fluid rounded" alt="image">
                 <figcaption class="figure-caption text-center">{$setting['site-weblogo']['value']}</figcaption>
             </figure>
             <input type="hidden" name="delete_site-weblogo" value="{$setting['site-weblogo']['value']}"/>
-        </if>
+        {/if}
     </div>
 </div>
 
@@ -39,17 +39,17 @@
     <label for="v-site-close" class="col-3 col-md-2 text-right align-middle">关闭站点</label>
     <div class="col-5">
         <div class="btn-group btn-group-toggle mregopengroup" data-toggle="buttons">
-            <foreach name="setting['site-close']['data']" item="value" key="k">
-                <if condition="$k==$setting['site-close']['value']">
+            {foreach $setting['site-close']['data'] as $k => $value}
+                {if $k==$setting['site-close']['value']}
                     <label class="btn btn-outline-secondary active">
                         <input type="radio" name="v-site-close" value="{$k}" autocomplete="off" checked> {$value}
                     </label>
-                    <else />
+                {else /}
                     <label class="btn btn-outline-secondary">
                         <input type="radio" name="v-site-close" value="{$k}" autocomplete="off"> {$value}
                     </label>
-                </if>
-            </foreach>
+                {/if}
+            {/foreach}
         </div>
     </div>
     <div class="col-4">
@@ -72,13 +72,13 @@
                 <label class="custom-file-label" for="upload_site-shareimg">选择文件</label>
             </div>
         </div>
-        <if condition="$setting['site-shareimg']['value']">
+        {if $setting['site-shareimg']['value']}
             <figure class="figure">
                 <img src="{$setting['site-shareimg']['value']}" class="figure-img img-fluid rounded" alt="image">
                 <figcaption class="figure-caption text-center">{$setting['site-shareimg']['value']}</figcaption>
             </figure>
             <input type="hidden" name="delete_site-shareimg" value="{$setting['site-shareimg']['value']}"/>
-        </if>
+        {/if}
     </div>
 </div>
 <div class="form-row form-group">

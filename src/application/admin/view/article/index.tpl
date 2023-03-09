@@ -1,7 +1,7 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
-<include file="public/bread" menu="article_index" title="文章列表" />
+{block name="body"}
+{include file="public/bread" menu="article_index" title="文章列表" /}
 <div id="page-wrapper">
 
 	<div class="row list-header">
@@ -29,9 +29,9 @@
 						</div>
 						<select name="cate_id" class="form-control">
 							<option value="0">不限分类</option>
-							<foreach name="category" item="v">
+							{foreach $category as $key => $v}
 								<option value="{$v.id}" {$cate_id == $v['id']?'selected="selected"':""}>{$v.html} {$v.title}</option>
-							</foreach>
+							{/foreach}
 						</select>
 					</div>
 					<div class="col input-group input-group-sm">
@@ -58,8 +58,8 @@
 			</tr>
 		</thead>
 		<tbody>
-			<empty name="lists">{:list_empty(8)}</empty>
-			<volist name="lists" id="v" >
+			{empty name="lists"}{:list_empty(8)}{/empty}
+			{volist name="lists" id="v" }
 				<tr>
 					<td><input type="checkbox" name="id" value="{$v.id}" /></td>
 					<td><a href="{:url('index/article/view',['id'=>$v['id']])}" target="_blank">{$v.title}</a> </td>
@@ -70,11 +70,11 @@
 					<td>{$v.username}</td>
 					<td>{$v.category_title}</td>
 					<td data-url="{:url('status')}" data-id="{$v.id}">
-						<if condition="$v['status'] EQ 1">
+						{if $v['status'] == 1}
 							<span class="chgstatus" data-status="0" title="点击隐藏">已发布</span>
-							<else/>
+						{else/}
 							<span class="chgstatus off" data-status="1" title="点击发布">未发布</span>
-						</if>
+						{/if}
 					</td>
 					<td class="operations">
 					<a class="btn btn-outline-primary" title="编辑" href="{:url('article/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> </a>
@@ -83,15 +83,15 @@
 					<a class="btn btn-outline-danger link-confirm" title="{:lang('Delete')}" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('article/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
 					</td>
 				</tr>
-			</volist>
+			{/volist}
 		</tbody>
 	</table>
 	<div class="clearfix"></div>
 	{$page|raw}
 
 </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
 	<script type="text/javascript">
 		(function(w){
 			w.actionPublish=function(ids){
@@ -168,4 +168,4 @@
 			}
         })(window)
 	</script>
-</block>
+{/block}

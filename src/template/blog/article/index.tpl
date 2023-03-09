@@ -1,25 +1,25 @@
-<extend name="public:base"/>
+{extend name="public:base"/}
 
-<block name="body">
+{block name="body"}
     <div class="main">
-        <php>$adimg=getAdImage($topCategory['name']);</php>
-        <if condition="!empty($adimg)">
+        {php}$adimg=getAdImage($topCategory['name']);{/php}
+        {if !empty($adimg)}
             <div class="subbanner">
                 <div class="inner" style="background-image:url({$adimg})"></div>
             </div>
-        </if>
+        {/if}
         <div class="container list-body">
             <div class="row">
             <div class="col-lg-9">
                 <ul class="list-group article-list">
-                    <php>$empty='<li class="list-group-item empty-box"><p class="empty">暂时没有内容</p></li>';</php>
-                    <Volist name="lists" id="art" empty="$empty">
+                    {php}$empty='<li class="list-group-item empty-box"><p class="empty">暂时没有内容</p></li>';{/php}
+                    {volist name="lists" id="art" empty="$empty"}
                         <li class="list-group-item">
-                            <if condition="!empty($art['cover'])">
+                            {if !empty($art['cover'])}
                                 <a class="list-img" href="{:url('index/article/view',['id'=>$art['id']])}" style="background-image:url({$art.cover})">
                                     <img class="card-img-top" src="{$art.cover}" alt="Card image cap">
                                 </a>
-                            </if>
+                            {/if}
                             <div class="art-view">
                                 <h3><a href="{:url('index/article/view',['id'=>$art['id']])}">{$art.title}</a></h3>
                                 <div class="desc">
@@ -33,12 +33,12 @@
                                 </div>
                             </div>
                         </li>
-                    </Volist>
+                    {/volist}
                 </ul>
                 {$page|raw}
             </div>
-            <include file="article:_left" />
+            {include file="article:_left" /}
             </div>
         </div>
     </div>
-</block>
+{/block}

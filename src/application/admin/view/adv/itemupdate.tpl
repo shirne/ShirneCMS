@@ -1,8 +1,8 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
-<include file="public/bread" menu="adv_index" title="广告资料" />
+{include file="public/bread" menu="adv_index" title="广告资料" /}
 
 <div id="page-wrapper">
     <div class="page-header">{$id>0?'编辑':'添加'}广告</div>
@@ -12,7 +12,7 @@
             <label for="title">名称</label>
             <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="名称">
         </div>
-        <if condition="$group['type'] eq 1">
+        {if $group['type'] == 1}
             <div class="form-row">
                 <div class="form-group col">
                     <label for="image">预览图</label>
@@ -22,13 +22,13 @@
                             <label class="custom-file-label" for="upload_image">选择文件</label>
                         </div>
                     </div>
-                    <if condition="$model['image']">
+                    {if $model['image']}
                         <figure class="figure">
                             <img src="{$model.image}" class="figure-img img-fluid rounded" alt="image">
                             <figcaption class="figure-caption text-center">{$model.image}</figcaption>
                         </figure>
                         <input type="hidden" name="delete_image" value="{$model.image}"/>
-                    </if>
+                    {/if}
                 </div>
                 <div class="form-group col">
                     <label for="video">视频</label>
@@ -38,16 +38,16 @@
                             <label class="custom-file-label" for="upload_video">选择文件</label>
                         </div>
                     </div>
-                    <if condition="$model['video']">
+                    {if $model['video']}
                         <figure class="figure">
                             <video src="{$model.video}" controls class="figure-img img-fluid rounded" alt="video"></video>
                             <figcaption class="figure-caption text-center">{$model.video}</figcaption>
                         </figure>
                         <input type="hidden" name="delete_video" value="{$model.video}"/>
-                    </if>
+                    {/if}
                 </div>
             </div>
-            <else/>
+            {else/}
             <div class="form-group">
                 <label for="image">图片</label>
                 <div class="input-group">
@@ -56,25 +56,27 @@
                         <label class="custom-file-label" for="upload_image">选择文件</label>
                     </div>
                 </div>
-                <if condition="$model['image']">
+                {if $model['image']}
                     <figure class="figure">
                         <img src="{$model.image}" class="figure-img img-fluid rounded" alt="image">
                         <figcaption class="figure-caption text-center">{$model.image}</figcaption>
                     </figure>
                     <input type="hidden" name="delete_image" value="{$model.image}"/>
-                </if>
+                {/if}
             </div>
-        </if>
+        {/if}
         
+        {if !empty($group['ext_set']['key'])}
         <div class="form-row">
-            <foreach name="group['ext_set']['key']" item="ikey">
+            {foreach $group['ext_set']['key'] as $key => $ikey}
                 <div class="col-6 form-group">
                     <label for="image">{$group['ext_set']['value'][$key]}</label>
                     <input type="text" name="ext[{$ikey}]" class="form-control" value="{$model['ext'][$ikey]}" />
                 </div>
-            </foreach>
+            {/foreach}
         </div>
-        <if condition="$group['type'] eq 0">
+        {/if}
+        {if $group['type'] == 0}
             <div class="form-group">
                 <label for="image">元件</label>
                 <div>
@@ -84,7 +86,7 @@
                     <a href="javascript:" class="btn btn-outline-dark btn-sm addelement"><i class="ion-md-add"></i> 添加元件</a>
                 </div>
             </div>
-        </if>
+        {/if}
 
         <div class="form-group">
             <label for="image">有效期</label>
@@ -118,10 +120,10 @@
         <div class="form-group">
             <label for="cc">状态</label>
             <label class="radio-inline">
-                <input type="radio" name="status" value="1" <if condition="$model['status'] eq 1">checked="checked"</if> >显示
+                <input type="radio" name="status" value="1" {if $model['status'] == 1}checked="checked"{/if} >显示
             </label>
             <label class="radio-inline">
-                <input type="radio" name="status" value="0" <if condition="$model['status'] eq 0">checked="checked"</if>>隐藏
+                <input type="radio" name="status" value="0" {if $model['status'] == 0}checked="checked"{/if}>隐藏
             </label>
         </div>
         <div class="form-group submit-btn">
@@ -131,8 +133,8 @@
     </form>
     </div>
 </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/html" id="element-image">
         <div class="slide-element mb-2">
             <input type="hidden" name="elements[{@i}][type]" value="image" />
@@ -481,4 +483,4 @@
             }
         });
     </script>
-    </block>
+    {/block}

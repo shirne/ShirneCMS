@@ -1,8 +1,8 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
-<include file="public/bread" menu="page_index" title="单页列表" />
+{include file="public/bread" menu="page_index" title="单页列表" /}
 
 <div id="page-wrapper">
     
@@ -29,9 +29,9 @@
 						</div>
 						<select name="group" class="form-control">
 							<option value="0">不限分组</option>
-							<foreach name="groups" item="v">
+							{foreach $groups as $key => $v}
 								<option value="{$v.group}" {$group == $v['group']?'selected="selected"':""}>{$v.group_name}</option>
-							</foreach>
+							{/foreach}
 						</select>
 					</div>
 					<div class="col input-group input-group-sm">
@@ -57,40 +57,40 @@
             </tr>
         </thead>
         <tbody>
-        <php>$empty=list_empty(7);</php>
-        <volist name="lists" id="v" empty="$empty">
+        {php}$empty=list_empty(7);{/php}
+        {volist name="lists" id="v" empty="$empty"}
             <tr>
                 <td><input type="checkbox" name="id" value="{$v.id}" /></td>
-                <td>{$v.group}<if condition="$v.group_use_template EQ 1">&nbsp;<span class="badge badge-warning">独立模板</span></if></td>
-                <td>{$v.name}<if condition="$v.use_template EQ 1">&nbsp;<span class="badge badge-warning">独立模板</span></if></td>
+                <td>{$v.group}{if $v['group_use_template'] == 1}&nbsp;<span class="badge badge-warning">独立模板</span>{/if}</td>
+                <td>{$v.name}{if $v['use_template'] == 1}&nbsp;<span class="badge badge-warning">独立模板</span>{/if}</td>
                 <td>{$v.title}</td>
                 <td>{$v.sort}</td>
                 <td data-id="{$v.id}" data-url="{:url('status')}">
-                    <if condition="$v['status'] EQ 1">
+                    {if $v['status'] == 1}
                         <span class="chgstatus" data-status="0" title="点击隐藏">显示</span>
-                        <else/>
+                    {else/}
                         <span class="chgstatus off" data-status="1" title="点击显示">隐藏</span>
-                    </if>
+                    {/if}
                 </td>
                 <td class="operations">
                     <a class="btn btn-outline-primary" title="编辑" href="{:url('page/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> </a>
                     <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('page/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
                 </td>
             </tr>
-        </volist>
+        {/volist}
         </tbody>
     </table>
     {$page|raw}
 </div>
 
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/javascript">
         (function(w){
             w.actionShow=function(ids){
                 dialog.confirm('确定将选中页面显示？',function() {
                     $.ajax({
-                        url:'{:url('page/status',['id'=>'__id__','status'=>1])}'.replace('__id__',ids.join(',')),
+                        url:"{:url('page/status',['id'=>'__id__','status'=>1])}".replace('__id__',ids.join(',')),
                         type:'GET',
                         dataType:'JSON',
                         success:function(json){
@@ -108,7 +108,7 @@
             w.actionHide=function(ids){
                 dialog.confirm('确定将选中页面隐藏？',function() {
                     $.ajax({
-                        url:'{:url('page/status',['id'=>'__id__','status'=>0])}'.replace('__id__',ids.join(',')),
+                        url:"{:url('page/status',['id'=>'__id__','status'=>0])}".replace('__id__',ids.join(',')),
                         type:'GET',
                         dataType:'JSON',
                         success:function(json){
@@ -126,7 +126,7 @@
             w.actionDelete=function(ids){
                 dialog.confirm('确定删除选中的页面？',function() {
                     $.ajax({
-                        url:'{:url('page/delete',['id'=>'__id__'])}'.replace('__id__',ids.join(',')),
+                        url:"{:url('page/delete',['id'=>'__id__'])}".replace('__id__',ids.join(',')),
                         type:'GET',
                         dataType:'JSON',
                         success:function(json){
@@ -143,4 +143,4 @@
             };
         })(window)
     </script>
-</block>
+{/block}

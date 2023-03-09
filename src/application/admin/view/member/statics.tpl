@@ -1,12 +1,12 @@
-<extend name="public:base" />
-<block name="header">
+{extend name="public:base" /}
+{block name="header"}
     <style type="text/css">
         html{overflow-y:scroll;}
     </style>
-</block>
-<block name="body">
+{/block}
+{block name="body"}
 
-    <include file="public/bread" menu="member_index" title="会员统计" />
+    {include file="public/bread" menu="member_index" title="会员统计" /}
 
     <div id="page-wrapper">
         <div class="list-header">
@@ -52,21 +52,21 @@
                     </tr>
                     </thead>
                     <tbody>
-                        <foreach name="statics" id="item">
+                        {foreach $statics as $item}
                             <tr>
                                 <th>{$item['awdate']}</th>
                                 <td>{$item['member_count']}</td>
                                 <td>{$item['agent_count']}</td>
                             </tr>
-                        </foreach>
+                        {/foreach}
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
 
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/javascript" src="__STATIC__/chart/Chart.bundle.min.js"></script>
     <script type="text/javascript">
         var ctx = document.getElementById("myChart");
@@ -115,4 +115,4 @@
             }
         });
     </script>
-</block>
+{/block}

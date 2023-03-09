@@ -1,8 +1,8 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
-<include file="public/bread" menu="paylog_recharge" title=""/>
+{include file="public/bread" menu="paylog_recharge" title=""/}
 
 <div id="page-wrapper">
 
@@ -43,16 +43,16 @@
         </tr>
         </thead>
         <tbody>
-        <php>$empty=list_empty(8);</php>
-        <volist name="lists" id="v" empty="$empty">
+        {php}$empty=list_empty(8);{/php}
+        {volist name="lists" id="v" empty="$empty"}
             <tr>
                 <td>{$v.id}</td>
                 <td>[{$v.member_id}]{$v.username}</td>
                 <td>
                     {$paytype[$v['paytype_id']]['title']}
-                    <if condition="$v.type EQ 'unioncard'">
+                    {if $v['type'] == 'unioncard'}
                         <br />{$v.cardname}[{$v.cardno}]
-                    </if>
+                    {/if}
                 </td>
                 <td>{$v.amount|showmoney}</td>
                 <td>{$v.remark}</td>
@@ -60,20 +60,20 @@
                 <td>{$v.status|audit_status|raw}</td>
                 <td class="operations">
                     <a href="{:url('paylog/rechargeView',['id'=>$v['id']])}" title="查看" class="btn btn-sm btn-outline-info" rel="ajax"><i class="ion-md-paper"></i> </a>
-                    <if condition="$v['status'] EQ 0">
+                    {if $v['status'] == 0}
                     <a class="btn btn-outline-success link-confirm" title="确认" data-confirm="确定该订单已到账？" href="{:url('Paylog/rechargeupdate',array('id'=>$v['id']))}"><i class="ion-md-checkmark-circle"></i> </a>
                     <a class="btn btn-outline-danger link-confirm" title="无效" data-confirm="您真的确定要作废吗？" href="{:url('Paylog/rechargedelete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
-                        <elseif condition="$v['status'] EQ 1"/>
-                        <a class="btn btn-outline-primary link-confirm" title="撤销" href="{:url('Paylog/rechargecancel',array('id'=>$v['id']))}" ><i class="ion-md-history"></i> </a>
-                        <else/>
+                    {elseif $v['status'] == 1/}
+                    <a class="btn btn-outline-primary link-confirm" title="撤销" href="{:url('Paylog/rechargecancel',array('id'=>$v['id']))}" ><i class="ion-md-history"></i> </a>
+                    {else/}
                         -
-                    </if>
+                    {/if}
                 </td>
             </tr>
-        </volist>
+        {/volist}
         </tbody>
     </table>
     {$page|raw}
 </div>
 
-</block>
+{/block}

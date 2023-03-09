@@ -45,7 +45,7 @@
         window['MAPKEY_GAODE'] = '{:getSetting("mapkey_gaode")}';
     </script>
 
-    <block name="header"></block>
+    {block name="header"}{/block}
 
 </head>
 
@@ -63,7 +63,7 @@
 
         <div class="collapse navbar-collapse justify-content-end navbar-ex1-collapse" id="navbarSupportedContent">
 
-            <include file="public/sidebar" />
+            {include file="public/sidebar" /}
 
             <div class="nav navbar-nav navbar-user">
                 <li class="dropdown user-dropdown">
@@ -88,7 +88,7 @@
         </div>
     </nav>
 
-    <block name="body" ></block>
+    {block name="body" }{/block}
 
     <script src="__STATIC__/moment/min/moment.min.js"></script>
     <script src="__STATIC__/moment/locale/zh-cn.js"></script>
@@ -174,6 +174,6 @@
             }
         })();
     </script>
-    <block name="script"></block>
+    {block name="script"}{/block}
 </body>
 </html>

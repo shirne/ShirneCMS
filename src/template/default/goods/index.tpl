@@ -1,26 +1,26 @@
-<extend name="public:base"/>
+{extend name="public:base"/}
 
-<block name="body">
+{block name="body"}
     <div class="main">
-        <php>$image = getAdImage('goods');</php>
-        <if condition="!empty($image)">
+        {php}$image = getAdImage('goods');{/php}
+        {if !empty($image)}
         <div class="subbanner" >
             <div class="inner" style="background-image:url({$image})"></div>
         </div>
-        </if>
+        {/if}
 
         <div class="container" style="padding:0;">
             <div class="goods-list">
-                <volist name="categories[0]" id="cate">
+                {volist name="categories[0]" id="cate"}
                     <goods:list var="prodlist" category="$cate['id']" limit="100"/>
-                    <if condition="!empty($prodlist)">
+                    {if !empty($prodlist)}
                 <div class="card mt-3" >
                     <div class="card-header">{$cate.title}</div>
                     <div class="card-body" >
 
                         <div class="row">
-                            <php>$empty='<span class="col-12 empty">暂时没有内容</span>';</php>
-                            <Volist name="prodlist" id="prod" empty="$empty">
+                            {php}$empty='<span class="col-12 empty">暂时没有内容</span>';{/php}
+                            {volist name="prodlist" id="prod" empty="$empty"}
                                 <a class="col-6" href="{:url('index/goods/view',['id'=>$prod['id']])}">
                                     <div class="card proditem">
                                         <img class="card-img-top" src="{$prod.image|media}" alt="{$prod.title}">
@@ -33,13 +33,13 @@
                                         </div>
                                     </div>
                                 </a>
-                            </Volist>
+                            {/volist}
                         </div>
                     </div>
                 </div>
-                    </if>
-                </volist>
+                    {/if}
+                {/volist}
             </div>
         </div>
     </div>
-</block>
+{/block}

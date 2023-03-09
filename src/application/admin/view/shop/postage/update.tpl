@@ -1,7 +1,7 @@
-<extend name="public:base"/>
+{extend name="public:base"/}
 
-<block name="body">
-    <include file="public/bread" menu="shop_postage_index" title="运费设置"/>
+{block name="body"}
+    {include file="public/bread" menu="shop_postage_index" title="运费设置"/}
 
     <div id="page-wrapper">
         <div class="page-header">{$model.id>0?'编辑':'添加'}运费模板</div>
@@ -171,8 +171,8 @@
             </form>
         </div>
     </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/javascript" src="__STATIC__/js/location.min.js"></script>
     <script type="text/javascript" src="__STATIC__/vue/2.6/vue.min.js"></script>
     <script type="text/javascript">
@@ -366,4 +366,4 @@
             }
         });
     </script>
-</block>
+{/block}

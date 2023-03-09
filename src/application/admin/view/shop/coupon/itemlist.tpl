@@ -1,8 +1,8 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
-<include file="public/bread" menu="shop_coupon_index" title="优惠券领取列表" />
+{include file="public/bread" menu="shop_coupon_index" title="优惠券领取列表" /}
 
 <div id="page-wrapper">
     
@@ -34,22 +34,22 @@
             </tr>
         </thead>
         <tbody>
-        <foreach name="lists" item="v">
+        {foreach $lists as $key => $v}
             <tr>
                 <td>{$v.id}</td>
                 <td>{$v.title}</td>
                 <td>
                     <a href="{:url('shop.coupon/itemlist',array('gid'=>$v['coupon_id'],'member_id'=>$v['member_id']))}" class="media">
-                    <if condition="!empty($v['avatar'])">
+                    {if !empty($v['avatar'])}
                         <img src="{$v.avatar}" class="mr-2 rounded" width="30"/>
-                    </if>
+                    {/if}
                     <div class="media-body">
                         <h5 class="mt-0 mb-1" style="font-size:13px;">
-                            <if condition="!empty($v['nickname'])">
+                            {if !empty($v['nickname'])}
                                 {$v.nickname}
-                                <else/>
+                            {else/}
                                 {$v.username}
-                            </if>
+                            {/if}
                         </h5>
                         <div style="font-size:12px;">
                             [{$v.member_id} {$levels[$v['level_id']]['level_name']}]
@@ -64,9 +64,9 @@
                     <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n\n删除后将不能恢复!" href="{:url('shop.coupon/itemdelete',array('id'=>$v['id'],'gid'=>$gid))}" ><i class="ion-md-trash"></i> </a>
                 </td>
             </tr>
-        </foreach>
+        {/foreach}
         </tbody>
     </table>
     {$page|raw}
 </div>
-</block>
+{/block}

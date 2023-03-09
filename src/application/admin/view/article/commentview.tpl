@@ -1,8 +1,8 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
-    <include file="public/bread" menu="article_comments" title="查看评论" />
+    {include file="public/bread" menu="article_comments" title="查看评论" /}
 
     <div id="page-wrapper">
         <div class="page-header">查看评论</div>
@@ -18,14 +18,14 @@
                     <div class="form-control">{$model.content}</div>
                 </div>
                 <div class="form-group actions">
-                    <if condition="$model['status'] EQ 0">
+                    {if $model['status'] == 0}
                         <a href="{:url('article/commentstatus',['id'=>$model['id'],'status'=>1])}" data-confirm="确定审核此评论？" class="btn btn-success">审核</a>
-                    </if>
-                    <if condition="$model['status'] EQ 2">
+                    {/if}
+                    {if $model['status'] == 2}
                         <a href="{:url('article/commentstatus',['id'=>$model['id'],'status'=>2])}" data-confirm="确定显示此评论？" class="btn btn-info">显示</a>
-                        <else/>
+                    {else/}
                         <a href="{:url('article/commentstatus',['id'=>$model['id'],'status'=>2])}" data-confirm="确定隐藏此评论？" class="btn btn-info">隐藏</a>
-                    </if>
+                    {/if}
                     <a href="{:url('article/commentdelete',['id'=>$model['id']])}" data-confirm="确定删除此评论？" class="btn btn-danger">删除</a>
                 </div>
                 <div class="form-group">
@@ -39,8 +39,8 @@
             </form>
         </div>
     </div>
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script type="text/javascript">
         jQuery(function ($) {
             $('.actions a').click(function (e) {
@@ -63,4 +63,4 @@
             })
         })
     </script>
-</block>
+{/block}

@@ -1,8 +1,8 @@
-<extend name="public:base" />
+{extend name="public:base" /}
 
-<block name="body">
+{block name="body"}
 
-<include file="public/bread" menu="invite_index" title="邀请码列表" />
+{include file="public/bread" menu="invite_index" title="邀请码列表" /}
 
 <div id="page-wrapper">
     <div class="row list-header">
@@ -52,23 +52,23 @@
             </tr>
         </thead>
         <tbody>
-        <php>$empty=list_empty(10);</php>
-        <volist name="lists" id="v" empty="$empty">
+        {php}$empty=list_empty(10);{/php}
+        {volist name="lists" id="v" empty="$empty"}
             <tr>
                 <td><input type="checkbox" name="id" value="{$v.id}" /></td>
                 <td>{$v.code}</td>
                 <td>
                     <div class="media">
-                        <if condition="!empty($v['avatar'])">
+                        {if !empty($v['avatar'])}
                             <img src="{$v.avatar}" class="mr-2 rounded" width="30"/>
-                        </if>
+                        {/if}
                         <div class="media-body">
                             <h5 class="mt-0 mb-1" style="font-size:13px;">
-                                <if condition="!empty($v['nickname'])">
+                                {if !empty($v['nickname'])}
                                     {$v.nickname}
-                                    <else/>
+                                {else /}
                                     {$v.username}
-                                </if>
+                                {/if}
                             </h5>
                             <div style="font-size:12px;">
                                 [{$v.member_id} {$levels[$v['level_id']]['level_name']}]
@@ -77,55 +77,55 @@
                     </div>
                 </td>
                 <td>
-                    <if condition="$v['level_id'] GT 0">
+                    {if $v['level_id'] > 0}
                         {$levels[$v['level_id']]['level_name']}
-                        <else/>
+                    {else/}
                         -
-                    </if>
+                    {/if}
                 </td>
                 <td>{$v.create_time|showdate}</td>
                 <td>
-                    <if condition="$v['member_use'] gt 0">
+                    {if $v['member_use'] > 0}
                         <div class="media">
-                            <if condition="!empty($v['avatar'])">
+                            {if !empty($v['avatar'])}
                                 <img src="{$v.avatar}" class="mr-2 rounded" width="30"/>
-                            </if>
+                            {/if}
                             <div class="media-body">
                                 <h5 class="mt-0 mb-1" style="font-size:13px;">
-                                    [{$v.member_id}]<if condition="!empty($v['nickname'])">
+                                    [{$v.member_id}]{if !empty($v['nickname'])}
                                         {$v.nickname}
-                                        <else/>
+                                        {else/}
                                         {$v.username}
-                                    </if>
+                                    {/if}
                                 </h5>
                                 <div style="font-size:12px;">
                                     {$v.use_time|showdate}
                                 </div>
                             </div>
                         </div>
-                        <else/>
+                        {else/}
                         -
-                    </if>  
+                    {/if}  
                 </td>
                 <td>{$v.invalid_time|showdate}</td>
-                <td><if condition="$v.is_lock eq 1"><span class="badge badge-danger">锁定</span><else/><span class="badge badge-secondary">正常</span></if></td>
+                <td>{if $v['is_lock'] == 1}<span class="badge badge-danger">锁定</span>{else/}<span class="badge badge-secondary">正常</span>{/if}</td>
                 <td class="operations">
                     <a class="btn btn-outline-primary btn-transfer" data-id="{$v.id}" title="转赠" href="javascript:"><i class="ion-md-repeat"></i> </a>
-                    <if condition="$v.is_lock eq 0">
+                    {if $v.is_lock == 0}
                         <a class="btn btn-outline-danger link-confirm" title="锁定" data-confirm="锁定后将不能使用此激活码注册!\n请确认!!!" href="{:url('Invite/lock',array('id'=>$v['id']))}" ><i class="ion-md-close"></i> </a>
-                    <else/>
+                    {else/}
                         <a class="btn btn-outline-success link-confirm" title="解锁" href="{:url('Invite/unlock',array('id'=>$v['id']))}" style="color:#50AD1E;"><i class="ion-md-check"></i> </a>
-                    </if>
+                    {/if}
                 </td>
             </tr>
-        </volist>
+        {/volist}
         </tbody>
     </table>
     {$page|raw}
 </div>
 
-</block>
-<block name="script">
+{/block}
+{block name="script"}
     <script>
         (function(w){
             w.actionEnable=function(ids){
@@ -206,4 +206,4 @@
             })
         })
     </script>
-</block>
+{/block}
