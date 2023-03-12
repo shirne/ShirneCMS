@@ -12,6 +12,7 @@ use app\common\core\SimpleFacade;
  * @see \app\common\model\CategoryModel
  * @method static array getCategories($force=false) 获取分类列表
  * @method static array findCategory($idorname) 查找分类
+ * @method static array findCategories($idorname) 查找分类
  * @method static array getCategoryId($idorname) 查找分类ID
  * @method static array getCategoryTree($idorname) 获取当前分类所在的层级树
  * @method static array getTopCategory($idorname) 获取顶级分类

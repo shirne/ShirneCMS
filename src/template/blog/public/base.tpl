@@ -51,7 +51,7 @@
 </body>
 
 {if $isWechat}
-<script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.3.2.js"></script>
+<script type="text/javascript" src="//res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
 <script>
     jQuery(function($){
         $.ajax({
@@ -63,7 +63,6 @@
                         console.log(res)
                     });
                     wx.ready(function () {
-                        var version= '1.3.2';
                         var logo_img="{:local_media($config['site-weblogo']?:'/static/images/share_logo.jpg')}";
                         var share_imgUrl= window.share_imgurl?window.share_imgurl: logo_img;
                         var share_title = '{$title}';
@@ -80,51 +79,50 @@
                             }
                             share_url += 'agent='+agent_code;
                         }
-                        if(version !== '1.4.0'){
-                            wx.onMenuShareTimeline({
-                                title: share_title,
-                                link:  share_url,
-                                imgUrl: share_imgUrl
-                            });
-                            wx.onMenuShareAppMessage({
-                                title: share_title,
-                                desc: share_desc,
-                                link:  share_url,
-                                imgUrl: share_imgUrl,
-                                type: '',
-                                dataUrl: ''
-                            });
-                            wx.onMenuShareQQ({
-                                title: share_title,
-                                desc: share_desc,
-                                link:  share_url,
-                                imgUrl: share_imgUrl
-                            });
-                            wx.onMenuShareQZone({
-                                title: share_title,
-                                desc: share_desc,
-                                link:  share_url,
-                                imgUrl: share_imgUrl
-                            });
-                        }else {
-
-
-                            wx.updateAppMessageShareData({
-                                title: share_title,
-                                desc: share_desc,
-                                link: share_url,
-                                imgUrl: share_imgUrl,
-                                success: function () {
-                                }
-                            });
-                            wx.updateTimelineShareData({
-                                title: share_title,
-                                link: share_url,
-                                imgUrl: share_imgUrl,
-                                success: function () {
-                                }
-                            });
-                        }
+                        // old version
+                        wx.onMenuShareTimeline({
+                            title: share_title,
+                            link:  share_url,
+                            imgUrl: share_imgUrl
+                        });
+                        wx.onMenuShareAppMessage({
+                            title: share_title,
+                            desc: share_desc,
+                            link:  share_url,
+                            imgUrl: share_imgUrl,
+                            type: '',
+                            dataUrl: ''
+                        });
+                        wx.onMenuShareQQ({
+                            title: share_title,
+                            desc: share_desc,
+                            link:  share_url,
+                            imgUrl: share_imgUrl
+                        });
+                        wx.onMenuShareQZone({
+                            title: share_title,
+                            desc: share_desc,
+                            link:  share_url,
+                            imgUrl: share_imgUrl
+                        });
+                        
+                        // >=1.4.0
+                        wx.updateAppMessageShareData({
+                            title: share_title,
+                            desc: share_desc,
+                            link: share_url,
+                            imgUrl: share_imgUrl,
+                            success: function () {
+                            }
+                        });
+                        wx.updateTimelineShareData({
+                            title: share_title,
+                            link: share_url,
+                            imgUrl: share_imgUrl,
+                            success: function () {
+                            }
+                        });
+                    
 
                         wx.onMenuShareWeibo({
                             title: share_title,
