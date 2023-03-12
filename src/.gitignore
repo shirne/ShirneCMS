@@ -1,0 +1,15 @@
+*.log
+/.env
+
+/vendor
+/thinkphp
+
+/config/cert/*
+!/config/cert/cacert.pem
+!/config/cert/openssl.cnf
+
+/public/uploads/*
+!/public/uploads/index.html
+
+/public/aspnet_client
+/public/static/fonts
