@@ -53,7 +53,7 @@
         </div>
     </div>
     <div class="col-4">
-        <a href="{:FU('/')}?force=1" target="_blank" class="btn btn-link">强制访问</a>
+        <a href="/?force=1" target="_blank" class="btn btn-link">强制访问</a>
     </div>
 </div>
 <div class="form-row form-group">

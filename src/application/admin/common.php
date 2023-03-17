@@ -88,13 +88,6 @@ function check_password($password){
     }
 }
 
-function FU($url='',$vars=''){
-
-    $link=url($url,$vars);
-
-    return str_replace(app()->getModulePath(),'',$link);
-}
-
 function delete_image($images){
     if(is_array($images)){
         foreach ($images as $image){
