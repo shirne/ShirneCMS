@@ -1,45 +1,42 @@
 'use strict';
 
-const gulp = require('gulp');
-const uglify = require('gulp-uglify');
-const babel = require('gulp-babel');
-const autoprefixer = require('gulp-autoprefixer');
-const concat = require('gulp-concat');
-const rename = require('gulp-rename');
-const sass = require('gulp-sass');
-const watch = require('gulp-watch');
-const sourcemaps=require('gulp-sourcemaps');
-const del = require('del');
-const copy = require('copy');
+import gulp from 'gulp';
+import uglify from 'gulp-uglify';
+import babel from 'gulp-babel';
+import LessAutoprefix from 'less-plugin-autoprefix';
+import concat from 'gulp-concat';
+import rename from 'gulp-rename';
+import less from 'gulp-less';
+import sourcemaps from 'gulp-sourcemaps';
+import { deleteAsync } from 'del';
+import copy from 'copy';
 
-let is_watching=false;
+var autoprefix = new LessAutoprefix({ browsers: ['last 2 versions'] });
 
-function sassTask() {
-    return gulp.src('./scss/*.scss')
+let is_watching = false;
+
+function cssTask() {
+    return gulp.src('./scss/*.less')
         .pipe(sourcemaps.init())
-        .pipe(autoprefixer())
-        .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
+        .pipe(less({ plugins: [autoprefix] }))
         .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest('./dest/css')).on('end',function () {
-            if(is_watching)copyDest();
+        .pipe(gulp.dest('./dest/css')).on('end', function () {
+            if (is_watching) copyDest();
         });
 }
 
-
-function sassadminTask() {
-    return gulp.src('./scss/admin/*.scss')
+function cssAdminTask() {
+    return gulp.src('./scss/admin/*.less')
         .pipe(sourcemaps.init())
-        .pipe(autoprefixer())
-        .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
+        .pipe(less({ plugins: [autoprefix] }))
         .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest('./dest/admin/css')).on('end',function () {
-            if(is_watching)copyDest();
+        .pipe(gulp.dest('./dest/admin/css')).on('end', function () {
+            if (is_watching) copyDest();
         });
 }
 
-
-let basejs=['js/model/common.js', 'js/model/template.js', 'js/model/dialog.js', 'js/model/jquery.tag.js', 'js/model/datetime.init.js'];
-let backsrces=basejs.concat(['js/model/map.js','js/backend.js']);
+let basejs = ['js/model/common.js', 'js/model/template.js', 'js/model/dialog.js', 'js/model/jquery.tag.js', 'js/model/datetime.init.js'];
+let backsrces = basejs.concat(['js/model/map.js', 'js/backend.js']);
 function backendTask() {
     return gulp.src(backsrces)
         .pipe(sourcemaps.init())
@@ -52,13 +49,12 @@ function backendTask() {
         .pipe(uglify())
         .pipe(rename({ extname: '.min.js' }))
         .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest('./dest/admin/js/')).on('end',function () {
-            if(is_watching)copyDest();
+        .pipe(gulp.dest('./dest/admin/js/')).on('end', function () {
+            if (is_watching) copyDest();
         });
 }
 
-
-let frontsrces=basejs.concat(['js/front.js']);
+let frontsrces = basejs.concat(['js/front.js']);
 function frontTask() {
     return gulp.src(frontsrces)
         .pipe(sourcemaps.init())
@@ -71,11 +67,10 @@ function frontTask() {
         .pipe(uglify())
         .pipe(rename({ extname: '.min.js' }))
         .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest('./dest/js/')).on('end',function () {
-            if(is_watching)copyDest();
+        .pipe(gulp.dest('./dest/js/')).on('end', function () {
+            if (is_watching) copyDest();
         });
 }
-
 
 function mobileTask() {
     return gulp.src(['js/mobile.js'])
@@ -87,31 +82,29 @@ function mobileTask() {
         .pipe(uglify())
         .pipe(rename({ extname: '.min.js' }))
         .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest('./dest/js/')).on('end',function () {
-            if(is_watching)copyDest();
+        .pipe(gulp.dest('./dest/js/')).on('end', function () {
+            if (is_watching) copyDest();
         });
 }
 
-
 function locationTask() {
-    return gulp.src(['js/model/areas.js','js/model/location.js'])
+    return gulp.src(['js/model/areas.js', 'js/model/location.js'])
         .pipe(sourcemaps.init())
         .pipe(concat('location.js'))
         .pipe(gulp.dest('./dest/js/'))
         .pipe(uglify())
         .pipe(rename({ extname: '.min.js' }))
         .pipe(sourcemaps.write('./'))
-        .pipe(gulp.dest('./dest/js/')).on('end',function () {
-            if(is_watching)copyDest();
+        .pipe(gulp.dest('./dest/js/')).on('end', function () {
+            if (is_watching) copyDest();
         });
 }
 
-
 function cleanTask(done) {
-    del('dest/**/*').then(function(paths) {
-        if(paths && paths.length) {
+    deleteAsync('dest/**/*').then(function (paths) {
+        if (paths && paths.length) {
             console.log('Deleted files and folders:\n', paths.join('\n'));
-        }else{
+        } else {
             console.log('No files were deleted.');
         }
         done()
@@ -120,40 +113,38 @@ function cleanTask(done) {
 
 function copyDest(done) {
     console.log('Copy dest to public...');
-    copy(['dest/**/*.css','dest/**/*.css.map','dest/**/*.min.js','dest/**/*.min.js.map'],'../src/public/static/',function () {
-        if(done)done()
+    copy(['dest/**/*.css', 'dest/**/*.css.map', 'dest/**/*.min.js', 'dest/**/*.min.js.map'], '../src/public/static/', function () {
+        if (done) done()
     });
 }
+
 function watchAll() {
-    is_watching=true;
+    is_watching = true;
     console.log('Starting watch all files...');
-    gulp.watch(['./scss/*.scss','./scss/model/*.scss'],sassTask, (event)=> {
+    gulp.watch(['./scss/*.less', './scss/model/*.less'], cssTask, (event) => {
         console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
     });
-    gulp.watch(['./scss/admin/*.scss'],sassadminTask,(event)=> {
+    gulp.watch(['./scss/admin/*.less'], cssAdminTask, (event) => {
         console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
     });
-    gulp.watch(backsrces,backendTask,(event)=> {
+    gulp.watch(backsrces, backendTask, (event) => {
         console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
     });
-    gulp.watch(frontsrces,frontTask,(event)=> {
+    gulp.watch(frontsrces, frontTask, (event) => {
         console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
     });
-    gulp.watch(['js/mobile.js'],mobileTask,(event)=> {
+    gulp.watch(['js/mobile.js'], mobileTask, (event) => {
         console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
     });
-    gulp.watch(['js/model/areas.js','js/model/location.js'],locationTask,(event)=> {
+    gulp.watch(['js/model/areas.js', 'js/model/location.js'], locationTask, (event) => {
         console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
     });
 }
 
+const build = gulp.series(cleanTask, gulp.parallel(cssTask, cssAdminTask, backendTask, frontTask, mobileTask, locationTask), copyDest);
 
-const build = gulp.series(cleanTask,gulp.parallel(sassTask,sassadminTask,backendTask,frontTask,mobileTask,locationTask),copyDest);
-
-gulp.task('default',gulp.series( build, watchAll));
+gulp.task('default', gulp.series(build, watchAll));
 gulp.task('clean', cleanTask);
 gulp.task('watch', watchAll);
 gulp.task('build', build);
 gulp.task('dest', copyDest);
-
-

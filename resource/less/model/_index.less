@@ -3,7 +3,7 @@
   .carousel-item{
     height :597px;
     overflow: hidden;
-    background:url(../images/blank.gif) center center no-repeat $bg-dark;
+    background:url(../images/blank.gif) center center no-repeat @bg-dark;
     background-size:auto 100%;
     img{
       display:none;
@@ -15,15 +15,15 @@
   padding:30px;
 }
 .index-bg{
-  background:$color-white;
+  background:@color-white;
 }
 .index-card-title{
   h2{
     text-align: center;
-    color:$color-text-dark;
+    color:@color-text-dark;
     &::after{
       content:".";
-      color:$color-eye;
+      color:@color-eye;
       font-size:2rem;
       line-height: 0.6;
       font-weight:bold;
@@ -32,7 +32,7 @@
   }
   p{
     text-align: center;
-    color:$color-text-lighter;
+    color:@color-text-lighter;
   }
 }
 .index-card .slide{
@@ -56,7 +56,7 @@
       white-space: nowrap;
     }
     .figure-title{
-      color:$color-text-dark;
+      color:@color-text-dark;
     }
     .figure-caption{
       font-size:0.8rem;
@@ -66,14 +66,14 @@
 
 .solution-body{
   .nav{
-    background:$bg-light;
+    background:@bg-light;
   }
   .nav-link{
     padding:24px 30px;
-    color:$color-text-dark;
+    color:@color-text-dark;
     border-radius:0;
     position:relative;
-    border-bottom:1px $bd-light solid;
+    border-bottom:1px @bd-light solid;
     transition:background-color .3s;
     &:last-child{
       border-bottom:0;
@@ -92,11 +92,11 @@
     }
     &.active{
       background:rgba(0,0,0,.1);
-      color:$color-text-dark;
+      color:@color-text-dark;
       &:after{
         left:-16px;
         width:16px;
-        border-left:4px $color-text-dark solid;
+        border-left:4px @color-text-dark solid;
       }
     }
     p{
@@ -104,7 +104,7 @@
       margin:0;
     }
     .vice_title{
-      color:$color-text-light;
+      color:@color-text-light;
     }
   }
 }
@@ -135,13 +135,13 @@
       height :100%;
     }
     &:hover{
-      background:$color-text;
+      background:@color-text;
       .mask{
         background-color:rgba(0,0,0,.6);
         background-position:center 72px;
       }
       h3{
-        color:$color-white;
+        color:@color-white;
       }
     }
   }
@@ -157,7 +157,7 @@
   display:inline-block;
   width:3rem;
   text-align: center;
-  background:$color-text;
+  background:@color-text;
   border-radius:5px;
 }
 
@@ -177,25 +177,25 @@
       .badge{
         border-radius:0;
         padding:0 10px;
-        color:$color-text-lighter;
-        border:1px $color-text-lighter solid;
+        color:@color-text-lighter;
+        border:1px @color-text-lighter solid;
         background:transparent;
         display:inline-block;
         line-height :1.6rem;
         margin-right:1rem;
       }
       .text-muted{
-        color:$color-text-lighter;
+        color:@color-text-lighter;
       }
       h4{
-        color:$color-text;
+        color:@color-text;
         transition:color .3s;
         font-size:1rem;
         margin-top:1rem;
       }
     }
     &:hover {
-      background : $color-text;
+      background : @color-text;
       .media-body {
         h4 {
           color : #fff;
