@@ -286,7 +286,7 @@ class BaseController extends Controller
 
         if($this->wechatLogin() && $this->config['wechat_autologin']=='1' ){
             redirect()->remember();
-
+            $this->wechat=$this->getWechatAccount('wechat');
             $callbackurl = url('index/login/callback', ['type' => 'wechat_'.$this->wechat['id']], true,true);
 
             // 使用第三方登陆
@@ -338,6 +338,7 @@ class BaseController extends Controller
 
         if($this->isLogin){
             if(empty($openid)) {
+                $this->wechat=$this->getWechatAccount('wechat');
                 $wechatUser = Db::name('memberOauth')
                     ->where('member_id', $this->userid)
                     ->where('type_id', $this->wechat['id'])
@@ -425,7 +426,7 @@ class BaseController extends Controller
     protected function getWechatAccount($type,$force=false){
         if(!isset($this->currentWechats[$type]) || $force) {
             $this->currentWechats[$type] = cache('default_' . $type);
-            if (empty($wechat) || $force == true) {
+            if (empty($this->currentWechats[$type]) || $force == true) {
                 $wechat = \think\Db::name('Wechat')->where('type', $type)
                     ->where('account_type', 'service')
                     ->order('is_default DESC')->find();
