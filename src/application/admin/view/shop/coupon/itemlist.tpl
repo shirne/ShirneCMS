@@ -58,8 +58,17 @@
                 </a>
             </td>
                 <td>{$v.create_time|showdate}</td>
-                <td>{$v.start_date|showdate}<br />{$v.end_date|showdate}</td>
-                <td>{$v.status|show_status|raw}</td>
+                <td>{$v.expiry_time|showdate}</td>
+                <td>
+                    {if $v['status']==1}
+                        <span class="badge badge-warning">待使用</span>
+                    {elseif $v['status']==2 /}
+                        <span class="badge badge-default">已使用</span>
+                        <span class="badge badge-default">{$v.use_time|showdate}</span>
+                    {else /}
+                        <span class="badge badge-default">已失效</span>
+                    {/if}
+                </td>
                 <td class="operations">
                     <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n\n删除后将不能恢复!" href="{:url('shop.coupon/itemdelete',array('id'=>$v['id'],'gid'=>$gid))}" ><i class="ion-md-trash"></i> </a>
                 </td>

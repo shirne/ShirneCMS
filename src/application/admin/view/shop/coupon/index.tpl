@@ -66,6 +66,8 @@
                 <td class="operations">
                     <a class="btn btn-outline-primary" title="编辑" href="{:url('shop.coupon/update',array('id'=>$v['id']))}"><i class="ion-md-create"></i></a>
                     <a class="btn btn-outline-primary" title="领取记录" href="{:url('shop.coupon/itemlist',array('gid'=>$v['id']))}"><i class="ion-md-menu"></i></a>
+                    <a class="btn btn-outline-primary btn-getlink" data-id="{$v['id']}" title="领取链接"
+                        href="javascript:"><i class="ion-md-link"></i></a>
                     <a class="btn btn-outline-danger link-confirm" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" title="删除" href="{:url('shop.coupon/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i></a>
                 </td>
             </tr>
@@ -74,4 +76,29 @@
     </table>
     {$page|raw}
 </div>
+{/block}
+{block name="script"}
+<script type="text/javascript">
+    var url = "{:url('shop.coupon/getlink',['id'=>'__ID__'])}";
+    jQuery(function ($) {
+        $('.btn-getlink').click(function (e) {
+            var id = $(this).data('id');
+            $.ajax({
+                url: url.replace('__ID__', id),
+                type: 'POST',
+                dataType: 'json',
+                success: function (json) {
+                    console.log(json)
+                    if (json.code == 1) {
+                        dialog.alert({size:'md',content:'<div class="text-center"><img src="' + json.data.qrcode + '"/></div><div>链接: ' + json.data.url + ' <a href="'+json.data.url+'" target="_blank"><i class="ion-md-open"></i></a></div>'}
+                        ,null);
+                    } else {
+                        dialog.alert(json.message);
+                    }
+                }
+            })
+
+        });
+    });
+</script>
 {/block}

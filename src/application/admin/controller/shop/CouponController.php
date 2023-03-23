@@ -121,6 +121,26 @@ class CouponController extends BaseController
     }
 
     /**
+     * 获取链接二维码
+     * @param int $id 
+     * @return void 
+     */
+    public function getlink($id)
+    {
+        $url = url('index/coupon/view', ['id' => $id], true, true);
+        $qrcodeUrl = './uploads/couponqrcode/' . $id . '.png';
+        if (!file_exists($qrcodeUrl)) {
+            $content = gener_qrcode($url, 430);
+            if (!is_dir(dirname($qrcodeUrl))) {
+                @mkdir(dirname($qrcodeUrl), 0777, true);
+            }
+            file_put_contents($qrcodeUrl, $content);
+        }
+
+        return $this->success('', '', ['url' => $url, 'qrcode' => ltrim($qrcodeUrl, '.')]);
+    }
+
+    /**
      * 删除优惠券
      * @param $id
      */
