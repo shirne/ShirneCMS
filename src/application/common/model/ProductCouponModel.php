@@ -294,14 +294,22 @@ class ProductCouponModel extends BaseModel
     public function useCoupon($member_coupon_id){
         $coupon = Db::name('memberCoupon')->where('id',$member_coupon_id)->find();
         if(empty($coupon)){
+            $this->setError('优惠券不存在');
             return false;
         }
         if($coupon['status'] != 1){
+            $this->setError('优惠券'.($coupon['status']==2 ? '已使用':'已失效'));
+            return false;
+        }
+        if($coupon['expiry_time'] < time()){
+            $this->setError('优惠券已过期');
+            Db::name('memberCoupon')->where('id',$member_coupon_id)->update(['status'=>0]);
             return false;
         }
         Db::name('memberCoupon')->where('id',$member_coupon_id)->update(['status'=>2,'use_time'=>time()]);
         return true;
     }
+
 
     /**
      * 锁定优惠券
