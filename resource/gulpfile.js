@@ -10,13 +10,14 @@ import less from 'gulp-less';
 import sourcemaps from 'gulp-sourcemaps';
 import { deleteAsync } from 'del';
 import copy from 'copy';
+import packageData from "./package.json" assert { type: 'json' };
 
-var autoprefix = new LessAutoprefix({ browsers: ['last 2 versions'] });
+var autoprefix = new LessAutoprefix({ browsers: packageData.browserslist });
 
 let is_watching = false;
 
 function cssTask() {
-    return gulp.src('./scss/*.less')
+    return gulp.src('./less/*.less')
         .pipe(sourcemaps.init())
         .pipe(less({ plugins: [autoprefix] }))
         .pipe(sourcemaps.write('./'))
@@ -26,7 +27,7 @@ function cssTask() {
 }
 
 function cssAdminTask() {
-    return gulp.src('./scss/admin/*.less')
+    return gulp.src('./less/admin/*.less')
         .pipe(sourcemaps.init())
         .pipe(less({ plugins: [autoprefix] }))
         .pipe(sourcemaps.write('./'))

@@ -8,6 +8,18 @@
   },
   "author": "shirne",
   "license": "ISC",
+  "browserslist": [
+    "last 1 major version",
+    ">= 1%",
+    "not dead",
+    "Chrome >= 45",
+    "Firefox >= 38",
+    "iOS >= 8",
+    "Android >= 4.4",
+    "Safari >= 9",
+    "Explorer >= 9",
+    "Edge >= 11"
+  ],
   "devDependencies": {
     "@babel/core": "^7.21.0",
     "@babel/preset-env": "^7.20.2",
