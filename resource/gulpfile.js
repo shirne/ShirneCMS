@@ -3,23 +3,25 @@
 import gulp from 'gulp';
 import uglify from 'gulp-uglify';
 import babel from 'gulp-babel';
-import LessAutoprefix from 'less-plugin-autoprefix';
 import concat from 'gulp-concat';
 import rename from 'gulp-rename';
 import less from 'gulp-less';
+import LessAutoprefix from 'less-plugin-autoprefix';
+import LessPluginCleanCSS from 'less-plugin-clean-css';
 import sourcemaps from 'gulp-sourcemaps';
 import { deleteAsync } from 'del';
 import copy from 'copy';
 import packageData from "./package.json" assert { type: 'json' };
 
-var autoprefix = new LessAutoprefix({ browsers: packageData.browserslist });
+const cleanCSS = new LessPluginCleanCSS({ advanced: true });
+const autoprefix = new LessAutoprefix({ browsers: packageData.browserslist });
 
 let is_watching = false;
 
 function cssTask() {
     return gulp.src('./less/*.less')
         .pipe(sourcemaps.init())
-        .pipe(less({ plugins: [autoprefix] }))
+        .pipe(less({ plugins: [autoprefix, cleanCSS] }))
         .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest('./dest/css')).on('end', function () {
             if (is_watching) copyDest();
@@ -29,7 +31,7 @@ function cssTask() {
 function cssAdminTask() {
     return gulp.src('./less/admin/*.less')
         .pipe(sourcemaps.init())
-        .pipe(less({ plugins: [autoprefix] }))
+        .pipe(less({ plugins: [autoprefix, cleanCSS] }))
         .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest('./dest/admin/css')).on('end', function () {
             if (is_watching) copyDest();

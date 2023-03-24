@@ -34,6 +34,7 @@
     "gulp-sourcemaps": "^3.0.0",
     "gulp-uglify": "^3.0.2",
     "gulp-watch": "^5.0.1",
-    "less-plugin-autoprefix": "2.0.0"
+    "less-plugin-autoprefix": "2.0.0",
+    "less-plugin-clean-css": "1.5.1"
   }
 }
