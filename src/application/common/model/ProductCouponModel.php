@@ -20,6 +20,20 @@ class ProductCouponModel extends BaseModel
         4=>'规格券'
     ];
 
+    protected function setStartTimeAttr($value=0)
+    {
+        if(is_int($value))return $value;
+        if(is_numeric($value))return intval($value);
+        return strtotime($value);
+    }
+
+    protected function setEndTimeAttr($value=0)
+    {
+        if(is_int($value))return $value;
+        if(is_numeric($value))return intval($value);
+        return strtotime($value);
+    }
+
     protected function setExpiryTimeAttr($value=0)
     {
         if(is_int($value))return $value;

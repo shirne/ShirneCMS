@@ -111,19 +111,19 @@
         </div>
 
         <div class="form-group">
-            <label for="start_date">有效期</label>
+            <label for="start_time">有效期</label>
             <div class="form-row date-range">
                 <div class="input-group col">
                     <div class="input-group-prepend">
                         <span class="input-group-text">从</span>
                     </div>
-                    <input type="text" name="start_date" class="form-control fromdate" value="{$model.start_date|showdate=''}" />
+                    <input type="text" name="start_time" class="form-control fromdate" value="{$model.start_time|showdate=''}" />
                 </div>
                 <div class="input-group col">
                     <div class="input-group-prepend">
                         <span class="input-group-text">至</span>
                     </div>
-                    <input type="text" name="end_date" class="form-control todate" value="{$model.end_date|showdate=''}" />
+                    <input type="text" name="end_time" class="form-control todate" value="{$model.end_time|showdate=''}" />
                 </div>
             </div>
         </div>
