@@ -2,10 +2,11 @@
 
 {block name="body"}
 
-    {include file="public/bread" menu="category_index" title="{:lang('Category update')}"/}
+    {assign name="page_title"  value=":lang($id>0?'Edit':'Add').lang('Category')" /}
+    {include file="public/bread" menu="category_index" title="$page_title"/}
 
     <div id="page-wrapper">
-        <div class="page-header">{:lang($id>0?'Edit':'Add')}{:lang('Category')}</div>
+        <div class="page-header">{$page_title}</div>
         <div class="page-content">
             <form method="post" class="page-form" action="" enctype="multipart/form-data">
                 <div class="form-row">
