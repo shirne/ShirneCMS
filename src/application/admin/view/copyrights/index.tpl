@@ -4,7 +4,7 @@
 
 {include file="public/bread" menu="copyrights_index" title="版权署名列表" /}
 
-<div id="page-wrapper" class="container-fluid">
+<div id="page-wrapper">
     
     <div class="row list-header">
         <div class="col-6">
