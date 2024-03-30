@@ -124,10 +124,10 @@ function copyDest(done) {
 function watchAll() {
     is_watching = true;
     console.log('Starting watch all files...');
-    gulp.watch(['./scss/*.less', './scss/model/*.less'], cssTask, (event) => {
+    gulp.watch(['./less/*.less', './less/model/*.less'], cssTask, (event) => {
         console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
     });
-    gulp.watch(['./scss/admin/*.less'], cssAdminTask, (event) => {
+    gulp.watch(['./less/admin/*.less'], cssAdminTask, (event) => {
         console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
     });
     gulp.watch(backsrces, backendTask, (event) => {
