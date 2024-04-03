@@ -5,6 +5,23 @@ use think\facade\Route;
 
 define('SESSKEY_USER_AUTO_LOGIN','login');
 
+
+function delete_image($images){
+    if(is_array($images)){
+        foreach ($images as $image){
+            delete_image($image);
+        }
+    }else{
+        if(!empty($images) && strpos($images,'/uploads/')===0){
+            @unlink('.'.$images);
+        }
+    }
+}
+
+function explode_keywords($keywords){
+    return array_filter(explode(',',str_replace(['，','、','；',';'],',',$keywords)));
+}
+
 function parseNavigator(&$config,$module){
     $navigators=cache($module.'_navigator');
     if(empty($navigators)){
@@ -151,4 +168,47 @@ function showstar($star, $max = 5){
     ]);
 }
 
+
+function orderclass($var, $up, $down){
+    if($var == $up){
+        return 'up';
+    }elseif($var == $down){
+        return 'down';
+    }
+    return 'cansort';
+}
+function trimItem($items){
+    foreach($items as $k=> $values){
+        $items[$k] = trim($values,', ');
+    }
+    return $items;
+}
+function pushQuery($items, $group, $id){
+    $queries=[];
+    foreach($items as $item){
+        $queries[$item['group']].=$item['id'].',';
+    }
+    if(!isset($queries[$group]))$queries[$group]='';
+    $queries[$group].=$id;
+
+    return trimItem($queries);
+}
+function tripQuery($items, $group, $id){
+    $queries=[];
+    foreach($items as $item){
+        if($item['group'] == $group && $item['id']==$id)continue;
+        $queries[$item['group']].=$item['id'].',';
+    }
+
+    return trimItem($queries);
+}
+function tripItem($items, $group, $id){
+    foreach($items as $k=>$item){
+        if($item['group'] == $group && $item['id']==$id){
+            unset($items[$k]);
+            break;
+        }
+    }
+    return $items;
+}
 //end file
