@@ -26,7 +26,7 @@ abstract class BaseProcessor
     {
         $this->app = $app;
         $this->handler = $handler;
-        $this->_member=null;
+        $this->_member = null;
     }
 
     /**
@@ -57,7 +57,7 @@ abstract class BaseProcessor
                 if (strpos($file, 'Processor.php') < 1) continue;
                 $processor = strtolower(str_replace('Processor.php', '', $file));
                 if ($processor !== 'base') {
-                    require_once(__DIR__.'/'.$file);
+                    require_once(__DIR__ . '/' . $file);
                     /**
                      * @var $class BaseProcessor
                      */
@@ -83,12 +83,13 @@ abstract class BaseProcessor
         return static::getInstance()->_getActions();
     }
 
-    public function getMember(){
-        if($this->_member === null){
-            if($this->handler && $this->handler->user){
+    public function getMember()
+    {
+        if ($this->_member === null) {
+            if ($this->handler && $this->handler->user) {
                 $member_id = $this->handler->user['member_id'];
-                if($member_id > 0){
-                    $this->_member = MemberModel::where('id',$member_id)->find();
+                if ($member_id > 0) {
+                    $this->_member = MemberModel::where('id', $member_id)->find();
                 }
             }
         }

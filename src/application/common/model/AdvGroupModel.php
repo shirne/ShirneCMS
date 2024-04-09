@@ -12,20 +12,20 @@ use think\Db;
  */
 class AdvGroupModel extends BaseModel
 {
-    protected $type = ['ext_set'=>'array'];
-    
-    public static function getAdPosition($flag,$limit=10)
+    protected $type = ['ext_set' => 'array'];
+
+    public static function getAdPosition($flag, $limit = 10)
     {
-        $model=self::get(['flag'=>$flag]);
-        if(empty($model)){
+        $model = self::get(['flag' => $flag]);
+        if (empty($model)) {
             return [];
         }
-        $time=strtotime(date('Y-m-d'));
+        $time = strtotime(date('Y-m-d'));
         $lists =  Db::name('AdvItem')
-            ->where('group_id',$model->id)
-            ->where('status',1)
-            ->where('start_date',['=',0],['<=',$time],'OR')
-            ->where('end_date',['=',0],['>=',$time],'OR')
+            ->where('group_id', $model->id)
+            ->where('status', 1)
+            ->where('start_date', ['=', 0], ['<=', $time], 'OR')
+            ->where('end_date', ['=', 0], ['>=', $time], 'OR')
             ->order('sort ASC, id DESC')
             ->limit($limit)
             ->select();
@@ -33,18 +33,18 @@ class AdvGroupModel extends BaseModel
         return $model;
     }
 
-    public static function getAdList($flag,$limit=10)
+    public static function getAdList($flag, $limit = 10)
     {
-        $model=self::get(['flag'=>$flag]);
-        if(empty($model)){
+        $model = self::get(['flag' => $flag]);
+        if (empty($model)) {
             return [];
         }
-        $time=strtotime(date('Y-m-d'));
+        $time = strtotime(date('Y-m-d'));
         $lists =  Db::name('AdvItem')
-            ->where('group_id',$model->id)
-            ->where('status',1)
-            ->where('start_date',['=',0],['<=',$time],'OR')
-            ->where('end_date',['=',0],['>=',$time],'OR')
+            ->where('group_id', $model->id)
+            ->where('status', 1)
+            ->where('start_date', ['=', 0], ['<=', $time], 'OR')
+            ->where('end_date', ['=', 0], ['>=', $time], 'OR')
             ->order('sort ASC, id DESC')
             ->limit($limit)
             ->select();
@@ -53,24 +53,25 @@ class AdvGroupModel extends BaseModel
 
     public static function getAdItem($flag)
     {
-        $model=self::get(['flag'=>$flag]);
-        if(empty($model)){
+        $model = self::get(['flag' => $flag]);
+        if (empty($model)) {
             return [];
         }
-        $time=strtotime(date('Y-m-d'));
+        $time = strtotime(date('Y-m-d'));
         $item = Db::name('AdvItem')
-            ->where('group_id',$model->id)
-            ->where('status',1)
-            ->where('start_date',['=',0],['<=',$time],'OR')
-            ->where('end_date',['=',0],['>=',$time],'OR')
+            ->where('group_id', $model->id)
+            ->where('status', 1)
+            ->where('start_date', ['=', 0], ['<=', $time], 'OR')
+            ->where('end_date', ['=', 0], ['>=', $time], 'OR')
             ->order('sort ASC, id DESC')
             ->find();
         return self::fixAdItem($item);
     }
-    
-    public static function fixAdItem($item, $islist=false){
-        if($islist){
-            foreach ($item as $k=>$itm){
+
+    public static function fixAdItem($item, $islist = false)
+    {
+        if ($islist) {
+            foreach ($item as $k => $itm) {
                 $item[$k] = self::fixAdItem($itm);
             }
             return $item;

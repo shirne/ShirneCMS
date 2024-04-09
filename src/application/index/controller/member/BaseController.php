@@ -15,6 +15,6 @@ class BaseController extends AuthedController
     public function initialize()
     {
         parent::initialize();
-        $this->assign('navmodel','member');
+        $this->assign('navmodel', 'member');
     }
 }

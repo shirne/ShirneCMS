@@ -20,7 +20,8 @@ use app\common\core\SimpleFacade;
  */
 class MemberCartFacade extends SimpleFacade
 {
-    protected static function getFacadeClass(){
+    protected static function getFacadeClass()
+    {
         return \app\common\model\MemberCartModel::class;
     }
 }

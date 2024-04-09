@@ -12,13 +12,14 @@ use think\Db;
  */
 class SpecificationsModel extends BaseModel
 {
-    protected $type = ['data'=>'array'];
+    protected $type = ['data' => 'array'];
 
-    public static function getList(){
-        $data=Db::name('Specifications')->field('id,title')->select();
-        $lists=[];
-        foreach ($data as $row){
-            $lists[$row['id']]=$row['title'];
+    public static function getList()
+    {
+        $data = Db::name('Specifications')->field('id,title')->select();
+        $lists = [];
+        foreach ($data as $row) {
+            $lists[$row['id']] = $row['title'];
         }
         return $lists;
     }

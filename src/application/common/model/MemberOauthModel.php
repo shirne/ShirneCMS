@@ -14,65 +14,67 @@ class MemberOauthModel extends BaseModel
 {
     protected $autoWriteTimestamp = true;
 
-    public static function checkUser($data, $account, $agent = ''){
-        $user=static::where('openid',$data['openid'])->find();
-        if(empty($data['data'])) {
+    public static function checkUser($data, $account, $agent = '')
+    {
+        $user = static::where('openid', $data['openid'])->find();
+        if (empty($data['data'])) {
             $data = MemberOauthModel::mapUserInfo($data);
         }
-    
+
         $data['type'] = $account['account_type'];
         $data['type_id'] = $account['id'];
-        if(empty($user['member_id']) && !empty($data['unionid'])){
-            $sameuser=Db::name('memberOauth')->where('unionid',$data['unionid'])->find();
-            if(!empty($sameuser['member_id'])){
-                $data['member_id']=$sameuser['member_id'];
+        if (empty($user['member_id']) && !empty($data['unionid'])) {
+            $sameuser = Db::name('memberOauth')->where('unionid', $data['unionid'])->find();
+            if (!empty($sameuser['member_id'])) {
+                $data['member_id'] = $sameuser['member_id'];
             }
         }
-        if(empty($user)){
-            if(!isset($data['member_id']))$data['member_id']=0;
-            
+        if (empty($user)) {
+            if (!isset($data['member_id'])) $data['member_id'] = 0;
+
             $user = static::create($data);
-            $user['is_new']=1;
-        }else{
+            $user['is_new'] = 1;
+        } else {
             $user->save($data);
         }
-        if($user['member_id']==0 && getSetting('m_register') != '1'){
+        if ($user['member_id'] == 0 && getSetting('m_register') != '1') {
             $member = MemberModel::createFromOauth($user, $agent);
             $user->save(['member_id' => $member['id']]);
         }
-        
+
         return $user;
     }
 
     public static function getAccountsByMemberAndType($member_id, $type = 'service')
     {
-        return Db::view('wechat','*')
-        ->view('memberOauth',['member_id','openid'],'memberOauth.type_id=wechat.id')
-        ->where('memberOauth.type',$type )
-        ->where('memberOauth.member_id',$member_id )
-        ->where('wechat.account_type',$type )
-        ->select();
+        return Db::view('wechat', '*')
+            ->view('memberOauth', ['member_id', 'openid'], 'memberOauth.type_id=wechat.id')
+            ->where('memberOauth.type', $type)
+            ->where('memberOauth.member_id', $member_id)
+            ->where('wechat.account_type', $type)
+            ->select();
     }
-    
-    public static function mapUserInfo($userInfo){
-        $data=[];
+
+    public static function mapUserInfo($userInfo)
+    {
+        $data = [];
 
         $data['openid'] = $userInfo['openid'];
-        $data['nickname'] =$userInfo['nickname'];
-        $data['name'] =$userInfo['nickname'];
-        $data['avatar'] =$userInfo['headimgurl'];
+        $data['nickname'] = $userInfo['nickname'];
+        $data['name'] = $userInfo['nickname'];
+        $data['avatar'] = $userInfo['headimgurl'];
 
-        $data['gender'] = empty($userInfo['gender'])?0:$userInfo['gender'];
-        $data['unionid'] = empty($userInfo['unionid'])?'':$userInfo['unionid'];
-        $data['data']=json_encode($userInfo);
+        $data['gender'] = empty($userInfo['gender']) ? 0 : $userInfo['gender'];
+        $data['unionid'] = empty($userInfo['unionid']) ? '' : $userInfo['unionid'];
+        $data['data'] = json_encode($userInfo);
 
-        $data['city'] =$userInfo['city'];
-        $data['province'] =$userInfo['province'];
-        $data['country'] =$userInfo['country'];
-        $data['language'] =$userInfo['language'];
-        $data['subscribe_time']=$userInfo['subscribe_time'];
-        if($data['subscribe_time']>0){
-            $data['is_follow']=1;
+        $data['city'] = $userInfo['city'];
+        $data['province'] = $userInfo['province'];
+        $data['country'] = $userInfo['country'];
+        $data['language'] = $userInfo['language'];
+        $data['subscribe_time'] = $userInfo['subscribe_time'];
+        if ($data['subscribe_time'] > 0) {
+            $data['is_follow'] = 1;
         }
 
         return $data;

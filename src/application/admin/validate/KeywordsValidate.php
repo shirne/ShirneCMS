@@ -12,11 +12,11 @@ use app\common\core\BaseUniqueValidate;
  */
 class KeywordsValidate extends BaseUniqueValidate
 {
-    protected $rule=array(
-        'title'=>'require|unique:keywords,%id%'
+    protected $rule = array(
+        'title' => 'require|unique:keywords,%id%'
     );
-    protected $message=array(
-        'title'=>'请填写关键字',
-        'title.unique'=>'关键字不可重复'
+    protected $message = array(
+        'title' => '请填写关键字',
+        'title.unique' => '关键字不可重复'
     );
 }

@@ -7,15 +7,19 @@ namespace shirne\third;
  *
  * @author Tanxu
  */
-class GeetestLib {
+class GeetestLib
+{
     const GT_SDK_VERSION = 'php_3.0.0';
 
     public static $connectTimeout = 1;
     public static $socketTimeout  = 1;
 
     private $response;
+    private $captcha_id;
+    private $private_key;
 
-    public function __construct($captcha_id, $private_key) {
+    public function __construct($captcha_id, $private_key)
+    {
         $this->captcha_id  = $captcha_id;
         $this->private_key = $private_key;
     }
@@ -26,11 +30,13 @@ class GeetestLib {
      * @param array $data
      * @return int
      */
-    public function pre_process($param, $new_captcha=1) {
-        $data = array('gt'=>$this->captcha_id,
-                     'new_captcha'=>$new_captcha
-                );
-        $data = array_merge($data,$param);
+    public function pre_process($param, $new_captcha = 1)
+    {
+        $data = array(
+            'gt' => $this->captcha_id,
+            'new_captcha' => $new_captcha
+        );
+        $data = array_merge($data, $param);
         $query = http_build_query($data);
         $url = "http://api.geetest.com/register.php?" . $query;
         $challenge = $this->send_request($url);
@@ -45,13 +51,14 @@ class GeetestLib {
     /**
      * @param $challenge
      */
-    private function success_process($challenge) {
+    private function success_process($challenge)
+    {
         $challenge      = md5($challenge . $this->private_key);
         $result         = array(
             'success'   => 1,
             'gt'        => $this->captcha_id,
             'challenge' => $challenge,
-            'new_captcha'=>1
+            'new_captcha' => 1
         );
         $this->response = $result;
     }
@@ -59,7 +66,8 @@ class GeetestLib {
     /**
      *
      */
-    private function failback_process() {
+    private function failback_process()
+    {
         $rnd1           = md5(rand(0, 100));
         $rnd2           = md5(rand(0, 100));
         $challenge      = $rnd1 . substr($rnd2, 0, 2);
@@ -67,7 +75,7 @@ class GeetestLib {
             'success'   => 0,
             'gt'        => $this->captcha_id,
             'challenge' => $challenge,
-            'new_captcha'=>1
+            'new_captcha' => 1
         );
         $this->response = $result;
     }
@@ -75,7 +83,8 @@ class GeetestLib {
     /**
      * @return mixed
      */
-    public function get_response_str() {
+    public function get_response_str()
+    {
         return json_encode($this->response);
     }
 
@@ -84,7 +93,8 @@ class GeetestLib {
      *
      * @return mixed
      */
-    public function get_response() {
+    public function get_response()
+    {
         return $this->response;
     }
 
@@ -97,23 +107,24 @@ class GeetestLib {
      * @param array $param
      * @return int
      */
-    public function success_validate($challenge, $validate, $seccode,$param, $json_format=1) {
+    public function success_validate($challenge, $validate, $seccode, $param, $json_format = 1)
+    {
         if (!$this->check_validate($challenge, $validate)) {
             return 0;
         }
         $query = array(
             "seccode" => $seccode,
-            "timestamp"=>time(),
-            "challenge"=>$challenge,
-            "captchaid"=>$this->captcha_id,
-            "json_format"=>$json_format,
+            "timestamp" => time(),
+            "challenge" => $challenge,
+            "captchaid" => $this->captcha_id,
+            "json_format" => $json_format,
             "sdk"     => self::GT_SDK_VERSION
         );
-        $query = array_merge($query,$param);
+        $query = array_merge($query, $param);
         $url          = "http://api.geetest.com/validate.php";
         $codevalidate = $this->post_request($url, $query);
-        $obj = json_decode($codevalidate,true);
-        if ($obj === false){
+        $obj = json_decode($codevalidate, true);
+        if ($obj === false) {
             return 0;
         }
         if ($obj['seccode'] == md5($seccode)) {
@@ -131,10 +142,11 @@ class GeetestLib {
      * @param $seccode
      * @return int
      */
-    public function fail_validate($challenge, $validate, $seccode) {
-        if(md5($challenge) == $validate){
+    public function fail_validate($challenge, $validate, $seccode)
+    {
+        if (md5($challenge) == $validate) {
             return 1;
-        }else{
+        } else {
             return 0;
         }
     }
@@ -144,7 +156,8 @@ class GeetestLib {
      * @param $validate
      * @return bool
      */
-    private function check_validate($challenge, $validate) {
+    private function check_validate($challenge, $validate)
+    {
         if (strlen($validate) != 32) {
             return false;
         }
@@ -161,7 +174,8 @@ class GeetestLib {
      * @param $url
      * @return mixed|string
      */
-    private function send_request($url) {
+    private function send_request($url)
+    {
 
         if (function_exists('curl_exec')) {
             $ch = curl_init();
@@ -172,9 +186,9 @@ class GeetestLib {
             $data = curl_exec($ch);
             $curl_errno = curl_errno($ch);
             curl_close($ch);
-            if ($curl_errno >0) {
+            if ($curl_errno > 0) {
                 return 0;
-            }else{
+            } else {
                 return $data;
             }
         } else {
@@ -186,11 +200,11 @@ class GeetestLib {
             );
             $context = stream_context_create($opts);
             $data    = @file_get_contents($url, false, $context);
-            if($data){ 
+            if ($data) {
                 return $data;
-            }else{ 
+            } else {
                 return 0;
-            } 
+            }
         }
     }
 
@@ -200,7 +214,8 @@ class GeetestLib {
      * @param array $postdata
      * @return mixed|string
      */
-    private function post_request($url, $postdata = '') {
+    private function post_request($url, $postdata = '')
+    {
         if (!$postdata) {
             return false;
         }
@@ -247,11 +262,12 @@ class GeetestLib {
     }
 
 
-    
+
     /**
      * @param $err
      */
-    private function triggerError($err) {
+    private function triggerError($err)
+    {
         trigger_error($err);
     }
 }

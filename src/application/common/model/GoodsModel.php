@@ -1,4 +1,5 @@
 <?php
+
 namespace app\common\model;
 
 
@@ -11,5 +12,5 @@ use app\common\core\ContentModel;
 class GoodsModel extends ContentModel
 {
     protected $autoWriteTimestamp = true;
-    protected $type = ['prop_data'=>'array'];
+    protected $type = ['prop_data' => 'array'];
 }

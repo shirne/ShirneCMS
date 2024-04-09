@@ -81,12 +81,12 @@ class MemberModel extends BaseModel
         if (strcmp($this['referer'], $referer) === 0) {
             return true;
         }
-        $rmember = Db::name('member')->where('id', (int)$referer)->whereOr('agentcode',$referer)->find();
-        if (empty($rmember) ) {
+        $rmember = Db::name('member')->where('id', (int)$referer)->whereOr('agentcode', $referer)->find();
+        if (empty($rmember)) {
             $this->setError('设置的推荐人不存在');
             return false;
         }
-        if(getSetting('agent_lock') != 1 && $rmember['is_agent']<1){
+        if (getSetting('agent_lock') != 1 && $rmember['is_agent'] < 1) {
             $this->setError('设置的推荐人不是代理');
             return false;
         }
@@ -191,7 +191,8 @@ class MemberModel extends BaseModel
         }
     }
 
-    public static function generAgentCode(){
+    public static function generAgentCode()
+    {
         $agentcode = random_str(10, 'string', 1);
         while (Db::name('member')->where('agentcode', $agentcode)->count() > 0) {
             $agentcode = random_str(10, 'string', 1);
@@ -392,7 +393,7 @@ class MemberModel extends BaseModel
         if (strcmp($member['referer'], $agentMember['id']) === 0) {
             return true;
         }
-        if(!getSetting('agent_lock') && $agentMember['is_agent']<1){
+        if (!getSetting('agent_lock') && $agentMember['is_agent'] < 1) {
             return false;
         }
 
@@ -502,7 +503,7 @@ class MemberModel extends BaseModel
     {
         $updata = array();
         if (!empty($data)) {
-            if (isset($data['gender']) && empty($member['gender']) ) {
+            if (isset($data['gender']) && empty($member['gender'])) {
                 $updata['gender'] = $data['gender'];
             }
             if (empty($member['province']) && !empty($data['province'])) {
@@ -520,7 +521,7 @@ class MemberModel extends BaseModel
             if (isset($data['mobile']) && empty($member['mobile'])) {
                 $updata['mobile'] = $data['mobile'];
             }
-            if (isset($data['mobile_bind']) && $data['mobile_bind']!=$member['mobile']) {
+            if (isset($data['mobile_bind']) && $data['mobile_bind'] != $member['mobile']) {
                 $updata['mobile_bind'] = $data['mobile_bind'];
             }
             if ((empty($member['avatar']) || is_wechat_avatar($member['avatar'])) && !is_empty_avatar($data['avatar'])) {

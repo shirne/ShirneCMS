@@ -12,16 +12,16 @@ use think\Paginator;
  */
 class Bootstrap4 extends Paginator
 {
-    protected $extstyle='';
-    protected $side=3;
-    protected $jump=0;
+    protected $extstyle = '';
+    protected $side = 3;
+    protected $jump = 0;
 
     public function __construct($items, $listRows, $currentPage = null, $total = null, $simple = false, array $options = [])
     {
         parent::__construct($items, $listRows, $currentPage, $total, $simple, $options);
 
-        if(isset($this->options['justify'])) {
-            switch ($this->options['justify']){
+        if (isset($this->options['justify'])) {
+            switch ($this->options['justify']) {
                 case 'center':
                     $this->extstyle = ' justify-content-center';
                     break;
@@ -30,8 +30,8 @@ class Bootstrap4 extends Paginator
                     break;
             }
         }
-        if(isset($this->options['size'])) {
-            switch ($this->options['size']){
+        if (isset($this->options['size'])) {
+            switch ($this->options['size']) {
                 case 'large':
                 case 'lg':
                     $this->extstyle .= ' pagination-lg';
@@ -42,11 +42,11 @@ class Bootstrap4 extends Paginator
                     break;
             }
         }
-        if(isset($this->options['side'])){
-            $this->side=intval($this->options['side']);
+        if (isset($this->options['side'])) {
+            $this->side = intval($this->options['side']);
         }
-        if(isset($this->options['jump'])){
-            $this->jump=intval($this->options['jump']);
+        if (isset($this->options['jump'])) {
+            $this->jump = intval($this->options['jump']);
         }
     }
 
@@ -143,14 +143,14 @@ class Bootstrap4 extends Paginator
             $block['first'] = $this->getUrlRange(1, $this->lastPage);
         } elseif ($this->currentPage <= $side + 1) {
             $block['first'] = $this->getUrlRange(1, $window + 1);
-            $block['last']  = $this->getUrlRange($this->lastPage,$this->lastPage);
+            $block['last']  = $this->getUrlRange($this->lastPage, $this->lastPage);
         } elseif ($this->currentPage > ($this->lastPage - $side - 1)) {
-            $block['first'] = $this->getUrlRange(1,1);
+            $block['first'] = $this->getUrlRange(1, 1);
             $block['last']  = $this->getUrlRange($this->lastPage - ($window + 1), $this->lastPage);
         } else {
-            $block['first']  = $this->getUrlRange(1,1);
+            $block['first']  = $this->getUrlRange(1, 1);
             $block['slider'] = $this->getUrlRange($this->currentPage - $side, $this->currentPage + $side);
-            $block['last']   = $this->getUrlRange($this->lastPage,$this->lastPage);
+            $block['last']   = $this->getUrlRange($this->lastPage, $this->lastPage);
         }
 
         $html = '';
@@ -181,15 +181,15 @@ class Bootstrap4 extends Paginator
         if ($this->hasPages()) {
             if ($this->simple) {
                 return sprintf(
-                    '<nav aria-label="Page navigation"><ul class="pagination'.$this->extstyle.'">%s %s %s</ul></nav>',
+                    '<nav aria-label="Page navigation"><ul class="pagination' . $this->extstyle . '">%s %s %s</ul></nav>',
                     $this->getPreviousButton(),
                     $this->getActivePageWrapper($this->currentPage()),
                     $this->getNextButton()
                 );
-            }elseif ($this->options['simple']) {
+            } elseif ($this->options['simple']) {
                 return sprintf(
-                    '<nav aria-label="Page navigation">%s<ul class="pagination'.$this->extstyle.'">%s %s %s %s %s</ul></nav>',
-                    $this->jump?$this->getJumpComponent():'',
+                    '<nav aria-label="Page navigation">%s<ul class="pagination' . $this->extstyle . '">%s %s %s %s %s</ul></nav>',
+                    $this->jump ? $this->getJumpComponent() : '',
                     $this->getFirstButton(),
                     $this->getPreviousButton(),
                     $this->getActivePageWrapper($this->currentPage()),
@@ -198,8 +198,8 @@ class Bootstrap4 extends Paginator
                 );
             } else {
                 return sprintf(
-                    '<nav aria-label="Page navigation">%s<ul class="pagination'.$this->extstyle.'">%s %s %s</ul></nav>',
-                    $this->jump?$this->getJumpComponent():'',
+                    '<nav aria-label="Page navigation">%s<ul class="pagination' . $this->extstyle . '">%s %s %s</ul></nav>',
+                    $this->jump ? $this->getJumpComponent() : '',
                     $this->getPreviousButton(),
                     $this->getLinks(),
                     $this->getNextButton()
@@ -289,12 +289,13 @@ class Bootstrap4 extends Paginator
      * 生成跳转链接
      * @return string
      */
-    protected function getJumpComponent($text='跳转到：'){
-        $html=['<div class="fr jumppage">'.$text.'<select onchange="location.href=this.value;" >'];
-        for($i=1; $i<=$this->lastPage; $i++){
-            $html[]='<option value="'.$this->url($i).'" '.($i==$this->currentPage?'selected':'').'>'.$i.'</option>';
+    protected function getJumpComponent($text = '跳转到：')
+    {
+        $html = ['<div class="fr jumppage">' . $text . '<select onchange="location.href=this.value;" >'];
+        for ($i = 1; $i <= $this->lastPage; $i++) {
+            $html[] = '<option value="' . $this->url($i) . '" ' . ($i == $this->currentPage ? 'selected' : '') . '>' . $i . '</option>';
         }
-        $html[]='</select></div>';
-        return implode('',$html);
+        $html[] = '</select></div>';
+        return implode('', $html);
     }
 }

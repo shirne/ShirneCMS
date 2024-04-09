@@ -1,4 +1,5 @@
 <?php
+
 namespace app\admin\model;
 
 use app\common\core\BaseModel;
@@ -11,19 +12,20 @@ use think\Db;
 class PageModel extends BaseModel
 {
     protected $autoWriteTimestamp = true;
-    
-    public static function init(){
+
+    public static function init()
+    {
         self::event('after_write', function ($page) {
             if (!empty($page['group'])) {
-                $group=$page['group'];
-                $exists=Db::name('PageGroup')->where('group',$group)->find();
-                if(empty($exists)){
+                $group = $page['group'];
+                $exists = Db::name('PageGroup')->where('group', $group)->find();
+                if (empty($exists)) {
                     Db::name('PageGroup')->insert([
-                        'group_name'=>$group,
-                        'group'=>$group,
-                        'sort'=>99
+                        'group_name' => $group,
+                        'group' => $group,
+                        'sort' => 99
                     ]);
-                    cache('page_group',null);
+                    cache('page_group', null);
                 }
             }
         });

@@ -1,4 +1,5 @@
 <?php
+
 namespace app\admin\validate;
 
 use app\common\core\BaseUniqueValidate;
@@ -11,7 +12,7 @@ use app\common\core\BaseUniqueValidate;
 class MemberLevelValidate extends BaseUniqueValidate
 {
     protected $rule  = array(
-        'level_name'=>'require|unique:memberLevel,%id%,level_id',
+        'level_name' => 'require|unique:memberLevel,%id%,level_id',
     );
 
     protected $message   = array(

@@ -37,77 +37,76 @@ class Install extends Command
      */
     protected function execute(Input $input, Output $output)
     {
-        $lockfile=app()->getRuntimePath().'install.lock';
-        if(file_exists($lockfile)){
-            $output->error('The system has been installed. If you want to reinstall, please delete the file '.$lockfile.' and run this command again.');
+        $lockfile = app()->getRuntimePath() . 'install.lock';
+        if (file_exists($lockfile)) {
+            $output->error('The system has been installed. If you want to reinstall, please delete the file ' . $lockfile . ' and run this command again.');
             return;
         }
 
-        $dbconfig=config('database.');
+        $dbconfig = config('database.');
 
-        if($input->hasOption('name')){
+        if ($input->hasOption('name')) {
             $name = trim($input->getOption('name'));
-            $args=explode('@',$name);
-            if(empty($args) || count($args)<2 || strpos(':',$args[0])===false){
+            $args = explode('@', $name);
+            if (empty($args) || count($args) < 2 || strpos(':', $args[0]) === false) {
                 $output->writeln("Install aborted with error: arguments error.");
                 exit;
             }
-            list($username,$password)=explode(':',$args[0]);
-            $dbconfig['username']=$username;
-            $dbconfig['password']=$password;
+            list($username, $password) = explode(':', $args[0]);
+            $dbconfig['username'] = $username;
+            $dbconfig['password'] = $password;
 
-            if(strpos(':',$args[1])===false){
-                $dbname=$args[1];
-            }else{
-                list($host,$dbname)=explode(':',$args[1]);
-                $dbconfig['hostname']=$host;
+            if (strpos(':', $args[1]) === false) {
+                $dbname = $args[1];
+            } else {
+                list($host, $dbname) = explode(':', $args[1]);
+                $dbconfig['hostname'] = $host;
             }
-            $dbconfig['database']=$dbname;
+            $dbconfig['database'] = $dbname;
         }
 
         //install code
-        if($input->hasOption('sql')){
-            $sql ='./'.trim($input->getOption('sql')).'.sql';
-            if(!file_exists($sql)){
+        if ($input->hasOption('sql')) {
+            $sql = './' . trim($input->getOption('sql')) . '.sql';
+            if (!file_exists($sql)) {
                 $output->error('The specified sql script not exists.');
                 return;
             }
-            $this->runsql($sql,$dbconfig['prefix']);
-        }
-        else{
-            $path=app()->getAppPath();
-            $sqlpath=$path.'../dbscript';
-            if(!is_dir($sqlpath)){
-                $sqlpath=$path.'../../dbscript';
+            $this->runsql($sql, $dbconfig['prefix']);
+        } else {
+            $path = app()->getAppPath();
+            $sqlpath = $path . '../dbscript';
+            if (!is_dir($sqlpath)) {
+                $sqlpath = $path . '../../dbscript';
             }
-            if(!is_readable($sqlpath)){
+            if (!is_readable($sqlpath)) {
                 $output->error('Please ensure the dbscript folder exists and accessable.');
                 return;
             }
-            if(!is_dir($sqlpath)){
+            if (!is_dir($sqlpath)) {
                 $output->error('Please upload the dbscript folder or specify sql option.');
                 return;
-            }else{
-                foreach (['struct','init'] as $script){
-                    $sql = $sqlpath.'/'.$script.'.sql';
-                    if(file_exists($sql)){
+            } else {
+                foreach (['struct', 'init'] as $script) {
+                    $sql = $sqlpath . '/' . $script . '.sql';
+                    if (file_exists($sql)) {
                         $output->writeln("Run sql $script.sql.");
-                        $this->runsql($sql,$dbconfig['prefix']);
-                    }else{
-                        $output->warning('Sql file '.$script.'.sql not exists!');
+                        $this->runsql($sql, $dbconfig['prefix']);
+                    } else {
+                        $output->warning('Sql file ' . $script . '.sql not exists!');
                     }
                 }
-                if($input->hasOption('module')){
-                    $mode=$input->getOption('module');
-                    if(!empty($mode)){
-                        $modes=explode(',',$mode);
-                        foreach ($modes as $mode){
-                            $sql = $sqlpath.'/update_'.$mode.'.sql';
-                            if(file_exists($sql)) {
+                if ($input->hasOption('module')) {
+                    $mode = $input->getOption('module');
+                    if (!empty($mode)) {
+                        $modes = explode(',', $mode);
+                        foreach ($modes as $mode) {
+                            $sql = $sqlpath . '/update_' . $mode . '.sql';
+                            if (file_exists($sql)) {
                                 $output->writeln("Install module $mode.");
                                 $this->runsql($sql, $dbconfig['prefix']);
-                            }else{
-                                $output->warning('Sql file update_'.$mode.'.sql not exists!');
+                            } else {
+                                $output->warning('Sql file update_' . $mode . '.sql not exists!');
                             }
                         }
                     }
@@ -116,67 +115,63 @@ class Install extends Command
         }
 
         $data = [];
-        if($input->hasOption('username')){
-            $data['username']=$input->getOption('username');
-        }
-        
-        if($input->hasOption('password')){
-            $password=$input->getOption('password');
-            $data['salt']=random_str(8);
-            $data['password'] = encode_password($password,$data['salt']);
-        }
-        if(!empty($data)){
-            $output->writeln("Reset manager.");
-            Db::name('Manager')->where('id',1)->update($data);
+        if ($input->hasOption('username')) {
+            $data['username'] = $input->getOption('username');
         }
 
-        file_put_contents($lockfile,time());
+        if ($input->hasOption('password')) {
+            $password = $input->getOption('password');
+            $data['salt'] = random_str(8);
+            $data['password'] = encode_password($password, $data['salt']);
+        }
+        if (!empty($data)) {
+            $output->writeln("Reset manager.");
+            Db::name('Manager')->where('id', 1)->update($data);
+        }
+
+        file_put_contents($lockfile, time());
 
         $output->writeln("Installation successful.");
     }
 
-    protected function runsql($file,$prefix){
-        $sqls=$this->explodesql($file,'sa_',$prefix);
-        foreach ($sqls as $sql){
+    protected function runsql($file, $prefix)
+    {
+        $sqls = $this->explodesql($file, 'sa_', $prefix);
+        foreach ($sqls as $sql) {
             Db::execute($sql);
         }
     }
 
-    protected function explodesql($sql_path,$old_prefix="",$new_prefix="",$separator=";\n")
+    protected function explodesql($sql_path, $old_prefix = "", $new_prefix = "", $separator = ";\n")
     {
-        $commenter = array('#','--');
+        $commenter = array('#', '--');
         //判断文件是否存在
-        if(!file_exists($sql_path))
+        if (!file_exists($sql_path))
             return false;
 
         $content = file_get_contents($sql_path);   //读取sql文件
-        $content = str_replace(array('`'.$old_prefix,' '.$old_prefix, "\r"), array('`'.$new_prefix,' '.$new_prefix, "\n"), $content);//替换前缀
+        $content = str_replace(array('`' . $old_prefix, ' ' . $old_prefix, "\r"), array('`' . $new_prefix, ' ' . $new_prefix, "\n"), $content); //替换前缀
 
         //通过sql语法的语句分割符进行分割
-        $segment = explode($separator,trim($content));
+        $segment = explode($separator, trim($content));
 
         //去掉注释和多余的空行
-        $data=array();
-        foreach($segment as  $statement)
-        {
-            $sentence = explode("\n",$statement);
+        $data = array();
+        foreach ($segment as  $statement) {
+            $sentence = explode("\n", $statement);
             $newStatement = array();
-            foreach($sentence as $subSentence)
-            {
-                if('' != trim($subSentence))
-                {
+            foreach ($sentence as $subSentence) {
+                if ('' != trim($subSentence)) {
                     //判断是会否是注释
                     $isComment = false;
-                    foreach($commenter as $comer)
-                    {
-                        if(preg_match("/^(".$comer.")/is",trim($subSentence)))
-                        {
+                    foreach ($commenter as $comer) {
+                        if (preg_match("/^(" . $comer . ")/is", trim($subSentence))) {
                             $isComment = true;
                             break;
                         }
                     }
                     //如果不是注释，则认为是sql语句
-                    if(!$isComment)
+                    if (!$isComment)
                         $newStatement[] = $subSentence;
                 }
             }
@@ -184,15 +179,12 @@ class Install extends Command
         }
 
         //组合sql语句
-        foreach($data as  $statement)
-        {
+        foreach ($data as  $statement) {
             $newStmt = '';
-            foreach($statement as $sentence)
-            {
-                $newStmt = $newStmt.trim($sentence)."\n";
+            foreach ($statement as $sentence) {
+                $newStmt = $newStmt . trim($sentence) . "\n";
             }
-            if(!empty($newStmt))
-            {
+            if (!empty($newStmt)) {
                 $result[] = $newStmt;
             }
         }

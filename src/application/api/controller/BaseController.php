@@ -16,37 +16,40 @@ use think\Controller;
 class BaseController extends Controller
 {
     protected $token;
-    protected $isLogin=false;
+    protected $isLogin = false;
     protected $tokenData;
     protected $user;
-    protected $input=array();
-    protected $config=array();
-    
+    protected $wechatUser;
+    protected $input = array();
+    protected $config = array();
+
     /**
      * API初始化
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    public function initialize(){
+    public function initialize()
+    {
         parent::initialize();
-        $this->config=getSettings();
+        $this->config = getSettings();
 
         /**
          * @deprecated DO NOT use this property
          */
-        $this->input=$this->request->put();
+        $this->input = $this->request->put();
 
         $this->checkLogin();
     }
-    
-    
+
+
     /**
      * 获取当前登录用户的级别信息
      * @return array
      */
-    protected function userLevel(){
-        if($this->isLogin) {
+    protected function userLevel()
+    {
+        if ($this->isLogin) {
             $levels = getMemberLevels();
             if (isset($levels[$this->user['id']])) {
                 return $levels[$this->user['id']];
@@ -54,26 +57,27 @@ class BaseController extends Controller
         }
         return [];
     }
-    
+
     /**
      * 操作频率限制，防止垃圾数据及重复提交
      * @param int $seconds  限制频率时间（秒）
      * @param string $key   应用单独的key 默认使用全局
      * @param string $hashkey   未登录情况下，系统判断是否同一用户的依据
      */
-    protected function check_submit_rate($seconds=2, $key='global', $hashkey=''){
-        $cache_key = 'submit_'.$key.'_';
-        if(empty($this->token)){
-            if(empty($hashkey))$hashkey = $this->request->ip().$this->request->server('user_agent');
+    protected function check_submit_rate($seconds = 2, $key = 'global', $hashkey = '')
+    {
+        $cache_key = 'submit_' . $key . '_';
+        if (empty($this->token)) {
+            if (empty($hashkey)) $hashkey = $this->request->ip() . $this->request->server('user_agent');
             $cache_key .= md5($hashkey);
-        }else {
+        } else {
             $cache_key .= $this->token;
         }
         $lasttime = cache($cache_key);
-        $curtime=time();
-        if(!$lasttime || $lasttime + $seconds < $curtime){
-            cache($cache_key, $curtime, ['expire'=>$seconds]);
-        }else{
+        $curtime = time();
+        if (!$lasttime || $lasttime + $seconds < $curtime) {
+            cache($cache_key, $curtime, ['expire' => $seconds]);
+        } else {
             $this->error('操作过于频繁');
         }
     }
@@ -84,17 +88,18 @@ class BaseController extends Controller
      * @return bool 
      * @throws InvalidArgumentException 
      */
-    protected function mobile_verify_limit($mobile){
-        if(!ValidateHelper::isMobile($mobile)){
+    protected function mobile_verify_limit($mobile)
+    {
+        if (!ValidateHelper::isMobile($mobile)) {
             $this->error('手机号码格式错误');
             return false;
         }
-        $sended = cache('mobile_limit_'.$mobile);
-        if($sended){
+        $sended = cache('mobile_limit_' . $mobile);
+        if ($sended) {
             return false;
         }
-        $count = cache('mobile_limit_hour_'.$mobile);
-        if($count >= 5){
+        $count = cache('mobile_limit_hour_' . $mobile);
+        if ($count >= 5) {
             return false;
         }
         return true;
@@ -105,42 +110,46 @@ class BaseController extends Controller
      * @param mixed $mobile 
      * @return void 
      */
-    protected function mobile_verify_add($mobile){
-        cache('mobile_limit_'.$mobile,1,['expire'=>50]);
-        $counted = max(0,cache('mobile_limit_hour_'.$mobile));
-        cache('mobile_limit_hour_'.$mobile,$counted+1,['expire'=>60*60]);
+    protected function mobile_verify_add($mobile)
+    {
+        cache('mobile_limit_' . $mobile, 1, ['expire' => 50]);
+        $counted = max(0, cache('mobile_limit_hour_' . $mobile));
+        cache('mobile_limit_hour_' . $mobile, $counted + 1, ['expire' => 60 * 60]);
     }
-    
+
     /**
      * 检查登录状态
      * 已登录时注册会员资料，未登录直接输出错误
      */
-    protected function checkLogin(){
-        if($this->request->isLogin){
+    protected function checkLogin()
+    {
+        if ($this->request->isLogin) {
             $this->token = $this->request->token;
             $this->tokenData = $this->request->tokenData;
             $this->isLogin = $this->request->isLogin;
             $this->user = $this->request->user;
-        }elseif($this->request->auth_error){
-            $this->error("登录失效",$this->request->auth_error);
+        } elseif ($this->request->auth_error) {
+            $this->error("登录失效", $this->request->auth_error);
         }
     }
 
-    protected function decodeAES($phoneData, $session_key, $phoneIv){
+    protected function decodeAES($phoneData, $session_key, $phoneIv)
+    {
         $aesKey = base64_decode($session_key);
         $aesIv = base64_decode($phoneIv);
         $datastr = base64_decode($phoneData);
         $decrypted = openssl_decrypt($datastr, 'AES-128-CBC', $aesKey, 1, $aesIv);
         return @json_decode($decrypted, true) ?? [];
     }
-    
+
     /**
      * 空操作输出
      * @return void 
      */
-    public function _empty(){
-        $static_file=DOC_ROOT.DIRECTORY_SEPARATOR.$this->request->action(true);
-        if(file_exists($static_file)){
+    public function _empty()
+    {
+        $static_file = DOC_ROOT . DIRECTORY_SEPARATOR . $this->request->action(true);
+        if (file_exists($static_file)) {
             exit(file_get_contents($static_file));
         }
         $this->error('接口不存在');
@@ -157,7 +166,7 @@ class BaseController extends Controller
      */
     protected function error($msg = '', $code = 0, $data = '', $wait = 3, array $header = [])
     {
-        $this->response($data,$code,$msg)->send();
+        $this->response($data, $code, $msg)->send();
         exit;
     }
 
@@ -173,11 +182,11 @@ class BaseController extends Controller
      */
     protected function success($data = '', $code = 1, $msg = '', $wait = 3, array $header = [])
     {
-        if(empty($msg) && is_string($data)){
-            $msg=$data;
-            $data=[];
+        if (empty($msg) && is_string($data)) {
+            $msg = $data;
+            $data = [];
         }
-        $this->response($data,$code,$msg)->send();
+        $this->response($data, $code, $msg)->send();
         exit;
     }
 
@@ -187,12 +196,13 @@ class BaseController extends Controller
      * @param array $exts 
      * @return Json 
      */
-    protected function respList($lists, $exts = []){
+    protected function respList($lists, $exts = [])
+    {
         $result = array_merge([
-            'lists'=>$lists->items(),
-            'page'=>$lists->currentPage(),
-            'count'=>$lists->total(),
-            'total_page'=>$lists->lastPage(),
+            'lists' => $lists->items(),
+            'page' => $lists->currentPage(),
+            'count' => $lists->total(),
+            'total_page' => $lists->lastPage(),
         ], $exts);
         return $this->response($result);
     }
@@ -204,8 +214,9 @@ class BaseController extends Controller
      * @param string $msg
      * @return \think\response\Json
      */
-    protected function response($data,$code=1,$msg = ''){
-        
+    protected function response($data, $code = 1, $msg = '')
+    {
+
         return json([
             'code' => $code,
             'msg'  => $msg,

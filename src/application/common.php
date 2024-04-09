@@ -12,30 +12,33 @@
 // 应用公共文件
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
-define('ART_TYPE_NORMAL',1);
-define('ART_TYPE_TOP',2);
-define('ART_TYPE_HOT',4);
-define('ART_TYPE_RECOMMEND',8);
+define('ART_TYPE_NORMAL', 1);
+define('ART_TYPE_TOP', 2);
+define('ART_TYPE_HOT', 4);
+define('ART_TYPE_RECOMMEND', 8);
 
-define('PRO_TYPE_NORMAL',1);
-define('PRO_TYPE_UPGRADE',2);
-define('PRO_TYPE_BIND',4);
+define('PRO_TYPE_NORMAL', 1);
+define('PRO_TYPE_UPGRADE', 2);
+define('PRO_TYPE_BIND', 4);
 
 
-define('ORDER_STATUS_REFUND',-2);
-define('ORDER_STATUS_CANCEL',-1);
-define('ORDER_STATUS_UNPAIED',0);
-define('ORDER_STATUS_PAIED',1);
-define('ORDER_STATUS_SHIPED',2);
-define('ORDER_STATUS_RECEIVED',3);
-define('ORDER_STATUS_FINISH',4);
+define('ORDER_STATUS_REFUND', -2);
+define('ORDER_STATUS_CANCEL', -1);
+define('ORDER_STATUS_UNPAIED', 0);
+define('ORDER_STATUS_PAIED', 1);
+define('ORDER_STATUS_SHIPED', 2);
+define('ORDER_STATUS_RECEIVED', 3);
+define('ORDER_STATUS_FINISH', 4);
 
-function force_json_decode($string){
-    if(is_array($string))return $string;
-    if(empty($string))return [];
-    
-    $json = @json_decode($string,true);
-    return empty($json)?[]:$json;
+define('USE_SEC_PASSWORD', 1);
+
+function force_json_decode($string)
+{
+    if (is_array($string)) return $string;
+    if (empty($string)) return [];
+
+    $json = @json_decode($string, true);
+    return empty($json) ? [] : $json;
 }
 
 /**
@@ -46,13 +49,14 @@ function force_json_decode($string){
  * @param int $quality
  * @return string
  */
-function media($src,$width='',$height='',$quality=70){
-    if(empty($src))return $src;
+function media($src, $width = '', $height = '', $quality = 70)
+{
+    if (empty($src)) return $src;
     $root = config('template.oss_root');
-    $src = ltrim($src,'.');
-    if(empty($root)){
+    $src = ltrim($src, '.');
+    if (empty($root)) {
         return $src;
-    }else {
+    } else {
         return $root . $src;
     }
 }
@@ -62,11 +66,12 @@ function media($src,$width='',$height='',$quality=70){
  * @param $src
  * @return string
  */
-function local_media($src){
-    if(empty($src))return $src;
-    $src = ltrim($src,'.');
-    if(strpos($src,'/')===0 || strpos($src,'://')===false){
-        return url('/','',false,true).$src;
+function local_media($src)
+{
+    if (empty($src)) return $src;
+    $src = ltrim($src, '.');
+    if (strpos($src, '/') === 0 || strpos($src, '://') === false) {
+        return url('/', '', false, true) . $src;
     }
     return $src;
 }
@@ -79,18 +84,19 @@ function local_media($src){
  * @param $mime
  * @return \think\Response
  */
-function file_download($data,$filename='',$isContent=true,$mime=''){
+function file_download($data, $filename = '', $isContent = true, $mime = '')
+{
     /**
      * @var think\response\Download
      */
-    $response = \think\Response::create($data?:$filename, 'download', 200);
-    if($mime){
+    $response = \think\Response::create($data ?: $filename, 'download', 200);
+    if ($mime) {
         $response->mimeType($mime);
     }
-    if($isContent){
+    if ($isContent) {
         $response->isContent(true);
     }
-    if($filename){
+    if ($filename) {
         $response->name($filename);
     }
     return $response;
@@ -101,94 +107,104 @@ function file_download($data,$filename='',$isContent=true,$mime=''){
  * 小标签的样式
  * @return array
  */
-function getTextStyles(){
-    return ['secondary','primary','info','success','warning','danger'];
+function getTextStyles()
+{
+    return ['secondary', 'primary', 'info', 'success', 'warning', 'danger'];
 }
-function getMoneyFields($withall=true){
-    $fields= [
-        'all'=>lang('All'),
-        'money'=>lang('Balance'),
-        'credit'=>lang('Credit'),
-        'reward'=>lang('Reward')
+function getMoneyFields($withall = true)
+{
+    $fields = [
+        'all' => lang('All'),
+        'money' => lang('Balance'),
+        'credit' => lang('Credit'),
+        'reward' => lang('Reward')
     ];
-    if(!$withall)unset($fields['all']);
+    if (!$withall) unset($fields['all']);
     return $fields;
 }
 
-function getLogTypes($withall=true, $filter = null){
+function getLogTypes($withall = true, $filter = null)
+{
     $fields = [
-        'all'=>lang('All'),
-        'system'=>lang('System Opt.'),
-        'consume'=>lang('Consume'),
-        'recharge'=>lang('Recharge'),
-        'commission'=>lang('Commission'),
-        'refund'=>lang('Refund'),
-        'transout'=>lang('Transfer out'),
-        'transin'=>lang('Transfer in'),
-        'consume_send'=>lang('Consume Send'),
+        'all' => lang('All'),
+        'system' => lang('System Opt.'),
+        'consume' => lang('Consume'),
+        'recharge' => lang('Recharge'),
+        'commission' => lang('Commission'),
+        'refund' => lang('Refund'),
+        'transout' => lang('Transfer out'),
+        'transin' => lang('Transfer in'),
+        'consume_send' => lang('Consume Send'),
     ];
-    if(!$withall)unset($fields['all']);
-    if($filter !== null){
-        if(is_string($filter)){
-            $filter = array_map('trim',explode(',', $filter));
+    if (!$withall) unset($fields['all']);
+    if ($filter !== null) {
+        if (is_string($filter)) {
+            $filter = array_map('trim', explode(',', $filter));
         }
-        foreach($fields as $k=>$v){
-            if($k == 'all')continue;
-            if(!in_array($k, $filter)){
+        foreach ($fields as $k => $v) {
+            if ($k == 'all') continue;
+            if (!in_array($k, $filter)) {
                 unset($fields[$k]);
             }
         }
     }
     return $fields;
 }
-function getMemberTypes(){
+function getMemberTypes()
+{
     return [
-        1=>lang('Member'),
-        2=>lang('Employee')
+        1 => lang('Member'),
+        2 => lang('Employee')
     ];
 }
 
-function getWechatTypes(){
+function getWechatTypes()
+{
     return [
-        'subscribe'=>'关注回复消息',
-        'resubscribe'=>'二次关注回复消息',
-        'default'=>'默认回复',
-        'keyword'=>'关键字回复',
-        'click'=>'点击事件回复'
+        'subscribe' => '关注回复消息',
+        'resubscribe' => '二次关注回复消息',
+        'default' => '默认回复',
+        'keyword' => '关键字回复',
+        'click' => '点击事件回复'
     ];
 }
-function getWechatReplyTypes(){
+function getWechatReplyTypes()
+{
     return [
-        'text'=>'文本消息',
-        'news'=>'图文消息',
-        'image'=>'图片消息',
-        'custom'=>'托管消息'
+        'text' => '文本消息',
+        'news' => '图文消息',
+        'image' => '图片消息',
+        'custom' => '托管消息'
     ];
 }
-function getWechatMaterialTypes(){
+function getWechatMaterialTypes()
+{
     return [
-        'image'=>'图片',
-        'voice'=>'语音',
-        'video'=>'视频',
-        'article'=>'图文'
+        'image' => '图片',
+        'voice' => '语音',
+        'video' => '视频',
+        'article' => '图文'
     ];
 }
-function getArticleTypes(){
+function getArticleTypes()
+{
     return [
-        ART_TYPE_NORMAL=>lang('Normal'),
-        ART_TYPE_TOP=>lang('Top'),
-        ART_TYPE_HOT=>lang('Hot'),
-        ART_TYPE_RECOMMEND=>lang('Recommend')
+        ART_TYPE_NORMAL => lang('Normal'),
+        ART_TYPE_TOP => lang('Top'),
+        ART_TYPE_HOT => lang('Hot'),
+        ART_TYPE_RECOMMEND => lang('Recommend')
     ];
 }
-function getProductTypes(){
+function getProductTypes()
+{
     return [
-        PRO_TYPE_NORMAL=>lang('Normal'),
-        PRO_TYPE_UPGRADE=>lang('Price Upgrade'),
-        PRO_TYPE_BIND=>lang('Bind Upgrade')
+        PRO_TYPE_NORMAL => lang('Normal'),
+        PRO_TYPE_UPGRADE => lang('Price Upgrade'),
+        PRO_TYPE_BIND => lang('Bind Upgrade')
     ];
 }
-function getOauthTypes(){
+function getOauthTypes()
+{
     return [
         'facebook' => 'Facebook',
         'github' => 'GitHub',
@@ -250,29 +266,30 @@ function settingTypes($key = '')
     }
 }
 
-function banklist($withcode=false){
+function banklist($withcode = false)
+{
     $banklist = array(
-        '工商银行'=>'1002',
-        '农业银行'=>'1005',
-        '中国银行'=>'1026',
-        '建设银行'=>'1003',
-        '招商银行'=>'1001',
-        '邮储银行'=>'1066',
-        '交通银行'=>'1020',
-        '浦发银行'=>'1004',
-        '民生银行'=>'1006',
-        '兴业银行'=>'1009',
-        '平安银行'=>'1010',
-        '中信银行'=>'1021',
-        '华夏银行'=>'1025',
-        '广发银行'=>'1027',
-        '光大银行'=>'1022',
-        '北京银行'=>'4836',
-        '宁波银行'=>'1056',
-        '上海银行'=>'1024',
+        '工商银行' => '1002',
+        '农业银行' => '1005',
+        '中国银行' => '1026',
+        '建设银行' => '1003',
+        '招商银行' => '1001',
+        '邮储银行' => '1066',
+        '交通银行' => '1020',
+        '浦发银行' => '1004',
+        '民生银行' => '1006',
+        '兴业银行' => '1009',
+        '平安银行' => '1010',
+        '中信银行' => '1021',
+        '华夏银行' => '1025',
+        '广发银行' => '1027',
+        '光大银行' => '1022',
+        '北京银行' => '4836',
+        '宁波银行' => '1056',
+        '上海银行' => '1024',
 
     );
-    if($withcode){
+    if ($withcode) {
         return $banklist;
     }
     return array_keys($banklist);
@@ -300,8 +317,9 @@ function payTypes($type = '')
  * @param $amount
  * @return float|int
  */
-function showmoney($amount){
-    return number_format(round($amount/100,2),2);
+function showmoney($amount)
+{
+    return number_format(round($amount / 100, 2), 2);
 }
 
 /**
@@ -311,17 +329,20 @@ function showmoney($amount){
  * @param bool $fulllen
  * @return string
  */
-function showcardno($cardno,$pos=6,$fulllen=false){
-    $l=strlen($cardno)-$pos;
-    return str_repeat('*',$fulllen?$l:3).substr($cardno,$l);
+function showcardno($cardno, $pos = 6, $fulllen = false)
+{
+    $l = strlen($cardno) - $pos;
+    return str_repeat('*', $fulllen ? $l : 3) . substr($cardno, $l);
 }
 
-function fmtCardno($cardno){
+function fmtCardno($cardno)
+{
     return $cardno;
 }
 
-function showcashtype($type){
-    switch ($type){
+function showcashtype($type)
+{
+    switch ($type) {
         case 'wechat':
             return lang('Wechat');
         case 'alipay':
@@ -336,10 +357,11 @@ function showcashtype($type){
  * @param $row
  * @return string
  */
-function show_price($row){
-    $price=$row['min_price'];
-    if($row['max_price']>$row['min_price']){
-        $price .= ' ~ '.$row['min_price'];
+function show_price($row)
+{
+    $price = $row['min_price'];
+    if ($row['max_price'] > $row['min_price']) {
+        $price .= ' ~ ' . $row['min_price'];
     }
     return $price;
 }
@@ -351,14 +373,15 @@ function show_price($row){
  * @param $format
  * @return false|string
  */
-function showdate($time,$replace='-',$format='Y-m-d H:i:s'){
-    if(!empty($replace)){
-        if($replace!='-'){
-            $format=$replace;
-            $replace='';
+function showdate($time, $replace = '-', $format = 'Y-m-d H:i:s')
+{
+    if (!empty($replace)) {
+        if ($replace != '-') {
+            $format = $replace;
+            $replace = '';
         }
     }
-    return $time==0?$replace:date($format,$time);
+    return $time == 0 ? $replace : date($format, $time);
 }
 
 
@@ -369,23 +392,24 @@ function showdate($time,$replace='-',$format='Y-m-d H:i:s'){
  * @param $empty string 时间为空时的替换字符串
  * @return string
  */
-function friendlytime($time = 0, $nowTime = 0, $empty='-') {
-    if(!$time)return $empty;
+function friendlytime($time = 0, $nowTime = 0, $empty = '-')
+{
+    if (!$time) return $empty;
     if (!$nowTime) $nowTime = time();
     $dif = $nowTime - $time;
     if ($dif < 60)
         return lang('Just now');
     $dif = $dif / 60;
     if (1 <= $dif && $dif < 60)
-        return intval($dif) .' '. lang('minutes ago');
+        return intval($dif) . ' ' . lang('minutes ago');
     $dif = $dif / 60;
     if (1 <= $dif && $dif < 24)
-        return intval($dif) .' '. lang('hours ago');
+        return intval($dif) . ' ' . lang('hours ago');
     //最多显示3天前
     $dif = $dif / 24;
     if (1 <= $dif && $dif <= 3)
-        return intval($dif) .' '. lang('days ago');
-    if (date('Y',$time) == date('Y',$nowTime))
+        return intval($dif) . ' ' . lang('days ago');
+    if (date('Y', $time) == date('Y', $nowTime))
         return date('m-d', $time);
     return date('Y-m-d', $time);
 }
@@ -396,11 +420,11 @@ function friendlytime($time = 0, $nowTime = 0, $empty='-') {
  * @param bool $wrap
  * @return string
  */
-function feedback_status($status,$wrap=true)
+function feedback_status($status, $wrap = true)
 {
     $statusText = array(lang('Unaudited'), lang('Audited'), lang('Hidden'));
 
-    return $wrap?wrap_label($statusText[$status],status_type($status)):$statusText[$status];
+    return $wrap ? wrap_label($statusText[$status], status_type($status)) : $statusText[$status];
 }
 
 /**
@@ -409,11 +433,11 @@ function feedback_status($status,$wrap=true)
  * @param bool $wrap
  * @return mixed
  */
-function audit_status($status,$wrap=true)
+function audit_status($status, $wrap = true)
 {
     $statusText = array(lang('Unaudited'), lang('Confirmed'), lang('Invalid'));
-    $statusText[-1]=lang('Invalid');
-    return $wrap?wrap_label($statusText[$status],status_type($status)):$statusText[$status];
+    $statusText[-1] = lang('Invalid');
+    return $wrap ? wrap_label($statusText[$status], status_type($status)) : $statusText[$status];
 }
 
 /**
@@ -422,14 +446,15 @@ function audit_status($status,$wrap=true)
  * @param bool $wrap
  * @return mixed
  */
-function show_status($status,$wrap=true)
+function show_status($status, $wrap = true)
 {
     $statusText = array(lang('Hidden'), lang('Shown'));
-    $statusText[-1]=lang('Invalid');
-    return $wrap?wrap_label($statusText[$status],status_type($status)):$statusText[$status];
+    $statusText[-1] = lang('Invalid');
+    return $wrap ? wrap_label($statusText[$status], status_type($status)) : $statusText[$status];
 }
-function status_type($status){
-    return $status>=0?['warning','success','secondary'][$status]:'secondary';
+function status_type($status)
+{
+    return $status >= 0 ? ['warning', 'success', 'secondary'][$status] : 'secondary';
 }
 
 /**
@@ -437,8 +462,9 @@ function status_type($status){
  * @param $status
  * @return string
  */
-function get_order_status($status){
-    switch ($status){
+function get_order_status($status)
+{
+    switch ($status) {
         case "-3":
             return lang('Refunding');
         case "-2":
@@ -466,97 +492,104 @@ function get_order_status($status){
  * @param bool $wrap
  * @return string
  */
-function order_status($status,$wrap=true){
-    $style='secondary';
-    switch ($status){
+function order_status($status, $wrap = true)
+{
+    $style = 'secondary';
+    switch ($status) {
         case "0":
-            $style='warning';
+            $style = 'warning';
             break;
         case "1":
-            $style='danger';
+            $style = 'danger';
             break;
         case "2":
-            $style='secondary';
+            $style = 'secondary';
             break;
         case "3":
-            $style='info';
+            $style = 'info';
             break;
         case "4":
-            $style='success';
+            $style = 'success';
             break;
         default:
-            $style='secondary';
-
+            $style = 'secondary';
     }
-    return $wrap?wrap_label(get_order_status($status),$style):get_order_status($status);
+    return $wrap ? wrap_label(get_order_status($status), $style) : get_order_status($status);
 }
-function money_type($type,$wrap=true){
-    switch ($type){
+function money_type($type, $wrap = true)
+{
+    switch ($type) {
         case "money":
-            return $wrap?wrap_label(lang('Balance'),'success'):lang('Balance');
+            return $wrap ? wrap_label(lang('Balance'), 'success') : lang('Balance');
         case "credit":
-            return $wrap?wrap_label(lang('Credit'),'info'):lang('Credit');
+            return $wrap ? wrap_label(lang('Credit'), 'info') : lang('Credit');
         case "reward":
-            return $wrap?wrap_label(lang('Reward'),'warning'):lang('Reward');
+            return $wrap ? wrap_label(lang('Reward'), 'warning') : lang('Reward');
         default:
-            return $wrap?wrap_label(lang('Unknown'),'secondary'):lang('Unknown');
-
+            return $wrap ? wrap_label(lang('Unknown'), 'secondary') : lang('Unknown');
     }
-    return $wrap?wrap_label(lang('Unknown'),'secondary'):lang('Unknown');
+    return $wrap ? wrap_label(lang('Unknown'), 'secondary') : lang('Unknown');
 }
-function award_status($status,$wrap=true){
-    switch ($status){
+function award_status($status, $wrap = true)
+{
+    switch ($status) {
         case "1":
-            return $wrap?wrap_label(lang('Gived'),'success'):lang('Gived');
+            return $wrap ? wrap_label(lang('Gived'), 'success') : lang('Gived');
         case "-1":
-            return $wrap?wrap_label(lang('Canceled'),'secondary'):lang('Canceled');
+            return $wrap ? wrap_label(lang('Canceled'), 'secondary') : lang('Canceled');
         case "0":
-            return $wrap?wrap_label(lang('Waiting'),'warning'):lang('Waiting');
+            return $wrap ? wrap_label(lang('Waiting'), 'warning') : lang('Waiting');
         default:
-            $wrap?wrap_label(lang('Unknown'),'default'):lang('Unknown');
+            $wrap ? wrap_label(lang('Unknown'), 'default') : lang('Unknown');
     }
-    return $wrap?wrap_label(lang('Unknown'),'default'):lang('Unknown');
+    return $wrap ? wrap_label(lang('Unknown'), 'default') : lang('Unknown');
 }
-function wrap_label($text,$type='secondary'){
+function wrap_label($text, $type = 'secondary')
+{
     return "<span class=\"badge badge-$type\">$text</span>";
 }
 
-function print_remark($data){
-    if(!empty($data) && !is_array($data)){
+function print_remark($data)
+{
+    if (!empty($data) && !is_array($data)) {
         $datarr = @json_decode($data);
     }
-    if(is_array($datarr)){
+    if (is_array($datarr)) {
         $temp = array_shift($datarr);
         return call_user_func('lang', $temp, $datarr);
     }
     return $data;
 }
 
-function masktext($text, $prelen=3,$suflen=4,$midmax=4){
-    $l=mb_strlen($text);
-    $masklen=min($l-$prelen-$suflen,$midmax);
-    return mb_substr($text,0,$prelen).str_repeat('*',$masklen).mb_substr($text,$l-$suflen);
+function masktext($text, $prelen = 3, $suflen = 4, $midmax = 4)
+{
+    $l = mb_strlen($text);
+    $masklen = min($l - $prelen - $suflen, $midmax);
+    return mb_substr($text, 0, $prelen) . str_repeat('*', $masklen) . mb_substr($text, $l - $suflen);
 }
 
-function maskphone($phone){
-    if(empty($phone))return $phone;
-    $l=strlen($phone);
-    $masklen=min($l-7,4);
-    return substr($phone,0,3).str_repeat('*',$masklen).substr($phone,$l-4);
+function maskphone($phone)
+{
+    if (empty($phone)) return $phone;
+    $l = strlen($phone);
+    $masklen = min($l - 7, 4);
+    return substr($phone, 0, 3) . str_repeat('*', $masklen) . substr($phone, $l - 4);
 }
 
-function maskemail($email){
-    if(empty($email) || strpos($email,'@')<1)return '';
-    $part=explode('@',$email);
-    $l=strlen($part[0]);
-    if($l<=3)$l=5;
-    return substr($part[0],0,3).str_repeat('*',$l-3).'@'.$part[1];
+function maskemail($email)
+{
+    if (empty($email) || strpos($email, '@') < 1) return '';
+    $part = explode('@', $email);
+    $l = strlen($part[0]);
+    if ($l <= 3) $l = 5;
+    return substr($part[0], 0, 3) . str_repeat('*', $l - 3) . '@' . $part[1];
 }
 
-function getWeek($d){
-    $time=strtotime($d);
-    $w=date('N',$time);
-    static $weeks=array('','星期一','星期二','星期三','星期四','星期五','星期六','星期日');
+function getWeek($d)
+{
+    $time = strtotime($d);
+    $w = date('N', $time);
+    static $weeks = array('', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日');
     return $weeks[intval($w)];
 }
 
@@ -568,11 +601,13 @@ function getWeek($d){
  */
 function filter_emoji($str, $replace = '')
 {
-    $str = preg_replace_callback( '/./u',
+    $str = preg_replace_callback(
+        '/./u',
         function (array $match) use ($replace) {
             return strlen($match[0]) >= 4 ? $replace : $match[0];
         },
-        $str);
+        $str
+    );
     return $str;
 }
 
@@ -583,28 +618,29 @@ function filter_emoji($str, $replace = '')
  * @param string $dot
  * @return mixed|string
  */
-function cutstr($str,$len,$dot='...', $triptags = true){
-    if($triptags){
-        $str=trim(strip_tags($str,''));
+function cutstr($str, $len, $dot = '...', $triptags = true)
+{
+    if ($triptags) {
+        $str = trim(strip_tags($str, ''));
     }
 
-    if (mb_strlen($str) <= $len+2) {
+    if (mb_strlen($str) <= $len + 2) {
         return $str;
     }
-    
+
     $dstr = html_entity_decode($str);
-    if(mb_strlen($dstr) <= $len+2){
+    if (mb_strlen($dstr) <= $len + 2) {
         return $str;
     }
     $hasDecode = mb_strlen($dstr) != mb_strlen($str);
-    if(strpos($dstr,' ')!== false || strpos($dstr,'\t')!== false|| strpos($dstr,"\n")!== false|| strpos($dstr,"\r")!== false){
-        $dstr = preg_replace('/\s+/',' ',$dstr);
+    if (strpos($dstr, ' ') !== false || strpos($dstr, '\t') !== false || strpos($dstr, "\n") !== false || strpos($dstr, "\r") !== false) {
+        $dstr = preg_replace('/\s+/', ' ', $dstr);
     }
     $substr = mb_substr($dstr, 0, $len);
-    if($hasDecode){
+    if ($hasDecode) {
         $substr = htmlentities($substr);
     }
-    return $substr .$dot;
+    return $substr . $dot;
 }
 
 /**
@@ -612,12 +648,13 @@ function cutstr($str,$len,$dot='...', $triptags = true){
  * @param mixed $string 
  * @return string|string[] 
  */
-function nl2p($string){
-    if(empty($string))return '';
+function nl2p($string)
+{
+    if (empty($string)) return '';
 
-    $html = "<p>".implode("</p><p>", array_map('trim', explode("\n", trim($string))))."</p>";
+    $html = "<p>" . implode("</p><p>", array_map('trim', explode("\n", trim($string)))) . "</p>";
 
-    return str_replace('<p></p>','',$html);
+    return str_replace('<p></p>', '', $html);
 }
 
 /** =====================================  数据类函数  ===================================== **/
@@ -630,8 +667,9 @@ function nl2p($string){
  * @param string $lang 默认当前语言
  * @return array
  */
-function translate($data,$table,$key='id',$lang=''){
-    return \app\common\facade\TranslateFacade::trans_list($data,$table,$key,$lang);
+function translate($data, $table, $key = 'id', $lang = '')
+{
+    return \app\common\facade\TranslateFacade::trans_list($data, $table, $key, $lang);
 }
 
 /**
@@ -642,35 +680,39 @@ function translate($data,$table,$key='id',$lang=''){
  * @param string $lang
  * @return array|string
  */
-function get_translate($table,$key,$field='',$lang=''){
-    return \app\common\facade\TranslateFacade::get_trans($table,$key,$field,$lang);
+function get_translate($table, $key, $field = '', $lang = '')
+{
+    return \app\common\facade\TranslateFacade::get_trans($table, $key, $field, $lang);
 }
 
 
-function getMemberLevels($force=false)
+function getMemberLevels($force = false)
 {
     return \app\common\model\MemberLevelModel::getCacheData($force);
 }
-function getMemberLevel($level_id){
-    $levels=getMemberLevels();
-    return $levels[$level_id]?:[];
+function getMemberLevel($level_id)
+{
+    $levels = getMemberLevels();
+    return $levels[$level_id] ?: [];
 }
-function getLevelConfig($levels){
-    $configs=array(
-        'commission_layer'=>0
+function getLevelConfig($levels)
+{
+    $configs = array(
+        'commission_layer' => 0
     );
-    foreach ($levels as $level){
-        foreach ($configs as $k=>$v){
-            $configs[$k] = max($v,$level[$k]);
+    foreach ($levels as $level) {
+        foreach ($configs as $k => $v) {
+            $configs[$k] = max($v, $level[$k]);
         }
     }
     return $configs;
 }
 
-function getDefaultLevel(){
-    $levels=getMemberLevels();
-    foreach ($levels as $level){
-        if($level['is_default']){
+function getDefaultLevel()
+{
+    $levels = getMemberLevels();
+    foreach ($levels as $level) {
+        if ($level['is_default']) {
             return $level['level_id'];
         }
     }
@@ -690,31 +732,31 @@ function getDefaultLevel(){
  */
 function user_log($uid, $action, $result, $remark = '', $tbl = 'member')
 {
-    $other_id=0;
-    if(is_array($action)){
-        $other_id=$action[1];
-        $action=$action[0];
+    $other_id = 0;
+    if (is_array($action)) {
+        $other_id = $action[1];
+        $action = $action[0];
     }
-    $datas=[];
+    $datas = [];
 
-    $data=[
+    $data = [
         'create_time' => time(),
         $tbl . '_id' => $uid,
-        'other_id'=>$other_id,
+        'other_id' => $other_id,
         'ip' => app()->request->ip(),
         'action' => $action,
         'result' => intval($result),
-        'remark' => json_encode(is_array($remark)?$remark:[$remark],JSON_UNESCAPED_UNICODE)
+        'remark' => json_encode(is_array($remark) ? $remark : [$remark], JSON_UNESCAPED_UNICODE)
     ];
-    if($tbl==='member'){
-        $data['model']=request()->module();
+    if ($tbl === 'member') {
+        $data['model'] = request()->module();
     }
-    if(is_array($other_id)){
-        foreach ($other_id as $id){
-            $data['other_id']=$id;
+    if (is_array($other_id)) {
+        foreach ($other_id as $id) {
+            $data['other_id'] = $id;
             $datas[] = $data;
         }
-    }else {
+    } else {
         $datas[] = $data;
     }
     return \think\Db::name($tbl . 'Log')->insertAll($datas);
@@ -731,55 +773,55 @@ function user_log($uid, $action, $result, $remark = '', $tbl = 'member')
  * @param string $field
  * @return bool|mixed
  */
-function money_log($uid, $money, $reson, $type='',$from_id=0,$field='money')
+function money_log($uid, $money, $reson, $type = '', $from_id = 0, $field = 'money')
 {
-    if($money==0)return true;
-    $fields=getMoneyFields();
-    if(is_string($from_id) && isset($fields[$from_id])){
-        $field=$from_id;
-        $from_id=0;
+    if ($money == 0) return true;
+    $fields = getMoneyFields();
+    if (is_string($from_id) && isset($fields[$from_id])) {
+        $field = $from_id;
+        $from_id = 0;
     }
-    if($field=='all' || !isset($fields[$field]))return false;
+    if ($field == 'all' || !isset($fields[$field])) return false;
 
-    if(!is_array($uid)){
-        $uid=idArr($uid);
+    if (!is_array($uid)) {
+        $uid = idArr($uid);
     }
-    if(count($uid)>500){
-        $uid_groups=array_chunk($uid,500);
-        $returns=[];
-        foreach ($uid_groups as $uids){
-            $returns=array_merge($returns,money_log($uids, $money, $reson, $type,$from_id,$field));
+    if (count($uid) > 500) {
+        $uid_groups = array_chunk($uid, 500);
+        $returns = [];
+        foreach ($uid_groups as $uids) {
+            $returns = array_merge($returns, money_log($uids, $money, $reson, $type, $from_id, $field));
         }
         return $returns;
     }
 
-    $logs=[];
-    $members=\think\Db::name('member')->field('id,username,'.$field)
-        ->whereIn('id' , $uid)->select();
-    $time=time();
-    if($money>0) {
-        $result=\think\Db::name('member')->whereIn('id' , $uid)
-            ->setInc($field,$money);
-        foreach ($members as $member){
-            $logs[]=[
+    $logs = [];
+    $members = \think\Db::name('member')->field('id,username,' . $field)
+        ->whereIn('id', $uid)->select();
+    $time = time();
+    if ($money > 0) {
+        $result = \think\Db::name('member')->whereIn('id', $uid)
+            ->setInc($field, $money);
+        foreach ($members as $member) {
+            $logs[] = [
                 'create_time' => $time,
                 'member_id' => $member['id'],
-                'from_member_id'=>$from_id,
+                'from_member_id' => $from_id,
                 'type' => $type,
                 'before' => $member[$field],
                 'amount' => $money,
                 'after' => $member[$field] + $money,
-                'field'=>$field,
+                'field' => $field,
                 'reson' => $reson
             ];
         }
-    }else{
-        $decMoney=abs($money);
-        $result=\think\Db::name('member')->whereIn('id' , $uid)
-            ->where($field,'>=',$decMoney)
-            ->setDec($field,$decMoney);
-        foreach ($members as $member){
-            if($member[$field]>=$decMoney) {
+    } else {
+        $decMoney = abs($money);
+        $result = \think\Db::name('member')->whereIn('id', $uid)
+            ->where($field, '>=', $decMoney)
+            ->setDec($field, $decMoney);
+        foreach ($members as $member) {
+            if ($member[$field] >= $decMoney) {
                 $logs[] = [
                     'create_time' => time(),
                     'member_id' => $member['id'],
@@ -793,47 +835,46 @@ function money_log($uid, $money, $reson, $type='',$from_id=0,$field='money')
                 ];
             }
         }
-
     }
-    if($result) {
+    if ($result) {
         \think\Db::name('memberMoneyLog')->insertAll($logs);
-        return array_column($logs,'member_id');
-    }else{
+        return array_column($logs, 'member_id');
+    } else {
         return false;
     }
 }
 
-function money_force_log($uid, $money, $reson, $type='',$from_id=0,$field='money')
+function money_force_log($uid, $money, $reson, $type = '', $from_id = 0, $field = 'money')
 {
-    if($money==0)return true;
-    $fields=getMoneyFields();
-    if($field=='all' || !isset($fields[$field]))return false;
+    if ($money == 0) return true;
+    $fields = getMoneyFields();
+    if ($field == 'all' || !isset($fields[$field])) return false;
 
-    if(is_array($uid)){
+    if (is_array($uid)) {
         throw new Exception('This method do not support batch uid');
     }
 
-    $member=\think\Db::name('member')->field('id,username,'.$field)
-        ->where('id' , $uid)->find();
-    $time=time();
-    if($money>0) {
-        $result=\think\Db::name('member')->where('id' , $uid)
-            ->setInc($field,$money);
-        $log=[
+    $member = \think\Db::name('member')->field('id,username,' . $field)
+        ->where('id', $uid)->find();
+    $time = time();
+    if ($money > 0) {
+        $result = \think\Db::name('member')->where('id', $uid)
+            ->setInc($field, $money);
+        $log = [
             'create_time' => $time,
             'member_id' => $member['id'],
-            'from_member_id'=>$from_id,
+            'from_member_id' => $from_id,
             'type' => $type,
             'before' => $member[$field],
             'amount' => $money,
             'after' => $member[$field] + $money,
-            'field'=>$field,
+            'field' => $field,
             'reson' => $reson
         ];
-    }else{
-        $decMoney=abs($money);
-        $result=\think\Db::name('member')->where('id' , $uid)
-            ->setDec($field,$decMoney);
+    } else {
+        $decMoney = abs($money);
+        $result = \think\Db::name('member')->where('id', $uid)
+            ->setDec($field, $decMoney);
         $log = [
             'create_time' => time(),
             'member_id' => $member['id'],
@@ -845,11 +886,10 @@ function money_force_log($uid, $money, $reson, $type='',$from_id=0,$field='money
             'field' => $field,
             'reson' => $reson
         ];
-
     }
-    if($result) {
-        return \think\Db::name('memberMoneyLog')->insert($log,false,true);
-    }else{
+    if ($result) {
+        return \think\Db::name('memberMoneyLog')->insert($log, false, true);
+    } else {
         return false;
     }
 }
@@ -857,27 +897,30 @@ function money_force_log($uid, $money, $reson, $type='',$from_id=0,$field='money
 function getPaytypes($type = '')
 {
 
-    $model=\think\Db::name('Paytype');
-    if(!empty($type)){
-        $model->where('type',$type);
+    $model = \think\Db::name('Paytype');
+    if (!empty($type)) {
+        $model->where('type', $type);
     }
-    $lists=$model->select();
-    return array_index($lists,'id');
+    $lists = $model->select();
+    return array_index($lists, 'id');
 }
 
-function getMemberParents($userid,$level=5,$getid=true){
-    return \app\common\model\MemberModel::getParents($userid,$level,$getid);
+function getMemberParents($userid, $level = 5, $getid = true)
+{
+    return \app\common\model\MemberModel::getParents($userid, $level, $getid);
 }
 
-function getMemberSons($userid,$level=1,$getid=true){
+function getMemberSons($userid, $level = 1, $getid = true)
+{
     return \app\common\model\MemberModel::getSons($userid, $level, $getid);
 }
 
-function getPageGroups($force=false){
-    $groups=cache('page_group');
-    if(empty($groups) || $force==true){
-        $groups=\think\Db::name('PageGroup')->order('sort ASC,id ASC')->select();
-        cache('page_group',$groups);
+function getPageGroups($force = false)
+{
+    $groups = cache('page_group');
+    if (empty($groups) || $force == true) {
+        $groups = \think\Db::name('PageGroup')->order('sort ASC,id ASC')->select();
+        cache('page_group', $groups);
     }
     return $groups;
 }
@@ -889,18 +932,20 @@ function getPageGroups($force=false){
  * @param $parse bool 是否解析值 针对多选解析成数组
  * @return array
  */
-function getSettings($all = false, $group = false, $parse=true)
+function getSettings($all = false, $group = false, $parse = true)
 {
     return \app\common\model\SettingModel::getSettings($all, $group, $parse);
 }
 
-function getSetting($key){
-    $settings=getSettings();
-    if(isset($settings[$key]))return $settings[$key];
+function getSetting($key)
+{
+    $settings = getSettings();
+    if (isset($settings[$key])) return $settings[$key];
     else return null;
 }
-function setSetting($key,$v){
-    \think\Db::name('setting')->where('key',$key)->update(array('value'=>$v));
+function setSetting($key, $v)
+{
+    \think\Db::name('setting')->where('key', $key)->update(array('value' => $v));
     \app\common\model\SettingModel::clearCache();
 }
 
@@ -914,27 +959,29 @@ function setSetting($key,$v){
  * @param $avatar
  * @return bool
  */
-function is_wechat_avatar($avatar){
-    if(empty($avatar)){
+function is_wechat_avatar($avatar)
+{
+    if (empty($avatar)) {
         return false;
     }
-    $nothttps=str_replace('https://','http://',$avatar);
-    if(strpos($nothttps,'http://thirdwx.qlogo.cn/')===0){
+    $nothttps = str_replace('https://', 'http://', $avatar);
+    if (strpos($nothttps, 'http://thirdwx.qlogo.cn/') === 0) {
         return true;
     }
-    if(strpos($nothttps,'http://wx.qlogo.cn/')===0){
+    if (strpos($nothttps, 'http://wx.qlogo.cn/') === 0) {
         return true;
     }
 
     return false;
 }
 
-function is_empty_avatar($avatar){
-    if(empty($avatar)){
+function is_empty_avatar($avatar)
+{
+    if (empty($avatar)) {
         return true;
     }
     // wechat default avatar
-    if(strpos($avatar,'POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg') !==false){
+    if (strpos($avatar, 'POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg') !== false) {
         return true;
     }
     return false;
@@ -945,19 +992,22 @@ function is_empty_avatar($avatar){
  * @param string $default
  * @return $this|\think\response\Redirect
  */
-function get_redirect($default=''){
-    if(empty($default))$default=url('index/member/index');
+function get_redirect($default = '')
+{
+    if (empty($default)) $default = url('index/member/index');
     return redirect()->restore($default);
 }
 
-function current_url($withqry=true){
-    $query=$withqry?$_REQUEST['QUERY_STRING']:'';
-    if(!empty($query))$query='?'.$query;
-    return current_domain().$_SERVER['REQUEST_URI'].$query;
+function current_url($withqry = true)
+{
+    $query = $withqry ? $_REQUEST['QUERY_STRING'] : '';
+    if (!empty($query)) $query = '?' . $query;
+    return current_domain() . $_SERVER['REQUEST_URI'] . $query;
 }
 
-function current_domain(){
-    return rtrim(url('/','',false,true),'/');
+function current_domain()
+{
+    return rtrim(url('/', '', false, true), '/');
 }
 
 /**
@@ -966,11 +1016,12 @@ function current_domain(){
  * @param array|string $except_methods 
  * @return bool 
  */
-function is_controller($controller, $except_actions=[]){
-    if(is_string($except_actions)){
-        $except_actions=explode(',',$except_actions);
+function is_controller($controller, $except_actions = [])
+{
+    if (is_string($except_actions)) {
+        $except_actions = explode(',', $except_actions);
     }
-    return strcasecmp(request()->controller(), $controller) == 0 && !in_array(request()->action(),$except_actions);
+    return strcasecmp(request()->controller(), $controller) == 0 && !in_array(request()->action(), $except_actions);
 }
 
 /**
@@ -979,12 +1030,13 @@ function is_controller($controller, $except_actions=[]){
  * @param array|string $actions 
  * @return bool 
  */
-function is_action($controller,$actions){
-    if(is_string($actions)){
+function is_action($controller, $actions)
+{
+    if (is_string($actions)) {
         $actions = explode(',', $actions);
     }
     return strcasecmp(request()->controller(), $controller) == 0 &&
-        in_array(request()->action(),$actions);
+        in_array(request()->action(), $actions);
 }
 
 /**
@@ -992,15 +1044,17 @@ function is_action($controller,$actions){
  * @param mixed $text 
  * @return string 
  */
-function base64url_encode($text) {
-    if(empty($text))return '';
+function base64url_encode($text)
+{
+    if (empty($text)) return '';
     $base64 = base64_encode($text);
     $base64url = strtr($base64, '+/=', '-_,');
     return $base64url;
 }
 
-function base64url_decode($text) {
-    if(empty($text))return '';
+function base64url_decode($text)
+{
+    if (empty($text)) return '';
     $base64url = strtr($text, '-_,', '+/=');
     $base64 = base64_decode($base64url);
     return $base64;
@@ -1013,28 +1067,29 @@ function base64url_decode($text) {
  * @param bool $order 正向权重
  * @return array
  */
-function weight_random($array, $wfield='weight',$order=true){
+function weight_random($array, $wfield = 'weight', $order = true)
+{
 
-    $row=[];
-    if(empty($array))return $row;
-    if(!$order){
-        $max = max(array_column($array,$wfield));
-        $pow = pow(10,ceil(log10($max)));
+    $row = [];
+    if (empty($array)) return $row;
+    if (!$order) {
+        $max = max(array_column($array, $wfield));
+        $pow = pow(10, ceil(log10($max)));
         $ofield = $wfield;
-        $wfield='_new_'.$wfield;
-        foreach ($array as &$row){
-            $row[$wfield]=$row[$ofield]==0?$pow:($pow/$row[$ofield]);
+        $wfield = '_new_' . $wfield;
+        foreach ($array as &$row) {
+            $row[$wfield] = $row[$ofield] == 0 ? $pow : ($pow / $row[$ofield]);
         }
         unset($row);
     }
-    $total = array_sum(array_column($array,$wfield));
+    $total = array_sum(array_column($array, $wfield));
     $randmax = min($total * 1000, mt_getrandmax());
-    $rand = mt_rand(0,$randmax);
+    $rand = mt_rand(0, $randmax);
     $rand = $rand * $total / $randmax;
-    $sum=0;
-    foreach ($array as $row){
+    $sum = 0;
+    foreach ($array as $row) {
         $sum += $row[$wfield];
-        if($sum>=$rand){
+        if ($sum >= $rand) {
             return $row;
         }
     }
@@ -1048,19 +1103,20 @@ function weight_random($array, $wfield='weight',$order=true){
  * @param string $search
  * @return array|mixed|string
  */
-function searchKey($key,$val,$search=''){
-    if(!is_array($search)){
-        $search=request()->param();
+function searchKey($key, $val, $search = '')
+{
+    if (!is_array($search)) {
+        $search = request()->param();
     }
-    if(isset($search['page'])){
+    if (isset($search['page'])) {
         unset($search['page']);
     }
-    if(strpos($key,',')>0){
-        $keys=explode(',',$key);
-        foreach ($keys as $key){
-            $search=searchKey(trim($key),$val,$search);
+    if (strpos($key, ',') > 0) {
+        $keys = explode(',', $key);
+        foreach ($keys as $key) {
+            $search = searchKey(trim($key), $val, $search);
         }
-    }else {
+    } else {
         if (empty($val) || $val == 'all') {
             if (isset($search[$key])) unset($search[$key]);
         } else {
@@ -1076,8 +1132,9 @@ function searchKey($key,$val,$search=''){
  * @param $str
  * @return mixed
  */
-function filter_specchar($str){
-    return preg_replace("/\/|\~|\!|\@|\#|\\$|\%|\^|\&|\*|\(|\)|\_|\+|\{|\}|\:|\<|\>|\?|\[|\]|\,|\.|\/|\;|\'|\`|\-|\=|\\\|\|/",'',$str);
+function filter_specchar($str)
+{
+    return preg_replace("/\/|\~|\!|\@|\#|\\$|\%|\^|\&|\*|\(|\)|\_|\+|\{|\}|\:|\<|\>|\?|\[|\]|\,|\.|\/|\;|\'|\`|\-|\=|\\\|\|/", '', $str);
 }
 
 /**
@@ -1086,18 +1143,19 @@ function filter_specchar($str){
  * @param $id
  * @return array
  */
-function idArr($id){
-    if(is_array($id)){
-        return array_map(function($i){
+function idArr($id)
+{
+    if (is_array($id)) {
+        return array_map(function ($i) {
             return intval($i);
-        },$id);
+        }, $id);
     }
-    if(strpos($id,',')>0){
-        $ids=explode(',',$id);
-        return array_map(function($i){
+    if (strpos($id, ',') > 0) {
+        $ids = explode(',', $id);
+        return array_map(function ($i) {
             return intval($i);
-        },$ids);
-    }else{
+        }, $ids);
+    } else {
         return [intval($id)];
     }
 }
@@ -1107,7 +1165,8 @@ function idArr($id){
  * @param string $file 文件路径
  * @return string|null 返回 编码名 或 null
  */
-function detect_encoding($file) {
+function detect_encoding($file)
+{
     $list = array('GB2312', 'GBK', 'UTF-8', 'UTF-16LE', 'UTF-16BE', 'ISO-8859-1');
     $str = file_get_contents($file);
     foreach ($list as $item) {
@@ -1125,7 +1184,8 @@ function detect_encoding($file) {
  * @param string $charset 读取编码
  * @return string 返回读取内容
  */
-function auto_read($file, $charset='UTF-8') {
+function auto_read($file, $charset = 'UTF-8')
+{
     $list = array('GB2312', 'GBK', 'UTF-8', 'UTF-16LE', 'UTF-16BE', 'ISO-8859-1');
     $str = file_get_contents($file);
     foreach ($list as $item) {
@@ -1144,9 +1204,10 @@ function auto_read($file, $charset='UTF-8') {
  * @param bool $ismulti 一对多模式
  * @return array
  */
-function array_index($arr,$index,$ismulti=false){
-    $return=[];
-    if(!empty($arr)) {
+function array_index($arr, $index, $ismulti = false)
+{
+    $return = [];
+    if (!empty($arr)) {
         $val = '';
         if (strpos($index, ',') > 0) {
             $indexes = explode(',', $index);
@@ -1164,9 +1225,9 @@ function array_index($arr,$index,$ismulti=false){
     return $return;
 }
 
-define('COMBINE_PAD_NONE',0);
-define('COMBINE_PAD_VALUE',1);
-define('COMBINE_PAD_KEY',2);
+define('COMBINE_PAD_NONE', 0);
+define('COMBINE_PAD_VALUE', 1);
+define('COMBINE_PAD_KEY', 2);
 /**
  * 兼容的array_combine
  * @param array $keys
@@ -1176,59 +1237,63 @@ define('COMBINE_PAD_KEY',2);
  * @param string $key_prefix
  * @return array
  */
-function array_combine_cmp($keys,$vals,$pad_mode=0, $value_default="",$key_prefix='extra_field_'){
+function array_combine_cmp($keys, $vals, $pad_mode = 0, $value_default = "", $key_prefix = 'extra_field_')
+{
     $kcount = count($keys);
     $vcount = count($vals);
     if (!$pad_mode) {
-        if($kcount > $vcount) {
+        if ($kcount > $vcount) {
             $keys = array_slice($keys, 0, $vcount);
-        }elseif($kcount < $vcount){
+        } elseif ($kcount < $vcount) {
             $vals = array_slice($vals, 0, $kcount);
         }
     } else {
         // more headers than row fields
-        if ($kcount > $vcount && ($pad_mode & COMBINE_PAD_VALUE)==COMBINE_PAD_VALUE) {
+        if ($kcount > $vcount && ($pad_mode & COMBINE_PAD_VALUE) == COMBINE_PAD_VALUE) {
             // how many fields are we missing at the end of the second array?
             // Add empty strings to ensure arrays $a and $b have same number of elements
             $more = $kcount - $vcount;
-            for($i = 0; $i < $more; $i++) {
+            for ($i = 0; $i < $more; $i++) {
                 $vals[] = $value_default;
             }
             // more fields than headers
-        } else if ($kcount < $vcount && ($pad_mode & COMBINE_PAD_KEY)==COMBINE_PAD_KEY) {
+        } else if ($kcount < $vcount && ($pad_mode & COMBINE_PAD_KEY) == COMBINE_PAD_KEY) {
             $more = $vcount - $kcount;
             // fewer elements in the first array, add extra keys
-            for($i = 0; $i < $more; $i++) {
+            for ($i = 0; $i < $more; $i++) {
                 $key = $key_prefix . $i;
                 $keys[] = $key;
             }
-
         }
     }
 
     return array_combine($keys, $vals);
 }
 
-function implode_cmp($arr,$glue=','){
-    if(is_array($arr)){
-        return implode($glue,$arr);
+function implode_cmp($arr, $glue = ',')
+{
+    if (is_array($arr)) {
+        return implode($glue, $arr);
     }
     return '';
 }
 
-function fix_in_array($val,$arr){
-    if(empty($arr))return false;
-    return in_array($val,(array)$arr);
+function fix_in_array($val, $arr)
+{
+    if (empty($arr)) return false;
+    return in_array($val, (array)$arr);
 }
 
-function array_max($arr,$column){
-    if(empty($arr))return 0;
-    $data=array_column($arr,$column);
+function array_max($arr, $column)
+{
+    if (empty($arr)) return 0;
+    $data = array_column($arr, $column);
     return max($data);
 }
-function array_min($arr,$column){
-    if(empty($arr))return 0;
-    $data=array_column($arr,$column);
+function array_min($arr, $column)
+{
+    if (empty($arr)) return 0;
+    $data = array_column($arr, $column);
     return min($data);
 }
 
@@ -1237,12 +1302,14 @@ function encode_password($pass, $salt = '')
     return md5(md5($pass) . $salt);
 }
 
-function compare_password($user,$password){
-    return encode_password($password,$user['salt'])===$user['password'];
+function compare_password($user, $password)
+{
+    return encode_password($password, $user['salt']) === $user['password'];
 }
 
-function compare_secpassword($user,$password){
-    return encode_password($password,$user['secsalt'])===$user['secpassword'];
+function compare_secpassword($user, $password)
+{
+    return encode_password($password, $user['secsalt']) === $user['secpassword'];
 }
 
 
@@ -1262,9 +1329,9 @@ function random_str($length = 6, $type = 'string', $convert = 0)
     $code = '';
     $strlen = strlen($string) - 1;
     for ($i = 0; $i < $length; $i++) {
-        if($type != 'number' && $i==0){
-            $code .= $config['letter'][mt_rand(0, $strlen-8)];
-        }else{
+        if ($type != 'number' && $i == 0) {
+            $code .= $config['letter'][mt_rand(0, $strlen - 8)];
+        } else {
             $code .= $string[mt_rand(0, $strlen)];
         }
     }
@@ -1284,40 +1351,41 @@ function random_str($length = 6, $type = 'string', $convert = 0)
 function getSortedCategory(&$data, $pid = 0, $pre = "")
 {
     $temp = array();
-    $curdata=array_filter($data,function($item) use ($pid){
-        return $item['pid']==$pid;
+    $curdata = array_filter($data, function ($item) use ($pid) {
+        return $item['pid'] == $pid;
     });
 
-    $count=count($curdata);
+    $count = count($curdata);
 
-    $idx=0;
+    $idx = 0;
     foreach ($curdata as $v) {
         $idx++;
-        $islast=$idx==$count?true:false;
-        $v['html'] =$islast?($pre.'└─'):($pre.'├─');
+        $islast = $idx == $count ? true : false;
+        $v['html'] = $islast ? ($pre . '└─') : ($pre . '├─');
         $temp[] = $v;
-        if($islast){
-            $temp = array_merge($temp, getSortedCategory($data, $v['id'], $pre.'　　'));
-        }else{
-            $temp = array_merge($temp, getSortedCategory($data, $v['id'], $pre.'│　'));
+        if ($islast) {
+            $temp = array_merge($temp, getSortedCategory($data, $v['id'], $pre . '　　'));
+        } else {
+            $temp = array_merge($temp, getSortedCategory($data, $v['id'], $pre . '│　'));
         }
-
     }
     return $temp;
 }
 
 
-function format_date($date_str, $format){
-    $time=strtotime($date_str);
-    if($time>0){
-        return date($format,$time);
+function format_date($date_str, $format)
+{
+    $time = strtotime($date_str);
+    if ($time > 0) {
+        return date($format, $time);
     }
     return '';
 }
 
-function number_empty($val){
+function number_empty($val)
+{
     $tval = floatval($val);
-    return empty($tval)?'':$val;
+    return empty($tval) ? '' : $val;
 }
 
 /**
@@ -1325,12 +1393,13 @@ function number_empty($val){
  * @param mixed $durl 
  * @return string|bool 
  */
-function curl_file_get_contents($durl, $timeout = 3, $referer = ''){
+function curl_file_get_contents($durl, $timeout = 3, $referer = '')
+{
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $durl);
     curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
     curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36');
-    curl_setopt($ch, CURLOPT_REFERER,$referer);
+    curl_setopt($ch, CURLOPT_REFERER, $referer);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     $r = curl_exec($ch);
     curl_close($ch);
@@ -1355,13 +1424,13 @@ function http_request($url, $params = false, $ispost = 0)
     curl_setopt($ch, CURLOPT_TIMEOUT, 60);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-    if(stripos($url,"https://")!==FALSE){
+    if (stripos($url, "https://") !== FALSE) {
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
         //curl_setopt($ch, CURLOPT_SSLVERSION, 1);
     }
-    if(is_array($params)){
-        $params=http_build_query($params);
+    if (is_array($params)) {
+        $params = http_build_query($params);
     }
     if ($ispost) {
         curl_setopt($ch, CURLOPT_POST, true);
@@ -1386,7 +1455,8 @@ function http_request($url, $params = false, $ispost = 0)
 }
 
 
-function gener_qrcode($text,$size=300,$margin=10,$errLevel='high'){
+function gener_qrcode($text, $size = 300, $margin = 10, $errLevel = 'high')
+{
     $qrCode = new \Endroid\QrCode\QrCode();
 
     $qrCode->setText($text)
@@ -1401,15 +1471,17 @@ function gener_qrcode($text,$size=300,$margin=10,$errLevel='high'){
     return $qrCode->writeString();
 }
 
-function file_rule($file){
-    static $stamp='';
-    if(!$stamp)$stamp=microtime();
-    else $stamp+=1;
-    return md5(md5_file($file).$stamp);
+function file_rule($file)
+{
+    static $stamp = '';
+    if (!$stamp) $stamp = microtime();
+    else $stamp += 1;
+    return md5(md5_file($file) . $stamp);
 }
 
-function crop_image($file, $options){
-    $imageCrop=new \extcore\ImageCrop($file, $options);
+function crop_image($file, $options)
+{
+    $imageCrop = new \extcore\ImageCrop($file, $options);
     return $imageCrop->crop();
 }
 

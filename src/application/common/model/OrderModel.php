@@ -163,9 +163,9 @@ class OrderModel extends BaseOrderModel
         if (empty($item) && $this->isExists()) {
             $item = $this->getOrigin();
         }
-        $credit=floatval(getSetting('credit_rate'));
-        if($credit > 0){
-            money_log($item['member_id'], $item['payamount'] * $credit, '消费赠送积分','consume_send',$item['order_id'],'credit');
+        $credit = floatval(getSetting('credit_rate'));
+        if ($credit > 0) {
+            money_log($item['member_id'], $item['payamount'] * $credit, '消费赠送积分', 'consume_send', $item['order_id'], 'credit');
         }
         self::sendOrderMessage($item['order_id'], 'order_payed');
     }
@@ -485,7 +485,7 @@ class OrderModel extends BaseOrderModel
                 return false;
             }
             $paytype = is_string($balance_pay) ? $balance_pay : 'money';
-            if(!in_array($paytype, ['money','reward'])){
+            if (!in_array($paytype, ['money', 'reward'])) {
                 $this->setError('抵扣类型错误');
                 return false;
             }

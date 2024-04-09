@@ -13,9 +13,10 @@ use think\Db;
 class LinksModel extends BaseModel
 {
     protected $autoWriteTimestamp = true;
-    
-    protected static $link_groups=[];
-    public static function getGroups(){
+
+    protected static $link_groups = [];
+    public static function getGroups()
+    {
         return self::$link_groups;
     }
 }

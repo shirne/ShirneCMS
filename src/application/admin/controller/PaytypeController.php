@@ -18,8 +18,8 @@ class PaytypeController extends BaseController
     public function initialize()
     {
         parent::initialize();
-        $this->paytypes=payTypes();
-        $this->assign('paytypes',$this->paytypes);
+        $this->paytypes = payTypes();
+        $this->assign('paytypes', $this->paytypes);
     }
 
     /**
@@ -27,24 +27,25 @@ class PaytypeController extends BaseController
      * @param string $type
      * @return mixed
      */
-    public function index($type='')
+    public function index($type = '')
     {
         $model = Db::name('Paytype');
-        $where=array();
-        if(!empty($type )){
+        $where = array();
+        if (!empty($type)) {
             $where['type'] = $type;
         }
 
-        $lists=$model->where($where)->order('ID DESC')->paginate(15);
-        $this->assign('lists',$lists);
-        $this->assign('page',$lists->render());
+        $lists = $model->where($where)->order('ID DESC')->paginate(15);
+        $this->assign('lists', $lists);
+        $this->assign('page', $lists->render());
         return $this->fetch();
     }
 
     /**
      * 添加付款方式
      */
-    public function add(){
+    public function add()
+    {
         if ($this->request->isPost()) {
             $data = $this->request->post();
             $validate = new PaytypeValidate();
@@ -56,9 +57,8 @@ class PaytypeController extends BaseController
                 $file = $this->_upload('paytype', 'upload_qrcode');
                 if ($file) {
                     $data['qrcode'] = $file['url'];
-
-                }elseif($this->uploadErrorCode>102){
-                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
+                } elseif ($this->uploadErrorCode > 102) {
+                    $this->error($this->uploadErrorCode . ':' . $this->uploadError);
                 }
 
                 if (Db::name('Paytype')->insert($data)) {
@@ -70,10 +70,10 @@ class PaytypeController extends BaseController
                 }
             }
         }
-        $model=array('status'=>1,'type'=>'unioncard');
-        $this->assign('model',$model);
-        $this->assign('id',0);
-        $this->assign('banklist',banklist());
+        $model = array('status' => 1, 'type' => 'unioncard');
+        $this->assign('model', $model);
+        $this->assign('id', 0);
+        $this->assign('banklist', banklist());
         return $this->fetch('edit');
     }
 
@@ -85,24 +85,24 @@ class PaytypeController extends BaseController
     public function edit($id)
     {
         if ($this->request->isPost()) {
-            $data=$this->request->post();
-            $validate=new PaytypeValidate();
+            $data = $this->request->post();
+            $validate = new PaytypeValidate();
 
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
                 exit();
             } else {
-                $delete_images=[];
-                $file=$this->_upload('paytype','qrcodefile');
-                if($file){
-                    $data['qrcode']=$file['url'];
-                    if(!empty($data['delete_qrcode']))$delete_images[]=$data['delete_qrcode'];
-                }elseif($this->uploadErrorCode>102){
-                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
+                $delete_images = [];
+                $file = $this->_upload('paytype', 'qrcodefile');
+                if ($file) {
+                    $data['qrcode'] = $file['url'];
+                    if (!empty($data['delete_qrcode'])) $delete_images[] = $data['delete_qrcode'];
+                } elseif ($this->uploadErrorCode > 102) {
+                    $this->error($this->uploadErrorCode . ':' . $this->uploadError);
                 }
                 unset($data['delete_qrcode']);
 
-                $data['id']=$id;
+                $data['id'] = $id;
                 if (Db::name('Paytype')->update($data)) {
                     delete_image($delete_images);
                     $this->success(lang('Update success!'), url('Paytype/index'));
@@ -110,18 +110,17 @@ class PaytypeController extends BaseController
                     delete_image($data['qrcode']);
                     $this->error(lang('Update failed!'));
                 }
-
             }
         }
 
 
         $model = Db::name('Paytype')->where('id', $id)->find();
-        if(empty($model)){
+        if (empty($model)) {
             $this->error('支付方式不存在');
         }
-        $this->assign('model',$model);
-        $this->assign('id',$id);
-        $this->assign('banklist',banklist());
+        $this->assign('model', $model);
+        $this->assign('id', $id);
+        $this->assign('banklist', banklist());
         return $this->fetch();
     }
 
@@ -134,9 +133,9 @@ class PaytypeController extends BaseController
         $id = intval($id);
         $model = Db::name('Paytype');
         $result = $model->delete($id);
-        if($result){
+        if ($result) {
             $this->success(lang('Delete success!'), url('Paytype/index'));
-        }else{
+        } else {
             $this->error(lang('Delete failed!'));
         }
     }

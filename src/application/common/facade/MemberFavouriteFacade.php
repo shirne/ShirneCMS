@@ -14,7 +14,8 @@ use app\common\core\SimpleFacade;
  */
 class MemberFavouriteFacade extends SimpleFacade
 {
-    protected static function getFacadeClass(){
+    protected static function getFacadeClass()
+    {
         return \app\common\model\MemberFavouriteModel::class;
     }
 }

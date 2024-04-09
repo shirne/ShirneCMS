@@ -16,8 +16,9 @@ class PageController extends BaseController
      * 获取单页分组列表
      * @return Json 
      */
-    public function groups(){
-        $groups=Db::name('PageGroup')->select();
+    public function groups()
+    {
+        $groups = Db::name('PageGroup')->select();
         return $this->response($groups);
     }
 
@@ -26,13 +27,14 @@ class PageController extends BaseController
      * @param string $group 
      * @return Json 
      */
-    public function pages($group=''){
-        $model=Db::name('page')->where('status',1);
+    public function pages($group = '')
+    {
+        $model = Db::name('page')->where('status', 1);
 
-        if($group){
-            $model->where('group',$group);
+        if ($group) {
+            $model->where('group', $group);
         }
-        $lists=$model->order('sort ASC,id ASC')->select();
+        $lists = $model->order('sort ASC,id ASC')->select();
         return $this->response($lists);
     }
 
@@ -41,14 +43,15 @@ class PageController extends BaseController
      * @param int|string $name 
      * @return Json 
      */
-    public function page($name){
-        $page = Db::name('page')->where(is_numeric($name)?'id':'name' ,is_numeric($name)?intval($name):$name)->find();
-        if (empty($page)) $this->error('页面不存在',0);
-        $images=Db::name('PageImages')->where('page_id' , $page['id'])->select();
+    public function page($name)
+    {
+        $page = Db::name('page')->where(is_numeric($name) ? 'id' : 'name', is_numeric($name) ? intval($name) : $name)->find();
+        if (empty($page)) $this->error('页面不存在', 0);
+        $images = Db::name('PageImages')->where('page_id', $page['id'])->select();
 
         return $this->response([
-            'page'=>$page,
-            'images'=>$images
+            'page' => $page,
+            'images' => $images
         ]);
     }
 }

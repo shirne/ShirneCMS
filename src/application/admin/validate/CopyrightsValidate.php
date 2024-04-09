@@ -12,11 +12,11 @@ use app\common\core\BaseUniqueValidate;
  */
 class CopyrightsValidate extends BaseUniqueValidate
 {
-    protected $rule=array(
-        'title'=>'require|unique:copyrights,%id%'
+    protected $rule = array(
+        'title' => 'require|unique:copyrights,%id%'
     );
-    protected $message=array(
-        'title'=>'请填写标题',
-        'title.unique'=>'标题不可重复'
+    protected $message = array(
+        'title' => '请填写标题',
+        'title.unique' => '标题不可重复'
     );
 }

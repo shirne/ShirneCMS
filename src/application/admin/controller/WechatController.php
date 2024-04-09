@@ -18,18 +18,19 @@ use think\Db;
 class WechatController extends BaseController
 {
 
-    public function search($key='',$type=''){
-        $model=Db::name('wechat');
-        if(!empty($key)){
-            $model->where('id|title|appid|hash','like',"%$key%");
+    public function search($key = '', $type = '')
+    {
+        $model = Db::name('wechat');
+        if (!empty($key)) {
+            $model->where('id|title|appid|hash', 'like', "%$key%");
         }
-        if(!empty($type)){
-            $model->where('account_type',$type);
+        if (!empty($type)) {
+            $model->where('account_type', $type);
         }
 
-        $lists=$model->field('id,title,is_default,type,account_type,appid,hash,logo,qrcode,shareimg,create_time')
+        $lists = $model->field('id,title,is_default,type,account_type,appid,hash,logo,qrcode,shareimg,create_time')
             ->order('id ASC')->limit(10)->select();
-        return json(['data'=>$lists,'code'=>1]);
+        return json(['data' => $lists, 'code' => 1]);
     }
 
     /**
@@ -37,26 +38,27 @@ class WechatController extends BaseController
      * @param string $key
      * @return mixed|\think\response\Redirect
      */
-    public function index($key="")
+    public function index($key = "")
     {
-        if($this->request->isPost()){
-            return redirect(url('',['key'=>base64url_encode($key)]));
+        if ($this->request->isPost()) {
+            return redirect(url('', ['key' => base64url_encode($key)]));
         }
-        $key=empty($key)?"":base64url_decode($key);
+        $key = empty($key) ? "" : base64url_decode($key);
         $model = Db::name('wechat');
-        if(!empty($key)){
-            $model->whereLike('title|appid',"%$key%");
+        if (!empty($key)) {
+            $model->whereLike('title|appid', "%$key%");
         }
-        $lists=$model->order('ID DESC')->paginate(15);
-        $this->assign('lists',$lists);
-        $this->assign('page',$lists->render());
+        $lists = $model->order('ID DESC')->paginate(15);
+        $this->assign('lists', $lists);
+        $this->assign('page', $lists->render());
         return $this->fetch();
     }
 
-    private function createHash($id=0){
-        $hash=random_str(rand(6,10));
-        $exists=Db::name('wechat')->where('hash',$hash)->where('id','NEQ',$id)->find();
-        if(!empty($exists)){
+    private function createHash($id = 0)
+    {
+        $hash = random_str(rand(6, 10));
+        $exists = Db::name('wechat')->where('hash', $hash)->where('id', 'NEQ', $id)->find();
+        if (!empty($exists)) {
             return $this->createHash($id);
         }
         return $hash;
@@ -66,39 +68,40 @@ class WechatController extends BaseController
      * 添加公众号
      * @return mixed
      */
-    public function add(){
+    public function add()
+    {
         if ($this->request->isPost()) {
             //如果用户提交数据
             $data = $this->request->post();
-            $validate=new WechatValidate();
+            $validate = new WechatValidate();
             $validate->setId(0);
 
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
-                $uploads=$this->_batchUpload('wechat',['logo','qrcode','shareimg','cert_path','key_path']);
-                if($uploads){
-                    $data=array_merge($data,$uploads);
+                $uploads = $this->_batchUpload('wechat', ['logo', 'qrcode', 'shareimg', 'cert_path', 'key_path']);
+                if ($uploads) {
+                    $data = array_merge($data, $uploads);
                 }
-                $data['hash']=$this->createHash();
-                if(!isset($data['is_default'])){
-                    $data['is_default']=0;
+                $data['hash'] = $this->createHash();
+                if (!isset($data['is_default'])) {
+                    $data['is_default'] = 0;
                 }
-                if($data['account_type']=='service') {
+                if ($data['account_type'] == 'service') {
                     $default = Db::name('wechat')->where('type', $data['type'])
                         ->where('is_default', 1)->find();
-                    if(empty($default)){
-                        $data['is_default']=1;
+                    if (empty($default)) {
+                        $data['is_default'] = 1;
                     }
-                }else{
-                    $data['is_default']=0;
+                } else {
+                    $data['is_default'] = 0;
                 }
-                $model=WechatModel::create($data);
+                $model = WechatModel::create($data);
                 if ($model['id']) {
-                    if($data['is_default']){
+                    if ($data['is_default']) {
                         Db::name('wechat')->where('type', $data['type'])
                             ->where('is_default', 1)
-                        ->where('id','NEQ',$model['id'])->update(['is_default'=>0]);
+                            ->where('id', 'NEQ', $model['id'])->update(['is_default' => 0]);
                     }
                     $this->success(lang('Add success!'), url('wechat/index'));
                 } else {
@@ -107,9 +110,9 @@ class WechatController extends BaseController
                 }
             }
         }
-        $model=array();
-        $this->assign('model',$model);
-        $this->assign('id',0);
+        $model = array();
+        $this->assign('model', $model);
+        $this->assign('id', 0);
         return $this->fetch('edit');
     }
 
@@ -120,43 +123,43 @@ class WechatController extends BaseController
      */
     public function edit($id)
     {
-        $id=intval($id);
-        if($id==0)$this->error('数据不存在');
+        $id = intval($id);
+        if ($id == 0) $this->error('数据不存在');
         if ($this->request->isPost()) {
             //如果用户提交数据
             $data = $this->request->post();
-            $validate=new WechatValidate();
+            $validate = new WechatValidate();
             $validate->setId($id);
 
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
-                $uploads=$this->_batchUpload('wechat',['logo','qrcode','shareimg','cert_path','key_path']);
-                if($uploads){
-                    $data=array_merge($data,$uploads);
+                $uploads = $this->_batchUpload('wechat', ['logo', 'qrcode', 'shareimg', 'cert_path', 'key_path']);
+                if ($uploads) {
+                    $data = array_merge($data, $uploads);
                 }
-                if(!isset($data['is_default'])){
-                    $data['is_default']=0;
+                if (!isset($data['is_default'])) {
+                    $data['is_default'] = 0;
                 }
-                if($data['account_type']=='service') {
+                if ($data['account_type'] == 'service') {
                     $default = Db::name('wechat')->where('type', $data['type'])
                         ->where('is_default', 1)->find();
-                    if(empty($default)){
-                        $data['is_default']=1;
+                    if (empty($default)) {
+                        $data['is_default'] = 1;
                     }
                 }/*else{
                     $data['is_default']=0;
                 }*/
-                $model=WechatModel::get($id);
-                if(empty($model['hash'])){
-                    $data['hash']=$this->createHash();
+                $model = WechatModel::get($id);
+                if (empty($model['hash'])) {
+                    $data['hash'] = $this->createHash();
                 }
                 if ($model->allowField(true)->save($data)) {
                     delete_image($this->deleteFiles);
-                    if($data['is_default']){
+                    if ($data['is_default']) {
                         Db::name('wechat')->where('type', $data['type'])
                             ->where('is_default', 1)
-                            ->where('id','NEQ',$id)->update(['is_default'=>0]);
+                            ->where('id', 'NEQ', $id)->update(['is_default' => 0]);
                     }
                     $this->success(lang('Update success!'), url('wechat/index'));
                 } else {
@@ -167,11 +170,11 @@ class WechatController extends BaseController
         }
 
         $model = Db::name('wechat')->find($id);
-        if(empty($model)){
+        if (empty($model)) {
             $this->error('数据不存在');
         }
-        $this->assign('model',$model);
-        $this->assign('id',$id);
+        $this->assign('model', $model);
+        $this->assign('id', $id);
         return $this->fetch();
     }
 
@@ -180,10 +183,11 @@ class WechatController extends BaseController
      * @param $name
      * @param $content
      */
-    public function uploadVerify($name,$content){
-        if(is_writable(DOC_ROOT)){
-            if(preg_match('/^MP_verify_[a-zA-Z0-9]+\.txt$/',$name)) {
-                if(preg_match('/^[a-zA-Z0-9=\\/]+$/',$content)) {
+    public function uploadVerify($name, $content)
+    {
+        if (is_writable(DOC_ROOT)) {
+            if (preg_match('/^MP_verify_[a-zA-Z0-9]+\.txt$/', $name)) {
+                if (preg_match('/^[a-zA-Z0-9=\\/]+$/', $content)) {
                     file_put_contents(DOC_ROOT . '/' . $name, $content);
                     $this->success('上传成功！');
                 }
@@ -199,17 +203,18 @@ class WechatController extends BaseController
      * @param $field
      * @param $value
      */
-    public function updateField($id,$field,$value){
-        $id=intval($id);
-        if($id==0)$this->error('数据不存在');
+    public function updateField($id, $field, $value)
+    {
+        $id = intval($id);
+        if ($id == 0) $this->error('数据不存在');
         $model = Db::name('wechat')->find($id);
-        if(empty($model)){
+        if (empty($model)) {
             $this->error('数据不存在');
         }
-        if(!in_array($field,['hash','token','encodingaeskey'])){
+        if (!in_array($field, ['hash', 'token', 'encodingaeskey'])) {
             $this->error('不允许更新的字段');
         }
-        Db::name('wechat')->where('id',$id)->update([$field=>$value]);
+        Db::name('wechat')->where('id', $id)->update([$field => $value]);
         $this->success('更新成功');
     }
 
@@ -222,11 +227,10 @@ class WechatController extends BaseController
         $id = intval($id);
         $model = Db::name('wechat');
         $result = $model->delete($id);
-        if($result){
+        if ($result) {
             $this->success(lang('Delete success!'), url('wechat/index'));
-        }else{
+        } else {
             $this->error(lang('Delete failed!'));
         }
     }
-
 }

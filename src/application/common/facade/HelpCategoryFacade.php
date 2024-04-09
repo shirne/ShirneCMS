@@ -24,7 +24,8 @@ use app\common\core\SimpleFacade;
  */
 class HelpCategoryFacade extends SimpleFacade
 {
-    protected static function getFacadeClass(){
+    protected static function getFacadeClass()
+    {
         return \app\common\model\HelpCategoryModel::class;
     }
 }

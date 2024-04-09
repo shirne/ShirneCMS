@@ -19,32 +19,31 @@ class SpecificationsController extends BaseController
      */
     public function index()
     {
-        if($this->request->isPost()){
-            $data=$this->request->post();
-            $data['id']=isset($data['id'])?intval($data['id']):0;
-            $validate=new SpecificationsValidate();
+        if ($this->request->isPost()) {
+            $data = $this->request->post();
+            $data['id'] = isset($data['id']) ? intval($data['id']) : 0;
+            $validate = new SpecificationsValidate();
             $validate->setId($data['id']);
-            if(!$validate->check($data)){
+            if (!$validate->check($data)) {
                 $this->error($validate->getError());
-            }else{
-                if($data['id']==0){
+            } else {
+                if ($data['id'] == 0) {
                     unset($data['id']);
-                    $model=SpecificationsModel::create($data);
-                    if($model['id']){
+                    $model = SpecificationsModel::create($data);
+                    if ($model['id']) {
                         $this->success('添加成功');
-                    }else{
+                    } else {
                         $this->error('添加失败');
                     }
-                }else{
+                } else {
                     SpecificationsModel::update($data);
                     $this->success('保存成功');
                 }
             }
-
         }
         $model = new SpecificationsModel();
-        $lists=$model->order('ID ASC')->select();
-        $this->assign('lists',$lists);
+        $lists = $model->order('ID ASC')->select();
+        $this->assign('lists', $lists);
         return $this->fetch();
     }
 
@@ -56,9 +55,9 @@ class SpecificationsController extends BaseController
         $id = intval($id);
         $model = Db::name('Specifications');
         $result = $model->delete($id);
-        if($result){
+        if ($result) {
             $this->success(lang('Delete success!'), url('shop.specifications/index'));
-        }else{
+        } else {
             $this->error(lang('Delete failed!'));
         }
     }

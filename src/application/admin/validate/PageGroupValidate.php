@@ -12,13 +12,13 @@ use app\common\core\BaseUniqueValidate;
  */
 class PageGroupValidate extends BaseUniqueValidate
 {
-    protected $rule=array(
-        'group_name'=>'require',
-        'group'=>'require|unique:pageGroup,%id%'
+    protected $rule = array(
+        'group_name' => 'require',
+        'group' => 'require|unique:pageGroup,%id%'
     );
     protected $message = array(
-        'group_name.require'=>'请填写分组名称！',
-        'group.require'=>'请填写分组标识！',
-        'group.unique'=>'分组标识已经存在！'
+        'group_name.require' => '请填写分组名称！',
+        'group.require' => '请填写分组标识！',
+        'group.unique' => '分组标识已经存在！'
     );
 }

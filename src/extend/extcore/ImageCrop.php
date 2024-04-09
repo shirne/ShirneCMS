@@ -9,10 +9,10 @@ class ImageCrop
 
     protected $file;
     protected $options;
-    public function __construct($file='',$options=[])
+    public function __construct($file = '', $options = [])
     {
-        $this->file=trim($file);
-        $this->options=$options;
+        $this->file = trim($file);
+        $this->options = $options;
     }
 
     /**
@@ -21,27 +21,28 @@ class ImageCrop
      * @param $opts array
      * @return \think\Response
      */
-    public function crop($savepath=null,$opts=[]){
-        $opts=array_merge($this->options, $opts);
+    public function crop($savepath = null, $opts = [])
+    {
+        $opts = array_merge($this->options, $opts);
         $img = $this->file;
         $imgWidth = (int)$opts['w'];
         $imgHeight = (int)$opts['h'];
         $imgQuality = (int)$opts['q'];
         $imgMode = strtolower(trim($opts['m']));
 
-        if (empty($img)){
+        if (empty($img)) {
             exit();
         }
-        if($imgWidth<1 && $imgHeight<1){
+        if ($imgWidth < 1 && $imgHeight < 1) {
             $imgWidth = config('upload.default_size');
         }
-        if($imgQuality<1){
+        if ($imgQuality < 1) {
             $imgQuality = config('upload.default_quality');
         }
-        
-        $imgData=$this->getImgData($img);
 
-        if($imgData!==false && !empty($imgData)) {
+        $imgData = $this->getImgData($img);
+
+        if ($imgData !== false && !empty($imgData)) {
             $imageinfo = getimagesizefromstring($imgData);
             $image = imagecreatefromstring($imgData);
 
@@ -49,7 +50,7 @@ class ImageCrop
             $photoHeight = $imageinfo[1];
 
             if ($photoWidth > 0 && $photoHeight > 0) {
-                if ($photoWidth > $imgWidth Or $photoHeight > $imgHeight) {
+                if ($photoWidth > $imgWidth or $photoHeight > $imgHeight) {
                     $photoScale = $photoWidth / $photoHeight;
                     if ($imgWidth > 0 && $imgHeight > 0) {
                         $imgScale = $imgWidth / $imgHeight;
@@ -66,7 +67,7 @@ class ImageCrop
                             $tempHeight = $imgHeight;
                             $tempWidth = $imgHeight * $imgScale;
                         }
-                    }else{
+                    } else {
                         switch ($imgMode) {
                             case "o":
                             case "1":
@@ -110,12 +111,13 @@ class ImageCrop
                 }
             }
         }
-        return redirect(ltrim(config('upload.default_img'),'.'));
+        return redirect(ltrim(config('upload.default_img'), '.'));
     }
 
-    private function createImage($width,$height){
-        $newimg=imagecreatetruecolor($width, $height);
-        imagesavealpha($newimg,true);
+    private function createImage($width, $height)
+    {
+        $newimg = imagecreatetruecolor($width, $height);
+        imagesavealpha($newimg, true);
         $trans_colour = imagecolorallocatealpha($newimg, 0, 0, 0, 127);
         imagefill($newimg, 0, 0, $trans_colour);
         return $newimg;
@@ -129,17 +131,18 @@ class ImageCrop
      * @param $imgQuality
      * @return \think\Response
      */
-    private function output($image,$mime='image/jpeg',$savepath=null,$imgQuality=80){
+    private function output($image, $mime = 'image/jpeg', $savepath = null, $imgQuality = 80)
+    {
         ob_start();
-        switch (strtolower($mime)){
+        switch (strtolower($mime)) {
             case 'image/png':
-                imagepng($image,$savepath);
+                imagepng($image, $savepath);
                 break;
             case 'image/gif':
-                imagegif($image,$savepath);
+                imagegif($image, $savepath);
                 break;
             default:
-                imagejpeg($image,$savepath,$imgQuality);
+                imagejpeg($image, $savepath, $imgQuality);
         }
         $content = ob_get_clean();
         imagedestroy($image);
@@ -152,14 +155,15 @@ class ImageCrop
      * @param $img
      * @return bool|string
      */
-    private function getImgData($img){
-        if(strripos($img, 'http://')!==FALSE OR strripos($img,'https://') !==FALSE) {	//站外图片
-            $data=file_get_contents($img);
-        }else{	//站内图片
-            $file=DOC_ROOT.'/'.$img;
-            if(is_file($file)) {
+    private function getImgData($img)
+    {
+        if (strripos($img, 'http://') !== FALSE or strripos($img, 'https://') !== FALSE) {    //站外图片
+            $data = file_get_contents($img);
+        } else {    //站内图片
+            $file = DOC_ROOT . '/' . $img;
+            if (is_file($file)) {
                 $data = file_get_contents($file);
-            }else{
+            } else {
                 return false;
             }
         }

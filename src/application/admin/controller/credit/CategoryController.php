@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 商品分类
  * User: shirne
@@ -17,26 +18,28 @@ use think\Db;
 
 class CategoryController extends BaseController
 {
-    public function index(){
-        $this->assign('lists',GoodsCategoryFacade::getCategories(true));
+    public function index()
+    {
+        $this->assign('lists', GoodsCategoryFacade::getCategories(true));
         return $this->fetch();
     }
-    public function add($pid=0){
-        $pid=intval($pid);
+    public function add($pid = 0)
+    {
+        $pid = intval($pid);
         if ($this->request->isPost()) {
-            $data=$this->request->post();
-            $validate=new GoodsCategoryValidate();
+            $data = $this->request->post();
+            $validate = new GoodsCategoryValidate();
             $validate->setId();
 
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
-                $iconupload=$this->_upload('category','upload_icon');
-                if(!empty($iconupload))$data['icon']=$iconupload['url'];
-                $uploaded=$this->_upload('category','upload_image');
-                if(!empty($uploaded))$data['image']=$uploaded['url'];
+                $iconupload = $this->_upload('category', 'upload_icon');
+                if (!empty($iconupload)) $data['icon'] = $iconupload['url'];
+                $uploaded = $this->_upload('category', 'upload_image');
+                if (!empty($uploaded)) $data['image'] = $uploaded['url'];
 
-                $model=GoodsCategoryModel::create($data);
+                $model = GoodsCategoryModel::create($data);
                 if ($model['id']) {
                     GoodsCategoryFacade::clearCache();
                     $this->success("添加成功", url('credit.category/index'));
@@ -46,11 +49,11 @@ class CategoryController extends BaseController
             }
         }
         $cate = GoodsCategoryFacade::getCategories();
-        $model=array('sort'=>99,'pid'=>$pid,'specs'=>[]);
-        $this->assign('cate',$cate);
-        $this->assign('model',$model);
-        $this->assign('specs',SpecificationsModel::getList());
-        $this->assign('id',0);
+        $model = array('sort' => 99, 'pid' => $pid, 'specs' => []);
+        $this->assign('cate', $cate);
+        $this->assign('model', $model);
+        $this->assign('specs', SpecificationsModel::getList());
+        $this->assign('id', 0);
         return $this->fetch('edit');
     }
 
@@ -61,28 +64,28 @@ class CategoryController extends BaseController
     {
         $id = intval($id);
         if ($this->request->isPost()) {
-            $data=$this->request->post();
-            $validate=new GoodsCategoryValidate();
+            $data = $this->request->post();
+            $validate = new GoodsCategoryValidate();
             $validate->setId($id);
 
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
-                $delete_images=[];
-                $iconupload=$this->_upload('category','upload_icon');
-                if(!empty($iconupload)){
-                    $data['icon']=$iconupload['url'];
-                    $delete_images[]=$data['delete_icon'];
+                $delete_images = [];
+                $iconupload = $this->_upload('category', 'upload_icon');
+                if (!empty($iconupload)) {
+                    $data['icon'] = $iconupload['url'];
+                    $delete_images[] = $data['delete_icon'];
                 }
-                $uploaded=$this->_upload('category','upload_image');
-                if(!empty($uploaded)){
-                    $data['image']=$uploaded['url'];
-                    $delete_images[]=$data['delete_image'];
+                $uploaded = $this->_upload('category', 'upload_image');
+                if (!empty($uploaded)) {
+                    $data['image'] = $uploaded['url'];
+                    $delete_images[] = $data['delete_image'];
                 }
                 unset($data['delete_icon']);
                 unset($data['delete_image']);
 
-                GoodsCategoryModel::update($data,['id'=>$id]);
+                GoodsCategoryModel::update($data, ['id' => $id]);
 
                 delete_image($delete_images);
                 GoodsCategoryFacade::clearCache();
@@ -90,18 +93,18 @@ class CategoryController extends BaseController
             }
         }
         $model = GoodsCategoryModel::get($id);
-        if(empty($model) || empty($model['id'])){
+        if (empty($model) || empty($model['id'])) {
             $this->error('分类不存在');
         }
         $cate = GoodsCategoryFacade::getCategories();
-        if(is_null($model->specs)){
-            $model->specs=[];
+        if (is_null($model->specs)) {
+            $model->specs = [];
         }
 
-        $this->assign('cate',$cate);
-        $this->assign('model',$model);
-        $this->assign('specs',SpecificationsModel::getList());
-        $this->assign('id',$id);
+        $this->assign('cate', $cate);
+        $this->assign('model', $model);
+        $this->assign('specs', SpecificationsModel::getList());
+        $this->assign('id', $id);
         return $this->fetch();
     }
 
@@ -112,21 +115,21 @@ class CategoryController extends BaseController
     {
         $id = idArr($id);
         //查询属于这个分类的文章
-        $posts = Db::name('Goods')->where('cate_id','in',$id)->count();
-        if($posts){
+        $posts = Db::name('Goods')->where('cate_id', 'in', $id)->count();
+        if ($posts) {
             $this->error("禁止删除含有产品的分类");
         }
         //禁止删除含有子分类的分类
-        $hasChild = Db::name('GoodsCategory')->where('pid','in',$id)->count();
-        if($hasChild){
+        $hasChild = Db::name('GoodsCategory')->where('pid', 'in', $id)->count();
+        if ($hasChild) {
             $this->error("禁止删除含有子分类的分类");
         }
         //验证通过
-        $result = Db::name('GoodsCategory')->where('id','in',$id)->delete();
-        if($result){
+        $result = Db::name('GoodsCategory')->where('id', 'in', $id)->delete();
+        if ($result) {
             GoodsCategoryFacade::clearCache();
             $this->success("分类删除成功", url('credit.category/index'));
-        }else{
+        } else {
             $this->error("分类删除失败");
         }
     }

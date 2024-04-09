@@ -27,12 +27,12 @@ class Aliyun extends ThirdModelBase
 
     public function greenScan($content)
     {
-        if(empty($this->accessKeyId) || empty($this->accessKeySecret))return 0;
+        if (empty($this->accessKeyId) || empty($this->accessKeySecret)) return 0;
 
         try {
-            AlibabaCloud::accessKeyClient($this->accessKeyId,$this->accessKeySecret)
-            ->regionId('cn-shenzhen')
-            ->asDefaultClient();
+            AlibabaCloud::accessKeyClient($this->accessKeyId, $this->accessKeySecret)
+                ->regionId('cn-shenzhen')
+                ->asDefaultClient();
 
             $request = Green::v20180509()->textScan();
             $task = array(
@@ -55,11 +55,11 @@ class Aliyun extends ThirdModelBase
 
                             if ($suggestion == 'pass') {
                                 return 1;
-                            }elseif($suggestion == 'review'){
+                            } elseif ($suggestion == 'review') {
                                 return 0;
                             }
                             Log::record($content);
-                            Log::record(json_encode($taskResults,JSON_UNESCAPED_UNICODE));
+                            Log::record(json_encode($taskResults, JSON_UNESCAPED_UNICODE));
                             return -1;
                         }
                     } else {
@@ -69,7 +69,7 @@ class Aliyun extends ThirdModelBase
                 }
             } else {
                 $this->set_error("detect fail. code:" + $result->Code);
-                Log::record("detect fail. " + json_encode($result,JSON_UNESCAPED_UNICODE));
+                Log::record("detect fail. " + json_encode($result, JSON_UNESCAPED_UNICODE));
             }
         } catch (\Exception $e) {
             $this->set_error($e->getMessage());
@@ -79,20 +79,21 @@ class Aliyun extends ThirdModelBase
         return 0;
     }
 
-    public function sendSms($mobiles, $param, $tplCode, $sign){
-        if(empty($this->accessKeyId) || empty($this->accessKeySecret))return 0;
+    public function sendSms($mobiles, $param, $tplCode, $sign)
+    {
+        if (empty($this->accessKeyId) || empty($this->accessKeySecret)) return 0;
         try {
-            if(is_string($param)){
-                $param = ['code'=>$param];
+            if (is_string($param)) {
+                $param = ['code' => $param];
             }
-            $param = json_encode($param,JSON_UNESCAPED_UNICODE);
+            $param = json_encode($param, JSON_UNESCAPED_UNICODE);
 
-            AlibabaCloud::accessKeyClient($this->accessKeyId,$this->accessKeySecret)
-            ->regionId('cn-shenzhen')
-            ->asDefaultClient();
+            AlibabaCloud::accessKeyClient($this->accessKeyId, $this->accessKeySecret)
+                ->regionId('cn-shenzhen')
+                ->asDefaultClient();
 
             $request = Dysmsapi::v20170525()->sendSms();
-            
+
             $result = $request->withPhoneNumbers($mobiles)
                 ->withSignName($sign)
                 ->withTemplateCode($tplCode)
@@ -103,7 +104,7 @@ class Aliyun extends ThirdModelBase
                 return 1;
             } else {
                 $this->set_error($result->Message);
-                Log::record("sendsms fail." . json_encode($result,JSON_UNESCAPED_UNICODE));
+                Log::record("sendsms fail." . json_encode($result, JSON_UNESCAPED_UNICODE));
             }
         } catch (\Exception $e) {
             $this->set_error($e->getMessage());

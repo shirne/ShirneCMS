@@ -14,20 +14,21 @@ class UmsHttp extends ThirdBase
     public function __construct($options)
     {
         parent::__construct($options);
-        if(!empty($options['sms_spcode'])){
-            $this->SpCode=$options['sms_spcode'];
+        if (!empty($options['sms_spcode'])) {
+            $this->SpCode = $options['sms_spcode'];
         }
-        if(!empty($options['sms_loginname'])){
-            $this->LoginName=$options['sms_loginname'];
+        if (!empty($options['sms_loginname'])) {
+            $this->LoginName = $options['sms_loginname'];
         }
-        if(!empty($options['sms_password'])){
-            $this->Password=$options['sms_password'];
+        if (!empty($options['sms_password'])) {
+            $this->Password = $options['sms_password'];
         }
     }
 
-    public function send($mobile,$content) {
-        if(empty($this->SpCode)||empty($this->LoginName) || empty($this->Password)){
-            $this->errMsg='短信接口配置错误';
+    public function send($mobile, $content)
+    {
+        if (empty($this->SpCode) || empty($this->LoginName) || empty($this->Password)) {
+            $this->errMsg = '短信接口配置错误';
             return false;
         }
         $params = array(
@@ -42,7 +43,7 @@ class UmsHttp extends ThirdBase
             "f" => '',
         );
         //$data = http_build_query($params);
-        $res = iconv('GB2312', 'UTF-8//IGNORE', $this->http_post($this->_apiUrl,$params));
+        $res = iconv('GB2312', 'UTF-8//IGNORE', $this->http_post($this->_apiUrl, $params));
         $resArr = array();
         parse_str($res, $resArr);
 

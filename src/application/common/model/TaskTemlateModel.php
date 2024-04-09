@@ -9,6 +9,5 @@ use app\common\core\BaseModel;
 class TaskTemlate extends BaseModel
 {
     protected $autoWriteTimestamp = true;
-    protected $type = ['content'=>'array'];
-    
+    protected $type = ['content' => 'array'];
 }

@@ -11,12 +11,12 @@ use think\Validate;
  */
 class ProductBrandValidate extends Validate
 {
-    protected $rule=array(
-        'title'=>'require',
-        'url'=>'url'
+    protected $rule = array(
+        'title' => 'require',
+        'url' => 'url'
     );
-    protected $message=array(
-        'title'=>'请填写品牌名称',
-        'url'=>'官网地址格式错误',
+    protected $message = array(
+        'title' => '请填写品牌名称',
+        'url' => '官网地址格式错误',
     );
 }

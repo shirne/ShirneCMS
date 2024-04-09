@@ -29,7 +29,8 @@ class ProductController extends BaseController
      *   ...
      * @return Json 
      */
-    public function get_all_cates(){
+    public function get_all_cates()
+    {
         return $this->response(ProductCategoryFacade::getTreedCategory());
     }
 
@@ -41,27 +42,28 @@ class ProductController extends BaseController
      * @param array $filters 携带商品列表的筛选条件
      * @return Json 
      */
-    public function get_cates($pid=0, $goods_count=0, $withsku=0, $filters=[]){
-        if($pid!=0 || preg_match('/^[a-zA-Z]\w+/',$pid)){
-            $current=ProductCategoryFacade::findCategory($pid);
-            if(empty($current)){
+    public function get_cates($pid = 0, $goods_count = 0, $withsku = 0, $filters = [])
+    {
+        if ($pid != 0 || preg_match('/^[a-zA-Z]\w+/', $pid)) {
+            $current = ProductCategoryFacade::findCategory($pid);
+            if (empty($current)) {
                 return $this->response([]);
             }
-            $pid=$current['id'];
+            $pid = $current['id'];
         }
         $cates = ProductCategoryFacade::getSubCategory($pid);
-        if($goods_count > 0){
+        if ($goods_count > 0) {
             $product = ProductModel::getInstance();
-            $filters['limit']=$goods_count;
-            if(!isset($filters['recursive'])){
-                $filters['recursive']=1;
+            $filters['limit'] = $goods_count;
+            if (!isset($filters['recursive'])) {
+                $filters['recursive'] = 1;
             }
-            if($withsku){
-                $filters['withsku']=$withsku;
+            if ($withsku) {
+                $filters['withsku'] = $withsku;
             }
-            foreach($cates as &$cate){
-                $filters['category']=$cate['id'];
-                $cate['products']=$product->tagList($filters);
+            foreach ($cates as &$cate) {
+                $filters['category'] = $cate['id'];
+                $cate['products'] = $product->tagList($filters);
             }
             unset($cate);
         }
@@ -79,52 +81,53 @@ class ProductController extends BaseController
      * @param int $pagesize 指定获取数量，分页时为每页大小
      * @return Json 
      */
-    public function get_list($cate='',$type='',$order='',$keyword='',$province='',$city='',$withsku=0,$page=1, $pagesize=10){
-        $condition=[];
-        if($cate){
-            $condition['category']=$cate;
-            $condition['recursive']=1;
+    public function get_list($cate = '', $type = '', $order = '', $keyword = '', $province = '', $city = '', $withsku = 0, $page = 1, $pagesize = 10)
+    {
+        $condition = [];
+        if ($cate) {
+            $condition['category'] = $cate;
+            $condition['recursive'] = 1;
         }
-        if(!empty($order)){
-            $condition['order']=$order;
+        if (!empty($order)) {
+            $condition['order'] = $order;
         }
-        if(!empty($keyword)){
-            $condition['keyword']=$keyword;
+        if (!empty($keyword)) {
+            $condition['keyword'] = $keyword;
         }
-        if(!empty($type)){
-            $condition['type']=$type;
+        if (!empty($type)) {
+            $condition['type'] = $type;
         }
-        if(!empty($city)){
-            $condition['province']=$province;
+        if (!empty($city)) {
+            $condition['province'] = $province;
         }
-        if(!empty($city)){
-            $condition['city']=$city;
+        if (!empty($city)) {
+            $condition['city'] = $city;
         }
-        if(!empty($withsku)){
-            $condition['withsku']=$withsku;
+        if (!empty($withsku)) {
+            $condition['withsku'] = $withsku;
         }
-        $condition['page']=$page;
-        $condition['pagesize']=$pagesize;
-        
+        $condition['page'] = $page;
+        $condition['pagesize'] = $pagesize;
+
         $lists = ProductModel::getInstance()->tagList($condition, true);
-        
-        if(!empty($lists) && !$lists->isEmpty()) {
+
+        if (!empty($lists) && !$lists->isEmpty()) {
             $levels = getMemberLevels();
-    
+
             $lists->each(function ($item) use ($levels) {
                 if ($item['level_id']) {
                     $item['level_name'] = $levels[$item['level_id']]['level_name'] ?: '';
                 }
-        
+
                 return $item;
             });
         }
 
         return $this->response([
-            'lists'=>$lists->items(),
-            'page'=>$lists->currentPage(),
-            'total'=>$lists->total(),
-            'total_page'=>$lists->lastPage(),
+            'lists' => $lists->items(),
+            'page' => $lists->currentPage(),
+            'total' => $lists->total(),
+            'total_page' => $lists->lastPage(),
         ]);
     }
 
@@ -133,10 +136,11 @@ class ProductController extends BaseController
      * @param int $id 
      * @return Json 
      */
-    public function brands($cate = 0){
+    public function brands($cate = 0)
+    {
         $lists = Db::name('productBrand')->order('sort asc')->select();
         return $this->response([
-            'lists'=>$lists,
+            'lists' => $lists,
         ]);
     }
 
@@ -145,45 +149,46 @@ class ProductController extends BaseController
      * @param int $id 
      * @return Json 
      */
-    public function view($id){
+    public function view($id)
+    {
         $id = intval($id);
         $product = ProductModel::get($id);
-        if(empty($product)){
+        if (empty($product)) {
             $this->error('商品不存在');
         }
 
-        $cateid=$product['cate_id'];
-        $product['category']=ProductCategoryFacade::findCategory($cateid);
-        $topid=0;
-        $topcate=ProductCategoryFacade::getTopCategory($cateid);
-        if(!empty($topcate)){
-            $topid=$topcate['id'];
+        $cateid = $product['cate_id'];
+        $product['category'] = ProductCategoryFacade::findCategory($cateid);
+        $topid = 0;
+        $topcate = ProductCategoryFacade::getTopCategory($cateid);
+        if (!empty($topcate)) {
+            $topid = $topcate['id'];
         }
-        $product['top_cate_id']=$topid;
-        $product['top_category']=$topcate;
-        if(!empty($product['v_sale'])){
-            $product['sale']=$product['sale']+$product['v_sale'];
+        $product['top_cate_id'] = $topid;
+        $product['top_category'] = $topcate;
+        if (!empty($product['v_sale'])) {
+            $product['sale'] = $product['sale'] + $product['v_sale'];
         }
 
-        $skus=ProductSkuModel::where('product_id',$product['id'])->select();
-        $images=Db::name('ProductImages')->where('product_id',$product['id'])->select();
-        if(!empty($product['levels'])){
-            $levels=MemberLevelModel::getCacheData();
-            $level_names=[];
-            foreach($product['levels'] as $lvid){
+        $skus = ProductSkuModel::where('product_id', $product['id'])->select();
+        $images = Db::name('ProductImages')->where('product_id', $product['id'])->select();
+        if (!empty($product['levels'])) {
+            $levels = MemberLevelModel::getCacheData();
+            $level_names = [];
+            foreach ($product['levels'] as $lvid) {
                 $level_names[] = $levels[intval($lvid)]['level_name'];
             }
-            $product['level_names']=$level_names;
+            $product['level_names'] = $level_names;
         }
 
-        $isFavourite=$this->isLogin?MemberFavouriteFacade::isFavourite($this->user['id'],'product',$id):0;
+        $isFavourite = $this->isLogin ? MemberFavouriteFacade::isFavourite($this->user['id'], 'product', $id) : 0;
 
         return $this->response([
-            'product'=>$product,
-            'is_favourite'=>$isFavourite,
-            'postage'=>PostageModel::getDesc($product['postage_id']),
-            'skus'=>$skus,
-            'images'=>$images
+            'product' => $product,
+            'is_favourite' => $isFavourite,
+            'postage' => PostageModel::getDesc($product['postage_id']),
+            'skus' => $skus,
+            'images' => $images
         ]);
     }
 
@@ -193,52 +198,54 @@ class ProductController extends BaseController
      * @param int $time 
      * @return void|Json 
      */
-    public function flash($id, $time){
-        $flash = ProductModel::getFlash($id,$time);
-        if(empty($flash)){
+    public function flash($id, $time)
+    {
+        $flash = ProductModel::getFlash($id, $time);
+        if (empty($flash)) {
             return $this->error('商品快照不存在');
         }
-        $product = json_decode($flash['product'],true);
+        $product = json_decode($flash['product'], true);
 
-        $skus=json_decode($flash['skus'],true);
-        $images=json_decode($flash['images'],true);
+        $skus = json_decode($flash['skus'], true);
+        $images = json_decode($flash['images'], true);
 
         return $this->response([
-            'product'=>$product,
-            'skus'=>$skus,
-            'images'=>$images,
-            'flash_date'=>$flash['timestamp']
+            'product' => $product,
+            'skus' => $skus,
+            'images' => $images,
+            'flash_date' => $flash['timestamp']
         ]);
     }
 
-    private function get_share_config(){
+    private function get_share_config()
+    {
         $config = [];
-        $sysconfig=getSettings(false,true);
-        $shareConfig=$sysconfig['share'];
-        if(empty($shareConfig) || empty($shareConfig['share_background'])){
+        $sysconfig = getSettings(false, true);
+        $shareConfig = $sysconfig['share'];
+        if (empty($shareConfig) || empty($shareConfig['share_background'])) {
             return false;
         }
 
-        $config['background']='.'.$shareConfig['share_background'];
-        
-        $config['data']['image']=$shareConfig['share_image'];
-        $config['data']['image']['type']='image';
-        $config['data']['avatar']=$shareConfig['share_avatar'];
-        $config['data']['avatar']['type']='image';
-        $config['data']['qrcode']=$shareConfig['share_qrcode'];
-        $config['data']['qrcode']['type']='image';
-        
-        if($shareConfig['share_bgset'] == 1){
-            $config['data']['bg']=['type'=>'background'];
+        $config['background'] = '.' . $shareConfig['share_background'];
+
+        $config['data']['image'] = $shareConfig['share_image'];
+        $config['data']['image']['type'] = 'image';
+        $config['data']['avatar'] = $shareConfig['share_avatar'];
+        $config['data']['avatar']['type'] = 'image';
+        $config['data']['qrcode'] = $shareConfig['share_qrcode'];
+        $config['data']['qrcode']['type'] = 'image';
+
+        if ($shareConfig['share_bgset'] == 1) {
+            $config['data']['bg'] = ['type' => 'background'];
         }
-        $config['data']['title']=$shareConfig['share_title'];
-        $config['data']['vice_title']=$shareConfig['vice_title'];
-        $config['data']['price']=$shareConfig['share_price'];
-        $config['data']['nickname']=$shareConfig['share_nickname'];
-        if(!empty($shareConfig['share_qrlogo'])){
-            $config['data']['qrlogo']=$shareConfig['share_qrcode'];
-            $config['data']['qrlogo']['type']='image';
-            $config['data']['qrlogo']['value']='.'.$shareConfig['share_qrlogo'];
+        $config['data']['title'] = $shareConfig['share_title'];
+        $config['data']['vice_title'] = $shareConfig['vice_title'];
+        $config['data']['price'] = $shareConfig['share_price'];
+        $config['data']['nickname'] = $shareConfig['share_nickname'];
+        if (!empty($shareConfig['share_qrlogo'])) {
+            $config['data']['qrlogo'] = $shareConfig['share_qrcode'];
+            $config['data']['qrlogo']['type'] = 'image';
+            $config['data']['qrlogo']['value'] = '.' . $shareConfig['share_qrlogo'];
         }
         return $config;
     }
@@ -249,88 +256,91 @@ class ProductController extends BaseController
      * @param string $type 
      * @return Json 
      */
-    public function share($id, $type='url'){
+    public function share($id, $type = 'url')
+    {
         $id = intval($id);
         $product = ProductModel::get($id);
-        if(empty($product)){
+        if (empty($product)) {
             $this->error('商品不存在');
         }
-        
-        $data=[
-            'avatar'=>'',
-            'nickname'=>'',
-            'image'=>'.'.$product['image'],
-            'title'=>$product['title'],
-            'vice_title'=>$product['vice_title'],
-            'price'=>$product['min_price'],
-            'qrcode'=>''
+
+        $data = [
+            'avatar' => '',
+            'nickname' => '',
+            'image' => '.' . $product['image'],
+            'title' => $product['title'],
+            'vice_title' => $product['vice_title'],
+            'price' => $product['min_price'],
+            'qrcode' => ''
         ];
-        if(strpos($data['title'],'【')==0 && strpos($data['title'],'】')>0){
-            $data['title'] = mb_substr($data['title'],mb_strpos($data['title'],'】')+1);
+        if (strpos($data['title'], '【') == 0 && strpos($data['title'], '】') > 0) {
+            $data['title'] = mb_substr($data['title'], mb_strpos($data['title'], '】') + 1);
         }
 
-        if(!in_array($type,['url','miniqr'])){
+        if (!in_array($type, ['url', 'miniqr'])) {
             $this->error('分享图类型错误');
         }
-        $params=['id'=>$id];
-        if($this->isLogin && !empty($this->user['agentcode'] )){
-            $data['avatar']=$this->user['avatar'];
-            $data['nickname']=$this->user['nickname'];
-            $params['agent']=$this->user['agentcode'];
-            $qrurl = './uploads/pshare/'.$id.'/'.($this->user['id']%100).'/'.$this->user['agentcode'].'-'.$type.'-p'.$id.'-qrcode.jpg';
-            $sharepath = './uploads/pshare/'.$id.'/'.($this->user['id']%100).'/'.$this->user['agentcode'].'-'.$type.'-p'.$id.'.jpg';
-        }else{
-            $data['avatar']='.'.$this->config['site-weblogo'];
-            $data['nickname']=$this->config['site-name'];
-            $qrurl = './uploads/pshare/'.$id.'/share-qrcode-'.$type.'.png';
-            $sharepath = './uploads/pshare/'.$id.'/share-'.$type.'.png';
+        $params = ['id' => $id];
+        if ($this->isLogin && !empty($this->user['agentcode'])) {
+            $data['avatar'] = $this->user['avatar'];
+            $data['nickname'] = $this->user['nickname'];
+            $params['agent'] = $this->user['agentcode'];
+            $qrurl = './uploads/pshare/' . $id . '/' . ($this->user['id'] % 100) . '/' . $this->user['agentcode'] . '-' . $type . '-p' . $id . '-qrcode.jpg';
+            $sharepath = './uploads/pshare/' . $id . '/' . ($this->user['id'] % 100) . '/' . $this->user['agentcode'] . '-' . $type . '-p' . $id . '.jpg';
+        } else {
+            $data['avatar'] = '.' . $this->config['site-weblogo'];
+            $data['nickname'] = $this->config['site-name'];
+            $qrurl = './uploads/pshare/' . $id . '/share-qrcode-' . $type . '.png';
+            $sharepath = './uploads/pshare/' . $id . '/share-' . $type . '.png';
         }
-        $imgurl = media(ltrim($sharepath,'.'));
-        $config=$this->get_share_config();
-        if(empty($config) || empty($config['background'])){
+        $imgurl = media(ltrim($sharepath, '.'));
+        $config = $this->get_share_config();
+        if (empty($config) || empty($config['background'])) {
             $this->error('请配置产品海报生成样式(config/share.php)');
         }
-        if(!file_exists($sharepath) || 
-            filemtime($sharepath) < $product['update_time'] || 
+        if (
+            !file_exists($sharepath) ||
+            filemtime($sharepath) < $product['update_time'] ||
             filemtime($sharepath) < $this->user['update_time'] ||
-            filemtime($sharepath) < filemtime($config['background'] )){
+            filemtime($sharepath) < filemtime($config['background'])
+        ) {
 
-            if($type == 'url'){
-                $url = url('index/product/view',$params, true, true);
-                $content=gener_qrcode($url, 430);
-            }else{
-                $appid=$this->request->tokenData['appid'];
-                $wechat=WechatModel::where('appid',$appid)->find();
-                if(empty($wechat)){
+            if ($type == 'url') {
+                $url = url('index/product/view', $params, true, true);
+                $content = gener_qrcode($url, 430);
+            } else {
+                $appid = $this->request->tokenData['appid'];
+                $wechat = WechatModel::where('appid', $appid)->find();
+                if (empty($wechat)) {
                     $this->error('分享图生成失败(wechat)');
                 }
-                $content = $this->miniprogramQrcode($wechat, ['path'=>'pages/product/detail', 'scene'=> $params], 430);
+                $content = $this->miniprogramQrcode($wechat, ['path' => 'pages/product/detail', 'scene' => $params], 430);
             }
             $dir = dirname($qrurl);
-            if(!is_dir($dir)){
-                mkdir($dir,0777,true);
+            if (!is_dir($dir)) {
+                mkdir($dir, 0777, true);
             }
-            file_put_contents($qrurl,$content);
-            $data['qrcode']=$qrurl;
+            file_put_contents($qrurl, $content);
+            $data['qrcode'] = $qrurl;
 
             $dir = dirname($sharepath);
-            if(!is_dir($dir)){
-                mkdir($dir,0777,true);
+            if (!is_dir($dir)) {
+                mkdir($dir, 0777, true);
             }
 
-            
+
             $poster = new Poster($config);
-            if($poster->generate($data)){
+            if ($poster->generate($data)) {
                 $poster->save($sharepath);
-                $imgurl .= '?_t='.time();
-            }else{
+                $imgurl .= '?_t=' . time();
+            } else {
                 $this->error('分享图生成失败');
             }
-        }else{
-            $imgurl .= '?_t='.filemtime($sharepath);
+        } else {
+            $imgurl .= '?_t=' . filemtime($sharepath);
         }
-        
-        return $this->response(['share_url'=>$imgurl]);
+
+        return $this->response(['share_url' => $imgurl]);
     }
 
     /**
@@ -340,16 +350,17 @@ class ProductController extends BaseController
      * @param mixed $size 
      * @return string|void 
      */
-    private function miniprogramQrcode($wechatid, $params, $size){
+    private function miniprogramQrcode($wechatid, $params, $size)
+    {
         $app = WechatModel::createApp($wechatid);
-        if(!$app){
+        if (!$app) {
             $this->error('小程序账号错误');
         }
-        $response = $app->app_code->getUnlimit(http_build_query($params['scene']), ['page'=>$params['path'],'width'=>$size]);
+        $response = $app->app_code->getUnlimit(http_build_query($params['scene']), ['page' => $params['path'], 'width' => $size]);
         if ($response instanceof \EasyWeChat\Kernel\Http\StreamResponse) {
             return $response->getBody()->getContents();
         }
-        Log::warning(var_export($response,true));
+        Log::warning(var_export($response, true));
         $this->error('小程序码生成失败');
     }
 
@@ -360,23 +371,24 @@ class ProductController extends BaseController
      * @param int $page 
      * @return Json 
      */
-    public function comments($id, $pagesize = 10){
+    public function comments($id, $pagesize = 10)
+    {
         $id = intval($id);
         $product = ProductModel::get($id);
-        if(empty($product)){
+        if (empty($product)) {
             $this->error('参数错误');
         }
-        $comments=Db::view('productComment','*')
-            ->view('member',['username','realname','avatar'],'member.id=productComment.member_id','LEFT')
-            ->where('productComment.status',1)
-            ->where('product_id',$id)
+        $comments = Db::view('productComment', '*')
+            ->view('member', ['username', 'realname', 'avatar'], 'member.id=productComment.member_id', 'LEFT')
+            ->where('productComment.status', 1)
+            ->where('product_id', $id)
             ->order('productComment.create_time desc')->paginate($pagesize);
 
         return $this->response([
-            'lists'=>$comments->items(),
-            'page'=>$comments->currentPage(),
-            'total'=>$comments->total(),
-            'total_page'=>$comments->lastPage(),
+            'lists' => $comments->items(),
+            'page' => $comments->currentPage(),
+            'total' => $comments->total(),
+            'total_page' => $comments->lastPage(),
         ]);
     }
 }

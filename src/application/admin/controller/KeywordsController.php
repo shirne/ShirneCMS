@@ -1,4 +1,5 @@
 <?php
+
 namespace app\admin\controller;
 
 use app\admin\validate\KeywordsValidate;
@@ -16,20 +17,20 @@ class KeywordsController extends BaseController
      * @param string $key
      * @return mixed|\think\response\Redirect
      */
-    public function index($key="")
+    public function index($key = "")
     {
-        if($this->request->isPost()){
-            return redirect(url('',['key'=>base64url_encode($key)]));
+        if ($this->request->isPost()) {
+            return redirect(url('', ['key' => base64url_encode($key)]));
         }
-        $key=empty($key)?"":base64url_decode($key);
+        $key = empty($key) ? "" : base64url_decode($key);
         $model = Db::name('keywords');
-        
-        if(!empty($key)){
-            $model->whereLike('title|description',"%$key%");
+
+        if (!empty($key)) {
+            $model->whereLike('title|description', "%$key%");
         }
-        $lists=$model->order('ID DESC')->paginate(15);
-        $this->assign('lists',$lists);
-        $this->assign('page',$lists->render());
+        $lists = $model->order('ID DESC')->paginate(15);
+        $this->assign('lists', $lists);
+        $this->assign('page', $lists->render());
         return $this->fetch();
     }
 
@@ -37,21 +38,22 @@ class KeywordsController extends BaseController
      * 添加关键字
      * @return mixed
      */
-    public function add(){
+    public function add()
+    {
         if ($this->request->isPost()) {
             //如果用户提交数据
             $data = $this->request->post();
-            $validate=new KeywordsValidate();
+            $validate = new KeywordsValidate();
             $validate->setId(0);
 
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
-                $uploaded=$this->_upload('keywords','upload_image');
-                if(!empty($uploaded)){
-                    $data['image']=$uploaded['url'];
-                }elseif($this->uploadErrorCode>102){
-                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
+                $uploaded = $this->_upload('keywords', 'upload_image');
+                if (!empty($uploaded)) {
+                    $data['image'] = $uploaded['url'];
+                } elseif ($this->uploadErrorCode > 102) {
+                    $this->error($this->uploadErrorCode . ':' . $this->uploadError);
                 }
 
                 if (Db::name('keywords')->insert($data)) {
@@ -61,10 +63,10 @@ class KeywordsController extends BaseController
                 }
             }
         }
-        $model=array('sort'=>99);
-        $this->assign('model',$model);
-        $this->assign('groups',$this->getGroups());
-        $this->assign('id',0);
+        $model = array('sort' => 99);
+        $this->assign('model', $model);
+        $this->assign('groups', $this->getGroups());
+        $this->assign('id', 0);
         return $this->fetch('edit');
     }
 
@@ -78,23 +80,23 @@ class KeywordsController extends BaseController
         if ($this->request->isPost()) {
             //如果用户提交数据
             $data = $this->request->post();
-            $validate=new KeywordsValidate();
+            $validate = new KeywordsValidate();
             $validate->setId($id);
 
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
-                $delete_images=[];
-                $uploaded=$this->_upload('keywords','upload_image');
-                if(!empty($uploaded)){
-                    $data['image']=$uploaded['url'];
-                    $delete_images[]=$data['delete_image'];
-                }elseif($this->uploadErrorCode>102){
-                    $this->error($this->uploadErrorCode.':'.$this->uploadError);
+                $delete_images = [];
+                $uploaded = $this->_upload('keywords', 'upload_image');
+                if (!empty($uploaded)) {
+                    $data['image'] = $uploaded['url'];
+                    $delete_images[] = $data['delete_image'];
+                } elseif ($this->uploadErrorCode > 102) {
+                    $this->error($this->uploadErrorCode . ':' . $this->uploadError);
                 }
                 unset($data['delete_image']);
 
-                $data['id']=$id;
+                $data['id'] = $id;
                 if (Db::name('keywords')->update($data)) {
                     delete_image($delete_images);
                     $this->success(lang('Update success!'), url('keywords/index'));
@@ -105,22 +107,23 @@ class KeywordsController extends BaseController
         }
 
         $model = Db::name('Keywords')->find($id);
-        if(empty($model)){
+        if (empty($model)) {
             $this->error('关键字不存在');
         }
-        $this->assign('groups',$this->getGroups());
-        $this->assign('model',$model);
-        $this->assign('id',$id);
+        $this->assign('groups', $this->getGroups());
+        $this->assign('model', $model);
+        $this->assign('id', $id);
         return $this->fetch();
     }
 
-    private function getGroups(){
-        $groups = Db::name('keywords')->where('group','neq','')->distinct('group')->field('group')->select();
+    private function getGroups()
+    {
+        $groups = Db::name('keywords')->where('group', 'neq', '')->distinct('group')->field('group')->select();
 
-        if(!empty($groups)){
-            return array_column($groups,'group');
+        if (!empty($groups)) {
+            return array_column($groups, 'group');
         }
-        return ['global','product','article'];
+        return ['global', 'product', 'article'];
     }
 
     /**
@@ -132,9 +135,9 @@ class KeywordsController extends BaseController
         $id = intval($id);
         $model = Db::name('keywords');
         $result = $model->delete($id);
-        if($result){
+        if ($result) {
             $this->success(lang('Delete success!'), url('keywords/index'));
-        }else{
+        } else {
             $this->error(lang('Delete failed!'));
         }
     }

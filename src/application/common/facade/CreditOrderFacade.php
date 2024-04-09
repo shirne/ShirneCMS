@@ -13,7 +13,8 @@ use app\common\core\SimpleFacade;
  */
 class CreditOrderFacade extends SimpleFacade
 {
-    protected static function getFacadeClass(){
+    protected static function getFacadeClass()
+    {
         return \app\common\model\CreditOrderModel::class;
     }
 }

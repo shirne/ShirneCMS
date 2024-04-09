@@ -11,6 +11,6 @@ use app\common\core\BaseModel;
  */
 class ProductSkuModel extends BaseModel
 {
-    protected $pk='sku_id';
-    protected $type = ['specs'=>'array','ext_price'=>'array'];
+    protected $pk = 'sku_id';
+    protected $type = ['specs' => 'array', 'ext_price' => 'array'];
 }

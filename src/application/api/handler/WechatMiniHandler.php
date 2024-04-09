@@ -8,7 +8,7 @@ use EasyWeChat\Kernel\Contracts\EventHandlerInterface;
 
 class WechatMiniHandler extends BaseHandler implements EventHandlerInterface
 {
-    
+
     /**
      * @param mixed $payload
      */

@@ -14,7 +14,8 @@ use app\common\core\SimpleFacade;
  */
 class OrderFacade extends SimpleFacade
 {
-    protected static function getFacadeClass(){
+    protected static function getFacadeClass()
+    {
         return \app\common\model\OrderModel::class;
     }
 }

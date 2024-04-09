@@ -1,18 +1,18 @@
 <?php
 
-define('ERROR_NEED_LOGIN',99);//需要登录
-define('ERROR_LOGIN_FAILED',101);//登录失败
-define('ERROR_NEED_VERIFY',104);//需要验证码
-define('ERROR_NEED_REGISTER',109);//登录失败,需要绑定
-define('ERROR_REGISTER_FAILED',111);//注册失败
-define('ERROR_TOKEN_INVAILD',102);//token无效
-define('ERROR_TOKEN_EXPIRE',103);//token过期
-define('ERROR_REFRESH_TOKEN_INVAILD',105);//refresh_token失效
+define('ERROR_NEED_LOGIN', 99); //需要登录
+define('ERROR_LOGIN_FAILED', 101); //登录失败
+define('ERROR_NEED_VERIFY', 104); //需要验证码
+define('ERROR_NEED_REGISTER', 109); //登录失败,需要绑定
+define('ERROR_REGISTER_FAILED', 111); //注册失败
+define('ERROR_TOKEN_INVAILD', 102); //token无效
+define('ERROR_TOKEN_EXPIRE', 103); //token过期
+define('ERROR_REFRESH_TOKEN_INVAILD', 105); //refresh_token失效
 
 define('ERROR_TMP_TOKEN_EXPIRE', 115);
 
-define('ERROR_NEED_OPENID',112);
-define('ERROR_MEMBER_DISABLED',113);
+define('ERROR_NEED_OPENID', 112);
+define('ERROR_MEMBER_DISABLED', 113);
 
 function empty2null($arr, $keys, $islist = true)
 {
@@ -37,18 +37,19 @@ function empty2null($arr, $keys, $islist = true)
     return $arr;
 }
 
-function delete_image($images){
-    if(is_array($images)){
-        foreach ($images as $image){
+function delete_image($images)
+{
+    if (is_array($images)) {
+        foreach ($images as $image) {
             delete_image($image);
         }
-    }else{
-        $images = str_replace('\\','/',$images);
+    } else {
+        $images = str_replace('\\', '/', $images);
 
-        if(strpos($images,'../') !== false)return;
-        
-        if(!empty($images) && strpos($images,'/uploads/')===0){
-            @unlink('.'.$images);
+        if (strpos($images, '../') !== false) return;
+
+        if (!empty($images) && strpos($images, '/uploads/') === 0) {
+            @unlink('.' . $images);
         }
     }
 }

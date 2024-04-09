@@ -11,6 +11,6 @@ use app\common\core\BaseModel;
  */
 class OrderProductModel extends BaseModel
 {
-    protected $pk='id';
-    protected $type = ['sku_specs'=>'array'];
+    protected $pk = 'id';
+    protected $type = ['sku_specs' => 'array'];
 }

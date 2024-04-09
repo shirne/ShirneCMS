@@ -14,27 +14,27 @@ class ProductCommentModel extends BaseModel
 {
     protected $autoWriteTimestamp = true;
 
-    protected $insert = ['status' ,'ip','device'];
+    protected $insert = ['status', 'ip', 'device'];
 
     public static function init()
     {
         parent::init();
 
-        self::afterInsert(function($model){
+        self::afterInsert(function ($model) {
             $product_id = $model['product_id'];
-            
-            Db::name('product')->where('id',$product_id)->setInc('comment',1);
+
+            Db::name('product')->where('id', $product_id)->setInc('comment', 1);
         });
-        self::afterDelete(function($model){
+        self::afterDelete(function ($model) {
             $product_id = $model['product_id'];
-            
-            Db::name('product')->where('id',$product_id)->setDec('comment',1);
+
+            Db::name('product')->where('id', $product_id)->setDec('comment', 1);
         });
     }
 
     protected function setDeviceAttr()
     {
-        return request()->isMobile()?'mobile':'pc';
+        return request()->isMobile() ? 'mobile' : 'pc';
     }
 
     protected function setIpAttr()
@@ -43,6 +43,6 @@ class ProductCommentModel extends BaseModel
     }
     protected function setStatusAttr($value)
     {
-        return empty($value)?0:intval($value);
+        return empty($value) ? 0 : intval($value);
     }
 }

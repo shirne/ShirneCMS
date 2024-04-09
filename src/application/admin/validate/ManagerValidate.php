@@ -13,11 +13,11 @@ use app\common\core\BaseUniqueValidate;
 class ManagerValidate extends BaseUniqueValidate
 {
     protected $rule  = array(
-        'username'=>'require|unique:manager,%id%',
-        'email'=>'email|unique:manager,%id%',
-        'mobile'=>'mobile|unique:manager,%id%',
-        'password'=>'require|min:6',
-        'type'=>'require|min:1'
+        'username' => 'require|unique:manager,%id%',
+        'email' => 'email|unique:manager,%id%',
+        'mobile' => 'mobile|unique:manager,%id%',
+        'password' => 'require|min:6',
+        'type' => 'require|min:1'
     );
 
     protected $message   = array(
@@ -33,7 +33,6 @@ class ManagerValidate extends BaseUniqueValidate
     );
 
     protected $scene = array(
-        'edit'=>['name','email','mobile']
+        'edit' => ['name', 'email', 'mobile']
     );
-
 }

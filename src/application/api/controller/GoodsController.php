@@ -22,7 +22,8 @@ class GoodsController extends BaseController
      *   ...
      * @return Json 
      */
-    public function get_all_cates(){
+    public function get_all_cates()
+    {
         return $this->response(GoodsCategoryFacade::getTreedCategory());
     }
 
@@ -33,24 +34,25 @@ class GoodsController extends BaseController
      * @param array $filters 携带积分商品筛选条件
      * @return Json 
      */
-    public function get_cates($pid=0, $goods_count=0, $filters=[]){
-        if($pid!=0 || preg_match('/^[a-zA-Z]\w+/',$pid)){
-            $current=GoodsCategoryFacade::findCategory($pid);
-            if(empty($current)){
+    public function get_cates($pid = 0, $goods_count = 0, $filters = [])
+    {
+        if ($pid != 0 || preg_match('/^[a-zA-Z]\w+/', $pid)) {
+            $current = GoodsCategoryFacade::findCategory($pid);
+            if (empty($current)) {
                 return $this->response([]);
             }
-            $pid=$current['id'];
+            $pid = $current['id'];
         }
         $cates = GoodsCategoryFacade::getSubCategory($pid);
-        if($goods_count > 0){
+        if ($goods_count > 0) {
             $goods = GoodsModel::getInstance();
-            $filters['limit']=$goods_count;
-            if(!isset($filters['recursive'])){
-                $filters['recursive']=1;
+            $filters['limit'] = $goods_count;
+            if (!isset($filters['recursive'])) {
+                $filters['recursive'] = 1;
             }
-            foreach($cates as &$cate){
-                $filters['category']=$cate['id'];
-                $cate['goods']=$goods->tagList($filters);
+            foreach ($cates as &$cate) {
+                $filters['category'] = $cate['id'];
+                $cate['goods'] = $goods->tagList($filters);
             }
             unset($cate);
         }
@@ -66,28 +68,29 @@ class GoodsController extends BaseController
      * @param int $pagesize 指定获取数量，分页时为每页大小
      * @return Json 
      */
-    public function get_list($cate='',$order='',$keyword='',$page=1, $pagesize=10){
-        $condition=[];
-        if($cate){
-            $condition['category']=$cate;
-            $condition['recursive']=1;
+    public function get_list($cate = '', $order = '', $keyword = '', $page = 1, $pagesize = 10)
+    {
+        $condition = [];
+        if ($cate) {
+            $condition['category'] = $cate;
+            $condition['recursive'] = 1;
         }
-        if(!empty($order)){
-            $condition['order']=$order;
+        if (!empty($order)) {
+            $condition['order'] = $order;
         }
-        if(!empty($keyword)){
-            $condition['keyword']=$keyword;
+        if (!empty($keyword)) {
+            $condition['keyword'] = $keyword;
         }
-        $condition['page']=$page;
-        $condition['pagesize']=$pagesize;
-        
+        $condition['page'] = $page;
+        $condition['pagesize'] = $pagesize;
+
         $lists = GoodsModel::getInstance()->tagList($condition, true);
 
         return $this->response([
-            'lists'=>$lists->items(),
-            'page'=>$lists->currentPage(),
-            'count'=>$lists->total(),
-            'total_page'=>$lists->lastPage(),
+            'lists' => $lists->items(),
+            'page' => $lists->currentPage(),
+            'count' => $lists->total(),
+            'total_page' => $lists->lastPage(),
         ]);
     }
 
@@ -96,19 +99,19 @@ class GoodsController extends BaseController
      * @param mixed $id 
      * @return Json 
      */
-    public function view($id){
+    public function view($id)
+    {
         $id = intval($id);
         $goods = GoodsModel::get($id);
-        if(empty($goods)){
+        if (empty($goods)) {
             $this->error('商品不存在');
         }
 
-        $images=Db::name('GoodsImages')->where('goods_id',$goods['id'])->select();
+        $images = Db::name('GoodsImages')->where('goods_id', $goods['id'])->select();
 
         return $this->response([
-            'goods'=>$goods,
-            'images'=>$images
+            'goods' => $goods,
+            'images' => $images
         ]);
     }
-
 }

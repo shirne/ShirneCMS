@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 会员资料验证
  * User: shirne
@@ -13,17 +14,17 @@ use app\common\core\BaseUniqueValidate;
 class MemberValidate extends BaseUniqueValidate
 {
     protected $rule  = array(
-        'username'=>['require', 'regex' => '/^[a-zA-Z][A-Za-z0-9\-\_]{5,19}$/','unique'=>'member,%id%'],
-        'email'=>'email|unique:member,%id%',
-        'mobile'=>'mobile|unique:member,%id%',
-        'password'=>'require|min:6',
-        'repassword'=>'require|confirm:password'
+        'username' => ['require', 'regex' => '/^[a-zA-Z][A-Za-z0-9\-\_]{5,19}$/', 'unique' => 'member,%id%'],
+        'email' => 'email|unique:member,%id%',
+        'mobile' => 'mobile|unique:member,%id%',
+        'password' => 'require|min:6',
+        'repassword' => 'require|confirm:password'
     );
 
     protected $message   = array(
         'username.require' => '请填写用户名',
         'username.unique' => '用户名已被占用',
-        'username.regex'=>'用户名格式不正确',
+        'username.regex' => '用户名格式不正确',
         'email' => '邮箱格式错误',
         'email.unique' => '邮箱已被占用',
         'mobile' => '手机号码格式错误',
@@ -36,8 +37,8 @@ class MemberValidate extends BaseUniqueValidate
 
 
     protected $scene = array(
-        'register'=>['username','password','repassword','email','mobile'],
-        'edit'=>['email','mobile'],
-        'repassword'=>['password','repassword']
+        'register' => ['username', 'password', 'repassword', 'email', 'mobile'],
+        'edit' => ['email', 'mobile'],
+        'repassword' => ['password', 'repassword']
     );
 }

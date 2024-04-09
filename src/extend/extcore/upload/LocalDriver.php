@@ -7,25 +7,29 @@ namespace extcore\upload;
  * Class LocalDriver
  * @package extcore\upload
  */
-class LocalDriver implements UploadInterface{
+class LocalDriver implements UploadInterface
+{
 
-	protected $config = array();
-	protected $errorMsg = '';
+    protected $config = array();
+    protected $errorMsg = '';
 
-    public function __construct( $config = array() ) {
-		$this->config = $config;
+    public function __construct($config = array())
+    {
+        $this->config = $config;
     }
 
-    public function rootPath($path) {
-    	if(!(is_dir($path) && is_writable($path))){
+    public function rootPath($path)
+    {
+        if (!(is_dir($path) && is_writable($path))) {
             $this->errorMsg = '上传根目录不存在！';
             return false;
         }
         return true;
     }
 
-    public function checkPath($path) {
-    	if (!$this->mkdir($path)) {
+    public function checkPath($path)
+    {
+        if (!$this->mkdir($path)) {
             return false;
         } else {
             if (!is_writable($path)) {
@@ -37,31 +41,34 @@ class LocalDriver implements UploadInterface{
         }
     }
 
-    public function saveFile($file) {
-        $savepath=$file['savepath'] . $file['savename'];
-		if(!move_uploaded_file($file['tmp_name'], $savepath)) {
+    public function saveFile($file)
+    {
+        $savepath = $file['savepath'] . $file['savename'];
+        if (!move_uploaded_file($file['tmp_name'], $savepath)) {
             $this->errorMsg = '文件上传保存错误！';
             return false;
-		}
-		$file['url']=ltrim($savepath,'.');
+        }
+        $file['url'] = ltrim($savepath, '.');
         return $file;
     }
 
-    public function mkdir($path){
+    public function mkdir($path)
+    {
         $dir = $path;
-        if(is_dir($dir)){
+        if (is_dir($dir)) {
             return true;
         }
         try {
             mkdir($dir, 0777, true);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             $this->errorMsg = "上传目录 '{$path}' 创建失败！";
             return false;
         }
         return true;
     }
 
-    public function getError(){
+    public function getError()
+    {
         return $this->errorMsg;
     }
 }

@@ -16,7 +16,8 @@ use think\Facade;
  */
 class MemberTokenFacade extends Facade
 {
-    protected static function getFacadeClass(){
+    protected static function getFacadeClass()
+    {
         return \app\api\model\MemberTokenModel::class;
     }
 }

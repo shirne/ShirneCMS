@@ -25,8 +25,8 @@ use app\common\core\SimpleFacade;
  */
 class ProductCategoryFacade extends SimpleFacade
 {
-    protected static function getFacadeClass(){
+    protected static function getFacadeClass()
+    {
         return \app\common\model\ProductCategoryModel::class;
     }
-
 }

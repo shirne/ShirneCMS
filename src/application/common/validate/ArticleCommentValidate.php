@@ -7,8 +7,8 @@ use think\Validate;
 
 class ArticleCommentValidate extends Validate
 {
-    protected $rule=[
-        'article_id'=>'require',
-        'content'=>'require'
+    protected $rule = [
+        'article_id' => 'require',
+        'content' => 'require'
     ];
 }

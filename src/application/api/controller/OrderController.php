@@ -132,8 +132,8 @@ class OrderController extends AuthedController
                 'total_price' => $data['total_price'],
                 'total_postage' => $data['total_postage'],
             ];
-            if(isset($data['debit_amount'])){
-                $remark['debit_amount']=floatval($data['debit_amount']);
+            if (isset($data['debit_amount'])) {
+                $remark['debit_amount'] = floatval($data['debit_amount']);
             }
             if (isset($data['subscribe'])) {
                 $remark['subscribe'] = $data['subscribe'];

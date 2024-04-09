@@ -10,7 +10,7 @@ namespace shirne\common;
 class Image
 {
     /**
-     * @var resource
+     * @var resource|GdImage
      */
     private $image;
 
@@ -34,23 +34,23 @@ class Image
      */
     private $height;
 
-    public function __construct($init=array())
+    public function __construct($init = array())
     {
-        if(!empty($init)) {
-            if(!is_array($init)){
-                if(is_numeric($init)){
-                    $init=[
-                        'width'=>$init,
-                        'height'=>$init,
+        if (!empty($init)) {
+            if (!is_array($init)) {
+                if (is_numeric($init)) {
+                    $init = [
+                        'width' => $init,
+                        'height' => $init,
                     ];
-                }else{
-                    $init=['file'=>$init];
+                } else {
+                    $init = ['file' => $init];
                 }
             }
             if (isset($init['file'])) {
-                if(isset($init['type'])){
+                if (isset($init['type'])) {
                     $this->loadFromFile($init['file'], $init['type']);
-                }else {
+                } else {
                     $this->loadFromFile($init['file']);
                 }
             } elseif (isset($init['width'])) {
@@ -74,7 +74,7 @@ class Image
 
     public function __get($name)
     {
-        if(property_exists($this,$name)){
+        if (property_exists($this, $name)) {
             return $this->$name;
         }
         return NULL;
@@ -87,7 +87,7 @@ class Image
      */
     public function type($type)
     {
-        $this->type=$type;
+        $this->type = $type;
         return $this;
     }
 
@@ -98,14 +98,14 @@ class Image
      * @param $bgColor int|string|array
      * @return $this
      */
-    public function create($width, $height, $bgColor=0)
+    public function create($width, $height, $bgColor = 0)
     {
         $this->width = $width;
         $this->height = $height;
         $this->image = imagecreatetruecolor($width, $height);
         $this->type = 'png';
 
-        if(!is_int($bgColor))$bgColor=$this->hex2color($bgColor);
+        if (!is_int($bgColor)) $bgColor = $this->hex2color($bgColor);
         imagefill($this->image, 0, 0, $bgColor);
 
         return $this;
@@ -119,16 +119,16 @@ class Image
      */
     public function fill($color, $range = null)
     {
-        if(is_string($color) || is_array($color)) {
+        if (is_string($color) || is_array($color)) {
             $color = $this->hex2color($color);
         }
 
-        if($range == null){
+        if ($range == null) {
             $range = [0, 0, $this->width, $this->height];
         }
-        if(count($range) == 2){
+        if (count($range) == 2) {
             imagefill($this->image, $range[0], $range[1], $color);
-        }else {
+        } else {
             imagefilledrectangle($this->image, $range[0], $range[1], $range[2], $range[3], $color);
         }
 
@@ -170,17 +170,37 @@ class Image
      */
     public function scale($percent, $resampled = true)
     {
-        if($percent != 100) {
+        if ($percent != 100) {
             $newWidth = round($this->width * $percent * .01);
             $newHeight = round($this->height * $percent * .01);
 
             $newImage = imagecreatetruecolor($newWidth, $newHeight);
             if ($resampled) {
-                imagecopyresampled($newImage, $this->image, 0, 0, 0, 0,
-                    $newWidth, $newHeight, $this->width, $this->height);
+                imagecopyresampled(
+                    $newImage,
+                    $this->image,
+                    0,
+                    0,
+                    0,
+                    0,
+                    $newWidth,
+                    $newHeight,
+                    $this->width,
+                    $this->height
+                );
             } else {
-                imagecopyresized($newImage, $this->image, 0, 0, 0, 0,
-                    $newWidth, $newHeight, $this->width, $this->height);
+                imagecopyresized(
+                    $newImage,
+                    $this->image,
+                    0,
+                    0,
+                    0,
+                    0,
+                    $newWidth,
+                    $newHeight,
+                    $this->width,
+                    $this->height
+                );
             }
 
             imagedestroy($this->image);
@@ -203,8 +223,8 @@ class Image
     public function crop($x, $y, $width, $height)
     {
 
-        $newImage = imagecrop($this->image,compact('x','y','width','height'));
-        if($newImage){
+        $newImage = imagecrop($this->image, compact('x', 'y', 'width', 'height'));
+        if ($newImage) {
             $this->image = $newImage;
             $this->width = $width;
             $this->height = $height;
@@ -225,38 +245,67 @@ class Image
      * @param $bgColor string 包含模式需要填充底色
      * @return $this
      */
-    public function resize($width, $height, $mode=self::SCALE_MODE_CONTAIN, $bgColor = '000000')
+    public function resize($width, $height, $mode = self::SCALE_MODE_CONTAIN, $bgColor = '000000')
     {
 
-        if($width != $this->width || $height != $this->height) {
+        if ($width != $this->width || $height != $this->height) {
             $newImage = imagecreatetruecolor($width, $height);
 
-            if($mode == self::SCALE_MODE_CONTAIN){
+            if ($mode == self::SCALE_MODE_CONTAIN) {
                 $bgColor = $this->hex2color($bgColor);
-                imagefill($newImage,0,0,$bgColor);
+                imagefill($newImage, 0, 0, $bgColor);
 
-                $scale = min($width/$this->width, $height/$this->height);
+                $scale = min($width / $this->width, $height / $this->height);
                 $newWidth = round($this->width * $scale);
                 $newHeight = round($this->height * $scale);
 
                 $left = round(($width - $newWidth) * .5);
                 $top = round(($height - $newHeight) * .5);
-                imagecopyresampled($newImage, $this->image, $left, $top, 0, 0,
-                    $this->width, $this->height, $newWidth, $newHeight);
+                imagecopyresampled(
+                    $newImage,
+                    $this->image,
+                    $left,
+                    $top,
+                    0,
+                    0,
+                    $this->width,
+                    $this->height,
+                    $newWidth,
+                    $newHeight
+                );
+            } elseif ($mode == self::SCALE_MODE_COVER) {
 
-            }elseif($mode == self::SCALE_MODE_COVER){
-
-                $scale = min($this->width/$width, $this->height/$height);
+                $scale = min($this->width / $width, $this->height / $height);
                 $newWidth = round($width * $scale);
                 $newHeight = round($height * $scale);
 
                 $left = round(($this->width - $newWidth) * .5);
                 $top = round(($this->height - $newHeight) * .5);
-                imagecopyresampled($newImage, $this->image, 0, 0, $left, $top,
-                    $width, $height, $this->width - $left * 2, $this->height - $top * 2);
-            }else{
-                imagecopyresampled($newImage, $this->image, 0, 0, 0, 0,
-                    $width, $height, $this->width, $this->height);
+                imagecopyresampled(
+                    $newImage,
+                    $this->image,
+                    0,
+                    0,
+                    $left,
+                    $top,
+                    $width,
+                    $height,
+                    $this->width - $left * 2,
+                    $this->height - $top * 2
+                );
+            } else {
+                imagecopyresampled(
+                    $newImage,
+                    $this->image,
+                    0,
+                    0,
+                    0,
+                    0,
+                    $width,
+                    $height,
+                    $this->width,
+                    $this->height
+                );
             }
 
             imagedestroy($this->image);
@@ -277,14 +326,34 @@ class Image
      */
     public function forceResize($width, $height, $resampled = true)
     {
-        if($width != $this->width || $height != $this->height) {
+        if ($width != $this->width || $height != $this->height) {
             $newImage = imagecreatetruecolor($width, $height);
             if ($resampled) {
-                imagecopyresampled($newImage, $this->image, 0, 0, 0, 0,
-                    $width, $height, $this->width, $this->height);
+                imagecopyresampled(
+                    $newImage,
+                    $this->image,
+                    0,
+                    0,
+                    0,
+                    0,
+                    $width,
+                    $height,
+                    $this->width,
+                    $this->height
+                );
             } else {
-                imagecopyresized($newImage, $this->image, 0, 0, 0, 0,
-                    $width, $height, $this->width, $this->height);
+                imagecopyresized(
+                    $newImage,
+                    $this->image,
+                    0,
+                    0,
+                    0,
+                    0,
+                    $width,
+                    $height,
+                    $this->width,
+                    $this->height
+                );
             }
 
             imagedestroy($this->image);
@@ -310,14 +379,14 @@ class Image
 
         list($pwidth, $pheight, $type, $attr) = getimagesize($src);
         $image = new Image($src);
-        if(!$width){
+        if (!$width) {
             $width = $pwidth;
         }
-        if(!$height){
+        if (!$height) {
             $height = $pheight;
         }
-        imagecopyresized($this->image,$image->getResource(),$x,$y,0,0,$width,$height,$pwidth,$pheight);
-        $image=null;
+        imagecopyresized($this->image, $image->getResource(), $x, $y, 0, 0, $width, $height, $pwidth, $pheight);
+        $image = null;
 
         return $this;
     }
@@ -333,18 +402,18 @@ class Image
      * @param $color array|int|string [r, g, b]
      * @return $this
      */
-    public function text($text, $size, $x, $y, $angle = 0, $ttf='', $color = 0)
+    public function text($text, $size, $x, $y, $angle = 0, $ttf = '', $color = 0)
     {
-        $font=app()->getRuntimePath().$ttf;
-        if(!is_file($font)){
-            exit('字体文件'.$font.'不存在');
+        $font = app()->getRuntimePath() . $ttf;
+        if (!is_file($font)) {
+            exit('字体文件' . $font . '不存在');
         }
 
-        if(!is_int($color)){
-            $color=$this->hex2color($color);
+        if (!is_int($color)) {
+            $color = $this->hex2color($color);
         }
 
-        imagettftext($this->image,$size,$angle,$x,$y,$color,$font,$text);
+        imagettftext($this->image, $size, $angle, $x, $y, $color, $font, $text);
 
         return $this;
     }
@@ -357,15 +426,15 @@ class Image
      */
     public function save($file, $quality = 70)
     {
-        switch ($this->type){
+        switch ($this->type) {
             case 'gif':
-                imagegif($this->image,$file);
+                imagegif($this->image, $file);
                 break;
             case 'wbmp':
-                imagewbmp($this->image,$file);
+                imagewbmp($this->image, $file);
                 break;
             case 'png':
-                imagepng($this->image,$file);
+                imagepng($this->image, $file);
                 break;
             default:
                 imagejpeg($this->image, $file, $quality);
@@ -378,10 +447,10 @@ class Image
      * @param int $quality jpeg品质,其它格式无效
      * @return $this
      */
-    public function output($quality=70)
+    public function output($quality = 70)
     {
-        header('Content-Type: image/'.$this->type);
-        $this->save(NULL,$quality);
+        header('Content-Type: image/' . $this->type);
+        $this->save(NULL, $quality);
 
         return $this;
     }
@@ -394,12 +463,13 @@ class Image
      * @param null $image
      * @return int
      */
-    private function hex2color($hex, $image=null){
-        if($image == null)$image = $this->image;
+    private function hex2color($hex, $image = null)
+    {
+        if ($image == null) $image = $this->image;
 
-        if(is_array($hex)){
+        if (is_array($hex)) {
             $rgb = $hex;
-        }else {
+        } else {
             $rgb = $this->hex2rgb($hex);
         }
         $color = 0;
@@ -413,19 +483,19 @@ class Image
     }
     private function hex2rgb($hex)
     {
-        $hex = trim($hex,'# ');
-        $rgb[0]=hexdec(substr($hex,0,2));
-        $rgb[1]=hexdec(substr($hex,2,2));
-        $rgb[2]=hexdec(substr($hex,4,2));
-        if(strlen($hex)>7){
-            $rgb[3]=hexdec(substr($hex,6,2));
+        $hex = trim($hex, '# ');
+        $rgb[0] = hexdec(substr($hex, 0, 2));
+        $rgb[1] = hexdec(substr($hex, 2, 2));
+        $rgb[2] = hexdec(substr($hex, 4, 2));
+        if (strlen($hex) > 7) {
+            $rgb[3] = hexdec(substr($hex, 6, 2));
         }
         return $rgb;
     }
 
     public function __destruct()
     {
-        if($this->image){
+        if ($this->image) {
             imagedestroy($this->image);
         }
     }

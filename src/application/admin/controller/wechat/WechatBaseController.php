@@ -16,25 +16,25 @@ use think\Db;
  */
 class WechatBaseController extends BaseController
 {
-    protected $wid=0;
-    protected $currentWechat=null;
+    protected $wid = 0;
+    protected $currentWechat = null;
 
     /**
      * @var Application|OfficialAccountApplication|MiniProgramApplication|OpenPlatformApplication|WorkApplication|OpenWorkApplication|MicroMerchantApplication|null 
      */
-    protected $wechatApp=null;
+    protected $wechatApp = null;
 
     public function initialize()
     {
         parent::initialize();
         $wid = $this->request->param('wid/d');
-        if(!$wid){
-            $wid=cookie('wechat_id');
-            $wid=intval($wid);
-        }else{
-            cookie('wechat_id',$wid);
+        if (!$wid) {
+            $wid = cookie('wechat_id');
+            $wid = intval($wid);
+        } else {
+            cookie('wechat_id', $wid);
         }
-        if($wid) {
+        if ($wid) {
             $this->wid = $wid;
             $this->wechatApp = $this->get_app($wid);
         }
@@ -44,31 +44,33 @@ class WechatBaseController extends BaseController
      * @param $wid
      * @return Application|OfficialAccountApplication|MiniProgramApplication|OpenPlatformApplication|WorkApplication|OpenWorkApplication|MicroMerchantApplication|null 
      */
-    protected function get_app($wid){
-        if(is_array($wid)){
-            $wechat=$wid;
-        }else {
+    protected function get_app($wid)
+    {
+        if (is_array($wid)) {
+            $wechat = $wid;
+        } else {
             $wechat = Db::name('Wechat')->where('id', $wid)->find();
-            if(empty($wechat)){
+            if (empty($wechat)) {
                 $this->error('公众号信息不存在');
             }
         }
-        $this->wid=$wechat['id'];
-        $this->currentWechat=$wechat;
-        $this->assign('wechat',$this->currentWechat);
-        $this->assign('wid',$wid);
-        
+        $this->wid = $wechat['id'];
+        $this->currentWechat = $wechat;
+        $this->assign('wechat', $this->currentWechat);
+        $this->assign('wid', $wid);
+
         return WechatModel::createApp($wechat);
     }
 
     /**
      * @param $exception \Exception
      */
-    protected function apiException($exception){
-        if($exception instanceof HttpException){
+    protected function apiException($exception)
+    {
+        if ($exception instanceof HttpException) {
             $response = $exception->formattedResponse;
-            if(!empty($response['errcode'])){
-                $this->error('API Error: '.$response['errcode'].' '.$response['errmsg']);
+            if (!empty($response['errcode'])) {
+                $this->error('API Error: ' . $response['errcode'] . ' ' . $response['errmsg']);
             }
         }
         $this->error($exception->getMessage());

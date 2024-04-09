@@ -24,7 +24,7 @@ class FileDownload extends Response
     protected function output($data)
     {
         try {
-            $this->header('Content-Disposition','attachment; filename='.$this->options['file_name']);
+            $this->header('Content-Disposition', 'attachment; filename=' . $this->options['file_name']);
 
             return $data;
         } catch (\Exception $e) {

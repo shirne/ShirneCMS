@@ -8,7 +8,5 @@ use think\Db;
 
 class MemberAddressModel extends BaseModel
 {
-    protected $pk='address_id';
-
-    
+    protected $pk = 'address_id';
 }

@@ -19,25 +19,28 @@ use EasyWeChat\MicroMerchant\Application as MicroMerchantApplication;
 class WechatModel extends BaseModel
 {
     protected $autoWriteTimestamp = true;
-    
-    public function setCertPathAttr($val, $data){
+
+    public function setCertPathAttr($val, $data)
+    {
         return $this->check_secure_file($val, $data);
     }
-    public function setKeyPathAttr($val, $data){
+    public function setKeyPathAttr($val, $data)
+    {
         return $this->check_secure_file($val, $data);
     }
-    protected function check_secure_file($val, $data){
-        if(!empty($val)){
-            if(strpos($val,'/../cert/')!==0){
-                $truefile = DOC_ROOT.$val;
-                if(file_exists($truefile)){
+    protected function check_secure_file($val, $data)
+    {
+        if (!empty($val)) {
+            if (strpos($val, '/../cert/') !== 0) {
+                $truefile = DOC_ROOT . $val;
+                if (file_exists($truefile)) {
                     $fileparts = pathinfo($truefile);
-                    if(!empty($fileparts['basename'])) {
+                    if (!empty($fileparts['basename'])) {
                         $newname = '/../cert/' . $data['appid'] . '/' . $fileparts['basename'];
                         $path = dirname(DOC_ROOT . $newname);
                         if (!is_dir($path)) mkdir($path, 0777, true);
                         rename($truefile, DOC_ROOT . $newname);
-    
+
                         return $newname;
                     }
                 }
@@ -46,41 +49,42 @@ class WechatModel extends BaseModel
         }
         return $val;
     }
-    
-    public static function to_config($data){
-        $options=[
+
+    public static function to_config($data)
+    {
+        $options = [
             'response_type' => 'array',
             'log' => config('log.wechat'),
         ];
-        if($data['account_type'] == 'work') {
+        if ($data['account_type'] == 'work') {
             $options['corp_id'] = $data['appid'];
             $options['secret'] = $data['appsecret'];
-            
+
             $options['agent_id'] = '';
-        }else if($data['account_type'] == 'openwork'){
+        } else if ($data['account_type'] == 'openwork') {
             $options['corp_id'] = $data['appid'];
-    
+
             $options['suite_id'] = '';
             $options['suite_secret'] = $data['appsecret'];
-            
+
             $options['token'] = $data['token'];
             $options['aes_key'] = $data['encodingaeskey'];
-            
-            $options['reg_template_id']='';
-            $options['redirect_uri_install']='';
-            $options['redirect_uri_single']='';
-            $options['redirect_uri_oauth']='';
-        }else if($data['account_type'] == 'micromerchant'){
+
+            $options['reg_template_id'] = '';
+            $options['redirect_uri_install'] = '';
+            $options['redirect_uri_single'] = '';
+            $options['redirect_uri_oauth'] = '';
+        } else if ($data['account_type'] == 'micromerchant') {
             $options['appid'] = $data['appid'];
             $options['key'] = '';
             $options['apiv3_key'] = '';
             $options['cert_path'] = '';
             $options['key_path'] = '';
-    
-    
+
+
             $options['serial_no'] = '';
             $options['certificate'] = '';
-        }else {
+        } else {
             $options['app_id'] = $data['appid'];
             $options['secret'] = $data['appsecret'];
             $options['token'] = $data['token'];
@@ -89,12 +93,14 @@ class WechatModel extends BaseModel
         return $options;
     }
 
-    public function toConfig(){
+    public function toConfig()
+    {
         return self::to_config($this);
     }
-    
+
     protected static $lastWechat = null;
-    public static function getLastWechat(){
+    public static function getLastWechat()
+    {
         return static::$lastWechat;
     }
 
@@ -105,25 +111,26 @@ class WechatModel extends BaseModel
      * @param array $payset 
      * @return false|Application|OfficialAccountApplication|MiniProgramApplication|OpenPlatformApplication|WorkApplication|OpenWorkApplication|MicroMerchantApplication|null 
      */
-    public static function createApp($wechat = 'default', $ispay=false, $payset=[]){
-        if($wechat === 'default'){
-            $wechat = static::where('is_default',1)->find();
-        }elseif(is_numeric($wechat)){
+    public static function createApp($wechat = 'default', $ispay = false, $payset = [])
+    {
+        if ($wechat === 'default') {
+            $wechat = static::where('is_default', 1)->find();
+        } elseif (is_numeric($wechat)) {
             $wechat = static::get($wechat);
-        }elseif(is_string($wechat)){
-            $wechat = static::where(['appid'=>$wechat])->find();
+        } elseif (is_string($wechat)) {
+            $wechat = static::where(['appid' => $wechat])->find();
         }
         static::$lastWechat = $wechat;
-        if(!empty($wechat)){
-            if($ispay){
-                $config=WechatModel::to_pay_config($wechat, $payset['notify']??'', $payset['use_cert']??false);
-                if(empty($config)){
+        if (!empty($wechat)) {
+            if ($ispay) {
+                $config = WechatModel::to_pay_config($wechat, $payset['notify'] ?? '', $payset['use_cert'] ?? false);
+                if (empty($config)) {
                     return false;
                 }
                 return Factory::payment($config);
             }
-            $options=self::to_config($wechat);
-        
+            $options = self::to_config($wechat);
+
             switch ($wechat['account_type']) {
                 case 'wechat':
                 case 'subscribe':
@@ -144,14 +151,15 @@ class WechatModel extends BaseModel
                 case 'micromerchant':
                     return Factory::microMerchant($options);
                 default:
-                    
+
                     break;
             }
         }
         return null;
     }
 
-    public static function to_pay_config($data,$notify='', $useCert=false){
+    public static function to_pay_config($data, $notify = '', $useCert = false)
+    {
 
         // 必要配置
         $config = [
@@ -161,22 +169,23 @@ class WechatModel extends BaseModel
         ];
 
         // 如需使用敏感接口（如退款、发送红包等）需要配置 API 证书路径(登录商户平台下载 API 证书)
-        if($useCert){
-            if(empty($data['cert_path']) || empty($data['key_path'])){
+        if ($useCert) {
+            if (empty($data['cert_path']) || empty($data['key_path'])) {
                 return false;
             }
-            $config['cert_path'] = realpath(DOC_ROOT.$data['cert_path']);
-            $config['key_path']  = realpath(DOC_ROOT.$data['key_path']);
+            $config['cert_path'] = realpath(DOC_ROOT . $data['cert_path']);
+            $config['key_path']  = realpath(DOC_ROOT . $data['key_path']);
         }
 
-        if($notify){
-            $notify = str_replace('__HASH__',$data['hash'],$notify);
-            $config['notify_url']=$notify;
+        if ($notify) {
+            $notify = str_replace('__HASH__', $data['hash'], $notify);
+            $config['notify_url'] = $notify;
         }
         return $config;
     }
 
-    public function toPayConfig(){
+    public function toPayConfig()
+    {
         return self::to_pay_config($this);
     }
 }

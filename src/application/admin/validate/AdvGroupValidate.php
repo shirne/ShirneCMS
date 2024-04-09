@@ -12,8 +12,8 @@ use app\common\core\BaseUniqueValidate;
  */
 class AdvGroupValidate extends BaseUniqueValidate
 {
-    protected $rule=array(
-        'title|广告组名称'=>'require',
-        'flag|调用标识'=>'require|unique:AdvGroup,%id%'
+    protected $rule = array(
+        'title|广告组名称' => 'require',
+        'flag|调用标识' => 'require|unique:AdvGroup,%id%'
     );
 }

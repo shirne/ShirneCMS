@@ -18,10 +18,10 @@ class PermissionController extends BaseController
      */
     public function index()
     {
-        $list=Db::name('permission')->order('parent_id ASC,sort_id ASC,id ASC')->select();
-        $menus=array();
-        foreach ($list as $item){
-            $menus[$item['parent_id']][]=$item;
+        $list = Db::name('permission')->order('parent_id ASC,sort_id ASC,id ASC')->select();
+        $menus = array();
+        foreach ($list as $item) {
+            $menus[$item['parent_id']][] = $item;
         }
         $this->assign('model', $menus);
         return $this->fetch();
@@ -30,8 +30,9 @@ class PermissionController extends BaseController
     /**
      * 清除缓存
      */
-    public function clearcache(){
-        cache('menus',null);
+    public function clearcache()
+    {
+        cache('menus', null);
         $this->success("清除成功", url('permission/index'));
     }
 
@@ -40,7 +41,8 @@ class PermissionController extends BaseController
      * @param $pid
      * @return mixed
      */
-    public function add($pid=0){
+    public function add($pid = 0)
+    {
         if ($this->request->isPost()) {
             $data = $this->request->post();
             $validate = new PermissionValidate();
@@ -56,8 +58,8 @@ class PermissionController extends BaseController
                 }
             }
         }
-        $model=array('pid'=>$pid);
-        $this->assign('perm',$model);
+        $model = array('pid' => $pid);
+        $this->assign('perm', $model);
         return $this->fetch('edit');
     }
 
@@ -66,31 +68,30 @@ class PermissionController extends BaseController
      * @param int $id
      * @return mixed
      */
-    public function edit($id=0)
+    public function edit($id = 0)
     {
         $id = intval($id);
         if ($this->request->isPost()) {
-            $data=$this->request->post();
-            $validate=new PermissionValidate();
+            $data = $this->request->post();
+            $validate = new PermissionValidate();
             $validate->setId($id);
 
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
-                if (Db::name('Permission')->where('id',$id)->update($data)) {
+                if (Db::name('Permission')->where('id', $id)->update($data)) {
                     $this->success(lang('Update success!'), url('permission/index'));
                 } else {
                     $this->error(lang('Update failed!'));
                 }
-
             }
         }
-        $model = Db::name('permission')->where('id' , $id)->find();
-        if(empty($model)){
+        $model = Db::name('permission')->where('id', $id)->find();
+        if (empty($model)) {
             $this->error('要编辑的项不存在');
         }
-        $this->assign('perm',$model);
-        $this->assign('id',$id);
+        $this->assign('perm', $model);
+        $this->assign('id', $id);
         return $this->fetch();
     }
 
@@ -98,15 +99,15 @@ class PermissionController extends BaseController
      * @param $id
      * @param int $status
      */
-    public function status($id,$status=1)
+    public function status($id, $status = 1)
     {
         $id = intval($id);
         $model = Db::name('Permission');
-        $result = $model->where('id',$id)->update(['disable'=>$status?1:0]);
-        if($result){
-            cache('menus',null);
+        $result = $model->where('id', $id)->update(['disable' => $status ? 1 : 0]);
+        if ($result) {
+            cache('menus', null);
             $this->success(lang('Update success!'), url('permission/index'));
-        }else{
+        } else {
             $this->error(lang('Update failed!'));
         }
     }
@@ -119,10 +120,10 @@ class PermissionController extends BaseController
     {
         $id = intval($id);
         $model = Db::name('Permission');
-        $result = $model->where('id',$id)->delete();
-        if($result){
+        $result = $model->where('id', $id)->delete();
+        if ($result) {
             $this->success(lang('Delete success!'), url('permission/index'));
-        }else{
+        } else {
             $this->error(lang('Delete failed!'));
         }
     }

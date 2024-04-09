@@ -2,36 +2,38 @@
 
 namespace shirne\common;
 
-class ValidateHelper{
-    
+class ValidateHelper
+{
+
     public static function isRegistrationNO($regid)
     {
-        if(strlen($regid) == 18){
+        if (strlen($regid) == 18) {
             return self::check_registration_no($regid);
-        }elseif(strlen($regid) == 15){
+        } elseif (strlen($regid) == 15) {
             return self::check_business_code($regid);
         }
-        
+
         return false;
     }
-    
-    private static function check_business_code($code){
-        if (empty($code)){
+
+    private static function check_business_code($code)
+    {
+        if (empty($code)) {
             return  false;
-        }else if(strlen($code)!=15){
+        } else if (strlen($code) != 15) {
             return false;
         }
-        if(!preg_match('/^[A-Za-z0-9]\w{14}$/',$code)){
+        if (!preg_match('/^[A-Za-z0-9]\w{14}$/', $code)) {
             return false;
         }
-        $businesslicensePrex14 = substr($code,0,14);
-        $businesslicense15 = substr($code,14,1);
+        $businesslicensePrex14 = substr($code, 0, 14);
+        $businesslicense15 = substr($code, 14, 1);
         $ints = [];
-        for($i=0; $i<14;$i++){
+        for ($i = 0; $i < 14; $i++) {
             $ints[$i] = intval($businesslicensePrex14[$i]);
         }
-        $checkcode=self::getCheckCode($ints);
-        if($checkcode == $businesslicense15){
+        $checkcode = self::getCheckCode($ints);
+        if ($checkcode == $businesslicense15) {
             return  true;
         }
         return false;
@@ -52,12 +54,12 @@ class ValidateHelper{
                 $cj = (0 == $si % 10 ? 10 : $si % 10) * 2;
                 if ($i == count($ints) - 1) {
                     $pj = ($cj % 11) == 0 ? 10 : ($cj % 11);
-                    
+
                     return $pj == 1 ? 1 : 11 - $pj;
                 }
             }
         }
-        
+
         return -1;
     }
     private static function check_registration_no($code)
@@ -69,10 +71,10 @@ class ValidateHelper{
         //$reg = '/^[1-9A-GY]{1}[1239]{1}[1-5]{1}[0-9]{5}[0-9A-Z]{10}$/';
         //$reg = '/^[^_IOZSVa-z\W]{2}\d{6}[^_IOZSVa-z\W]{10}$/';
         $reg = '/^([0-9ABCDEFGHJKLMNPQRTUWXY]{2})([0-9]{6})([0-9ABCDEFGHJKLMNPQRTUWXY]{10})$/';
-        if (!preg_match($reg,$code)) {
+        if (!preg_match($reg, $code)) {
             return false;
         }
-        
+
         $str = '0123456789ABCDEFGHJKLMNPQRTUWXY';
         $ws = [1, 3, 9, 27, 19, 26, 16, 17, 20, 29, 25, 13, 8, 24, 10, 30, 28];
         $codes = array();
@@ -83,52 +85,58 @@ class ValidateHelper{
             $sum += strpos($str, $codes[0][$i]) * $ws[$i];
         }
         $c18 = $str[31 - ($sum % 31)];
-        
+
         if ($c18 != $codes[1]) {
             return false;
         }
-        
+
         return true;
     }
-    
+
     public static function isRealname($name)
     {
         if (preg_match('/^([\xe4-\xe9][\x80-\xbf]{2}){2,4}$/', $name)) {
             return true;
         }
-        
+
         return false;
     }
 
-    public static function isEmail($email){
+    public static function isEmail($email)
+    {
         if (preg_match('/^[\w]+@[\w]+(\.[\w]+)+$/', $email)) {
             return true;
         }
         return false;
     }
-    
-    public static function isMobile($mobile){
+
+    public static function isMobile($mobile)
+    {
         if (preg_match('/^1[3-9][0-9]{9}$/', $mobile)) {
             return true;
         }
         return false;
     }
-    
-    public static function isBankcard($bankcard){
-        $checkcode=self::get_bankcard_checkcode(substr($bankcard,0,strlen($bankcard)-1));
-        if($checkcode == 'N'){
+
+    public static function isBankcard($bankcard)
+    {
+        $checkcode = self::get_bankcard_checkcode(substr($bankcard, 0, strlen($bankcard) - 1));
+        if ($checkcode == 'N') {
             return false;
         }
-        $code = substr($bankcard,-1);
+        $code = substr($bankcard, -1);
         if ($checkcode == $code) {
             return true;
         }
         return false;
     }
-    
-    private static function get_bankcard_checkcode($nocode_cardid) {
-        if (empty($nocode_cardid)
-            || !preg_match('/^\\d+$/',$nocode_cardid)) {
+
+    private static function get_bankcard_checkcode($nocode_cardid)
+    {
+        if (
+            empty($nocode_cardid)
+            || !preg_match('/^\\d+$/', $nocode_cardid)
+        ) {
             // 如果传的不是数据返回N
             return 'N';
         }
@@ -144,7 +152,7 @@ class ValidateHelper{
         }
         return ($luhmSum % 10 == 0) ? '0' : strval(10 - $luhmSum % 10);
     }
-    
+
     public static function isIdcard($idcard)
     {
         $regx = "/^\d{17}[0-9X]$/";

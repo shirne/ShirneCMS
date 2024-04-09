@@ -15,18 +15,20 @@ trait Email
      */
     protected $emailConfig;
 
-    protected function _setEmailConfig($config){
-        $this->emailConfig=$config;
+    protected function _setEmailConfig($config)
+    {
+        $this->emailConfig = $config;
     }
-    protected function _sendEmail($user,$subject,$body,$attachment=array()){
-        if(empty($this->emailConfig) && !empty($this->config)){
+    protected function _sendEmail($user, $subject, $body, $attachment = array())
+    {
+        if (empty($this->emailConfig) && !empty($this->config)) {
             $this->_setEmailConfig($this->config);
         }
-        if(!is_array($user)){
-            $split=explode('@',$user);
-            $user=array(
-                'username'=>$split[0],
-                'email'=>$user
+        if (!is_array($user)) {
+            $split = explode('@', $user);
+            $user = array(
+                'username' => $split[0],
+                'email' => $user
             );
         }
 
@@ -49,8 +51,8 @@ trait Email
         $mail->Subject    = $subject;
         $mail->MsgHTML($body);
         $mail->AddAddress($user['email'], $user['username']);
-        if(!empty($attachment)){ // 添加附件
-            foreach ($attachment as $file){
+        if (!empty($attachment)) { // 添加附件
+            foreach ($attachment as $file) {
                 is_file($file) && $mail->AddAttachment($file);
             }
         }

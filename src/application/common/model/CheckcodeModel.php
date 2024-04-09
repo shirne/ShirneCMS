@@ -10,5 +10,4 @@ use app\common\core\BaseModel;
  */
 class CheckcodeModel extends BaseModel
 {
-
 }

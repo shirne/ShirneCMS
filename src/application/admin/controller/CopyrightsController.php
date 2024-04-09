@@ -1,4 +1,5 @@
 <?php
+
 namespace app\admin\controller;
 
 use app\admin\validate\CopyrightsValidate;
@@ -16,20 +17,20 @@ class CopyrightsController extends BaseController
      * @param string $key
      * @return mixed|\think\response\Redirect
      */
-    public function index($key="")
+    public function index($key = "")
     {
-        if($this->request->isPost()){
-            return redirect(url('',['key'=>base64url_encode($key)]));
+        if ($this->request->isPost()) {
+            return redirect(url('', ['key' => base64url_encode($key)]));
         }
-        $key=empty($key)?"":base64url_decode($key);
+        $key = empty($key) ? "" : base64url_decode($key);
         $model = Db::name('copyrights');
-        
-        if(!empty($key)){
-            $model->whereLike('title',"%$key%");
+
+        if (!empty($key)) {
+            $model->whereLike('title', "%$key%");
         }
-        $lists=$model->order('ID DESC')->paginate(15);
-        $this->assign('lists',$lists);
-        $this->assign('page',$lists->render());
+        $lists = $model->order('ID DESC')->paginate(15);
+        $this->assign('lists', $lists);
+        $this->assign('page', $lists->render());
         return $this->fetch();
     }
 
@@ -37,18 +38,19 @@ class CopyrightsController extends BaseController
      * 添加版权署名
      * @return mixed
      */
-    public function add(){
+    public function add()
+    {
         if ($this->request->isPost()) {
             //如果用户提交数据
             $data = $this->request->post();
-            $validate=new CopyrightsValidate();
+            $validate = new CopyrightsValidate();
             $validate->setId(0);
 
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
-                
-                
+
+
 
                 if (Db::name('copyrights')->insert($data)) {
                     $this->success(lang('Add success!'), url('copyrights/index'));
@@ -57,9 +59,9 @@ class CopyrightsController extends BaseController
                 }
             }
         }
-        $model=array('sort'=>99);
-        $this->assign('model',$model);
-        $this->assign('id',0);
+        $model = array('sort' => 99);
+        $this->assign('model', $model);
+        $this->assign('id', 0);
         return $this->fetch('edit');
     }
 
@@ -73,14 +75,14 @@ class CopyrightsController extends BaseController
         if ($this->request->isPost()) {
             //如果用户提交数据
             $data = $this->request->post();
-            $validate=new CopyrightsValidate();
+            $validate = new CopyrightsValidate();
             $validate->setId($id);
 
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
 
-                $data['id']=$id;
+                $data['id'] = $id;
                 if (Db::name('copyrights')->update($data)) {
                     $this->success(lang('Update success!'), url('copyrights/index'));
                 } else {
@@ -90,11 +92,11 @@ class CopyrightsController extends BaseController
         }
 
         $model = Db::name('copyrights')->find($id);
-        if(empty($model)){
+        if (empty($model)) {
             $this->error('版权署名不存在');
         }
-        $this->assign('model',$model);
-        $this->assign('id',$id);
+        $this->assign('model', $model);
+        $this->assign('id', $id);
         return $this->fetch();
     }
 
@@ -107,9 +109,9 @@ class CopyrightsController extends BaseController
         $id = intval($id);
         $model = Db::name('copyrights');
         $result = $model->delete($id);
-        if($result){
+        if ($result) {
             $this->success(lang('Delete success!'), url('copyrights/index'));
-        }else{
+        } else {
             $this->error(lang('Delete failed!'));
         }
     }

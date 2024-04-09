@@ -15,37 +15,40 @@ class BaseModel extends Model
 {
     protected function getRelationAttribute($name, &$item)
     {
-        try{
+        try {
             return parent::getRelationAttribute($name, $item);
-        }catch (\InvalidArgumentException $e){
+        } catch (\InvalidArgumentException $e) {
             $traces = static::getTempFile($e->getTrace());
-            Log::notice($e->getMessage().' '.$traces['file'].':'.$traces['line']);
+            Log::notice($e->getMessage() . ' ' . $traces['file'] . ':' . $traces['line']);
             return null;
-        }catch (\Exception $e){
+        } catch (\Exception $e) {
             $traces = static::getTempFile($e->getTrace());
-            Log::notice($e->getMessage().' '.$traces['file'].':'.$traces['line']);
+            Log::notice($e->getMessage() . ' ' . $traces['file'] . ':' . $traces['line']);
             return null;
         }
     }
-    protected static function getTempFile($traces){
-        foreach($traces as $trace){
-            if(strpos($trace['file'],'\\temp\\') > 0){
+    protected static function getTempFile($traces)
+    {
+        foreach ($traces as $trace) {
+            if (strpos($trace['file'], '\\temp\\') > 0) {
                 return $trace;
             }
         }
         return $traces[0];
     }
-    
+
     protected $errno;
-    protected function setError($error, $errno=-1){
+    protected function setError($error, $errno = -1)
+    {
         $this->error = $error;
         $this->errno = $errno;
     }
-    public function getErrNo(){
+    public function getErrNo()
+    {
         return $this->errno;
     }
 
-    protected static $instances=[];
+    protected static $instances = [];
 
     /**
      * @return static
@@ -53,27 +56,27 @@ class BaseModel extends Model
     public static function getInstance()
     {
         $class = get_called_class();
-        if(!isset(static::$instances[$class])){
+        if (!isset(static::$instances[$class])) {
             static::$instances[$class] = new static();
         }
         return static::$instances[$class];
     }
 
-    protected function triggerStatus($item,$status, $newData=[])
+    protected function triggerStatus($item, $status, $newData = [])
     {
         return true;
     }
-    
+
     /**
      * @param $status
      * @return array
      */
     protected function beforeStatus($status)
     {
-        if(is_array($status)){
-            $data=$status;
-        }else{
-            $data['status']=$status;
+        if (is_array($status)) {
+            $data = $status;
+        } else {
+            $data['status'] = $status;
         }
         return $data;
     }
@@ -85,22 +88,23 @@ class BaseModel extends Model
      * @param $where string|array|int
      * @throws Exception
      */
-    public function updateStatus($toStatus,$where=null){
+    public function updateStatus($toStatus, $where = null)
+    {
         $data = $this->beforeStatus($toStatus);
-        if(empty($where)) {
-            if($this->isExists()){
-                $odata=$this->getOrigin();
-                $updated=Db::name($this->name)->where($this->getWhere())->update($data);
+        if (empty($where)) {
+            if ($this->isExists()) {
+                $odata = $this->getOrigin();
+                $updated = Db::name($this->name)->where($this->getWhere())->update($data);
                 if ($updated && $odata['status'] != $data['status']) {
                     $this->triggerStatus($odata, $data['status'], $data);
                 }
-            }else{
+            } else {
                 throw new \Exception('Update status with No data exists');
             }
-        }else {
+        } else {
             $lists = Db::name($this->name)->where($where)->select();
-            $updated=Db::name($this->name)->where($where)->update($data);
-            if($updated) {
+            $updated = Db::name($this->name)->where($where)->update($data);
+            if ($updated) {
                 foreach ($lists as $item) {
                     if ($item['status'] != $data['status']) {
                         $this->triggerStatus($item, $data['status'], $data);

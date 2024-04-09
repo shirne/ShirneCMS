@@ -11,7 +11,7 @@ use think\Validate;
  */
 class AdvItemValidate extends Validate
 {
-    protected $rule=array(
-        'title|广告名称'=>'require'
+    protected $rule = array(
+        'title|广告名称' => 'require'
     );
 }

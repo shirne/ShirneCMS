@@ -16,32 +16,32 @@ class WechatOfficialHandler extends BaseHandler implements EventHandlerInterface
      */
     public function handle($message = null)
     {
-        Log::info('接收到消息:'.var_export($message,true));
-        if(empty($message) || !isset($message['MsgType'])){
+        Log::info('接收到消息:' . var_export($message, true));
+        if (empty($message) || !isset($message['MsgType'])) {
             return '';
         }
-        
+
         //非订阅事件自动处理会员
-        if($message['MsgType'] != 'event' || $message['Event']!= 'subscribe'){
-            $hasUser = MemberOauthModel::where('openid',$message['FromUserName'])->find();
-            if(empty($hasUser) || empty($hasUser['member_id'])){
-                $userinfo=$this->app->user->get($message['FromUserName']);
+        if ($message['MsgType'] != 'event' || $message['Event'] != 'subscribe') {
+            $hasUser = MemberOauthModel::where('openid', $message['FromUserName'])->find();
+            if (empty($hasUser) || empty($hasUser['member_id'])) {
+                $userinfo = $this->app->user->get($message['FromUserName']);
                 $this->user = MemberOauthModel::checkUser($userinfo, $this->account);
-            }else{
+            } else {
                 $this->user = $hasUser;
             }
         }
 
         switch ($message['MsgType']) {
             case 'event':
-                switch ($message['Event']){
+                switch ($message['Event']) {
                     case 'subscribe':
-                        $userinfo=$this->app->user->get($message['FromUserName']);
-                        if(!empty($message['EventKey'])){
+                        $userinfo = $this->app->user->get($message['FromUserName']);
+                        if (!empty($message['EventKey'])) {
                             $subscribe = $this->onSubscribe($message, $userinfo);
-                            $scene_id=substr($message['EventKey'],8);
-                            return $this->onScan($message,$scene_id)?:$subscribe;
-                        }else {
+                            $scene_id = substr($message['EventKey'], 8);
+                            return $this->onScan($message, $scene_id) ?: $subscribe;
+                        } else {
                             return $this->onSubscribe($message, $userinfo);
                         }
                         break;
@@ -49,7 +49,7 @@ class WechatOfficialHandler extends BaseHandler implements EventHandlerInterface
                         return $this->onUnSubscribe($message);
                         break;
                     case 'SCAN':
-                        return $this->onScan($message,$message['EventKey']);
+                        return $this->onScan($message, $message['EventKey']);
                         break;
                     case 'scancode_waitmsg':
                         break;
@@ -84,7 +84,7 @@ class WechatOfficialHandler extends BaseHandler implements EventHandlerInterface
                 }
                 break;
             case 'text':
-                return $this->getTypeReply('keyword',$message['Content']);
+                return $this->getTypeReply('keyword', $message['Content']);
                 break;
             case 'image':
                 return '收到图片消息';
@@ -103,12 +103,12 @@ class WechatOfficialHandler extends BaseHandler implements EventHandlerInterface
                 break;
             case 'file':
                 return '收到文件消息';
-            // ... 其它消息
+                // ... 其它消息
             default:
                 return '收到其它消息';
                 break;
         }
-    
+
         return new Raw('');
     }
 }

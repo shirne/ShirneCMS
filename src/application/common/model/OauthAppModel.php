@@ -16,32 +16,34 @@ class OauthAppModel extends BaseModel
      * @throws Exception
      * @return bool|array
      */
-    public static function checkSign($data){
-        if(empty($data['appid']) || empty($data['sign'])){
+    public static function checkSign($data)
+    {
+        if (empty($data['appid']) || empty($data['sign'])) {
             return false;
         }
-        if(empty($data['timestamp']) || abs($data['timestamp']-time())>600){
+        if (empty($data['timestamp']) || abs($data['timestamp'] - time()) > 600) {
             return false;
         }
-        $app = Db::name('oauthApp')->where('appid',$data['appid'])->find();
-        if(empty($app)){
+        $app = Db::name('oauthApp')->where('appid', $data['appid'])->find();
+        if (empty($app)) {
             return false;
         }
         $sign = $data['sign'];
-        $mysign = md5(self::joinData($data).'&'.$app['appsecret']);
-        if($sign === $mysign){
+        $mysign = md5(self::joinData($data) . '&' . $app['appsecret']);
+        if ($sign === $mysign) {
             return $app;
         }
         return false;
     }
-    protected static function joinData($data){
-        $join=[];
+    protected static function joinData($data)
+    {
+        $join = [];
         ksort($data);
-        foreach ($data as $key=>$item){
-            if($key != 'sign'){
-                $join[]="{$key}={$item}";
+        foreach ($data as $key => $item) {
+            if ($key != 'sign') {
+                $join[] = "{$key}={$item}";
             }
         }
-        return implode('&',$join);
+        return implode('&', $join);
     }
 }

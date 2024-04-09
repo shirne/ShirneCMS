@@ -12,11 +12,10 @@ use think\Validate;
  */
 class NoticeValidate extends Validate
 {
-    protected $rule=array(
-        'title'=>'require'
+    protected $rule = array(
+        'title' => 'require'
     );
-    protected $message=array(
-        'title'=>'请填写公告标题'
+    protected $message = array(
+        'title' => '请填写公告标题'
     );
-
 }

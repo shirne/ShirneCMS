@@ -16,7 +16,8 @@ use app\common\core\SimpleFacade;
  */
 class TranslateFacade extends SimpleFacade
 {
-    protected static function getFacadeClass(){
+    protected static function getFacadeClass()
+    {
         return \app\common\model\TranslateModel::class;
     }
 }

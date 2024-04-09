@@ -12,5 +12,4 @@ use think\Validate;
  */
 class PaytypeValidate extends Validate
 {
-
 }

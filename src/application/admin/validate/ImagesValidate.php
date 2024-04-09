@@ -12,7 +12,7 @@ use think\Validate;
  */
 class ImagesValidate extends Validate
 {
-    protected $rule=array(
-        'title|图片名称'=>'require'
+    protected $rule = array(
+        'title|图片名称' => 'require'
     );
 }

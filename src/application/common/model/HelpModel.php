@@ -1,4 +1,5 @@
 <?php
+
 namespace app\common\model;
 
 use app\common\core\ContentModel;
@@ -13,15 +14,15 @@ use think\Paginator;
 class HelpModel extends ContentModel
 {
     protected $autoWriteTimestamp = true;
-    protected $type = ['prop_data'=>'array'];
+    protected $type = ['prop_data' => 'array'];
 
     function __construct($data = [])
     {
         parent::__construct($data);
-        $this->cateFacade=CategoryFacade::getFacadeInstance();
+        $this->cateFacade = CategoryFacade::getFacadeInstance();
         $this->searchFields = 'title|vice_title|description';
     }
-    
+
     /**
      * @param array|Paginator $lists
      * @param array $attrs
@@ -30,17 +31,17 @@ class HelpModel extends ContentModel
      * @throws \think\db\exception\ModelNotFoundException
      * @throws \think\exception\DbException
      */
-    protected function afterTagList($lists,$attrs){
-        if(!empty($lists)){
-            
-            
+    protected function afterTagList($lists, $attrs)
+    {
+        if (!empty($lists)) {
         }
         return $lists;
     }
 
-    protected function afterTagItem($item,$attrs=[]){
-        $item['digg']=$item['digg']+intval($item['v_digg']);
-        $item['views']=$item['views']+intval($item['v_views']);
+    protected function afterTagItem($item, $attrs = [])
+    {
+        $item['digg'] = $item['digg'] + intval($item['v_digg']);
+        $item['views'] = $item['views'] + intval($item['v_views']);
         return $item;
     }
 }

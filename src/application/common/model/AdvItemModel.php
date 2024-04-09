@@ -12,6 +12,5 @@ use think\Db;
  */
 class AdvItemModel extends BaseModel
 {
-    protected $type = ['elements'=>'array','ext_data'=>'array'];
-
+    protected $type = ['elements' => 'array', 'ext_data' => 'array'];
 }
