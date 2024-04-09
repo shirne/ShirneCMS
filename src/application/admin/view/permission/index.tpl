@@ -92,7 +92,6 @@
         {/foreach}
         </tbody>
     </table>
-    {$page|raw}
 </div>
 
 {/block}
