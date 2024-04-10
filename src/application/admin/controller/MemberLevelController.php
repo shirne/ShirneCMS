@@ -107,7 +107,10 @@ class MemberLevelController extends BaseController
             }
         }
         $this->assign('model', array(
-            'commission_layer' => 3
+            'commission_layer' => 3,
+            'style' => '',
+            'upgrade_type' => 1,
+            'diy_price' => 0
         ));
         $this->assign('styles', getTextStyles());
         return $this->fetch('update');

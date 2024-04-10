@@ -272,6 +272,7 @@ class PaylogController extends BaseController
         $this->assign('lists', $lists);
         $this->assign('page', $lists->render());
         $total = Db::name('MemberCashin')->where('status', 'gt', 0)->sum('amount');
+        $this->assign('ids', implode('', array_column($lists->items(), 'id')));
         $this->assign('total', $total);
         $this->assign('status', $status);
         $this->assign('keyword', $key);

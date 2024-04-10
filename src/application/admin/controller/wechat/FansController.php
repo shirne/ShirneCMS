@@ -129,6 +129,7 @@ class FansController extends WechatBaseController
             } catch (\Exception $e) {
                 $this->apiException($e);
             }
+            $this->updateUsers($users['user_info_list'], $this->wid);
 
             $sesskey = 'fans_count_' . $wechat['appid'];
             $count = (int)session($sesskey);

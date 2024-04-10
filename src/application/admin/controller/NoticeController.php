@@ -57,8 +57,8 @@ class NoticeController extends BaseController
         }
         $model = array('status' => 1);
         $this->assign('model', $model);
-        $this->assign('id', 0);
         $this->assign('flags', NoticeModel::getFlags());
+        $this->assign('id', 0);
         return $this->fetch('edit');
     }
 

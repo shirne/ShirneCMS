@@ -10,11 +10,11 @@
     <form method="post" action="" enctype="multipart/form-data">
         <div class="form-group">
             <label for="title">链接标题</label>
-            <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="输入链接标题">
+            <input type="text" name="title" class="form-control" value="{$model.title|default=''}" placeholder="输入链接标题">
         </div>
         <div class="form-group">
             <label for="url">链接地址</label>
-            <input type="text" name="url" class="form-control" value="{$model.url}" placeholder="输入链接标题">
+            <input type="text" name="url" class="form-control" value="{$model.url|default=''}" placeholder="输入链接标题">
         </div>
         <div class="form-row">
             <div class="form-group col">
@@ -28,7 +28,7 @@
             </div>
             <div class="form-group col">
                 <label for="sort">优先级</label>
-                <input type="text" name="sort" class="form-control" value="{$model.sort}" placeholder="越小越靠前" >
+                <input type="text" name="sort" class="form-control" value="{$model.sort|default=''}" placeholder="越小越靠前" >
             </div>
         </div>
         <div class="form-group">
@@ -48,7 +48,7 @@
             {/if}
         </div>
         <div class="form-group">
-            <input type="hidden" name="id" value="{$model.id}">
+            <input type="hidden" name="id" value="{$model.id|default=''}">
             <button type="submit" class="btn btn-primary">{$id>0?'保存':'添加'}</button>
         </div>
     </form>

@@ -57,7 +57,7 @@ class NavigatorController extends BaseController
                 }
 
                 unset($v['urltype']);
-                if (isset($v['subnavtype'])) unset($v['subnavtype']);
+                if ($v['subnavtype']) unset($v['subnavtype']);
                 unset($v['module']);
                 unset($v['cate_name']);
                 $newNavigator[] = $v;

@@ -19,7 +19,7 @@ class FeedbackController extends BaseController
      * @param string $key
      * @return mixed
      */
-    public function index($key = "")
+    public function index($key = "", $type = 0)
     {
         if ($this->request->isPost()) {
             return redirect(url('', ['key' => base64url_encode($key)]));
@@ -31,6 +31,9 @@ class FeedbackController extends BaseController
 
         if (!empty($key)) {
             $model->whereLike('feedback.email|feedback.content|member.nickname|member.username', "%$key%");
+        }
+        if ($type > 0) {
+            $model->where('feedback.type', $type);
         }
         $lists = $model->order('Feedback.id desc')->paginate(15);
         $this->assign('lists', $lists);

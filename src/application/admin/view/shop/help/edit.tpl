@@ -9,11 +9,11 @@
             <div class="form-row">
                 <div class="col form-group">
                     <label for="article-title">帮助标题</label>
-                    <input type="text" name="title" class="form-control" value="{$article.title}" id="article-title" placeholder="输入帮助标题">
+                    <input type="text" name="title" class="form-control" value="{$article.title|default=''}" id="article-title" placeholder="输入帮助标题">
                 </div>
                 <div class="col form-group">
                     <label for="vice_title">副标题</label>
-                    <input type="text" name="vice_title" class="form-control" value="{$article.vice_title}" >
+                    <input type="text" name="vice_title" class="form-control" value="{$article.vice_title|default=''}" >
                 </div>
             </div>
             <div class="form-row">
@@ -27,7 +27,7 @@
                 </div>
                 <div class="col form-group">
                     <label for="create_time">发布时间</label>
-                    <input type="text" name="create_time" class="form-control datepicker" data-format="YYYY-MM-DD hh:mm:ss" value="{$article.create_time|showdate}" placeholder="默认取当前系统时间" >
+                    <input type="text" name="create_time" class="form-control datepicker" data-format="YYYY-MM-DD hh:mm:ss" value="{$article.create_time|default='0'|showdate}" placeholder="默认取当前系统时间" >
                 </div>
             </div>
             <div class="form-group">
@@ -38,7 +38,7 @@
                         <label class="custom-file-label" for="upload_cover">选择文件</label>
                     </div>
                 </div>
-                {if $article['image']}
+                {if !empty($article['image'])}
                     <figure class="figure">
                         <img src="{$article.image}" class="figure-img img-fluid rounded" alt="image">
                         <figcaption class="figure-caption text-center">{$article.image}</figcaption>
@@ -50,7 +50,7 @@
                 <label class="pl-2 mr-2">自定义字段</label>
                 <div class="form-group col">
                     <div class="prop-groups">
-                        {foreach $article['prop_data'] as $k => $prop}
+                        {foreach $article['prop_data']??[] as $k => $prop}
                             <div class="input-group mb-2" >
                                 <input type="text" class="form-control" style="max-width:120px;" name="prop_data[keys][]" value="{$k}"/>
                                 <input type="text" class="form-control" name="prop_data[values][]" value="{$prop}"/>
@@ -65,30 +65,30 @@
                 <label class="pl-2 mr-2">浏览量</label>
                 <div class="form-group col">
                     <div class="input-group">
-                        <input type="text" class="form-control" readonly value="{$article['views']}" />
+                        <input type="text" class="form-control" readonly value="{$article['views']|default=''}" />
                         <span class="input-group-middle"><span class="input-group-text">+</span></span>
-                        <input type="text" class="form-control" name="v_views" title="虚拟浏览量" value="{$article['v_views']}" />
+                        <input type="text" class="form-control" name="v_views" title="虚拟浏览量" value="{$article['v_views']|default=''}" />
                     </div>
                 </div>
                 <label class="pl-2 mr-2">点赞数</label>
                 <div class="form-group col">
                     <div class="input-group">
-                        <input type="text" class="form-control" readonly value="{$article['digg']}" />
+                        <input type="text" class="form-control" readonly value="{$article['digg']|default=''}" />
                         <span class="input-group-middle"><span class="input-group-text">+</span></span>
-                        <input type="text" class="form-control" name="v_digg" title="虚拟点赞数" value="{$article['v_digg']}" />
+                        <input type="text" class="form-control" name="v_digg" title="虚拟点赞数" value="{$article['v_digg']|default=''}" />
                     </div>
                 </div>
             </div>
             <div class="form-group">
                 <label for="description">帮助摘要</label>
-                <textarea name="description" class="form-control" >{$article.description}</textarea>
+                <textarea name="description" class="form-control" >{$article.description|default=''}</textarea>
             </div>
             <div class="form-group">
                 <label for="article-content">帮助内容</label>
-                <script id="article-content" name="content" type="text/plain">{$article.content|raw}</script>
+                <script id="article-content" name="content" type="text/plain">{$article.content|default=''|raw}</script>
             </div>
             <div class="form-group submit-btn">
-                <input type="hidden" name="id" value="{$article.id}">
+                <input type="hidden" name="id" value="{$article.id|default=''}">
                 <button type="submit" class="btn btn-primary">{$id>0?'保存':'添加'}</button>
             </div>
         </form>

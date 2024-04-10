@@ -10,28 +10,28 @@
                 <div class="form-row">
                     <div class="col form-group">
                         <label for="page-title">页面标题</label>
-                        <input type="text" name="title" class="form-control" value="{$page.title}" id="page-title"
+                        <input type="text" name="title" class="form-control" value="{$page.title|default=''}" id="page-title"
                                placeholder="输入单页标题">
                     </div>
                     <div class="col form-group">
                         <label for="vice_title">副标题</label>
-                        <input type="text" name="vice_title" class="form-control" value="{$page.vice_title}"  >
+                        <input type="text" name="vice_title" class="form-control" value="{$page.vice_title|default=''}"  >
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="col form-group">
                         <label for="page-name">页面标识</label>
-                        <input type="text" name="name" class="form-control" value="{$page.name}" id="page-name"
+                        <input type="text" name="name" class="form-control" value="{$page.name|default=''}" id="page-name"
                                placeholder="输入标识,不能和其他页面标识重复">
                     </div>
                     <div class="col form-group">
                         <label for="sort">排序</label>
-                        <input type="text" name="sort" class="form-control" value="{$page.sort}" >
+                        <input type="text" name="sort" class="form-control" value="{$page.sort|default=''}" >
                     </div>
                     <div class="col form-group">
                         <label for="group">分组</label>
                         <div class="input-group">
-                        <input type="text" name="group" class="form-control" value="{$page.group}" placeholder="从右侧选择或填写一个新的分组" >
+                        <input type="text" name="group" class="form-control" value="{$page.group|default=''}" placeholder="从右侧选择或填写一个新的分组" >
                             <select class="form-control" onchange="var val=$(this).val();if(val)this.form.group.value=val;">
                                 <option value="">选择分组</option>
                                 {volist name="groups" id="group"}
@@ -106,10 +106,10 @@
                 </div>
                 <div class="form-group">
                     <label for="p-content">单页内容</label>
-                    <script id="p-content" name="content" type="text/plain">{$page.content|raw}</script>
+                    <script id="p-content" name="content" type="text/plain">{$page.content|default=''|raw}</script>
                 </div>
                 <div class="form-group submit-btn">
-                    <input type="hidden" name="id" value="{$page.id}">
+                    <input type="hidden" name="id" value="{$page.id|default=''}">
                     <button type="submit" class="btn btn-primary">{$id>0?'保存':'添加'}</button>
                 </div>
             </form>

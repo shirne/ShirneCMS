@@ -215,20 +215,20 @@ class HelpController extends BaseController
                 unset($data['delete_icon']);
                 unset($data['delete_image']);
 
-                if ($id > 0) {
-                    $result = Db::name('helpCategory')->where('id', $id)->update($data);
-                } else {
-                    $result = Db::name('helpCategory')->insert($data);
-                }
-
-                if ($result) {
+                try {
+                    if ($id > 0) {
+                        Db::name('helpCategory')->where('id', $id)->update($data);
+                    } else {
+                        Db::name('helpCategory')->insert($data);
+                    }
                     delete_image($delete_images);
                     HelpCategoryFacade::clearCache();
-                    $this->success(lang('Update success!'), url('tender.category/index'));
-                } else {
+                } catch (\Exception $err) {
                     delete_image([$data['icon'], $data['image']]);
-                    $this->error(lang('Update failed!'));
+                    $this->error(lang('Update failed: %s', [$err->getMessage()]));
                 }
+
+                $this->success(lang('Update success!'), url('shop.help/index'));
             }
         }
         $model = Db::name('helpCategory')->find($id);

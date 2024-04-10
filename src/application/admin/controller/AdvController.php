@@ -70,7 +70,7 @@ class AdvController extends BaseController
                 }
             }
         }
-        $model = array('status' => 1);
+        $model = array('status' => 1, 'type' => 0);
         $this->assign('model', $model);
         $this->assign('id', 0);
         return $this->fetch('update');

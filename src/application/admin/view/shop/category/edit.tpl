@@ -14,7 +14,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text">分类名称</span>
                             </div>
-                            <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="输入分类名称"/>
+                            <input type="text" name="title" class="form-control" value="{$model.title|default=''}" placeholder="输入分类名称"/>
                         </div>
                     </div>
                     <div class="form-group col">
@@ -22,7 +22,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text">简称</span>
                             </div>
-                            <input type="text" name="short" class="form-control" value="{$model.short}"/>
+                            <input type="text" name="short" class="form-control" value="{$model.short|default=''}"/>
                         </div>
                     </div>
                 </div>
@@ -47,7 +47,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text">分类别名</span>
                             </div>
-                        <input type="text" name="name" class="form-control" {$model['is_lock']?'readonly="readonly"':''} value="{$model.name}" placeholder="输入分类别名,不能和其他分类别名重复">
+                        <input type="text" name="name" class="form-control" {$model['is_lock']?'readonly="readonly"':''} value="{$model.name|default=''}" placeholder="输入分类别名,不能和其他分类别名重复">
                         </div>
                     </div>
                 </div>
@@ -95,7 +95,7 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text">排序</span>
                             </div>
-                        <input type="text" name="sort" class="form-control" value="{$model.sort}" placeholder="排序按从小到大">
+                        <input type="text" name="sort" class="form-control" value="{$model.sort|default=''}" placeholder="排序按从小到大">
                         </div>
                     </div>
                     <div class="form-group col">
@@ -115,14 +115,14 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text">关键词</span>
                         </div>
-                    <input type="text" name="keywords" class="form-control" value="{$model.keywords}"
+                    <input type="text" name="keywords" class="form-control" value="{$model.keywords|default=''}"
                            placeholder="请输入SEO关键词(选填)">
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="description">产品属性</label>
                     <div class="form-control">
-                        <input type="text" class="taginput" value="{$model.props|implode_cmp}" placeholder="填写多个值以,分割"  />
+                        <input type="text" class="taginput" value="{$model.props|default=''|implode_cmp}" placeholder="填写多个值以,分割"  />
                     </div>
                 </div>
                 {if !empty($specs)}
@@ -140,9 +140,9 @@
                 <div class="form-group">
                     <label for="description">描述信息</label>
                     <textarea name="description" cols="30" rows="10" class="form-control"
-                              placeholder="请输入分类描述(选填)">{$model.description}</textarea>
+                              placeholder="请输入分类描述(选填)">{$model.description|default=''}</textarea>
                 </div>
-                <input type="hidden" name="id" value="{$model.id}">
+                <input type="hidden" name="id" value="{$model.id|default=''}">
                 <button type="submit" class="btn btn-primary">{$id>0?'保存':'添加'}</button>
             </form>
         </div>

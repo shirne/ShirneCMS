@@ -23,7 +23,7 @@ class CategoryController extends BaseController
      */
     public function index()
     {
-        $this->assign('model', ProductCategoryFacade::getAllCategories());
+        $this->assign('model', ProductCategoryFacade::getCategories());
         return $this->fetch();
     }
 
@@ -58,14 +58,14 @@ class CategoryController extends BaseController
                 $model = ProductCategoryModel::create($data);
                 if ($model['id']) {
                     ProductCategoryFacade::clearCache();
-                    $this->success(lang('Add success!'), url('shop.category/index'));
+                    $this->success(lang('Add success!'), murl('shop.category/index'));
                 } else {
                     $this->error(lang('Add failed!'));
                 }
             }
         }
         $cate = ProductCategoryFacade::getCategories();
-        $model = array('sort' => 99, 'pid' => $pid, 'specs' => []);
+        $model = array('sort' => 99, 'pid' => $pid, 'specs' => [], 'is_hot' => 0);
         $this->assign('cate', $cate);
         $this->assign('model', $model);
         $this->assign('specs', SpecificationsModel::getList());
@@ -117,7 +117,7 @@ class CategoryController extends BaseController
                 } catch (\Exception $err) {
                     $this->error(lang('Update failed: %', [$err->getMessage()]));
                 }
-                $this->success(lang('Update success!'), url('shop.category/index'));
+                $this->success(lang('Update success!'), murl('shop.category/index'));
             }
         }
 
@@ -247,7 +247,7 @@ class CategoryController extends BaseController
         $result = Db::name('ProductCategory')->whereIn('id', $id)->where('is_lock', 0)->delete();
         if ($result) {
             ProductCategoryFacade::clearCache();
-            $this->success(lang('Delete success!'), url('shop.category/index'));
+            $this->success(lang('Delete success!'), murl('shop.category/index'));
         } else {
             $this->error(lang('Delete failed!'));
         }

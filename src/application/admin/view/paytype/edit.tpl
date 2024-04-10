@@ -10,7 +10,7 @@
     <form method="post" action=""  enctype="multipart/form-data">
         <div class="form-group">
             <label for="title">付款方式名称</label>
-            <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="输入付款方式名称">
+            <input type="text" name="title" class="form-control" value="{$model.title|default=''}" placeholder="输入付款方式名称">
         </div>
         <div class="form-group">
             <label for="cc">状态</label>
@@ -46,25 +46,25 @@
         <div class="form-group typebox type-unioncard">
             <label for="cc">银行名称</label>
             <div class="input-group">
-                <input type="text" name="bank" class="form-control" placeholder="请填写银行名称" value="{$model.bank}">
+                <input type="text" name="bank" class="form-control" placeholder="请填写银行名称" value="{$model.bank|default=''}">
                 <select id="cardlist" class="form-control" onchange="if(this.value)this.form.bank.value=this.value;">
                     <option value="">从列表中选择自动填写</option>
                     {foreach $banklist as $key => $v}
-                    <option value="{$v}" {$v==$model['bank']?'selected':''}>{$v}</option>
+                    <option value="{$v}" {if !empty($model['bank']) && $v==$model['bank']}selected{/if}>{$v}</option>
                     {/foreach}
                 </select>
             </div>
         </div>
         <div class="form-group typebox type-unioncard">
             <label for="cardname">开户名称</label>
-            <input type="text" name="cardname" class="form-control" placeholder="请填写开户名" value="{$model.cardname}">
+            <input type="text" name="cardname" class="form-control" placeholder="请填写开户名" value="{$model.cardname|default=''}">
         </div>
         <div class="form-group typebox type-unioncard">
             <label for="cardno">银行卡号</label>
-            <input type="text" name="cardno" class="form-control" placeholder="请填写卡号" value="{$model.cardno}">
+            <input type="text" name="cardno" class="form-control" placeholder="请填写卡号" value="{$model.cardno|default=''}">
         </div>
         <div class="form-group">
-            <input type="hidden" name="id" value="{$model.id}">
+            <input type="hidden" name="id" value="{$model.id|default=''}">
             <button type="submit" class="btn btn-primary">保存</button>
         </div>
     </form>

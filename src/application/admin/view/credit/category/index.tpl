@@ -8,12 +8,13 @@
     
     <div class="row list-header">
         <div class="col-6">
-            <a href="{:url('credit.category/add')}" class="btn btn-outline-primary btn-sm"><i class="ion-md-add"></i> 添加分类</a>
+            <a href="{:url('credit.category/add')}" class="btn btn-outline-primary btn-sm"><i class="ion-md-add"></i> {:lang('Add Category')}</a>
+            <a href="javascript:" class="btn btn-outline-primary btn-sm btn-batch-add"><i class="ion-md-albums"></i> {:lang('Batch add Categories')}</a>
         </div>
         <div class="col-6">
             <form action="{:url('credit.category/index')}" method="post">
                 <div class="input-group input-group-sm">
-                    <input type="text" class="form-control" name="key" placeholder="输入分类标题或者别名关键词搜索">
+                    <input type="text" class="form-control" name="key" placeholder="{:lang('Search title or slug')}">
                     <div class="input-group-append">
                       <button class="btn btn-outline-secondary" type="submit"><i class="ion-md-search"></i></button>
                     </div>
@@ -53,4 +54,55 @@
     </table>
 </div>
 
+{/block}
+
+{block name="script"}
+    <script type="text/html" id="cateselect">
+        <div class="form-group">
+            <select class="form-control">
+                <option value="0">顶级分类</option>
+                {volist name="lists" id="cate"}
+                    <option value="{$cate.id}">{$cate.html|raw} {$cate.title}</option>
+                {/volist}
+            </select>
+        </div>
+        <div class="form-group text-muted">每行一个分类，每个分类以空格区分名称、简称、别名，简称、别名可依次省略，别名必须使用英文字母<br />例：分类名称 分类简称 catename</div>
+    </script>
+    <script>
+        jQuery(function(){
+            $('.btn-batch-add').click(function(e){
+                var prmpt=dialog.prompt({
+                    title:'批量添加',
+                    content:$('#cateselect').html(),
+                    is_textarea:true
+                },function(args,body){
+                    var pid=body.find('select').val();
+                    var loading = dialog.loading('正在提交...');
+                    $.ajax({
+                        url:"{:url('batch')}",
+                        type:'POST',
+                        dataType:'json',
+                        data:{
+                            pid: pid,
+                            content: args
+                        },
+                        success:function(json){
+                            loading.close();
+                            if(json.code == 1){
+                                dialog.success(json.msg)
+                                prmpt.close()          
+                                setTimeout(function(){
+                                    location.reload()
+                                },1500);                      
+                            }else{
+                                dialog.error(json.msg)
+                            }
+
+                        }
+                    })
+                    return false;
+                })
+            })
+        })
+    </script>
 {/block}

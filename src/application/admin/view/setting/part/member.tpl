@@ -132,7 +132,7 @@
     <label for="v-referer_id" class="col-3 col-md-2 text-right align-middle">默认推荐人</label>
     <div class="col-9 col-md-8 col-lg-6">
         <div class="input-group">
-            <input type="text" class="form-control" name="v-referer_id" value="{$setting['referer_id']['value']}" placeholder="推荐人ID">
+            <input type="text" class="form-control" name="v-referer_id" value="{$setting['referer_id']['value']|default=''}" placeholder="推荐人ID">
             <div class="input-group-append">
                 <a href="javascript:" class="btn btn-outline-secondary userPick" data-filter='{"is_agent":1}'>选择推荐人</a>
             </div>

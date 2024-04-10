@@ -126,7 +126,7 @@
                 </div>
                 <div class="form-group">
                     <input type="hidden" name="wechat_id" value="{$model.wechat_id}">
-                    <button type="submit" class="btn btn-primary">{$model['id']>0?'保存':'添加'}</button>
+                    <button type="submit" class="btn btn-primary">{if !empty($model['id'])}保存{else}添加{/if}</button>
                 </div>
             </form>
         </div>

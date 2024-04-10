@@ -201,7 +201,7 @@ class ReplyController extends WechatBaseController
         $result = $model->where('id', 'in', idArr($id))->delete();
         if ($result) {
             user_log($this->mid, 'deletewechatreply', 1, '删除回复消息 ' . $id, 'manager');
-            $this->success("删除成功", url('wechat/reply', ['wid' => $wid]));
+            $this->success("删除成功", murl('wechat/reply', ['wid' => $wid]));
         } else {
             $this->error("删除失败");
         }

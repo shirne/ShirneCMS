@@ -44,7 +44,6 @@ class BaseController extends Controller
 
         $this->mid = session(SESSKEY_ADMIN_ID);
 
-
         $controller = strtolower($this->request->controller());
         if ($controller === 'login') {
             return;
@@ -55,18 +54,18 @@ class BaseController extends Controller
         }
         //判断用户是否登陆
         if (empty($this->mid)) {
-            $this->error(lang('Please login first!'), url('admin/login/index'));
+            $this->error(lang('Please login first!'), url('login/index'));
         }
         if (empty($this->manager)) {
             $this->manager = Db::name('Manager')->where('id', $this->mid)->find();
         }
         if (empty($this->manager)) {
             clearLogin();
-            $this->error(lang('Invalid account!'), url('admin/login/index'));
+            $this->error(lang('Invalid account!'), url('login/index'));
         }
         if (TEST_ACCOUNT != $this->manager['username'] && $this->manager['logintime'] != session(SESSKEY_ADMIN_LAST_TIME)) {
             clearLogin();
-            $this->error(lang('The account has login in other places!'), url('admin/login/index'));
+            $this->error(lang('The account has login in other places!'), url('login/index'));
         }
 
         //$controller=strtolower($this->request->controller());
@@ -152,7 +151,7 @@ class BaseController extends Controller
     public function _empty()
     {
 
-        $this->error('页面不存在', url('admin/index/index'));
+        $this->error('页面不存在', url('index/index'));
     }
 
     /**
@@ -206,13 +205,16 @@ class BaseController extends Controller
         }
 
         try {
-            Db::execute('ALTER TABLE ' . config('database.prefix') . $table . ' AUTO_INCREMENT = ' . intval($incre));
+            $succed = Db::execute('ALTER TABLE ' . config('database.prefix') . $table . ' AUTO_INCREMENT = ' . intval($incre));
         } catch (Exception $e) {
             $this->error($e->getMessage());
         }
-
-        user_log($this->mid, 'set_increment', 1, '设置[' . $table . ']起始id' . $incre, 'manager');
-        $this->success('设置成功');
+        if ($succed) {
+            user_log($this->mid, 'set_increment', 1, '设置[' . $table . ']起始id' . $incre, 'manager');
+            $this->success('设置成功');
+        } else {
+            $this->error('设置失败');
+        }
     }
 
     /**

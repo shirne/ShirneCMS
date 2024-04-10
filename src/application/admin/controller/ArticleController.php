@@ -6,6 +6,7 @@ use app\common\model\ArticleModel;
 use app\admin\validate\ArticleValidate;
 use app\admin\validate\ImagesValidate;
 use app\common\facade\CategoryFacade;
+use app\common\facade\ProductCategoryFacade;
 use app\common\model\ArticleCommentModel;
 use think\Db;
 use think\Exception;
@@ -43,10 +44,10 @@ class ArticleController extends BaseController
      * @param int $cate_id
      * @return mixed|\think\response\Redirect
      */
-    public function index($key = "", $cate_id = 0)
+    public function index($key = "", $cate_id = 0, $page_size = 10)
     {
         if ($this->request->isPost()) {
-            return redirect(url('', ['cate_id' => $cate_id, 'key' => base64url_encode($key)]));
+            return redirect(url('', ['cate_id' => $cate_id, 'page_size' => $page_size, 'key' => base64url_encode($key)]));
         }
         $key = empty($key) ? "" : base64url_decode($key);
         $model = Db::view('article', '*')->view('category', ['name' => 'category_name', 'title' => 'category_title'], 'article.cate_id=category.id', 'LEFT')
@@ -58,12 +59,13 @@ class ArticleController extends BaseController
             $model->whereIn('article.cate_id', CategoryFacade::getSubCateIds($cate_id));
         }
 
-        $lists = $model->order('id DESC')->paginate(10);
+        $lists = $model->order('id DESC')->paginate($page_size);
         $this->assign('lists', $lists);
         $this->assign('page', $lists->render());
         $this->assign('types', getArticleTypes());
         $this->assign('keyword', $key);
         $this->assign('cate_id', $cate_id);
+        $this->assign('page_size', $page_size);
         $this->assign("category", CategoryFacade::getCategories());
 
         return $this->fetch();
@@ -120,6 +122,7 @@ class ArticleController extends BaseController
         }
         $model = array('type' => 1, 'cate_id' => $cid, 'digg' => 0, 'views' => 0);
         $this->assign("category", CategoryFacade::getCategories());
+        $this->assign("brands", ProductCategoryFacade::getBrands(0));
         $this->assign('article', $model);
         $this->assign('types', getArticleTypes());
         $this->assign('copyrights', Db::name('copyrights')->order('sort asc')->select());
@@ -177,6 +180,7 @@ class ArticleController extends BaseController
             $this->error('文章不存在');
         }
         $this->assign("category", CategoryFacade::getCategories());
+        $this->assign("brands", ProductCategoryFacade::getBrands(0));
         $this->assign('article', $model);
         $this->assign('types', getArticleTypes());
         $this->assign('copyrights', Db::name('copyrights')->order('sort asc')->select());

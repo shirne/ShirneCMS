@@ -103,6 +103,7 @@ class WechatController extends BaseController
                             ->where('is_default', 1)
                             ->where('id', 'NEQ', $model['id'])->update(['is_default' => 0]);
                     }
+                    delete_image($this->deleteFiles);
                     $this->success(lang('Add success!'), url('wechat/index'));
                 } else {
                     delete_image($uploads);
@@ -110,7 +111,7 @@ class WechatController extends BaseController
                 }
             }
         }
-        $model = array();
+        $model = array('is_debug' => 0, 'type' => 'wechat', 'account_type' => 'service', 'hash' => '');
         $this->assign('model', $model);
         $this->assign('id', 0);
         return $this->fetch('edit');
@@ -161,10 +162,10 @@ class WechatController extends BaseController
                             ->where('is_default', 1)
                             ->where('id', 'NEQ', $id)->update(['is_default' => 0]);
                     }
-                    $this->success(lang('Update success!'), url('wechat/index'));
+                    $this->success(lang('Update success!') . $this->uploadError, url('wechat/index'));
                 } else {
                     delete_image($uploads);
-                    $this->error(lang('Update failed!'));
+                    $this->error(lang('Update failed!') . $this->uploadError);
                 }
             }
         }

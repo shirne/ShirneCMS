@@ -12,7 +12,7 @@
                     <div class="col form-group">
                         <label for="title">名称</label>
                         <div class="input-group">
-                            <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="输入公众号名称">
+                            <input type="text" name="title" class="form-control" value="{$model.title|default=''}" placeholder="输入公众号名称">
                             <div class="input-group-append">
                                 <label class="input-group-text">
                                     <input type="checkbox" name="is_default" value="1" {$model['is_default']?'checked':''}>
@@ -62,11 +62,11 @@
                 <div class="form-row">
                     <div class="col form-group">
                         <label for="account">账号</label>
-                        <input type="text" name="account" class="form-control" value="{$model.account}">
+                        <input type="text" name="account" class="form-control" value="{$model.account|default=''}">
                     </div>
                     <div class="col form-group">
                         <label for="original">原始账号</label>
-                        <input type="text" name="original" class="form-control" value="{$model.original}" >
+                        <input type="text" name="original" class="form-control" value="{$model.original|default=''}" >
                     </div>
                 </div>
                 <div class="form-row">
@@ -122,7 +122,7 @@
                 <div class="form-row">
                     <div class="col form-group">
                         <label for="account">海报链接</label>
-                        <input type="text" name="share_poster_url" class="form-control" value="{$model.share_poster_url}">
+                        <input type="text" name="share_poster_url" class="form-control" value="{$model.share_poster_url|default=''}">
                     </div>
                     <div class="col text-muted">
                         代理码使用 [code] 代替
@@ -131,32 +131,32 @@
                 <div class="form-row">
                     <div class="col form-group">
                         <label for="appid">APPID</label>
-                        <input type="text" name="appid" class="form-control" value="{$model.appid}">
+                        <input type="text" name="appid" class="form-control" value="{$model.appid|default=''}">
                     </div>
                     <div class="col form-group">
                         <label for="appsecret">APPSecret</label>
-                        <input type="text" name="appsecret" class="form-control" value="{$model.appsecret}">
+                        <input type="text" name="appsecret" class="form-control" value="{$model.appsecret|default=''}">
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="col form-group">
                         <label for="token">Token</label>
                         <div class="input-group">
-                        <input type="text" name="token" class="form-control" value="{$model.token}">
+                        <input type="text" name="token" class="form-control" value="{$model.token|default=''}">
                         <div class="input-group-append"><a href="javascript:" class="btn btn-outline-secondary gener-token">随机生成</a> </div>
                         </div>
                     </div>
                     <div class="col form-group">
                         <label for="encodingaeskey">AESKey</label>
                         <div class="input-group">
-                        <input type="text" name="encodingaeskey" class="form-control" value="{$model.encodingaeskey}">
+                        <input type="text" name="encodingaeskey" class="form-control" value="{$model.encodingaeskey|default=''}">
                             <div class="input-group-append"><a href="javascript:" class="btn btn-outline-secondary gener-aeskey">随机生成</a> </div>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="subscribeurl">订阅链接</label>
-                    <input type="text" name="subscribeurl" class="form-control" value="{$model.subscribeurl}">
+                    <input type="text" name="subscribeurl" class="form-control" value="{$model.subscribeurl|default=''}">
                 </div>
                 <h3>支付参数</h3>
                 <hr/>
@@ -164,13 +164,13 @@
                     <div class="col form-group">
                         <label for="token">商户ID</label>
                         <div class="input-group">
-                            <input type="text" name="mch_id" class="form-control" value="{$model.mch_id}">
+                            <input type="text" name="mch_id" class="form-control" value="{$model.mch_id|default=''}">
                         </div>
                     </div>
                     <div class="col form-group">
                         <label for="encodingaeskey">支付密钥</label>
                         <div class="input-group">
-                            <input type="text" name="key" class="form-control" value="{$model.key}">
+                            <input type="text" name="key" class="form-control" value="{$model.key|default=''}">
                         </div>
                     </div>
                 </div>
@@ -207,8 +207,8 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <input type="hidden" name="id" value="{$model.id}">
-                    <button type="submit" class="btn btn-primary">{$model['id']>0?'保存':'添加'}</button>
+                    <input type="hidden" name="id" value="{$model.id|default=''}">
+                    <button type="submit" class="btn btn-primary">{if !empty($model['id'])}保存{else}添加{/if}</button>
                 </div>
             </form>
         </div>
@@ -250,7 +250,7 @@
                             type: 'POST',
                             dataType: 'JSON',
                             data: {
-                                'id': '{$model.id}',
+                                'id': '{$model.id|default=''}',
                                 'field': 'hash',
                                 'value': newtoken
                             },

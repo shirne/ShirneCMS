@@ -15,11 +15,17 @@ class PromotionController extends BaseController
         if ($this->request->isPost()) {
 
             $data = $this->request->post();
+            $uploaded = $this->_upload('setting', 'upload_shop_avatar');
+            if ($uploaded) {
+                $data['v-shop_avatar'] = $uploaded['url'];
+                $delete_images[] = $data['delete_shop_avatar'];
+            } elseif ($this->uploadErrorCode > 102) {
+                $this->error($this->uploadError);
+            }
             $result = save_setting($data, 'shop');
             user_log($this->mid, 'shopconfig', 1, '修改商城配置', 'manager');
             $this->success('配置已更新', url('shop.promotion/index'));
         }
-
         $this->assign('setting', $setting['shop']);
         return $this->fetch();
     }

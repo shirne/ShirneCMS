@@ -59,7 +59,7 @@ class IndexController extends BaseController
         $password_error = session('password_error');
         if ($password_error) {
             $notices[] = [
-                'message' => '您的密码过于简单，建议使用<strong>6</strong>位长度以上<strong>大小写字母</strong>及<strong>数字</strong>，<strong>特殊符号</strong>混合的密码，请<a href="' . url('admin/index/profile') . '">立即修改</a>!',
+                'message' => '您的密码过于简单，建议使用<strong>6</strong>位长度以上<strong>大小写字母</strong>及<strong>数字</strong>，<strong>特殊符号</strong>混合的密码，请<a href="' . url('index/profile') . '">立即修改</a>!',
                 'level' => $password_error,
                 'type' => $password_error > 2 ? 'warning' : 'danger'
             ];

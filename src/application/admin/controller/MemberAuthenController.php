@@ -6,6 +6,7 @@ use app\common\model\MemberAgentModel;
 use app\common\model\MemberAuthenModel;
 use app\common\model\MemberLevelModel;
 use app\common\model\MemberModel;
+use app\common\validate\MemberAuthenValidate;
 use think\Db;
 
 /**
@@ -43,6 +44,15 @@ class MemberAuthenController extends BaseController
             $model = MemberAuthenModel::get($id);
             try {
                 $model->allowField(true)->save($data);
+                if ($data['status'] == 1) {
+                    $datas = ['type' => $model['type']];
+                    if ($model['type'] == 2) {
+                        $datas['company'] = $model['name'];
+                    }
+                    Db::name('member')->where('id', $model['member_id'])->update($datas);
+                } else {
+                    Db::name('member')->where('id', $model['member_id'])->update(['type' => 1]);
+                }
                 user_log($this->mid, 'updatememberauthen', 1, '审核升级申请' . $id, 'manager');
             } catch (\Exception $err) {
                 $this->error(lang('Update failed: %s', [$err->getMessage()]));

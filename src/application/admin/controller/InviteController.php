@@ -55,8 +55,7 @@ class InviteController extends BaseController
     public function add()
     {
         if ($this->request->isPost()) {
-
-            $model = Db::name("inviteCode");
+            $model = Db::name("invite_code");
             $mem_id = $this->request->post('member_id/d');
             $level_id = $this->request->post('level_id/d');
             $length = $this->request->post('length/d');

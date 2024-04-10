@@ -10,11 +10,11 @@
     <form method="post" action="" enctype="multipart/form-data">
         <div class="form-group">
             <label for="title">品牌名称</label>
-            <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="输入品牌名称">
+            <input type="text" name="title" class="form-control" value="{$model.title|default=''}" placeholder="输入品牌名称">
         </div>
         <div class="form-group">
             <label for="url">官网地址</label>
-            <input type="text" name="url" class="form-control" value="{$model.url}" placeholder="输入官网地址">
+            <input type="text" name="url" class="form-control" value="{$model.url|default=''}" placeholder="输入官网地址">
         </div>
         <div class="form-group">
             <label for="image">LOGO</label>
@@ -34,7 +34,7 @@
         </div>
         <div class="form-group">
             <label for="sort">优先级</label>
-            <input type="text" name="sort" class="form-control" value="{$model.sort}" placeholder="越小越靠前" >
+            <input type="text" name="sort" class="form-control" value="{$model.sort|default=''}" placeholder="越小越靠前" >
         </div>
         <div class="form-group">
             <label for="url">类目</label>
@@ -48,7 +48,7 @@
             </div>
         </div>
         <div class="form-group">
-            <input type="hidden" name="id" value="{$model.id}">
+            <input type="hidden" name="id" value="{$model.id|default=''}">
             <button type="submit" class="btn btn-primary">{$id>0?'保存':'添加'}</button>
         </div>
     </form>

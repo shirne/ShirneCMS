@@ -6,6 +6,8 @@ use app\common\model\MemberAgentModel;
 use app\common\model\MemberLevelModel;
 use app\common\model\MemberModel;
 use app\common\validate\MemberValidate;
+use shirne\excel\Excel;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use think\Db;
 use think\Exception;
 
@@ -76,10 +78,10 @@ class MemberController extends BaseController
      * @param string $referer
      * @return mixed|\think\response\Redirect
      */
-    public function index($type = 0, $start_date = '', $end_date = '', $keyword = '', $referer = '')
+    public function index($type = 0, $status = '', $start_date = '', $end_date = '', $keyword = '', $referer = '', $page_size = 15)
     {
         if ($this->request->isPost()) {
-            return redirect(url('', ['referer' => $referer, 'start_date' => $start_date, 'end_date' => $end_date, 'type' => $type, 'keyword' => base64url_encode($keyword)]));
+            return redirect(url('', ['referer' => $referer, 'start_date' => $start_date, 'end_date' => $end_date, 'type' => $type, 'page_size' => $page_size, 'keyword' => base64url_encode($keyword)]));
         }
         $keyword = empty($keyword) ? "" : base64url_decode($keyword);
         $model = Db::view('__MEMBER__ m', '*')
@@ -88,6 +90,7 @@ class MemberController extends BaseController
             $model->whereLike('m.username|m.nickname|m.mobile|m.email|m.realname|m.agentcode', "%$keyword%");
         }
 
+        $this->assign('refid', intval($referer));
         if ($referer !== '') {
             if ($referer != '0') {
                 $member = Db::name('Member')->where('id|username', $referer)->find();
@@ -95,13 +98,18 @@ class MemberController extends BaseController
                     $this->error('填写的会员不存在');
                 }
                 $model->where('m.referer', $member['id']);
+                $this->assign('refid', $member['id']);
             } else {
                 $model->where('m.referer', intval($referer));
             }
         }
+        if ($status !== '') {
+            $model->where('m.status', intval($status));
+        }
         if ($type > 0) {
             $model->where('m.type', intval($type) - 1);
         }
+
         if ($start_date !== '') {
             if ($end_date !== '') {
                 $model->whereBetween('m.create_time', [strtotime($start_date), strtotime($end_date . ' 23:59:59')]);
@@ -114,21 +122,155 @@ class MemberController extends BaseController
             }
         }
 
-        $lists = $model->order('m.id desc')->paginate(15);
+        $lists = $model->order('m.id desc')->paginate($page_size);
 
         $this->assign('lists', $lists);
+        $this->assign('page', $lists->render());
+        $this->assign('memberids', implode(',', array_column($lists->items(), 'id')));
         $this->assign('moneyTypes', getMoneyFields(false));
         $this->assign('types', getMemberTypes());
         $this->assign('typestyles', ['default', 'info', 'warning', 'danger']);
         $this->assign('levels', getMemberLevels());
         $this->assign('agents', MemberAgentModel::getCacheData());
         $this->assign('type', $type);
-        $this->assign('page', $lists->render());
+        $this->assign('status', intval($status));
         $this->assign('referer', $referer);
         $this->assign('start_date', $start_date);
         $this->assign('end_date', $end_date);
         $this->assign('keyword', $keyword);
+        $this->assign('page_size', $page_size);
         return $this->fetch();
+    }
+
+    /**
+     * 导出会员
+     * @param string $ids
+     * @param string $type
+     * @param string $keyword
+     * @param string $refid
+     * @param string $start_date
+     * @param string $end_date
+     * @param string $status
+     * @param string $subscrib
+     * @param string $fields
+     */
+    public function export($ids = '', $type = '', $keyword = '', $refid = '', $start_date = '', $end_date = '', $status = '', $subscrib = '', $fields = 'mobile')
+    {
+        $keyword = empty($keyword) ? "" : base64_decode($keyword);
+        $model = Db::view('__MEMBER__ m', '*')
+            ->view('__MEMBER__ rm', ['username' => 'refer_name', 'nickname' => 'refer_nickname', 'realname' => 'refer_realname', 'avatar' => 'refer_avatar', 'is_agent' => 'refer_agent'], 'm.referer=rm.id', 'LEFT');
+        if (empty($ids)) {
+            if (!empty($keyword)) {
+                $model->whereLike('m.username|m.nickname|m.email|m.realname', "%$keyword%");
+            }
+            if ($type !== '') {
+                $model->where('m.type', intval($type) - 1);
+            }
+            if ($status !== '') {
+                $model->where('m.status', intval($status));
+            }
+            if ($refid !== '') {
+                $model->where('m.referer', intval($refid));
+            }
+            if ($subscrib !== '') {
+                $model->where('m.is_subscrib', $subscrib);
+            }
+            if ($start_date !== '') {
+                if ($end_date !== '') {
+                    $model->whereBetween('m.create_time', [strtotime($start_date), strtotime($end_date . ' 23:59:59')]);
+                } else {
+                    $model->where('m.create_time', 'GT', strtotime($start_date));
+                }
+            } else {
+                if ($end_date !== '') {
+                    $model->where('m.create_time', 'LT', strtotime($end_date . ' 23:59:59'));
+                }
+            }
+        } elseif ($ids == 'status') {
+            $model->where('m.status', 1);
+        } else {
+            $model->whereIn('m.id', idArr($ids));
+        }
+
+        $fields = explode(',', $fields);
+        $rows = $model->order('m.create_time DESC')->select();
+        if (empty($rows)) {
+            $this->error('没有选择要导出的项目');
+        }
+
+        $excel = new Excel();
+        $headers = [];
+        if (in_array('id', $fields)) {
+            $headers[] = 'ID';
+        }
+        if (in_array('username', $fields)) {
+            $headers[] = '用户名';
+        }
+        if (in_array('nickname', $fields)) {
+            $headers[] = '昵称';
+        }
+        if (in_array('realname', $fields)) {
+            $headers[] = '姓名';
+        }
+        if (in_array('company', $fields)) {
+            $headers[] = '公司';
+        }
+        if (in_array('mobile', $fields)) {
+            $headers[] = '手机号';
+        }
+        if (in_array('email', $fields)) {
+            $headers[] = '邮箱';
+        }
+        if (in_array('balance', $fields) || in_array('money', $fields)) {
+            $headers[] = '余额';
+        }
+        if (in_array('credit', $fields)) {
+            $headers[] = '积分';
+        }
+        if (in_array('reward', $fields)) {
+            $headers[] = '佣金';
+        }
+        $excel->setHeader($headers);
+        for ($i = 0; $i < count($headers); $i++) {
+            $excel->setColumnType(chr(ord('A') + $i), DataType::TYPE_STRING);
+        }
+
+        foreach ($rows as $row) {
+            $rValues = [];
+            if (in_array('id', $fields)) {
+                $rValues[] = $row['id'];
+            }
+            if (in_array('username', $fields)) {
+                $rValues[] = $row['username'];
+            }
+            if (in_array('nickname', $fields)) {
+                $rValues[] = $row['nickname'];
+            }
+            if (in_array('realname', $fields)) {
+                $rValues[] = $row['realname'];
+            }
+            if (in_array('company', $fields)) {
+                $headers[] = $row['company'];
+            }
+            if (in_array('mobile', $fields)) {
+                $rValues[] = $row['mobile'];
+            }
+            if (in_array('email', $fields)) {
+                $rValues[] = $row['email'];
+            }
+            if (in_array('balance', $fields) || in_array('money', $fields)) {
+                $rValues[] = $row['money'];
+            }
+            if (in_array('credit', $fields)) {
+                $rValues[] = $row['credit'];
+            }
+            if (in_array('reward', $fields)) {
+                $rValues[] = $row['reward'];
+            }
+            $excel->addRow($rValues);
+        }
+
+        $excel->output(date('Y-m-d-H-i') . '-会员导出[' . count($rows) . '条]');
     }
 
     public function set_increment($incre)
@@ -225,7 +367,6 @@ class MemberController extends BaseController
         if ($member['is_agent'] == $agent_id) $this->success('设置成功');
 
         $result = MemberModel::setAgent($id, $agent_id, 'admin', '后台升级');
-
         if ($result) {
             if ($member['is_agent'] < 1) {
                 MemberModel::updateRecommend($member['referer']);
@@ -410,7 +551,6 @@ class MemberController extends BaseController
 
         $types = getLogTypes();
         $fields = getMoneyFields();
-
         $stacrows = $model->group('mlog.field,mlog.type')->setOption('field', [])->setOption('order', 'mlog.field')->field('mlog.field,mlog.type,sum(mlog.amount) as total_amount')->select();
         $statics = [];
         foreach ($stacrows as $row) {

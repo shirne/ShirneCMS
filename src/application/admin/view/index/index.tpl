@@ -21,7 +21,7 @@
                             <i class="ion-md-chatbubbles ion-5x"></i>
                         </div>
                         <div class="col text-right">
-                            <p class="announcement-heading text-nowrap">{$stat.feedback}</p>
+                            <p class="announcement-heading text-nowrap">{$stat['feedback']}</p>
                             <p class="announcement-text">留言</p>
                         </div>
                     </div>
@@ -42,7 +42,7 @@
                             <i class="ion-md-people ion-5x"></i>
                         </div>
                         <div class="col text-right">
-                            <p class="announcement-heading text-nowrap">{$stat.member}</p>
+                            <p class="announcement-heading text-nowrap">{$stat['member']}</p>
                             <p class="announcement-text">会员</p>
                         </div>
                     </div>

@@ -11,21 +11,21 @@
                     <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-prepend"><span class="input-group-text">商品名称</span> </div>
-                            <input type="text" name="title" class="form-control" value="{$goods.title}" id="goods-title" placeholder="输入商品名称">
+                            <input type="text" name="title" class="form-control" value="{$goods.title|default=''}" id="goods-title" placeholder="输入商品名称">
                             <div class="input-group-prepend"><span class="input-group-text">单位</span> </div>
-                            <input type="text" name="unit" class="form-control" value="{$goods.unit}" id="goods-unit" style="max-width:50px;" placeholder="单位">
+                            <input type="text" name="unit" class="form-control" value="{$goods.unit|default=''}" id="goods-unit" style="max-width:50px;" placeholder="单位">
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-prepend"><span class="input-group-text">商品简介</span> </div>
-                            <input type="text" name="vice_title" class="form-control" value="{$goods.vice_title}" id="goods-vice_title">
+                            <input type="text" name="vice_title" class="form-control" value="{$goods.vice_title|default=''}" id="goods-vice_title">
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-prepend"><span class="input-group-text">商品货号</span> </div>
-                            <input type="text" name="goods_no" class="form-control" value="{$goods.goods_no}" id="goods-goods_no" placeholder="输入商品货号">
+                            <input type="text" name="goods_no" class="form-control" value="{$goods.goods_no|default=''}" id="goods-goods_no" placeholder="输入商品货号">
                         </div>
                     </div>
                     <div class="form-group">
@@ -48,7 +48,7 @@
                                 <label class="custom-file-label" for="upload_image">选择文件</label>
                             </div>
                         </div>
-                        {if $goods['image']}
+                        {if !empty($goods['image'])}
                             <figure class="figure">
                                 <img src="{$goods.image}" class="figure-img img-fluid rounded" alt="image">
                                 <figcaption class="figure-caption text-center">{$goods.image}</figcaption>
@@ -78,7 +78,7 @@
                                 <label class="col-3">商品售价</label>
                                 <div class="form-group col">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" name="price" value="{$goods.price}" />
+                                        <input type="text" class="form-control" name="price" value="{$goods.price|default=''}" />
                                         <div class="input-group-append">
                                             <span class="input-group-text">积分</span>
                                         </div>
@@ -92,7 +92,7 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">￥</span>
                                         </div>
-                                        <input type="text" class="form-control" name="market_price" value="{$goods.market_price}" />
+                                        <input type="text" class="form-control" name="market_price" value="{$goods.market_price|default=''}" />
                                     </div>
                                 </div>
                             </div>
@@ -100,11 +100,11 @@
                                 <label class="col-3">库存</label>
                                 <div class="form-group col">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" name="storage" value="{$goods.storage}" />
+                                        <input type="text" class="form-control" name="storage" value="{$goods.storage|default=''}" />
                                         <div class="input-group-append">
                                             <span class="input-group-text">已售</span>
                                         </div>
-                                        <span class="form-control">{$goods.sale}</span>
+                                        <span class="form-control">{$goods.sale|default=''}</span>
                                     </div>
                                 </div>
                             </div>
@@ -112,7 +112,7 @@
                                 <label class="col-3">排序</label>
                                 <div class="form-group col">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" name="sort" value="{$goods.sort}" />
+                                        <input type="text" class="form-control" name="sort" value="{$goods.sort|default=''}" />
                                     </div>
                                     <div class="help-block text-muted">
                                         排序越大越靠前
@@ -135,7 +135,7 @@
                                 <label class="col-3">兑换数量</label>
                                 <div class="form-group col">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" name="limit" value="{$goods.limit}" />
+                                        <input type="text" class="form-control" name="limit" value="{$goods.limit|default='0'}" />
                                     </div>
                                     <div class="help-block text-muted">
                                         填写0不限制
@@ -150,7 +150,7 @@
                 <label class="col-2" style="max-width: 80px;">自定义属性</label>
                 <div class="form-group col">
                     <div class="prop-groups">
-                        {foreach $goods['prop_data'] as $k => $prop}
+                        {foreach $goods['prop_data']??[] as $k => $prop}
                             <div class="input-group mb-2" >
                                 <input type="text" class="form-control" style="max-width:120px;" name="prop_data[keys][]" value="{$k}"/>
                                 <input type="text" class="form-control" name="prop_data[values][]" value="{$prop}"/>
@@ -164,10 +164,10 @@
 
             <div class="form-group">
                 <label for="goods-content">商品介绍</label>
-                <script id="goods-content" name="content" type="text/plain">{$goods.content|raw}</script>
+                <script id="goods-content" name="content" type="text/plain">{$goods.content|default=''|raw}</script>
             </div>
 
-            <input type="hidden" name="id" value="{$goods.id}">
+            <input type="hidden" name="id" value="{$goods.id|default=''}">
             <button type="submit" class="btn btn-primary">{$id>0?'保存':'添加'}</button>
         </form>
     </div>

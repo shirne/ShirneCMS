@@ -58,7 +58,8 @@ class PermissionController extends BaseController
                 }
             }
         }
-        $model = array('pid' => $pid);
+        $model = array('pid' => $pid, 'id' => 0, 'parent_id' => $pid, 'disable' => 0);
+        $this->assign('id', 0);
         $this->assign('perm', $model);
         return $this->fetch('edit');
     }

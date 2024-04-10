@@ -64,7 +64,7 @@ class LinksController extends BaseController
                 }
             }
         }
-        $model = array('sort' => 99);
+        $model = array('sort' => 99, 'group' => '');
         $this->assign('model', $model);
         $this->assign('groups', $this->getGroups());
         $this->assign('id', 0);
@@ -110,8 +110,8 @@ class LinksController extends BaseController
         if (empty($model)) {
             $this->error('链接不存在');
         }
-        $this->assign('model', $model);
         $this->assign('groups', $this->getGroups());
+        $this->assign('model', $model);
         $this->assign('id', $id);
         return $this->fetch();
     }

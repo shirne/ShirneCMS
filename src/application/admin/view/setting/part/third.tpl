@@ -202,25 +202,25 @@
                 <div class="form-row form-group">
                     <label for="v-mail_host" class="col-3 col-md-2 text-right align-middle">邮箱主机</label>
                     <div class="col">
-                        <input type="text" class="form-control" name="v-mail_host" value="{$setting['mail_host']['value']}" placeholder="">
+                        <input type="text" class="form-control" name="v-mail_host" value="{$setting['mail_host']['value']|default=''}" placeholder="">
                     </div>
                 </div>
                 <div class="form-row form-group">
                     <label for="v-mail_port" class="col-3 col-md-2 text-right align-middle">邮箱端口</label>
                     <div class="col">
-                        <input type="text" class="form-control" name="v-mail_port" value="{$setting['mail_port']['value']}" placeholder="">
+                        <input type="text" class="form-control" name="v-mail_port" value="{$setting['mail_port']['value']|default=''}" placeholder="">
                     </div>
                 </div>
                 <div class="form-row form-group">
                     <label for="v-mail_user" class="col-3 col-md-2 text-right align-middle">邮箱账户</label>
                     <div class="col">
-                        <input type="text" class="form-control" name="v-mail_user" value="{$setting['mail_user']['value']}" placeholder="">
+                        <input type="text" class="form-control" name="v-mail_user" value="{$setting['mail_user']['value']|default=''}" placeholder="">
                     </div>
                 </div>
                 <div class="form-row form-group">
                     <label for="v-mail_pass" class="col-3 col-md-2 text-right align-middle">邮箱密码</label>
                     <div class="col">
-                        <input type="text" class="form-control" name="v-mail_pass" value="{$setting['mail_pass']['value']}" placeholder="">
+                        <input type="text" class="form-control" name="v-mail_pass" value="{$setting['mail_pass']['value']|default=''}" placeholder="">
                     </div>
                 </div>
             </div>

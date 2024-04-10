@@ -10,18 +10,18 @@
     <form method="post" action="" enctype="multipart/form-data">
         <div class="form-group">
             <label for="title">版权署名</label>
-            <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="输入版权署名">
+            <input type="text" name="title" class="form-control" value="{$model.title|default=''}" placeholder="输入版权署名">
         </div>
         <div class="form-group">
             <label for="sort">排序</label>
-            <input type="text" name="sort" class="form-control" value="{$model.sort}">
+            <input type="text" name="sort" class="form-control" value="{$model.sort|default=''}">
         </div>
         <div class="form-group">
             <label for="content">版权署名代码</label>
-            <textarea name="content" class="form-control">{$model.content|raw}</textarea>
+            <textarea name="content" class="form-control">{$model.content|default=''|raw}</textarea>
         </div>
         <div class="form-group">
-            <input type="hidden" name="id" value="{$model.id}">
+            <input type="hidden" name="id" value="{$model.id|default=''}">
             <button type="submit" class="btn btn-primary">{$id>0?'保存':'添加'}</button>
             <a class="ml-3" href="https://creativecommons.org/choose/?lang=zh" target="_blank">署名版权代码生成</a>
         </div>

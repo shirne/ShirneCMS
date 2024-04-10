@@ -4,7 +4,7 @@
     {include file="public/bread" menu="member_index" title="会员信息" /}
 
     <div id="page-wrapper">
-        <div class="page-header">{$model['id']>0?'编辑':'添加'}会员</div>
+        <div class="page-header">{if !empty($model['id'])}编辑{else}添加{/if}会员</div>
         <div id="page-content">
             <form action="" method="post">
                 <div class="row">
@@ -210,7 +210,7 @@
 
                 <div class="form-group">
                     <input type="hidden" name="id" value="{$model.id}">
-                    <button class="btn btn-primary" type="submit">{$model['id']>0?'保存':'添加'}</button>
+                    <button class="btn btn-primary" type="submit">{if !empty($model['id'])}保存{else}添加{/if}</button>
                 </div>
 
 

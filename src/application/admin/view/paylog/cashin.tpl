@@ -13,7 +13,7 @@
                     导出订单
                 </button>
                 <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                    <a class="dropdown-item" href="{:url('paylog/export',['order_ids'=>$orderids])}" target="_blank" >导出本页</a>
+                    <a class="dropdown-item" href="{:url('paylog/export',['order_ids'=>$ids])}" target="_blank" >导出本页</a>
                     <a class="dropdown-item" href="{:url('paylog/export',['status'=>1])}" target="_blank">导出未处理</a>
                     <a class="dropdown-item" href="{:url('paylog/export',['status'=>$status,'key'=>base64_encode($key)])}" target="_blank">导出筛选结果</a>
                 </div>

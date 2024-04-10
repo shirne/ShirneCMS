@@ -19,24 +19,25 @@ class ManagerController extends BaseController
 
     /**
      * 用户列表
-     * @param string $key
+     * @param string $keyword
      * @return mixed|\think\response\Redirect
      */
-    public function index($key = "")
+    public function index($keyword = "")
     {
         if ($this->request->isPost()) {
-            return redirect(url('', ['key' => base64url_encode($key)]));
+            return redirect(url('', ['keyword' => base64url_encode($keyword)]));
         }
-        $key = empty($key) ? "" : base64url_decode($key);
+        $keyword = empty($keyword) ? "" : base64url_decode($keyword);
         $model = Db::name('Manager');
-        if (!empty($key)) {
-            $model->whereLike('username|email', "%$key%");
+        if (!empty($keyword)) {
+            $model->whereLike('username|email', "%$keyword%");
         }
 
         $lists = $model->order('ID ASC')->paginate(15);
         $this->assign('lists', $lists);
         $this->assign('roles', ManagerRoleModel::getRoles());
         $this->assign('page', $lists->render());
+        $this->assign('keyword', $keyword);
         return $this->fetch();
     }
 

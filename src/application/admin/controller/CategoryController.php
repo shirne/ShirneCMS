@@ -63,7 +63,7 @@ class CategoryController extends BaseController
             }
         }
         $cate = CategoryFacade::getCategories();
-        $model = array('sort' => 99, 'pid' => $pid);
+        $model = array('sort' => 99, 'pid' => $pid, 'use_template' => 0);
         $this->assign('cate', $cate);
         $this->assign('model', $model);
         $this->assign('id', 0);

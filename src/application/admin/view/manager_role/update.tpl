@@ -5,14 +5,14 @@
     {include file="public/bread" menu="manager_index" title="角色信息"/}
 
     <div id="page-wrapper">
-        <div class="page-header">{$model['id']>0?'编辑':'添加'}角色</div>
+        <div class="page-header">{if !empty($model['id'])}编辑{else}添加{/if}角色</div>
         <div id="page-content">
 
             <form action="" method="post">
                 <div class="form-row">
                     <div class="form-group col">
                         <label>角色名</label>
-                        <input class="form-control" type="text" name="role_name" value="{$model.role_name}" />
+                        <input class="form-control" type="text" name="role_name" value="{$model.role_name|default=''}" />
                     </div>
                     <div class="form-group col">
                         <label>角色等级</label>
@@ -63,8 +63,8 @@
 
                 {/if}
                 <div class="form-group mt-2">
-                    <input type="hidden" name="id" value="{$model.id}">
-                    <button class="btn btn-primary" type="submit">{$model['id']>0?'保存':'添加'}</button>
+                    <input type="hidden" name="id" value="{$model.id|default=''}">
+                    <button class="btn btn-primary" type="submit">{if !empty($model['id'])}保存{else}添加{/if}</button>
                 </div>
 
 

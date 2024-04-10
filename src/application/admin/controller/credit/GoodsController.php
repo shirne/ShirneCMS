@@ -91,7 +91,7 @@ class GoodsController extends BaseController
                 }
             }
         }
-        $model = array('type' => 1, 'status' => 1, 'cate_id' => $cid, 'sale' => 0);
+        $model = array('type' => 1, 'status' => 1, 'cate_id' => $cid, 'sale' => 0, 'levels' => []);
         $this->assign("category", GoodsCategoryFacade::getCategories());
         $this->assign('goods', $model);
         $this->assign('levels', getMemberLevels());

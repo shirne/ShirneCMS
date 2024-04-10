@@ -10,17 +10,17 @@
     <form method="post" action="" enctype="multipart/form-data">
         <div class="form-group">
             <label for="title">关键字</label>
-            <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="输入关键字">
+            <input type="text" name="title" class="form-control" value="{$model.title|default=''}" placeholder="输入关键字">
         </div>
         <div class="form-group">
             <label for="description">关键字说明</label>
-            <input type="text" name="description" class="form-control" value="{$model.description}" placeholder="输入关键字说明">
+            <input type="text" name="description" class="form-control" value="{$model.description|default=''}" placeholder="输入关键字说明">
         </div>
         <div class="form-row">
             <div class="form-group col">
                 <label for="group">分组</label>
                 <div class="input-group">
-                <input type="text" name="group" class="form-control" value="{$model.group}" placeholder="关键字分组" >
+                <input type="text" name="group" class="form-control" value="{$model.group|default=''}" placeholder="关键字分组" >
                     <select class="form-control" onchange="var val=$(this).val();if(val)this.form.group.value=val;">
                         <option value="">选择分组</option>
                         {volist name="groups" id="group"}
@@ -31,7 +31,7 @@
             </div>
             <div class="form-group col">
                 <label for="v_hot">虚拟热度</label>
-                <input type="text" name="v_hot" class="form-control" value="{$model.v_hot}" placeholder="越大越靠前" >
+                <input type="text" name="v_hot" class="form-control" value="{$model.v_hot|default=''}" placeholder="越大越靠前" >
             </div>
         </div>
         <div class="form-group">
@@ -51,7 +51,7 @@
             {/if}
         </div>
         <div class="form-group">
-            <input type="hidden" name="id" value="{$model.id}">
+            <input type="hidden" name="id" value="{$model.id|default=''}">
             <button type="submit" class="btn btn-primary">{$id>0?'保存':'添加'}</button>
         </div>
     </form>
