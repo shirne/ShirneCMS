@@ -16,18 +16,18 @@
         }
     ],
     "require": {
-        "php": ">=7.2.0",
-        "ext-pdo":"*",
-        "ext-json":"*",
-        "ext-gd":"*",
-        "ext-curl":"*",
-        "ext-zip":"*",
-        "ext-fileinfo":"*",
+        "php": ">=7.2.0|>=8.0.0",
+        "ext-pdo": "*",
+        "ext-json": "*",
+        "ext-gd": "*",
+        "ext-curl": "*",
+        "ext-zip": "*",
+        "ext-fileinfo": "*",
         "shirne/thinkphp": "5.1.*",
         "shirne/captcha": "1.1.*",
         "shirne/think-image": "^1.0",
         "topthink/think-helper": "^1.0",
-        "endroid/qr-code": "^2.5",
+        "endroid/qr-code": "^2.5|^5.0.7",
         "phpoffice/phpspreadsheet": "^1.8",
         "phpmailer/phpmailer": "^6.5.0",
         "overtrue/wechat": "^4.6.0",
@@ -53,6 +53,6 @@
         }
     },
     "require-dev": {
-        "shirne/think-testing": "2.0.*"
+        "shirne/think-testing": "2.0.*|3.0.*"
     }
 }
