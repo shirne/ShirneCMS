@@ -56,7 +56,7 @@
                             <tr>
                                 <th>{$item['awdate']}</th>
                                 <td>{$item['member_count']}</td>
-                                <td>{$item['agent_count']}</td>
+                                <td>{$item['agent_count']|default=0}</td>
                             </tr>
                         {/foreach}
                     </tbody>

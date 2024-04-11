@@ -676,7 +676,7 @@ class MemberController extends BaseController
                 }
             }
         }
-        $model = array('type' => 1, 'status' => 1);
+        $model = array('type' => 1, 'status' => 1, 'gender' => 0);
         $this->assign('model', $model);
         $this->assign('types', getMemberTypes());
         return $this->fetch('update');

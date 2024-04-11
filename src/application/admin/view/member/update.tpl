@@ -16,21 +16,21 @@
                                     <label class="form-label">用户名</label>
                                     <div class="col">
                                         <input class="form-control" type="text" name="username"
-                                            value="{$model.username}" />
+                                            value="{$model.username|default=''}" />
                                     </div>
                                 </div>
                                 <div class="form-group form-row">
                                     <label class="form-label">真实姓名</label>
                                     <div class="col">
                                         <input class="form-control" type="text" name="realname"
-                                            value="{$model.realname}" />
+                                            value="{$model.realname|default=''}" />
                                     </div>
                                 </div>
                                 <div class="form-group form-row">
                                     <label class="form-label">邮箱</label>
                                     <div class="col">
                                         <div class="input-group">
-                                            <input class="form-control" type="text" name="email" value="{$model.email}" />
+                                            <input class="form-control" type="text" name="email" value="{$model.email|default=''}" />
                                             <div class="input-group-append">
                                                 <label class="input-group-text"><input type="checkbox" name="email_bind" value="1" {$model['email_bind']?'checked':''}>&nbsp;绑定</label>
                                             </div>
@@ -41,14 +41,14 @@
                                     <label class="form-label">手机号</label>
                                     <div class="col">
                                         <div class="input-group">
-                                            <input class="form-control" type="text" name="mobile" value="{$model.mobile}" />
+                                            <input class="form-control" type="text" name="mobile" value="{$model.mobile|default=''}" />
                                             <div class="input-group-append">
                                                 <label class="input-group-text"><input type="checkbox" name="mobile_bind" value="1" {$model['mobile_bind']?'checked':''}>&nbsp;绑定</label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                {if $model['id'] > 0}
+                                {if !empty($model['id'])}
                                     <div class="form-group form-row">
                                         <label class="form-label">新密码</label>
                                         <div class="col">
@@ -133,7 +133,7 @@
                                     <label class="form-label">昵称</label>
                                     <div class="col">
                                         <input class="form-control" type="text" name="nickname"
-                                            value="{$model.nickname}" />
+                                            value="{$model.nickname|default=''}" />
                                     </div>
                                 </div>
                                 <div class="form-group form-row">
@@ -158,26 +158,26 @@
                                 <div class="form-group form-row">
                                     <label class="form-label">QQ</label>
                                     <div class="col">
-                                        <input class="form-control" type="text" name="qq" value="{$model.qq}" />
+                                        <input class="form-control" type="text" name="qq" value="{$model.qq|default=''}" />
                                     </div>
                                 </div>
                                 <div class="form-group form-row">
                                     <label class="form-label">微信号</label>
                                     <div class="col">
-                                        <input class="form-control" type="text" name="wechat" value="{$model.wechat}" />
+                                        <input class="form-control" type="text" name="wechat" value="{$model.wechat|default=''}" />
                                     </div>
                                 </div>
                                 <div class="form-group form-row">
                                     <label class="form-label">支付宝</label>
                                     <div class="col">
-                                        <input class="form-control" type="text" name="alipay" value="{$model.alipay}" />
+                                        <input class="form-control" type="text" name="alipay" value="{$model.alipay|default=''}" />
                                     </div>
                                 </div>
                                 <div class="form-group form-row">
                                     <label class="form-label">生日</label>
                                     <div class="col">
                                         <input class="form-control datepicker" type="text" name="birth"
-                                            value="{$model.birth|showdate}" />
+                                            value="{$model.birth|default='0'|showdate}" />
                                     </div>
                                 </div>
                                 <div class="form-group form-row areabox">
@@ -199,7 +199,7 @@
                                     <label class="form-label">地址</label>
                                     <div class="col">
                                         <input class="form-control" type="text" name="address"
-                                            value="{$model.address}" />
+                                            value="{$model.address|default=''}" />
                                     </div>
                                 </div>
                             </div>
@@ -209,7 +209,7 @@
 
 
                 <div class="form-group">
-                    <input type="hidden" name="id" value="{$model.id}">
+                    <input type="hidden" name="id" value="{$model.id|default=''}">
                     <button class="btn btn-primary" type="submit">{if !empty($model['id'])}保存{else}添加{/if}</button>
                 </div>
 
@@ -225,15 +225,15 @@
             var locobj = new Location()
             $(".areabox").jChinaArea({
                 aspnet: true,
-                s1:"{$model.province}",
-                s2:"{$model.city}",
-                s3:"{$model.county}"
+                s1:"{$model.province|default=''}",
+                s2:"{$model.city|default=''}",
+                s3:"{$model.county|default=''}"
             });
             $(".agentareabox").jChinaArea({
                 aspnet: true,
-                s1:"{$model.agent_province}",
-                s2:"{$model.agent_city}",
-                s3:"{$model.agent_county}",
+                s1:"{$model.agent_province|default=''}",
+                s2:"{$model.agent_city|default=''}",
+                s3:"{$model.agent_county|default=''}",
                 onEmpty:function(s){
                     sel.prepend('<option value="">全部</option>');
                 }
