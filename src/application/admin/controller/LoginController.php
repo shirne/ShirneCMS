@@ -112,7 +112,7 @@ class LoginController extends BaseController
             $this->setAutoLogin($user);
         }
 
-        $this->success(lang('Login success!'), url('Index/index'));
+        $this->success(lang('Login success!'), url('admin/index/index'));
     }
 
     use Verify;
@@ -137,6 +137,6 @@ class LoginController extends BaseController
     public function logout()
     {
         clearLogin();
-        $this->success('退出成功', url('index'));
+        $this->success('退出成功', url('admin/login/index'));
     }
 }

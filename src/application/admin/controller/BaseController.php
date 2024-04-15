@@ -54,18 +54,18 @@ class BaseController extends Controller
         }
         //判断用户是否登陆
         if (empty($this->mid)) {
-            $this->error(lang('Please login first!'), url('login/index'));
+            $this->error(lang('Please login first!'), url('admin/login/index'));
         }
         if (empty($this->manager)) {
             $this->manager = Db::name('Manager')->where('id', $this->mid)->find();
         }
         if (empty($this->manager)) {
             clearLogin();
-            $this->error(lang('Invalid account!'), url('login/index'));
+            $this->error(lang('Invalid account!'), url('admin/login/index'));
         }
         if (TEST_ACCOUNT != $this->manager['username'] && $this->manager['logintime'] != session(SESSKEY_ADMIN_LAST_TIME)) {
             clearLogin();
-            $this->error(lang('The account has login in other places!'), url('login/index'));
+            $this->error(lang('The account has login in other places!'), url('admin/login/index'));
         }
 
         //$controller=strtolower($this->request->controller());
