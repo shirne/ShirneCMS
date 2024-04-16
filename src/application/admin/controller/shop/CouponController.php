@@ -51,13 +51,13 @@ class CouponController extends BaseController
             } else {
                 $model = ProductCouponModel::create($data);
                 if ($model['id']) {
-                    $this->success(lang('Add success!'), murl('shop.coupon/index'));
+                    $this->success(lang('Add success!'), url('shop.coupon/index'));
                 } else {
                     $this->error(lang('Add failed!'));
                 }
             }
         }
-        $model = array('status' => 1, 'type' => 1, 'bind_type' => 0, 'expiry_type' => 1);
+        $model = array('status' => 1, 'type' => 1, 'bind_type' => 0, 'expiry_type' => 1, 'cate_id' => 0);
         $this->assign('model', $model);
         $this->assign('levels', getMemberLevels());
         $this->assign("category", ProductCategoryFacade::getCategories());
@@ -88,7 +88,7 @@ class CouponController extends BaseController
                 } catch (\Exception $err) {
                     $this->error(lang('Update failed: %', [$err->getMessage()]));
                 }
-                $this->success(lang('Update success!'), murl('shop.coupon/index'));
+                $this->success(lang('Update success!'), url('shop.coupon/index'));
             }
         }
 
@@ -127,7 +127,7 @@ class CouponController extends BaseController
      */
     public function getlink($id)
     {
-        $url = murl('index/coupon/view', ['id' => $id], true, true);
+        $url = url('index/coupon/view', ['id' => $id], true, true);
         $qrcodeUrl = './uploads/couponqrcode/' . $id . '.png';
         if (!file_exists($qrcodeUrl)) {
             $content = gener_qrcode($url, 430);
@@ -160,7 +160,7 @@ class CouponController extends BaseController
             if ($count > 0) {
                 Db::name('MemberCoupon')->where('coupon_id', $id)->delete();
             }
-            $this->success(lang('Delete success!'), murl('shop.coupon/index'));
+            $this->success(lang('Delete success!'), url('shop.coupon/index'));
         } else {
             $this->error(lang('Delete failed!'));
         }
@@ -204,7 +204,7 @@ class CouponController extends BaseController
         $model = Db::name('MemberCoupon');
         $result = $model->delete($id);
         if ($result) {
-            $this->success(lang('Delete success!'), murl('shop.coupon/itemlist', array('gid' => $gid)));
+            $this->success(lang('Delete success!'), url('shop.coupon/itemlist', array('gid' => $gid)));
         } else {
             $this->error(lang('Delete failed!'));
         }
