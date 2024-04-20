@@ -28,7 +28,7 @@
             <tr>
                 <th width="50">编号</th>
                 <th width="70">图标</th>
-                <th>名称</th>
+                <th colspan="2">{:lang('Title')} <a href="javascript:" class="btn btn-outline-primary btn-sm expandall"><i class="ion-md-add"></i></a> <a href="javascript:" class="btn btn-outline-secondary btn-sm closeall"><i class="ion-md-remove "></i></a></th>
                 <th>别名</th>
                 <th>排序</th>
                 <th>状态</th>
@@ -36,12 +36,13 @@
             </tr>
         </thead>
         <tbody>
-        {php}$empty=list_empty(7);{/php}
+        {php}$empty=list_empty(8);{/php}
         {volist name="model" id="v" empty="$empty"}
-            <tr>
+            <tr data-level="{$v.level}">
                 <td>{$v.id}</td>
                 <td><img src="{$v.icon}" class="rounded" width="60"/></td>
-                <td>{$v.html|raw} {$v.title}&nbsp;<span class="badge badge-info">{$v.short}</span></td>
+                <td width="30">{if $v['count']>0}<a href="javascript:" class="btn btn-link btn-sm expandsub"><i class="ion-md-remove"></i></a>{/if}</td>
+                <td>{$v.html|raw} {$v.title} ({$v.count|default=0})&nbsp;<span class="badge badge-info">{$v.short}</span></td>
                 <td>{$v.name}</td>
                 <td>{$v.sort}</td>
                 <td data-url="{:url('status')}" data-id="{$v.id}">
@@ -120,6 +121,44 @@
                     })
                     return false;
                 })
+            })
+            
+            $('.closeall').click(function(){
+                $('tbody>tr').each(function(){
+                    var l = $(this).data('level')
+                    if(l>0){
+                        $(this).hide();
+                    }
+                })
+                $('tbody tr .expandsub i').attr('class','ion ion-md-add')
+            })
+            $('.expandall').click(function(){
+                $('tbody>tr').show()
+                $('tbody tr .expandsub i').attr('class','ion ion-md-remove')
+            })
+            $('.expandsub').click(function(){
+                var i = $(this).children('i')
+                var tr = $(this).parents('tr').eq(0)
+                var l = tr.data('level')
+                var n = tr.next()
+                if(i.attr('class').indexOf('remove')>0){
+                    i.attr('class','ion ion-md-add')
+                    while(n.data('level')>l){
+                        n.hide()
+                        n.find('.expandsub i').attr('class','ion ion-md-add')
+                        n = n.next()
+                    }
+
+                }else{
+                    i.attr('class','ion ion-md-remove')
+                    while(n.data('level')>l){
+                       if(n.data('level')==l+1) {
+                        n.show()
+
+                        }
+                        n = n.next()
+                    }
+                }
             })
         })
     </script>

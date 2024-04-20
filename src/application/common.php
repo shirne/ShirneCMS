@@ -1348,7 +1348,7 @@ function random_str($length = 6, $type = 'string', $convert = 0)
  * @param  string $pre [description]
  * @return array
  */
-function getSortedCategory(&$data, $pid = 0, $pre = "")
+function getSortedCategory(&$data, $pid = 0, $pre = "", $level = 0, &$count = 0)
 {
     $temp = array();
     $curdata = array_filter($data, function ($item) use ($pid) {
@@ -1361,16 +1361,22 @@ function getSortedCategory(&$data, $pid = 0, $pre = "")
     foreach ($curdata as $v) {
         $idx++;
         $islast = $idx == $count ? true : false;
+        $v['islast'] = $islast;
         $v['html'] = $islast ? ($pre . '└─') : ($pre . '├─');
-        $temp[] = $v;
+        $v['level'] = $level;
+        $subcount = 0;
         if ($islast) {
-            $temp = array_merge($temp, getSortedCategory($data, $v['id'], $pre . '　　'));
+            $sublist = getSortedCategory($data, $v['id'], $pre . '　　', $level + 1, $subcount);
         } else {
-            $temp = array_merge($temp, getSortedCategory($data, $v['id'], $pre . '│　'));
+            $sublist = getSortedCategory($data, $v['id'], $pre . '│　', $level + 1, $subcount);
         }
+        $v['count'] = $subcount;
+        $temp[] = $v;
+        $temp = array_merge($temp, $sublist);
     }
     return $temp;
 }
+
 
 
 function format_date($date_str, $format)
