@@ -25,10 +25,10 @@ class ImageCrop
     {
         $opts = array_merge($this->options, $opts);
         $img = $this->file;
-        $imgWidth = (int)$opts['w'];
-        $imgHeight = (int)$opts['h'];
-        $imgQuality = (int)$opts['q'];
-        $imgMode = strtolower(trim($opts['m']));
+        $imgWidth = isset($opts['w']) ? intval($opts['w']) : 0;
+        $imgHeight = isset($opts['h']) ? intval($opts['h']) : 0;
+        $imgQuality = isset($opts['q']) ? intval($opts['q']) : 0;
+        $imgMode = strtolower(isset($opts['m']) ? trim($opts['m']) : '');
 
         if (empty($img)) {
             exit();
