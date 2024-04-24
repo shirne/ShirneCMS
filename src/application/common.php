@@ -1160,6 +1160,23 @@ function idArr($id)
     }
 }
 
+function numberArr($id)
+{
+    if (is_array($id)) {
+        return array_map(function ($i) {
+            return floatval($i);
+        }, $id);
+    }
+    if (strpos($id, ',') > 0) {
+        $ids = explode(',', $id);
+        return array_map(function ($i) {
+            return floatval($i);
+        }, $ids);
+    } else {
+        return [floatval($id)];
+    }
+}
+
 /**
  * 检测文件编码
  * @param string $file 文件路径
