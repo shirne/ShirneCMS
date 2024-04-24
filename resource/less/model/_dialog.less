@@ -1,45 +1,94 @@
-.dialog-message{
-    font-size:18px;line-height:22px;
-    position: relative;
-    i{
-      font-size:22px;
+.modal-content {
+  border: 0;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, .2);
+}
+
+.modal-title {
+  font-size: 1.2rem;
+}
+
+.modal-body {
+  .mapbox {
+    height: 100%;
+  }
+}
+
+.modal-footer {
+  padding: 0;
+
+  .nav {
+    width: 100%;
+    margin: 0;
+  }
+
+  .btn {
+    line-height: 2.5rem;
+    margin: 0;
+    border-radius: 0;
+    border: 0;
+    border-left: 1px #e9ecef solid;
+
+    &:first-child {
+      border-left: 0;
+      border-bottom-left-radius: .3rem;
     }
-    .closebtn{
-      font-size:20px;
-      position: absolute;
-      right:0;
-      top:0;
-      color:#fff;
-      text-shadow: 0 1px 0 #fff;
-      transition: all .5s;
-      &:hover{
-        transform: rotate(180deg);
-      }
+
+    &:last-child {
+      border-bottom-right-radius: .3rem;
     }
   }
-  
+}
+
+.dialog-message {
+  font-size: 18px;
+  line-height: 22px;
+  position: relative;
+
+  i {
+    font-size: 22px;
+  }
+
+  .closebtn {
+    font-size: 20px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    color: #fff;
+    text-shadow: 0 1px 0 #fff;
+    transition: all .5s;
+
+    &:hover {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+
 .list-loading {
-    color: #999;
-    margin: 50px 0;
-    text-align: center;
+  color: #999;
+  margin: 50px 0;
+  text-align: center;
+}
+
+.list-group .list-group-item {
+  .badge {
+    margin-left: 5px;
   }
-  
-  .list-group .list-group-item {
-    .badge{
-      margin-left:5px;
-    }
-    &.disabled{
-      .title{
-        color:#999;
-      }
-    }
-    &.active {
-      .title {
-        color : #fff;
-      }
-      .badge-secondary{
-        background-color : #f8f9fa;
-        color:#212529;
-      }
+
+  &.disabled {
+    .title {
+      color: #999;
     }
   }
+
+  &.active {
+    .title {
+      color: #fff;
+    }
+
+    .badge-secondary {
+      background-color: #f8f9fa;
+      color: #212529;
+    }
+  }
+}
