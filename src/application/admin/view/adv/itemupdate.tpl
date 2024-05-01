@@ -7,43 +7,43 @@
 <div id="page-wrapper">
     <div class="page-header">{$id>0?'编辑':'添加'}广告</div>
     <div class="page-content">
-    <form method="post" class="page-form" action="" enctype="multipart/form-data">
-        <div class="form-group">
-            <label for="title">名称</label>
-            <input type="text" name="title" class="form-control" value="{$model.title}" placeholder="名称">
-        </div>
-        {if $group['type'] == 1}
+        <form method="post" class="page-form" action="" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="title">名称</label>
+                <input type="text" name="title" class="form-control" value="{$model.title|default=''}" placeholder="名称">
+            </div>
+            {if $group['type'] == 1}
             <div class="form-row">
                 <div class="form-group col">
                     <label for="image">预览图</label>
                     <div class="input-group">
                         <div class="custom-file">
-                            <input type="file" class="custom-file-input" name="upload_image"/>
+                            <input type="file" class="custom-file-input" name="upload_image" />
                             <label class="custom-file-label" for="upload_image">选择文件</label>
                         </div>
                     </div>
-                    {if $model['image']}
-                        <figure class="figure">
-                            <img src="{$model.image}" class="figure-img img-fluid rounded" alt="image">
-                            <figcaption class="figure-caption text-center">{$model.image}</figcaption>
-                        </figure>
-                        <input type="hidden" name="delete_image" value="{$model.image}"/>
+                    {if !empty($model['image'])}
+                    <figure class="figure">
+                        <img src="{$model.image}" class="figure-img img-fluid rounded" alt="image">
+                        <figcaption class="figure-caption text-center">{$model.image}</figcaption>
+                    </figure>
+                    <input type="hidden" name="delete_image" value="{$model.image}" />
                     {/if}
                 </div>
                 <div class="form-group col">
                     <label for="video">视频</label>
                     <div class="input-group">
                         <div class="custom-file">
-                            <input type="file" class="custom-file-input" name="upload_video"/>
+                            <input type="file" class="custom-file-input" name="upload_video" />
                             <label class="custom-file-label" for="upload_video">选择文件</label>
                         </div>
                     </div>
-                    {if $model['video']}
-                        <figure class="figure">
-                            <video src="{$model.video}" controls class="figure-img img-fluid rounded" alt="video"></video>
-                            <figcaption class="figure-caption text-center">{$model.video}</figcaption>
-                        </figure>
-                        <input type="hidden" name="delete_video" value="{$model.video}"/>
+                    {if !empty($model['video'])}
+                    <figure class="figure">
+                        <video src="{$model.video}" controls class="figure-img img-fluid rounded" alt="video"></video>
+                        <figcaption class="figure-caption text-center">{$model.video}</figcaption>
+                    </figure>
+                    <input type="hidden" name="delete_video" value="{$model.video}" />
                     {/if}
                 </div>
             </div>
@@ -52,90 +52,94 @@
                 <label for="image">图片</label>
                 <div class="input-group">
                     <div class="custom-file">
-                        <input type="file" class="custom-file-input" name="upload_image"/>
+                        <input type="file" class="custom-file-input" name="upload_image" />
                         <label class="custom-file-label" for="upload_image">选择文件</label>
                     </div>
                 </div>
-                {if $model['image']}
-                    <figure class="figure">
-                        <img src="{$model.image}" class="figure-img img-fluid rounded" alt="image">
-                        <figcaption class="figure-caption text-center">{$model.image}</figcaption>
-                    </figure>
-                    <input type="hidden" name="delete_image" value="{$model.image}"/>
+                {if !empty($model['image'])}
+                <figure class="figure">
+                    <img src="{$model.image}" class="figure-img img-fluid rounded" alt="image">
+                    <figcaption class="figure-caption text-center">{$model.image}</figcaption>
+                </figure>
+                <input type="hidden" name="delete_image" value="{$model.image}" />
                 {/if}
             </div>
-        {/if}
-        
-        {if !empty($group['ext_set']['key'])}
-        <div class="form-row">
-            {foreach $group['ext_set']['key'] as $key => $ikey}
+            {/if}
+
+            {if !empty($group['ext_set']['key'])}
+            <div class="form-row">
+                {foreach $group['ext_set']['key'] as $key => $ikey}
                 <div class="col-6 form-group">
                     <label for="image">{$group['ext_set']['value'][$key]}</label>
-                    <input type="text" name="ext[{$ikey}]" class="form-control" value="{$model['ext'][$ikey]}" />
+                    <input type="text" name="ext[{$ikey}]" class="form-control"
+                        value="{$model['ext'][$ikey]|default=''}" />
                 </div>
-            {/foreach}
-        </div>
-        {/if}
-        {if $group['type'] == 0}
+                {/foreach}
+            </div>
+            {/if}
+            {if $group['type'] == 0}
             <div class="form-group">
                 <label for="image">元件</label>
                 <div>
                     <div class="row elements-box">
 
                     </div>
-                    <a href="javascript:" class="btn btn-outline-dark btn-sm addelement"><i class="ion-md-add"></i> 添加元件</a>
+                    <a href="javascript:" class="btn btn-outline-dark btn-sm addelement"><i class="ion-md-add"></i>
+                        添加元件</a>
                 </div>
             </div>
-        {/if}
+            {/if}
 
-        <div class="form-group">
-            <label for="image">有效期</label>
-            <div class="form-row date-range">
-                <div class="input-group col">
-                    <div class="input-group-prepend">
-                    <span class="input-group-text">从</span>
+            <div class="form-group">
+                <label for="image">有效期</label>
+                <div class="form-row date-range">
+                    <div class="input-group col">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">从</span>
+                        </div>
+                        <input type="text" name="start_date" class="form-control fromdate"
+                            value="{$model.start_date|default=0|showdate=''}" />
                     </div>
-                    <input type="text" name="start_date" class="form-control fromdate" value="{$model.start_date|showdate=''}" />
-                </div>
-                <div class="input-group col">
-                    <div class="input-group-prepend">
-                    <span class="input-group-text">至</span>
+                    <div class="input-group col">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">至</span>
+                        </div>
+                        <input type="text" name="end_date" class="form-control todate"
+                            value="{$model.end_date|default=0|showdate=''}" />
                     </div>
-                    <input type="text" name="end_date" class="form-control todate" value="{$model.end_date|showdate=''}" />
+                </div>
+
+            </div>
+            <div class="form-row">
+                <div class="col form-group">
+                    <label for="url">链接</label>
+                    <input type="text" name="url" class="form-control" value="{$model.url|default=''}" />
+                </div>
+                <div class="col form-group">
+                    <label for="image">排序</label>
+                    <input type="text" name="sort" class="form-control" value="{$model.sort|default=''}" />
                 </div>
             </div>
 
-        </div>
-        <div class="form-row">
-            <div class="col form-group">
-                <label for="url">链接</label>
-                <input type="text" name="url" class="form-control" value="{$model.url}" />
+            <div class="form-group">
+                <label for="cc">状态</label>
+                <label class="radio-inline">
+                    <input type="radio" name="status" value="1" {if $model['status']==1}checked="checked" {/if}>显示
+                </label>
+                <label class="radio-inline">
+                    <input type="radio" name="status" value="0" {if $model['status']==0}checked="checked" {/if}>隐藏
+                </label>
             </div>
-            <div class="col form-group">
-                <label for="image">排序</label>
-                <input type="text" name="sort" class="form-control" value="{$model.sort}" />
+            <div class="form-group submit-btn">
+                <input type="hidden" name="group_id" value="{$model.group_id}">
+                <button type="submit" class="btn btn-primary">{$id>0?'保存':'添加'}</button>
             </div>
-        </div>
-
-        <div class="form-group">
-            <label for="cc">状态</label>
-            <label class="radio-inline">
-                <input type="radio" name="status" value="1" {if $model['status'] == 1}checked="checked"{/if} >显示
-            </label>
-            <label class="radio-inline">
-                <input type="radio" name="status" value="0" {if $model['status'] == 0}checked="checked"{/if}>隐藏
-            </label>
-        </div>
-        <div class="form-group submit-btn">
-            <input type="hidden" name="group_id" value="{$model.group_id}">
-            <button type="submit" class="btn btn-primary">{$id>0?'保存':'添加'}</button>
-        </div>
-    </form>
+        </form>
     </div>
 </div>
 {/block}
 {block name="script"}
-    <script type="text/html" id="element-image">
+<script type="text/html" id="element-image">
         <div class="slide-element mb-2">
             <input type="hidden" name="elements[{@i}][type]" value="image" />
             <div class="input-group mb-1">
@@ -283,7 +287,7 @@
             </div>
         </div>
     </script>
-    <script type="text/html" id="element-text">
+<script type="text/html" id="element-text">
         <div class="slide-element mb-2">
             <input type="hidden" name="elements[{@i}][type]" value="text" />
             <div class="input-group mb-1">
@@ -426,61 +430,61 @@
             </div>
         </div>
     </script>
-    <script type="text/javascript">
-        function addElement(row, key){
-            var tmpl = '';
-            if(row.type == 'text'){
-                tmpl = $('#element-text').html();
-            }else if(row.type == 'image'){
-                tmpl = $('#element-image').html();
-            }
-            if(tmpl){
-                row.i = key;
-                $('.elements-box').append('<div class="col-12 col-lg-6 mb-2"><div class="card"><div class="card-body">'+tmpl.compile(row)+'</div></div></div>');
-                var current = $('.elements-box .slide-element').eq(-1);
-                current.find('input,select').each(function(idx, item){
-                    if($(item).attr('type')!=='hidden'){
-                        var name=$(item).attr('name');
-                        nameparts=name.split('][');
-                        if(nameparts.length>1){
-                            var k = nameparts[1].replace(']','');
-                            $(item).val(row[k]?row[k]:'');
-                        }
-
-                        if($(item).attr('type')=='file'){
-                            $(item).on('change',window.fileInputHander);
-                        }
+<script type="text/javascript">
+    function addElement(row, key) {
+        var tmpl = '';
+        if (row.type == 'text') {
+            tmpl = $('#element-text').html();
+        } else if (row.type == 'image') {
+            tmpl = $('#element-image').html();
+        }
+        if (tmpl) {
+            row.i = key;
+            $('.elements-box').append('<div class="col-12 col-lg-6 mb-2"><div class="card"><div class="card-body">' + tmpl.compile(row) + '</div></div></div>');
+            var current = $('.elements-box .slide-element').eq(-1);
+            current.find('input,select').each(function (idx, item) {
+                if ($(item).attr('type') !== 'hidden') {
+                    var name = $(item).attr('name');
+                    nameparts = name.split('][');
+                    if (nameparts.length > 1) {
+                        var k = nameparts[1].replace(']', '');
+                        $(item).val(row[k] ? row[k] : '');
                     }
-                })
 
+                    if ($(item).attr('type') == 'file') {
+                        $(item).on('change', window.fileInputHander);
+                    }
+                }
+            })
+
+        }
+    }
+    jQuery(function ($) {
+        var elementCount = 0;
+        var elements = JSON.parse('{$model.elements|default=[]|json_encode|raw}')
+        $('.addelement').click(function (e) {
+            dialog.action(['文本', '图片'], function (index) {
+                addElement({
+                    image: '/static/images/nopic.png',
+                    type: index ? 'image' : 'text',
+                    style: 'left:50%;top:0px;margin-left:-550px;',
+                    effect: 'fadeIn',
+                    duration: '0.5',
+                    delay: 0
+                }, 'add' + (elementCount++))
+            })
+        });
+        $('.elements-box').on('click', '.delete-btn', function (e) {
+            var self = $(this);
+            dialog.confirm('确定删除该元件？', function () {
+                self.parents('.slide-element').remove();
+            })
+        });
+        if (elements && elements.length > 0) {
+            for (var i = 0; i < elements.length; i++) {
+                addElement(elements[i], i)
             }
         }
-        jQuery(function ($) {
-            var elementCount = 0;
-            var elements = JSON.parse('{$model.elements|json_encode|raw}')
-            $('.addelement').click(function (e) {
-                dialog.action(['文本','图片'],function(index){
-                    addElement({
-                        image:'/static/images/nopic.png',
-                        type:index?'image':'text',
-                        style:'left:50%;top:0px;margin-left:-550px;',
-                        effect:'fadeIn',
-                        duration:'0.5',
-                        delay:0
-                    },'add'+(elementCount++))
-                })
-            });
-            $('.elements-box').on('click','.delete-btn',function (e) {
-                var self=$(this);
-                dialog.confirm('确定删除该元件？',function () {
-                    self.parents('.slide-element').remove();
-                })
-            });
-            if(elements && elements.length>0){
-                for(var i=0;i<elements.length;i++){
-                    addElement(elements[i], i)
-                }
-            }
-        });
-    </script>
-    {/block}
+    });
+</script>
+{/block}

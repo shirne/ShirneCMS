@@ -50,9 +50,10 @@ class ThirdBase extends ThirdModelBase
      * @param $url
      * @param string $data
      * @param string $method
+     * @param array|null $headers
      * @return bool|string
      */
-    protected function http($url, $data = '', $method = 'GET')
+    protected function http($url, $data = '', $method = 'GET', $headers = null)
     {
         $oCurl = curl_init();
         if (stripos($url, "https://") !== FALSE) {
@@ -66,6 +67,9 @@ class ThirdBase extends ThirdModelBase
         curl_setopt($oCurl, CURLOPT_TIMEOUT, 60);
         curl_setopt($oCurl, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($oCurl, CURLOPT_FOLLOWLOCATION, 1);
+        if (!empty($headers)) {
+            curl_setopt($oCurl, CURLOPT_HTTPHEADER, $headers);
+        }
         if (strtoupper($method) == 'POST') {
             curl_setopt($oCurl, CURLOPT_URL, $url);
             curl_setopt($oCurl, CURLOPT_POST, 1);
@@ -95,25 +99,27 @@ class ThirdBase extends ThirdModelBase
      * GET 请求
      * @param string $url
      * @param string|array $param
+     * @param array|null $headers
      * @return string|bool
      */
-    protected function http_get($url, $param = '')
+    protected function http_get($url, $param = '', $headers = null)
     {
-        return $this->http($url, $param);
+        return $this->http($url, $param, null, $headers);
     }
 
     /**
      * POST 请求
-     * @param $url string
-     * @param $param array|string
-     * @param $post_type int 发送编码方式(1 强制urlencoded)
+     * @param string $url
+     * @param array|string $param
+     * @param int $post_type 发送编码方式(1 强制urlencoded)
+     * @param array|null $headers
      * @return string content
      */
-    protected function http_post($url, $param = '', $post_type = 0)
+    protected function http_post($url, $param = '', $post_type = 0, $headers = null)
     {
         if ($post_type == 1 && is_array($param)) {
             $param = http_build_query($param);
         }
-        return $this->http($url, $param, 'POST');
+        return $this->http($url, $param, 'POST', $headers);
     }
 }
