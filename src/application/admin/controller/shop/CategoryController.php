@@ -93,20 +93,20 @@ class CategoryController extends BaseController
                 $iconupload = $this->_upload('category', 'upload_icon');
                 if (!empty($iconupload)) {
                     $data['icon'] = $iconupload['url'];
-                    $delete_images[] = $data['delete_icon'];
+                    if (!empty($data['delete_icon'])) $delete_images[] = $data['delete_icon'];
                 } elseif ($this->uploadErrorCode > 102) {
                     $this->error($this->uploadErrorCode . ':' . $this->uploadError);
                 }
                 $uploaded = $this->_upload('category', 'upload_image');
                 if (!empty($uploaded)) {
                     $data['image'] = $uploaded['url'];
-                    $delete_images[] = $data['delete_image'];
+                    if (!empty($data['delete_image'])) $delete_images[] = $data['delete_image'];
                 } elseif ($this->uploadErrorCode > 102) {
                     delete_image($data['icon']);
                     $this->error($this->uploadErrorCode . ':' . $this->uploadError);
                 }
-                unset($data['delete_icon']);
-                unset($data['delete_image']);
+                if (isset($data['delete_icon'])) unset($data['delete_icon']);
+                if (isset($data['delete_image'])) unset($data['delete_image']);
                 if (empty($data['specs'])) $data['specs'] = [];
 
                 try {

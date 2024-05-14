@@ -125,7 +125,8 @@ class ReplyController extends WechatBaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
-                $delete_images = [$data['delete_image']];
+                $delete_images = [];
+                if (!empty($data['delete_image'])) $delete_images[] = $data['delete_image'];
                 switch ($data['reply_type']) {
                     case 'text':
                         break;
@@ -141,7 +142,7 @@ class ReplyController extends WechatBaseController
                             $this->error($this->uploadErrorCode . ':' . $this->uploadError);
                         } else {
                             unset($data['content']);
-                            unset($delete_images[0]);
+                            if (isset($delete_images[0]))  unset($delete_images[0]);
                         }
                         break;
                     case 'custom':

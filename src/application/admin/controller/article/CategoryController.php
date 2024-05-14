@@ -91,15 +91,15 @@ class CategoryController extends BaseController
                 $iconupload = $this->_upload('category', 'upload_icon');
                 if (!empty($iconupload)) {
                     $data['icon'] = $iconupload['url'];
-                    $delete_images[] = $data['delete_icon'];
+                    if (!empty($data['delete_icon']))  $delete_images[] = $data['delete_icon'];
                 }
                 $uploaded = $this->_upload('category', 'upload_image');
                 if (!empty($uploaded)) {
                     $data['image'] = $uploaded['url'];
-                    $delete_images[] = $data['delete_image'];
+                    if (!empty($data['delete_image'])) $delete_images[] = $data['delete_image'];
                 }
-                unset($data['delete_icon']);
-                unset($data['delete_image']);
+                if (isset($data['delete_icon'])) unset($data['delete_icon']);
+                if (isset($data['delete_image']))  unset($data['delete_image']);
 
                 try {
                     $result = CategoryModel::update($data, ['id' => $id]);

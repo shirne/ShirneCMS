@@ -64,11 +64,11 @@ class HelpController extends BaseController
                 $uploaded = $this->_upload('article', 'upload_image');
                 if (!empty($uploaded)) {
                     $data['image'] = $uploaded['url'];
-                    $delete_images[] = $data['delete_image'];
+                    if (!empty($data['delete_image'])) $delete_images[] = $data['delete_image'];
                 } elseif ($this->uploadErrorCode > 102) {
                     $this->error($this->uploadErrorCode . ':' . $this->uploadError);
                 }
-                unset($data['delete_image']);
+                if (isset($data['delete_image'])) unset($data['delete_image']);
                 $data['user_id'] = $this->mid;
                 if (!empty($data['prop_data'])) {
                     $data['prop_data'] = array_combine($data['prop_data']['keys'], $data['prop_data']['values']);
@@ -117,7 +117,7 @@ class HelpController extends BaseController
                 $uploaded = $this->_upload('shop', 'upload_image');
                 if (!empty($uploaded)) {
                     $data['image'] = $uploaded['url'];
-                    $delete_images[] = $data['delete_image'];
+                    if (!empty($data['delete_image'])) $delete_images[] = $data['delete_image'];
                 } elseif ($this->uploadErrorCode > 102) {
                     $this->error($this->uploadErrorCode . ':' . $this->uploadError);
                 }
@@ -205,15 +205,15 @@ class HelpController extends BaseController
                 $iconupload = $this->_upload('category', 'upload_icon');
                 if (!empty($iconupload)) {
                     $data['icon'] = $iconupload['url'];
-                    $delete_images[] = $data['delete_icon'];
+                    if (!empty($data['delete_icon'])) $delete_images[] = $data['delete_icon'];
                 }
                 $uploaded = $this->_upload('category', 'upload_image');
                 if (!empty($uploaded)) {
                     $data['image'] = $uploaded['url'];
-                    $delete_images[] = $data['delete_image'];
+                    if (!empty($data['delete_image'])) $delete_images[] = $data['delete_image'];
                 }
-                unset($data['delete_icon']);
-                unset($data['delete_image']);
+                if (isset($data['delete_icon']))  unset($data['delete_icon']);
+                if (isset($data['delete_image']))  unset($data['delete_image']);
 
                 try {
                     if ($id > 0) {

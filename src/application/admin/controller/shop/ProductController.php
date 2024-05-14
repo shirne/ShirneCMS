@@ -236,11 +236,11 @@ class ProductController extends BaseController
                 $uploaded = $this->_upload('product', 'upload_image');
                 if (!empty($uploaded)) {
                     $data['image'] = $uploaded['url'];
-                    $delete_images[] = $data['delete_image'];
+                    if (!empty($data['delete_image']))  $delete_images[] = $data['delete_image'];
                 } elseif ($this->uploadErrorCode > 102) {
                     $this->error($this->uploadErrorCode . ':' . $this->uploadError);
                 }
-                unset($data['delete_image']);
+                if (isset($data['delete_image']))  unset($data['delete_image']);
                 $data['user_id'] = $this->mid;
                 $data = $this->processData($data);
                 $skus = $data['skus'];
@@ -328,7 +328,7 @@ class ProductController extends BaseController
                 $uploaded = $this->_upload('product', 'upload_image');
                 if (!empty($uploaded)) {
                     $data['image'] = $uploaded['url'];
-                    $delete_images[] = $data['delete_image'];
+                    if (!empty($data['delete_image'])) $delete_images[] = $data['delete_image'];
                 } elseif ($this->uploadErrorCode > 102) {
                     $this->error($this->uploadErrorCode . ':' . $this->uploadError);
                 }
@@ -588,9 +588,9 @@ class ProductController extends BaseController
                 $uploaded = $this->_upload('product', 'upload_image');
                 if (!empty($uploaded)) {
                     $data['image'] = $uploaded['url'];
-                    $delete_images[] = $data['delete_image'];
+                    if (!empty($data['delete_image']))  $delete_images[] = $data['delete_image'];
                 }
-                unset($data['delete_image']);
+                if (isset($data['delete_image']))  unset($data['delete_image']);
                 $data['id'] = $id;
                 if ($model->update($data)) {
                     delete_image($delete_images);

@@ -312,9 +312,9 @@ class IndexController extends BaseController
                 $uploaded = $this->_upload('article', 'upload_image');
                 if (!empty($uploaded)) {
                     $data['image'] = $uploaded['url'];
-                    $delete_images[] = $data['delete_image'];
+                    if (!empty($data['delete_image'])) $delete_images[] = $data['delete_image'];
                 }
-                unset($data['delete_image']);
+                if (isset($data['delete_image'])) unset($data['delete_image']);
                 $data['id'] = $id;
                 if ($model->update($data)) {
                     delete_image($delete_images);
