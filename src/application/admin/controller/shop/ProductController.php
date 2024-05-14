@@ -268,6 +268,7 @@ class ProductController extends BaseController
         $model['status'] = 1;
         $model['cate_id'] = $cid;
         $model['spec_data'] = [];
+        $model['brand_id'] = 0;
 
         if ($cid > 0 && isset($presets[$cid])) {
             $model = array_merge($model, $presets[$cid]);
