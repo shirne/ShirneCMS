@@ -27,7 +27,7 @@ class FeedbackController extends BaseController
         }
         $key = empty($key) ? "" : base64url_decode($key);
         $model = Db::view('Feedback', '*')
-            ->view('Member', ['username', 'realname' => 'member_realname', 'nickname', 'avatar'], 'Feedback.member_id=Member.id', 'LEFT')
+            ->view('Member', ['username', 'realname' => 'member_realname', 'nickname', 'avatar', 'level_id'], 'Feedback.member_id=Member.id', 'LEFT')
             ->view('Manager', ['username' => 'manager_username', 'realname' => 'manager_realname'], 'Feedback.manager_id=Manager.id', 'LEFT');
 
         if (!empty($key)) {
@@ -37,6 +37,7 @@ class FeedbackController extends BaseController
             $model->where('feedback.type', $type);
         }
         $lists = $model->order('Feedback.id desc')->paginate(15);
+        $this->assign('levels', getMemberLevels());
         $this->assign('lists', $lists);
         $this->assign('page', $lists->render());
         return $this->fetch();
