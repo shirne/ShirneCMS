@@ -9,8 +9,8 @@ DROP TABLE IF EXISTS `sa_lang`;
 CREATE TABLE `sa_lang` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `lang` varchar(10) NOT NULL,
-  `table` varchar(20) NOT NULL DEFAULT '',
-  `field` varchar(20) DEFAULT '',
+  `table` varchar(30) NOT NULL DEFAULT '',
+  `field` varchar(30) DEFAULT '',
   `key_id` int(11) DEFAULT '0',
   `value` TEXT,
   PRIMARY KEY (`id`),
