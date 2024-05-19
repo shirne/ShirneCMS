@@ -566,6 +566,127 @@
                 }
             }).show(html, title ? title : '请选择');
         },
+
+        pickTree: function (config, callback, filter) {
+            if (typeof config === 'string') config = { url: config };
+            if (Object.prototype.toString.call(config) == '[object Array]') {
+                config = {
+                    isajax: false,
+                    list: config
+                };
+            }
+            var icon = config.icon ? '<i class="ion-md-checkmark"></i> ' : ''
+            config = $.extend({
+                url: '',
+                title: '',
+                isajax: true,
+                list: [],
+                name: '项目',
+                idkey: 'id',
+                titlekey: 'title',
+                level: 3,
+                onRow: null,
+                toList: function (json) {
+                    return json.data;
+                },
+                breadTemplate: '<li class="breadcrumb-item" aria-current="page"><a href="javascript:" data-id="{@id}">{@title}</a></li>',
+                rowTemplate: '<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action" style="line-height:30px;">' + icon + '[{@id}]&nbsp;{@title}</a>'
+            }, config || {});
+            var selected = [{ id: 0, pid: -1, title: config.name }]
+            if (!filter) filter = {};
+
+            var title = '请选择' + config.name;
+            var contentTpl = '<div class="list-group list-group-picker mt-2" style="max-height:500px;overflow: auto;"></div>';
+            if (config.isajax) {
+                contentTpl = '<nav aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item active" aria-current="page"><a href="javascript:" data-id="0">' + config.name + '</a></li></ol></nav>' + contentTpl;
+            }
+            if (!config.title) config.title = title;
+
+            var dlg = new Dialog({
+                backdrop: 'static',
+                onshown: function (body) {
+                    var breadcrumb = body.find('.breadcrumb');
+                    var listbox = body.find('.list-group');
+                    var lastLoading = 0;
+                    listbox.on('click', 'a.list-group-item', function () {
+                        var id = $(this).data('id');
+                        for (var i = 0; i < config.list.length; i++) {
+                            if (config.list[i][config.idkey] == id) {
+                                listbox.find('a.list-group-item').removeClass('active');
+                                $(this).addClass('active');
+                                if (config.list[i].pid == selected[selected.length - 1].pid) {
+                                    selected.pop()
+                                }
+                                selected.push(config.list[i])
+                                if (selected.length <= config.level) {
+                                    dlg.box.find('.modal-footer .btn-outline-primary').prop('disabled', true)
+                                } else {
+                                    dlg.box.find('.modal-footer .btn-outline-primary').prop('disabled', false)
+                                }
+                                breadcrumb.html(config.breadTemplate.compile(selected, true));
+                                loadList()
+                                break;
+                            }
+                        }
+                    });
+                    breadcrumb.on('click', '.breadcrumb-item a', function () {
+                        var id = $(this).data('id')
+                        var index = selected.findIndex((v) => v.id == id)
+                        if (index > -1) {
+                            selected = selected.slice(0, index + 1)
+                            breadcrumb.html(config.breadTemplate.compile(selected, true));
+                            loadList()
+                        }
+                    })
+
+                    if (!config.isajax) {
+                        listbox.html(config.rowTemplate.compile(config.list, true));
+                        return;
+                    }
+
+                    function loadList() {
+                        var curLoading = new Date().getTime()
+                        lastLoading = curLoading;
+                        //listbox.html('<span class="list-loading">加载中...</span>');
+                        filter['pid'] = selected[selected.length - 1].id;
+
+                        $.ajax(
+                            {
+                                url: config.url,
+                                type: 'GET',
+                                dataType: 'JSON',
+                                data: filter,
+                                success: function (json) {
+                                    if (curLoading != lastLoading) return;
+                                    if (json.code === 1) {
+                                        var lists = config.toList(json);
+                                        if (lists && lists.length) {
+                                            config.list = lists
+                                            listbox.html(config.rowTemplate.compile(lists, true));
+                                        }
+                                    } else {
+                                        listbox.html('<span class="text-danger"><i class="ion-md-warning"></i> 加载失败</span>');
+                                    }
+                                }
+                            }
+                        );
+
+                    }
+                    loadList();
+                },
+                onsure: function (body) {
+                    if (selected.length < config.level) {
+                        dialog.warning('没有选择' + config.name + '!');
+                        return false;
+                    }
+                    if (typeof callback == 'function') {
+                        var result = callback(selected);
+                        return result;
+                    }
+                }
+            }).show(contentTpl, config.title);
+            return dlg;
+        },
         pickList: function (config, callback, filter) {
             if (typeof config === 'string') config = { url: config };
             if (Object.prototype.toString.call(config) == '[object Array]') {
