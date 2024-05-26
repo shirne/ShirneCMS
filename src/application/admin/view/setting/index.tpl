@@ -6,11 +6,13 @@
 
 <div id="page-wrapper">
 
-    <div class="container-fluid tab-container" >
+    <div class="container-fluid tab-container">
         <div class="btn-toolbar tab-toolbar" role="toolbar" aria-label="Toolbar with button groups">
             <div class="btn-group mr-2 btn-group-sm" role="group" aria-label="First group">
-                <a href="javascript:" class="btn btn-outline-secondary import-btn"><i class="ion-md-cloud-upload"></i> 导入</a>
-                <a href="{:url('export')}" target="_blank" class="btn btn-outline-secondary"><i class="ion-md-cloud-download"></i> 导出</a>
+                <a href="javascript:" class="btn btn-outline-secondary import-btn"><i class="ion-md-cloud-upload"></i>
+                    导入</a>
+                <a href="{:url('export')}" target="_blank" class="btn btn-outline-secondary"><i
+                        class="ion-md-cloud-download"></i> 导出</a>
                 <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown">
                     <span class="caret"></span>
                     <span class="sr-only">Toggle Dropdown</span>
@@ -28,7 +30,10 @@
         <!-- Nav tabs -->
         <ul class="nav nav-tabs" role="tablist">
             {foreach $groups as $key => $name}
-                <li class="nav-item head-{$key}"><a class="nav-link" href="#panel-{$key}" data-group="{$key}" role="tab" data-toggle="tab">{$name}</a></li>
+            {if !empty($settings[$key])}
+            <li class="nav-item head-{$key}"><a class="nav-link" href="#panel-{$key}" data-group="{$key}" role="tab"
+                    data-toggle="tab">{$name}</a></li>
+            {/if}
             {/foreach}
         </ul>
 
@@ -37,129 +42,138 @@
 
             {php} function group_tab($group,$setting){ {/php}
             {switch name="group"}
-                {case value="common"}
-                    {include file="setting/part/common"  /}
-                {/case}
-                {case value="member"}
-                    {include file="setting/part/member"  /}
-                {/case}
-                {case value="third"}
-                    {include file="setting/part/third"  /}
-                {/case}
-                {case value="sign"}
-                    {include file="setting/part/sign"  /}
-                {/case}
-                {case value="advance"}
-                    {include file="setting/part/advance"  /}
-                {/case}
+            {case value="common"}
+            {include file="setting/part/common" /}
+            {/case}
+            {case value="member"}
+            {include file="setting/part/member" /}
+            {/case}
+            {case value="third"}
+            {include file="setting/part/third" /}
+            {/case}
+            {case value="sign"}
+            {include file="setting/part/sign" /}
+            {/case}
+            {case value="advance"}
+            {include file="setting/part/advance" /}
+            {/case}
             {/switch}
             {php} return "";} {/php}
             <!-- Tab panes -->
             <div class="tab-content">
                 {foreach $groups as $key => $name}
+                {if !empty($settings[$key])}
                 <div role="tabpanel" class="tab-pane" id="panel-{$key}">
                     {:group_tab($key,$settings[$key])}
                     {foreach $settings[$key] as $key => $item}
-                        {if $item['is_sys'] == 0}
-                        <div class="form-row form-group">
-                            <label for="v-{$key}" class="col-3 col-md-2 text-right align-middle">{$item.title}</label>
-                            <div class="col-9 col-md-8 col-lg-6">
-                                {switch name="item.type"}
-                                    {case value="text"}
-                                        <input type="text" class="form-control" name="v-{$key}" value="{$item.value}" placeholder="{$item.description}">
-                                    {/case}
-                                    {case value="image"}
-                                        <div class="input-group">
-                                            <div class="custom-file">
-                                                <input type="file" class="custom-file-input" name="upload_{$key}"/>
-                                                <label class="custom-file-label" for="upload_{$key}">选择文件</label>
-                                            </div>
-                                        </div>
-                                        {if $item['value']}
-                                            <figure class="figure">
-                                                <img src="{$item.value}" class="figure-img img-fluid rounded" alt="image">
-                                                <figcaption class="figure-caption text-center">{$item.value}</figcaption>
-                                            </figure>
-                                            <input type="hidden" name="delete_{$key}" value="{$item.value}"/>
-                                        {/if}
-                                    {/case}
-                                    {case value="location"}
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" name="v-{$key}" value="{$item.value}" placeholder="{$item.description}">
-                                            <div class="input-group-append">
-                                                <a href="javascript:" class="btn btn-outline-secondary locationPick">选择位置</a>
-                                            </div>
-                                        </div>
-                                    {/case}
-                                    {case value="number"}
-                                        <input type="number" class="form-control" name="v-{$key}" value="{$item.value}" placeholder="{$item.description}">
-                                    {/case}
-                                    {case value="bool"}
-                                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                        {foreach $item.data as $k => $value}
-                                            {if $item['value']==$k}
-                                                <label class="btn btn-outline-secondary active">
-                                                    <input type="radio" name="v-{$key}" value="{$k}" autocomplete="off" checked> {$value}
-                                                </label>
-                                            {else /}
-                                                <label class="btn btn-outline-secondary">
-                                                    <input type="radio" name="v-{$key}" value="{$k}" autocomplete="off"> {$value}
-                                                </label>
-                                            {/if}
-                                        {/foreach}
-                                        </div>
-                                    {/case}
-                                    {case value="radio"}
-                                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                        {foreach $item.data as $k => $value}
-                                            {if $item['value']==$k}
-                                                <label class="btn btn-outline-secondary active">
-                                                    <input type="radio" name="v-{$key}" value="{$k}" autocomplete="off" checked> {$value}
-                                                </label>
-                                            {else /}
-                                                <label class="btn btn-outline-secondary">
-                                                    <input type="radio" name="v-{$key}" value="{$k}" autocomplete="off"> {$value}
-                                                </label>
-                                            {/if}
-                                        {/foreach}
-                                        </div>
-                                    {/case}
-                                    {case value="check"}
-                                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                        {foreach $item.data as $k => $value}
-                                            {if in_array($k,$item['value'])}
-                                                <label class="btn btn-outline-secondary active">
-                                                    <input type="radio" name="v-{$key}[]" value="{$k}" autocomplete="off" checked> {$value}
-                                                </label>
-                                            {else /}
-                                                <label class="btn btn-outline-secondary">
-                                                    <input type="radio" name="v-{$key}[]" value="{$k}" autocomplete="off"> {$value}
-                                                </label>
-                                            {/if}
-                                        {/foreach}
-                                        </div>
-                                    {/case}
-                                    {case value="select"}
-                                        <select name="v-{$key}" class="form-control">
-                                            {foreach $item.data as $k => $value}
-                                                {if $k==$item['value']}
-                                                    <option value="{$k}" selected="selected">{$value}</option>
-                                                {else/}
-                                                    <option value="{$k}">{$value}</option>
-                                                {/if}
-                                            {/foreach}
-                                        </select>
-                                    {/case}
-                                    {case value="textarea"}
-                                        <textarea name="v-{$key}" class="form-control" placeholder="{$item.description}">{$item.value|raw}</textarea>
-                                    {/case}
-                                    {case value="html"}
-                                        <textarea name="v-{$key}" id="editor-{$key}" class="w-100 html-content" placeholder="{$item.description}">{$item.value|raw}</textarea>
-                                    {/case}
-                                {/switch}
+                    {if $item['is_sys'] == 0}
+                    <div class="form-row form-group">
+                        <label for="v-{$key}" class="col-3 col-md-2 text-right align-middle">{$item.title}</label>
+                        <div class="col-9 col-md-8 col-lg-6">
+                            {switch name="item.type"}
+                            {case value="text"}
+                            <input type="text" class="form-control" name="v-{$key}" value="{$item.value}"
+                                placeholder="{$item.description}">
+                            {/case}
+                            {case value="image"}
+                            <div class="input-group">
+                                <div class="custom-file">
+                                    <input type="file" class="custom-file-input" name="upload_{$key}" />
+                                    <label class="custom-file-label" for="upload_{$key}">选择文件</label>
+                                </div>
                             </div>
+                            {if $item['value']}
+                            <figure class="figure">
+                                <img src="{$item.value}" class="figure-img img-fluid rounded" alt="image">
+                                <figcaption class="figure-caption text-center">{$item.value}</figcaption>
+                            </figure>
+                            <input type="hidden" name="delete_{$key}" value="{$item.value}" />
+                            {/if}
+                            {/case}
+                            {case value="location"}
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="v-{$key}" value="{$item.value}"
+                                    placeholder="{$item.description}">
+                                <div class="input-group-append">
+                                    <a href="javascript:" class="btn btn-outline-secondary locationPick">选择位置</a>
+                                </div>
+                            </div>
+                            {/case}
+                            {case value="number"}
+                            <input type="number" class="form-control" name="v-{$key}" value="{$item.value}"
+                                placeholder="{$item.description}">
+                            {/case}
+                            {case value="bool"}
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                {foreach $item.data as $k => $value}
+                                {if $item['value']==$k}
+                                <label class="btn btn-outline-secondary active">
+                                    <input type="radio" name="v-{$key}" value="{$k}" autocomplete="off" checked>
+                                    {$value}
+                                </label>
+                                {else /}
+                                <label class="btn btn-outline-secondary">
+                                    <input type="radio" name="v-{$key}" value="{$k}" autocomplete="off"> {$value}
+                                </label>
+                                {/if}
+                                {/foreach}
+                            </div>
+                            {/case}
+                            {case value="radio"}
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                {foreach $item.data as $k => $value}
+                                {if $item['value']==$k}
+                                <label class="btn btn-outline-secondary active">
+                                    <input type="radio" name="v-{$key}" value="{$k}" autocomplete="off" checked>
+                                    {$value}
+                                </label>
+                                {else /}
+                                <label class="btn btn-outline-secondary">
+                                    <input type="radio" name="v-{$key}" value="{$k}" autocomplete="off"> {$value}
+                                </label>
+                                {/if}
+                                {/foreach}
+                            </div>
+                            {/case}
+                            {case value="check"}
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                {foreach $item.data as $k => $value}
+                                {if in_array($k,$item['value'])}
+                                <label class="btn btn-outline-secondary active">
+                                    <input type="radio" name="v-{$key}[]" value="{$k}" autocomplete="off" checked>
+                                    {$value}
+                                </label>
+                                {else /}
+                                <label class="btn btn-outline-secondary">
+                                    <input type="radio" name="v-{$key}[]" value="{$k}" autocomplete="off"> {$value}
+                                </label>
+                                {/if}
+                                {/foreach}
+                            </div>
+                            {/case}
+                            {case value="select"}
+                            <select name="v-{$key}" class="form-control">
+                                {foreach $item.data as $k => $value}
+                                {if $k==$item['value']}
+                                <option value="{$k}" selected="selected">{$value}</option>
+                                {else/}
+                                <option value="{$k}">{$value}</option>
+                                {/if}
+                                {/foreach}
+                            </select>
+                            {/case}
+                            {case value="textarea"}
+                            <textarea name="v-{$key}" class="form-control"
+                                placeholder="{$item.description}">{$item.value|raw}</textarea>
+                            {/case}
+                            {case value="html"}
+                            <textarea name="v-{$key}" id="editor-{$key}" class="w-100 html-content"
+                                placeholder="{$item.description}">{$item.value|raw}</textarea>
+                            {/case}
+                            {/switch}
                         </div>
-                        {/if}
+                    </div>
+                    {/if}
                     {/foreach}
                     <div class="form-row form-group">
                         <div class="col-10 offset-2">
@@ -167,12 +181,13 @@
                         </div>
                     </div>
                 </div>
+                {/if}
                 {/foreach}
             </div>
         </form>
     </div>
 </div>
-    <script type="text/plain" id="importTpl">
+<script type="text/plain" id="importTpl">
         <div class="container-fluid">
         <form method="post" action="{:url('import')}" enctype="multipart/form-data">
         <div class="form-row">
@@ -208,85 +223,85 @@
     </script>
 {/block}
 {block name="script"}
-    <!-- 配置文件 -->
-    <script type="text/javascript" src="__STATIC__/ueditor/ueditor.config.js"></script>
-    <!-- 编辑器源码文件 -->
-    <script type="text/javascript" src="__STATIC__/ueditor/ueditor.all.min.js"></script>
+<!-- 配置文件 -->
+<script type="text/javascript" src="__STATIC__/ueditor/ueditor.config.js"></script>
+<!-- 编辑器源码文件 -->
+<script type="text/javascript" src="__STATIC__/ueditor/ueditor.all.min.js"></script>
 <script type="text/javascript">
-    jQuery(function() {
-        var agroup='{$group}';
-        if(agroup && $('.head-'+agroup).length>0){
-            $('.nav-tabs li.head-'+agroup+' a').trigger('click');
-        }else{
+    jQuery(function () {
+        var agroup = '{$group}';
+        if (agroup && $('.head-' + agroup).length > 0) {
+            $('.nav-tabs li.head-' + agroup + ' a').trigger('click');
+        } else {
             $('.nav-tabs li').eq(0).find('a').trigger('click');
         }
-        $('.nav-tabs a').click(function() {
+        $('.nav-tabs a').click(function () {
             $('[name=group]').val($(this).data('group'));
         });
 
         jQuery(function ($) {
             $('.mopengroup label').click(function () {
-                var val=$(this).find('input').val();
-                var parent=$(this).parents('.form-group').eq(0)
-                if(val>0){
+                var val = $(this).find('input').val();
+                var parent = $(this).parents('.form-group').eq(0)
+                if (val > 0) {
                     parent.nextAll().show();
-                }else{
+                } else {
                     parent.nextAll().hide();
                 }
             }).filter('.active').trigger('click');
             $('.mregopengroup label').click(function () {
-                var val=$(this).find('input').val();
-                if(val>0){
+                var val = $(this).find('input').val();
+                if (val > 0) {
                     $('.regsetrow').show();
-                }else{
+                } else {
                     $('.regsetrow').hide();
                 }
             }).filter('.active').trigger('click');
         })
 
-        var importTpl=$('#importTpl').html();
-        $('.import-btn').click(function(e) {
-            var isposting=false;
-            var dlg=new Dialog({
-                'onshow':function(body) {
+        var importTpl = $('#importTpl').html();
+        $('.import-btn').click(function (e) {
+            var isposting = false;
+            var dlg = new Dialog({
+                'onshow': function (body) {
                     body.find('[name=type]').change(function (e) {
-                        var val=$('[name=type]:checked').val();
+                        var val = $('[name=type]:checked').val();
                         body.find('.typerow').hide();
-                        body.find('.'+val+'row').show();
+                        body.find('.' + val + 'row').show();
                     }).eq(0).trigger('change');
-                    body.find('[name=contentFile]').change(function() {
-                        var label=$(this).parents('.custom-file').find('.custom-file-label');
+                    body.find('[name=contentFile]').change(function () {
+                        var label = $(this).parents('.custom-file').find('.custom-file-label');
                         label.text($(this).val());
                     })
                 },
-                'onsure':function(body){
-                    if(!isposting) {
+                'onsure': function (body) {
+                    if (!isposting) {
                         isposting = true;
-                        var form=body.find('form');
-                        if(!FormData){
+                        var form = body.find('form');
+                        if (!FormData) {
                             form.submit();
-                        }else{
+                        } else {
                             $.ajax({
-                                url:form.attr('action'),
-                                type:'POST',
-                                dataType:'JSON',
-                                data:new FormData(form[0]),
-                                cache:false,
-                                processData:false,
-                                contentType:false,
-                                success:function (json) {
-                                    if(json.code==1){
+                                url: form.attr('action'),
+                                type: 'POST',
+                                dataType: 'JSON',
+                                data: new FormData(form[0]),
+                                cache: false,
+                                processData: false,
+                                contentType: false,
+                                success: function (json) {
+                                    if (json.code == 1) {
                                         dlg.hide();
-                                        dialog.alert(json.msg,function(){
-                                            if(json.url){
-                                                location.href=json.url;
-                                            }else{
+                                        dialog.alert(json.msg, function () {
+                                            if (json.url) {
+                                                location.href = json.url;
+                                            } else {
                                                 location.reload();
                                             }
                                         });
-                                    }else{
+                                    } else {
                                         dialog.warning(json.msg);
-                                        isposting=false;
+                                        isposting = false;
                                     }
                                 }
                             });
@@ -294,36 +309,36 @@
                     }
                     return false;
                 }
-            }).show(importTpl,'导入配置');
+            }).show(importTpl, '导入配置');
         });
         $('.locationPick').click(function () {
-            var input=$(this).parents('.input-group').find('input[type=text]');
-            var locate=null
-            var locates=input.val()
-            if(locates){
-                locates=locates.split(',');
-                locate={lng:locates[0],lat:locates[1]}
+            var input = $(this).parents('.input-group').find('input[type=text]');
+            var locate = null
+            var locates = input.val()
+            if (locates) {
+                locates = locates.split(',');
+                locate = { lng: locates[0], lat: locates[1] }
             }
-            dialog.pickLocate('',function (locate) {
+            dialog.pickLocate('', function (locate) {
                 console.log(locate);
-                input.val(locate.lng+','+locate.lat);
-            },locate);
+                input.val(locate.lng + ',' + locate.lat);
+            }, locate);
         });
-        
+
         $('.userPick').click(function () {
-            var input=$(this).parents('.input-group').find('input[type=text]');
-            
-            var userid=input.val()
-            
+            var input = $(this).parents('.input-group').find('input[type=text]');
+
+            var userid = input.val()
+
             dialog.pickUser(function (user) {
                 input.val(user.id)
-            },$(this).data('filter'))
+            }, $(this).data('filter'))
         });
-        $('.html-content').each(function (idx,item) {
-            UE.getEditor($(item).attr('id'),{
+        $('.html-content').each(function (idx, item) {
+            UE.getEditor($(item).attr('id'), {
                 toolbars: Toolbars.simple,
-                initialFrameHeight:200,
-                zIndex:100
+                initialFrameHeight: 200,
+                zIndex: 100
             });
         });
     });
