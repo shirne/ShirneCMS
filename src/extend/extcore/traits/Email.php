@@ -3,6 +3,7 @@
 namespace extcore\traits;
 
 use PHPMailer\PHPMailer\PHPMailer;
+use think\facade\Log;
 
 /**
  * Trait Email
@@ -56,6 +57,10 @@ trait Email
                 is_file($file) && $mail->AddAttachment($file);
             }
         }
-        return $mail->Send() ? true : $mail->ErrorInfo;
+        if ($mail->Send()) {
+            return true;
+        }
+        Log::error('send mail error:' . $mail->ErrorInfo);
+        return false;
     }
 }
