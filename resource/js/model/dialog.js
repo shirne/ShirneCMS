@@ -281,6 +281,7 @@
             var title = '';
             var size = 'sm';
             var html = '';
+            var buttonText = '确定'
             if (callback !== undefined && !iscallback) {
                 icon = callback;
             }
@@ -290,6 +291,9 @@
                 }
                 if (message['size'] !== undefined) {
                     size = message['size'];
+                }
+                if (message['buttonText'] !== undefined) {
+                    buttonText = message['buttonText'];
                 }
                 if (message['content'] === undefined) {
                     throw 'message.content can not be empty.';
@@ -320,7 +324,7 @@
                 html = message;
             }
             return new Dialog({
-                btns: '确定',
+                btns: buttonText,
                 size: size,
                 header: title ? true : false,
                 onsure: function () {
@@ -566,7 +570,6 @@
                 }
             }).show(html, title ? title : '请选择');
         },
-
         pickTree: function (config, callback, filter) {
             if (typeof config === 'string') config = { url: config };
             if (Object.prototype.toString.call(config) == '[object Array]') {
@@ -680,7 +683,7 @@
                         return false;
                     }
                     if (typeof callback == 'function') {
-                        var result = callback(selected);
+                        var result = callback(selected.slice(1));
                         return result;
                     }
                 }
@@ -705,6 +708,7 @@
                 searchHolder: '根据名称搜索',
                 idkey: 'id',
                 titlekey: 'title',
+                searchkey: 'key',
                 onRow: null,
                 extend: null,
                 toList: function (json) {
@@ -769,7 +773,7 @@
                         if (isloading) return;
                         isloading = true;
                         listbox.html('<span class="list-loading">加载中...</span>');
-                        filter['key'] = input.val();
+                        filter[config.searchkey] = input.val();
                         if (config.extend) {
                             filter[config.extend.name] = extField.val();
                         }
