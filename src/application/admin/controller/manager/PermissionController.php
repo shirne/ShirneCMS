@@ -1,9 +1,10 @@
 <?php
 
-namespace app\admin\controller;
+namespace app\admin\controller\manager;
 
 
 use app\admin\validate\PermissionValidate;
+use app\admin\controller\BaseController;
 use think\Db;
 
 /**

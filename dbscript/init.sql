@@ -31,7 +31,7 @@ VALUES
   (89,8,'操作日志','member.index/log','member_log','ion-md-clipboard',15,0),
   (91,9,'配置管理','Setting/index','setting_index','ion-md-options',0,0),
   (92,9,'管理员','manager.index/index','manager_index','ion-md-person',3,0),
-  (93,9,'菜单管理','Permission/index','permission_index','ion-md-code-working',5,0),
+  (93,9,'菜单管理','manager.permission/index','permission_index','ion-md-code-working',5,0),
   (94,9,'导航管理','Navigator/index','navigator_index','ion-md-reorder',7,0),
   (95,9,'操作日志','manager.index/log','manager_log','ion-md-clipboard',9,0),
   (96,9,'付款方式','Paytype/index','paytype_index','ion-md-card',11,0);
