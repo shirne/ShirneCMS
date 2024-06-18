@@ -1155,9 +1155,10 @@ function idArr($id)
         return array_map(function ($i) {
             return intval($i);
         }, $ids);
-    } else {
+    } elseif (!empty($id)) {
         return [intval($id)];
     }
+    return [];
 }
 
 function numberArr($id)
