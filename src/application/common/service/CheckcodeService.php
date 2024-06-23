@@ -210,7 +210,7 @@ class CheckcodeService extends BaseService
             ->order('create_time DESC')->find();
         $time = time();
         if (!empty($crow) && $crow['create_time'] > $time - 60 * 5) {
-            Db::name('checkcode')->where('id', $crow['id'])->update(array('is_check' => 1, 'check_at' => $time));
+            Db::name('checkcode')->where('id', $crow['id'])->update(array('is_check' => 1, 'check_time' => $time));
             return true;
         }
         return false;

@@ -879,7 +879,7 @@ CREATE TABLE `sa_checkcode` (
   `code` varchar(20) DEFAULT NULL,
   `create_time` int UNSIGNED DEFAULT NULL,
   `is_check` tinyint DEFAULT '0',
-  `check_at` int DEFAULT '0',
+  `check_time` int DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `sendto` (`sendto`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

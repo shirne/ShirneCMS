@@ -58,7 +58,7 @@ class FeedbackController extends BaseController
             if (!$validate->check($data)) {
                 $this->error($validate->getError());
             } else {
-                $data['reply_at'] = time();
+                $data['reply_time'] = time();
                 $model = FeedbackModel::get($id);
                 if ($model->allowField(true)->save($data)) {
                     $this->success(lang('Update success!'), url('other.feedback/index'));
