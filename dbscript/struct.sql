@@ -459,6 +459,7 @@ CREATE TABLE `sa_member_authen` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `member_id` int NOT NULL DEFAULT 0,
   `level_id` int(4) NOT NULL DEFAULT 0,
+  `type` VARCHAR(20) NOT NULL DEFAULT '',
   `realname` VARCHAR(20) NOT NULL,
   `mobile` VARCHAR(20) NOT NULL,
   `province` VARCHAR(20) NOT NULL,
