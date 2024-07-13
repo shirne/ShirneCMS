@@ -1315,6 +1315,11 @@ function array_min($arr, $column)
     return min($data);
 }
 
+function is_assoc_array($array)
+{
+    return array_keys($array) !== range(0, count($array) - 1);
+}
+
 function encode_password($pass, $salt = '')
 {
     return md5(md5($pass) . $salt);
