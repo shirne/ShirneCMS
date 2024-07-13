@@ -12,6 +12,8 @@
 // [ 应用入口文件 ]
 namespace think;
 
+use think\facade\Log;
+
 define('DOC_ROOT', __DIR__);
 
 // 加载基础文件
