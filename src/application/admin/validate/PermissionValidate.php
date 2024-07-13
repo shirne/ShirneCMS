@@ -12,14 +12,14 @@ use app\common\core\BaseUniqueValidate;
  */
 class PermissionValidate extends BaseUniqueValidate
 {
-    protected $rule=array(
-        'name'=>'require',
-        'key'=>'require|unique:permission,%id%'
+    protected $rule = array(
+        'name' => 'require',
+        'key' => 'require|unique:permission,%id%'
     );
 
-    protected $message=array(
-        'name.require'=>'请填写菜单名称',
-        'key.require'=>'请填写菜单键名',
-        'key.unique'=>'键名已存在'
+    protected $message = array(
+        'name.require' => '请填写菜单名称',
+        'key.require' => '请填写菜单键名',
+        'key.unique' => '键名已存在'
     );
 }

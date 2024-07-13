@@ -5,17 +5,18 @@
 {include file="public/bread" menu="shop_coupon_index" title="优惠券管理" /}
 
 <div id="page-wrapper">
-    
+
     <div class="row list-header">
         <div class="col-6">
-            <a href="{:url('shop.coupon/add')}" class="btn btn-outline-primary btn-sm"><i class="ion-md-add"></i> 添加优惠券</a>
+            <a href="{:url('shop.coupon/add')}" class="btn btn-outline-primary btn-sm"><i class="ion-md-add"></i>
+                添加优惠券</a>
         </div>
         <div class="col-6">
             <form action="{:url('shop.coupon/index')}" method="post">
                 <div class="input-group input-group-sm">
                     <input type="text" class="form-control" name="key" placeholder="输入优惠券名称搜索">
                     <div class="input-group-append">
-                      <button class="btn btn-outline-secondary" type="submit"><i class="ion-md-search"></i></button>
+                        <button class="btn btn-outline-secondary" type="submit"><i class="ion-md-search"></i></button>
                     </div>
                 </div>
             </form>
@@ -35,43 +36,46 @@
             </tr>
         </thead>
         <tbody>
-        {php}$empty=list_empty(8);{/php}
-        {volist name="lists" id="v" empty="$empty"}
+            {php}$empty=list_empty(8);{/php}
+            {volist name="lists" id="v" empty="$empty"}
             <tr>
                 <td>{$v.id}</td>
                 <td>{$v.title}</td>
                 <td>
                     {if $v['type'] == 1}
-                        <span class="badge badge-info">折扣券 {$v['discount']}%</span>
-                        {else/}
-                        <span class="badge badge-warning">满减券 满{$v['limit']}减{$v['amount']}</span>
+                    <span class="badge badge-info">折扣券 {$v['discount']}%</span>
+                    {else/}
+                    <span class="badge badge-warning">满减券 满{$v['limit']}减{$v['amount']}</span>
                     {/if}
                 </td>
                 <td>
                     {if $v['bind_type'] == 1}
-                        <span class="badge badge-warning">类目券</span> {$v.category_title}
+                    <span class="badge badge-warning">类目券</span> {$v.category_title}
                     {elseif $v['bind_type'] == 2/}
-                        <span class="badge badge-primary">品牌券</span> {$v.brand_title}
+                    <span class="badge badge-primary">品牌券</span> {$v.brand_title}
                     {elseif $v['bind_type'] == 3/}
-                        <span class="badge badge-info">商品券</span> {$v.product_title}
+                    <span class="badge badge-info">商品券</span> {$v.product_title}
                     {elseif $v['bind_type'] == 4/}
-                        <span class="badge badge-dark">规格券</span> {$v.product_title}/{$v.goods_no}
+                    <span class="badge badge-dark">规格券</span> {$v.product_title}/{$v.goods_no}
                     {else/}
-                        <span class="badge badge-secondary">通用券</span>
+                    <span class="badge badge-secondary">通用券</span>
                     {/if}
                 </td>
                 <td>{$v.start_time|showdate}<br />{$v.end_time|showdate}</td>
                 <td>{if $v['stock'] < 0}不限{else/}{$v.stock}{/if}</td>
                 <td>{$v.receive}</td>
                 <td class="operations">
-                    <a class="btn btn-outline-primary" title="编辑" href="{:url('shop.coupon/update',array('id'=>$v['id']))}"><i class="ion-md-create"></i></a>
-                    <a class="btn btn-outline-primary" title="领取记录" href="{:url('shop.coupon/itemlist',array('gid'=>$v['id']))}"><i class="ion-md-menu"></i></a>
+                    <a class="btn btn-outline-primary" title="编辑"
+                        href="{:url('shop.coupon/update',array('id'=>$v['id']))}"><i class="ion-md-create"></i></a>
+                    <a class="btn btn-outline-primary" title="领取记录"
+                        href="{:url('shop.coupon/itemlist',array('gid'=>$v['id']))}"><i class="ion-md-menu"></i></a>
                     <a class="btn btn-outline-primary btn-getlink" data-id="{$v['id']}" title="领取链接"
                         href="javascript:"><i class="ion-md-link"></i></a>
-                    <a class="btn btn-outline-danger link-confirm" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" title="删除" href="{:url('shop.coupon/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i></a>
+                    <a class="btn btn-outline-danger link-confirm" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" title="删除"
+                        href="{:url('shop.coupon/delete',array('id'=>$v['id']))}"><i class="ion-md-trash"></i></a>
                 </td>
             </tr>
-        {/volist}
+            {/volist}
         </tbody>
     </table>
     {$page|raw}
@@ -90,8 +94,8 @@
                 success: function (json) {
                     console.log(json)
                     if (json.code == 1) {
-                        dialog.alert({size:'md',content:'<div class="text-center"><img src="' + json.data.qrcode + '"/></div><div>链接: ' + json.data.url + ' <a href="'+json.data.url+'" target="_blank"><i class="ion-md-open"></i></a></div>'}
-                        ,null);
+                        dialog.alert({ size: 'md', content: '<div class="text-center"><img src="' + json.data.qrcode + '"/></div><div>链接: ' + json.data.url + ' <a href="' + json.data.url + '" target="_blank"><i class="ion-md-open"></i></a></div>' }
+                            , null);
                     } else {
                         dialog.alert(json.message);
                     }

@@ -59,7 +59,7 @@ class Poster
     ];
 
     /**
-     * @var resource|GdImage
+     * @var resource|\GdImage
      */
     protected $bg;
 

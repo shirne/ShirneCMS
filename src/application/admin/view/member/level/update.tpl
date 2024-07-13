@@ -1,14 +1,14 @@
 {extend name="public:base"/}
 
 {block name="body"}
-    {include file="public/bread" menu="member_level_index" title="会员组配置"/}
+{include file="public/bread" menu="member_level_index" title="会员组配置"/}
 
-    <div id="page-wrapper">
-        <div class="page-header">{if empty($model['level_id'])}添加{else}编辑{/if}等级</div>
-        <div class="page-content">
-            <form method="post">
-                <div class="row">
-                    <div class="col-12 col-lg-6">
+<div id="page-wrapper">
+    <div class="page-header">{if empty($model['level_id'])}添加{else}编辑{/if}等级</div>
+    <div class="page-content">
+        <form method="post">
+            <div class="row">
+                <div class="col-12 col-lg-6">
                     <div class="card mt-3">
                         <div class="card-header">基本设置</div>
                         <div class="card-body">
@@ -19,8 +19,7 @@
                                             <span class="input-group-text">等级名称</span>
                                         </div>
                                         <input type="text" name="level_name" class="form-control"
-                                               value="{$model.level_name|default=''}"
-                                               placeholder="输入名称">
+                                            value="{$model.level_name|default=''}" placeholder="输入名称">
                                     </div>
                                 </div>
                                 <div class="form-group col">
@@ -29,8 +28,7 @@
                                             <span class="input-group-text">简称</span>
                                         </div>
                                         <input type="text" name="short_name" class="form-control"
-                                               value="{$model.short_name|default=''}"
-                                               placeholder="名称简写">
+                                            value="{$model.short_name|default=''}" placeholder="名称简写">
                                     </div>
                                 </div>
 
@@ -42,11 +40,11 @@
                                             <span class="input-group-text">样式</span>
                                         </div>
                                         <select name="style" class="form-control text-{$model.style|default=''}"
-                                                onchange="$(this).attr('class','form-control text-'+$(this).val())">
+                                            onchange="$(this).attr('class','form-control text-'+$(this).val())">
                                             {foreach $styles as $style}
-                                                <option value="{$style}" {$model['style']==$style?'selected':''}
-                                                        class="text-{$style}">██████████
-                                                </option>
+                                            <option value="{$style}" {$model['style']==$style?'selected':''}
+                                                class="text-{$style}">██████████
+                                            </option>
                                             {/foreach}
                                         </select>
                                     </div>
@@ -56,8 +54,8 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">排序</span>
                                         </div>
-                                        <input type="text" name="sort" class="form-control" value="{$model.sort|default=''}"
-                                               placeholder="越小越靠前">
+                                        <input type="text" name="sort" class="form-control"
+                                            value="{$model.sort|default=''}" placeholder="越小越靠前">
                                     </div>
                                 </div>
                             </div>
@@ -66,13 +64,14 @@
                                     <label for="is_default">是否默认</label>
                                     <div class="col">
                                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                            <label class="btn btn-outline-primary {$model['is_default']?"active":""}">
-                                                <input type="radio" name="is_default" value="1"
-                                                       autocomplete="off" {$model['is_default']?"checked":""}> 是
+                                            <label class="btn btn-outline-primary {$model['is_default']?" active":""}">
+                                                <input type="radio" name="is_default" value="1" autocomplete="off"
+                                                    {$model['is_default']?"checked":""}> 是
                                             </label>
-                                            <label class="btn btn-outline-secondary {$model['is_default']?"":"active"}">
-                                                <input type="radio" name="is_default" value="0"
-                                                       autocomplete="off" {$model['is_default']?"":"checked"}> 否
+                                            <label class="btn btn-outline-secondary {$model['is_default']?"":"
+                                                active"}">
+                                                <input type="radio" name="is_default" value="0" autocomplete="off"
+                                                    {$model['is_default']?"":"checked"}> 否
                                             </label>
                                         </div>
                                     </div>
@@ -81,13 +80,13 @@
                                     <label for="is_default">是否代理</label>
                                     <div class="col">
                                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                            <label class="btn btn-outline-primary {$model['is_agent']?"active":""}">
-                                                <input type="radio" name="is_agent" value="1"
-                                                       autocomplete="off" {$model['is_agent']?"checked":""}> 是
+                                            <label class="btn btn-outline-primary {$model['is_agent']?" active":""}">
+                                                <input type="radio" name="is_agent" value="1" autocomplete="off"
+                                                    {$model['is_agent']?"checked":""}> 是
                                             </label>
-                                            <label class="btn btn-outline-secondary {$model['is_agent']?"":"active"}">
-                                                <input type="radio" name="is_agent" value="0"
-                                                       autocomplete="off" {$model['is_agent']?"":"checked"}> 否
+                                            <label class="btn btn-outline-secondary {$model['is_agent']?"":" active"}">
+                                                <input type="radio" name="is_agent" value="0" autocomplete="off"
+                                                    {$model['is_agent']?"":"checked"}> 否
                                             </label>
                                         </div>
                                     </div>
@@ -99,7 +98,7 @@
                         </div>
                     </div>
                 </div>
-                    <div class="col-12 col-lg-6">
+                <div class="col-12 col-lg-6">
                     <div class="card mt-3">
                         <div class="card-header">消费设置</div>
                         <div class="card-body">
@@ -108,13 +107,15 @@
                                     <label for="is_default">升级方式</label>
                                     <div class="col">
                                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                            <label class="btn btn-outline-primary {$model['upgrade_type']=='1'?"active":""}">
-                                                <input type="radio" name="upgrade_type" value="1"
-                                                    autocomplete="off" {$model['upgrade_type']=='1'?"checked":""}> 自动升级
+                                            <label class="btn btn-outline-primary {$model['upgrade_type']=='1'?"
+                                                active":""}">
+                                                <input type="radio" name="upgrade_type" value="1" autocomplete="off"
+                                                    {$model['upgrade_type']=='1' ?"checked":""}> 自动升级
                                             </label>
-                                            <label class="btn btn-outline-secondary {$model['upgrade_type']==0?"active":""}">
-                                                <input type="radio" name="upgrade_type" value="0"
-                                                    autocomplete="off" {$model['upgrade_type']==0?"checked":""}> 手动或绑定
+                                            <label class="btn btn-outline-secondary {$model['upgrade_type']==0?"
+                                                active":""}">
+                                                <input type="radio" name="upgrade_type" value="0" autocomplete="off"
+                                                    {$model['upgrade_type']==0?"checked":""}> 手动或绑定
                                             </label>
                                         </div>
                                     </div>
@@ -125,8 +126,7 @@
                                             <span class="input-group-text">消费额度</span>
                                         </div>
                                         <input type="text" name="level_price" class="form-control"
-                                            value="{$model.level_price|default=''}"
-                                            placeholder="输入消费额度">
+                                            value="{$model.level_price|default=''}" placeholder="输入消费额度">
                                     </div>
                                 </div>
                             </div>
@@ -138,13 +138,15 @@
                                     <label for="is_default">自定义价格</label>
                                     <div class="col">
                                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                            <label class="btn btn-outline-primary {$model['diy_price']=='1'?"active":""}">
-                                                <input type="radio" name="diy_price" value="1"
-                                                    autocomplete="off" {$model['diy_price']=='1'?"checked":""}> 是
+                                            <label class="btn btn-outline-primary {$model['diy_price']=='1'?"
+                                                active":""}">
+                                                <input type="radio" name="diy_price" value="1" autocomplete="off"
+                                                    {$model['diy_price']=='1' ?"checked":""}> 是
                                             </label>
-                                            <label class="btn btn-outline-secondary {$model['diy_price']==0?"active":""}">
-                                                <input type="radio" name="diy_price" value="0"
-                                                    autocomplete="off" {$model['diy_price']==0?"checked":""}> 否
+                                            <label class="btn btn-outline-secondary {$model['diy_price']==0?"
+                                                active":""}">
+                                                <input type="radio" name="diy_price" value="0" autocomplete="off"
+                                                    {$model['diy_price']==0?"checked":""}> 否
                                             </label>
                                         </div>
                                     </div>
@@ -154,8 +156,8 @@
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">会员折扣</span>
                                         </div>
-                                        <input type="text" name="discount" class="form-control" value="{$model.discount|default=''}"
-                                            placeholder="百分比折扣">
+                                        <input type="text" name="discount" class="form-control"
+                                            value="{$model.discount|default=''}" placeholder="百分比折扣">
                                         <div class="input-group-append">
                                             <span class="input-group-text">%</span>
                                         </div>
@@ -168,57 +170,56 @@
                         </div>
                     </div>
 
-                    </div>
                 </div>
+            </div>
 
-                <div class="card mt-3">
-                    <div class="card-header">奖励设置</div>
-                    <div class="card-body">
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text">推荐代数</span>
-                                </div>
-                                <input type="text" name="commission_layer" class="form-control"
-                                       value="{$model.commission_layer|default=''}"
-                                       placeholder="佣金层数">
-                                <div class="input-group-middle">
-                                    <span class="input-group-text">本金上限</span>
-                                </div>
-                                <input type="text" name="commission_limit" class="form-control"
-                                       value="{$model.commission_limit|default=''}">
+            <div class="card mt-3">
+                <div class="card-header">奖励设置</div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">推荐代数</span>
                             </div>
-                            <div class="row">
-                                <div class="col form-text text-muted">代数修改需保存后才能再修改比例</div>
-                                <div class="col form-text text-muted">本金上限即计算佣金时基数的最大值，填写 0 为不限制</div>
+                            <input type="text" name="commission_layer" class="form-control"
+                                value="{$model.commission_layer|default=''}" placeholder="佣金层数">
+                            <div class="input-group-middle">
+                                <span class="input-group-text">本金上限</span>
                             </div>
+                            <input type="text" name="commission_limit" class="form-control"
+                                value="{$model.commission_limit|default=''}">
                         </div>
-                        <div class="form-group">
-                            <label for="cc">推荐比例</label>
-                            <div class="row">
-                                {for start="0" end="$model['commission_layer']"}
-                                    <div class="input-group col">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">第 {$i+1} 代</span>
-                                        </div>
-                                        <input type="text" name="commission_percent[{$i}]"
-                                               value="{$model['commission_percent'][$i]|default=''}"
-                                               class="form-control"/>
-                                        <div class="input-group-append">
-                                            <span class="input-group-text">%</span>
-                                        </div>
-                                    </div>
-                                {/for}
-                            </div>
-                            <span class="form-text text-muted">佣金本金 = 本金上限 > 0 ? min(销售价-成本价,本金上限) : (销售价-成本价) &nbsp;|&nbsp; 佣金金额 = 佣金本金 * 消费会员相对本会员的层级的比例</span>
+                        <div class="row">
+                            <div class="col form-text text-muted">代数修改需保存后才能再修改比例</div>
+                            <div class="col form-text text-muted">本金上限即计算佣金时基数的最大值，填写 0 为不限制</div>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label for="cc">推荐比例</label>
+                        <div class="row">
+                            {for start="0" end="$model['commission_layer']"}
+                            <div class="input-group col">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">第 {$i+1} 代</span>
+                                </div>
+                                <input type="text" name="commission_percent[{$i}]"
+                                    value="{$model['commission_percent'][$i]|default=''}" class="form-control" />
+                                <div class="input-group-append">
+                                    <span class="input-group-text">%</span>
+                                </div>
+                            </div>
+                            {/for}
+                        </div>
+                        <span class="form-text text-muted">佣金本金 = 本金上限 > 0 ? min(销售价-成本价,本金上限) : (销售价-成本价) &nbsp;|&nbsp;
+                            佣金金额 = 佣金本金 * 消费会员相对本会员的层级的比例</span>
+                    </div>
                 </div>
-                <div class="form-group mt-3">
-                    <input type="hidden" name="level_id" value="{$model.level_id|default=''}"/>
-                    <button type="submit" class="btn btn-primary">提交</button>
-                </div>
-            </form>
-        </div>
+            </div>
+            <div class="form-group mt-3">
+                <input type="hidden" name="level_id" value="{$model.level_id|default=''}" />
+                <button type="submit" class="btn btn-primary">提交</button>
+            </div>
+        </form>
     </div>
+</div>
 {/block}

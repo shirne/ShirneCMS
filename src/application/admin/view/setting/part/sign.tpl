@@ -1,18 +1,17 @@
-
 <div class="form-row form-group">
     <label for="v-sign_open" class="col-3 col-md-2 text-right align-middle">开启签到</label>
     <div class="col-9 col-md-8 col-lg-6">
         <div class="btn-group btn-group-toggle" data-toggle="buttons">
             {foreach $setting['sign_open']['data'] as $k => $value}
-                {if $k==$setting['sign_open']['value']}
-                    <label class="btn btn-outline-secondary active">
-                        <input type="radio" name="v-sign_open" value="{$k}" autocomplete="off" checked> {$value}
-                    </label>
-                    {else /}
-                    <label class="btn btn-outline-secondary">
-                        <input type="radio" name="v-sign_open" value="{$k}" autocomplete="off"> {$value}
-                    </label>
-                {/if}
+            {if $k==$setting['sign_open']['value']}
+            <label class="btn btn-outline-secondary active">
+                <input type="radio" name="v-sign_open" value="{$k}" autocomplete="off" checked> {$value}
+            </label>
+            {else /}
+            <label class="btn btn-outline-secondary">
+                <input type="radio" name="v-sign_open" value="{$k}" autocomplete="off"> {$value}
+            </label>
+            {/if}
             {/foreach}
         </div>
     </div>
@@ -23,15 +22,15 @@
     <div class="col-9 col-md-8 col-lg-6">
         <div class="btn-group btn-group-toggle" data-toggle="buttons">
             {foreach $setting['sup_sign_open']['data'] as $k => $value}
-                {if $k==$setting['sup_sign_open']['value']}
-                    <label class="btn btn-outline-secondary active">
-                        <input type="radio" name="v-sup_sign_open" value="{$k}" autocomplete="off" checked> {$value}
-                    </label>
-                {else /}
-                    <label class="btn btn-outline-secondary">
-                        <input type="radio" name="v-sup_sign_open" value="{$k}" autocomplete="off"> {$value}
-                    </label>
-                {/if}
+            {if $k==$setting['sup_sign_open']['value']}
+            <label class="btn btn-outline-secondary active">
+                <input type="radio" name="v-sup_sign_open" value="{$k}" autocomplete="off" checked> {$value}
+            </label>
+            {else /}
+            <label class="btn btn-outline-secondary">
+                <input type="radio" name="v-sup_sign_open" value="{$k}" autocomplete="off"> {$value}
+            </label>
+            {/if}
             {/foreach}
         </div>
     </div>
@@ -42,9 +41,11 @@
     <div class="col-9 col-md-8 col-lg-6">
         <div class="input-group">
             <span class="input-group-prepend"><span class="input-group-text">扣除积分</span></span>
-            <input type="text" class="form-control" name="v-sup_sign_rule[credit]" value="{$setting['sup_sign_rule']['value']['credit']}" placeholder="">
+            <input type="text" class="form-control" name="v-sup_sign_rule[credit]"
+                value="{$setting['sup_sign_rule']['value']['credit']}" placeholder="">
             <span class="input-group-middle"><span class="input-group-text">每月次数</span></span>
-            <input type="text" class="form-control" name="v-sup_sign_rule[times]" value="{$setting['sup_sign_rule']['value']['times']}" placeholder="">
+            <input type="text" class="form-control" name="v-sup_sign_rule[times]"
+                value="{$setting['sup_sign_rule']['value']['times']}" placeholder="">
         </div>
     </div>
 </div>
@@ -54,15 +55,15 @@
     <div class="col-9 col-md-8 col-lg-6">
         <div class="btn-group btn-group-toggle" data-toggle="buttons">
             {foreach $setting['sign_cycle']['data'] as $k => $value}
-                {if $k==$setting['sign_cycle']['value']}
-                    <label class="btn btn-outline-secondary active">
-                        <input type="radio" name="v-sign_cycle" value="{$k}" autocomplete="off" checked> {$value}
-                    </label>
-                    {else /}
-                    <label class="btn btn-outline-secondary">
-                        <input type="radio" name="v-sign_cycle" value="{$k}" autocomplete="off"> {$value}
-                    </label>
-                {/if}
+            {if $k==$setting['sign_cycle']['value']}
+            <label class="btn btn-outline-secondary active">
+                <input type="radio" name="v-sign_cycle" value="{$k}" autocomplete="off" checked> {$value}
+            </label>
+            {else /}
+            <label class="btn btn-outline-secondary">
+                <input type="radio" name="v-sign_cycle" value="{$k}" autocomplete="off"> {$value}
+            </label>
+            {/if}
             {/foreach}
         </div>
     </div>
@@ -72,9 +73,11 @@
     <div class="col-9 col-md-8 col-lg-6">
         <div class="input-group">
             <span class="input-group-prepend"><span class="input-group-text">首次签到</span></span>
-            <input type="text" class="form-control" name="v-sign_award[first]" value="{$setting['sign_award']['value']['first']}" placeholder="">
+            <input type="text" class="form-control" name="v-sign_award[first]"
+                value="{$setting['sign_award']['value']['first']}" placeholder="">
             <span class="input-group-middle"><span class="input-group-text">普通签到</span></span>
-            <input type="text" class="form-control" name="v-sign_award[normal]" value="{$setting['sign_award']['value']['normal']}" placeholder="">
+            <input type="text" class="form-control" name="v-sign_award[normal]"
+                value="{$setting['sign_award']['value']['normal']}" placeholder="">
         </div>
     </div>
 </div>
@@ -83,15 +86,17 @@
     <label for="v-sign_keep_award" class="col-3 col-md-2 text-right align-middle">连续奖励</label>
     <div class="col-9 col-md-8 col-lg-6 keepawdrows">
         {foreach $setting['sign_keep_award']['value'] as $key => $keep_day}
-            <div class="input-group mb-2" data-key="{$key}">
-                <span class="input-group-prepend"><span class="input-group-text">连续签到</span></span>
-                <input type="text" class="form-control" name="v-sign_keep_award[{$key}][day]" value="{$keep_day['day']}" placeholder="">
-                <span class="input-group-middle"><span class="input-group-text">天，奖励</span></span>
-                <input type="text" class="form-control" name="v-sign_keep_award[{$key}][value]" value="{$keep_day['value']}" placeholder="">
-                <div class="input-group-append">
+        <div class="input-group mb-2" data-key="{$key}">
+            <span class="input-group-prepend"><span class="input-group-text">连续签到</span></span>
+            <input type="text" class="form-control" name="v-sign_keep_award[{$key}][day]" value="{$keep_day['day']}"
+                placeholder="">
+            <span class="input-group-middle"><span class="input-group-text">天，奖励</span></span>
+            <input type="text" class="form-control" name="v-sign_keep_award[{$key}][value]" value="{$keep_day['value']}"
+                placeholder="">
+            <div class="input-group-append">
                 <a class="btn btn-outline-secondary delkeepbtn" href="javascript:">移除</a>
-                </div>
             </div>
+        </div>
         {/foreach}
         <a href="javascript:" class="btn btn-primary addkeepbtn">添加奖励</a>
     </div>
@@ -101,7 +106,8 @@
 <div class="form-row form-group">
     <label for="v-sign_description" class="col-3 col-md-2 text-right align-middle">签到说明</label>
     <div class="col-9 col-md-8 col-lg-6">
-        <textarea name="v-sign_description" class="form-control" placeholder="签到说明">{$setting['sign_description']['value']}</textarea>
+        <textarea name="v-sign_description" class="form-control"
+            placeholder="签到说明">{$setting['sign_description']['value']}</textarea>
     </div>
 </div>
 <script type="text/html" id="keepday_tpl">
@@ -116,23 +122,23 @@
     </div>
 </script>
 <script type="text/javascript">
-jQuery(function($){
-    var maxkey=1;
-    var lastgroup=$('.keepawdrows>.input-group').eq(-1)
-    if(lastgroup.length>0){
-        maxkey = lastgroup.data('key')+1;
-    }
-    var tpl = $('#keepday_tpl').html();
-    $('.addkeepbtn').click(function(e){
-        $(tpl.compile({key: maxkey})).insertBefore(this)
-        maxkey++
-    });
+    jQuery(function ($) {
+        var maxkey = 1;
+        var lastgroup = $('.keepawdrows>.input-group').eq(-1)
+        if (lastgroup.length > 0) {
+            maxkey = lastgroup.data('key') + 1;
+        }
+        var tpl = $('#keepday_tpl').html();
+        $('.addkeepbtn').click(function (e) {
+            $(tpl.compile({ key: maxkey })).insertBefore(this)
+            maxkey++
+        });
 
-    $('.keepawdrows').on('click','.delkeepbtn',function(e){
-        var row = $(this).parents('.input-group');
-        dialog.confirm('确定删除该行规则？',function () {
-            row.remove();
+        $('.keepawdrows').on('click', '.delkeepbtn', function (e) {
+            var row = $(this).parents('.input-group');
+            dialog.confirm('确定删除该行规则？', function () {
+                row.remove();
+            })
         })
     })
-})
 </script>

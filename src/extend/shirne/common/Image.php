@@ -10,7 +10,7 @@ namespace shirne\common;
 class Image
 {
     /**
-     * @var resource|GdImage
+     * @var resource|\GdImage
      */
     private $image;
 

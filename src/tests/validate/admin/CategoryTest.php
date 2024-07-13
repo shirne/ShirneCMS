@@ -7,7 +7,8 @@ use tests\TestCase;
 
 class CategoryTest extends TestCase
 {
-    public function testIndex(){
+    public function testIndex()
+    {
 
         $validate = new CategoryValidate();
         $validate->setId(0);

@@ -1,34 +1,35 @@
 {extend name="public:base" /}
 
 {block name="body"}
-    {include file="public/bread" menu="member_authen_index" title="升级申请" /}
+{include file="public/bread" menu="member_authen_index" title="升级申请" /}
 
-    <div id="page-wrapper" class="page-form">
-        <div class="card mb-3">
-            <div class="card-header">
-                <h3 class="card-title">会员信息</h3>
-            </div>
-            <table class="table">
-                <tbody>
+<div id="page-wrapper" class="page-form">
+    <div class="card mb-3">
+        <div class="card-header">
+            <h3 class="card-title">会员信息</h3>
+        </div>
+        <table class="table">
+            <tbody>
                 <tr>
                     <td colspan="4">
                         <div class="media">
                             {if !empty($member['avatar'])}
-                                <img src="{$member.avatar}" class="mr-2 rounded" width="60"/>
+                            <img src="{$member.avatar}" class="mr-2 rounded" width="60" />
                             {/if}
                             <div class="media-body">
                                 <h5 class="text-nowrap mt-0 mb-1">
                                     [{$member.id}]
                                     {if !empty($member['nickname'])}
-                                        {$member.nickname}
-                                        {else/}
-                                        {$member.username}
+                                    {$member.nickname}
+                                    {else/}
+                                    {$member.username}
                                     {/if}
                                 </h5>
                                 <div style="font-size:12px;">
-                                {if !empty($member['realname'])}真实姓名：{$member.realname}{/if}
-                                注册时间：{$member.create_time|showdate}<br/>
-                                    上次登陆：{$member.logintime|showdate} {if !empty($member['login_ip'])}[{$member.login_ip}]{/if}
+                                    {if !empty($member['realname'])}真实姓名：{$member.realname}{/if}
+                                    注册时间：{$member.create_time|showdate}<br />
+                                    上次登陆：{$member.logintime|showdate} {if
+                                    !empty($member['login_ip'])}[{$member.login_ip}]{/if}
                                 </div>
                             </div>
                         </div>
@@ -52,57 +53,57 @@
                     <td>团队业绩</td>
                     <td>{$member.total_performance|showmoney}</td>
                 </tr>
-                </tbody>
-            </table>
+            </tbody>
+        </table>
+    </div>
+    <div class="card mb-3">
+        <div class="card-heading">
+            <h3 class="card-title">申请信息</h3>
         </div>
-        <div class="card mb-3">
-            <div class="card-heading">
-                <h3 class="card-title">申请信息</h3>
-            </div>
-            <form method="post">
+        <form method="post">
             <table class="table">
                 <tbody>
-                <tr>
-                    <td>真实姓名</td>
-                    <td>{$model.realname}</td>
-                    <td>手机号码</td>
-                    <td>{$model.mobile}</td>
-                </tr>
-                <tr>
-                    <td>所在省份</td>
-                    <td>{$model.province}</td>
-                    <td>所在城市</td>
-                    <td>{$model.city}</td>
-                </tr>
-                <tr>
-                    <th>审核状态</th>
-                    <th colspan="3">
-                        <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                            <label class="btn btn-outline-success {$model['status']==1?"active":""}">
-                                <input type="radio" name="status" value="1"
-                                        autocomplete="off" {$model['status']==1?"checked":""}> 通过
-                            </label>
-                            <label class="btn btn-outline-danger {$model['status']?"":"active"}">
-                                <input type="radio" name="status" value="0"
-                                        autocomplete="off" {$model['status']?"":"checked"}> 驳回
-                            </label>
-                            <label class="btn btn-outline-warning {$model['status']==-1?"":"active"}">
-                                <input type="radio" name="status" value="-1"
-                                        autocomplete="off" {$model['status']==-1?"":"checked"}> 审核中
-                            </label>
-                        </div>
-                    </th>
-                </tr>
-                <tr>
-                    <th colspan="4">驳回备注</th>
-                </tr>
-                <tr>
-                    <td colspan="4">
-                        <textarea class="form-control">
+                    <tr>
+                        <td>真实姓名</td>
+                        <td>{$model.realname}</td>
+                        <td>手机号码</td>
+                        <td>{$model.mobile}</td>
+                    </tr>
+                    <tr>
+                        <td>所在省份</td>
+                        <td>{$model.province}</td>
+                        <td>所在城市</td>
+                        <td>{$model.city}</td>
+                    </tr>
+                    <tr>
+                        <th>审核状态</th>
+                        <th colspan="3">
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                <label class="btn btn-outline-success {$model['status']==1?" active":""}">
+                                    <input type="radio" name="status" value="1" autocomplete="off"
+                                        {$model['status']==1?"checked":""}> 通过
+                                </label>
+                                <label class="btn btn-outline-danger {$model['status']?"":" active"}">
+                                    <input type="radio" name="status" value="0" autocomplete="off"
+                                        {$model['status']?"":"checked"}> 驳回
+                                </label>
+                                <label class="btn btn-outline-warning {$model['status']==-1?"":" active"}">
+                                    <input type="radio" name="status" value="-1" autocomplete="off"
+                                        {$model['status']==-1?"":"checked"}> 审核中
+                                </label>
+                            </div>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th colspan="4">驳回备注</th>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <textarea class="form-control">
                             {$model.remark}
                         </textarea>
-                    </td>
-                </tr>
+                        </td>
+                    </tr>
                 </tbody>
                 <tfoot>
                     <tr>
@@ -112,15 +113,15 @@
                     </tr>
                 </tfoot>
             </table>
-            </form>
-        </div>
+        </form>
     </div>
+</div>
 {/block}
 {block name="script"}
-    <script type="text/javascript">
-        jQuery(function($){
-            
+<script type="text/javascript">
+    jQuery(function ($) {
 
-        })
-    </script>
+
+    })
+</script>
 {/block}

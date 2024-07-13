@@ -40,74 +40,74 @@
     </div>
 </script>
 <script type="text/javascript">
-jQuery(function($){
-    var statusTitles=['订单取消','订单支付','订单发货','订单确认','订单完成'];
-    var actions=['setcancel','setpayed','setdelivery','setreceive','setcomplete'];
-    var tpl=$('#orderStatus').text();
-    $('.btn-status').click(function() {
-        var id=$(this).data('id');
-        var status=$(this).data('status');
-        var express=($(this).data('express')+'').split('/');
-        var action = actions[status<0?0:status];
-        if(!action){
-            dialog.error('操作错误')
-        }
-        var dlg=new Dialog({
-            onshown:function(body){
-                var express_code=body.find('.express-code');
-                express_code.change(function(){
-                    if($(this).val()){
-                        body.find('.express_no').show();
-                    }else{
-                        body.find('.express_no').hide();
-                    }
-                }).val(express[0]||'');
-                body.find('.express-no').val(express[1]||'');
-                body.find('.status_ext').hide();
-                if(status == 1){
-                    body.find('.paytype_row').show();
-                }else if(status==2){
-                    body.find('.express_row').show();
-                }else if(status < 0){
-                    body.find('.status_ext_0').show();
-                }else if(status == 3){
-                    body.find('.status_ext_3').show();
-                }else if(status == 4){
-                    body.find('.status_ext_4').show();
-                }
-                
-            },
-            onsure:function(body){
-                var data={
-                        id:id,
-                        status:status
-                    };
-                if(data.status==1){
-                    data['paytype']=body.find('[name=paytype]:checked').val();
-                }else if(data.status==2){
-                    data['express_code']=body.find('select.express-code').val();
-                    data['express_no']=body.find('.express-no').val();
-                }
-                
-                $.ajax({
-                    url:"{:url('credit.order/[action]')}".replace('[action]',action),
-                    type:'POST',
-                    data:data,
-                    dataType:'JSON',
-                    success:function(json){
-                        dlg.hide();
-                        if(json.code==1){
-                            dialog.success(json.msg)
-                        }else{
-                            dialog.error(json.msg)
-                        }
-                        setTimeout(function(){
-                            location.reload();
-                        },800)
-                    }
-                })
+    jQuery(function ($) {
+        var statusTitles = ['订单取消', '订单支付', '订单发货', '订单确认', '订单完成'];
+        var actions = ['setcancel', 'setpayed', 'setdelivery', 'setreceive', 'setcomplete'];
+        var tpl = $('#orderStatus').text();
+        $('.btn-status').click(function () {
+            var id = $(this).data('id');
+            var status = $(this).data('status');
+            var express = ($(this).data('express') + '').split('/');
+            var action = actions[status < 0 ? 0 : status];
+            if (!action) {
+                dialog.error('操作错误')
             }
-        }).show(tpl,statusTitles[status<0?0:status]);
-    });
-})
+            var dlg = new Dialog({
+                onshown: function (body) {
+                    var express_code = body.find('.express-code');
+                    express_code.change(function () {
+                        if ($(this).val()) {
+                            body.find('.express_no').show();
+                        } else {
+                            body.find('.express_no').hide();
+                        }
+                    }).val(express[0] || '');
+                    body.find('.express-no').val(express[1] || '');
+                    body.find('.status_ext').hide();
+                    if (status == 1) {
+                        body.find('.paytype_row').show();
+                    } else if (status == 2) {
+                        body.find('.express_row').show();
+                    } else if (status < 0) {
+                        body.find('.status_ext_0').show();
+                    } else if (status == 3) {
+                        body.find('.status_ext_3').show();
+                    } else if (status == 4) {
+                        body.find('.status_ext_4').show();
+                    }
+
+                },
+                onsure: function (body) {
+                    var data = {
+                        id: id,
+                        status: status
+                    };
+                    if (data.status == 1) {
+                        data['paytype'] = body.find('[name=paytype]:checked').val();
+                    } else if (data.status == 2) {
+                        data['express_code'] = body.find('select.express-code').val();
+                        data['express_no'] = body.find('.express-no').val();
+                    }
+
+                    $.ajax({
+                        url: "{:url('credit.order/[action]')}".replace('[action]', action),
+                        type: 'POST',
+                        data: data,
+                        dataType: 'JSON',
+                        success: function (json) {
+                            dlg.hide();
+                            if (json.code == 1) {
+                                dialog.success(json.msg)
+                            } else {
+                                dialog.error(json.msg)
+                            }
+                            setTimeout(function () {
+                                location.reload();
+                            }, 800)
+                        }
+                    })
+                }
+            }).show(tpl, statusTitles[status < 0 ? 0 : status]);
+        });
+    })
 </script>

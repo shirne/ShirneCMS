@@ -77,6 +77,7 @@ return implode(', ', $result);
 ?>
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>系统发生错误</title>
@@ -89,13 +90,15 @@ return implode(', ', $result);
             margin: 0;
             padding: 0 20px 20px;
         }
-        h1{
+
+        h1 {
             margin: 10px 0 0;
             font-size: 28px;
             font-weight: 500;
             line-height: 32px;
         }
-        h2{
+
+        h2 {
             color: #4288ce;
             font-weight: 400;
             padding: 6px 0;
@@ -103,24 +106,29 @@ return implode(', ', $result);
             font-size: 18px;
             border-bottom: 1px solid #eee;
         }
-        h3{
+
+        h3 {
             margin: 12px;
             font-size: 16px;
             font-weight: bold;
         }
-        abbr{
+
+        abbr {
             cursor: help;
             text-decoration: underline;
             text-decoration-style: dotted;
         }
-        a{
+
+        a {
             color: #868686;
             cursor: pointer;
         }
-        a:hover{
+
+        a:hover {
             text-decoration: underline;
         }
-        .line-error{
+
+        .line-error {
             background: #f8cbcb;
         }
 
@@ -139,7 +147,7 @@ return implode(', ', $result);
             font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
         }
 
-        .echo pre > pre {
+        .echo pre>pre {
             padding: 0;
             margin: 0;
         }
@@ -148,18 +156,19 @@ return implode(', ', $result);
         .exception {
             margin-top: 20px;
         }
-        .exception .message{
+
+        .exception .message {
             padding: 12px;
             border: 1px solid #ddd;
             border-bottom: 0 none;
             line-height: 18px;
-            font-size:16px;
+            font-size: 16px;
             border-top-left-radius: 4px;
             border-top-right-radius: 4px;
-            font-family: Consolas,"Liberation Mono",Courier,Verdana,"微软雅黑";
+            font-family: Consolas, "Liberation Mono", Courier, Verdana, "微软雅黑";
         }
 
-        .exception .code{
+        .exception .code {
             float: left;
             text-align: center;
             color: #fff;
@@ -168,7 +177,8 @@ return implode(', ', $result);
             border-radius: 4px;
             background: #999;
         }
-        .exception .source-code{
+
+        .exception .source-code {
             padding: 6px;
             border: 1px solid #ddd;
 
@@ -176,140 +186,216 @@ return implode(', ', $result);
             overflow-x: auto;
 
         }
-        .exception .source-code pre{
+
+        .exception .source-code pre {
             margin: 0;
         }
-        .exception .source-code pre ol{
+
+        .exception .source-code pre ol {
             margin: 0;
             color: #4288ce;
             display: inline-block;
             min-width: 100%;
             box-sizing: border-box;
-            font-size:14px;
-            font-family: "Century Gothic",Consolas,"Liberation Mono",Courier,Verdana;
-            padding-left: <?php echo (isset($source) && !empty($source)) ? parse_padding($source) : 40;  ?>px;
+            font-size: 14px;
+            font-family: "Century Gothic", Consolas, "Liberation Mono", Courier, Verdana;
+            padding-left: <?php echo (isset($source) && !empty($source)) ? parse_padding($source): 40;
+            ?>px;
         }
-        .exception .source-code pre li{
+
+        .exception .source-code pre li {
             border-left: 1px solid #ddd;
             height: 18px;
             line-height: 18px;
         }
-        .exception .source-code pre code{
+
+        .exception .source-code pre code {
             color: #333;
             height: 100%;
             display: inline-block;
             border-left: 1px solid #fff;
-            font-size:14px;
-            font-family: Consolas,"Liberation Mono",Courier,Verdana,"微软雅黑";
+            font-size: 14px;
+            font-family: Consolas, "Liberation Mono", Courier, Verdana, "微软雅黑";
         }
-        .exception .trace{
+
+        .exception .trace {
             padding: 6px;
             border: 1px solid #ddd;
             border-top: 0 none;
             line-height: 16px;
-            font-size:14px;
-            font-family: Consolas,"Liberation Mono",Courier,Verdana,"微软雅黑";
+            font-size: 14px;
+            font-family: Consolas, "Liberation Mono", Courier, Verdana, "微软雅黑";
         }
-        .exception .trace ol{
+
+        .exception .trace ol {
             margin: 12px;
         }
-        .exception .trace ol li{
+
+        .exception .trace ol li {
             padding: 2px 4px;
         }
-        .exception div:last-child{
+
+        .exception div:last-child {
             border-bottom-left-radius: 4px;
             border-bottom-right-radius: 4px;
         }
 
         /* Exception Variables */
-        .exception-var table{
+        .exception-var table {
             width: 100%;
             margin: 12px 0;
             box-sizing: border-box;
-            table-layout:fixed;
-            word-wrap:break-word;
+            table-layout: fixed;
+            word-wrap: break-word;
         }
-        .exception-var table caption{
+
+        .exception-var table caption {
             text-align: left;
             font-size: 16px;
             font-weight: bold;
             padding: 6px 0;
         }
-        .exception-var table caption small{
+
+        .exception-var table caption small {
             font-weight: 300;
             display: inline-block;
             margin-left: 10px;
             color: #ccc;
         }
-        .exception-var table tbody{
+
+        .exception-var table tbody {
             font-size: 13px;
-            font-family: Consolas,"Liberation Mono",Courier,"微软雅黑";
+            font-family: Consolas, "Liberation Mono", Courier, "微软雅黑";
         }
-        .exception-var table td{
+
+        .exception-var table td {
             padding: 0 6px;
             vertical-align: top;
             word-break: break-all;
         }
-        .exception-var table td:first-child{
+
+        .exception-var table td:first-child {
             width: 28%;
             font-weight: bold;
             white-space: nowrap;
         }
-        .exception-var table td pre{
+
+        .exception-var table td pre {
             margin: 0;
         }
 
         /* Copyright Info */
-        .copyright{
+        .copyright {
             margin-top: 24px;
             padding: 12px 0;
             border-top: 1px solid #eee;
         }
 
         /* SPAN elements with the classes below are added by prettyprint. */
-        pre.prettyprint .pln { color: #000 }  /* plain text */
-        pre.prettyprint .str { color: #080 }  /* string content */
-        pre.prettyprint .kwd { color: #008 }  /* a keyword */
-        pre.prettyprint .com { color: #800 }  /* a comment */
-        pre.prettyprint .typ { color: #606 }  /* a type name */
-        pre.prettyprint .lit { color: #066 }  /* a literal value */
+        pre.prettyprint .pln {
+            color: #000
+        }
+
+        /* plain text */
+        pre.prettyprint .str {
+            color: #080
+        }
+
+        /* string content */
+        pre.prettyprint .kwd {
+            color: #008
+        }
+
+        /* a keyword */
+        pre.prettyprint .com {
+            color: #800
+        }
+
+        /* a comment */
+        pre.prettyprint .typ {
+            color: #606
+        }
+
+        /* a type name */
+        pre.prettyprint .lit {
+            color: #066
+        }
+
+        /* a literal value */
         /* punctuation, lisp open bracket, lisp close bracket */
-        pre.prettyprint .pun, pre.prettyprint .opn, pre.prettyprint .clo { color: #660 }
-        pre.prettyprint .tag { color: #008 }  /* a markup tag name */
-        pre.prettyprint .atn { color: #606 }  /* a markup attribute name */
-        pre.prettyprint .atv { color: #080 }  /* a markup attribute value */
-        pre.prettyprint .dec, pre.prettyprint .var { color: #606 }  /* a declaration; a variable name */
-        pre.prettyprint .fun { color: red }  /* a function name */
+        pre.prettyprint .pun,
+        pre.prettyprint .opn,
+        pre.prettyprint .clo {
+            color: #660
+        }
+
+        pre.prettyprint .tag {
+            color: #008
+        }
+
+        /* a markup tag name */
+        pre.prettyprint .atn {
+            color: #606
+        }
+
+        /* a markup attribute name */
+        pre.prettyprint .atv {
+            color: #080
+        }
+
+        /* a markup attribute value */
+        pre.prettyprint .dec,
+        pre.prettyprint .var {
+            color: #606
+        }
+
+        /* a declaration; a variable name */
+        pre.prettyprint .fun {
+            color: red
+        }
+
+        /* a function name */
     </style>
 </head>
+
 <body>
-<div class="echo">
-    <?php echo $echo;?>
-</div>
-<?php if(\think\facade\App::isDebug()) { ?>
-<div class="exception">
-    <div class="message">
-
-        <div class="info">
-            <div>
-                <h2>[<?php echo $code; ?>]&nbsp;<?php echo sprintf('%s in %s', parse_class($name), parse_file($file, $line)); ?></h2>
-            </div>
-            <div><h1><?php echo nl2br(htmlentities($message)); ?></h1></div>
-        </div>
-
+    <div class="echo">
+        <?php echo $echo;?>
     </div>
-    <?php if(!empty($source)){?>
-    <div class="source-code">
-    <pre class="prettyprint lang-php"><ol start="<?php echo $source['first']; ?>"><?php foreach ((array) $source['source'] as $key => $value) { ?><li class="line-<?php echo $key + $source['first']; ?>"><code><?php echo htmlentities($value); ?></code></li><?php } ?></ol></pre>
-</div>
-<?php }?>
-<div class="trace">
-    <h2>Call Stack</h2>
-    <ol>
-        <li><?php echo sprintf('in %s', parse_file($file, $line)); ?></li>
-        <?php foreach ((array) $trace as $value) { ?>
-        <li>
-            <?php
+    <?php if(\think\facade\App::isDebug()) { ?>
+    <div class="exception">
+        <div class="message">
+
+            <div class="info">
+                <div>
+                    <h2>[
+                        <?php echo $code; ?>]&nbsp;
+                        <?php echo sprintf('%s in %s', parse_class($name), parse_file($file, $line)); ?>
+                    </h2>
+                </div>
+                <div>
+                    <h1>
+                        <?php echo nl2br(htmlentities($message)); ?>
+                    </h1>
+                </div>
+            </div>
+
+        </div>
+        <?php if(!empty($source)){?>
+        <div class="source-code">
+            <pre
+                class="prettyprint lang-php"><ol start="<?php echo $source['first']; ?>"><?php foreach ((array) $source['source'] as $key => $value) { ?><li class="line-<?php echo $key + $source['first']; ?>"><code><?php echo htmlentities($value); ?></code></li><?php } ?></ol></pre>
+        </div>
+        <?php }?>
+        <div class="trace">
+            <h2>Call Stack</h2>
+            <ol>
+                <li>
+                    <?php echo sprintf('in %s', parse_file($file, $line)); ?>
+                </li>
+                <?php foreach ((array) $trace as $value) { ?>
+                <li>
+                    <?php
                     // Show Function
                     if($value['function']){
                         echo sprintf(
@@ -326,34 +412,44 @@ return implode(', ', $result);
                         echo sprintf(' in %s', parse_file($value['file'], $value['line']));
                     }
                 ?>
-        </li>
-        <?php } ?>
-    </ol>
-</div>
-</div>
-<?php } else { ?>
-<div class="exception">
+                </li>
+                <?php } ?>
+            </ol>
+        </div>
+    </div>
+    <?php } else { ?>
+    <div class="exception">
 
-    <div class="info"><h1><?php echo htmlentities($message); ?></h1></div>
+        <div class="info">
+            <h1>
+                <?php echo htmlentities($message); ?>
+            </h1>
+        </div>
 
-</div>
-<?php } ?>
+    </div>
+    <?php } ?>
 
-<?php if(!empty($datas)){ ?>
-<div class="exception-var">
-    <h2>Exception Datas</h2>
-    <?php foreach ((array) $datas as $label => $value) { ?>
-    <table>
-        <?php if(empty($value)){ ?>
-        <caption><?php echo $label; ?><small>empty</small></caption>
-        <?php } else { ?>
-        <caption><?php echo $label; ?></caption>
-        <tbody>
-        <?php foreach ((array) $value as $key => $val) { ?>
-        <tr>
-            <td><?php echo htmlentities($key); ?></td>
-            <td>
-                <?php
+    <?php if(!empty($datas)){ ?>
+    <div class="exception-var">
+        <h2>Exception Datas</h2>
+        <?php foreach ((array) $datas as $label => $value) { ?>
+        <table>
+            <?php if(empty($value)){ ?>
+            <caption>
+                <?php echo $label; ?><small>empty</small>
+            </caption>
+            <?php } else { ?>
+            <caption>
+                <?php echo $label; ?>
+            </caption>
+            <tbody>
+                <?php foreach ((array) $value as $key => $val) { ?>
+                <tr>
+                    <td>
+                        <?php echo htmlentities($key); ?>
+                    </td>
+                    <td>
+                        <?php
                             if(is_array($val) || is_object($val)){
                                 echo htmlentities(json_encode($val, JSON_PRETTY_PRINT));
                             } else if(is_bool($val)) {
@@ -364,31 +460,37 @@ return implode(', ', $result);
                                 echo 'Resource';
                             }
                         ?>
-            </td>
-        </tr>
+                    </td>
+                </tr>
+                <?php } ?>
+            </tbody>
+            <?php } ?>
+        </table>
         <?php } ?>
-        </tbody>
-        <?php } ?>
-    </table>
+    </div>
     <?php } ?>
-</div>
-<?php } ?>
 
-<?php if(!empty($tables)){ ?>
-<div class="exception-var">
-    <h2>Environment Variables</h2>
-    <?php foreach ((array) $tables as $label => $value) { ?>
-    <table>
-        <?php if(empty($value)){ ?>
-        <caption><?php echo $label; ?><small>empty</small></caption>
-        <?php } else { ?>
-        <caption><?php echo $label; ?></caption>
-        <tbody>
-        <?php foreach ((array) $value as $key => $val) { ?>
-        <tr>
-            <td><?php echo htmlentities($key); ?></td>
-            <td>
-                <?php
+    <?php if(!empty($tables)){ ?>
+    <div class="exception-var">
+        <h2>Environment Variables</h2>
+        <?php foreach ((array) $tables as $label => $value) { ?>
+        <table>
+            <?php if(empty($value)){ ?>
+            <caption>
+                <?php echo $label; ?><small>empty</small>
+            </caption>
+            <?php } else { ?>
+            <caption>
+                <?php echo $label; ?>
+            </caption>
+            <tbody>
+                <?php foreach ((array) $value as $key => $val) { ?>
+                <tr>
+                    <td>
+                        <?php echo htmlentities($key); ?>
+                    </td>
+                    <td>
+                        <?php
                             if(is_array($val) || is_object($val)){
                                 echo htmlentities(json_encode($val, JSON_PRETTY_PRINT));
                             } else if(is_bool($val)) {
@@ -399,109 +501,112 @@ return implode(', ', $result);
                                 echo 'Resource';
                             }
                         ?>
-            </td>
-        </tr>
+                    </td>
+                </tr>
+                <?php } ?>
+            </tbody>
+            <?php } ?>
+        </table>
         <?php } ?>
-        </tbody>
-        <?php } ?>
-    </table>
+    </div>
     <?php } ?>
-</div>
-<?php } ?>
 
-<div class="copyright">
-    <a title="官方网站" href="http://www.thinkphp.cn">ThinkPHP</a>
-    <span>V<?php echo \think\facade\App::version(); ?></span>
-    <span>{ 十年磨一剑-为API开发设计的高性能框架 }</span>
-</div>
-<?php if(\think\facade\App::isDebug()) { ?>
-<script>
-    var LINE = <?php echo $line; ?>;
+    <div class="copyright">
+        <a title="官方网站" href="http://www.thinkphp.cn">ThinkPHP</a>
+        <span>V
+            <?php echo \think\facade\App::version(); ?>
+        </span>
+        <span>{ 十年磨一剑-为API开发设计的高性能框架 }</span>
+    </div>
+    <?php if(\think\facade\App::isDebug()) { ?>
+    <script>
+        var LINE = <? php echo $line; ?>;
 
-    function $(selector, node){
-        var elements;
-
-        node = node || document;
-        if(document.querySelectorAll){
-            elements = node.querySelectorAll(selector);
-        } else {
-            switch(selector.substr(0, 1)){
-                case '#':
-                    elements = [node.getElementById(selector.substr(1))];
-                    break;
-                case '.':
-                    if(document.getElementsByClassName){
-                        elements = node.getElementsByClassName(selector.substr(1));
-                    } else {
-                        elements = get_elements_by_class(selector.substr(1), node);
-                    }
-                    break;
-                default:
-                    elements = node.getElementsByTagName();
-            }
-        }
-        return elements;
-
-        function get_elements_by_class(search_class, node, tag) {
-            var elements = [], eles,
-                pattern  = new RegExp('(^|\\s)' + search_class + '(\\s|$)');
+        function $(selector, node) {
+            var elements;
 
             node = node || document;
-            tag  = tag  || '*';
-
-            eles = node.getElementsByTagName(tag);
-            for(var i = 0; i < eles.length; i++) {
-                if(pattern.test(eles[i].className)) {
-                    elements.push(eles[i])
+            if (document.querySelectorAll) {
+                elements = node.querySelectorAll(selector);
+            } else {
+                switch (selector.substr(0, 1)) {
+                    case '#':
+                        elements = [node.getElementById(selector.substr(1))];
+                        break;
+                    case '.':
+                        if (document.getElementsByClassName) {
+                            elements = node.getElementsByClassName(selector.substr(1));
+                        } else {
+                            elements = get_elements_by_class(selector.substr(1), node);
+                        }
+                        break;
+                    default:
+                        elements = node.getElementsByTagName();
                 }
             }
-
             return elements;
-        }
-    }
 
-    $.getScript = function(src, func){
-        var script = document.createElement('script');
+            function get_elements_by_class(search_class, node, tag) {
+                var elements = [], eles,
+                    pattern = new RegExp('(^|\\s)' + search_class + '(\\s|$)');
 
-        script.async  = 'async';
-        script.src    = src;
-        script.onload = func || function(){};
+                node = node || document;
+                tag = tag || '*';
 
-        $('head')[0].appendChild(script);
-    }
+                eles = node.getElementsByTagName(tag);
+                for (var i = 0; i < eles.length; i++) {
+                    if (pattern.test(eles[i].className)) {
+                        elements.push(eles[i])
+                    }
+                }
 
-    ;(function(){
-        var files = $('.toggle');
-        var ol    = $('ol', $('.prettyprint')[0]);
-        var li    = $('li', ol[0]);
-
-        // 短路径和长路径变换
-        for(var i = 0; i < files.length; i++){
-            files[i].ondblclick = function(){
-                var title = this.title;
-
-                this.title = this.innerHTML;
-                this.innerHTML = title;
+                return elements;
             }
         }
 
-        // 设置出错行
-        var err_line = $('.line-' + LINE, ol[0])[0];
-        err_line.className = err_line.className + ' line-error';
+        $.getScript = function (src, func) {
+            var script = document.createElement('script');
 
-        $.getScript('//cdn.bootcss.com/prettify/r298/prettify.min.js', function(){
-            prettyPrint();
+            script.async = 'async';
+            script.src = src;
+            script.onload = func || function () { };
 
-            // 解决Firefox浏览器一个很诡异的问题
-            // 当代码高亮后，ol的行号莫名其妙的错位
-            // 但是只要刷新li里面的html重新渲染就没有问题了
-            if(window.navigator.userAgent.indexOf('Firefox') >= 0){
-                ol[0].innerHTML = ol[0].innerHTML;
-            }
-        });
+            $('head')[0].appendChild(script);
+        }
 
-    })();
-</script>
-<?php } ?>
+            ; (function () {
+                var files = $('.toggle');
+                var ol = $('ol', $('.prettyprint')[0]);
+                var li = $('li', ol[0]);
+
+                // 短路径和长路径变换
+                for (var i = 0; i < files.length; i++) {
+                    files[i].ondblclick = function () {
+                        var title = this.title;
+
+                        this.title = this.innerHTML;
+                        this.innerHTML = title;
+                    }
+                }
+
+                // 设置出错行
+                var err_line = $('.line-' + LINE, ol[0])[0];
+                err_line.className = err_line.className + ' line-error';
+
+                $.getScript('//cdn.bootcss.com/prettify/r298/prettify.min.js', function () {
+                    prettyPrint();
+
+                    // 解决Firefox浏览器一个很诡异的问题
+                    // 当代码高亮后，ol的行号莫名其妙的错位
+                    // 但是只要刷新li里面的html重新渲染就没有问题了
+                    if (window.navigator.userAgent.indexOf('Firefox') >= 0) {
+                        ol[0].innerHTML = ol[0].innerHTML;
+                    }
+                });
+
+            })();
+    </script>
+    <?php } ?>
 </body>
+
 </html>

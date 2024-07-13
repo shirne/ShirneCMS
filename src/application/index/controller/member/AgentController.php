@@ -35,7 +35,7 @@ class AgentController extends BaseController
             $qrCode->setWriterByName('png')
                 ->setMargin(10)
                 ->setEncoding('UTF-8')
-                ->setErrorCorrectionLevel(ErrorCorrectionLevel::HIGH)
+                ->setErrorCorrectionLevel(ErrorCorrectionLevel->HIGH)
                 ->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0])
                 ->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255])
                 //->setLabel('Scan the code', 16, __DIR__.'/../assets/noto_sans.otf', LabelAlignment::CENTER)

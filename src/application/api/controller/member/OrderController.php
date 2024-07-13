@@ -145,7 +145,7 @@ class OrderController extends AuthedController
                 $type = $order['debit_type'];
                 if (empty($type)) $type = 'money';
                 $success = money_log($order['member_id'], $order['payedamount'] * 100, "取消订单退款", 'refund', 0, $type);
-                if($success){
+                if ($success) {
                     $order->save(['payedamount' => 0, 'debit_type' => '']);
                 }
             }

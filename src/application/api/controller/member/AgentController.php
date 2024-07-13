@@ -20,7 +20,7 @@ class AgentController extends AuthedController
     public function initialize()
     {
         parent::initialize();
-        if(!$this->user['is_agent']){
+        if (!$this->user['is_agent']) {
             $this->error('您还不是代理，请先升级为代理');
         }
     }
@@ -190,7 +190,7 @@ class AgentController extends AuthedController
             'page' => $logs->currentPage()
         ]);
     }
-    public function areamember($keyword='')
+    public function areamember($keyword = '')
     {
         if ($this->user['is_agent'] > 2) {
             $levels = getMemberLevels();
@@ -220,7 +220,7 @@ class AgentController extends AuthedController
                 $model->where('city', $this->user['agent_city']);
             }
             $total = $model->count();
-            if(!empty($keyword)){
+            if (!empty($keyword)) {
                 $model->whereLike('nickname|mobile', "%$keyword%");
             }
             $users = $model->field('id,username,nickname,level_id,mobile,avatar,gender,is_agent,province,city,county')
@@ -262,7 +262,7 @@ class AgentController extends AuthedController
             return $this->response([
                 'users' => $users->items(),
                 'total' => $users->total(),
-                'totalcount'=>$total,
+                'totalcount' => $total,
                 'page' => $users->currentPage()
             ]);
         }
@@ -283,10 +283,10 @@ class AgentController extends AuthedController
             ->where('Order.delete_time', 0);
         if ($status !== '') {
             $model->where('Order.status', intval($status));
-        }else {
+        } else {
             $model->where('Order.status', 'EGT', 0);
         }
-        
+
         if ($this->user['is_agent'] == 2) {
             $model->where('Order.city', $this->user['agent_city']);
         }
@@ -392,7 +392,7 @@ class AgentController extends AuthedController
         return $this->response($counts);
     }
 
-    public function team($pid = 0, $level = 1,$keyword='')
+    public function team($pid = 0, $level = 1, $keyword = '')
     {
         $levels = getMemberLevels();
         $curLevel = $levels[$this->user['level_id']];
@@ -440,7 +440,7 @@ class AgentController extends AuthedController
             $model->where('referer', $pid);
         }
         $total = $model->count();
-        if(!empty($keyword)){
+        if (!empty($keyword)) {
             $model->whereLike('nickname|mobile', "%$keyword%");
         }
         $users = $model->field('id,username,nickname,level_id,mobile,avatar,gender,is_agent,province,city,county')
@@ -483,7 +483,7 @@ class AgentController extends AuthedController
         return $this->response([
             'users' => $users->items(),
             'total' => $users->total(),
-            'totalcount'=>$total,
+            'totalcount' => $total,
             'page' => $users->currentPage()
         ]);
     }

@@ -5,12 +5,12 @@
 {include file="public/bread" menu="Board" section="主面板" title=""/}
 <div id="page-wrapper">
     {foreach $notices as $key => $notice}
-        <div class="alert alert-{$notice.type|default='warning'} alert-dismissible fade show" role="alert">
-            {$notice.message|raw}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
+    <div class="alert alert-{$notice.type|default='warning'} alert-dismissible fade show" role="alert">
+        {$notice.message|raw}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
     {/foreach}
     <div class="row">
         <div class="col-lg-3 col-md-6 mb-3">
@@ -28,8 +28,10 @@
                 </div>
                 <div class="card-footer announcement-bottom">
                     <nav class="nav nav-fill">
-                        <a class="nav-item nav-link" href="{:url('feedback/index')}"><i class="ion-md-navicon"></i> 查看留言 </a>
-                        <a class="nav-item nav-link" href="{:url('feedback/statics')}"><i class="ion-md-stats-bars"></i> 留言统计 </a>
+                        <a class="nav-item nav-link" href="{:url('feedback/index')}"><i class="ion-md-navicon"></i> 查看留言
+                        </a>
+                        <a class="nav-item nav-link" href="{:url('feedback/statics')}"><i class="ion-md-stats-bars"></i>
+                            留言统计 </a>
                     </nav>
                 </div>
             </div>
@@ -49,8 +51,10 @@
                 </div>
                 <div class="card-footer announcement-bottom">
                     <nav class="nav nav-fill">
-                        <a class="nav-item nav-link" href="{:url('member/index')}"><i class="ion-md-navicon"></i> 管理会员 </a>
-                        <a class="nav-item nav-link" href="{:url('member/statics')}"><i class="ion-md-stats-bars"></i> 会员统计 </a>
+                        <a class="nav-item nav-link" href="{:url('member/index')}"><i class="ion-md-navicon"></i> 管理会员
+                        </a>
+                        <a class="nav-item nav-link" href="{:url('member/statics')}"><i class="ion-md-stats-bars"></i>
+                            会员统计 </a>
                     </nav>
                 </div>
             </div>
@@ -70,7 +74,8 @@
                 </div>
                 <div class="card-footer announcement-bottom">
                     <nav class="nav nav-fill">
-                        <a class="nav-item nav-link" href="{:url('article/index')}"><i class="ion-md-navicon"></i> 管理文章 </a>
+                        <a class="nav-item nav-link" href="{:url('article/index')}"><i class="ion-md-navicon"></i> 管理文章
+                        </a>
                         <a class="nav-item nav-link" href="{:url('article/add')}"><i class="ion-md-add"></i> 发布文章 </a>
                     </nav>
                 </div>
@@ -91,8 +96,10 @@
                 </div>
                 <div class="card-footer announcement-bottom">
                     <nav class="nav nav-fill">
-                        <a class="nav-item nav-link" href="{:url('links/index')}"><i class="ion-md-navicon"></i> 管理链接 </a>
-                        <a class="nav-item nav-link" href="{:url('links/statics')}"><i class="ion-md-stats-bars"></i> 文章统计 </a>
+                        <a class="nav-item nav-link" href="{:url('links/index')}"><i class="ion-md-navicon"></i> 管理链接
+                        </a>
+                        <a class="nav-item nav-link" href="{:url('links/statics')}"><i class="ion-md-stats-bars"></i>
+                            文章统计 </a>
                     </nav>
                 </div>
             </div>

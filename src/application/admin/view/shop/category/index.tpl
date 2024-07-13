@@ -5,19 +5,22 @@
 {include file="public/bread" menu="shop_category_index" title="" /}
 
 <div id="page-wrapper">
-    
+
     <div class="row list-header">
         <div class="col-6">
-            <a href="{:url('shop.specifications/index')}" class="btn btn-outline-info btn-sm"><i class="ion-md-pricetags"></i> 规格管理</a>
-            <a href="{:url('shop.category/add')}" class="btn btn-outline-primary btn-sm"><i class="ion-md-add"></i> 添加分类</a>
-            <a href="javascript:" class="btn btn-outline-primary btn-sm btn-batch-add"><i class="ion-md-albums"></i> {:lang('Batch add Categories')}</a>
+            <a href="{:url('shop.specifications/index')}" class="btn btn-outline-info btn-sm"><i
+                    class="ion-md-pricetags"></i> 规格管理</a>
+            <a href="{:url('shop.category/add')}" class="btn btn-outline-primary btn-sm"><i class="ion-md-add"></i>
+                添加分类</a>
+            <a href="javascript:" class="btn btn-outline-primary btn-sm btn-batch-add"><i class="ion-md-albums"></i>
+                {:lang('Batch add Categories')}</a>
         </div>
         <div class="col-6">
             <form action="{:url('shop.category/index')}" method="post">
                 <div class="input-group input-group-sm">
                     <input type="text" class="form-control" name="key" placeholder="输入分类标题或者别名关键词搜索">
                     <div class="input-group-append">
-                      <button class="btn btn-outline-secondary" type="submit"><i class="ion-md-search"></i></button>
+                        <button class="btn btn-outline-secondary" type="submit"><i class="ion-md-search"></i></button>
                     </div>
                 </div>
             </form>
@@ -28,7 +31,10 @@
             <tr>
                 <th width="50">编号</th>
                 <th width="70">图标</th>
-                <th colspan="2">{:lang('Title')} <a href="javascript:" class="btn btn-outline-primary btn-sm expandall"><i class="ion-md-add"></i></a> <a href="javascript:" class="btn btn-outline-secondary btn-sm closeall"><i class="ion-md-remove "></i></a></th>
+                <th colspan="2">{:lang('Title')} <a href="javascript:"
+                        class="btn btn-outline-primary btn-sm expandall"><i class="ion-md-add"></i></a> <a
+                        href="javascript:" class="btn btn-outline-secondary btn-sm closeall"><i
+                            class="ion-md-remove "></i></a></th>
                 <th>别名</th>
                 <th>排序</th>
                 <th>状态</th>
@@ -36,47 +42,53 @@
             </tr>
         </thead>
         <tbody>
-        {php}$empty=list_empty(8);{/php}
-        {volist name="model" id="v" empty="$empty"}
+            {php}$empty=list_empty(8);{/php}
+            {volist name="model" id="v" empty="$empty"}
             <tr data-level="{$v.level}">
                 <td>{$v.id}</td>
-                <td><img src="{$v.icon}" class="rounded" width="60"/></td>
-                <td width="30">{if $v['count']>0}<a href="javascript:" class="btn btn-link btn-sm expandsub"><i class="ion-md-remove"></i></a>{/if}</td>
-                <td>{$v.html|raw} {$v.title} ({$v.count|default=0})&nbsp;<span class="badge badge-info">{$v.short}</span></td>
+                <td><img src="{$v.icon}" class="rounded" width="60" /></td>
+                <td width="30">{if $v['count']>0}<a href="javascript:" class="btn btn-link btn-sm expandsub"><i
+                            class="ion-md-remove"></i></a>{/if}</td>
+                <td>{$v.html|raw} {$v.title} ({$v.count|default=0})&nbsp;<span
+                        class="badge badge-info">{$v.short}</span></td>
                 <td>{$v.name}</td>
                 <td>{$v.sort}</td>
                 <td data-url="{:url('status')}" data-id="{$v.id}">
                     {if $v['is_lock']}
-                        {if $v['status'] == 1}
-                            <span class="badge badge-success" >已启用</span>
-                            {else/}
-                            <span class="badge " >已隐藏</span>
-                        {/if}
-                        {else/}
-                        {if $v['status'] == 1}
-                            <span class="chgstatus" data-status="0" title="点击隐藏">已启用</span>
-                            {else/}
-                            <span class="chgstatus off" data-status="1" title="点击启用">已隐藏</span>
-                        {/if}
+                    {if $v['status'] == 1}
+                    <span class="badge badge-success">已启用</span>
+                    {else/}
+                    <span class="badge ">已隐藏</span>
+                    {/if}
+                    {else/}
+                    {if $v['status'] == 1}
+                    <span class="chgstatus" data-status="0" title="点击隐藏">已启用</span>
+                    {else/}
+                    <span class="chgstatus off" data-status="1" title="点击启用">已隐藏</span>
+                    {/if}
                     {/if}
                 </td>
                 <td class="operations">
-                    <a class="btn btn-outline-primary" title="发布商品" href="{:url('shop.product/add',array('cid'=>$v['id']))}"><i class="ion-md-paper-plane"></i> </a>
-                    <a class="btn btn-outline-primary" title="添加子分类" href="{:url('shop.category/add',array('pid'=>$v['id']))}"><i class="ion-md-add"></i> </a>
-                    <a class="btn btn-outline-primary" title="编辑" href="{:url('shop.category/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> </a>
+                    <a class="btn btn-outline-primary" title="发布商品"
+                        href="{:url('shop.product/add',array('cid'=>$v['id']))}"><i class="ion-md-paper-plane"></i> </a>
+                    <a class="btn btn-outline-primary" title="添加子分类"
+                        href="{:url('shop.category/add',array('pid'=>$v['id']))}"><i class="ion-md-add"></i> </a>
+                    <a class="btn btn-outline-primary" title="编辑"
+                        href="{:url('shop.category/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i> </a>
                     {if !$v['is_lock']}
-                        <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" href="{:url('shop.category/delete',array('id'=>$v['id']))}" ><i class="ion-md-trash"></i> </a>
+                    <a class="btn btn-outline-danger link-confirm" title="删除" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!"
+                        href="{:url('shop.category/delete',array('id'=>$v['id']))}"><i class="ion-md-trash"></i> </a>
                     {/if}
                 </td>
             </tr>
-        {/volist}
+            {/volist}
         </tbody>
     </table>
 </div>
 
 {/block}
 {block name="script"}
-    <script type="text/html" id="cateselect">
+<script type="text/html" id="cateselect">
         <div class="form-group">
             <select class="form-control">
                 <option value="0">顶级分类</option>
@@ -87,79 +99,79 @@
         </div>
         <div class="form-group text-muted">每行一个分类，每个分类以空格区分名称、简称、别名，简称、别名可依次省略，别名必须使用英文字母<br />例：分类名称 分类简称 catename</div>
     </script>
-    <script>
-        jQuery(function(){
-            $('.btn-batch-add').click(function(e){
-                var prmpt=dialog.prompt({
-                    title:'批量添加',
-                    content:$('#cateselect').html(),
-                    is_textarea:true
-                },function(args,body){
-                    var pid=body.find('select').val();
-                    var loading = dialog.loading('正在提交...');
-                    $.ajax({
-                        url:"{:url('batch')}",
-                        type:'POST',
-                        dataType:'json',
-                        data:{
-                            pid: pid,
-                            content: args
-                        },
-                        success:function(json){
-                            loading.close();
-                            if(json.code == 1){
-                                dialog.success(json.msg)
-                                prmpt.close()          
-                                setTimeout(function(){
-                                    location.reload()
-                                },1500);                      
-                            }else{
-                                dialog.error(json.msg)
-                            }
-
+<script>
+    jQuery(function () {
+        $('.btn-batch-add').click(function (e) {
+            var prmpt = dialog.prompt({
+                title: '批量添加',
+                content: $('#cateselect').html(),
+                is_textarea: true
+            }, function (args, body) {
+                var pid = body.find('select').val();
+                var loading = dialog.loading('正在提交...');
+                $.ajax({
+                    url: "{:url('batch')}",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        pid: pid,
+                        content: args
+                    },
+                    success: function (json) {
+                        loading.close();
+                        if (json.code == 1) {
+                            dialog.success(json.msg)
+                            prmpt.close()
+                            setTimeout(function () {
+                                location.reload()
+                            }, 1500);
+                        } else {
+                            dialog.error(json.msg)
                         }
-                    })
-                    return false;
-                })
-            })
-            
-            $('.closeall').click(function(){
-                $('tbody>tr').each(function(){
-                    var l = $(this).data('level')
-                    if(l>0){
-                        $(this).hide();
+
                     }
                 })
-                $('tbody tr .expandsub i').attr('class','ion ion-md-add')
-            })
-            $('.expandall').click(function(){
-                $('tbody>tr').show()
-                $('tbody tr .expandsub i').attr('class','ion ion-md-remove')
-            })
-            $('.expandsub').click(function(){
-                var i = $(this).children('i')
-                var tr = $(this).parents('tr').eq(0)
-                var l = tr.data('level')
-                var n = tr.next()
-                if(i.attr('class').indexOf('remove')>0){
-                    i.attr('class','ion ion-md-add')
-                    while(n.data('level')>l){
-                        n.hide()
-                        n.find('.expandsub i').attr('class','ion ion-md-add')
-                        n = n.next()
-                    }
-
-                }else{
-                    i.attr('class','ion ion-md-remove')
-                    while(n.data('level')>l){
-                       if(n.data('level')==l+1) {
-                        n.show()
-
-                        }
-                        n = n.next()
-                    }
-                }
+                return false;
             })
         })
-    </script>
+
+        $('.closeall').click(function () {
+            $('tbody>tr').each(function () {
+                var l = $(this).data('level')
+                if (l > 0) {
+                    $(this).hide();
+                }
+            })
+            $('tbody tr .expandsub i').attr('class', 'ion ion-md-add')
+        })
+        $('.expandall').click(function () {
+            $('tbody>tr').show()
+            $('tbody tr .expandsub i').attr('class', 'ion ion-md-remove')
+        })
+        $('.expandsub').click(function () {
+            var i = $(this).children('i')
+            var tr = $(this).parents('tr').eq(0)
+            var l = tr.data('level')
+            var n = tr.next()
+            if (i.attr('class').indexOf('remove') > 0) {
+                i.attr('class', 'ion ion-md-add')
+                while (n.data('level') > l) {
+                    n.hide()
+                    n.find('.expandsub i').attr('class', 'ion ion-md-add')
+                    n = n.next()
+                }
+
+            } else {
+                i.attr('class', 'ion ion-md-remove')
+                while (n.data('level') > l) {
+                    if (n.data('level') == l + 1) {
+                        n.show()
+
+                    }
+                    n = n.next()
+                }
+            }
+        })
+    })
+</script>
 {/block}

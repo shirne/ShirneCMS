@@ -18,8 +18,9 @@ class FavouriteController extends AuthedController
      * @param mixed $type 
      * @return void 
      */
-    public function index($type){
-        $model=new MemberFavouriteModel();
+    public function index($type)
+    {
+        $model = new MemberFavouriteModel();
         $this->response($model->getFavourites($type));
     }
 
@@ -29,18 +30,19 @@ class FavouriteController extends AuthedController
      * @param int|string|array $id 
      * @return void 
      */
-    public function add($type,$id){
-        $model=new MemberFavouriteModel();
+    public function add($type, $id)
+    {
+        $model = new MemberFavouriteModel();
         $ids = idArr($id);
-        if(count($ids) > 1){
-            foreach($ids as $id){
-                $model->addFavourite($this->user['id'],$type,$id);
+        if (count($ids) > 1) {
+            foreach ($ids as $id) {
+                $model->addFavourite($this->user['id'], $type, $id);
             }
             $this->success('处理成功');
         }
-        if($model->addFavourite($this->user['id'],$type,$id)){
+        if ($model->addFavourite($this->user['id'], $type, $id)) {
             $this->success('已添加收藏');
-        }else{
+        } else {
             $this->error($model->getError());
         }
     }
@@ -51,14 +53,15 @@ class FavouriteController extends AuthedController
      * @param mixed $ids 
      * @return void 
      */
-    public function remove($type,$ids){
-        $model=Db::name('memberFavourite')
-        ->where('member_id',$this->user['id']);
-        if(empty($type)){
-            $model->whereIn('id',idArr($ids));
-        }else{
-            $model->where('fav_type',$type)
-            ->whereIn('fav_id',idArr($ids));
+    public function remove($type, $ids)
+    {
+        $model = Db::name('memberFavourite')
+            ->where('member_id', $this->user['id']);
+        if (empty($type)) {
+            $model->whereIn('id', idArr($ids));
+        } else {
+            $model->where('fav_type', $type)
+                ->whereIn('fav_id', idArr($ids));
         }
         $model->delete();
         $this->success('已移除收藏');
