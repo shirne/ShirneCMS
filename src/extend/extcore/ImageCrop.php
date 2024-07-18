@@ -21,7 +21,7 @@ class ImageCrop
      * @param $opts array
      * @return \think\Response
      */
-    public function crop($savepath = null, $opts = [])
+    public function crop($savepath = null, $opts = [], $output = true)
     {
         $opts = array_merge($this->options, $opts);
         $img = $this->file;
@@ -105,11 +105,14 @@ class ImageCrop
                     }
                     imagedestroy($image);
 
-                    return $this->output($newimg, $imageinfo['mime'], $savepath, $imgQuality);
+                    return $this->output($newimg, $imageinfo['mime'], $savepath, $imgQuality, $output);
                 } else {
-                    return $this->output($image, $imageinfo['mime'], $savepath, $imgQuality);
+                    return $this->output($image, $imageinfo['mime'], $savepath, $imgQuality, $output);
                 }
             }
+        }
+        if (!$output) {
+            return false;
         }
         return redirect(ltrim(config('upload.default_img'), '.'));
     }
@@ -131,7 +134,7 @@ class ImageCrop
      * @param $imgQuality
      * @return \think\Response
      */
-    private function output($image, $mime = 'image/jpeg', $savepath = null, $imgQuality = 80)
+    private function output($image, $mime = 'image/jpeg', $savepath = null, $imgQuality = 80, $output = true)
     {
         ob_start();
         switch (strtolower($mime)) {
@@ -141,11 +144,17 @@ class ImageCrop
             case 'image/gif':
                 imagegif($image, $savepath);
                 break;
+            case 'image/webp':
+                imagewebp($image, $savepath);
+                break;
             default:
                 imagejpeg($image, $savepath, $imgQuality);
         }
         $content = ob_get_clean();
         imagedestroy($image);
+        if (!$output) {
+            return true;
+        }
         return response($content, 200, ['Content-Length' => strlen($content)])->contentType($mime);
     }
 

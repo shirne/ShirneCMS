@@ -11,23 +11,23 @@ use think\Exception;
  */
 class OAuthFactory
 {
-    public static function getInstence($type, $appid, $appkey, $url = '', $iswechat = false)
+    public static function getInstence($type,$appid,$appkey,$url='',$iswechat=false)
     {
-        if ($type == 'wechat') $iswechat = true;
-        if ($type == 'wechat_open') $type = 'wechat';
-        $config = [
-            $type => [
+        if($type=='wechat')$iswechat=true;
+        if($type=='wechat_open')$type='wechat';
+        $config=[
+            $type=>[
                 'client_id' => $appid,
                 'client_secret' => $appkey,
                 'redirect' => $url,
             ],
-            'guzzle' => [
-                'verify' => false
+            'guzzle'=>[
+                'verify'=>false
             ]
         ];
-        $factory = new SocialiteManager($config);
+        $factory=new SocialiteManager($config);
         $driver = $factory->driver($type);
-        if ($iswechat) {
+        if($iswechat){
             $driver->scopes(['snsapi_userinfo']);
         }
         return $driver;

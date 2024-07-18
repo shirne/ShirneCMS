@@ -8,8 +8,7 @@ namespace extcore\upload;
  * Class OssDriver
  * @package extcore\upload
  */
-class OssDriver implements UploadInterface
-{
+class OssDriver implements UploadInterface {
 
     protected $config = [
         'access_id' => '',
@@ -21,13 +20,11 @@ class OssDriver implements UploadInterface
     ];
     protected $errorMsg = '';
 
-    public function __construct($config = array())
-    {
+    public function __construct($config = array()) {
         $this->config = array_merge($this->config, (array)$config['driverConfig']);
     }
 
-    public function rootPath($path)
-    {
+    public function rootPath($path) {
         if (empty($this->config['access_id']) || empty($this->config['secret_key']) || empty($this->config['bucket']) || empty($this->config['domain']) || empty($this->config['url'])) {
             $this->errorMsg = '请先配置Oss上传参数！';
             return false;
@@ -35,13 +32,11 @@ class OssDriver implements UploadInterface
         return true;
     }
 
-    public function checkPath($path)
-    {
+    public function checkPath($path) {
         return true;
     }
 
-    public function saveFile($fileData)
-    {
+    public function saveFile($fileData) {
 
         $date = gmdate('Y-m-d\TH:i:s\Z', strtotime('+1 day'));
         $policy = [
@@ -72,7 +67,7 @@ class OssDriver implements UploadInterface
             'success_action_status' => 201
         );
 
-        $data = $this->curl($this->config['url'], $postFields, 10, "Content-type: " . $fileData['type']);
+        $data = $this->curl($this->config['url'], $postFields, 10, "Content-type: ". $fileData['type']);
 
         if (empty($data)) {
             $this->errorMsg = '图片服务器连接失败！';
@@ -97,8 +92,7 @@ class OssDriver implements UploadInterface
         return $fileData;
     }
 
-    public function curl($url, $post_data = [], $header = '', $timeout = 10)
-    {
+    public function curl($url, $post_data = [], $header = '',$timeout=10) {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
@@ -112,8 +106,7 @@ class OssDriver implements UploadInterface
         return $result;
     }
 
-    public function getError()
-    {
+    public function getError() {
         return $this->errorMsg;
     }
 }

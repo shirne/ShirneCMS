@@ -2,6 +2,9 @@
 
 namespace shirne\common;
 
+use Exception;
+use think\facade\Log;
+
 /**
  * 图像处理综合类, 暂不支持多侦gif格式
  * @package shirne\common
@@ -10,7 +13,7 @@ namespace shirne\common;
 class Image
 {
     /**
-     * @var resource|\GdImage
+     * @var resource|\GDImage
      */
     private $image;
 
@@ -48,10 +51,20 @@ class Image
                 }
             }
             if (isset($init['file'])) {
+
                 if (isset($init['type'])) {
                     $this->loadFromFile($init['file'], $init['type']);
                 } else {
                     $this->loadFromFile($init['file']);
+                }
+                try {
+                    getimagesize($init['file'], $size);
+                    if (!empty($size)) {
+                        $this->width = $size[0];
+                        $this->width = $size[1];
+                    }
+                } catch (\Exception $e) {
+                    Log::warning('image load error: ' . $e);
                 }
             } elseif (isset($init['width'])) {
                 if (isset($init['bg'])) {
@@ -65,7 +78,7 @@ class Image
 
     /**
      * 当前图像资源标识符
-     * @return resource
+     * @return resource|\GDImage
      */
     public function getResource()
     {
@@ -143,22 +156,29 @@ class Image
      */
     public function loadFromFile($path, $type = '')
     {
+        $this->imageInfo = getimagesize($path);
         if (empty($type)) {
-            $pathinfo = pathinfo($path);
-            if (!empty($pathinfo['extension'])) {
-                $ext = strtolower($pathinfo['extension']);
-                if ($ext == 'jpg') $ext = 'jpeg';
-                if (in_array($ext, ['jpeg', 'png', 'bmp', 'gif', 'gd2', 'gd', 'wbmp', 'webp', 'xbm', 'xpm'])) {
-                    $type = $ext;
-                }
+            if ($this->imageInfo) {
+                $types = explode('/', $this->imageInfo['mime']);
+                $type = $types[1];
+            } else {
+                throw Exception('image type error');
             }
         }
         $func = 'imagecreatefrom' . $type;
-        $this->type = $type;
-        $this->imageInfo = getimagesize($path);
-        $this->width = $this->imageInfo[0];
-        $this->height = $this->imageInfo[1];
-        $this->image = $func($path);
+        if (function_exists($func)) {
+            try {
+                $this->type = $type;
+                $this->width = $this->imageInfo[0];
+                $this->height = $this->imageInfo[1];
+                $this->image = $func($path);
+            } catch (\Exception $e) {
+                throw Exception('image load error:' . $e);
+            }
+        }
+        if (!$this->image) {
+            throw Exception('image load error:' . $path);
+        }
         return $this;
     }
 

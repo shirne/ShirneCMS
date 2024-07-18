@@ -7,8 +7,7 @@ namespace extcore\upload;
  * Interface UploadInterface
  * @package extcore\upload
  */
-interface UploadInterface
-{
+Interface UploadInterface {
 
 	/**
 	 * 构建函数
@@ -23,23 +22,24 @@ interface UploadInterface
 	 */
 	public function rootPath($path);
 
-	/**
+    /**
 	 * 检查上传路径
 	 * @param  string $path 路径
 	 * @return boolean
 	 */
-	public function checkPath($path);
+    public function checkPath($path);
 
-	/**
+    /**
 	 * 保存文件
 	 * @param  array $file 文件名
 	 * @return boolean|array
 	 */
-	public function saveFile($file);
+    public function saveFile($file);
 
-	/**
-	 * 获取错误
-	 * @return string
-	 */
-	public function getError();
+    /**
+     * 获取错误
+     * @return string
+     */
+    public function getError();
+		
 }

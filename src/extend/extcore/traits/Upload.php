@@ -2,6 +2,8 @@
 
 namespace extcore\traits;
 
+use shirne\common\Image;
+
 trait Upload
 {
     /**
@@ -17,12 +19,12 @@ trait Upload
         'max_size'       =>  10485760,
         //允许的文件后缀
         'allow_exts'     =>  array(
-            'jpg', 'jpeg', 'png', 'gif', 'bmp', 'tif',
+            'jpg', 'jpeg', 'png', 'gif', 'bmp', 'tif', 'webp',
             'swf', 'mp4', 'mp3', 'flv', 'avi',
             'txt', 'csv', 'xls', 'xlsx', 'doc', 'docx', 'ppt', 'pptx', 'pdf',
             'zip', 'rar', 'json', 'pem'
         ),
-        'img_exts'       =>  array('gif', 'jpg', 'jpeg', 'bmp', 'png', 'swf', 'tif'),
+        'img_exts'       =>  array('gif', 'jpg', 'jpeg', 'bmp', 'png', 'swf', 'tif', 'webp'),
         'media_exts'       =>  array('gif', 'jpg', 'jpeg', 'bmp', 'png', 'swf', 'tif', 'swf', 'mp4', 'mp3', 'flv', 'avi'),
         'root_path'      =>  './uploads/',
         'save_path'      =>  '',
@@ -109,7 +111,7 @@ trait Upload
      * @param bool $isImg
      * @return bool|array
      */
-    protected function _uploadFile($folder, $field, $isImg = false)
+    protected function _uploadFile($folder, $field, $isImg = false, $watermark = true)
     {
         if (!$this->uploader) {
             $this->_setUploadDriver();
@@ -122,7 +124,7 @@ trait Upload
         if (empty($field)) {
             $files = $_FILES;
         } else {
-            $files[$field] = $_FILES[$field];
+            $files[$field] = $_FILES[$field] ?? '';
         }
         if (empty($files[$field]) || empty($files[$field]['tmp_name'])) {
             $this->uploadError = '没有文件上传！';
@@ -186,15 +188,39 @@ trait Upload
                 $this->uploadErrorCode = 109;
                 return false;
             }
+            if ($isImg && $watermark) {
+                try {
+                    //$waterset = getSettings(false, 'watermark');
+                    $waterset = config('watermark.');
+                    $image = new Image(['file' => '.' . $info['url']]);
+                    $width = $image->width;
+                    $height = $image->height;
+                    $proccessed = true;
+                    if ($waterset['type'] == 'text' && !empty($waterset['text'])) {
+                        $fontfile = './static/fonts/NotoSansCJKsc/Regular.otf';
+                        $fontbox = imagettfbbox($waterset['fontsize'], 0, $fontfile, $waterset['text']);
+                        $image->text($waterset['text'], $waterset['fontsize'], $width - ($fontbox[2] = $fontbox[0]), $height - $waterset['fontsize']);
+                    } elseif (!empty($waterset['logo'])) {
+                        $logosize = getimagesize('.' . $waterset['logo']);
+                        $image->paste('.' . $waterset['logo'], $width - $logosize[0] - 8, $height - $logosize[1] - 8);
+                    } else {
+                        $proccessed = false;
+                    }
+                    if ($proccessed) $image->save('.' . $info['url']);
+                } catch (\Exception $err) {
+                    $this->uploadError = strval($err);
+                    $this->uploadErrorCode = 111;
+                }
+            }
             $uploadFileInfo[$key] = $info;
         }
 
         return empty($field) ? $uploadFileInfo : (isset($uploadFileInfo[$field]) ? $uploadFileInfo[$field] : null);
     }
 
-    protected function _upload($folder, $field)
+    protected function _upload($folder, $field, $watermark = true)
     {
-        return $this->_uploadFile($folder, $field, true);
+        return $this->_uploadFile($folder, $field, true, $watermark);
     }
 
     protected $deleteFiles;
