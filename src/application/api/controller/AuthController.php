@@ -52,7 +52,7 @@ class AuthController extends BaseController
                 }
             }
         }
-        Log::info(['access:', $this->accessToken, $this->accessSession]);
+        Log::info('access:' . $this->accessToken . '/' . var_export($this->accessSession, true));
         if (
             empty($this->accessToken) &&
             !in_array($this->request->action(), ['token', 'wxsign', 'wxauth', 'wxautologin', 'wxlogin', 'refresh'])
@@ -76,7 +76,7 @@ class AuthController extends BaseController
                 json_encode($this->accessSession, JSON_UNESCAPED_UNICODE),
                 ['expire' => 60 * 10]
             );
-            Log::info(['access cache:', $this->accessToken, $this->accessSession]);
+            Log::info('access cache:' . $this->accessToken . '/' . var_export($this->accessSession, true));
         }
     }
 

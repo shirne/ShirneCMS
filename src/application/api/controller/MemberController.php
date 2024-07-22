@@ -365,7 +365,7 @@ class MemberController extends AuthedController
         $info = getimagesize($path . $file);
         if ($info === false) {
             unlink($path . $file);
-            Log::info($info);
+            Log::info('getimagesize error: ' . $path . $file);
             $this->error('文件数据损坏');
         }
 
