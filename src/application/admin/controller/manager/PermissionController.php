@@ -34,7 +34,7 @@ class PermissionController extends BaseController
     public function clearcache()
     {
         cache('menus', null);
-        $this->success("清除成功", url('permission/index'));
+        $this->success("清除成功", url('manager.permission/index'));
     }
 
     /**
@@ -53,7 +53,7 @@ class PermissionController extends BaseController
                 $this->error($validate->getError());
             } else {
                 if (Db::name('Permission')->insert($data)) {
-                    $this->success(lang('Add success!'), url('permission/index'));
+                    $this->success(lang('Add success!'), url('manager.permission/index'));
                 } else {
                     $this->error(lang('Add failed!'));
                 }
@@ -82,7 +82,7 @@ class PermissionController extends BaseController
                 $this->error($validate->getError());
             } else {
                 if (Db::name('Permission')->where('id', $id)->update($data)) {
-                    $this->success(lang('Update success!'), url('permission/index'));
+                    $this->success(lang('Update success!'), url('manager.permission/index'));
                 } else {
                     $this->error(lang('Update failed!'));
                 }
@@ -108,7 +108,7 @@ class PermissionController extends BaseController
         $result = $model->where('id', $id)->update(['disable' => $status ? 1 : 0]);
         if ($result) {
             cache('menus', null);
-            $this->success(lang('Update success!'), url('permission/index'));
+            $this->success(lang('Update success!'), url('manager.permission/index'));
         } else {
             $this->error(lang('Update failed!'));
         }
@@ -124,7 +124,7 @@ class PermissionController extends BaseController
         $model = Db::name('Permission');
         $result = $model->where('id', $id)->delete();
         if ($result) {
-            $this->success(lang('Delete success!'), url('permission/index'));
+            $this->success(lang('Delete success!'), url('manager.permission/index'));
         } else {
             $this->error(lang('Delete failed!'));
         }
