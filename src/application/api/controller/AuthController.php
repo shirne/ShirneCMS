@@ -368,7 +368,7 @@ class AuthController extends BaseController
         }
         if ($weapp instanceof Application) {
             try {
-                $userinfo = $weapp->oauth->user()->getOriginal();
+                $userinfo = $weapp->oauth->userFromCode($code)->getRaw();
             } catch (Exception $e) {
                 $this->error('登录失败:' . $e->getMessage(), ERROR_LOGIN_FAILED);
             }
@@ -459,7 +459,7 @@ class AuthController extends BaseController
         $mobileData = [];
         if ($weapp instanceof Application) {
             try {
-                $userinfo = $weapp->oauth->user()->getOriginal();
+                $userinfo = $weapp->oauth->userFromCode($code)->getRaw();
             } catch (Exception $e) {
                 $this->error('登录失败:' . $e->getMessage(), ERROR_LOGIN_FAILED);
             }
