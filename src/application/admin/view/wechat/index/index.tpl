@@ -146,7 +146,7 @@
                     if (newtoken !== input.data('hash')) {
                         $(this).data('ajaxing', 1);
                         $.ajax({
-                            url: "{:url('admin/wechat/updateField')}",
+                            url: "{:url('admin/wechat.index/updateField')}",
                             type: 'POST',
                             dataType: 'JSON',
                             data: {
@@ -172,7 +172,7 @@
                     $(this).data('ajaxing', 1);
                     var btn = $(this);
                     $.ajax({
-                        url: "{:url('admin/wechat/updateField')}",
+                        url: "{:url('admin/wechat.index/updateField')}",
                         type: 'POST',
                         dataType: 'JSON',
                         data: {
@@ -197,7 +197,7 @@
                     $(this).data('ajaxing', 1);
                     var btn = $(this);
                     $.ajax({
-                        url: "{:url('admin/wechat/updateField')}",
+                        url: "{:url('admin/wechat.index/updateField')}",
                         type: 'POST',
                         dataType: 'JSON',
                         data: {
@@ -239,7 +239,7 @@
                 reader.onload = function (evt) {
                     var fileString = evt.target.result;
                     $.ajax({
-                        url: "{:url('admin/wechat/uploadVerify')}",
+                        url: "{:url('admin/wechat.index/uploadVerify')}",
                         type: 'POST',
                         dataType: 'JSON',
                         data: {

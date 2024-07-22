@@ -255,7 +255,7 @@
                 if (newtoken !== hash) {
                     btn.data('ajaxing', 1);
                     $.ajax({
-                        url: "{:url('admin/wechat/updateField')}",
+                        url: "{:url('admin/wechat.index/updateField')}",
                         type: 'POST',
                         dataType: 'JSON',
                         data: {

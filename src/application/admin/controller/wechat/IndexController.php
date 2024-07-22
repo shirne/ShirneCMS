@@ -105,7 +105,7 @@ class IndexController extends BaseController
                             ->where('id', 'NEQ', $model['id'])->update(['is_default' => 0]);
                     }
                     delete_image($this->deleteFiles);
-                    $this->success(lang('Add success!'), url('wechat/index'));
+                    $this->success(lang('Add success!'), url('wechat.index/index'));
                 } else {
                     delete_image($uploads);
                     $this->error(lang('Add failed!'));
@@ -163,7 +163,7 @@ class IndexController extends BaseController
                             ->where('is_default', 1)
                             ->where('id', 'NEQ', $id)->update(['is_default' => 0]);
                     }
-                    $this->success(lang('Update success!') . $this->uploadError, url('wechat/index'));
+                    $this->success(lang('Update success!') . $this->uploadError, url('wechat.index/index'));
                 } else {
                     delete_image($uploads);
                     $this->error(lang('Update failed!') . $this->uploadError);
@@ -230,7 +230,7 @@ class IndexController extends BaseController
         $model = Db::name('wechat');
         $result = $model->delete($id);
         if ($result) {
-            $this->success(lang('Delete success!'), url('wechat/index'));
+            $this->success(lang('Delete success!'), url('wechat.index/index'));
         } else {
             $this->error(lang('Delete failed!'));
         }

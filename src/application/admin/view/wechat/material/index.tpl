@@ -8,7 +8,8 @@
 
     <div class="row list-header">
         <div class="col-6">
-            <a href="{:url('wechat/index')}" class="btn btn-outline-primary btn-sm"><i class="ion-md-arrow-back"></i>
+            <a href="{:url('wechat.index/index')}" class="btn btn-outline-primary btn-sm"><i
+                    class="ion-md-arrow-back"></i>
                 返回列表</a>
             <a href="{:url('wechat.material/sync',array('type'=>'__TYPE__'))}"
                 class="btn btn-outline-primary btn-sm btn-sync"><i class="ion-md-sync"></i> 同步素材</a>

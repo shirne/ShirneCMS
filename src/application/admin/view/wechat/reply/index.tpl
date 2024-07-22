@@ -8,13 +8,14 @@
 
     <div class="row list-header">
         <div class="col-6">
-            <a href="{:url('wechat/index')}" class="btn btn-outline-primary btn-sm"><i class="ion-md-arrow-back"></i>
+            <a href="{:url('wechat.index/index')}" class="btn btn-outline-primary btn-sm"><i
+                    class="ion-md-arrow-back"></i>
                 返回列表</a>
             <a href="{:url('wechat.reply/add',array('wid'=>$wid))}" class="btn btn-outline-primary btn-sm"><i
                     class="ion-md-add"></i> 添加回复</a>
         </div>
         <div class="col-6">
-            <form action="{:url('wechat/reply',['wid'=>$wid])}" method="post">
+            <form action="{:url('wechat.reply/index',['wid'=>$wid])}" method="post">
                 <div class="input-group input-group-sm">
                     <input type="text" class="form-control" name="key" placeholder="输入标题或者地址关键词搜索">
                     <div class="input-group-append">

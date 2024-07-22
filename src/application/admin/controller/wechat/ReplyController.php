@@ -22,7 +22,7 @@ class ReplyController extends WechatBaseController
     public function index($key = '')
     {
         if ($this->request->isPost()) {
-            return redirect(url('wechat/reply', ['wid' => $this->wid, 'key' => base64url_encode($key)]));
+            return redirect(url('wechat.reply/index', ['wid' => $this->wid, 'key' => base64url_encode($key)]));
         }
         $model = Db::name('WechatReply')->where('wechat_id', $this->wid);
         if (!empty($key)) {
@@ -202,7 +202,7 @@ class ReplyController extends WechatBaseController
         $result = $model->where('id', 'in', idArr($id))->delete();
         if ($result) {
             user_log($this->mid, 'deletewechatreply', 1, '删除回复消息 ' . $id, 'manager');
-            $this->success("删除成功", url('wechat/reply', ['wid' => $wid]));
+            $this->success("删除成功", url('wechat.reply/index', ['wid' => $wid]));
         } else {
             $this->error("删除失败");
         }
