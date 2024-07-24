@@ -34,7 +34,8 @@ VALUES
   (93,9,'菜单管理','manager.permission/index','permission_index','ion-md-code-working',5,0),
   (94,9,'导航管理','Navigator/index','navigator_index','ion-md-reorder',7,0),
   (95,9,'操作日志','manager.index/log','manager_log','ion-md-clipboard',9,0),
-  (96,9,'付款方式','Paytype/index','paytype_index','ion-md-card',11,0);
+  (96,9,'付款方式','Paytype/index','paytype_index','ion-md-card',11,0),
+  (97,9,'地区管理','Region/index','region_index','ion-md-globe',12,0);
 
 TRUNCATE TABLE `sa_manager_role`;
 
