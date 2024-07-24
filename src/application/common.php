@@ -1524,8 +1524,8 @@ function gener_qrcode($text, $size = 300, $margin = 10, $errLevel = \Endroid\QrC
         ->size($size)
         ->margin($margin)
         ->errorCorrectionLevel($errLevel)
-        ->foregroundColor(new Endroid\QrCode\Color\Color(0,  0,  0))
-        ->backgroundColor(new Endroid\QrCode\Color\Color(255,  255,  255))
+        ->foregroundColor(new \Endroid\QrCode\Color\Color(0,  0,  0))
+        ->backgroundColor(new \Endroid\QrCode\Color\Color(255,  255,  255))
         //->labelText('thinkphp.cn')
         //->labelFont(new NotoSans(16))
         ->build();;

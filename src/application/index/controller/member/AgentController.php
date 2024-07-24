@@ -4,7 +4,7 @@ namespace app\index\controller\member;
 
 
 use Endroid\QrCode\ErrorCorrectionLevel;
-use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Color\Color;
 use think\Db;
 
 /**
@@ -30,19 +30,22 @@ class AgentController extends BaseController
         if (!file_exists('.' . $qrurl)) {
             $dir = '.' . dirname($qrurl);
             if (!file_exists($dir)) @mkdir($dir, 0777, true);
-            $qrCode = new QrCode($shareurl);
-            $qrCode->setSize(300);
-            $qrCode->setWriterByName('png')
-                ->setMargin(10)
-                ->setEncoding('UTF-8')
-                ->setErrorCorrectionLevel(ErrorCorrectionLevel->HIGH)
-                ->setForegroundColor(['r' => 0, 'g' => 0, 'b' => 0])
-                ->setBackgroundColor(['r' => 255, 'g' => 255, 'b' => 255])
-                //->setLabel('Scan the code', 16, __DIR__.'/../assets/noto_sans.otf', LabelAlignment::CENTER)
-                ->setLogoPath('./static/images/qrlogo.png')
-                ->setLogoWidth(150)
-                ->setValidateResult(false);
-            $qrCode->writeFile('.' . $qrurl);
+
+            $builder = new \Endroid\QrCode\Builder\Builder();
+            $result = $builder->writer(new \Endroid\QrCode\Writer\PngWriter())
+                ->encoding(new \Endroid\QrCode\Encoding\Encoding('UTF-8'))
+                ->data($shareurl)
+                ->size(300)
+                ->margin(10)
+                ->errorCorrectionLevel(ErrorCorrectionLevel::High)
+                ->foregroundColor(new Color(0,  0,  0))
+                ->backgroundColor(new Color(255,  255,  255))
+                ->logoPath('./static/images/qrlogo.png')
+                ->logoResizeToWidth(150)
+                //->labelText('thinkphp.cn')
+                //->labelFont(new NotoSans(16))
+                ->build();;
+            $result->saveToFile('.' . $qrurl);
         }
         $this->assign('qrtime', filemtime('.' . $qrurl));
         $this->assign('qrurl', $qrurl);
