@@ -123,7 +123,6 @@ class IndexController extends BaseController
         }
         $model = array('type' => 1, 'cate_id' => $cid, 'digg' => 0, 'views' => 0);
         $this->assign("category", CategoryFacade::getCategories());
-        $this->assign("brands", ProductCategoryFacade::getBrands(0));
         $this->assign('article', $model);
         $this->assign('types', getArticleTypes());
         $this->assign('copyrights', Db::name('copyrights')->order('sort asc')->select());
@@ -181,7 +180,6 @@ class IndexController extends BaseController
             $this->error('文章不存在');
         }
         $this->assign("category", CategoryFacade::getCategories());
-        $this->assign("brands", ProductCategoryFacade::getBrands(0));
         $this->assign('article', $model);
         $this->assign('types', getArticleTypes());
         $this->assign('copyrights', Db::name('copyrights')->order('sort asc')->select());
