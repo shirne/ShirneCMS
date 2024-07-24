@@ -14,7 +14,7 @@
 				</div>
 				<ul class="list-group list-group-flush" style="max-height: 80vh; overflow: auto;">
 					<li class="list-group-item"><a class="list-cate-item"
-							href="{:murl('index',['key'=>$keyword,'cate_id'=>0])}" data-value="0">不限区域</a></li>
+							href="{:url('index',['key'=>$keyword,'cate_id'=>0])}" data-value="0">不限区域</a></li>
 					{foreach name="category" item="v"}
 					<li class="list-group-item{$cate_id == $v['id']?' active':''}">
 						<a href="javascript:" data-id="{$v['id']}" title="删除地区"
@@ -25,7 +25,7 @@
 							class="float-right ml-2 addcate"><i class="ion-md-create"></i></a>
 						<a href="javascript:" data-pid="{$v['id']}" title="添加地区" class="float-right addcate"><i
 								class="ion-md-add"></i></a>
-						<a class="list-cate-item" href="{:murl('index',['key'=>$keyword,'cate_id'=>$v['id']])}"
+						<a class="list-cate-item" href="{:url('index',['key'=>$keyword,'cate_id'=>$v['id']])}"
 							data-value="{$v.id}">{$v.html} {$v.title}</a>
 					</li>
 					{/foreach}
@@ -65,7 +65,7 @@
 								data-sort="{$v['sort']}" data-pid="{$v['pid']}"><i class="ion-md-create"></i> </a>
 							<a class="btn btn-outline-danger link-confirm" title="{:lang('Delete')}"
 								data-confirm="您真的确定要删除吗？\n删除后将不能恢复!"
-								href="{:murl('region/delete',array('id'=>$v['id']))}"><i class="ion-md-trash"></i> </a>
+								href="{:url('region/delete',array('id'=>$v['id']))}"><i class="ion-md-trash"></i> </a>
 						</td>
 					</tr>
 					{/volist}
@@ -112,7 +112,7 @@
 	<script type="text/html" id="cateselect">
         <div class="form-group">
             <select class="form-control">
-                <option value="0">顶级分类</option>
+                <option value="0">顶级区域</option>
                 {volist name="regions" id="cate"}
                     <option value="{$cate.id}">{$cate.html|raw} {$cate.title}</option>
                 {/volist}
@@ -134,7 +134,7 @@
 						var newData = getData(body)
 						newData.id = data.id ? data.id : 0
 						$.ajax({
-							url: "{:murl('category')}",
+							url: "{:url('category')}",
 							data: newData,
 							type: 'POST',
 							dataType: 'json',
@@ -163,7 +163,7 @@
 					var pid = body.find('select').val();
 					var loading = dialog.loading('正在提交...');
 					$.ajax({
-						url: "{:murl('batch')}",
+						url: "{:url('batch')}",
 						type: 'POST',
 						dataType: 'json',
 						data: {
