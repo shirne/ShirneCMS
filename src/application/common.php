@@ -312,6 +312,36 @@ function payTypes($type = '')
 
 /** =====================================  模板类函数  ===================================== **/
 
+function my_implode($arr, $separator = ',')
+{
+    if (empty($arr)) {
+        return '';
+    }
+    if (!is_array($arr)) {
+        return strval($arr);
+    }
+
+    if (is_array(current($arr))) {
+        return implode($separator, array_column($arr, 'title'));
+    }
+    return implode($separator, $arr);
+}
+
+function showAddress($address)
+{
+    $str = '';
+    if (!empty($address)) {
+        $str  = $address['receive_name'] . '/' . $address['mobile'];
+        if (!empty($address['country'])) $str .= '/' . $address['country'];
+        if (!empty($address['province'])) $str .= '/' . $address['province'];
+        if (!empty($address['city'])) $str .= '/' . $address['city'];
+        if (!empty($address['area'])) $str .= '/' . $address['area'];
+        if (!empty($address['street'])) $str .= '/' . $address['street'];
+        if (!empty($address['address'])) $str .= '/' . $address['address'];
+    }
+    return $str;
+}
+
 /**
  * 显示金额 (除以 100)
  * @param $amount
@@ -1484,20 +1514,22 @@ function http_request($url, $params = false, $ispost = 0)
 }
 
 
-function gener_qrcode($text, $size = 300, $margin = 10, $errLevel = 'high')
+function gener_qrcode($text, $size = 300, $margin = 10, $errLevel = \Endroid\QrCode\ErrorCorrectionLevel::High)
 {
-    $qrCode = new \Endroid\QrCode\QrCode();
+    $builder = new \Endroid\QrCode\Builder\Builder();
 
-    $qrCode->setText($text)
-        ->setSize($size)
-        ->setMargin($margin)
-        ->setErrorCorrectionLevel($errLevel)
-        ->setForegroundColor(array('r' => 0, 'g' => 0, 'b' => 0, 'a' => 0))
-        ->setBackgroundColor(array('r' => 255, 'g' => 255, 'b' => 255, 'a' => 0))
-        //->setLabel('thinkphp.cn')
-        //->setLabelFontSize(16)
-        ->setWriterByName('png');
-    return $qrCode->writeString();
+    $result = $builder->writer(new \Endroid\QrCode\Writer\PngWriter())
+        ->encoding(new \Endroid\QrCode\Encoding\Encoding('UTF-8'))
+        ->data($text)
+        ->size($size)
+        ->margin($margin)
+        ->errorCorrectionLevel($errLevel)
+        ->foregroundColor(new Endroid\QrCode\Color\Color(0,  0,  0))
+        ->backgroundColor(new Endroid\QrCode\Color\Color(255,  255,  255))
+        //->labelText('thinkphp.cn')
+        //->labelFont(new NotoSans(16))
+        ->build();;
+    return $result->getString();
 }
 
 function file_rule($file)
