@@ -139,6 +139,25 @@ CREATE TABLE `sa_category` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+--
+-- Table structure for table `sa_region`
+--
+
+DROP TABLE IF EXISTS `sa_region`;
+CREATE TABLE `sa_region` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `pid` int DEFAULT NULL COMMENT '父分类ID',
+  `title` varchar(100) DEFAULT NULL COMMENT '地区名称',
+  `title_en` varchar(150) DEFAULT NULL COMMENT '地区名称',
+  `short` varchar(50) DEFAULT NULL COMMENT '地区简称',
+  `code` varchar(10) DEFAULT NULL COMMENT '地区简称',
+  `name` varchar(50) DEFAULT NULL COMMENT '地区拼音',
+  `sort` int DEFAULT 0 COMMENT '排序',
+  `description` varchar(255) DEFAULT NULL COMMENT '分类描述',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --
 -- Table structure for table `sa_subscribe`
 --
