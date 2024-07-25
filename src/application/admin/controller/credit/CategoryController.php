@@ -10,7 +10,6 @@
 namespace app\admin\controller\credit;
 
 use app\admin\controller\BaseController;
-use app\admin\model\SpecificationsModel;
 use app\admin\validate\GoodsCategoryValidate;
 use app\common\facade\GoodsCategoryFacade;
 use app\common\model\GoodsCategoryModel;
@@ -52,7 +51,6 @@ class CategoryController extends BaseController
         $model = array('sort' => 99, 'pid' => $pid, 'specs' => []);
         $this->assign('cate', $cate);
         $this->assign('model', $model);
-        $this->assign('specs', SpecificationsModel::getList());
         $this->assign('id', 0);
         return $this->fetch('edit');
     }
@@ -103,7 +101,6 @@ class CategoryController extends BaseController
 
         $this->assign('cate', $cate);
         $this->assign('model', $model);
-        $this->assign('specs', SpecificationsModel::getList());
         $this->assign('id', $id);
         return $this->fetch();
     }
