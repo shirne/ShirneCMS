@@ -25,6 +25,7 @@
         };
         window.get_search_url = function (model) {
             if (model == 'product') model = 'shop.product';
+            else if (model.indexOf('.') == -1) model = model + '.index';
             return "{:url('admin/--model--/search')}".replace('--model--', model);
         };
         window.get_view_url = function (model, id) {
