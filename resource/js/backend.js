@@ -1,27 +1,60 @@
-window.stop_ajax=false;
+window.stop_ajax = false;
 
-function radio_tab(radios,lists,prefix) {
-    $(radios).on('change',function (e) {
-        if(!$(this).is(':checked'))return;
-        var curval=$(this).val();
+function radio_tab(radios, lists, prefix) {
+    $(radios).on('change', function (e) {
+        if (!$(this).is(':checked')) return;
+        var curval = $(this).val();
         $(lists).hide();
-        $('.'+prefix+curval).show();
+        $('.' + prefix + curval).show();
     }).filter(':checked').trigger('change');
 }
 
+
 //绑定数据
-function bindData(body,data) {
-    for(var i in data){
-        body.find('[name='+i+']').val(data[i]);
+function bindData(body, data) {
+    for (var i in data) {
+        var field = body.find('[name=' + i + ']')
+        if (field.attr('type') == 'radio') {
+            field.each(function () {
+                if ($(this).val() == data[i]) {
+                    $(this).prop('checked', true)
+                }
+            })
+        } else if (field.attr('type') == 'checkbox') {
+            field.each(function () {
+                if (data[i].indexOf($(this).val()) > -1) {
+                    $(this).prop('checked', true)
+                }
+            })
+        } else {
+            body.find('[name=' + i + ']').val(data[i]);
+        }
     }
 }
 
 //获取表单数据
 function getData(body) {
-    var data={};
-    var fields=body.find('[name]');
-    for(var i=0;i<fields.length;i++){
-        data[fields.eq(i).attr('name')]=fields.eq(i).val();
+    var data = {};
+    var fields = body.find('[name]');
+    for (var i = 0; i < fields.length; i++) {
+        var field = fields.eq(i)
+        if (field.attr('type') == 'radio') {
+            field.each(function () {
+                if ($(this).prop('checked')) {
+                    data[$(this).attr('name')] = $(this).val();
+                }
+            })
+        } else if (field.attr('type') == 'checkbox') {
+            var val = []
+            field.each(function () {
+                if ($(this).prop('checked')) {
+                    val.push($(this).val());
+                }
+            })
+            data[field.attr('name')] = val
+        } else {
+            data[field.attr('name')] = field.val();
+        }
     }
     return data;
 }
@@ -53,7 +86,7 @@ jQuery(function ($) {
         bread.html(html.join("\n"));
     }
 
-    $(window).on('scroll',function (e) {
+    $(window).on('scroll', function (e) {
 
     }).trigger('scroll');
 
@@ -115,26 +148,26 @@ jQuery(function ($) {
     });
 
     // 状态切换 input[hidden]
-    $('.radiostatus').click(function(e){
+    $('.radiostatus').click(function (e) {
         var init = $(this).data('init');
         var hid = $(this).find('input');
         var openText = hid.data('open');
         var closeText = hid.data('close');
         var value = hid.val();
-        if(!init){
-            $(this).data('init',1);
+        if (!init) {
+            $(this).data('init', 1);
             $(this).append('<span></span>');
-        }else{
+        } else {
             value = value == '1' ? 0 : 1;
             hid.val(value);
         }
-        if(value == '1'){
+        if (value == '1') {
             $(this).find('span').text(openText)
-            $(this).prop('title','点击'+closeText);
+            $(this).prop('title', '点击' + closeText);
             $(this).removeClass('off')
-        }else{
+        } else {
             $(this).find('span').text(closeText)
-            $(this).prop('title','点击'+openText);
+            $(this).prop('title', '点击' + openText);
             $(this).addClass('off')
         }
 
@@ -142,31 +175,31 @@ jQuery(function ($) {
 
     // 状态切换按钮 切换后跳转
     $('.chgstatus').click(function (e) {
-        if($(this).data('ajaxing'))return;
-        $(this).data('ajaxing',1);
-        var self=$(this);
-        var parent=self.parents('td');
-        var id=parent.data('id');
-        var status=self.data('status');
+        if ($(this).data('ajaxing')) return;
+        $(this).data('ajaxing', 1);
+        var self = $(this);
+        var parent = self.parents('td');
+        var id = parent.data('id');
+        var status = self.data('status');
         $.ajax({
-            url:parent.data('url'),
-            type:'POST',
-            dataType:'JSON',
-            data:{
-                id:id,
-                status:status
+            url: parent.data('url'),
+            type: 'POST',
+            dataType: 'JSON',
+            data: {
+                id: id,
+                status: status
             },
-            success:function (json) {
-                self.data('ajaxing',0);
-                if(json.code==1){
+            success: function (json) {
+                self.data('ajaxing', 0);
+                if (json.code == 1) {
                     dialog.success(json.msg);
                     self.toggleClass('off');
-                    var totext=self.attr('title').replace('点击','');
+                    var totext = self.attr('title').replace('点击', '');
                     self.text(totext);
                     setTimeout(function () {
                         location.reload();
-                    },1000);
-                }else{
+                    }, 1000);
+                } else {
                     dialog.error(json.msg);
                 }
             }
@@ -188,15 +221,15 @@ jQuery(function ($) {
             onshow: function (body) {
                 $.ajax({
                     url: self.attr('href'),
-                    beforeSend: function(request) {
-                        request.setRequestHeader("X-Requested-With","htmlhttp");
+                    beforeSend: function (request) {
+                        request.setRequestHeader("X-Requested-With", "htmlhttp");
                     },
                     success: function (text) {
                         body.html(text);
                     }
                 });
             }
-        }).show('<p class="loading">'+lang('loading...')+'</p>', title);
+        }).show('<p class="loading">' + lang('loading...') + '</p>', title);
 
     });
 
@@ -204,27 +237,30 @@ jQuery(function ($) {
     $('.link-confirm').click(function (e) {
         e.preventDefault();
         e.stopPropagation();
-        var text=$(this).data('confirm');
-        var url=$(this).attr('href');
-        if(text)text=text.replace(/(\\n|\n)+/g,"<br />");
-        if(!text)text=lang('Confirm operation?');
+        var text = $(this).data('confirm');
+        var url = $(this).attr('href');
+        if (text) text = text.replace(/(\\n|\n)+/g, "<br />");
+        if (!text) text = lang('Confirm operation?');
+        var method = $(this).data('method')
+        if (!method) method = 'GET'
 
-        dialog.confirm(text,function () {
+        dialog.confirm(text, function () {
             $.ajax({
-                url:url,
-                dataType:'JSON',
-                success:function (json) {
-                    dialog.alert(json.msg,function(){
-                        if(json.code==1){
-                            if(json.url){
-                                location.href=json.url;
-                            }else{
+                url: url,
+                type: method,
+                dataType: 'JSON',
+                success: function (json) {
+                    dialog.alert(json.msg, function () {
+                        if (json.code == 1) {
+                            if (json.url) {
+                                location.href = json.url;
+                            } else {
                                 location.reload();
                             }
                         }
                     });
                 },
-                error:function () {
+                error: function () {
                     dialog.alert(lang('Server error.'));
                 }
             })
@@ -235,11 +271,11 @@ jQuery(function ($) {
     $('.img-view').click(function (e) {
         e.preventDefault();
         e.stopPropagation();
-        var url=$(this).attr('href');
-        if(!url)url=$(this).data('img');
+        var url = $(this).attr('href');
+        if (!url) url = $(this).data('img');
         var dlg = new Dialog({
             btns: ['确定']
-        }).show('<a href="'+url+'" class="d-block text-center" target="_blank"><img class="img-fluid" src="'+url+'" /></a><div class="text-muted text-center">点击图片在新页面放大查看</div>', '查看图片');
+        }).show('<a href="' + url + '" class="d-block text-center" target="_blank"><img class="img-fluid" src="' + url + '" /></a><div class="text-muted text-center">点击图片在新页面放大查看</div>', '查看图片');
     });
 
     //tab切换效果
@@ -250,19 +286,19 @@ jQuery(function ($) {
 
     //上传框
     window.fileInputHander = function () {
-        var self=$(this);
-        if(!this.files || !this.files[0])return;
-        var inputgroup=$(this).parents('.input-group').eq(0);
-        var parent=inputgroup.parents('div').eq(0);
+        var self = $(this);
+        if (!this.files || !this.files[0]) return;
+        var inputgroup = $(this).parents('.input-group').eq(0);
+        var parent = inputgroup.parents('div').eq(0);
         var label = $(this).parents('.custom-file').find('.custom-file-label');
-        if(!label.data('origtext')){
-            label.data('origtext',label.text());
+        if (!label.data('origtext')) {
+            label.data('origtext', label.text());
         }
         label.text($(this).val());
 
-        if(!window.URL && !window.URL.createObjectURL)return;
-        var file=self[0].files[0];
-        var is_img=file.type && file.type.match(/(\.|\/)(jpe?g|png|gif|webp)$/);
+        if (!window.URL && !window.URL.createObjectURL) return;
+        var file = self[0].files[0];
+        var is_img = file.type && file.type.match(/(\.|\/)(jpe?g|png|gif|webp)$/);
 
 
         var figure = parent.find('.figure');
@@ -273,7 +309,7 @@ jQuery(function ($) {
                 '                        </figure>');
             figure = parent.find('.figure');
         }
-        if(is_img) {
+        if (is_img) {
             var img = figure.find('img');
             var origurl = img.data('origurl');
             if (!origurl) {
@@ -296,7 +332,7 @@ jQuery(function ($) {
                 dialog.confirm('取消上传该文件?', function () {
                     self.val('');
                     label.text(label.data('origtext'));
-                    if(is_img) {
+                    if (is_img) {
                         img.attr('src', origurl);
                         figcap.text(figcap.data('origtext'));
                     }
@@ -311,20 +347,20 @@ jQuery(function ($) {
     //表单Ajax提交
     $('.btn-primary[type=submit]').click(function (e) {
         var form = $(this).parents('form');
-        if(form.is('.noajax'))return true;
+        if (form.is('.noajax')) return true;
         var btn = this;
 
-        var isbtn=$(btn).prop('tagName').toUpperCase()=='BUTTON';
-        var origText=isbtn?$(btn).text():$(btn).val();
+        var isbtn = $(btn).prop('tagName').toUpperCase() == 'BUTTON';
+        var origText = isbtn ? $(btn).text() : $(btn).val();
         var options = {
             url: $(form).attr('action'),
             type: 'POST',
             dataType: 'JSON',
             success: function (json) {
-                window.stop_ajax=false;
-                isbtn?$(btn).text(origText):$(btn).val(origText);
+                window.stop_ajax = false;
+                isbtn ? $(btn).text(origText) : $(btn).val(origText);
                 if (json.code == 1) {
-                    dialog.alert(json.msg,function(){
+                    dialog.alert(json.msg, function () {
                         if (json.url) {
                             location.href = json.url;
                         } else {
@@ -337,27 +373,27 @@ jQuery(function ($) {
                 }
             },
             error: function (xhr) {
-                window.stop_ajax=false;
-                isbtn?$(btn).text(origText):$(btn).val(origText);
+                window.stop_ajax = false;
+                isbtn ? $(btn).text(origText) : $(btn).val(origText);
                 $(btn).removeAttr('disabled');
                 dialog.error('服务器处理错误');
             }
         };
         if (form.attr('enctype') === 'multipart/form-data') {
             if (!FormData) {
-                window.stop_ajax=false;
+                window.stop_ajax = false;
                 return true;
             }
             options.data = new FormData(form[0]);
             options.cache = false;
             options.processData = false;
             options.contentType = false;
-            options.xhr= function() { //用以显示上传进度
+            options.xhr = function () { //用以显示上传进度
                 var xhr = $.ajaxSettings.xhr();
                 if (xhr.upload) {
-                    xhr.upload.addEventListener('progress', function(event) {
+                    xhr.upload.addEventListener('progress', function (event) {
                         var percent = Math.floor(event.loaded / event.total * 100);
-                        $(btn).text(origText+'  ('+percent+'%)');
+                        $(btn).text(origText + '  (' + percent + '%)');
                     }, false);
                 }
                 return xhr;
@@ -368,7 +404,7 @@ jQuery(function ($) {
 
         e.preventDefault();
         $(this).attr('disabled', true);
-        window.stop_ajax=true;
+        window.stop_ajax = true;
         $.ajax(options);
     });
 
@@ -377,18 +413,18 @@ jQuery(function ($) {
         var group = $(this).parents('.input-group');
         var idele = group.find('[name=member_id]');
         var infoele = group.find('[name=member_info]');
-        dialog.pickUser( function (user) {
+        dialog.pickUser(function (user) {
             idele.val(user.id);
             infoele.val('[' + user.id + '] ' + user.username + (user.mobile ? (' / ' + user.mobile) : ''));
         }, $(this).data('filter'));
     });
 
     //位置选择按钮绑定
-    $('.pick-locate').click(function(e){
-        var group=$(this).parents('.input-group');
-        var idele=group.find('input[type=text]');
-        dialog.pickLocate('qq',function(locate){
-            idele.val(locate.lng+','+locate.lat);
-        },idele.val());
+    $('.pick-locate').click(function (e) {
+        var group = $(this).parents('.input-group');
+        var idele = group.find('input[type=text]');
+        dialog.pickLocate('qq', function (locate) {
+            idele.val(locate.lng + ',' + locate.lat);
+        }, idele.val());
     });
 });
