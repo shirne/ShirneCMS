@@ -580,6 +580,7 @@ CREATE TABLE `sa_oauth_app` (
 
 DROP TABLE IF EXISTS `sa_member_message`;
 
+
 CREATE TABLE `sa_member_message` (
   `message_id` BIGINT NOT NULL AUTO_INCREMENT,
   `member_id` INT NOT NULL DEFAULT 0,
@@ -589,16 +590,18 @@ CREATE TABLE `sa_member_message` (
   `reply_id` INT NULL DEFAULT 0,
   `group_id` INT NULL DEFAULT 0,
   `title` VARCHAR(60) NULL DEFAULT '',
+  `attachment` VARCHAR(150) NULL DEFAULT '',
   `content` TEXT NULL,
   `create_time` int UNSIGNED NULL DEFAULT 0,
-  `show_at` INT NULL,
-  `read_at` INT NULL DEFAULT 0,
-  `is_delete` TINYINT NULL DEFAULT 0,
+  `update_time` int UNSIGNED NULL DEFAULT 0,
+  `show_time` INT NULL,
+  `read_time` INT NULL DEFAULT 0,
+  `delete_time` TINYINT NULL DEFAULT 0,
   PRIMARY KEY (`message_id`),
   INDEX `member_id`(`member_id`),
   INDEX `type`(`type`),
-  INDEX `show_at`(`show_at`),
-  INDEX `is_delete`(`is_delete`)
+  INDEX `show_time`(`show_time`),
+  INDEX `delete_time`(`delete_time`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 

@@ -63,6 +63,22 @@ class MemberModel extends BaseModel
         });
     }
 
+    public static function sendMessage($userid, $touserid, $title, $content)
+    {
+        return Db::name('memberMessage')->insert([
+            'member_id' => $touserid,
+            'type' => '0',
+            'from_member_id' => $userid,
+            'manager_id' => 0,
+            'reply_id' => 0,
+            'group_id' => 0,
+            'title' => $title,
+            'content' => $content,
+            'create_time' => time(),
+            'update_time' => time(),
+        ]);
+    }
+
     // 后台手动设置推荐人
     public function setReferer($referer)
     {
