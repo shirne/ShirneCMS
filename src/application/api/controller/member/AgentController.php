@@ -91,7 +91,7 @@ class AgentController extends AuthedController
 
         try {
             $userModel = MemberModel::where('id', $this->user['id'])->find();
-            $url = $userModel->getSharePoster($platform, $page);
+            $url = $userModel->getSharePoster($platform . '-' . $this->request->tokenData['appid'], $page);
         } catch (\Exception $e) {
             $this->error($e->getMessage());
         }

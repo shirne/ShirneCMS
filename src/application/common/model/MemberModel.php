@@ -560,6 +560,12 @@ class MemberModel extends BaseModel
             $this->setError('会员没有推广码');
             return false;
         }
+        $parts = explode('-', $platform);
+        $appid = '';
+        if (count($parts) > 2) {
+            $platform = $parts[0] . '-' . $parts[1];
+            $appid = $parts[2];
+        }
         $sharepath = './uploads/share/' . ($this['id'] % 100) . '/' . $this['agentcode'] . '-' . $platform . '.jpg';
 
         $config = $this->get_poster_config();
@@ -581,9 +587,9 @@ class MemberModel extends BaseModel
             }
         }
         if (in_array($platform, ['wechat-miniprogram', 'wechat-minigame'])) {
-            $created = $this->create_appcode_img($config, $sharepath, $page);
+            $created = $this->create_appcode_img($config, $appid, $sharepath, $page);
         } else {
-            $created = $this->create_share_img($config, $sharepath, $page);
+            $created = $this->create_share_img($config, $appid, $sharepath, $page);
         }
         if (!$created) return $created;
         return media(ltrim($sharepath, '.'));
@@ -615,7 +621,7 @@ class MemberModel extends BaseModel
         return $config;
     }
 
-    private function create_share_img($config, $sharepath, $page)
+    private function create_share_img($config, $appid, $sharepath, $page)
     {
         if (strpos($page, $this['agentcode']) === false) {
             $this->setError('分享链接错误');
@@ -647,9 +653,8 @@ class MemberModel extends BaseModel
         $poster->save($sharepath);
         return true;
     }
-    private function create_appcode_img($config, $sharepath, $page)
+    private function create_appcode_img($config, $appid, $sharepath, $page)
     {
-        $appid = request()->tokenData['appid'];
         $wechat = WechatModel::where('appid', $appid)->find();
         if (empty($wechat)) {
             $this->setError('分享图生成失败(wechat)');

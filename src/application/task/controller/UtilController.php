@@ -104,7 +104,7 @@ class UtilController extends Controller
         if (empty($account)) {
             exit('NA');
         }
-        $poster = $userModel->getSharePoster($account['type'] . '-' . $account['account_type'], str_replace('[code]', $userModel['agentcode'], $account['share_poster_url']));
+        $poster = $userModel->getSharePoster($account['type'] . '-' . $account['account_type'] . '-' . $account['id'], str_replace('[code]', $userModel['agentcode'], $account['share_poster_url']));
         if (empty($poster)) {
             exit('NP');
         }
