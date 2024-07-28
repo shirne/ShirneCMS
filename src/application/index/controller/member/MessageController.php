@@ -13,6 +13,22 @@ use think\Db;
  */
 class MessageController extends BaseController
 {
+    public function count()
+    {
+        session_write_close();
+        $receive = Db::name('MemberMessage')->where('member_id', $this->user['id'])->where('is_delete', 0)->where('read_time', 0)->where(function ($query) {
+            $query->where('reply_id', 0)->whereOr(Db::raw('reply_id in (select message_id from sa_member_message where member_id=' . $this->user['id'] . ')'));
+        })->count();
+
+        $send = Db::name('MemberMessage')->where('member_id', $this->user['id'])->where('is_delete', 0)->where('read_time', 0)->where(Db::raw('reply_id in (select message_id from sa_member_message where from_member_id=' . $this->user['id'] . ')'))->count();
+
+        $this->success('ok', '', [
+            'total' => $receive + $send,
+            'receive' => $receive,
+            'send' => $send
+        ]);
+    }
+
     public function index($page = 1, $pagesize = 15)
     {
         $paged = Db::view('MemberMessage', '*')
@@ -27,6 +43,8 @@ class MessageController extends BaseController
             if (empty($item['from_nickname'])) {
                 $item['from_nickname'] = $item['from_username'];
             }
+            $newcount = Db::name('MemberMessage')->where('group_id', $item['message_id'])->where('member_id', $this->user['id'])->where('is_delete', 0)->where('read_time', 0)->count();
+            $item['newcount'] = $newcount;
         }
         $ids = array_column($lists, 'message_id');
         if (!empty($ids)) {
@@ -75,7 +93,8 @@ class MessageController extends BaseController
 
         $ids = array_column($lists, 'message_id');
         if (!empty($ids)) {
-            Db::name('MemberMessage')->where('member_id', $this->userid)->where('show_time', 0)->whereIn('message_id', $ids)->update(['show_time' => time(), 'read_time' => time()]);
+            Db::name('MemberMessage')->where('member_id', $this->userid)->where('show_time', 0)->whereIn('message_id', $ids)->update(['show_time' => time()]);
+            Db::name('MemberMessage')->where('member_id', $this->userid)->where('read_time', 0)->whereIn('message_id', $ids)->update(['read_time' => time()]);
         }
 
         $this->assign('active',  $message['member_id'] == $this->user['id'] ? 0 : 1);
@@ -98,6 +117,8 @@ class MessageController extends BaseController
             if (empty($item['to_nickname'])) {
                 $item['to_nickname'] = $item['to_username'];
             }
+            $newcount = Db::name('MemberMessage')->where('group_id', $item['message_id'])->where('member_id', $this->user['id'])->where('is_delete', 0)->where('read_time', 0)->count();
+            $item['newcount'] = $newcount;
         }
         $this->assign('lists', $lists);
         $this->assign('page', $paged->render());

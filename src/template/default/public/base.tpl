@@ -37,6 +37,157 @@
     <script type="text/javascript">
         jQuery(function ($) {
             setNav('{$navmodel}');
+
+            $('.list-group-item').click(function (e) {
+                var target = $(e.target);
+                if (target.is('a')) return;
+                if (target.parents('a').length > 0) return;
+                var link = $(this).find('a[href]')
+                if (link.length > 0) {
+                    if (link.is('.btn-confirm')) {
+                        return;
+                    }
+                    var anchor = target.data('anchor')
+                    if (anchor) {
+                        link.attr('href', link.attr('href') + '#' + anchor)
+                    }
+                    link[0].click();
+                }
+            });
+            $('.gotop-btn').click(function () {
+                $("html,body").animate({
+                    scrollTop: 0
+                }, 500);
+            })
+
+            $('.need-login').click(function () {
+                dialog.confirm("{:lang( 'Please login first!' )}", function () {
+                    location.href = "{:url('index/login/index')}"
+                })
+            })
+
+            $('.favate-btn').click(function (e) {
+                e.preventDefault();
+                if (!isLogin) {
+                    dialog.alert('请先登录')
+                    return
+                }
+
+                var type = $(this).data('type')
+                var id = $(this).data('id')
+                $.ajax({
+                    url: "{:aurl('index/member.favourite/add')}",
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        type: type,
+                        id: id,
+                    },
+                    success: function (json) {
+                        if (json.code == 1) {
+                            dialog.success(json.msg)
+                            setTimeout(function () {
+                                location.reload()
+                            }, 500)
+                        } else {
+                            dialog.alert(json.msg)
+                        }
+                    }
+                })
+            })
+            $('.cancel-favate-btn').click(function (e) {
+                e.preventDefault();
+                if (!isLogin) {
+                    dialog.alert('请先登录')
+                    return
+                }
+
+                var type = $(this).data('type')
+                var id = $(this).data('id')
+                dialog.confirm('取消收藏？', function () {
+                    $.ajax({
+                        url: "{:aurl('index/member.favourite/remove')}",
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            type: type,
+                            id: id,
+                        },
+                        success: function (json) {
+                            if (json.code == 1) {
+                                dialog.success(json.msg)
+                                setTimeout(function () {
+                                    location.reload()
+                                }, 500)
+                            } else {
+                                dialog.alert(json.msg)
+                            }
+                        }
+                    })
+                })
+            })
+
+            var ajaxes = $('.ajax-notice')
+            var timer
+            function startAjax() {
+                clearTimeout(timer)
+                var modules = []
+                for (var i = 0; i < ajaxes.length; i++) {
+                    var module = ajaxes.eq(i).data('module')
+                    if (modules.indexOf(module) > -1) continue;
+                    modules.push(module)
+                    switch (module) {
+                        default:
+                            getMessageCount()
+                    }
+                }
+                timer = setTimeout(startAjax, 5000);
+            }
+            if (isLogin) {
+                startAjax();
+            }
+
+            var isMessageSync = false
+            function getMessageCount() {
+                if (isMessageSync) return
+                isMessageSync = true
+                try {
+                    $.ajax({
+                        url: "{:aurl('index/member.message/count')}",
+                        type: 'POST',
+                        dataType: 'json',
+                        success: function (json) {
+                            isMessageSync = false
+                            if (json.code == 1) {
+                                $('.ajax-notice-message').each(function () {
+                                    var badge = $(this).find('.badge')
+                                    var count = json.data.total
+                                    if ($(this).data('type') == 'receive') {
+                                        count = json.data.receive
+                                    } else if ($(this).data('type') == 'send') {
+                                        count = json.data.send
+                                    }
+                                    if (count > 0) {
+                                        if (badge.length < 1) {
+                                            $(this).append('<span class="badge badge-light">' + count + '</span>')
+                                        } else {
+                                            badge.text(count)
+                                        }
+                                    } else {
+                                        badge.remove()
+                                    }
+                                })
+                            }
+                        },
+                        error: function () {
+                            isMessageSync = false
+                        }
+                    })
+                } catch (err) {
+                    isMessageSync = false
+                }
+
+            }
         })
     </script>
     {block name="script" }{/block}
