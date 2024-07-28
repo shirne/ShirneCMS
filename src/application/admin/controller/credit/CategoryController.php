@@ -105,6 +105,70 @@ class CategoryController extends BaseController
         return $this->fetch();
     }
 
+
+
+    public function batch($pid = 0)
+    {
+        $content = $this->request->post('content');
+        $rows = explode("\n", $content);
+        $datas = [];
+        $names = Db::name('goodsCategory')->field('name')->select();
+        $names = array_column($names, 'name');
+        $pinyin = new Pinyin();
+
+        $sort = 0;
+        if ($pid > 0) {
+            $sort = Db::name('goodsCategory')->where('pid', $pid)->max('sort') + 1;
+        } else {
+            $sort = Db::name('goodsCategory')->max('sort') + 1;
+        }
+        foreach ($rows as $item) {
+            $item = trim($item);
+            if (empty($item)) continue;
+            $fields = explode(' ', $item);
+            $fieldCount = count($fields);
+            $data = ['pid' => $pid, 'sort' => $sort++];
+            if ($fieldCount > 2) {
+                $data['title'] = trim($fields[0]);
+                $data['short'] = trim($fields[1]);
+                $data['name'] = trim($fields[2]);
+            } elseif ($fieldCount > 1) {
+                $data['title'] = trim($fields[0]);
+                $data['short'] = trim($fields[0]);
+                $data['name'] = trim($fields[1]);
+            } else {
+                $data['title'] = trim($fields[0]);
+                $data['short'] = trim($fields[0]);
+                $data['name'] = $pinyin->permalink(trim($fields[0]), '');
+            }
+            if (in_array($data['name'], $names)) {
+                $parts = explode('_', $data['name']);
+                $partCount = count($parts);
+                if (count($parts) > 1) {
+                    $parts[$partCount - 1] += 1;
+                    while (((in_array(implode('_', $parts), $names)))) {
+                        $parts[$partCount - 1] += 1;
+                    }
+                } else {
+                    $parts[] = 1;
+                    while (((in_array(implode('_', $parts), $names)))) {
+                        $parts[$partCount] += 1;
+                    }
+                }
+                $data['name'] = implode('_', $parts);
+            }
+            $names[] = $data['name'];
+
+            $datas[] = $data;
+            unset($data);
+        }
+        if (!empty($datas)) {
+            Db::name('goodsCategory')->insertAll($datas);
+            $this->success('添加成功');
+        }
+        $this->error('未提交数据');
+    }
+
     /**
      * 删除分类
      */
