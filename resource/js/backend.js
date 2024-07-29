@@ -9,6 +9,64 @@ function radio_tab(radios, lists, prefix) {
     }).filter(':checked').trigger('change');
 }
 
+// 弹出框编辑
+function editData(id, url, tpl, name) {
+    var dlg = new Dialog({
+        onshown: function (body) {
+            if ($.fn.datetimepicker) {
+                body.find('.datepicker').each(function () {
+                    $(this).datetimepicker({ format: 'YYYY-MM-DD' })
+                })
+            }
+            if (id > 0) {
+                $.ajax({
+                    url: url + '?id=' + id,
+                    dataType: 'JSON',
+                    type: 'GET',
+                    success: function (json) {
+                        //console.log(json);
+                        if (json.code == 1) {
+                            bindData(body, json.data.model);
+                        }
+                    }
+                })
+            }
+        },
+        onsure: function (body) {
+            var options = {
+                url: url,
+                type: 'POST',
+                dataType: 'JSON',
+                success: function (json) {
+                    //console.log(json);
+                    dialog.alert(json.msg);
+                    if (json.code == 1) {
+                        location.reload();
+                        dlg.close();
+                    }
+                },
+                error: function (err) {
+                    dialog.error(err.toString())
+                }
+            }
+            var form = body.find('form')
+            if (form.length > 0) {
+                if (form.attr('enctype') == 'multipart/form-data') {
+                    options.data = new FormData(form[0])
+                    options.cache = false;
+                    options.processData = false;
+                    options.contentType = false;
+                } else {
+                    options.data = $(form).serialize()
+                }
+            } else {
+                options.data = getData(body)
+            }
+            $.ajax(options);
+            return false;
+        }
+    }).show(tpl, (id > 0 ? '编辑' : '添加') + name);
+}
 
 //绑定数据
 function bindData(body, data) {
