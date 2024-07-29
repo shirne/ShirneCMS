@@ -13,6 +13,7 @@ use app\admin\controller\BaseController;
 use app\admin\validate\GoodsCategoryValidate;
 use app\common\facade\GoodsCategoryFacade;
 use app\common\model\GoodsCategoryModel;
+use Overtrue\Pinyin\Pinyin;
 use think\Db;
 
 class CategoryController extends BaseController

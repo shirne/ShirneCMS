@@ -72,11 +72,11 @@
                                     <div class="btn-group btn-group-toggle btn-group-sm" data-toggle="buttons">
                                         <label class="btn btn-outline-secondary{$goods['status']=='1'?' active':''}">
                                             <input type="radio" name="status" value="1" autocomplete="off"
-                                                {$goods['type']=='1' ?'checked':''}>是
+                                                {$goods['status']=='1' ?'checked':''}>是
                                         </label>
                                         <label class="btn btn-outline-secondary{$goods['status']=='0'?' active':''}">
                                             <input type="radio" name="status" value="0" autocomplete="off"
-                                                {$goods['type']=='0' ?'checked':''}>否
+                                                {$goods['status']=='0' ?'checked':''}>否
                                         </label>
                                     </div>
                                 </div>
