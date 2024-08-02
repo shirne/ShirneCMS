@@ -180,7 +180,7 @@ class BaseController extends Controller
      */
     protected function setLogin($member, $logintype = 1)
     {
-        if ($member['status'] != '1') {
+        if (isset($member['status']) && $member['status'] != '1') {
             $this->error('会员已禁用');
         }
         session('userid', $member['id']);
