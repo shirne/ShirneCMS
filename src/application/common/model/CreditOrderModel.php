@@ -206,4 +206,12 @@ class CreditOrderModel extends BaseOrderModel
         }
         return $result;
     }
+
+    public function getItems()
+    {
+        if ($this->isEmpty()) {
+            return [];
+        }
+        return Db::name('creditOrderGoods')->where('order_id', $this['order_id'])->order('id asc')->select();
+    }
 }
