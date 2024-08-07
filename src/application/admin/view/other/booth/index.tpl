@@ -43,10 +43,10 @@
                     <a class="btn btn-outline-primary" title="编辑"
                         href="{:url('other.booth/update',array('id'=>$v['id']))}"><i class="ion-md-create"></i></a>
                     {if $v['locked']}
-                    <a class="btn btn-outline-primary" title="解锁"
+                    <a class="btn btn-outline-primary link-confirm" data-confirm="确定解锁项目?" title="解锁"
                         href="{:url('other.booth/unlock',array('id'=>$v['id']))}"><i class="ion-md-unlock"></i></a>
                     {else/}
-                    <a class="btn btn-outline-primary" title="锁定"
+                    <a class="btn btn-outline-primary link-confirm" data-confirm="确定锁定项目?" title="锁定"
                         href="{:url('other.booth/lock',array('id'=>$v['id']))}"><i class="ion-md-lock"></i></a>
                     <a class="btn btn-outline-danger link-confirm" data-confirm="您真的确定要删除吗？\n删除后将不能恢复!" title="删除"
                         href="{:url('other.booth/delete',array('id'=>$v['id']))}"><i class="ion-md-trash"></i></a>

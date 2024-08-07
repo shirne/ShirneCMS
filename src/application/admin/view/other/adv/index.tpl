@@ -42,12 +42,12 @@
                 <td>{$v.width}px &times; {$v.height}px</td>
                 <td class="operations">
                     {if $v['locked']}
-                    <a class="btn btn-outline-primary" title="解锁"
+                    <a class="btn btn-outline-primary link-confirm" data-confirm="确定解锁项目?" title="解锁"
                         href="{:url('other.adv/unlock',array('id'=>$v['id']))}"><i class="ion-md-unlock"></i></a>
                     {else/}
                     <a class="btn btn-outline-primary" title="编辑"
                         href="{:url('other.adv/update',array('id'=>$v['id']))}"><i class="ion-md-create"></i></a>
-                    <a class="btn btn-outline-primary" title="锁定"
+                    <a class="btn btn-outline-primary link-confirm" data-confirm="确定锁定项目?" title="锁定"
                         href="{:url('other.adv/lock',array('id'=>$v['id']))}"><i class="ion-md-lock"></i></a>
                     {/if}
 
