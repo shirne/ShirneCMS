@@ -30,7 +30,7 @@ class BaseModel extends Model
     protected static function getTempFile($traces)
     {
         foreach ($traces as $trace) {
-            if (strpos($trace['file'], '\\temp\\') > 0) {
+            if (isset($trace['file']) && strpos($trace['file'], '\\temp\\') > 0) {
                 return $trace;
             }
         }

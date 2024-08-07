@@ -244,6 +244,7 @@ CREATE TABLE `sa_adv_group` (
   `width` int DEFAULT 0,
   `height` int DEFAULT 0,
   `ext_set` varchar(500) DEFAULT '',
+  `type` tinyint DEFAULT 0,
   `locked` tinyint DEFAULT 0,
   `status` tinyint DEFAULT 0,
   `create_time` int UNSIGNED DEFAULT 0,

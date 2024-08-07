@@ -176,7 +176,7 @@ trait Upload
 
             //检查文件类型大小和合法性
             if (!$this->_checkFile($file, $isImg)) {
-                $this->uploadError = '文件类型不合法';
+                if (empty($this->uploadError)) $this->uploadError = '文件类型不合法';
                 $this->uploadErrorCode = 108;
                 return false;
             }
