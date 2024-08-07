@@ -1,6 +1,6 @@
 <?php
 
-namespace app\admin\validate;
+namespace modules\credit\validate;
 
 
 use app\common\core\BaseUniqueValidate;

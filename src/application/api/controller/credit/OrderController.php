@@ -1,19 +1,19 @@
 <?php
 
-namespace app\api\controller;
+namespace app\api\controller\credit;
 
-
-use app\common\model\CreditOrderModel;
+use app\api\controller\AuthedController;
+use modules\credit\model\CreditOrderModel;
 use app\common\validate\OrderValidate;
 use think\Db;
 use think\response\Json;
 
 /**
  * 积分订单操作
- * Class CreditOrderController
+ * Class OrderController
  * @package app\api\Controller
  */
-class CreditOrderController extends AuthedController
+class OrderController extends AuthedController
 {
     /**
      * 初始化订单信息

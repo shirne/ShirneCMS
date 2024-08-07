@@ -1,9 +1,10 @@
 <?php
 
-namespace app\index\controller;
+namespace app\index\controller\credit;
 
-use app\common\model\GoodsModel;
-use app\common\facade\GoodsCategoryFacade;
+use modules\credit\model\GoodsModel;
+use modules\credit\facade\GoodsCategoryFacade;
+use app\index\controller\BaseController;
 use think\Db;
 
 class GoodsController extends BaseController

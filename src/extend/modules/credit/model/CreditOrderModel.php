@@ -1,6 +1,6 @@
 <?php
 
-namespace app\common\model;
+namespace modules\credit\model;
 
 
 use app\common\core\BaseOrderModel;

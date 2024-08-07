@@ -3,7 +3,7 @@
 namespace app\admin\controller\credit;
 
 use app\admin\controller\BaseController;
-use app\common\model\CreditOrderModel;
+use modules\credit\model\CreditOrderModel;
 use app\common\model\PayOrderModel;
 use shirne\excel\Excel;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
@@ -138,7 +138,7 @@ class OrderController extends BaseController
             $this->error('订单不可取消');
         }
         $order->updateStatus(['status' => -1]);
-        user_log($this->mid, 'cancelcreditorder', 1, '取消积分订单 ' . $id, 'manager');
+        user_log($this->mid, 'cancel-credit-order', 1, '取消积分订单 ' . $id, 'manager');
         $this->success('操作成功');
     }
     public function setpayed($id)
@@ -164,7 +164,7 @@ class OrderController extends BaseController
             $paytype = 'offline';
         }
         $order->updateStatus(['status' => 1, 'pay_type' => $paytype]);
-        user_log($this->mid, 'creditorderpay', 1, '积分订单支付 ' . $id, 'manager');
+        user_log($this->mid, 'credit-order-pay', 1, '积分订单支付 ' . $id, 'manager');
         $this->success('操作成功');
     }
     public function setdelivery($id)
@@ -191,7 +191,7 @@ class OrderController extends BaseController
             'express_no' => $express_no,
             'express_code' => $express_code
         ]);
-        user_log($this->mid, 'creditorderdelivery', 1, '积分订单发货 ' . $id, 'manager');
+        user_log($this->mid, 'credit-order-delivery', 1, '积分订单发货 ' . $id, 'manager');
         $this->success('操作成功');
     }
     public function setreceive($id)
@@ -211,7 +211,7 @@ class OrderController extends BaseController
             $this->error('订单已完成');
         }
         $order->updateStatus(['status' => 3]);
-        user_log($this->mid, 'creditorderconfirm', 1, '积分订单确认 ' . $id, 'manager');
+        user_log($this->mid, 'credit-order-confirm', 1, '积分订单确认 ' . $id, 'manager');
         $this->success('操作成功');
     }
 
@@ -232,7 +232,7 @@ class OrderController extends BaseController
             $this->error('订单已完成');
         }
         $order->updateStatus(['status' => 4]);
-        user_log($this->mid, 'creditordercomplete', 1, '积分订单完成 ' . $id, 'manager');
+        user_log($this->mid, 'credit-order-complete', 1, '积分订单完成 ' . $id, 'manager');
         $this->success('操作成功');
     }
 
@@ -267,7 +267,7 @@ class OrderController extends BaseController
         );
 
         $order->save($data);
-        user_log($this->mid, 'repricecreditorder', 1, '积分订单改价 ' . $id . ' ' . $price, 'manager');
+        user_log($this->mid, 'reprice-credit-order', 1, '积分订单改价 ' . $id . ' ' . $price, 'manager');
         $this->success('操作成功');
     }
 
@@ -325,7 +325,7 @@ class OrderController extends BaseController
         $model = Db::name('creditOrder');
         $result = $model->whereIn("order_id", idArr($id))->useSoftDelete('delete_time', time())->delete();
         if ($result) {
-            user_log($this->mid, 'deleteorder', 1, '删除订单 ' . $id, 'manager');
+            user_log($this->mid, 'delete-credit-order', 1, '删除订单 ' . $id, 'manager');
             $this->success("删除成功", url('credit.order/index'));
         } else {
             $this->error("删除失败");

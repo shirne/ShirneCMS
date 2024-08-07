@@ -10,9 +10,9 @@
 namespace app\admin\controller\credit;
 
 use app\admin\controller\BaseController;
-use app\admin\validate\GoodsCategoryValidate;
-use app\common\facade\GoodsCategoryFacade;
-use app\common\model\GoodsCategoryModel;
+use modules\credit\validate\GoodsCategoryValidate;
+use modules\credit\facade\GoodsCategoryFacade;
+use modules\credit\model\GoodsCategoryModel;
 use Overtrue\Pinyin\Pinyin;
 use think\Db;
 

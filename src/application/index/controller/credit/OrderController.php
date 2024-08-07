@@ -10,12 +10,12 @@
 namespace app\index\controller;
 
 
-use app\common\facade\CreditOrderFacade;
-use app\common\model\CreditOrderModel;
+use modules\credit\facade\CreditOrderFacade;
+use modules\credit\model\CreditOrderModel;
 use app\common\validate\OrderValidate;
 use think\Db;
 
-class CreditOrderController extends AuthedController
+class OrderController extends AuthedController
 {
     public function initialize()
     {

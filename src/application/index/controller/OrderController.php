@@ -11,8 +11,6 @@ namespace app\index\controller;
 
 
 use app\common\facade\MemberCartFacade;
-//use app\common\facade\OrderFacade;
-use app\common\model\CreditOrderModel;
 use app\common\model\MemberOauthModel;
 use app\common\model\OrderModel;
 use app\common\model\PayOrderModel;

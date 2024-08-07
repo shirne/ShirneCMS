@@ -1,8 +1,8 @@
 <?php
 
-namespace app\common\model;
+namespace modules\credit\model;
 
-
+use app\common\model\CategoryModel;
 use think\Db;
 
 class GoodsCategoryModel extends CategoryModel

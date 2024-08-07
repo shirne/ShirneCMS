@@ -10,10 +10,10 @@
 namespace app\admin\controller\credit;
 
 use app\admin\controller\BaseController;
-use app\common\model\GoodsModel;
-use app\admin\validate\GoodsValidate;
+use modules\credit\model\GoodsModel;
+use modules\credit\validate\GoodsValidate;
 use app\admin\validate\ImagesValidate;
-use app\common\facade\GoodsCategoryFacade;
+use modules\credit\facade\GoodsCategoryFacade;
 use think\Db;
 
 class GoodsController extends BaseController
@@ -83,7 +83,7 @@ class GoodsController extends BaseController
                 if ($model['id']) {
                     //delete_image($delete_images);
 
-                    user_log($this->mid, 'addgoods', 1, '添加商品 ' . $model->id, 'manager');
+                    user_log($this->mid, 'add-credit-goods', 1, '添加商品 ' . $model->id, 'manager');
                     $this->success("添加成功", url('credit.goods/index'));
                 } else {
                     delete_image($data['image']);
@@ -135,7 +135,7 @@ class GoodsController extends BaseController
                 if ($model->allowField(true)->save($data)) {
                     //delete_image($delete_images);
 
-                    user_log($this->mid, 'updategoods', 1, '修改商品 ' . $id, 'manager');
+                    user_log($this->mid, 'update-credit-goods', 1, '修改商品 ' . $id, 'manager');
                     $this->success("编辑成功", url('credit.goods/index'));
                 } else {
                     delete_image($data['image']);
@@ -166,7 +166,7 @@ class GoodsController extends BaseController
         if ($result) {
 
             Db::name('goodsImages')->where('goods_id', 'in', idArr($id))->delete();
-            user_log($this->mid, 'deletegoods', 1, '删除商品 ' . $id, 'manager');
+            user_log($this->mid, 'delete-credit-goods', 1, '删除商品 ' . $id, 'manager');
             $this->success("删除成功", url('credit.goods/index'));
         } else {
             $this->error("删除失败");
@@ -181,7 +181,7 @@ class GoodsController extends BaseController
             user_log($this->mid, 'pushgoods', 1, '上架商品 ' . $id, 'manager');
             $this->success("上架成功", url('credit.goods/index'));
         } elseif ($result && $data['status'] === 0) {
-            user_log($this->mid, 'cancelgoods', 1, '下架商品 ' . $id, 'manager');
+            user_log($this->mid, 'cancel-credit-goods', 1, '下架商品 ' . $id, 'manager');
             $this->success("下架成功", url('credit.goods/index'));
         } else {
             $this->error("操作失败");

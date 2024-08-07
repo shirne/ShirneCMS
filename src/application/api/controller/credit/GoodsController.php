@@ -1,9 +1,10 @@
 <?php
 
-namespace app\api\controller;
+namespace app\api\controller\credit;
 
-use app\common\facade\GoodsCategoryFacade;
-use app\common\model\GoodsModel;
+use app\api\controller\BaseController;
+use modules\credit\facade\GoodsCategoryFacade;
+use modules\credit\model\GoodsModel;
 use think\Db;
 use think\response\Json;
 

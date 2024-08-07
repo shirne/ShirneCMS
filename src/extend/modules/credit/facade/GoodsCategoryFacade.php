@@ -1,14 +1,14 @@
 <?php
 
-namespace app\common\facade;
+namespace modules\credit\facade;
 
 
 use app\common\core\SimpleFacade;
 
 /**
  * Class GoodsCategoryFacade
- * @package app\common\facade
- * @see \app\common\model\GoodsCategoryModel
+ * @package modules\credit\facade
+ * @see \modules\credit\model\GoodsCategoryModel
  * @method static array getAllCategories($force=false) 获取全部分类列表，无缓存
  * @method static array getCategories($force=false) 获取分类列表
  * @method static array findCategory($idorname) 查找分类
@@ -25,6 +25,6 @@ class GoodsCategoryFacade extends SimpleFacade
 {
     protected static function getFacadeClass()
     {
-        return \app\common\model\GoodsCategoryModel::class;
+        return \modules\credit\model\GoodsCategoryModel::class;
     }
 }

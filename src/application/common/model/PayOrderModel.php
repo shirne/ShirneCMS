@@ -4,6 +4,7 @@ namespace app\common\model;
 
 use EasyWeChat\Factory;
 use app\common\core\BaseModel;
+use modules\credit\model\CreditOrderModel;
 use think\Db;
 use think\facade\Log;
 
