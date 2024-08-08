@@ -254,23 +254,24 @@ class BaseController extends Controller
     protected function checkLogin()
     {
         $this->userid = session('userid');
-
-        $loginsession = $this->request->cookie(SESSKEY_USER_AUTO_LOGIN);
-        if (!empty($loginsession)) {
-            cookie(SESSKEY_USER_AUTO_LOGIN, null);
-            $data = EncryptService::getInstance()->decrypt($loginsession);
-            if (!empty($data)) {
-                $json = json_decode($data, true);
-                if (!empty($json['hash'])) {
-                    $login = MemberLoginModel::where('hash', $json['hash'])->find();
-                    if (!empty($login)) {
-                        $timestamp = $json['time'];
-                        if ($timestamp >= time()) {
-                            $this->userid = $json['id'];
-                            $member = MemberModel::where('id', $this->userid)->find();
-                            $this->setLogin($member, 0);
-                            $this->user = $member;
-                            $this->setAutoLogin($member, $login['id']);
+        if (empty($this->userid)) {
+            $loginsession = $this->request->cookie(SESSKEY_USER_AUTO_LOGIN);
+            if (!empty($loginsession)) {
+                cookie(SESSKEY_USER_AUTO_LOGIN, null);
+                $data = EncryptService::getInstance()->decrypt($loginsession);
+                if (!empty($data)) {
+                    $json = json_decode($data, true);
+                    if (!empty($json['hash'])) {
+                        $login = MemberLoginModel::where('hash', $json['hash'])->find();
+                        if (!empty($login)) {
+                            $timestamp = $json['time'];
+                            if ($timestamp >= time()) {
+                                $this->userid = $login['member_id'];
+                                $member = MemberModel::where('id', $this->userid)->find();
+                                $this->setLogin($member, 0);
+                                $this->user = $member;
+                                $this->setAutoLogin($member, $login['id']);
+                            }
                         }
                     }
                 }
