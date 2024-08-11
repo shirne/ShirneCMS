@@ -40,23 +40,25 @@
             <tr>
                 <td>{$v.id}</td>
                 <td>{$v.html} {$v.title}&nbsp;<span class="badge badge-info">{$v.short}</span>{if $v['use_template'] ==
-                    1}&nbsp;<span class="badge badge-warning">独立模板</span>{/if}</td>
+                    1}
+                    &nbsp;<span class="badge badge-warning">独立模板</span>
+                    {/if}</td>
                 <td>{$v.name}</td>
                 <td>{$v.sort}</td>
-                <td>
+                <td class="operations">
                     <div class="btn-group" role="group" aria-label="Basic example">
-                        <a class="btn btn-outline-dark btn-sm"
-                            href="{:url('credit.goods/add',array('cid'=>$v['id']))}"><i class="ion-md-add"></i> 发布</a>
-                        <a class="btn btn-outline-dark btn-sm"
+                        <a class="btn btn-outline-primary" title="发布"
+                            href="{:url('credit.goods/add',array('cid'=>$v['id']))}"><i
+                                class="ion-md-paper-plane"></i></a>
+                        <a class="btn btn-outline-primary" title="添加"
                             href="{:url('credit.category/add',array('pid'=>$v['id']))}"><i class="ion-md-add"></i>
-                            添加</a>
-                        <a class="btn btn-outline-dark btn-sm"
+                        </a>
+                        <a class="btn btn-outline-primary" title="{:lang('Edit')}"
                             href="{:url('credit.category/edit',array('id'=>$v['id']))}"><i class="ion-md-create"></i>
-                            编辑</a>
-                        <a class="btn btn-outline-dark btn-sm"
+                        </a>
+                        <a class="btn btn-outline-danger link-confirm" title="{:lang('Delete')}"
                             href="{:url('credit.category/delete',array('id'=>$v['id']))}"
-                            onclick="javascript:return del(this,'您真的确定要删除吗？\n\n删除后将不能恢复!');"><i
-                                class="ion-md-trash"></i> 删除</a>
+                            data-confirm="您真的确定要删除吗？\n\n删除后将不能恢复!"><i class="ion-md-trash"></i> </a>
                     </div>
                 </td>
             </tr>
