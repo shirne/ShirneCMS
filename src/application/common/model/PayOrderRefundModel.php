@@ -28,7 +28,7 @@ class PayOrderRefundModel extends BaseModel
         return $strlen < $len ? str_pad($id, $len, '0', STR_PAD_LEFT) : substr($id, $strlen - $len);
     }
 
-    public function createFromPayOrder($payOrder, $reason, $refundFee = null)
+    public static function createFromPayOrder($payOrder, $reason, $refundFee = null)
     {
         $refund = [
             'member_id' => $payOrder['member_id'],

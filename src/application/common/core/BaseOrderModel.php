@@ -20,6 +20,11 @@ class BaseOrderModel extends BaseModel
         return $this->lastInsertStatus;
     }
 
+    public static function getOrder($id)
+    {
+        return static::where('order_id', $id)->find();
+    }
+
     protected function orderno_sufix()
     {
         $key = 'order_no_' . strtolower(str_replace(['/', '\\'], '_', static::class));

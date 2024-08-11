@@ -23,6 +23,16 @@ class MemberLevelLogModel extends BaseModel
         parent::init();
     }
 
+
+    public static function getOrder($id)
+    {
+        $order = static::where('id', $id)->find();
+        if (!empty($order)) {
+            $order['order_id'] = $order['id'];
+        }
+        return $order;
+    }
+
     protected function triggerStatus($item, $status, $newData = [])
     {
         parent::triggerStatus($item, $status, $newData);

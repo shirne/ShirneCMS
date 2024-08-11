@@ -11,11 +11,11 @@
                 <div class="btn-group">
                     <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
-                        订单类型 {$orderTypes[$ordertype]} <span class="caret"></span>
+                        订单类型 {$orderTypes[$ordertype]['title']} <span class="caret"></span>
                     </button>
                     <div class="dropdown-menu">
                         {foreach $orderTypes as $k => $t}
-                        <a class="dropdown-item" href="{:url('index',searchKey('ordertype',$k))}">{$t}</a>
+                        <a class="dropdown-item" href="{:url('index',searchKey('ordertype',$k))}">{$t.title}</a>
                         {/foreach}
                     </div>
                 </div>
@@ -58,7 +58,7 @@
                 <th class="text-center">\</th>
                 {foreach $orderTypes as $k => $t}
                 {if $k != 'all'}
-                <th>{$t}</th>
+                <th>{$t.title}</th>
                 {/if}
                 {/foreach}
                 <th>合计</th>
@@ -127,7 +127,7 @@
                 <td class="text-success">￥{$v.pay_amount|showmoney}</td>
                 <td>{$payTypes[$v['pay_type']]}</td>
                 <td><a href="{:url($orderDetails[$v['order_type']],['id'=>$v['order_id']])}"
-                        target="_blank">{$orderTypes[$v['order_type']]}</a></td>
+                        target="_blank">{$orderTypes[$v['order_type']]['title']}</a></td>
                 <td>{$v.create_time|showdate}</td>
                 <td>{if $v['is_refund'] > 0}
                     <span class="badge badge-warning">{$v['is_refund']}次 共￥{$v['refund_fee']}</span>

@@ -4,7 +4,6 @@ namespace app\common\model;
 
 use EasyWeChat\Factory;
 use app\common\core\BaseModel;
-use modules\credit\model\CreditOrderModel;
 use think\Db;
 use think\facade\Log;
 
@@ -19,15 +18,35 @@ class PayOrderModel extends BaseModel
     protected $type = ['pay_data' => 'array'];
 
     public static $orderTypes = [
-        'order' => '商城订单',
-        'groupbuy' => '团购订单',
-        'credit' => '积分订单',
-        'recharge' => '充值订单'
+        'order' => [
+            'title' => '商城订单',
+            'prefix' => '',
+            'class' => 'app\common\model\OrderModel'
+        ],
+        'recharge' => [
+            'title' => '充值订单',
+            'prefix' => 'CZ_',
+            'class' => 'app\common\model\MemberRechargeModel'
+        ],
+        'upgrade' => [
+            'title' => '升级订单',
+            'prefix' => 'UL_',
+            'class' => 'app\common\model\MemberLevelLogModel'
+        ],
     ];
     public static $payTypes = [
         'wechat' => '微信支付',
         'alipay' => '支付宝'
     ];
+
+    public static function register($type, $title, $prefix, $orderClass)
+    {
+        static::$orderTypes[$type] = [
+            'title' => $title,
+            'prefix' => $prefix,
+            'class' => $orderClass
+        ];
+    }
 
     private static function create_no()
     {
@@ -45,31 +64,24 @@ class PayOrderModel extends BaseModel
     {
         $ordertype = '';
         $orderid = 0;
-        if (strpos($orderno, 'CZ_') === 0) {
-            $ordertype = 'recharge';
-            $orderno = intval(substr($orderno, 3));
-            $order = Db::name('memberRecharge')->where('id', $orderno)
-                ->find();
-            if (!empty($order)) {
-                $order['payamount'] = $order['amount'] * .01;
-                $order['order_no'] = 'CZ_' . str_pad($order['id'], 6, '0', STR_PAD_LEFT);
-                $orderid = $order['id'];
+        foreach (static::$orderTypes as $k => $oType) {
+            if (!empty($oType['prefix'])) {
+                if (strpos($orderno, $oType['prefix']) === 0) {
+                    $ordertype = $k;
+                    $orderno = intval(substr($orderno, strlen($oType['prefix'])));
+
+                    $order = call_user_func([$oType['class'], 'getOrder'], $orderno);
+
+                    if (empty($order)) {
+                        $this->setError('订单已失效或不存在!');
+                        return false;
+                    }
+                    $orderid = $order['order_id'];
+                    break;
+                }
             }
-        } elseif (strpos($orderno, 'UL_') === 0) {
-            $ordertype = 'upgrade';
-            $orderno = intval(substr($orderno, 3));
-            $order = MemberLevelLogModel::get($orderno);
-            if (!empty($order)) {
-                $orderid = $order['id'];
-            }
-        } elseif (strpos($orderno, 'PO_') === 0) {
-            $ordertype = 'credit';
-            $orderno = intval(substr($orderno, 3));
-            $order = CreditOrderModel::get($orderno);
-            if (!empty($order)) {
-                $orderid = $order['id'];
-            }
-        } else {
+        }
+        if (empty($k)) {
             $ordertype = 'order';
             $order = OrderModel::get($orderno);
             if (!empty($order)) {
@@ -196,19 +208,15 @@ class PayOrderModel extends BaseModel
         if ($status == 1) {
             $paytime = isset($newData['pay_time']) ? $newData['pay_time'] : 0;
             if (!$paytime) $paytime = time();
-            switch ($item['order_type']) {
-                case 'recharge':
-                    $order = MemberRechargeModel::where('id', $item['order_id'])->find();
-                    break;
-                case 'credit':
-                    $order = CreditOrderModel::where('order_id', $item['order_id'])->find();
-                    break;
-                default:
-                    $order = OrderModel::where('order_id', $item['order_id'])->find();
-                    break;
+            if (isset(static::$orderTypes[$item['order_type']])) {
+                $oType = static::$orderTypes[$item['order_type']];
+                $order = call_user_func([$oType['class'], 'getOrder'], $item['order_id']);
             }
+
             if (!empty($order)) {
                 $order->onPayResult($item['pay_type'], $paytime, $item['pay_amount'] / 100);
+            } else {
+                Log::warning('order ' . $item['order_type'] . '/' . $item['order_id'] . ' error');
             }
         }
     }

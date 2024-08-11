@@ -69,7 +69,7 @@ class PaylogController extends BaseController
 
         $logs = $model->order('ID DESC')->paginate(15);
 
-        $all = ['all' => '全部'];
+        $all = ['all' => ['title' => '全部']];
         $orderTypes = array_merge($all, PayOrderModel::$orderTypes);
         $payTypes = array_merge($all, PayOrderModel::$payTypes);
 
@@ -178,7 +178,7 @@ class PaylogController extends BaseController
         if ($id == 0) $this->error('参数错误 ');
 
         /**
-         * @var $recharge MemberRechargeModel
+         * @var MemberRechargeModel
          */
         $recharge = MemberRechargeModel::find($id);
         if (empty($recharge)) $this->error('充值单不存在');
@@ -309,9 +309,19 @@ class PaylogController extends BaseController
 
         $excel = new Excel();
         $excel->setHeader(array(
-            '编号', '会员ID', '会员账号',
-            '提现来源', '提现金额', '应转款', '申请时间',
-            '提现方式', '银行', '分行', '开户名', '卡号', '状态'
+            '编号',
+            '会员ID',
+            '会员账号',
+            '提现来源',
+            '提现金额',
+            '应转款',
+            '申请时间',
+            '提现方式',
+            '银行',
+            '分行',
+            '开户名',
+            '卡号',
+            '状态'
         ));
         $excel->setColumnType('A', DataType::TYPE_STRING);
         $excel->setColumnType('B', DataType::TYPE_STRING);
@@ -321,11 +331,18 @@ class PaylogController extends BaseController
 
         foreach ($rows as $row) {
             $excel->addRow(array(
-                $row['id'], $row['member_id'], $row['username'],
-                money_type($row['from_field'], false), showmoney($row['amount']), showmoney($row['real_amount']),
+                $row['id'],
+                $row['member_id'],
+                $row['username'],
+                money_type($row['from_field'], false),
+                showmoney($row['amount']),
+                showmoney($row['real_amount']),
                 date('Y-m-d H:i:s', $row['create_time']),
                 showcashtype($row['cashtype']),
-                $row['bank_name'], $row['bank'], $row['card_name'], $row['cardno'],
+                $row['bank_name'],
+                $row['bank'],
+                $row['card_name'],
+                $row['cardno'],
                 audit_status($row['status'], false)
             ));
         }
