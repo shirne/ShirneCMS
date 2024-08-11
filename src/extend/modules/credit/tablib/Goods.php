@@ -1,6 +1,6 @@
 <?php
 
-namespace app\common\taglib;
+namespace modules\credit\taglib;
 
 
 use app\common\core\BaseTabLib;
@@ -20,7 +20,7 @@ class Goods extends BaseTabLib
         $recursive = isset($tag['recursive']) ? $tag['recursive'] : 'false';
         $category = isset($tag['category']) ? $this->parseArg($tag['category']) : '';
         if (is_string($category) && strpos($category, "'") === 0) {
-            $category = "\\app\\common\\facade\\GoodsCategoryFacade::getCategoryId(" . $category . ")";
+            $category = "\\modules\\credit\\facade\\GoodsCategoryFacade::getCategoryId(" . $category . ")";
         }
 
         $parseStr = '<?php ';
@@ -57,7 +57,7 @@ class Goods extends BaseTabLib
         $category = isset($tag['category']) ? $tag['category'] : '';
         $id = isset($tag['id']) ? $tag['id'] : 0;
         if (preg_match('/^[a-zA-Z]\w*$/', $category)) {
-            $category = "\\app\\common\\facade\\GoodsCategoryFacade::getCategoryId('" . $category . "')";
+            $category = "\\modules\\credit\\facade\\GoodsCategoryFacade::getCategoryId('" . $category . "')";
         }
 
         $parseStr = '<?php ';
@@ -107,7 +107,7 @@ class Goods extends BaseTabLib
 
         $parseStr = '<?php ';
 
-        $parseStr .= '$' . $var . '=\app\common\facade\GoodsCategoryFacade::findCategory(' . $name . ');';
+        $parseStr .= '$' . $var . '=\modules\credit\facade\GoodsCategoryFacade::findCategory(' . $name . ');';
 
         $parseStr .= ' ?>';
         return $parseStr;
