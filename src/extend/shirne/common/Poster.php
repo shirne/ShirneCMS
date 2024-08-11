@@ -582,31 +582,47 @@ class Poster
 
         //画四条边
         imagefilledpolygon($img, [
-            $radius, 0,
-            $radius * .5 + $border, $border - 1,
-            $w + $border - $radius * .5, $border - 1,
-            $w + $border * 2 - $radius, 0
+            $radius,
+            0,
+            $radius * .5 + $border,
+            $border - 1,
+            $w + $border - $radius * .5,
+            $border - 1,
+            $w + $border * 2 - $radius,
+            0
         ], 4, $bcolor);
 
         imagefilledpolygon($img, [
-            $w + $border * 2, $radius,
-            $w + $border, $border + $radius * .5,
-            $w + $border, $h + $border - $radius * .5,
-            $w + $border * 2, $h + $border * 2 - $radius
+            $w + $border * 2,
+            $radius,
+            $w + $border,
+            $border + $radius * .5,
+            $w + $border,
+            $h + $border - $radius * .5,
+            $w + $border * 2,
+            $h + $border * 2 - $radius
         ], 4, $bcolor);
 
         imagefilledpolygon($img, [
-            $w + $border * 2 - $radius, $h + $border * 2,
-            $w + $border - $radius * .5, $h + $border,
-            $border + $radius * .5, $h + $border,
-            $radius, $h + $border * 2
+            $w + $border * 2 - $radius,
+            $h + $border * 2,
+            $w + $border - $radius * .5,
+            $h + $border,
+            $border + $radius * .5,
+            $h + $border,
+            $radius,
+            $h + $border * 2
         ], 4, $bcolor);
 
         imagefilledpolygon($img, [
-            0, $h + $border * 2 - $radius,
-            $border - 1, $h + $border - $radius * .5,
-            $border - 1, $border + $radius * .5,
-            0, $radius
+            0,
+            $h + $border * 2 - $radius,
+            $border - 1,
+            $h + $border - $radius * .5,
+            $border - 1,
+            $border + $radius * .5,
+            0,
+            $radius
         ], 4, $bcolor);
 
         if ($radius > 0) {
@@ -695,7 +711,7 @@ class Poster
 
     public function __destruct()
     {
-        if ($this->bg && is_resource($this->bg)) {
+        if ($this->bg) {
             imagedestroy($this->bg);
         }
     }
