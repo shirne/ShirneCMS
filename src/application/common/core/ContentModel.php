@@ -32,7 +32,7 @@ class ContentModel extends BaseModel
     }
 
     /**
-     * @var $cateFacade \app\common\model\CategoryModel
+     * @var \app\common\model\CategoryModel
      */
     protected $cateFacade;
 
@@ -284,9 +284,7 @@ class ContentModel extends BaseModel
         return $this->afterTagList($this->analysisType($list), $attrs);
     }
 
-    protected function onFilter($model, $attrs)
-    {
-    }
+    protected function onFilter($model, $attrs) {}
 
     public function tagRelation($attrs, $filter = false)
     {

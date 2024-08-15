@@ -13,4 +13,11 @@ class GoodsModel extends ContentModel
 {
     protected $autoWriteTimestamp = true;
     protected $type = ['prop_data' => 'array'];
+
+    function __construct($data = [])
+    {
+        parent::__construct($data);
+        $this->cateFacade = GoodsCategoryFacade::getFacadeInstance();
+        $this->searchFields = 'title|goods_no|description';
+    }
 }
