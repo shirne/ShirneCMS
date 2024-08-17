@@ -1,5 +1,5 @@
 
-(function(window,$) {
+(function (window, $) {
 
 
     var apis = {
@@ -16,12 +16,12 @@
         document.body.appendChild(script);
     }
 
-    var mapObj,mapBox,onPick;
+    var mapObj, mapBox, onPick;
 
-    function InitMap(maptype,box,callback,locate) {
+    function InitMap(maptype, box, callback, locate) {
         if (mapObj) mapObj.hide();
-        mapBox=$(box);
-        onPick=callback;
+        mapBox = $(box);
+        onPick = callback;
 
         switch (maptype.toLowerCase()) {
             case 'baidu':
@@ -39,15 +39,15 @@
                 break;
         }
         if (!mapObj) return dialog.warning('不支持该地图类型');
-        if(locate){
-            if(typeof locate==='string'){
-                var loc=locate.split(',');
-                locate={
-                    lng:parseFloat(loc[0]),
-                    lat:parseFloat(loc[1])
+        if (locate) {
+            if (typeof locate === 'string') {
+                var loc = locate.split(',');
+                locate = {
+                    lng: parseFloat(loc[0]),
+                    lat: parseFloat(loc[1])
                 }
             }
-            mapObj.locate=locate;
+            mapObj.locate = locate;
         }
         mapObj.setMap();
 
@@ -55,7 +55,7 @@
     }
 
     function BaseMap(type) {
-        if(type !== undefined) {
+        if (type !== undefined) {
             var key = 'MAPKEY_' + type.toUpperCase();
 
             if (!window[key]) {
@@ -109,7 +109,7 @@
                 self.setMap();
                 delete window[func];
             };
-            var apiurl=apis[this.mapType].replace('__KEY__',this.mapkey);
+            var apiurl = apis[this.mapType].replace('__KEY__', this.mapkey);
             loadScript(apiurl + func);
             return false;
         } else {
@@ -134,25 +134,25 @@
             this.infoWindow.setContent(content);
         }
     };
-    BaseMap.prototype.showAtCenter=function () {
-        var center=this.getCenter();
+    BaseMap.prototype.showAtCenter = function () {
+        var center = this.getCenter();
         this.showInfo(center);
     };
     BaseMap.prototype.showLocationInfo = function (pt, rs) {
 
         this.showInfo();
-        var address=this.getAddress(rs);
-        var addressComponent=this.getAddressComponent(rs);
-        var locate={};
+        var address = this.getAddress(rs);
+        var addressComponent = this.getAddressComponent(rs);
+        var locate = {};
         if (typeof (pt.lng) === 'function') {
-            locate.lng=pt.lng();
-            locate.lat=pt.lat();
+            locate.lng = pt.lng();
+            locate.lat = pt.lat();
         } else {
-            locate.lng=pt.lng;
-            locate.lat=pt.lat;
+            locate.lng = pt.lng;
+            locate.lat = pt.lat;
         }
 
-        onPick(address,locate,addressComponent);
+        onPick(address, locate, addressComponent);
     };
     BaseMap.prototype.show = function () {
         this.ishide = false;
@@ -191,9 +191,9 @@
         map.addControl(new BMap.OverviewMapControl());
         map.enableScrollWheelZoom();
 
-        if(!this.locate)this.locate = this.getCenter()
+        if (!this.locate) this.locate = this.getCenter()
         var point = this.objectToPoint(this.locate);
-        
+
         map.centerAndZoom(point, 15); //初始化地图中心点
         this.marker = new BMap.Marker(point); //初始化地图标记
         this.marker.enableDragging(); //标记开启拖拽
@@ -233,15 +233,15 @@
     };
     BaiduMap.prototype.pointToObject = function (point) {
         return {
-            lng:point.lng,
-            lat:point.lat
+            lng: point.lng,
+            lat: point.lat
         };
     };
     BaiduMap.prototype.objectToPoint = function (object) {
-        return new BMap.Point(parseFloat(object.lng),parseFloat(object.lat));
+        return new BMap.Point(parseFloat(object.lng), parseFloat(object.lat));
     };
     BaiduMap.prototype.getCenter = function () {
-        var center=this.map.getCenter();
+        var center = this.map.getCenter();
         return this.pointToObject(center);
     };
 
@@ -251,9 +251,9 @@
             this.toshow = true;
             return;
         }
-        if(point){
-            this.locate=point;
-            this.marker.panTo(new BMap.Point(point.lng,point.lat));
+        if (point) {
+            this.locate = point;
+            this.marker.panTo(new BMap.Point(point.lng, point.lat));
         }
         this.setInfoContent();
 
@@ -261,7 +261,7 @@
     };
     BaiduMap.prototype.getAddress = function (rs) {
         var addComp = rs.addressComponents;
-        if(addComp) {
+        if (addComp) {
             return addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber;
         }
     };
@@ -317,17 +317,17 @@
         });
 
         //获取经纬度坐标值
-        if(!this.locate)this.locate = this.getCenter()
+        if (!this.locate) this.locate = this.getCenter()
         var point = this.objectToPoint(this.locate);
         map.panTo(point);
-        this.marker = new google.maps.Marker({position: point, map: map, draggable: true});
+        this.marker = new google.maps.Marker({ position: point, map: map, draggable: true });
 
 
         var gc = new google.maps.Geocoder();
 
         this.marker.addListener("dragend", function () {
             point = self.marker.getPosition();
-            gc.geocode({'location': point}, function (rs) {
+            gc.geocode({ 'location': point }, function (rs) {
                 self.showLocationInfo(point, rs);
             });
         });
@@ -335,15 +335,15 @@
         //添加标记点击监听
         this.marker.addListener("click", function () {
             point = self.marker.getPosition();
-            gc.geocode({'location': point}, function (rs) {
+            gc.geocode({ 'location': point }, function (rs) {
                 self.showLocationInfo(point, rs);
             });
         });
 
-        gc.geocode({'location': point}, function (rs) {
+        gc.geocode({ 'location': point }, function (rs) {
             self.showLocationInfo(point, rs);
         });
-        this.infoWindow = new google.maps.InfoWindow({map: map});
+        this.infoWindow = new google.maps.InfoWindow({ map: map });
         this.infoWindow.setPosition(point);
 
         this.isshow = true;
@@ -355,15 +355,15 @@
 
     GoogleMap.prototype.pointToObject = function (point) {
         return {
-            lng:point.lng,
-            lat:point.lat
+            lng: point.lng,
+            lat: point.lat
         };
     };
     GoogleMap.prototype.objectToPoint = function (object) {
-        return new google.maps.LatLng(parseFloat(object.lat),parseFloat(object.lng));
+        return new google.maps.LatLng(parseFloat(object.lat), parseFloat(object.lng));
     };
     GoogleMap.prototype.getCenter = function () {
-        var center=this.map.getCenter();
+        var center = this.map.getCenter();
         return this.pointToObject(center);
     };
 
@@ -373,11 +373,11 @@
             this.toshow = true;
             return;
         }
-        if(point){
-            this.locate=point;
+        if (point) {
+            this.locate = point;
             this.marker.setPosition(this.objectToPoint(point));
         }
-        this.infoWindow.setOptions({position: this.marker.getPosition()});
+        this.infoWindow.setOptions({ position: this.marker.getPosition() });
         this.setInfoContent();
 
     };
@@ -387,15 +387,15 @@
         }
     };
     GoogleMap.prototype.getAddressComponent = function (rs, status) {
-        var result={};
+        var result = {};
         if (rs && rs[0]) {
-            var comps=rs[0].address_components
-            if(comps[0])result.country=comps[0].long_name
-            if(comps[1])result.province=comps[1].long_name
-            if(comps[2])result.city=comps[2].long_name
-            if(comps[3])result.district=comps[3].long_name
-            if(comps[4])result.street=comps[4].long_name
-            if(comps[5])result.address=comps[5].long_name
+            var comps = rs[0].address_components
+            if (comps[0]) result.country = comps[0].long_name
+            if (comps[1]) result.province = comps[1].long_name
+            if (comps[2]) result.city = comps[2].long_name
+            if (comps[3]) result.district = comps[3].long_name
+            if (comps[4]) result.street = comps[4].long_name
+            if (comps[5]) result.address = comps[5].long_name
         }
         return result;
     };
@@ -427,12 +427,12 @@
     };
     TencentMap.prototype.pointToObject = function (point) {
         return {
-            lng:point.getLng(),
-            lat:point.getLat()
+            lng: point.getLng(),
+            lat: point.getLat()
         };
     };
     TencentMap.prototype.objectToPoint = function (object) {
-        return new qq.maps.LatLng(parseFloat(object.lat),parseFloat(object.lng));
+        return new qq.maps.LatLng(parseFloat(object.lat), parseFloat(object.lng));
     };
     TencentMap.prototype.setMap = function () {
         var self = this;
@@ -441,7 +441,7 @@
 
 
         //初始化地图
-        var map = self.map = new qq.maps.Map(this.mapbox[0], {zoom: 15});
+        var map = self.map = new qq.maps.Map(this.mapbox[0], { zoom: 15 });
         //初始化地图控件
         new qq.maps.ScaleControl({
             align: qq.maps.ALIGN.BOTTOM_LEFT,
@@ -452,7 +452,7 @@
         //map.enableScrollWheelZoom();
 
         //获取经纬度坐标值
-        if(!this.locate)this.locate = this.getCenter()
+        if (!this.locate) this.locate = this.getCenter()
         var point = this.objectToPoint(this.locate);
         map.panTo(point); //初始化地图中心点
 
@@ -483,7 +483,7 @@
 
         gc.getAddress(point);
 
-        this.infoWindow = new qq.maps.InfoWindow({map: map});
+        this.infoWindow = new qq.maps.InfoWindow({ map: map });
 
         this.isshow = true;
         if (this.toshow) {
@@ -493,7 +493,7 @@
     };
 
     TencentMap.prototype.getCenter = function () {
-        var center=this.map.getCenter();
+        var center = this.map.getCenter();
         return this.pointToObject(center);
     };
 
@@ -503,8 +503,8 @@
             this.toshow = true;
             return;
         }
-        if(point){
-            this.locate=point;
+        if (point) {
+            this.locate = point;
             this.marker.setPosition(this.objectToPoint(point));
         }
         this.infoWindow.setPosition(this.marker.getPosition());
@@ -513,20 +513,20 @@
     };
 
     TencentMap.prototype.getAddress = function (rs) {
-        if(rs && rs.detail) {
+        if (rs && rs.detail) {
             return rs.detail.address;
         }
         return "";
     };
-    
+
     TencentMap.prototype.getAddressComponent = function (rs) {
-        if(rs && rs.detail) {
+        if (rs && rs.detail) {
             var comp = rs.detail.addressComponents
-            if(!comp.province){
-                comp.province=comp.city;
+            if (!comp.province) {
+                comp.province = comp.city;
             }
-            if(comp.streetNumber){
-                comp.address=comp.streetNumber
+            if (comp.streetNumber) {
+                comp.address = comp.streetNumber
             }
             return comp;
         }
@@ -538,16 +538,16 @@
         var self = this;
         var myGeo = new qq.maps.Geocoder({
             complete: function (result) {
-                if(result && result.detail && result.detail.location){
-                    var point=result.detail.location;
+                if (result && result.detail && result.detail.location) {
+                    var point = result.detail.location;
                     self.map.setCenter(point);
                     self.marker.setPosition(point);
                     self.showLocationInfo(point, result);
-                }else{
+                } else {
                     alert("地址信息不正确，定位失败");
                 }
             },
-            error:function(result){
+            error: function (result) {
                 alert("地址信息不正确，定位失败");
             }
         });
@@ -594,11 +594,11 @@
 
 
         //获取经纬度坐标值
-        if(!this.locate)this.locate = this.getCenter()
+        if (!this.locate) this.locate = this.getCenter()
         var point = this.objectToPoint(this.locate);
         map.setCenter(point);
 
-        this.marker = new AMap.Marker({position: point, map: map}); //初始化地图标记
+        this.marker = new AMap.Marker({ position: point, map: map }); //初始化地图标记
         this.marker.setDraggable(true); //标记开启拖拽
 
 
@@ -635,15 +635,15 @@
     };
     GaodeMap.prototype.pointToObject = function (point) {
         return {
-            lng:point.getLng(),
-            lat:point.getLat()
+            lng: point.getLng(),
+            lat: point.getLat()
         };
     };
     GaodeMap.prototype.objectToPoint = function (object) {
         return new AMap.LngLat(object.lng, object.lat);
     };
     GaodeMap.prototype.getCenter = function () {
-        var center=this.map.center();
+        var center = this.map.center();
         return this.pointToObject(center);
     };
 
@@ -653,7 +653,7 @@
             this.toshow = true;
             return;
         }
-        if(point){
+        if (point) {
             this.marker.setPosition(this.objectToPoint(point));
         }
         this.setInfoContent();
@@ -685,5 +685,5 @@
         }, '');
     };
 
-    window.InitMap=InitMap;
-})(window,jQuery);
+    window.InitMap = InitMap;
+})(window, jQuery);

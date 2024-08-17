@@ -1,204 +1,238 @@
-#carouselBannerControls{
-  height :597px;
-  .carousel-item{
-    height :597px;
+#carouselBannerControls {
+  height: 597px;
+
+  .carousel-item {
+    height: 597px;
     overflow: hidden;
-    background:url(../images/blank.gif) center center no-repeat @bg-dark;
-    background-size:auto 100%;
-    img{
-      display:none;
+    background: url(../images/blank.gif) center center no-repeat @bg-dark;
+    background-size: auto 100%;
+
+    img {
+      display: none;
     }
   }
 }
 
-.index-card{
-  padding:30px;
+.index-card {
+  padding: 30px;
 }
-.index-bg{
-  background:@color-white;
+
+.index-bg {
+  background: @color-white;
 }
-.index-card-title{
-  h2{
+
+.index-card-title {
+  h2 {
     text-align: center;
-    color:@color-text-dark;
-    &::after{
-      content:".";
-      color:@color-eye;
-      font-size:2rem;
+    color: @color-text-dark;
+
+    &::after {
+      content: ".";
+      color: @color-eye;
+      font-size: 2rem;
       line-height: 0.6;
-      font-weight:bold;
+      font-weight: bold;
       vertical-align: sub;
     }
   }
-  p{
+
+  p {
     text-align: center;
-    color:@color-text-lighter;
+    color: @color-text-lighter;
   }
-}
-.index-card .slide{
-  h2{
-    text-align: left;
-  }
-  p{
-     text-align: left;
-   }
 }
 
-.service-body{
-  padding-top:40px;
-  .figure{
-    transition:opacity .3s;
-    &:hover{
+.index-card .slide {
+  h2 {
+    text-align: left;
+  }
+
+  p {
+    text-align: left;
+  }
+}
+
+.service-body {
+  padding-top: 40px;
+
+  .figure {
+    transition: opacity .3s;
+
+    &:hover {
       opacity: .5;
     }
-    figcaption{
+
+    figcaption {
       text-align: center;
       white-space: nowrap;
     }
-    .figure-title{
-      color:@color-text-dark;
+
+    .figure-title {
+      color: @color-text-dark;
     }
-    .figure-caption{
-      font-size:0.8rem;
+
+    .figure-caption {
+      font-size: 0.8rem;
     }
   }
 }
 
-.solution-body{
-  .nav{
-    background:@bg-light;
+.solution-body {
+  .nav {
+    background: @bg-light;
   }
-  .nav-link{
-    padding:24px 30px;
-    color:@color-text-dark;
-    border-radius:0;
-    position:relative;
-    border-bottom:1px @bd-light solid;
-    transition:background-color .3s;
-    &:last-child{
-      border-bottom:0;
+
+  .nav-link {
+    padding: 24px 30px;
+    color: @color-text-dark;
+    border-radius: 0;
+    position: relative;
+    border-bottom: 1px @bd-light solid;
+    transition: background-color .3s;
+
+    &:last-child {
+      border-bottom: 0;
     }
-    &:after{
-      content:"";
-      display:block;
+
+    &:after {
+      content: "";
+      display: block;
       position: absolute;
-      top:0;
-      left:0;
-      height:100%;
-      width:0;
-      background:rgba(0,0,0,.1);
-      border-left:0;
-      transition:all .5s;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 0;
+      background: rgba(0, 0, 0, .1);
+      border-left: 0;
+      transition: all .5s;
     }
-    &.active{
-      background:rgba(0,0,0,.1);
-      color:@color-text-dark;
-      &:after{
-        left:-16px;
-        width:16px;
-        border-left:4px @color-text-dark solid;
+
+    &.active {
+      background: rgba(0, 0, 0, .1);
+      color: @color-text-dark;
+
+      &:after {
+        left: -16px;
+        width: 16px;
+        border-left: 4px @color-text-dark solid;
       }
     }
-    p{
-      line-height:1.8rem;
-      margin:0;
+
+    p {
+      line-height: 1.8rem;
+      margin: 0;
     }
-    .vice_title{
-      color:@color-text-light;
+
+    .vice_title {
+      color: @color-text-light;
     }
   }
 }
 
 
-.cases-body{
-  .card{
-    border-radius:0;
-    box-shadow: rgba(0,0,0,.08) 0 0 5px;
+.cases-body {
+  .card {
+    border-radius: 0;
+    box-shadow: rgba(0, 0, 0, .08) 0 0 5px;
     position: relative;
     transition: background-color .3s;
-    border:0;
-    .card-body{
+    border: 0;
+
+    .card-body {
       position: relative;
-      z-index:2;
+      z-index: 2;
     }
-    h3{
+
+    h3 {
       transition: color .3s;
     }
-    .mask{
-      background:url(../images/eye.png) center -99px no-repeat rgba(0,0,0,0);
-      transition:background-color,background-position .5s;
-      z-index:1;
-      position:absolute;
-      left:0;
-      top:0;
-      width:100%;
-      height :100%;
+
+    .mask {
+      background: url(../images/eye.png) center -99px no-repeat rgba(0, 0, 0, 0);
+      transition: background-color, background-position .5s;
+      z-index: 1;
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
     }
-    &:hover{
-      background:@color-text;
-      .mask{
-        background-color:rgba(0,0,0,.6);
-        background-position:center 72px;
+
+    &:hover {
+      background: @color-text;
+
+      .mask {
+        background-color: rgba(0, 0, 0, .6);
+        background-position: center 72px;
       }
-      h3{
-        color:@color-white;
+
+      h3 {
+        color: @color-white;
       }
     }
   }
 }
 
-.about-body{
-  padding-top:60px;
+.about-body {
+  padding-top: 60px;
 }
 
-.slide-box a{
-  color:#fff;
-  line-height:3rem;
-  display:inline-block;
-  width:3rem;
+.slide-box a {
+  color: #fff;
+  line-height: 3rem;
+  display: inline-block;
+  width: 3rem;
   text-align: center;
-  background:@color-text;
-  border-radius:5px;
+  background: @color-text;
+  border-radius: 5px;
 }
 
-.news-body{
-  a{
+.news-body {
+  a {
     text-decoration: none;
   }
-  .media{
-    background:#fff;
-    transition:background-color .3s;
-    >img{
+
+  .media {
+    background: #fff;
+    transition: background-color .3s;
+
+    >img {
       width: 133px;
-      height :100px;
+      height: 100px;
     }
-    .media-body{
-      padding-top:1.6rem;
-      .badge{
-        border-radius:0;
-        padding:0 10px;
-        color:@color-text-lighter;
-        border:1px @color-text-lighter solid;
-        background:transparent;
-        display:inline-block;
-        line-height :1.6rem;
-        margin-right:1rem;
+
+    .media-body {
+      padding-top: 1.6rem;
+
+      .badge {
+        border-radius: 0;
+        padding: 0 10px;
+        color: @color-text-lighter;
+        border: 1px @color-text-lighter solid;
+        background: transparent;
+        display: inline-block;
+        line-height: 1.6rem;
+        margin-right: 1rem;
       }
-      .text-muted{
-        color:@color-text-lighter;
+
+      .text-muted {
+        color: @color-text-lighter;
       }
-      h4{
-        color:@color-text;
-        transition:color .3s;
-        font-size:1rem;
-        margin-top:1rem;
+
+      h4 {
+        color: @color-text;
+        transition: color .3s;
+        font-size: 1rem;
+        margin-top: 1rem;
       }
     }
+
     &:hover {
-      background : @color-text;
+      background: @color-text;
+
       .media-body {
         h4 {
-          color : #fff;
+          color: #fff;
         }
       }
     }

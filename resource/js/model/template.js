@@ -1,46 +1,46 @@
 
-Number.prototype.format=function(fix){
-    if(fix===undefined)fix=2;
-    var num=this.toFixed(fix);
-    var z=num.split('.');
-    var format=[],f=z[0].split(''),l=f.length;
-    for(var i=0;i<l;i++){
-        if(i>0 && i % 3==0){
+Number.prototype.format = function (fix) {
+    if (fix === undefined) fix = 2;
+    var num = this.toFixed(fix);
+    var z = num.split('.');
+    var format = [], f = z[0].split(''), l = f.length;
+    for (var i = 0; i < l; i++) {
+        if (i > 0 && i % 3 == 0) {
             format.unshift(',');
         }
-        format.unshift(f[l-i-1]);
+        format.unshift(f[l - i - 1]);
     }
-    return format.join('')+(z.length==2?'.'+z[1]:'');
+    return format.join('') + (z.length == 2 ? '.' + z[1] : '');
 };
-if(!String.prototype.trim){
-    String.prototype.trim=function () {
-        return this.replace(/(^\s+|\s+$)/g,'');
+if (!String.prototype.trim) {
+    String.prototype.trim = function () {
+        return this.replace(/(^\s+|\s+$)/g, '');
     }
 }
-String.prototype.compile=function(data,list){
+String.prototype.compile = function (data, list) {
 
-    if(list){
-        var temps=[];
-        for(var i in data){
+    if (list) {
+        var temps = [];
+        for (var i in data) {
             temps.push(this.compile(data[i]));
         }
         return temps.join("\n");
-    }else{
-        return this.replace(/\{if\s+([^\}]+)\}([\W\w]*?){\/if}/g,function(all, condition, cont){
+    } else {
+        return this.replace(/\{if\s+([^\}]+)\}([\W\w]*?){\/if}/g, function (all, condition, cont) {
             var operation;
-            var conts=cont.split('{else}');
-            if(operation=condition.match(/\s+(=+|<|>)\s+/)){
-                operation=operation[0];
-                var part=condition.split(operation);
-                if(part[0].indexOf('@')===0){
-                    part[0]=data[part[0].replace('@','')];
+            var conts = cont.split('{else}');
+            if (operation = condition.match(/\s+(=+|<|>)\s+/)) {
+                operation = operation[0];
+                var part = condition.split(operation);
+                if (part[0].indexOf('@') === 0) {
+                    part[0] = data[part[0].replace('@', '')];
                 }
-                if(part[1].indexOf('@')===0){
-                    part[1]=data[part[1].replace('@','')];
+                if (part[1].indexOf('@') === 0) {
+                    part[1] = data[part[1].replace('@', '')];
                 }
-                operation=operation.trim();
-                var result=false;
-                switch (operation){
+                operation = operation.trim();
+                var result = false;
+                switch (operation) {
                     case '==':
                         result = part[0] == part[1];
                         break;
@@ -54,70 +54,70 @@ String.prototype.compile=function(data,list){
                         result = part[0] < part[1];
                         break;
                 }
-                if(result){
+                if (result) {
                     return cont;
-                }else if(conts[1]){
+                } else if (conts[1]) {
                     return conts[1];
                 }
-            }else {
-                if (data[condition.replace('@','')]) return conts[0];
-                else if(conts[1]) return conts[1];
+            } else {
+                if (data[condition.replace('@', '')]) return conts[0];
+                else if (conts[1]) return conts[1];
             }
             return '';
-        }).replace(/\{@([\w\d\.]+)(?:\|([\w\d]+)(?:\s*=\s*([^\}]+))?)?\}/g,function(all,m1,func,args){
+        }).replace(/\{@([\w\d\.]+)(?:\|([\w\d]+)(?:\s*=\s*([^\}]+))?)?\}/g, function (all, m1, func, args) {
 
-            if(m1.indexOf('.')>0){
-                var keys=m1.split('.'),val=data;
-                for(var i=0;i<keys.length;i++){
-                    if(val[keys[i]]!==undefined && val[keys[i]]!==null){
-                        val=val[keys[i]];
-                    }else{
+            if (m1.indexOf('.') > 0) {
+                var keys = m1.split('.'), val = data;
+                for (var i = 0; i < keys.length; i++) {
+                    if (val[keys[i]] !== undefined && val[keys[i]] !== null) {
+                        val = val[keys[i]];
+                    } else {
                         val = '';
                         break;
                     }
                 }
-                return callfunc(val,func,args);
-            }else{
-                return callfunc(data[m1],func,args,data);
+                return callfunc(val, func, args);
+            } else {
+                return callfunc(data[m1], func, args, data);
             }
         });
     }
 };
 
 function tostring(obj) {
-    if(obj && obj.toString){
+    if (obj && obj.toString) {
         return obj.toString();
     }
     return '';
 }
 
-function callfunc(val,func,args,thisobj){
-    if(!args){
-        args=[val];
-    }else{
-        if(typeof args==='string')args=args.split(',');
-        var argidx=args.indexOf('###');
-        if(argidx>=0){
-            args[argidx]=val;
-        }else{
-            args=[val].concat(args);
+function callfunc(val, func, args, thisobj) {
+    if (!args) {
+        args = [val];
+    } else {
+        if (typeof args === 'string') args = args.split(',');
+        var argidx = args.indexOf('###');
+        if (argidx >= 0) {
+            args[argidx] = val;
+        } else {
+            args = [val].concat(args);
         }
     }
 
-    return window[func]?window[func].apply(thisobj,args):((val===undefined||val===null)?'':val);
+    return window[func] ? window[func].apply(thisobj, args) : ((val === undefined || val === null) ? '' : val);
 }
 
 
-function html_encode(html){
-    if(!html)return html;
-    var temp = document.createElement ("div");
-    (temp.textContent != undefined ) ? (temp.textContent = html) : (temp.innerText = html);
+function html_encode(html) {
+    if (!html) return html;
+    var temp = document.createElement("div");
+    (temp.textContent != undefined) ? (temp.textContent = html) : (temp.innerText = html);
     var output = temp.innerHTML;
     temp = null;
     return output;
 }
-function html_decode(text){
-    if(!text)return text;
+function html_decode(text) {
+    if (!text) return text;
     var temp = document.createElement("div");
     temp.innerHTML = text;
     var output = temp.innerText || temp.textContent;
@@ -125,7 +125,7 @@ function html_decode(text){
     return output;
 }
 
-function pad_zero(n, c){
+function pad_zero(n, c) {
     if ((n = n + "").length < c) {
         return new Array(++c - n.length).join("0") + n;
     } else {
@@ -133,10 +133,10 @@ function pad_zero(n, c){
     }
 }
 
-function timestamp_date(timestamp, fmt){
-    if(!timestamp)return '';
-    var jsdate=new Date(timestamp*1000);
-    if(!fmt)fmt = 'Y-m-d H:i:s';
+function timestamp_date(timestamp, fmt) {
+    if (!timestamp) return '';
+    var jsdate = new Date(timestamp * 1000);
+    if (!fmt) fmt = 'Y-m-d H:i:s';
 
     var txt_weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     var txt_ordin = {
@@ -186,7 +186,7 @@ function timestamp_date(timestamp, fmt){
             } else {
                 if (a <= 2 && nd >= 4 && a >= (6 - nd)) {
                     nd2 = new Date(jsdate.getFullYear() - 1 + "/12/31");
-                    return timestamp_date(Math.round(nd2.getTime() / 1000),"W");
+                    return timestamp_date(Math.round(nd2.getTime() / 1000), "W");
                 } else {
                     return (1 + (nd <= 3 ? ((a + nd) / 7) : (a - (7 - nd)) / 7) >> 0);
                 }
@@ -312,11 +312,11 @@ function timestamp_date(timestamp, fmt){
     });
 }
 
-function iif(v,m1,m2){
-    if(v==='0')v=0;
-    return v?m1:m2;
+function iif(v, m1, m2) {
+    if (v === '0') v = 0;
+    return v ? m1 : m2;
 }
 
-window['default']=function (v,d) {
-    return v?v:d;
+window['default'] = function (v, d) {
+    return v ? v : d;
 };
