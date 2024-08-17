@@ -376,12 +376,19 @@
                 if (message['btns'] !== undefined) {
                     btns = message['btns'];
                 }
+                if (message['cancel_text']) {
+                    btns[0].text = message['cancel_text'];
+                }
+                if (message['confirm_text']) {
+                    btns[1].text = message['confirm_text'];
+                }
                 if (message['content'] === undefined) {
                     throw 'message.content can not be empty.';
                 }
                 if (message['onshown'] !== undefined) {
                     onshown = message['onshown'];
                 }
+
                 message = message['content'];
             }
 
@@ -411,6 +418,7 @@
                 header: title ? true : false,
                 size: size,
                 backdrop: 'static',
+                btns: btns,
                 onshown: onshown,
                 onsure: function () {
                     if (confirm && typeof confirm === 'function') {
