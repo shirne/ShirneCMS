@@ -3,6 +3,7 @@
 {block name="body"}
 
 {include file="public/bread" menu="Board" section="主面板" title=""/}
+
 <div id="page-wrapper">
     {foreach $notices as $key => $notice}
     <div class="alert alert-{$notice.type|default='warning'} alert-dismissible fade show" role="alert">

@@ -68,10 +68,57 @@ function editData(id, url, tpl, name) {
     }).show(tpl, (id > 0 ? '编辑' : '添加') + name);
 }
 
+String.prototype.toHtmlEntities = function () {
+    return this.replace(/./gm, function (s) {
+        // return "&#" + s.charCodeAt(0) + ";";
+        return (s.match(/[a-z0-9\s]+/i)) ? s : '&#' + s.charCodeAt(0) + ';';
+    });
+};
+
+String.prototype.fromHtmlEntities = function () {
+    return this.replace(/&#\d+;/gm, function (s) {
+        return String.fromCharCode(s.match(/\d+/gm)[0]);
+    })
+};
+
+function isObject(obj) {
+    return Object.prototype.toString.call(obj) === '[object Object]'
+}
+
+
+function isArray(obj) {
+    return Object.prototype.toString.call(obj) === '[object Array]'
+}
+
 //绑定数据
 function bindData(body, data) {
     for (var i in data) {
-        var field = body.find('[name=' + i + ']')
+        if (isObject(data[i])) {
+            for (var k in data[i]) {
+                var field = body.find('[name="' + i + '[' + k + ']"]')
+                if (field.attr('type') == 'radio') {
+                    field.each(function () {
+                        if ($(this).val() == data[i][k]) {
+                            $(this).prop('checked', true)
+                        }
+                    })
+                } else if (field.attr('type') == 'checkbox') {
+
+                    if (data[i][k] == $(this).val()) {
+                        $(this).prop('checked', true)
+                    }
+
+                } else {
+                    field.val(data[i][k]);
+                }
+            }
+            continue;
+        }
+        var suffix = ''
+        if (isArray(data[i])) {
+            suffix = '[]'
+        }
+        var field = body.find('[name="' + i + suffix + '"]')
         if (field.attr('type') == 'radio') {
             field.each(function () {
                 if ($(this).val() == data[i]) {
@@ -85,7 +132,7 @@ function bindData(body, data) {
                 }
             })
         } else {
-            body.find('[name=' + i + ']').val(data[i]);
+            field.val(data[i]);
         }
     }
 }
@@ -96,22 +143,24 @@ function getData(body) {
     var fields = body.find('[name]');
     for (var i = 0; i < fields.length; i++) {
         var field = fields.eq(i)
+        var name = field.attr('name')
+        if (data[name] != undefined) continue;
         if (field.attr('type') == 'radio') {
-            field.each(function () {
+            body.find('[name=' + name + ']').each(function () {
                 if ($(this).prop('checked')) {
-                    data[$(this).attr('name')] = $(this).val();
+                    data[name] = $(this).val();
                 }
             })
         } else if (field.attr('type') == 'checkbox') {
             var val = []
-            field.each(function () {
+            body.find('[name="' + name + '"]').each(function () {
                 if ($(this).prop('checked')) {
                     val.push($(this).val());
                 }
             })
-            data[field.attr('name')] = val
+            data[name] = val
         } else {
-            data[field.attr('name')] = field.val();
+            data[name] = field.val();
         }
     }
     return data;
