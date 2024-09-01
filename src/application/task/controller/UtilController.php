@@ -69,7 +69,7 @@ class UtilController extends Controller
         foreach ($orders as $order) {
             if ($order['referer'] > 0) {
                 $amount = round($order['payamount'] * 100);
-                Db::name('member')->where('id', $member['referer'])->setInc('recom_performance', $amount);
+                Db::name('member')->where('id', $order['referer'])->setInc('recom_performance', $amount);
 
                 $parents = MemberModel::getParents($order['member_id'], 0);
                 Db::name('member')->whereIn('id', $parents)->setInc('total_performance', $amount);
