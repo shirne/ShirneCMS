@@ -26,6 +26,7 @@ CREATE TABLE `sa_goods_category` (
   `name` varchar(50) DEFAULT NULL COMMENT '分类别名',
   `icon` varchar(100) DEFAULT NULL COMMENT '图标',
   `image` varchar(100) DEFAULT NULL COMMENT '大图',
+  `props` TEXT COMMENT '绑定属性',
   `sort` int(11) DEFAULT NULL COMMENT '排序',
   `keywords` varchar(255) DEFAULT NULL COMMENT '分类关键词',
   `description` varchar(255) DEFAULT NULL COMMENT '分类描述',

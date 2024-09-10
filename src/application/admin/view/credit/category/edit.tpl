@@ -91,6 +91,13 @@
                 </div>
             </div>
             <div class="form-group">
+                <label for="description">产品属性</label>
+                <div class="form-control">
+                    <input type="text" class="taginput" value="{$model.props|default=''|implode_cmp}"
+                        placeholder="填写多个值以,分割" />
+                </div>
+            </div>
+            <div class="form-group">
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <span class="input-group-text">排序</span>

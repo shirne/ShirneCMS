@@ -37,7 +37,8 @@
                             <div class="input-group-prepend"><span class="input-group-text">商品分类</span> </div>
                             <select name="cate_id" id="goods-cate" class="form-control">
                                 {foreach $category as $key => $v}
-                                <option value="{$v.id}" {$goods['cate_id']==$v['id']?'selected':""}>{$v.html} {$v.title}
+                                <option value="{$v.id}" {$goods['cate_id']==$v['id']?'selected':""}
+                                    data-props="{$v['props']}">{$v.html} {$v.title}
                                 </option>
                                 {/foreach}
                             </select>
@@ -203,15 +204,6 @@
         zIndex: 100
     });
     jQuery(function ($) {
-
-        $('.addpropbtn').click(function (e) {
-            $('.prop-groups').append('<div class="input-group mb-2" >\n' +
-                '                            <input type="text" class="form-control" style="max-width:120px;" name="prop_data[keys][]" />\n' +
-                '                            <input type="text" class="form-control" name="prop_data[values][]" />\n' +
-                '                            <div class="input-group-append delete"><a href="javascript:" class="btn btn-outline-secondary"><i class="ion-md-trash"></i> </a> </div>\n' +
-                '                        </div>');
-        });
-
         $('.taginput').each(function () {
             $(this).tags('spec_data[' + $(this).data('spec_id') + '][data][]', resetSkus);
         });
@@ -221,6 +213,49 @@
                 self.parents('.input-group').remove();
             })
         });
+        function addProp(key, value) {
+            $('.prop-groups').append('<div class="input-group mb-2" >\n' +
+                '                            <input type="text" class="form-control" style="max-width:120px;" name="prop_data[keys][]" value="' + (key ? key : '') + '" />\n' +
+                '                            <input type="text" class="form-control" name="prop_data[values][]" value="' + (value ? value : '') + '" />\n' +
+                '                            <div class="input-group-append delete"><a href="javascript:" class="btn btn-outline-secondary"><i class="ion-md-trash"></i> </a> </div>\n' +
+                '                        </div>');
+        }
+        $('.addpropbtn').click(function (e) {
+            addProp();
+        });
+
+        function changeCategory(select, force) {
+            var option = $(select).find('option:selected');
+            var curProps = [];
+            var cid = $(option).val();
+
+            var props = $(option).data('props') || [];
+            $('.prop-groups .input-group').each(function () {
+                var input = $(this).find('input');
+                var prop = input.val().trim();
+                if (input.eq(1).val().trim() === '') {
+                    if (props.indexOf(prop) < 0) {
+                        $(this).remove();
+                    } else {
+                        curProps.push(prop);
+                    }
+                } else {
+                    curProps.push(prop);
+                }
+            });
+            for (var i = 0; i < props.length; i++) {
+                if (curProps.indexOf(props[i]) < 0) {
+                    addProp(props[i]);
+                }
+            }
+        }
+
+        $('#goods-cate').change(function (e) {
+            changeCategory(this);
+        });
+        if ('add' === "{$goods['id']?'':'add'}") {
+            changeCategory($('#goods-cate'), true);
+        }
 
     });
 </script>
