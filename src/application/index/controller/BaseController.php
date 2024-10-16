@@ -297,7 +297,7 @@ class BaseController extends Controller
             }
         }
 
-        if ($this->wechatLogin() && $this->config['wechat_autologin'] == '1') {
+        if ($this->canRedirectLogin()) {
             redirect()->remember();
             $this->wechat = $this->getWechatAccount('wechat');
             $callbackurl = url('index/login/callback', ['type' => 'wechat_' . $this->wechat['id']], true, true);
@@ -308,6 +308,20 @@ class BaseController extends Controller
             exit;
         }
         $this->assign('wechatUser', $this->wechatUser);
+    }
+
+    protected function canRedirectLogin()
+    {
+        if ($this->request->isAjax()) {
+            return false;
+        }
+        if (strpos($this->request->header('accept'), 'image') !== false) {
+            return false;
+        }
+        if ($this->wechatLogin() && $this->config['wechat_autologin'] == '1') {
+            return true;
+        }
+        return false;
     }
 
     /**
