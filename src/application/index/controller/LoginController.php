@@ -92,7 +92,7 @@ class LoginController extends BaseController
             $oauth = OAuthFactory::getInstence($app['type'], $app['appid'], $app['appkey'], $callbackurl);
             $url = $oauth->redirect();
 
-            return redirect($url->getTargetUrl());
+            return redirect($url);
         }
     }
 
@@ -120,14 +120,14 @@ class LoginController extends BaseController
         }
 
         try {
-            $userInfo = $oauth->user();
+            $userInfo = $oauth->userFromCode($code);
             $data['openid'] = $userInfo['id'];
             $data['nickname'] = $userInfo['nickname'];
             $data['name'] = $userInfo['name'];
             $data['email'] = $userInfo['email'];
             $data['avatar'] = $userInfo['avatar'];
 
-            $origin = $userInfo->getOriginal();
+            $origin = $userInfo->getRaw();
             $data['gender'] = empty($origin['gender']) ? 0 : $this->parseGender($origin['gender']);
             $data['unionid'] = empty($origin['unionid']) ? '' : $origin['unionid'];
             $data['data'] = json_encode($origin);

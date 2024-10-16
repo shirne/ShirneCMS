@@ -304,7 +304,7 @@ class BaseController extends Controller
 
             // 使用第三方登陆
             $oauth = OAuthFactory::getInstence('wechat', $this->wechat['appid'], $this->wechat['appsecret'], $callbackurl, true);
-            $oauth->redirect()->send();
+            redirect($oauth->redirect())->send();
             exit;
         }
         $this->assign('wechatUser', $this->wechatUser);
