@@ -315,7 +315,8 @@ class BaseController extends Controller
         if ($this->request->isAjax()) {
             return false;
         }
-        if (strpos($this->request->header('accept'), 'image') !== false) {
+        $accept = $this->request->header('accept');
+        if (strpos($accept, 'image') !== false && strpos($accept, 'html') === false) {
             return false;
         }
         if ($this->wechatLogin() && $this->config['wechat_autologin'] == '1') {
