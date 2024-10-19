@@ -166,6 +166,7 @@ class WechatModel extends BaseModel
             'app_id'             => $data['appid'],
             'mch_id'             => $data['mch_id'],
             'key'                => $data['key'],
+            'log'                => config('log.wechat'),
         ];
 
         // 如需使用敏感接口（如退款、发送红包等）需要配置 API 证书路径(登录商户平台下载 API 证书)

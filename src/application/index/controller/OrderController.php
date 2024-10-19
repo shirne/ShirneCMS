@@ -114,7 +114,7 @@ class OrderController extends AuthedController
                 $this->wechatUser = MemberOauthModel::where('type_id', $payid)->where('member_id', $this->userid)->find();
                 //redirect()->remember();
                 //redirect(url('index/order/wechatpay',['type'=>$payid]))->send();exit;
-                if (empty($this->wechatUser)) $this->error('支付方式错误');
+                if (empty($this->wechatUser)) $this->error('请先绑定微信账号', url('index/login/index'));
             }
         }
         if ($payid == 0 && !empty($this->wechatUser)) $payid = $this->wechatUser['type_id'];
@@ -152,6 +152,11 @@ class OrderController extends AuthedController
         }
         if ($trade_type == 'MWEB') {
             $this->success('', $result['mweb_url']);
+        }
+
+        // 非商城订单，直接输出签名数据
+        if ($trade_type == 'JSAPI' && $payorder['order_type'] != 'order') {
+            $this->success('', '', $payorder->getSignedData($result, $config['key']));
         }
 
         $this->assign('paydata', $payorder->getSignedData($result, $config['key']));

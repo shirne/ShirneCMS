@@ -36,6 +36,7 @@ class BaseController extends Controller
     protected $errMsg;
     protected $config = array();
     protected $isWechat = false;
+    protected $isWechatDev = false;
     protected $isMobile = false;
 
     protected $lang;
@@ -312,14 +313,14 @@ class BaseController extends Controller
 
     protected function canRedirectLogin()
     {
-        if ($this->request->isAjax()) {
-            return false;
-        }
         $accept = $this->request->header('accept');
         if (strpos($accept, 'image') !== false && strpos($accept, 'html') === false) {
             return false;
         }
         if ($this->wechatLogin() && $this->config['wechat_autologin'] == '1') {
+            if ($this->request->isAjax()) {
+                return false;
+            }
             return true;
         }
         return false;
@@ -422,18 +423,22 @@ class BaseController extends Controller
             $useragent = $this->request->server('HTTP_USER_AGENT');
             if (stripos($useragent, 'MicroMessenger') > 0) {
                 $this->isWechat = true;
+                $this->isWechatDev = stripos($useragent, 'wechatdevtools') > 0;
                 $this->isMobile = true;
             } else {
                 $this->isMobile = $this->request->isMobile();
             }
             session('detected', 1);
             session('isWechat', $this->isWechat);
+            session('isWechatDev', $this->isWechatDev);
             session('isMobile', $this->isMobile);
         } else {
             $this->isWechat = session('isWechat');
+            $this->isWechatDev = session('isWechatDev');
             $this->isMobile = session('isMobile');
         }
         $this->assign('isWechat', $this->isWechat);
+        $this->assign('isWechatDev', $this->isWechatDev);
         $this->assign('isMobile', $this->isMobile);
 
         $base_path = config('template.view_path');

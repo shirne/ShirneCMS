@@ -64,6 +64,6 @@ class IndexController extends BaseController
 
     public function jssdk($url = '')
     {
-        $this->success('', '', $this->getShareData($url));
+        $this->success('', '', json_decode($this->getShareData($url)));
     }
 }

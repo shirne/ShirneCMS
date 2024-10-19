@@ -34,8 +34,9 @@
 									</div>
 									<div class="col">
 										<p style="margin-bottom:0.5rem;">{$wechatUser['nickname']}</p>
-										<p style="font-size: 13px;color: #888888;">{:lang('Bind to this wechat after
-											sign up')}</p>
+										<p style="font-size: 13px;color: #888888;">
+											{:lang('Bind to this wechat after sign up')}
+										</p>
 									</div>
 								</div>
 							</div>
