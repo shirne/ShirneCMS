@@ -116,10 +116,14 @@ class OrderController extends AuthedController
                 //redirect(url('index/order/wechatpay',['type'=>$payid]))->send();exit;
                 if (empty($this->wechatUser)) $this->error('请先绑定微信账号', url('index/login/index'));
             }
+            if ($payid == 0 && !empty($this->wechatUser)) $payid = $this->wechatUser['type_id'];
+
+            $wechat = WechatModel::where('id', $payid)->where('type', 'wechat')->find();
+        } else {
+            $wechat = WechatModel::where('type', 'wechat')->order('is_default desc')->find();
+            $payid = $wechat['id'];
         }
-        if ($payid == 0 && !empty($this->wechatUser)) $payid = $this->wechatUser['type_id'];
-        $wechat = WechatModel::where('id', $payid)
-            ->where('type', 'wechat')->find();
+
         if (empty($wechat)) {
             $this->error('支付方式错误');
         }
