@@ -491,7 +491,8 @@ class BaseController extends Controller
                 'checkJsApi',
                 'openAddress',
                 'openLocation',
-                'getLocation'
+                'getLocation',
+                'chooseWXPay'
             ]);
             return $signPackage;
         }

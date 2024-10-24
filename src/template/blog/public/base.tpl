@@ -58,6 +58,9 @@
     jQuery(function ($) {
         $.ajax({
             url: "{:url('index/jssdk')}",
+            data: {
+                url: location.href
+            },
             success: function (json) {
                 if (json.code == 1) {
                     wx.config(json.data);
