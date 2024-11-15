@@ -12,6 +12,7 @@ use app\admin\validate\ProductValidate;
 use app\admin\validate\ImagesValidate;
 use app\common\facade\ProductCategoryFacade;
 use app\common\model\WechatModel;
+use stdClass;
 use think\Db;
 use think\Exception;
 
@@ -35,7 +36,8 @@ class ProductController extends BaseController
     {
         $model = Db::view('productSku', 'sku_id,goods_no as sku_goods_no,price')
             ->view('product', 'id,title,image,min_price,max_price,goods_no,create_time', 'product.id=productSku.sku_id')
-            ->where('product.status', 1);
+            ->where('product.status', 1)
+            ->where('product.delete_time', 0);
         if (!empty($key)) {
             $model->where('product.id|product.title|product.vice_title|product.goods_no|productSku.goods_no', 'like', "%$key%");
         }
@@ -56,7 +58,8 @@ class ProductController extends BaseController
     private function searchProduct($key = '', $cate = 0, $brand = 0, $type = 0)
     {
         $model = Db::name('product')
-            ->where('status', 1);
+            ->where('status', 1)
+            ->where('delete_time', 0);
         if (!empty($key)) {
             $model->where('id|title', 'like', "%$key%");
         }
@@ -82,17 +85,18 @@ class ProductController extends BaseController
      * @return mixed|\think\response\Redirect
      * @throws Exception
      */
-    public function index($key = '', $cate_id = 0)
+    public function index($keyword = '',  $cate_id = 0)
     {
         if ($this->request->isPost()) {
-            return redirect(url('', ['cate_id' => $cate_id, 'key' => base64url_encode($key)]));
+            return redirect(url('', ['cate_id' => $cate_id, 'keyword' => base64url_encode($keyword)]));
         }
-        $key = empty($key) ? "" : base64url_decode($key);
+        $keyword = empty($keyword) ? "" : base64url_decode($keyword);
         $model = Db::view('product', '*')
-            ->view('productCategory', ['name' => 'category_name', 'title' => 'category_title'], 'product.cate_id=productCategory.id', 'LEFT');
+            ->view('productCategory', ['name' => 'category_name', 'title' => 'category_title'], 'product.cate_id=productCategory.id', 'LEFT')
+            ->where('product.delete_time', 0);
 
-        if (!empty($key)) {
-            $model->whereLike('product.title|productCategory.title', "%$key%");
+        if (!empty($keyword)) {
+            $model->whereLike('product.title|productCategory.title', "%$keyword%");
         }
         if ($cate_id > 0) {
             $model->whereIn('product.cate_id', ProductCategoryFacade::getSubCateIds($cate_id));
@@ -116,7 +120,7 @@ class ProductController extends BaseController
         $this->assign('lists', $lists);
         $this->assign('page', $lists->render());
         $this->assign('types', getProductTypes());
-        $this->assign('keyword', $key);
+        $this->assign('keyword', $keyword);
         $this->assign('cate_id', $cate_id);
         $this->assign("category", ProductCategoryFacade::getCategories());
         $this->assign("brands", ProductCategoryFacade::getBrands(0));
@@ -164,12 +168,10 @@ class ProductController extends BaseController
         $data['min_price'] = array_min($skus, 'price');
         $data['market_price'] = array_max($skus, 'market_price');
         $data['storage'] = array_sum(array_column($skus, 'storage'));
-        if (!empty($data['prop_data'])) {
-            $data['prop_data'] = array_combine($data['prop_data']['keys'], $data['prop_data']['values']);
-        } else {
+        if (empty($data['prop_data'])) {
             $data['prop_data'] = [];
         }
-        if (!isset($data['spec_data'])) $data['spec_data'] = [];
+        if (!isset($data['spec_data'])) $data['spec_data'] =  [];
         if ($data['is_commission'] == 3) {
             $data['commission_percent'] = $data['commission_amount'];
         } elseif ($data['is_commission'] == 4) {
@@ -236,11 +238,11 @@ class ProductController extends BaseController
                 $uploaded = $this->_upload('product', 'upload_image');
                 if (!empty($uploaded)) {
                     $data['image'] = $uploaded['url'];
-                    if (!empty($data['delete_image']))  $delete_images[] = $data['delete_image'];
+                    if (!empty($data['delete_image'])) $delete_images[] = $data['delete_image'];
                 } elseif ($this->uploadErrorCode > 102) {
                     $this->error($this->uploadErrorCode . ':' . $this->uploadError);
                 }
-                if (isset($data['delete_image']))  unset($data['delete_image']);
+                if (isset($data['delete_image'])) unset($data['delete_image']);
                 $data['user_id'] = $this->mid;
                 $data = $this->processData($data);
                 $skus = $data['skus'];
@@ -279,11 +281,8 @@ class ProductController extends BaseController
         $this->assign("brands", ProductCategoryFacade::getBrands(0));
         $this->assign('product', $model);
         $this->assign('presets', $presets);
-        $this->assign('skus', [[]]);
+        $this->assign('skus', []);
         $this->assign('levels', $levels);
-        $this->assign('price_levels', array_filter($levels, function ($item) {
-            return $item['diy_price'] == 1;
-        }));
         $this->assign('needarea', true);
         $this->assign('types', getProductTypes());
         $this->assign('postages', PostageModel::getCacheData());
@@ -306,6 +305,20 @@ class ProductController extends BaseController
             $this->checkArea($data);
             $validate = new ProductValidate();
             $validate->setId($id);
+
+            $oldSkus = Db::name('productSku')->where('product_id', $id)->select();
+
+            // 匹配已存在的sku_id和goods_no
+            if (!empty($data['skus']) && !empty($oldSkus)) {
+                $oldNoIds = array_column($oldSkus, 'sku_id', 'goods_no');
+                foreach ($data['skus'] as &$sku) {
+                    if (empty($sku['sku_id']) && isset($oldNoIds[$sku['goods_no']])) {
+                        $sku['sku_id'] = $oldNoIds[$sku['goods_no']];
+                    }
+                }
+                unset($sku);
+            }
+
             $skuValidate = new ProductSkuValidate();
             $validate->rule([
                 'skus' => function ($value) use ($skuValidate) {
@@ -342,8 +355,8 @@ class ProductController extends BaseController
                     //delete_image($delete_images);
                     $existsIds = [];
                     foreach ($skus as $sku) {
-                        if (!isset($sku['specs'])) $sku['specs'] = [];
-                        if ($sku['sku_id']) {
+                        if (!isset($sku['specs'])) $sku['specs'] = new stdClass;
+                        if (!empty($sku['sku_id'])) {
                             ProductSkuModel::update($sku);
                             $existsIds[] = $sku['sku_id'];
                         } else {
@@ -390,7 +403,7 @@ class ProductController extends BaseController
         $model = Db::name('product');
         $result = $model->where('id', 'in', idArr($ids))->update(['cate_id' => $cate_id]);
         if ($result) {
-            user_log($this->mid, 'setcateproduct', 1, '设置商品分类 ' . $ids . '=>' . $cate_id, 'manager');
+            user_log($this->mid, 'set-product-cate', 1, '设置商品分类 ' . $ids . '=>' . $cate_id, 'manager');
             $this->success(lang('Update success!'), url('shop.product/index'));
         }
         $this->error(lang('Update failed!'));
@@ -430,9 +443,9 @@ class ProductController extends BaseController
         if (!empty($key)) {
             $model->whereLike('title', "%$key%");
         }
-        if ($ids) {
+        if (!empty($ids)) {
             $ids = idArr($ids);
-            $model->whereIn('id', $ids);
+            $model->whereIn('key', $ids);
             $limit = count($ids);
         }
         $lists = $model->order('ID ASC')->limit($limit)->select();
@@ -447,15 +460,81 @@ class ProductController extends BaseController
     public function delete($id)
     {
         $model = Db::name('product');
-        $result = $model->where('id', 'in', idArr($id))->delete();
+        $result = $model->where('id', 'in', idArr($id))->update(['delete_time' => time()]);
+        if ($result) {
+            user_log($this->mid, 'mark-delete-product', 1, '商品移到回收站 ' . $id, 'manager');
+            $this->success(lang('Delete success!'), url('shop.product/index'));
+        } else {
+            $this->error(lang('Delete failed!'));
+        }
+    }
+
+    public function trash($keyword = '', $cate_id = 0)
+    {
+        if ($this->request->isPost()) {
+            return redirect(url('', ['cate_id' => $cate_id, 'key' => base64url_encode($keyword)]));
+        }
+        $keyword = empty($keyword) ? "" : base64url_decode($keyword);
+        $model = Db::view('product', '*')
+            ->view('productCategory', ['name' => 'category_name', 'title' => 'category_title'], 'product.cate_id=productCategory.id', 'LEFT')
+            ->where('product.delete_time', 0);
+
+        if (!empty($keyword)) {
+            $model->whereLike('product.title|productCategory.title', "%$keyword%");
+        }
+        if ($cate_id > 0) {
+            $model->whereIn('product.cate_id', ProductCategoryFacade::getSubCateIds($cate_id));
+        }
+
+        $lists = $model->order('create_time DESC')->paginate(10);
+        if (!$lists->isEmpty()) {
+            $ids = array_column($lists->items(), 'id');
+            $skus = Db::name('productSku')->whereIn('product_id', $ids)->select();
+            $skugroups = array_index($skus, 'product_id', true);
+            $lists->each(function ($item) use ($skugroups) {
+                if (isset($skugroups[$item['id']])) {
+                    $item['skus'] = $skugroups[$item['id']];
+                } else {
+                    $item['skus'] = [];
+                }
+                return $item;
+            });
+        }
+
+        $this->assign('lists', $lists);
+        $this->assign('page', $lists->render());
+        $this->assign('types', getProductTypes());
+        $this->assign('keyword', $keyword);
+        $this->assign('cate_id', $cate_id);
+        $this->assign("category", ProductCategoryFacade::getCategories());
+        $this->assign("brands", ProductCategoryFacade::getBrands(0));
+        return $this->fetch();
+    }
+
+    public function trash_del($id)
+    {
+        $model = Db::name('product');
+        $result = $model->where('delete_time', '>', 0)->where('id', 'in', idArr($id))->delete();
         if ($result) {
             Db::name('productSku')->where('product_id', 'in', idArr($id))->delete();
             Db::name('productImages')->where('product_id', 'in', idArr($id))->delete();
             Db::name('productComment')->where('product_id', 'in', idArr($id))->delete();
-            user_log($this->mid, 'deleteproduct', 1, '删除商品 ' . $id, 'manager');
-            $this->success(lang('Delete success!'), url('shop.product/index'));
+            user_log($this->mid, 'delete-product', 1, '删除商品 ' . $id, 'manager');
+            $this->success(lang('Delete success!'), url('shop.product/trash'));
         } else {
             $this->error(lang('Delete failed!'));
+        }
+    }
+
+    public function trash_restore($id)
+    {
+        $model = Db::name('product');
+        $result = $model->where('id', 'in', idArr($id))->update(['delete_time' => 0]);
+        if ($result) {
+            user_log($this->mid, 'mark-restore-product', 1, '商品移出回收站 ' . $id, 'manager');
+            $this->success(lang('Restore success!'), url('shop.product/trash'));
+        } else {
+            $this->error(lang('Restore failed!'));
         }
     }
 
@@ -588,7 +667,7 @@ class ProductController extends BaseController
                 $uploaded = $this->_upload('product', 'upload_image');
                 if (!empty($uploaded)) {
                     $data['image'] = $uploaded['url'];
-                    if (!empty($data['delete_image']))  $delete_images[] = $data['delete_image'];
+                    if (!empty($data['delete_image'])) $delete_images[] = $data['delete_image'];
                 }
                 if (isset($data['delete_image']))  unset($data['delete_image']);
                 $data['id'] = $id;
