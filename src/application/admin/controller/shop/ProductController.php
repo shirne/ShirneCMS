@@ -460,7 +460,7 @@ class ProductController extends BaseController
     public function delete($id)
     {
         $model = Db::name('product');
-        $result = $model->where('id', 'in', idArr($id))->update(['delete_time' => time()]);
+        $result = $model->where('id', 'in', idArr($id))->update(['delete_time' => time(), 'status' => 0]);
         if ($result) {
             user_log($this->mid, 'mark-delete-product', 1, '商品移到回收站 ' . $id, 'manager');
             $this->success(lang('Delete success!'), url('shop.product/index'));
@@ -477,7 +477,7 @@ class ProductController extends BaseController
         $keyword = empty($keyword) ? "" : base64url_decode($keyword);
         $model = Db::view('product', '*')
             ->view('productCategory', ['name' => 'category_name', 'title' => 'category_title'], 'product.cate_id=productCategory.id', 'LEFT')
-            ->where('product.delete_time', 0);
+            ->where('product.delete_time', '>', 0);
 
         if (!empty($keyword)) {
             $model->whereLike('product.title|productCategory.title', "%$keyword%");

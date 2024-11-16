@@ -91,11 +91,6 @@
                             <span class="input-group-text">库存</span>
                         </span>
                         <span class="form-control">{$sku.storage}</span>
-                        <span class="input-group-append">
-                            <a href="javascript:" data-price="{$sku.price}" data-skuid="{$sku.sku_id}"
-                                data-storage="{$sku.storage}" class="btn btn-outline-primary btn-edit-sku"><i
-                                    class="ion-md-create"></i></a>
-                        </span>
                     </div>
                     {/foreach}
                 </td>
@@ -106,7 +101,7 @@
                 </td>
                 <td class="operations">
                     <a class="btn btn-outline-primary  link-confirm" title="恢复" data-confirm="确定恢复产品上架？"
-                        href="{:url('shop.product/trash_restore',array('id'=>$v['id']))}"><i class="ion-md-create"></i>
+                        href="{:url('shop.product/trash_restore',array('id'=>$v['id']))}"><i class="ion-md-undo"></i>
                     </a>
 
 
