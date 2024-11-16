@@ -7,22 +7,17 @@
     <div class="row list-header">
         <div class="col-md-6">
             <div class="btn-toolbar list-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                <a href="{:murl('shop.product/index')}" class="btn btn-outline-primary btn-sm mr-2"><i
+                        class="ion-md-arrow-back"></i> 返回</a>
                 <div class="btn-group btn-group-sm mr-2" role="group" aria-label="check action group">
                     <a href="javascript:" class="btn btn-outline-secondary checkall-btn" data-toggle="button"
                         aria-pressed="false">全选</a>
                     <a href="javascript:" class="btn btn-outline-secondary checkreverse-btn">反选</a>
                 </div>
                 <div class="btn-group btn-group-sm mr-2" role="group" aria-label="action button group">
-                    <a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="publish">发布</a>
-                    <a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="cancel">撤销</a>
-                    <a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="setcate">设置分类</a>
-                    <a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="setarea">设置区域</a>
-                    <a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="delete">删除</a>
+                    <a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="restore">恢复</a>
+                    <a href="javascript:" class="btn btn-outline-secondary action-btn" data-action="delete">彻底删除</a>
                 </div>
-                <a href="{:url('shop.product/add')}" class="btn btn-outline-primary btn-sm mr-2"><i
-                        class="ion-md-add"></i> 添加商品</a>
-                <a href="javascript:" class="btn btn-outline-warning btn-sm action-btn" data-need-checks="false"
-                    data-action="setIncrement"><i class="ion-md-add"></i> 设置起始ID</a>
             </div>
         </div>
         <div class="col-md-6">
@@ -35,7 +30,7 @@
                         <select name="cate_id" class="form-control">
                             <option value="0">不限分类</option>
                             {foreach $category as $key => $v}
-                            <option value="{$v.id}" selected="{$cate_id==$v['id']?'selected':''}">{$v.html} {$v.title}
+                            <option value="{$v.id}" "{$cate_id==$v['id']?'selected':''}">{$v.html} {$v.title}
                             </option>
                             {/foreach}
                         </select>
@@ -60,7 +55,7 @@
                 <th>SKU</th>
                 <th>发布时间</th>
                 <th>分类</th>
-                <th>状态</th>
+                <th>回收日期</th>
                 <th width="200">&nbsp;</th>
             </tr>
         </thead>
@@ -106,12 +101,8 @@
                 </td>
                 <td>{$v.create_time|showdate}</td>
                 <td>{$v.category_title}</td>
-                <td data-url="{:url('push')}" data-id="{$v.id}">
-                    {if $v['status'] == 1}
-                    <span class="chgstatus" data-status="0" title="点击下架">已上架</span>
-                    {else/}
-                    <span class="chgstatus off" data-status="1" title="点击上架">已下架</span>
-                    {/if}
+                <td>
+                    {$v.delete_time|showdate}
                 </td>
                 <td class="operations">
                     <a class="btn btn-outline-primary  link-confirm" title="恢复" data-confirm="确定恢复产品上架？"

@@ -21,8 +21,10 @@
 				</div>
 				<a href="{:url('shop.product/add')}" class="btn btn-outline-primary btn-sm mr-2"><i
 						class="ion-md-add"></i> 添加商品</a>
-				<a href="javascript:" class="btn btn-outline-warning btn-sm action-btn" data-need-checks="false"
+				<a href="javascript:" class="btn btn-outline-warning btn-sm action-btn mr-2" data-need-checks="false"
 					data-action="setIncrement"><i class="ion-md-add"></i> 设置起始ID</a>
+				<a href="{:murl('shop.product/trash')}" class="btn btn-outline-primary btn-sm"><i
+						class="ion-md-trash"></i> 回收站</a>
 			</div>
 		</div>
 		<div class="col-md-6">
