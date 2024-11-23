@@ -28,7 +28,7 @@
         "shirne/think-image": "^1.0",
         "topthink/think-helper": "^1.0",
         "endroid/qr-code": "^2.5|^5.0.7",
-        "phpoffice/phpspreadsheet": "^1.8",
+        "phpoffice/phpspreadsheet": "^1.29.4",
         "phpmailer/phpmailer": "^6.5.0",
         "overtrue/wechat": "^5.35.1",
         "aliyuncs/oss-sdk-php": "^2.3",
