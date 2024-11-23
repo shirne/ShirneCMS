@@ -314,8 +314,10 @@ class BaseController extends Controller
     protected function canRedirectLogin()
     {
         $accept = $this->request->header('accept');
-        if (strpos($accept, 'image') !== false && strpos($accept, 'html') === false) {
-            return false;
+        if (!empty($accept)) {
+            if (strpos($accept, 'image') !== false && strpos($accept, 'html') === false) {
+                return false;
+            }
         }
         if ($this->wechatLogin() && $this->config['wechat_autologin'] == '1') {
             if ($this->request->isAjax()) {
