@@ -268,7 +268,7 @@
                             var ckboxes = $(body).find('[name=expitem]')
                             for (var i = 0; i < ckboxes.length; i++) {
                                 if (picked.indexOf(ckboxes.eq(i).val()) > -1) {
-                                    ckboxes.eq(i).parent('label').trigger('click')
+                                    ckboxes.eq(i).parent('label')[0].click()
                                 }
                             }
                         }
@@ -326,7 +326,7 @@
                             var ckboxes = $(body).find('[name=areaitem]')
                             for (var i = 0; i < ckboxes.length; i++) {
                                 if (ckboxes.eq(i).prop('checked')) {
-                                    ckboxes.eq(i).parent('label').trigger('click')
+                                    ckboxes.eq(i).parent('label')[0].click()
                                 }
                             }
                             return false;
@@ -338,7 +338,7 @@
                             var ckboxes = $(body).find('[name=areaitem]')
                             for (var i = 0; i < ckboxes.length; i++) {
                                 if (picked.indexOf(ckboxes.eq(i).val()) > -1) {
-                                    ckboxes.eq(i).parent('label').trigger('click')
+                                    ckboxes.eq(i).parent('label')[0].click()
                                 }
                             }
                         }
@@ -347,7 +347,7 @@
                             var ckboxes = prow.find('[name=areaitem]')
                             for (var i = 0; i < ckboxes.length; i++) {
                                 if (!ckboxes.eq(i).prop('checked')) {
-                                    ckboxes.eq(i).parent('label').trigger('click')
+                                    ckboxes.eq(i).parent('label')[0].click()
                                 }
                             }
                         })
@@ -356,7 +356,7 @@
                             var ckboxes = prow.find('[name=areaitem]')
                             for (var i = 0; i < ckboxes.length; i++) {
                                 if (ckboxes.eq(i).prop('checked')) {
-                                    ckboxes.eq(i).parent('label').trigger('click')
+                                    ckboxes.eq(i).parent('label')[0].click()
                                 }
                             }
                         })
