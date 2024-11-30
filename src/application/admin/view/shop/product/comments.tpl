@@ -1,7 +1,7 @@
 {extend name="public:base" /}
 
 {block name="body"}
-{include file="public/bread" menu="shop_product_index" title="文章列表" /}
+{include file="public/bread" menu="shop_product_index" title="产品管理" /}
 <div id="page-wrapper">
 
     <div class="row list-header">
@@ -22,17 +22,6 @@
         <div class="col-md-6">
             <form action="{:url('shop.product/index')}" method="post">
                 <div class="form-row">
-                    <div class="col input-group input-group-sm mr-2">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">分类</span>
-                        </div>
-                        <select name="cate_id" class="form-control">
-                            <option value="0">不限分类</option>
-                            {foreach $category as $key => $v}
-                            <option value="{$v.id}" {$cate_id==$v['id']?'selected':""}>{$v.html} {$v.title}</option>
-                            {/foreach}
-                        </select>
-                    </div>
                     <div class="col input-group input-group-sm">
                         <input type="text" class="form-control" name="key" value="{$keyword}" placeholder="搜索商品名称或分类">
                         <div class="input-group-append">
