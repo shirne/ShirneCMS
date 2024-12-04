@@ -57,15 +57,15 @@ class Image
                 } else {
                     $this->loadFromFile($init['file']);
                 }
-                try {
-                    getimagesize($init['file'], $size);
-                    if (!empty($size)) {
-                        $this->width = $size[0];
-                        $this->width = $size[1];
-                    }
-                } catch (\Exception $e) {
-                    Log::warning('image load error: ' . $e);
-                }
+                // try {
+                //     getimagesize($init['file'], $size);
+                //     if (!empty($size)) {
+                //         $this->width = $size[0];
+                //         $this->width = $size[1];
+                //     }
+                // } catch (\Exception $e) {
+                //     Log::warning('image load error: ' . $e);
+                // }
             } elseif (isset($init['width'])) {
                 if (isset($init['bg'])) {
                     $this->create($init['width'], $init['height'], $init['bg']);
