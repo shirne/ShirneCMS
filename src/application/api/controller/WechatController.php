@@ -179,7 +179,7 @@ class WechatController extends Controller
             Log::info(var_export($message, TRUE));
 
             /**
-             * @var $order PayOrderModel
+             * @var PayOrderModel
              */
             $order = PayOrderModel::where(['order_no' => $message['out_trade_no']])->find();
 

@@ -337,7 +337,7 @@ class AuthController extends BaseController
         $oauth = OAuthFactory::getInstence($wechat['type'], $wechat['appid'], $wechat['appsecret'], $url);
         $url = $oauth->redirect();
 
-        return $this->response(['url' => $url->getTargetUrl()]);
+        return $this->response(['url' => $url]);
     }
 
     /**
@@ -508,7 +508,15 @@ class AuthController extends BaseController
 
         // 只使用code登录，自动生成空微信信息
         if (empty($userinfo)) {
-            $userinfo = ["nickName" => "微信用户", "gender" => 0, "language" => "", "city" => "", "province" => "", "country" => "", "avatarUrl" => "https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132"];
+            $userinfo = [
+                "nickName" => "微信用户",
+                "gender" => 0,
+                "language" => "",
+                "city" => "",
+                "province" => "",
+                "country" => "",
+                "avatarUrl" => "https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132",
+            ];
         }
         $type = $wechat['account_type'];
         $typeid = $wechat['id'];
@@ -808,9 +816,7 @@ class AuthController extends BaseController
     /**
      * todo 验证码
      */
-    public function verify()
-    {
-    }
+    public function verify() {}
 
     /**
      * 忘记密码

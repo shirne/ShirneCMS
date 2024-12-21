@@ -119,9 +119,7 @@ class OrderController extends AuthedController
      * @param string $types 
      * @return Json 
      */
-    public function subscribe($types)
-    {
-    }
+    public function subscribe($types) {}
 
     /**
      * 取消订单

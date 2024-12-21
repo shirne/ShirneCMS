@@ -4,7 +4,7 @@ namespace app\api\controller\member;
 
 
 use app\api\controller\AuthedController;
-use app\common\model\CreditOrderModel;
+use modules\credit\model\CreditOrderModel;
 use think\Db;
 use think\response\Json;
 
@@ -229,7 +229,5 @@ class CreditOrderController extends AuthedController
      * 订单评论 todo
      * @return void 
      */
-    public function comment()
-    {
-    }
+    public function comment() {}
 }
