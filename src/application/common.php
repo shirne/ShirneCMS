@@ -312,7 +312,7 @@ function payTypes($type = '')
 
 /** =====================================  模板类函数  ===================================== **/
 
-function my_implode($arr, $separator = ',')
+function my_implode($arr, $separator = ',', $key = 'title')
 {
     if (empty($arr)) {
         return '';
@@ -322,7 +322,7 @@ function my_implode($arr, $separator = ',')
     }
 
     if (is_array(current($arr))) {
-        return implode($separator, array_column($arr, 'title'));
+        return implode($separator, array_column($arr, $key));
     }
     return implode($separator, $arr);
 }

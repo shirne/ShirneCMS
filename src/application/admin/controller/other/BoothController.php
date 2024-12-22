@@ -6,6 +6,8 @@ namespace app\admin\controller\other;
 use app\admin\controller\BaseController;
 use app\admin\validate\BoothValidate;
 use app\common\model\BoothModel;
+use app\common\facade\CategoryFacade;
+use app\common\facade\ProductCategoryFacade;
 use think\Db;
 
 class BoothController extends BaseController
@@ -55,6 +57,8 @@ class BoothController extends BaseController
         $this->assign('article_types', getArticleTypes());
         $this->assign('booth_types', BoothModel::$booth_types);
         $this->assign('id', 0);
+        $this->assign('articleCates', []);
+        $this->assign('productCates', []);
         return $this->fetch('update');
     }
 
@@ -91,10 +95,26 @@ class BoothController extends BaseController
             }
         }
 
+        $articleCates = [];
+        $productCates = [];
+        if ($model['data']['type'] == 0) {
+            if ($model['type'] == 'article') {
+                $articleCates = CategoryFacade::getCategoryTree($model['data']['category_id']);
+            } elseif ($model['type'] == 'article_category') {
+                $articleCates = CategoryFacade::getCategoryTree($model['data']['parent_id']);
+            } elseif ($model['type'] == 'product') {
+                $productCates = ProductCategoryFacade::getCategoryTree($model['data']['category_id']);
+            } elseif ($model['type'] == 'product_category') {
+                $productCates = ProductCategoryFacade::getCategoryTree($model['data']['parent_id']);
+            }
+        }
+
         $this->assign('model', $model);
         $this->assign('article_types', getArticleTypes());
         $this->assign('booth_types', BoothModel::$booth_types);
         $this->assign('id', $id);
+        $this->assign('articleCates', $articleCates);
+        $this->assign('productCates', $productCates);
         return $this->fetch();
     }
 

@@ -102,10 +102,12 @@
                     <div v-show="model.data.type==0" class="form-group">
                         <div class="input-group">
                             <span class="input-group-prepend"><span class="input-group-text">上级分类</span> </span>
-                            <select name="data[parent_id]" class="form-control" v-model="model.data.parent_id">
-                                <option :value="0">顶级分类</option>
-                                <option v-for="cate in category" :value="cate.id">{{cate.html}}{{cate.title}}</option>
-                            </select>
+                            <input type="hidden" name="data[parent_id]" :value="model.data.parent_id" />
+                            <input class="form-control" readonly :value="articleCates" />
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary pickArticleCate" type="button"
+                                    id="button-addon2" @click="pickArticleCate('parent_id')">选择</button>
+                            </div>
                         </div>
                     </div>
                     <div v-show="model.data.type==1" class="form-row">
@@ -166,11 +168,12 @@
                         <div class="form-group col">
                             <div class="input-group">
                                 <span class="input-group-prepend"><span class="input-group-text">文章分类</span> </span>
-                                <select name="data[category_id]" class="form-control" v-model="model.data.category_id">
-                                    <option :value="0">全部分类</option>
-                                    <option v-for="cate in category" :value="cate.id">{{cate.html}}{{cate.title}}
-                                    </option>
-                                </select>
+                                <input type="hidden" name="data[category_id]" :value="model.data.category_id" />
+                                <input class="form-control" readonly :value="articleCates" />
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-secondary pickCate" type="button" id="button-addon2"
+                                        @click="pickCate('category_id')">选择</button>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group col">
@@ -246,11 +249,12 @@
                     <div v-show="model.data.type==0" class="form-group">
                         <div class="input-group">
                             <span class="input-group-prepend"><span class="input-group-text">上级分类</span> </span>
-                            <select name="data[parent_id]" class="form-control" v-model="model.data.parent_id">
-                                <option :value="0">顶级分类</option>
-                                <option v-for="cate in product_category" :value="cate.id">{{cate.html}}{{cate.title}}
-                                </option>
-                            </select>
+                            <input type="hidden" name="data[parent_id]" :value="model.data.parent_id" />
+                            <input class="form-control" readonly :value="productCates" />
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary pickProductCate" type="button"
+                                    id="button-addon2" @click="pickProductCate('parent_id')">选择</button>
+                            </div>
                         </div>
                     </div>
                     <div v-show="model.data.type==1" class="form-row">
@@ -323,11 +327,12 @@
                     <div v-show="model.data.type==0" class="form-group">
                         <div class="input-group">
                             <span class="input-group-prepend"><span class="input-group-text">商品分类</span> </span>
-                            <select name="data[category_id]" class="form-control" v-model="model.data.category_id">
-                                <option :value="0">全部分类</option>
-                                <option v-for="cate in product_category" :value="cate.id">{{cate.html}}{{cate.title}}
-                                </option>
-                            </select>
+                            <input type="hidden" name="data[category_id]" :value="model.data.category_id" />
+                            <input class="form-control" readonly :value="productCates" />
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary pickProductCate" type="button"
+                                    id="button-addon2" @click="pickProductCate('category_id')">选择</button>
+                            </div>
                         </div>
                     </div>
                     <div v-show="model.data.type==1" class="form-row">
@@ -449,10 +454,6 @@
 {/block}
 
 {block name="script"}
-<script type="text/plain"
-    id="category_json">{:json_encode(\\app\\common\\facade\\CategoryFacade::getCategories())}</script>
-<script type="text/plain"
-    id="product_category_json">{:json_encode(\\app\\common\\facade\\ProductCategoryFacade::getCategories())}</script>
 <script type="text/plain" id="cur_list">{:json_encode(!empty($model['id'])?$model->fetchData():'')}</script>
 <script type="text/javascript" src="__STATIC__/vue/2.6/vue.min.js"></script>
 <script type="text/javascript">
@@ -468,12 +469,12 @@
                     category_id: 0
                 }
             },
+            productCates: "{$productCates|my_implode='/'}",
+            articleCates: "{$articleCates|my_implode='/'}",
             list_category: [],
             list_article: [],
             list_product_category: [],
-            list_product: [],
-            category: [],
-            product_category: []
+            list_product: []
         },
         mounted: function () {
             this.loadData();
@@ -481,8 +482,6 @@
         methods: {
             loadData: function () {
                 var self = this;
-                self.category = JSON.parse($('#category_json').text())
-                self.product_category = JSON.parse($('#product_category_json').text())
 
                 jQuery.ajax({
                     url: '',
@@ -511,12 +510,26 @@
                 })
             },
             pickCate: function (e) {
-                dialog.pickList({
-                    isajax: false,
-                    list: this.category,
-                    rowTemplate: '<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action pt-0 pb-0" style="line-height:30px;">{@html}&nbsp;[{@id}]&nbsp;{@title}</a>'
-                }, function (category) {
-                    app.list_category.push(category)
+                dialog.pickTree({
+                    url: "{:url('api/article/get_cates')}",
+                    titlekey: 'title',
+                    name: '分类',
+                    level: 1
+                }, function (categories) {
+                    var setCateTitle = true
+                    if (e == 'category_id') {
+                        app.model.data.category_id = categories[categories.length - 1].id
+                    } else if (e == 'parent_id') {
+                        app.model.data.parent_id = categories[categories.length - 1].id
+                    } else {
+                        setCateTitle = false
+                        app.list_category.push(categories[categories.length - 1])
+                    }
+                    if (setCateTitle) {
+                        app.articleCates = categories.map(function (item) {
+                            return item.title
+                        }).join('/')
+                    }
                 })
             },
             pickArticle: function (e) {
@@ -525,12 +538,27 @@
                 })
             },
             pickProductCate: function (e) {
-                dialog.pickList({
-                    isajax: false,
-                    list: this.product_category,
-                    rowTemplate: '<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action pt-0 pb-0" style="line-height:30px;">{@html}&nbsp;[{@id}]&nbsp;{@title}</a>'
-                }, function (category) {
-                    app.list_product_category.push(category)
+                dialog.pickTree({
+                    url: "{:url('api/product/get_cates')}",
+                    titlekey: 'title',
+                    name: '分类',
+                    level: 1
+                }, function (categories) {
+                    var setCateTitle = true
+                    if (e == 'category_id') {
+                        app.model.data.category_id = categories[categories.length - 1].id
+                    } else if (e == 'parent_id') {
+                        app.model.data.parent_id = categories[categories.length - 1].id
+                    } else {
+                        setCateTitle = false
+                        app.list_product_category.push(categories[categories.length - 1])
+                    }
+
+                    if (setCateTitle) {
+                        app.productCates = categories.map(function (item) {
+                            return item.title
+                        }).join('/')
+                    }
                 })
             },
             pickProduct: function (e) {
