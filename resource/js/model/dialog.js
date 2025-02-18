@@ -711,6 +711,7 @@
                 url: '',
                 title: '',
                 isajax: true,
+                autoSearch: true,
                 list: [],
                 name: '项目',
                 searchHolder: '根据名称搜索',
@@ -777,10 +778,11 @@
                             });
                         }
                     }
-                    btn.click(function () {
-                        if (isloading) return;
-                        isloading = true;
-                        listbox.html('<span class="list-loading">加载中...</span>');
+
+                    var lastSearch = 0;
+                    function searchList() {
+                        var loadingTime = new Date().getTime();
+                        lastSearch = loadingTime;
                         filter[config.searchkey] = input.val();
                         if (config.extend) {
                             filter[config.extend.name] = extField.val();
@@ -792,6 +794,7 @@
                                 dataType: 'JSON',
                                 data: filter,
                                 success: function (json) {
+                                    if (loadingTime != lastSearch) return;
                                     isloading = false;
                                     if (json.code === 1) {
                                         config.list = config.toList(json);
@@ -806,8 +809,24 @@
                                 }
                             }
                         );
+                    }
+                    btn.click(function () {
+                        if (isloading) return;
+                        isloading = true;
+                        listbox.html('<span class="list-loading">加载中...</span>');
 
+                        searchList();
                     }).trigger('click');
+
+                    if (config.autoSearch) {
+                        var t = 0;
+                        input.on('input', function () {
+                            clearTimeout(t)
+                            t = setTimeout(function () {
+                                searchList();
+                            }, 500);
+                        })
+                    }
                 },
                 onsure: function (body) {
                     if (!current) {
