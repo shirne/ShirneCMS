@@ -438,7 +438,7 @@ class ProductController extends BaseController
      */
     public function get_specs($key = '', $ids = '')
     {
-        $model = new SpecificationsModel();
+        $model = SpecificationsModel::where(1);
         $limit = 10;
         if (!empty($key)) {
             $model->whereLike('title', "%$key%");
