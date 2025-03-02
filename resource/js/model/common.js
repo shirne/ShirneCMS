@@ -46,6 +46,12 @@ function parseArray(str) {
     return [];
 }
 
+function strPad(str, len, pad) {
+    str = str.toString();
+    if (str.length >= len) return str;
+    return strPad(pad + str, len, pad);
+}
+
 function copy_obj(arr) {
     return JSON.parse(JSON.stringify(arr));
 }
