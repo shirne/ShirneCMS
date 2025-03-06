@@ -34,7 +34,8 @@
         "aliyuncs/oss-sdk-php": "^2.3",
         "alibabacloud/green": "^1.7",
         "alibabacloud/dysmsapi": "^1.7",
-        "overtrue/pinyin": "~4.0"
+        "overtrue/pinyin": "~4.0",
+        "nxp/math-executor": "^2.3"
     },
     "autoload": {
         "psr-4": {
