@@ -1352,7 +1352,7 @@ function is_assoc_array($array)
 
 function encode_password($pass, $salt = '')
 {
-    return md5(md5($pass) . $salt);
+    return sha1('HashPrefixForPassword' . md5($pass) . $salt);
 }
 
 function compare_password($user, $password)
