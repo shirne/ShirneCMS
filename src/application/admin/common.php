@@ -43,7 +43,7 @@ function setLogin($user, $logintype = 1)
     session(SESSKEY_ADMIN_NAME, empty($user['realname']) ? $user['username'] : $user['realname']);
     Db::name('Manager')->where('id', $user['id'])->update(array(
         'login_ip' => Request::ip(),
-        'logintime' => $time
+        'login_time' => $time
     ));
     if ($logintype == 1) {
         user_log($user['id'], 'login', 1, '登录成功', 'manager');

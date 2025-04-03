@@ -28,7 +28,7 @@
                                 <div style="font-size:12px;">
                                     {if !empty($member['realname'])}真实姓名：{$member.realname}{/if}
                                     注册时间：{$member.create_time|showdate}<br />
-                                    上次登陆：{$member.logintime|showdate} {if
+                                    上次登陆：{$member.login_time|showdate} {if
                                     !empty($member['login_ip'])}[{$member.login_ip}]{/if}
                                 </div>
                             </div>

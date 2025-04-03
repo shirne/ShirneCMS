@@ -96,7 +96,7 @@
                             <div style="font-size:12px;">
                                 {if !empty($v['realname'])}真实姓名：{$v.realname}{/if}
                                 注册时间：{$v.create_time|showdate}<br />
-                                上次登陆：{$v.logintime|showdate} {if !empty($v['login_ip'])}[{$v.login_ip}]{/if}
+                                上次登陆：{$v.login_time|showdate} {if !empty($v['login_ip'])}[{$v.login_ip}]{/if}
                             </div>
                         </div>
                     </div>

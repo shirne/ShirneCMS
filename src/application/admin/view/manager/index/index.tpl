@@ -42,7 +42,7 @@
                 <td>{$v.username}</td>
                 <td>{$v.email}</td>
                 <td style="font-size: 12px">{$v.create_time|showdate}<br />{$v.update_time|showdate}</td>
-                <td style="font-size: 12px">{$v.login_ip}<br />{$v.logintime|showdate}</td>
+                <td style="font-size: 12px">{$v.login_ip}<br />{$v.login_time|showdate}</td>
                 <td>
 
                     {if isset($roles[$v['type']])}

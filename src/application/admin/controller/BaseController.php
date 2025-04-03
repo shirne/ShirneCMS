@@ -63,7 +63,7 @@ class BaseController extends Controller
             clearLogin();
             $this->error(lang('Invalid account!'), url('admin/login/index'));
         }
-        if (TEST_ACCOUNT != $this->manager['username'] && $this->manager['logintime'] != session(SESSKEY_ADMIN_LAST_TIME)) {
+        if (TEST_ACCOUNT != $this->manager['username'] && $this->manager['login_time'] != session(SESSKEY_ADMIN_LAST_TIME)) {
             clearLogin();
             $this->error(lang('The account has login in other places!'), url('admin/login/index'));
         }
@@ -107,7 +107,7 @@ class BaseController extends Controller
                             $this->mid = $login['manager_id'];
                             $this->manager = Db::name('Manager')->where('id', $this->mid)->find();
                             setLogin($this->manager, 0);
-                            $this->manager['logintime'] = session(SESSKEY_ADMIN_LAST_TIME);
+                            $this->manager['login_time'] = session(SESSKEY_ADMIN_LAST_TIME);
                             $this->setAutoLogin($this->manager, $login['id']);
                         }
                     }

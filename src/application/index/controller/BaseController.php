@@ -187,11 +187,11 @@ class BaseController extends Controller
         session('userid', $member['id']);
         session('username', empty($member['realname']) ? $member['username'] : $member['realname']);
         $time = time();
-        session('logintime', $time);
+        session('login_time', $time);
         if ($logintype == 1) {
             Db::name('member')->where('id', $member['id'])->update(array(
                 'login_ip' => request()->ip(),
-                'logintime' => $time
+                'login_time' => $time
             ));
             user_log($member['id'], 'login', 1, '登录成功');
         }
@@ -210,7 +210,7 @@ class BaseController extends Controller
 
         session('userid', null);
         session('username', null);
-        session('logintime', null);
+        session('login_time', null);
 
         cookie(SESSKEY_USER_AUTO_LOGIN, null);
     }
@@ -283,8 +283,8 @@ class BaseController extends Controller
             if (empty($this->user)) {
                 $this->user = MemberModel::where('id', $this->userid)->find();
             }
-            /*$time=session('logintime');
-            if($time != $this->user['logintime']){
+            /*$time=session('login_time');
+            if($time != $this->user['login_time']){
                 session('userid',null);
                 $this->error('您的帐号已在其它地区登录！');
             }*/

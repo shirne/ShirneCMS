@@ -37,7 +37,7 @@ CREATE TABLE `sa_manager` (
   `login_ip` varchar(50) DEFAULT '',
   `status` tinyint DEFAULT '1' COMMENT '0:禁止登陆 1:正常',
   `type` tinyint DEFAULT '1' COMMENT 'role.type',
-  `logintime` BIGINT NULL DEFAULT 0,
+  `login_time` BIGINT NULL DEFAULT 0,
   `last_view_member` BIGINT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`) USING BTREE
@@ -449,7 +449,7 @@ CREATE TABLE `sa_member` (
   `recom_performance` BIGINT DEFAULT 0 COMMENT '直推总业绩',
   `total_performance` BIGINT DEFAULT 0 COMMENT '推荐团队总业绩',
   `team_count` int DEFAULT '0' COMMENT '团队总数',
-  `logintime` BIGINT DEFAULT '0',
+  `login_time` BIGINT DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`) USING BTREE,
   KEY `mobile` (`mobile`),

@@ -414,7 +414,7 @@ class AuthController extends BaseController
             if (!empty($token)) {
                 MemberModel::update([
                     'login_ip' => request()->ip(),
-                    'logintime' => time()
+                    'login_time' => time()
                 ], ['id' => $member['id']]);
                 user_log($member['id'], 'login', 1, '登录' . $wechat['title']);
                 $token['openid'] = $session['openid'];
@@ -599,7 +599,7 @@ class AuthController extends BaseController
             if (!empty($token)) {
                 MemberModel::update([
                     'login_ip' => request()->ip(),
-                    'logintime' => time()
+                    'login_time' => time()
                 ], ['id' => $member['id']]);
                 user_log($member['id'], 'login', 1, '登录' . $wechat['title']);
                 $token['openid'] = $session['openid'];
@@ -751,7 +751,7 @@ class AuthController extends BaseController
             case 'register':
                 $key = 'register_verify';
                 break;
-                /* case 'forget':
+            /* case 'forget':
                 $key = 'forget_verify';
             break; */
             default:
