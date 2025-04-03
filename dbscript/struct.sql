@@ -23,8 +23,8 @@ CREATE TABLE `sa_lang` (
 
 DROP TABLE IF EXISTS `sa_manager`;
 CREATE TABLE `sa_manager` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `pid` int DEFAULT '0',
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `pid` BIGINT DEFAULT '0',
   `username` varchar(20) NOT NULL,
   `realname` varchar(20) NOT NULL DEFAULT '',
   `mobile` varchar(20) DEFAULT '',
@@ -32,28 +32,28 @@ CREATE TABLE `sa_manager` (
   `password` varchar(32) NOT NULL,
   `salt` varchar(8) NOT NULL,
   `avatar` varchar(255) DEFAULT '' COMMENT '头像',
-  `create_time` int UNSIGNED DEFAULT '0',
-  `update_time` int UNSIGNED DEFAULT '0',
+  `create_time` BIGINT DEFAULT '0',
+  `update_time` BIGINT DEFAULT '0',
   `login_ip` varchar(50) DEFAULT '',
   `status` tinyint DEFAULT '1' COMMENT '0:禁止登陆 1:正常',
   `type` tinyint DEFAULT '1' COMMENT 'role.type',
-  `logintime` int UNSIGNED NULL DEFAULT 0,
-  `last_view_member` int NULL DEFAULT 0,
+  `logintime` BIGINT NULL DEFAULT 0,
+  `last_view_member` BIGINT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `sa_manager_login`;
 CREATE TABLE `sa_manager_login` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `manager_id` int DEFAULT '0',
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `manager_id` BIGINT DEFAULT '0',
   `hash` varchar(50) NOT NULL,
-  `create_time` int UNSIGNED DEFAULT '0',
-  `update_time` int UNSIGNED DEFAULT '0',
+  `create_time` BIGINT DEFAULT '0',
+  `update_time` BIGINT DEFAULT '0',
   `device` varchar(50) DEFAULT '',
   `create_ip` varchar(50) DEFAULT '',
   `create_user_agent` varchar(300) DEFAULT '',
-  `login_time` int UNSIGNED NULL DEFAULT 0,
+  `login_time` BIGINT NULL DEFAULT 0,
   `login_ip` varchar(50) DEFAULT '',
   `login_user_agent` varchar(300) DEFAULT '',
   PRIMARY KEY (`id`),
@@ -71,8 +71,8 @@ CREATE TABLE `sa_manager_role` (
   `role_name` VARCHAR(50) NOT NULL DEFAULT '',
   `global` VARCHAR(200) NULL DEFAULT '',
   `detail` TEXT NULL,
-  `create_time` int UNSIGNED DEFAULT '0',
-  `update_time` int UNSIGNED DEFAULT '0',
+  `create_time` BIGINT DEFAULT '0',
+  `update_time` BIGINT DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE INDEX `type_UNIQUE` (`type` ASC)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -82,10 +82,10 @@ CREATE TABLE `sa_manager_role` (
 --
 DROP TABLE IF EXISTS `sa_manager_permision`;
 CREATE TABLE `sa_manager_permision` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
   `global` VARCHAR(200) NULL DEFAULT '',
   `detail` TEXT NULL,
-  `manager_id` INT NOT NULL,
+  `manager_id` BIGINT NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `manager_id_UNIQUE` (`manager_id` ASC)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -97,11 +97,11 @@ CREATE TABLE `sa_manager_permision` (
 
 DROP TABLE IF EXISTS `sa_manager_log`;
 CREATE TABLE `sa_manager_log` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `manager_id` int DEFAULT '0',
-  `other_id` int DEFAULT '0',
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `manager_id` BIGINT DEFAULT '0',
+  `other_id` BIGINT DEFAULT '0',
   `ip` varchar(50) DEFAULT '',
-  `create_time` int UNSIGNED DEFAULT NULL,
+  `create_time` BIGINT DEFAULT NULL,
   `action` varchar(45) DEFAULT NULL,
   `result` tinyint DEFAULT '1',
   `remark` varchar(250) DEFAULT '',
@@ -115,8 +115,8 @@ CREATE TABLE `sa_manager_log` (
 
 DROP TABLE IF EXISTS `sa_category`;
 CREATE TABLE `sa_category` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `pid` int DEFAULT 0 COMMENT '父分类ID',
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `pid` BIGINT DEFAULT 0 COMMENT '父分类ID',
   `title` varchar(100) DEFAULT '' COMMENT '分类名称',
   `short` varchar(20) DEFAULT '' COMMENT '分类简称',
   `name` varchar(50) DEFAULT '' COMMENT '分类别名',
@@ -130,10 +130,10 @@ CREATE TABLE `sa_category` (
   `template_dir` varchar(20) DEFAULT 0 COMMENT '独立模板目录',
   `channel_mode` tinyint DEFAULT 0 COMMENT '频道模式',
   `status` tinyint DEFAULT 1 COMMENT '状态 1为正常 0为关闭',
-  `is_lock` tinyint DEFAULT 0 COMMENT '是否锁定',
-  `is_comment` tinyint DEFAULT 0 COMMENT '是否开启评论',
-  `is_images` tinyint DEFAULT 0 COMMENT '是否有图集',
-  `is_attachments` tinyint DEFAULT 0 COMMENT '是否有附件',
+  `is_lock` tinyint(1) DEFAULT 0 COMMENT '是否锁定',
+  `is_comment` tinyint(1) DEFAULT 0 COMMENT '是否开启评论',
+  `is_images` tinyint(1) DEFAULT 0 COMMENT '是否有图集',
+  `is_attachments` tinyint(1) DEFAULT 0 COMMENT '是否有附件',
   `keywords` varchar(255) DEFAULT '' COMMENT '分类关键词',
   `description` varchar(255) DEFAULT '' COMMENT '分类描述',
   PRIMARY KEY (`id`)
@@ -164,15 +164,15 @@ CREATE TABLE `sa_region` (
 
 DROP TABLE IF EXISTS `sa_subscribe`;
 CREATE TABLE `sa_subscribe` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
   `lang` varchar(10) DEFAULT NULL COMMENT '语言',
   `title` varchar(100) DEFAULT NULL,
   `email` varchar(150) DEFAULT '',
-  `last_send_time` int UNSIGNED DEFAULT 0,
+  `last_send_time` BIGINT DEFAULT 0,
   `cancel_code` varchar(100) DEFAULT '',
-  `is_subscribe` tinyint DEFAULT 1,
-  `create_time` int UNSIGNED DEFAULT 0,
-  `update_time` int UNSIGNED DEFAULT 0,
+  `is_subscribe` TINYINT(1) DEFAULT 1,
+  `create_time` BIGINT DEFAULT 0,
+  `update_time` BIGINT DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -182,14 +182,14 @@ CREATE TABLE `sa_subscribe` (
 
 DROP TABLE IF EXISTS `sa_subscribe_content`;
 CREATE TABLE `sa_subscribe_content` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
   `lang` varchar(10) DEFAULT NULL COMMENT '语言',
   `main_id` int DEFAULT NULL COMMENT '主id',
   `title` varchar(100) DEFAULT NULL,
   `content` text,
   `status` tinyint DEFAULT 0,
-  `create_time` int UNSIGNED DEFAULT 0,
-  `update_time` int UNSIGNED DEFAULT 0,
+  `create_time` BIGINT DEFAULT 0,
+  `update_time` BIGINT DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -199,7 +199,7 @@ CREATE TABLE `sa_subscribe_content` (
 
 DROP TABLE IF EXISTS `sa_subscribe_email`;
 CREATE TABLE `sa_subscribe_email` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
   `email` varchar(100) DEFAULT NULL,
   `account` varchar(100) DEFAULT NULL,
   `type` varchar(10) DEFAULT 'smtp',
@@ -208,8 +208,8 @@ CREATE TABLE `sa_subscribe_email` (
   `port` varchar(10) DEFAULT NULL,
   `ssl` tinyint DEFAULT 1,
   `status` tinyint DEFAULT 0,
-  `create_time` int UNSIGNED DEFAULT 0,
-  `update_time` int UNSIGNED DEFAULT 0,
+  `create_time` BIGINT DEFAULT 0,
+  `update_time` BIGINT DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -219,14 +219,14 @@ CREATE TABLE `sa_subscribe_email` (
 
 DROP TABLE IF EXISTS `sa_booth`;
 CREATE TABLE `sa_booth` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
   `title` varchar(100) DEFAULT '',
   `flag` varchar(50) NOT NULL DEFAULT '',
   `type` varchar(30) NOT NULL DEFAULT '',
   `data` TEXT,
   `locked` tinyint DEFAULT '0',
-  `create_time` int UNSIGNED DEFAULT 0,
-  `update_time` int UNSIGNED DEFAULT 0,
+  `create_time` BIGINT DEFAULT 0,
+  `update_time` BIGINT DEFAULT 0,
   `status` tinyint DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `flag_UNIQUE` (`flag`)
@@ -238,7 +238,7 @@ CREATE TABLE `sa_booth` (
 
 DROP TABLE IF EXISTS `sa_adv_group`;
 CREATE TABLE `sa_adv_group` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
   `title` varchar(100) DEFAULT '',
   `flag` varchar(50) DEFAULT '',
   `width` int DEFAULT 0,
@@ -247,8 +247,8 @@ CREATE TABLE `sa_adv_group` (
   `type` tinyint DEFAULT 0,
   `locked` tinyint DEFAULT 0,
   `status` tinyint DEFAULT 0,
-  `create_time` int UNSIGNED DEFAULT 0,
-  `update_time` int UNSIGNED DEFAULT 0,
+  `create_time` BIGINT DEFAULT 0,
+  `update_time` BIGINT DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `flag_UNIQUE` (`flag` ASC)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -259,7 +259,7 @@ CREATE TABLE `sa_adv_group` (
 
 DROP TABLE IF EXISTS `sa_adv_item`;
 CREATE TABLE `sa_adv_item` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
   `lang` varchar(10) DEFAULT '' COMMENT '语言',
   `main_id` int DEFAULT 0 COMMENT '主id',
   `group_id` int DEFAULT 0 COMMENT '分组ID',
@@ -271,8 +271,8 @@ CREATE TABLE `sa_adv_item` (
   `ext_data` TEXT,
   `start_date` int DEFAULT 0,
   `end_date` int DEFAULT 0,
-  `create_time` int UNSIGNED DEFAULT 0,
-  `update_time` int UNSIGNED DEFAULT 0,
+  `create_time` BIGINT DEFAULT 0,
+  `update_time` BIGINT DEFAULT 0,
   `sort` int DEFAULT 0,
   `status` tinyint DEFAULT 0,
   PRIMARY KEY (`id`)
@@ -284,7 +284,7 @@ CREATE TABLE `sa_adv_item` (
 
 DROP TABLE IF EXISTS `sa_copyrights`;
 CREATE TABLE `sa_copyrights` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
   `lang` varchar(10) DEFAULT NULL COMMENT '语言',
   `main_id` int DEFAULT NULL COMMENT '主id',
   `title` varchar(100) DEFAULT '',
@@ -292,8 +292,8 @@ CREATE TABLE `sa_copyrights` (
   `content` TEXT,
   `sort` int DEFAULT 0,
   `status` int DEFAULT 0,
-  `create_time` int UNSIGNED DEFAULT 0,
-  `update_time` int UNSIGNED DEFAULT 0,
+  `create_time` BIGINT DEFAULT 0,
+  `update_time` BIGINT DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -303,7 +303,7 @@ CREATE TABLE `sa_copyrights` (
 
 DROP TABLE IF EXISTS `sa_links`;
 CREATE TABLE `sa_links` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
   `lang` varchar(10) DEFAULT NULL COMMENT '语言',
   `main_id` int DEFAULT NULL COMMENT '主id',
   `title` varchar(100) DEFAULT '',
@@ -312,8 +312,8 @@ CREATE TABLE `sa_links` (
   `url` varchar(150) DEFAULT '',
   `sort` int DEFAULT 0,
   `status` int DEFAULT 0,
-  `create_time` int UNSIGNED DEFAULT 0,
-  `update_time` int UNSIGNED DEFAULT 0,
+  `create_time` BIGINT DEFAULT 0,
+  `update_time` BIGINT DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -323,7 +323,7 @@ CREATE TABLE `sa_links` (
 
 DROP TABLE IF EXISTS `sa_notice`;
 CREATE TABLE `sa_notice` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
   `lang` varchar(10) DEFAULT '' COMMENT '语言',
   `main_id` int DEFAULT 0 COMMENT '主id',
   `title` varchar(100) DEFAULT '',
@@ -331,8 +331,8 @@ CREATE TABLE `sa_notice` (
   `url` varchar(150) DEFAULT '',
   `status` tinyint DEFAULT 0,
   `manager_id` int DEFAULT '0',
-  `create_time` int UNSIGNED DEFAULT '0',
-  `update_time` int UNSIGNED DEFAULT '0',
+  `create_time` BIGINT DEFAULT '0',
+  `update_time` BIGINT DEFAULT '0',
   `summary` VARCHAR(500) DEFAULT '',
   `content` text,
   PRIMARY KEY (`id`)
@@ -344,7 +344,7 @@ CREATE TABLE `sa_notice` (
 
 DROP TABLE IF EXISTS `sa_keywords`;
 CREATE TABLE `sa_keywords` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
   `title` varchar(60) DEFAULT '',
   `description` varchar(200) DEFAULT '',
   `group` varchar(20) DEFAULT '',
@@ -352,8 +352,8 @@ CREATE TABLE `sa_keywords` (
   `v_hot` int DEFAULT 0,
   `hot` int DEFAULT 0,
   `status` int DEFAULT 0,
-  `create_time` int UNSIGNED DEFAULT 0,
-  `update_time` int UNSIGNED DEFAULT 0,
+  `create_time` BIGINT DEFAULT 0,
+  `update_time` BIGINT DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -379,14 +379,14 @@ CREATE TABLE `sa_o_auth` (
 
 DROP TABLE IF EXISTS `sa_subscribe`;
 CREATE TABLE `sa_subscribe` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
   `member_id` int(10) NOT NULL DEFAULT 0,
   `type` varchar(20) NOT NULL DEFAULT 'email',
   `mobile` varchar(20) NOT NULL DEFAULT '',
   `email` varchar(100) DEFAULT '',
-  `create_time` int UNSIGNED DEFAULT '0',
-  `update_time` int UNSIGNED DEFAULT '0',
-  `last_time` int UNSIGNED DEFAULT '0',
+  `create_time` BIGINT DEFAULT '0',
+  `update_time` BIGINT DEFAULT '0',
+  `last_time` BIGINT DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `mobile` (`mobile`),
   KEY `email` (`email`)
@@ -398,7 +398,7 @@ CREATE TABLE `sa_subscribe` (
 
 DROP TABLE IF EXISTS `sa_member`;
 CREATE TABLE `sa_member` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
   `username` varchar(50) NOT NULL,
   `nickname` varchar(50) NOT NULL DEFAULT '' COMMENT '昵称,用于同步微信昵称',
   `realname` varchar(50) NOT NULL DEFAULT '' COMMENT '真实姓名',
@@ -421,11 +421,11 @@ CREATE TABLE `sa_member` (
   `qq` varchar(20) DEFAULT '',
   `wechat` varchar(20) DEFAULT '',
   `alipay` varchar(50) DEFAULT '',
-  `create_time` int UNSIGNED DEFAULT '0',
-  `update_time` int UNSIGNED DEFAULT '0',
-  `delete_time` int UNSIGNED NULL DEFAULT 0 COMMENT '删除状态',
+  `create_time` BIGINT DEFAULT '0',
+  `update_time` BIGINT DEFAULT '0',
+  `delete_time` BIGINT NULL DEFAULT 0 COMMENT '删除状态',
   `login_ip` varchar(50) DEFAULT '',
-  `is_expired` tinyint DEFAULT '0' COMMENT '0:正常 1:过期',
+  `is_expired` TINYINT(1) DEFAULT '0' COMMENT '0:正常 1:过期',
   `expired_time` bigint DEFAULT '0' COMMENT '过期时间',
   `status` tinyint DEFAULT '1' COMMENT '0:禁止登陆 1:正常',
   `type` tinyint DEFAULT '1' COMMENT '1:普通会员 ',
@@ -449,7 +449,7 @@ CREATE TABLE `sa_member` (
   `recom_performance` BIGINT DEFAULT 0 COMMENT '直推总业绩',
   `total_performance` BIGINT DEFAULT 0 COMMENT '推荐团队总业绩',
   `team_count` int DEFAULT '0' COMMENT '团队总数',
-  `logintime` int UNSIGNED DEFAULT '0',
+  `logintime` BIGINT DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`) USING BTREE,
   KEY `mobile` (`mobile`),
@@ -458,15 +458,15 @@ CREATE TABLE `sa_member` (
 
 DROP TABLE IF EXISTS `sa_member_login`;
 CREATE TABLE `sa_member_login` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
   `member_id` int DEFAULT '0',
   `hash` varchar(50) NOT NULL,
-  `create_time` int UNSIGNED DEFAULT '0',
-  `update_time` int UNSIGNED DEFAULT '0',
+  `create_time` BIGINT DEFAULT '0',
+  `update_time` BIGINT DEFAULT '0',
   `device` varchar(50) DEFAULT '',
   `create_ip` varchar(50) DEFAULT '',
   `create_user_agent` varchar(300) DEFAULT '',
-  `login_time` int UNSIGNED NULL DEFAULT 0,
+  `login_time` BIGINT NULL DEFAULT 0,
   `login_ip` varchar(50) DEFAULT '',
   `login_user_agent` varchar(300) DEFAULT '',
   PRIMARY KEY (`id`),
@@ -476,7 +476,7 @@ CREATE TABLE `sa_member_login` (
 DROP TABLE IF EXISTS `sa_member_authen`;
 
 CREATE TABLE `sa_member_authen` (
-  `id` INT NOT NULL AUTO_INCREMENT,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
   `member_id` int NOT NULL DEFAULT 0,
   `level_id` int(4) NOT NULL DEFAULT 0,
   `type` VARCHAR(20) NOT NULL DEFAULT '',
@@ -487,10 +487,10 @@ CREATE TABLE `sa_member_authen` (
   `id_no` VARCHAR(50) NOT NULL,
   `image` VARCHAR(150) NOT NULL,
   `image2` VARCHAR(150) NOT NULL,
-  `validate_time` int UNSIGNED NOT NULL DEFAULT 0,
-  `create_time` int UNSIGNED NOT NULL DEFAULT 0,
-  `update_time` int UNSIGNED NOT NULL DEFAULT 0,
-  `authen_time` int UNSIGNED NOT NULL DEFAULT 0,
+  `validate_time` BIGINT NOT NULL DEFAULT 0,
+  `create_time` BIGINT NOT NULL DEFAULT 0,
+  `update_time` BIGINT NOT NULL DEFAULT 0,
+  `authen_time` BIGINT NOT NULL DEFAULT 0,
   `status` TINYINT NULL DEFAULT 0,
   `reason` VARCHAR(50) NOT NULL,
   PRIMARY KEY (`id`)
@@ -509,19 +509,19 @@ CREATE TABLE `sa_pay_order` (
   `prepay_id` VARCHAR(50) NULL DEFAULT '',
   `trade_type` VARCHAR(20) NULL DEFAULT '' COMMENT '交易类型',
   `order_id` INT NULL DEFAULT 0,
-  `create_time` int UNSIGNED NULL DEFAULT 0,
-  `pay_time` int UNSIGNED NULL DEFAULT 0,
+  `create_time` BIGINT NULL DEFAULT 0,
+  `pay_time` BIGINT NULL DEFAULT 0,
   `pay_amount` INT NULL DEFAULT 0,
   `status` TINYINT NULL DEFAULT 0,
   `pay_bill` VARCHAR(40) NULL DEFAULT '',
   `time_end` VARCHAR(20) NULL DEFAULT '',
-  `is_refund` TINYINT NULL DEFAULT 0 COMMENT '是否退款',
+  `is_refund` TINYINT(1) NULL DEFAULT 0 COMMENT '是否退款',
   `refund_fee` DECIMAL(10,2) NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `sa_pay_order_refund` (
- `id` INT NOT NULL AUTO_INCREMENT,
+ `id` BIGINT NOT NULL AUTO_INCREMENT,
  `member_id` int(10) unsigned NOT NULL,
  `order_id` int(10) unsigned NOT NULL,
  `refund_no` VARCHAR(20) NOT NULL,
@@ -529,9 +529,9 @@ CREATE TABLE IF NOT EXISTS `sa_pay_order_refund` (
  `status` TINYINT NULL DEFAULT 0 COMMENT '状态 0-未退款 1- 退款中 2- 已退款',
  `reason` VARCHAR(50) NOT NULL,
  `refund_result` VARCHAR(50) NOT NULL,
- `refund_time` int UNSIGNED NULL DEFAULT 0,
- `create_time` int UNSIGNED NULL DEFAULT 0,
- `update_time` int UNSIGNED NULL DEFAULT 0,
+ `refund_time` BIGINT NULL DEFAULT 0,
+ `create_time` BIGINT NULL DEFAULT 0,
+ `update_time` BIGINT NULL DEFAULT 0,
  PRIMARY KEY (`id`),
  UNIQUE KEY `refund_no`(`refund_no`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT = '订单退款记录';
@@ -539,12 +539,12 @@ CREATE TABLE IF NOT EXISTS `sa_pay_order_refund` (
 DROP TABLE IF EXISTS `sa_member_freeze`;
 
 CREATE TABLE `sa_member_freeze` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `member_id` int NOT NULL DEFAULT 0,
-  `award_log_id` int NOT NULL DEFAULT 0,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `member_id` BIGINT NOT NULL DEFAULT 0,
+  `award_log_id` BIGINT NOT NULL DEFAULT 0,
   `amount` int NOT NULL DEFAULT '0' COMMENT '金额 单位分',
-  `create_time` int UNSIGNED NOT NULL DEFAULT 0,
-  `freeze_time` int UNSIGNED NOT NULL DEFAULT 0,
+  `create_time` BIGINT NOT NULL DEFAULT 0,
+  `freeze_time` BIGINT NOT NULL DEFAULT 0,
   `status` TINYINT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -553,12 +553,12 @@ DROP TABLE IF EXISTS `sa_member_token`;
 
 CREATE TABLE `sa_member_token` (
   `token_id` BIGINT NOT NULL AUTO_INCREMENT,
-  `member_id` INT UNSIGNED NULL DEFAULT 0,
+  `member_id` BIGINT NULL DEFAULT 0,
   `platform` VARCHAR(30) NULL,
   `appid` VARCHAR(30) NULL,
   `token` VARCHAR(50) NULL,
-  `create_time` int UNSIGNED NULL DEFAULT 0,
-  `update_time` int UNSIGNED NULL DEFAULT 0,
+  `create_time` BIGINT NULL DEFAULT 0,
+  `update_time` BIGINT NULL DEFAULT 0,
   `expire_in` INT NULL DEFAULT 720,
   `refresh_token` VARCHAR(50) NULL,
   PRIMARY KEY (`token_id`),
@@ -573,8 +573,8 @@ CREATE TABLE `sa_oauth_app` (
   `platform` VARCHAR(20) NULL,
   `appid` VARCHAR(30) NULL,
   `appsecret` VARCHAR(50) NULL,
-  `create_time` int UNSIGNED NULL DEFAULT 0,
-  `update_time` int UNSIGNED NULL DEFAULT 0,
+  `create_time` BIGINT NULL DEFAULT 0,
+  `update_time` BIGINT NULL DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `appid` (`appid`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -584,19 +584,19 @@ DROP TABLE IF EXISTS `sa_member_message`;
 
 CREATE TABLE `sa_member_message` (
   `message_id` BIGINT NOT NULL AUTO_INCREMENT,
-  `member_id` INT NOT NULL DEFAULT 0,
+  `member_id` BIGINT NOT NULL DEFAULT 0,
   `type` TINYINT NOT NULL DEFAULT 0,
-  `from_member_id` INT NULL DEFAULT 0,
-  `manager_id` INT NULL DEFAULT 0,
-  `reply_id` INT NULL DEFAULT 0,
-  `group_id` INT NULL DEFAULT 0,
+  `from_member_id` BIGINT NULL DEFAULT 0,
+  `manager_id` BIGINT NULL DEFAULT 0,
+  `reply_id` BIGINT NULL DEFAULT 0,
+  `group_id` BIGINT NULL DEFAULT 0,
   `title` VARCHAR(60) NULL DEFAULT '',
   `attachment` VARCHAR(150) NULL DEFAULT '',
   `content` TEXT NULL,
-  `create_time` int UNSIGNED NULL DEFAULT 0,
-  `update_time` int UNSIGNED NULL DEFAULT 0,
-  `show_time` INT NULL,
-  `read_time` INT NULL DEFAULT 0,
+  `create_time` BIGINT NULL DEFAULT 0,
+  `update_time` BIGINT NULL DEFAULT 0,
+  `show_time` BIGINT NULL,
+  `read_time` BIGINT NULL DEFAULT 0,
   `delete_time` TINYINT NULL DEFAULT 0,
   PRIMARY KEY (`message_id`),
   INDEX `member_id`(`member_id`),
@@ -613,7 +613,7 @@ CREATE TABLE `sa_member_level` (
   `level_name` VARCHAR(30) NULL,
   `short_name` VARCHAR(10) NULL,
   `style` VARCHAR(10) default 'secondary',
-  `is_default` TINYINT NULL DEFAULT 0,
+  `is_default` TINYINT(1) NULL DEFAULT 0,
   `upgrade_type` TINYINT NULL DEFAULT 0 COMMENT '1: 累计消费升级, 2: 购买升级',
   `diy_price` tinyint NULL DEFAULT 0 COMMENT '自定义价格',
   `level_price` DECIMAL(10,2) NULL COMMENT '购买价格/累计金额',
@@ -628,13 +628,13 @@ CREATE TABLE `sa_member_level` (
 
 DROP TABLE IF EXISTS `sa_member_level_log`;
 CREATE TABLE `sa_member_level_log` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `member_id` int NOT NULL,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `member_id` BIGINT NOT NULL,
   `level_id` int NOT NULL,
   `amount` int DEFAULT '0' COMMENT '金额 单位分',
   `pay_type` VARCHAR(20) NULL COMMENT '付款方式',
-  `create_time` int UNSIGNED DEFAULT NULL,
-  `payed_time` int UNSIGNED DEFAULT NULL,
+  `create_time` BIGINT DEFAULT NULL,
+  `payed_time` BIGINT DEFAULT NULL,
   `start_time` bigint DEFAULT NULL,
   `end_time` bigint DEFAULT NULL,
   `status` tinyint DEFAULT '0',
@@ -649,7 +649,7 @@ CREATE TABLE `sa_member_agent` (
   `name` VARCHAR(30) NULL,
   `short_name` VARCHAR(10) NULL,
   `style` VARCHAR(10) default 'secondary',
-  `is_default` TINYINT NULL DEFAULT 0,
+  `is_default` TINYINT(1) NULL DEFAULT 0,
   `recom_count` INT NULL DEFAULT 0,
   `team_count` INT NULL DEFAULT 0,
   `recom_performance` BIGINT DEFAULT 0,
@@ -662,20 +662,20 @@ CREATE TABLE `sa_member_agent` (
 DROP TABLE IF EXISTS `sa_member_agent_log`;
 
 CREATE TABLE `sa_member_agent_log` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `member_id` INT NULL DEFAULT 0,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `member_id` BIGINT NULL DEFAULT 0,
   `agent_id` INT NULL DEFAULT 0,
   `type` VARCHAR(10) NULL,
   `remark` VARCHAR(100) NULL DEFAULT '',
-  `create_time` int UNSIGNED NULL DEFAULT 0,
+  `create_time` BIGINT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `sa_member_invoice`;
 
 CREATE TABLE `sa_member_invoice` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `member_id` int NOT NULL DEFAULT 0,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `member_id` BIGINT NOT NULL DEFAULT 0,
   `type` tinyint NOT NULL DEFAULT 0,
   `title` VARCHAR(100) NOT NULL,
   `telephone` VARCHAR(50) NOT NULL,
@@ -683,9 +683,9 @@ CREATE TABLE `sa_member_invoice` (
   `bank` VARCHAR(60) NOT NULL,
   `caedno` VARCHAR(50) NOT NULL,
   `tax_no` VARCHAR(50) NOT NULL,
-  `create_time` int UNSIGNED NOT NULL DEFAULT 0,
-  `update_time` int UNSIGNED NOT NULL DEFAULT 0,
-  `is_default` TINYINT NULL DEFAULT 0,
+  `create_time` BIGINT NOT NULL DEFAULT 0,
+  `update_time` BIGINT NOT NULL DEFAULT 0,
+  `is_default` TINYINT(1) NULL DEFAULT 0,
   `status` TINYINT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -693,8 +693,8 @@ CREATE TABLE `sa_member_invoice` (
 DROP TABLE IF EXISTS `sa_member_address`;
 
 CREATE TABLE `sa_member_address` (
-  `address_id` INT NOT NULL AUTO_INCREMENT,
-  `member_id` INT NULL,
+  `address_id` BIGINT NOT NULL AUTO_INCREMENT,
+  `member_id` BIGINT NULL,
   `receive_name` VARCHAR(50) NULL,
   `mobile` VARCHAR(30) NULL,
   `province` VARCHAR(50) NULL,
@@ -704,19 +704,19 @@ CREATE TABLE `sa_member_address` (
   `address` VARCHAR(150) NULL,
   `code` VARCHAR(10) NULL,
   `locate` VARCHAR(100) NULL,
-  `is_default` TINYINT NULL DEFAULT 0,
+  `is_default` TINYINT(1) NULL DEFAULT 0,
   PRIMARY KEY (`address_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `sa_member_favourite`;
 
 CREATE TABLE `sa_member_favourite` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `member_id` int NOT NULL DEFAULT 0,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `member_id` BIGINT NOT NULL DEFAULT 0,
   `fav_type` varchar(30) DEFAULT NULL,
-  `fav_id` int DEFAULT 0,
-  `create_time` int UNSIGNED DEFAULT 0,
-  `update_time` int UNSIGNED DEFAULT 0,
+  `fav_id` BIGINT DEFAULT 0,
+  `create_time` BIGINT DEFAULT 0,
+  `update_time` BIGINT DEFAULT 0,
   `fav_title` varchar(50) DEFAULT '',
   `fav_image` varchar(150) DEFAULT '',
   PRIMARY KEY (`id`)
@@ -726,12 +726,12 @@ CREATE TABLE `sa_member_favourite` (
 DROP TABLE IF EXISTS `sa_member_log`;
 
 CREATE TABLE `sa_member_log` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `member_id` INT NULL DEFAULT 0,
-  `other_id` int DEFAULT '0',
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `member_id` BIGINT NULL DEFAULT 0,
+  `other_id` BIGINT DEFAULT '0',
   `model` VARCHAR(45) NULL,
   `ip` VARCHAR(50) DEFAULT '',
-  `create_time` int UNSIGNED NULL,
+  `create_time` BIGINT NULL,
   `action` VARCHAR(45) NULL,
   `result` TINYINT NULL DEFAULT 1,
   `remark` VARCHAR(250) NULL DEFAULT '',
@@ -742,13 +742,13 @@ CREATE TABLE `sa_member_log` (
 DROP TABLE IF EXISTS `sa_member_card`;
 
 CREATE TABLE `sa_member_card` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `member_id` int NOT NULL DEFAULT 0,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `member_id` BIGINT NOT NULL DEFAULT 0,
   `cardno` varchar(30) DEFAULT NULL,
   `bankname` varchar(50) DEFAULT NULL,
   `cardname` varchar(50) DEFAULT NULL,
   `bank` varchar(50) DEFAULT NULL,
-  `is_default` tinyint DEFAULT NULL,
+  `is_default` TINYINT(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -758,16 +758,16 @@ CREATE TABLE `sa_member_card` (
 
 DROP TABLE IF EXISTS `sa_member_recharge`;
 CREATE TABLE `sa_member_recharge` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `member_id` int NOT NULL,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `member_id` BIGINT NOT NULL,
   `platform` VARCHAR(30) NULL,
   `paytype_id` int NOT NULL,
   `amount` int DEFAULT '0' COMMENT '金额 单位分',
-  `create_time` int UNSIGNED DEFAULT NULL,
+  `create_time` BIGINT DEFAULT NULL,
   `pay_bill` varchar(150) DEFAULT '',
   `status` tinyint DEFAULT '0',
   `remark` varchar(45) DEFAULT '',
-  `audit_time` int UNSIGNED DEFAULT '0',
+  `audit_time` BIGINT DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -778,8 +778,8 @@ CREATE TABLE `sa_member_recharge` (
 
 DROP TABLE IF EXISTS `sa_member_cashin`;
 CREATE TABLE `sa_member_cashin` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `member_id` int NOT NULL,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `member_id` BIGINT NOT NULL,
   `platform` VARCHAR(30) NULL,
   `appid` varchar(30) DEFAULT '',
   `form_id` varchar(50) DEFAULT '',
@@ -788,9 +788,9 @@ CREATE TABLE `sa_member_cashin` (
   `amount` int DEFAULT '0' COMMENT '金额 单位分',
   `cash_fee` int NULL DEFAULT '0',
   `real_amount` int DEFAULT '0',
-  `audit_time` int UNSIGNED DEFAULT '0',
-  `payment_time` int UNSIGNED DEFAULT 0,
-  `fail_time` int UNSIGNED DEFAULT 0,
+  `audit_time` BIGINT DEFAULT '0',
+  `payment_time` BIGINT DEFAULT 0,
+  `fail_time` BIGINT DEFAULT 0,
   `bank_id` int DEFAULT '0',
   `bank` varchar(50) DEFAULT '',
   `bank_name` varchar(40) DEFAULT '',
@@ -799,8 +799,8 @@ CREATE TABLE `sa_member_cashin` (
   `status` tinyint DEFAULT '0',
   `remark` varchar(50) DEFAULT '',
   `reason` varchar(100) NULL DEFAULT '',
-  `create_time` int UNSIGNED DEFAULT 0,
-  `update_time` int UNSIGNED DEFAULT 0,
+  `create_time` BIGINT DEFAULT 0,
+  `update_time` BIGINT DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `member_id` (`member_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -811,16 +811,16 @@ CREATE TABLE `sa_member_cashin` (
 
 DROP TABLE IF EXISTS `sa_member_money_log`;
 CREATE TABLE `sa_member_money_log` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `member_id` int NOT NULL,
-  `from_member_id` int NOT NULL DEFAULT 0,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `member_id` BIGINT NOT NULL,
+  `from_member_id` BIGINT NOT NULL DEFAULT 0,
   `type` varchar(20) DEFAULT NULL,
   `before` int DEFAULT NULL,
   `amount` int DEFAULT NULL,
   `after` int DEFAULT NULL,
   `field` varchar(30) DEFAULT 'money',
   `reson` varchar(100) DEFAULT NULL,
-  `create_time` int UNSIGNED DEFAULT NULL,
+  `create_time` BIGINT DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY  `type`(`type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -828,18 +828,18 @@ CREATE TABLE `sa_member_money_log` (
 DROP TABLE IF EXISTS `sa_award_log`;
 
 CREATE TABLE `sa_award_log`(
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `member_id` int NOT NULL,
-  `order_id` int NOT NULL,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `member_id` BIGINT NOT NULL,
+  `order_id` BIGINT NOT NULL,
   `type` varchar(20) DEFAULT '',
   `field` varchar(20) DEFAULT '',
-  `from_member_id` int NOT NULL,
+  `from_member_id` BIGINT NOT NULL,
   `amount` int DEFAULT '0' COMMENT '金额 单位分',
   `real_amount` int DEFAULT '0',
   `status` tinyint DEFAULT 0,
-  `give_time` int UNSIGNED DEFAULT 0,
-  `cancel_time` int UNSIGNED DEFAULT 0,
-  `create_time` int UNSIGNED DEFAULT NULL,
+  `give_time` BIGINT DEFAULT 0,
+  `cancel_time` BIGINT DEFAULT 0,
+  `create_time` BIGINT DEFAULT NULL,
   `remark` varchar(50) DEFAULT '',
   PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -848,17 +848,17 @@ CREATE TABLE `sa_award_log`(
 DROP TABLE IF EXISTS `sa_member_oauth`;
 
 CREATE TABLE `sa_member_oauth` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `member_id` int NOT NULL DEFAULT 0,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `member_id` BIGINT NOT NULL DEFAULT 0,
   `type` varchar(20) DEFAULT NULL COMMENT 'qq/sina/github/weixin/wxapp',
   `type_id` INT DEFAULT 0,
   `openid` varchar(64) DEFAULT '',
   `unionid` varchar(64) DEFAULT '',
-  `subscribe_time` int UNSIGNED DEFAULT 0,
+  `subscribe_time` BIGINT DEFAULT 0,
   `data` TEXT,
-  `create_time` int UNSIGNED DEFAULT 0,
-  `update_time` int UNSIGNED DEFAULT 0,
-  `is_follow` tinyint DEFAULT 0,
+  `create_time` BIGINT DEFAULT 0,
+  `update_time` BIGINT DEFAULT 0,
+  `is_follow` TINYINT(1) DEFAULT 0,
   `nickname` varchar(100) DEFAULT '',
   `name` varchar(100) DEFAULT '',
   `email` varchar(150) DEFAULT '',
@@ -878,15 +878,15 @@ CREATE TABLE `sa_member_oauth` (
 
 DROP TABLE IF EXISTS `sa_invite_code`;
 CREATE TABLE `sa_invite_code` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id` BIGINT unsigned NOT NULL AUTO_INCREMENT,
   `code` varchar(20) NOT NULL,
-  `create_time` int UNSIGNED DEFAULT 0,
-  `invalid_time` int UNSIGNED DEFAULT 0,
-  `member_id` int DEFAULT 0,
+  `create_time` BIGINT DEFAULT 0,
+  `invalid_time` BIGINT DEFAULT 0,
+  `member_id` BIGINT DEFAULT 0,
   `level_id` int DEFAULT 0,
   `member_use` int DEFAULT '0',
-  `use_time` int UNSIGNED DEFAULT '0',
-  `is_lock` tinyint DEFAULT '0',
+  `use_time` BIGINT DEFAULT '0',
+  `is_lock` TINYINT(1) DEFAULT '0',
   PRIMARY KEY (`id`),
   UNIQUE KEY `code` (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -897,13 +897,13 @@ CREATE TABLE `sa_invite_code` (
 
 DROP TABLE IF EXISTS `sa_checkcode`;
 CREATE TABLE `sa_checkcode` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
   `type` tinyint NOT NULL DEFAULT '0' COMMENT '0-手机 1-邮箱',
   `sendto` varchar(100) NOT NULL,
   `code` varchar(20) DEFAULT NULL,
-  `create_time` int UNSIGNED DEFAULT NULL,
-  `is_check` tinyint DEFAULT '0',
-  `check_time` int DEFAULT '0',
+  `create_time` BIGINT DEFAULT NULL,
+  `is_check` TINYINT(1) DEFAULT '0',
+  `check_time` BIGINT DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `sendto` (`sendto`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -914,10 +914,10 @@ CREATE TABLE `sa_checkcode` (
 
 DROP TABLE IF EXISTS `sa_checkcode_limit`;
 CREATE TABLE `sa_checkcode_limit` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
   `type` varchar(10) NOT NULL DEFAULT '' COMMENT '限制类型 ip,mobile',
   `key` varchar(100) NOT NULL,
-  `create_time` int UNSIGNED DEFAULT NULL,
+  `create_time` BIGINT DEFAULT NULL,
   `count` int DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -928,9 +928,9 @@ CREATE TABLE `sa_checkcode_limit` (
 
 DROP TABLE IF EXISTS `sa_page`;
 CREATE TABLE `sa_page` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
   `lang` varchar(10) DEFAULT NULL COMMENT '语言',
-  `main_id` int DEFAULT NULL COMMENT '主id',
+  `main_id` BIGINT DEFAULT NULL COMMENT '主id',
   `title` varchar(100) NOT NULL,
   `vice_title` varchar(100) NOT NULL DEFAULT '' COMMENT '副标题',
   `group` varchar(50) NOT NULL DEFAULT '',
@@ -950,11 +950,11 @@ CREATE TABLE `sa_page` (
 
 DROP TABLE IF EXISTS `sa_page_images`;
 CREATE TABLE `sa_page_images` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
   `title` varchar(100) DEFAULT NULL,
   `description` varchar(250) DEFAULT NULL,
   `image` varchar(150) DEFAULT NULL,
-  `page_id` int DEFAULT NULL,
+  `page_id` BIGINT DEFAULT NULL,
   `sort` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `page_id` (`page_id`)
@@ -982,10 +982,10 @@ CREATE TABLE `sa_page_group` (
 
 DROP TABLE IF EXISTS `sa_article`;
 CREATE TABLE `sa_article` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
   `lang` varchar(10) DEFAULT NULL COMMENT '语言',
-  `main_id` int DEFAULT NULL COMMENT '主id',
-  `user_id` int DEFAULT 0,
+  `main_id` BIGINT DEFAULT NULL COMMENT '主id',
+  `user_id` BIGINT DEFAULT 0,
   `copyright_id` int DEFAULT 0,
   `name` varchar(100) DEFAULT '',
   `title` varchar(100) DEFAULT '',
@@ -996,15 +996,15 @@ CREATE TABLE `sa_article` (
   `source` varchar(150) DEFAULT '',
   `prop_data` text,
   `content` text,
-  `create_time` int UNSIGNED DEFAULT '0',
-  `update_time` int UNSIGNED DEFAULT '0',
+  `create_time` BIGINT DEFAULT '0',
+  `update_time` BIGINT DEFAULT '0',
   `cate_id` int DEFAULT 0,
-  `digg` int DEFAULT '0',
-  `v_digg` int DEFAULT '0',
+  `digg` BIGINT DEFAULT '0',
+  `v_digg` BIGINT DEFAULT '0',
   `close_comment` tinyint NOT NULL DEFAULT '0',
-  `comment` int DEFAULT '0',
-  `views` int DEFAULT '0',
-  `v_views` int DEFAULT '0',
+  `comment` BIGINT DEFAULT '0',
+  `views` BIGINT DEFAULT '0',
+  `v_views` BIGINT DEFAULT '0',
   `type` tinyint UNSIGNED DEFAULT '1' COMMENT '1:普通,2:置顶,4:热门,8:推荐',
   `template` varchar(100) NOT NULL DEFAULT '',
   `status` tinyint NOT NULL DEFAULT '1',
@@ -1019,11 +1019,11 @@ CREATE TABLE `sa_article` (
 
 DROP TABLE IF EXISTS `sa_article_images`;
 CREATE TABLE `sa_article_images` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
   `title` varchar(100) DEFAULT NULL,
   `description` varchar(250) DEFAULT NULL,
   `image` varchar(150) DEFAULT NULL,
-  `article_id` int DEFAULT NULL,
+  `article_id` BIGINT DEFAULT NULL,
   `sort` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `article_id` (`article_id`)
@@ -1036,9 +1036,9 @@ CREATE TABLE `sa_article_images` (
 DROP TABLE IF EXISTS `sa_article_digg`;
 CREATE TABLE `sa_article_digg` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
-  `article_id` int DEFAULT NULL,
-  `member_id` int DEFAULT NULL,
-  `create_time` int UNSIGNED NOT NULL DEFAULT '0',
+  `article_id` BIGINT DEFAULT NULL,
+  `member_id` BIGINT DEFAULT NULL,
+  `create_time` BIGINT NOT NULL DEFAULT '0',
   `device` varchar(50) NOT NULL DEFAULT '',
   `ip` varchar(50) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
@@ -1051,19 +1051,19 @@ CREATE TABLE `sa_article_digg` (
 
 DROP TABLE IF EXISTS `sa_article_comment`;
 CREATE TABLE `sa_article_comment` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `member_id` int NOT NULL DEFAULT '0',
-  `article_id` int NOT NULL DEFAULT '0',
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `member_id` BIGINT NOT NULL DEFAULT '0',
+  `article_id` BIGINT NOT NULL DEFAULT '0',
   `nickname` varchar(50) NOT NULL DEFAULT '',
   `email` varchar(150) NOT NULL DEFAULT '',
-  `create_time` int UNSIGNED NOT NULL DEFAULT '0',
+  `create_time` BIGINT NOT NULL DEFAULT '0',
   `device` varchar(50) NOT NULL DEFAULT '',
   `ip` varchar(50) NOT NULL DEFAULT '',
   `status` tinyint NOT NULL DEFAULT '0',
-  `is_anonymous` tinyint NOT NULL DEFAULT '0',
+  `is_anonymous` TINYINT(1) NOT NULL DEFAULT '0',
   `content` text,
-  `reply_id` int DEFAULT '0',
-  `group_id` int DEFAULT '0',
+  `reply_id` BIGINT DEFAULT '0',
+  `group_id` BIGINT DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `member_id` (`member_id`),
   KEY `article_id` (`article_id`)
@@ -1075,13 +1075,13 @@ CREATE TABLE `sa_article_comment` (
 
 DROP TABLE IF EXISTS `sa_setting`;
 CREATE TABLE `sa_setting` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
   `key` varchar(50) NOT NULL DEFAULT '',
   `title` varchar(20) NOT NULL DEFAULT '',
   `type` varchar(10) NOT NULL DEFAULT '',
   `group` varchar(50) NOT NULL DEFAULT '',
   `sort` int NOT NULL DEFAULT '0',
-  `is_sys` tinyint NOT NULL DEFAULT '0',
+  `is_sys` TINYINT(1) NOT NULL DEFAULT '0',
   `value` text NOT NULL,
   `description` varchar(150) DEFAULT NULL,
   `data` text,
@@ -1095,7 +1095,7 @@ CREATE TABLE `sa_setting` (
 
 DROP TABLE IF EXISTS `sa_paytype`;
 CREATE TABLE `sa_paytype` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
   `type` varchar(20) NOT NULL,
   `qrcode` varchar(150) DEFAULT NULL,
   `cardno` varchar(30) DEFAULT NULL,
@@ -1112,20 +1112,20 @@ CREATE TABLE `sa_paytype` (
 
 DROP TABLE IF EXISTS `sa_feedback`;
 CREATE TABLE `sa_feedback` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `member_id` int NOT NULL DEFAULT '0',
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `member_id` BIGINT NOT NULL DEFAULT '0',
   `realname` varchar(30) NOT NULL DEFAULT '',
   `mobile` varchar(30) NOT NULL DEFAULT '',
   `email` varchar(150) NOT NULL DEFAULT '',
   `type` tinyint DEFAULT '0',
-  `create_time` int UNSIGNED NOT NULL DEFAULT '0',
-  `update_time` int UNSIGNED NOT NULL DEFAULT '0',
+  `create_time` BIGINT NOT NULL DEFAULT '0',
+  `update_time` BIGINT NOT NULL DEFAULT '0',
   `ip` varchar(50) NOT NULL DEFAULT '',
   `status` tinyint NOT NULL DEFAULT '0',
   `content` text,
   `reply` varchar(255) DEFAULT '',
-  `manager_id` int DEFAULT '0',
-  `reply_time` int UNSIGNED DEFAULT '0',
+  `manager_id` BIGINT DEFAULT '0',
+  `reply_time` BIGINT DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `member_id` (`member_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -1144,7 +1144,7 @@ CREATE TABLE `sa_permission` (
   `key` VARCHAR(50) NULL,
   `icon` VARCHAR(30) NULL,
   `sort_id` INT NULL,
-  `disable` TINYINT NULL,
+  `disable` TINYINT(1) NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

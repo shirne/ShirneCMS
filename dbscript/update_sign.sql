@@ -10,14 +10,14 @@ VALUES
 
 DROP TABLE IF EXISTS `sa_sign_log`;
 CREATE TABLE `sa_sign_log` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `member_id` int(11) NOT NULL DEFAULT '0',
-  `is_sup` tinyint(11) NOT NULL DEFAULT '0',
-  `ranking_day` int(11) NOT NULL DEFAULT '0',
-  `keep_days` int(11) NOT NULL DEFAULT '0',
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
+  `member_id` BIGINT NOT NULL DEFAULT '0',
+  `is_sup` tinyint(1) NOT NULL DEFAULT '0',
+  `ranking_day` int NOT NULL DEFAULT '0',
+  `keep_days` int NOT NULL DEFAULT '0',
   `signdate` varchar(10) DEFAULT '0',
-  `signtime` int(11) DEFAULT '0',
-  `mood` int(11) NOT NULL DEFAULT '0',
+  `signtime` BIGINT DEFAULT '0',
+  `mood` BIGINT NOT NULL DEFAULT '0',
   `remark` varchar(50) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `key_member_id`(`member_id`)
