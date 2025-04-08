@@ -219,18 +219,20 @@ class IndexController extends BaseController
         return $this->fetch();
     }
 
-    private function updatePermission($managerId, $global, $detail = null)
+    private function updatePermission($managerId, $global, $detail = null, $actions = null)
     {
-        if (is_null($detail)) {
+        if (is_null($detail) || is_null($actions)) {
             $roles = ManagerRoleModel::getRoles();
             $role = $roles[$global];
             if (empty($role)) return false;
             $global = $role['global'];
             $detail = $role['detail'];
+            $actions = $role['actions'];
         }
         $model['manager_id'] = $managerId;
         $model['global'] = is_array($global) ? implode(',', $global) : $global;
         $model['detail'] = is_array($detail) ? implode(',', $detail) : $detail;
+        $model['actions'] = is_array($actions) ? implode(',', $actions) : $actions;
         Db::name('managerPermision')->insert($model, true);
         return true;
     }
@@ -258,14 +260,15 @@ class IndexController extends BaseController
         }
         $model = Db::name('ManagerPermision')->where('manager_id', $id)->find();
         if (empty($model)) {
-            $this->updatePermission($id, $role['global'], $role['detail']);
+            $this->updatePermission($id, $role['global'], $role['detail'], $role['actions']);
             $model = Db::name('ManagerPermision')->where('manager_id', $id)->find();
         }
         if ($this->request->isPost()) {
 
-            list($global, $detail) = $role->filterPermissions($this->request->post('global'), $this->request->post('detail'));
+            list($global, $detail, $actions) = $role->filterPermissions($this->request->post('global'), $this->request->post('detail'), $this->request->post('actions'));
             $model['global'] = $global;
             $model['detail'] = $detail;
+            $model['actions'] = $actions;
             if (Db::name('ManagerPermision')->update($model)) {
                 $this->success(lang('Update success!'), url('manager.index/index'));
             } else {

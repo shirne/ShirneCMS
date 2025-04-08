@@ -10,7 +10,7 @@ use think\Db;
 class ManagerRoleModel extends BaseModel
 {
     protected $autoWriteTimestamp = true;
-    protected $type = ['global' => 'array', 'detail' => 'array'];
+    protected $type = ['global' => 'array', 'detail' => 'array', 'actions' => 'array'];
 
     protected static $roles;
     protected static $roles_cache_key = 'manager_role';
@@ -42,13 +42,14 @@ class ManagerRoleModel extends BaseModel
     }
     public function hasPerm($item)
     {
-        return in_array($item, $this['detail']);
+        return in_array($item, $this['detail']) || in_array($item, $this['actions']);
     }
 
-    public function filterPermissions($global, $detail)
+    public function filterPermissions($global, $detail, $actions)
     {
         if (!is_array($global)) $global = explode(',', (strval($global)));
         if (!is_array($detail)) $detail = explode(',', (strval($detail)));
+        if (!is_array($actions)) $actions = explode(',', (strval($actions)));
         $globalperms = $this['global'];
         $newglobal = [];
         foreach ($global as $item) {
@@ -63,7 +64,14 @@ class ManagerRoleModel extends BaseModel
                 $newdetail[] = $item;
             }
         }
+        $actionperms = $this['actions'];
+        $newActions = [];
+        foreach ($actions as $item) {
+            if (in_array($item, $actionperms)) {
+                $newActions[] = $item;
+            }
+        }
 
-        return [implode(',', $newglobal), implode(',', $newdetail)];
+        return [implode(',', $newglobal), implode(',', $newdetail), implode(',', $newActions)];
     }
 }

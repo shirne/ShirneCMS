@@ -71,6 +71,7 @@ CREATE TABLE `sa_manager_role` (
   `role_name` VARCHAR(50) NOT NULL DEFAULT '',
   `global` VARCHAR(200) NULL DEFAULT '',
   `detail` TEXT NULL,
+  `actions` TEXT NULL,
   `create_time` BIGINT DEFAULT '0',
   `update_time` BIGINT DEFAULT '0',
   PRIMARY KEY (`id`),
@@ -85,6 +86,7 @@ CREATE TABLE `sa_manager_permision` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
   `global` VARCHAR(200) NULL DEFAULT '',
   `detail` TEXT NULL,
+  `actions` TEXT NULL,
   `manager_id` BIGINT NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE INDEX `manager_id_UNIQUE` (`manager_id` ASC)

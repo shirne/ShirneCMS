@@ -51,11 +51,22 @@
 							<label class="col-2"><input type="checkbox"
 									onclick="checkline(this)" />&nbsp;{$perm.title}</label>
 							<div class="col-10">
-								{foreach $perm.items as $k => $item}
-								<label title="{$item}"><input type="checkbox" name="detail[]"
-										{$role->hasPerm($key.'_'.$k)?'':'disabled'} value="{$key}_{$k}" {if
-									in_array($key.'_'.$k,$model['detail'])}checked{/if} />&nbsp;{$item}</label>
-								{/foreach}
+								<div>
+									{foreach $perm.items as $k => $item}
+									<label title="{$item}"><input type="checkbox" name="detail[]"
+											{$role->hasPerm($key.'_'.$k)?'':'disabled'} value="{$key}_{$k}" {if
+										in_array($key.'_'.$k,$model['detail'])}checked{/if} />&nbsp;{$item}</label>
+									{/foreach}
+								</div>
+								{if !empty($perm['actions'])}
+								<div>
+									{foreach $perm.actions as $k => $item}
+									<label title="{$item}"><input type="checkbox" name="actions[]"
+											{$role->hasPerm($key.'_'.$k)?'':'disabled'} value="{$key}_{$k}" {if
+										in_array($key.'_'.$k,$model['detail'])}checked{/if} />&nbsp;{$item}</label>
+									{/foreach}
+								</div>
+								{/if}
 							</div>
 						</div>
 					</li>
