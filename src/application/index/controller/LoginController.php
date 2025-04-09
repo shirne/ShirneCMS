@@ -35,44 +35,91 @@ class LoginController extends BaseController
         if (empty($type)) {
             if ($this->request->isPost()) {
                 $this->checkSubmitRate(2);
-                $code = $this->request->post('verify', '', 'strtolower');
-                //验证验证码是否正确
-                if (!($this->check_verify($code))) {
-                    $this->error(lang('Verify code error!'));
-                }
 
-                $data['username'] = $this->request->post('username');
-                $password = $this->request->post('password');
-                $member = Db::name('member')->where($data)->find();
-                if (!empty($member) && $member['password'] === encode_password($password, $member['salt'])) {
+                $mode = $this->request->post('mode');
+                if ($mode == 'mobile') {
+                    $mobile = $this->request->post('mobile');
+                    if (empty($mobile)) {
+                        $this->error('请填写手机号码');
+                    }
+                    $checkcode = $this->request->post('checkcode');
+                    if (empty($checkcode)) {
+                        $this->error('请填写验证码');
+                    }
 
-                    if ($member['status'] == 0) {
-                        user_log($member['id'], 'login', 0, '账号已禁用');
-                        $this->error(lang('Account is disabled!'));
-                    } else {
-                        $this->setLogin($member);
-                        $remember = $this->request->post('remember');
-                        if ($remember) {
-                            $this->setAutoLogin($member);
-                        }
-                        $redirect = redirect()->restore();
-                        if (empty($redirect->getData())) {
-                            $url = session('?before-login') ? session('before-login') : aurl('index/member/index');
-                            session('before-login', null);
-                        } else {
-                            $url = $redirect->getTargetUrl();
-                        }
+                    $service = new CheckcodeService();
+                    $verifyed = $service->verifyCode($mobile, $checkcode);
+                    if (!$verifyed) {
+                        $this->error('手机验证码填写错误');
+                    }
+                    $member = Db::name('member')->where('mobile', $mobile)->where('mobile_bind', 1)->find();
+                    if (empty($member)) {
+                        $this->error('该手机号码未绑定账号');
+                    }
+                } else if ($mode == 'email') {
+                    $email = $this->request->post('email');
+                    if (empty($email)) {
+                        $this->error('请填写邮箱');
+                    }
+                    $checkcode = $this->request->post('checkcode');
+                    if (empty($checkcode)) {
+                        $this->error('请填写验证码');
+                    }
 
-                        if (!empty($this->wechatUser)) {
-                            Db::name('memberOauth')->where('openid', $this->wechatUser['openid'])
-                                ->update(['member_id' => $member['id']]);
-                        }
-
-                        $this->success(lang('Login success!'), $url);
+                    $service = new CheckcodeService();
+                    $verifyed = $service->verifyCode($email, $checkcode);
+                    if (!$verifyed) {
+                        $this->error('邮箱验证码填写错误');
+                    }
+                    $member = Db::name('member')->where('email', $email)->where('email_bind', 1)->find();
+                    if (empty($member)) {
+                        $this->error('该邮箱未绑定账号');
                     }
                 } else {
-                    user_log($member['id'], 'login', 0, '密码错误:' . $password);
-                    $this->error(lang('Account or password incorrect!'));
+                    $code = $this->request->post('verify', '', 'strtolower');
+                    //验证验证码是否正确
+                    if (!($this->check_verify($code))) {
+                        $this->error(lang('Verify code error!'));
+                    }
+
+                    $username = $this->request->post('username');
+                    $password = $this->request->post('password');
+                    $member =  Db::name('member')->where('username', $username)->whereOr(function ($query) use ($username) {
+                        $query->where('mobile', $username)->where('mobile_bind', 1);
+                    })->whereOr(function ($query) use ($username) {
+                        $query->where('email', $username)->where('email_bind', 1);
+                    })->find();
+
+                    if (empty($member) || strcmp($member['password'], encode_password($password, $member['salt']) !== 0)) {
+
+                        user_log($member['id'], 'login', 0, '密码错误:' . $password);
+                        $this->error(lang('Account or password incorrect!'));
+                    }
+                }
+
+                if ($member['status'] == 0) {
+                    user_log($member['id'], 'login', 0, '账号已禁用');
+                    $this->error(lang('Account is disabled!'));
+                } else {
+                    $this->setLogin($member);
+                    $remember = $this->request->post('remember');
+                    if ($remember) {
+                        $this->setAutoLogin($member);
+                    }
+                    $redirect = redirect()->restore();
+                    if (empty($redirect->getData())) {
+                        $url = session('?before-login') ? session('before-login') : aurl('index/member/index');
+                        session('before-login', null);
+                    } else {
+                        $url = $redirect->getTargetUrl();
+                    }
+
+                    if (!empty($this->wechatUser)) {
+                        Db::name('memberOauth')->where('openid', $this->wechatUser['openid'])
+                            ->update(['member_id' => $member['id']]);
+                    }
+
+                    $this->success(lang('Login success!'), $url);
                 }
             }
             $referurl = request()->server('HTTP_REFERER');

@@ -79,7 +79,7 @@ class LoginController extends BaseController
         //验证账号密码是否正确
         $user = Db::name('Manager')->where('username', $username)->find();
 
-        if (empty($user) || $user['password'] !== encode_password($password, $user['salt'])) {
+        if (empty($user) || strcmp($user['password'], encode_password($password, $user['salt'])) !== 0) {
 
             $error_count++;
             $iperror_count++;
