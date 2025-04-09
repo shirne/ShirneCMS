@@ -44,7 +44,7 @@ class LoginController extends BaseController
                 $data['username'] = $this->request->post('username');
                 $password = $this->request->post('password');
                 $member = Db::name('member')->where($data)->find();
-                if (!empty($member) && $member['password'] == encode_password($password, $member['salt'])) {
+                if (!empty($member) && $member['password'] === encode_password($password, $member['salt'])) {
 
                     if ($member['status'] == 0) {
                         user_log($member['id'], 'login', 0, '账号已禁用');
