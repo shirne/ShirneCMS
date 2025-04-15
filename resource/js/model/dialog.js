@@ -376,19 +376,18 @@
                 if (message['btns'] !== undefined) {
                     btns = message['btns'];
                 }
-                if (message['cancel_text']) {
-                    btns[0].text = message['cancel_text'];
-                }
-                if (message['confirm_text']) {
-                    btns[1].text = message['confirm_text'];
-                }
                 if (message['content'] === undefined) {
                     throw 'message.content can not be empty.';
                 }
                 if (message['onshown'] !== undefined) {
                     onshown = message['onshown'];
                 }
-
+                if (message['cancel_text']) {
+                    btns[0].text = message['cancel_text'];
+                }
+                if (message['confirm_text']) {
+                    btns[1].text = message['confirm_text'];
+                }
                 message = message['content'];
             }
 
@@ -418,8 +417,8 @@
                 header: title ? true : false,
                 size: size,
                 backdrop: 'static',
-                btns: btns,
                 onshown: onshown,
+                btns: btns,
                 onsure: function () {
                     if (confirm && typeof confirm === 'function') {
                         called = true;
@@ -490,16 +489,46 @@
             if (is_multi) {
                 inputHtml = '';
                 for (var i in multiset) {
-                    var label = multiset[i], value = '', sub_is_textarea = false;
+                    var label = multiset[i], value = '', sub_is_textarea = false, sub_type = '', values = [];
                     if (typeof label === 'object') {
                         value = label.value ? label.value : ''
                         sub_is_textarea = label.is_textarea ? label.is_textarea : is_textarea;
+                        sub_type = label.type
+                        if (label.values) {
+                            console.log(label.values)
+                            for (var k in label.values) {
+                                values.push({
+                                    value: k,
+                                    label: label.values[k]
+                                })
+                            }
+                        }
                         label = label.label ? label.label : (label.title ? label.title : i)
+
                     }
+
                     if (sub_is_textarea) {
-                        inputHtml += '<div class="input-group mt-2"><div class="input-group-prepend"><span class="input-group-text">' + label + '</span></div><textarea name="confirm_input" data-key="' + i + '" class="form-control" >' + value + '</textarea></div>';
+                        inputHtml += '<div class="input-group mt-2"><div class="input-group-prepend"><span class="input-group-text">' + label + '</span></div><textarea name="' + i + '" class="form-control" >' + value + '</textarea></div>';
+                    } else if (sub_type == 'radio') {
+                        inputHtml += '<div class="form-group mt-2"><label class="form-label mr-3">' + label + '</label>' + values.map(function (v) {
+                            return '<div class="form-check form-check-inline">' +
+                                '  <input class="form-check-input" type="radio" name="' + i + '" id="prompt-radio-' + i + '-' + v.value + '" value="' + v.value + '">' +
+                                '  <label class="form-check-label" for="prompt-radio-' + i + '-' + v.value + '">' + v.label + '</label>' +
+                                '</div>'
+                        }).join('') + '</div>';
+                    } else if (sub_type == 'checkbox') {
+                        inputHtml += '<div class="form-group mt-2"><label class="form-label">' + label + '</label>' + values.map(function (v) {
+                            return '<div class="form-check form-check-inline">' +
+                                '  <input class="form-check-input" type="checkbox" name="' + i + '" id="prompt-checkbox-' + i + '-' + v.value + '" value="' + v.value + '">' +
+                                '  <label class="form-check-label" for="prompt-checkbox-' + i + '-' + v.value + '">' + v.label + '</label>' +
+                                '</div>'
+                        }).join('') + '</div>';
+                    } else if (sub_type == 'select') {
+                        inputHtml += '<div class="input-group mt-2"><div class="input-group-prepend"><span class="input-group-text">' + label + '</span></div><select class="form-control" name="' + i + '">' + values.map(function (v) {
+                            return '<option value="' + v.value + '">' + v.label + '</option>'
+                        }).join('') + '</select></div>';
                     } else {
-                        inputHtml += '<div class="input-group mt-2"><div class="input-group-prepend"><span class="input-group-text">' + label + '</span></div><input type="text" data-key="' + i + '" name="confirm_input" value="' + value + '" class="form-control" /></div>';
+                        inputHtml += '<div class="input-group mt-2"><div class="input-group-prepend"><span class="input-group-text">' + label + '</span></div><input type="text"  name="' + i + '" value="' + value + '" class="form-control" /></div>';
                     }
                 }
             }
@@ -512,9 +541,15 @@
                     }
                 },
                 onshown: function (body) {
-                    var firstInput = body.find('[name=confirm_input]').eq(0);
+                    var firstInput = body.find('.form-control').eq(0);
                     if (dftValue) {
-                        firstInput.val(dftValue);
+                        if (typeof dftValue === 'object') {
+                            for (var i in dftValue) {
+                                body.find('[name=' + i + ']').val(dftValue[i]);
+                            }
+                        } else {
+                            firstInput.val(dftValue);
+                        }
                     }
                     firstInput.select();
                     if (message && message.onshown) {
@@ -522,12 +557,23 @@
                     }
                 },
                 onsure: function (body) {
-                    var inputs = body.find('[name=confirm_input]'), val = inputs.val();
+                    var inputs = body.find('.form-control,.form-check-input'), val = inputs.val();
                     if (is_multi) {
                         val = {};
                         inputs.each(function () {
-                            var key = $(this).data('key')
-                            val[key] = $(this).val()
+                            var key = $(this).attr('name')
+                            if ($(this).attr('type') == 'radio') {
+                                if ($(this).prop('checked')) {
+                                    val[key] = $(this).val()
+                                }
+                            } else if ($(this).attr('type') == 'checkbox') {
+                                if (!val[key]) val[key] = []
+                                if ($(this).prop('checked')) {
+                                    val[key].push($(this).val())
+                                }
+                            } else {
+                                val[key] = $(this).val()
+                            }
                         })
                     }
                     if (typeof callback == 'function') {
@@ -721,7 +767,13 @@
                 onRow: null,
                 extend: null,
                 toList: function (json) {
-                    return json.data;
+                    if (json.data instanceof Array) {
+                        return json.data;
+                    }
+                    if (json.data.lists) {
+                        return json.data.lists
+                    }
+                    return [];
                 },
                 rowTemplate: '<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action" style="line-height:30px;">' + icon + '[{@id}]&nbsp;{@title}</a>'
             }, config || {});
@@ -773,7 +825,11 @@
                                 type: 'GET',
                                 dataType: 'JSON',
                                 success: function (json) {
-                                    extField.append(config.extend.htmlRow.compile(json.data, true));
+                                    if (json.data instanceof Array) {
+                                        extField.append(config.extend.htmlRow.compile(json.data, true));
+                                    } else if (json.data.lists) {
+                                        extField.append(config.extend.htmlRow.compile(json.data.lists, true));
+                                    }
                                 }
                             });
                         }
