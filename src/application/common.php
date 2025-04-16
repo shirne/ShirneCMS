@@ -32,6 +32,9 @@ define('ORDER_STATUS_FINISH', 4);
 
 define('USE_SEC_PASSWORD', 1);
 
+// TODO 上线前修改此值
+define('PASSWORD_HASH_PREFIX', 'HashPrefixForPassword');
+
 function force_json_decode($string)
 {
     if (is_array($string)) return $string;
@@ -1352,7 +1355,7 @@ function is_assoc_array($array)
 
 function encode_password($pass, $salt = '')
 {
-    return sha1('HashPrefixForPassword' . md5($pass) . $salt);
+    return sha1(PASSWORD_HASH_PREFIX . md5($pass) . $salt);
 }
 
 function compare_password($user, $password)
