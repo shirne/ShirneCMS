@@ -7,7 +7,7 @@
     <div class="row list-header">
         <div class="col-md-6">
             <div class="btn-toolbar list-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-                <a href="{:murl('shop.product/index')}" class="btn btn-outline-primary btn-sm mr-2"><i
+                <a href="{:url('shop.product/index')}" class="btn btn-outline-primary btn-sm mr-2"><i
                         class="ion-md-arrow-back"></i> 返回</a>
                 <div class="btn-group btn-group-sm mr-2" role="group" aria-label="check action group">
                     <a href="javascript:" class="btn btn-outline-secondary checkall-btn" data-toggle="button"

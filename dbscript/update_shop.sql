@@ -217,6 +217,7 @@ CREATE TABLE `sa_product` (
   `max_buy` INT DEFAULT '0' COMMENT '会员可购买数量 0为不限制',
   `max_buy_cycle` varchar(10) DEFAULT '' COMMENT '限制周期',
   `status` TINYINT NOT NULL DEFAULT '1',
+  `delete_time` BIGINT DEFAULT '0',
   `create_time` BIGINT DEFAULT '0',
   `update_time` BIGINT DEFAULT '0',
   PRIMARY KEY (`id`),
