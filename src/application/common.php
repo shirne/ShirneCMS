@@ -223,7 +223,24 @@ function getOauthTypes()
     ];
 }
 
-
+function toDto($array, $map = [])
+{
+    if (empty($array)) {
+        return new \stdClass();
+    }
+    if (!is_array($array)) {
+        return $array;
+    }
+    $newdata = [];
+    foreach ($array as $k => $v) {
+        if (isset($map[$k])) {
+            $newdata[$map[$k]] = $v;
+        } else {
+            $newdata[camelize(str_replace('-', '_', $k))] = $v;
+        }
+    }
+    return $newdata;
+}
 
 function settingGroups($name = '')
 {
@@ -1369,6 +1386,22 @@ function compare_secpassword($user, $password)
 }
 
 
+function camelize($uncamelized_words, $separator = '_')
+{
+    $uncamelized_words = $separator . str_replace($separator, " ", strtolower($uncamelized_words));
+    return ltrim(str_replace(" ", "", ucwords($uncamelized_words)), $separator);
+}
+
+function ucfcamelize($uncamelized_words, $separator = '_')
+{
+    $uncamelized_words =  str_replace($separator, " ", strtolower($uncamelized_words));
+    return str_replace(" ", "", ucwords($uncamelized_words));
+}
+
+function uncamelize($str, $separator = '_')
+{
+    return strtolower(preg_replace('/([a-z])([A-Z])/', "$1" . $separator . "$2", $str));
+}
 
 function random_str($length = 6, $type = 'string', $convert = 0)
 {

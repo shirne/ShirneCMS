@@ -290,7 +290,7 @@ class CommonController extends BaseController
      * 获取网站通用配置
      * @return Json 
      */
-    public function siteinfo()
+    public function siteinfo($dto = 0)
     {
         $settings = getSettings(false, true);
         $data = [];
@@ -304,6 +304,9 @@ class CommonController extends BaseController
         if ($this->request->param('tencent-key') == '1') {
             $data['mapkey_tencent'] = $settings['third']['mapkey_tencent'];
         }
+        if ($dto) {
+            $data = toDto($data, ['400' => 'tel400']);
+        }
         return $this->response($data);
     }
 
@@ -313,7 +316,7 @@ class CommonController extends BaseController
      * @param mixed $group 
      * @return Json 
      */
-    public function config($group)
+    public function config($group, $dto = 0)
     {
         $rdata = new \stdClass();
         if (!empty($group) && $group != 'third') {
@@ -323,6 +326,9 @@ class CommonController extends BaseController
                     $rdata = $this->getDefaultWechat();
                 } elseif (isset($settings[$group])) {
                     $rdata = $settings[$group];
+                }
+                if ($dto) {
+                    $rdata = toDto($rdata);
                 }
             } else {
                 $groups = explode(',', $group);
@@ -335,6 +341,9 @@ class CommonController extends BaseController
                         $rdata[$g] = $settings[$g];
                     } else {
                         $rdata[$g] = new \stdClass();
+                    }
+                    if ($dto) {
+                        $rdata[$g] = toDto($rdata[$g]);
                     }
                 }
             }
