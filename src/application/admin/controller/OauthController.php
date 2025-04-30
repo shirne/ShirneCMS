@@ -41,6 +41,13 @@ class OauthController extends BaseController
                 $this->error($validate->getError());
             } else {
 
+                $uploaded = $this->_upload('oauth', 'upload_logo', false);
+                if (!empty($uploaded)) {
+                    $data['logo'] = $uploaded['url'];
+                } elseif ($this->uploadErrorCode > 102) {
+                    $this->error($this->uploadErrorCode . ':' . $this->uploadError);
+                }
+
                 if (Db::name('OAuth')->insert($data)) {
                     $this->success(lang('Add success!'), url('oauth/index'));
                 } else {
@@ -71,7 +78,18 @@ class OauthController extends BaseController
                 $this->error($validate->getError());
             } else {
                 $data['id'] = $id;
+                $delete_images = [];
+                $uploaded = $this->_upload('oauth', 'upload_logo', false);
+                if (!empty($uploaded)) {
+                    $data['logo'] = $uploaded['url'];
+                    if (!empty($data['delete_logo'])) $delete_images[] = $data['delete_logo'];
+                } elseif ($this->uploadErrorCode > 102) {
+                    $this->error($this->uploadErrorCode . ':' . $this->uploadError);
+                }
+                if (isset($data['delete_logo'])) unset($data['delete_logo']);
+
                 if (Db::name('OAuth')->update($data)) {
+                    delete_image($delete_images);
                     $this->success(lang('Update success!'), url('oauth/index'));
                 } else {
                     $this->error(lang('Update failed!'));

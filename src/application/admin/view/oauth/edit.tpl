@@ -17,7 +17,8 @@
                 <select name="type" class="form-control">
                     <option value="">请选择类型</option>
                     {foreach $types as $k => $v}
-                    <option value="{$k}" {$model['type']==$k?'selected':''}?>{$v}</option>
+                    <option value="{$k}" <?php if($model['type']==$k) {echo 'selected="selected"' ;}?>
+                        >{$v}</option>
                     {/foreach}
                 </select>
             </div>
@@ -30,19 +31,19 @@
                 <input type="text" name="appkey" class="form-control" value="{$model.appkey}">
             </div>
             <div class="form-group">
-                <label for="image">图标</label>
+                <label for="logo">图标</label>
                 <div class="input-group">
                     <div class="custom-file">
-                        <input type="file" class="custom-file-input" name="upload_image" />
-                        <label class="custom-file-label" for="upload_image">选择文件</label>
+                        <input type="file" class="custom-file-input" name="upload_logo" />
+                        <label class="custom-file-label" for="upload_logo">选择文件</label>
                     </div>
                 </div>
-                {if !empty($model['image'])}
+                {if !empty($model['logo'])}
                 <figure class="figure">
-                    <img src="{$model.image}" class="figure-img img-fluid rounded" alt="image">
-                    <figcaption class="figure-caption text-center">{$model.image}</figcaption>
+                    <img src="{$model.logo}" class="figure-img img-fluid rounded" alt="logo">
+                    <figcaption class="figure-caption text-center">{$model.logo}</figcaption>
                 </figure>
-                <input type="hidden" name="delete_image" value="{$model.image}" />
+                <input type="hidden" name="delete_logo" value="{$model.logo}" />
                 {/if}
             </div>
             <div class="form-group">
