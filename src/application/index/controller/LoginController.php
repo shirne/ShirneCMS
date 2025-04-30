@@ -28,11 +28,12 @@ class LoginController extends BaseController
 
     public function index($type = 0)
     {
-        if ($this->userid) {
-            $this->success('您已登录', aurl('index/member/index'));
-        }
         //方式1：本地账号登陆
         if (empty($type)) {
+            if ($this->userid) {
+                $this->success('您已登录', aurl('index/member/index'));
+            }
+
             if ($this->request->isPost()) {
                 $this->checkSubmitRate(2);
 
