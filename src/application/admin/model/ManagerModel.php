@@ -4,7 +4,6 @@ namespace app\admin\model;
 
 use app\common\core\BaseModel;
 use think\Db;
-use think\Exception;
 
 /**
  * Class ManagerModel
@@ -45,7 +44,7 @@ class ManagerModel extends BaseModel
      * 检测指定的账号是否对本账号有编辑权限
      * @param $id
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     public function hasPermission($id)
     {

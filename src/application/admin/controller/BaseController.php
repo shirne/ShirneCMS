@@ -7,7 +7,6 @@ use app\common\service\EncryptService;
 use extcore\traits\Upload;
 use think\Controller;
 use think\Db;
-use think\Exception;
 
 /**
  * 后台基类
@@ -33,7 +32,7 @@ class BaseController extends Controller
     /**
      * 后台控制器全局初始化
      * @param $needLogin
-     * @throws Exception
+     * @throws \Exception
      */
     public function initialize()
     {
@@ -206,7 +205,7 @@ class BaseController extends Controller
 
         try {
             $succed = Db::execute('ALTER TABLE ' . config('database.prefix') . $table . ' AUTO_INCREMENT = ' . intval($incre));
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $this->error($e->getMessage());
         }
         if ($succed) {

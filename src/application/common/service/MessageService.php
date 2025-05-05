@@ -8,7 +8,6 @@ use EasyWeChat\Kernel\Exceptions\InvalidConfigException;
 use EasyWeChat\Kernel\Exceptions\RuntimeException;
 use EasyWeChat\Kernel\Messages\Text;
 use think\Db;
-use think\Exception;
 use think\facade\Log;
 
 class MessageService
@@ -48,8 +47,7 @@ class MessageService
      * @param string|Message $message 
      * @param string $link 
      * @return void 
-     * @throws Exception 
-     * @throws RuntimeException 
+     * @throws \Exception 
      */
     public static function sendWechatMessage($openid, $message, $link = '')
     {
@@ -76,9 +74,7 @@ class MessageService
      * @param string $link 
      * @param mixed|null $miniprogram 
      * @return object|array|string|false 
-     * @throws Exception 
-     * @throws InvalidArgumentException 
-     * @throws InvalidConfigException 
+     * @throws \Exception 
      */
     public static function sendWechatTplMessage($openid, $tplid, $data, $link = '', $miniprogram = null)
     {

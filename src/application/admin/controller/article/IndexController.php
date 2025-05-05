@@ -10,8 +10,6 @@ use app\common\facade\CategoryFacade;
 use app\common\facade\ProductCategoryFacade;
 use app\common\model\ArticleCommentModel;
 use think\Db;
-use think\Exception;
-use think\Response;
 
 /**
  * 文章管理

@@ -10,7 +10,6 @@ use app\common\model\PayOrderModel;
 use shirne\excel\Excel;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use think\Db;
-use think\Exception;
 
 /**
  * 订单管理
@@ -148,7 +147,19 @@ class OrderController extends BaseController
     {
         $excel = new Excel();
         $excel->setHeader(array(
-            '编号', '状态', '时间', '会员ID', '会员账号', '购买产品', '购买价格', '收货人', '电话', '省', '市', '区', '地址'
+            '编号',
+            '状态',
+            '时间',
+            '会员ID',
+            '会员账号',
+            '购买产品',
+            '购买价格',
+            '收货人',
+            '电话',
+            '省',
+            '市',
+            '区',
+            '地址'
         ));
         $excel->setColumnType('A', DataType::TYPE_STRING);
         $excel->setColumnType('D', DataType::TYPE_STRING);
@@ -161,8 +172,19 @@ class OrderController extends BaseController
                 $username = filter_emoji($row['nickname'], '?');
             }
             $excel->addRow(array(
-                $row['order_no'], order_status($row['status'], false), date('Y/m/d H:i:s', $row['create_time']), $row['member_id'], $username,
-                $prodata['product_title'], $row['payamount'], $row['receive_name'], $row['mobile'], $row['province'], $row['city'], $row['area'], $row['address']
+                $row['order_no'],
+                order_status($row['status'], false),
+                date('Y/m/d H:i:s', $row['create_time']),
+                $row['member_id'],
+                $username,
+                $prodata['product_title'],
+                $row['payamount'],
+                $row['receive_name'],
+                $row['mobile'],
+                $row['province'],
+                $row['city'],
+                $row['area'],
+                $row['address']
             ));
         }
 
@@ -173,11 +195,23 @@ class OrderController extends BaseController
     {
         $excel = new Excel();
         $excel->setHeader(array(
-            '', '收件信息', '', '', '物品信息', '', '备注'
+            '',
+            '收件信息',
+            '',
+            '',
+            '物品信息',
+            '',
+            '备注'
         ));
         $excel->getSheet()->setMergeCells(['B1:D1', 'E1:F1']);
         $excel->setHeader(array(
-            '编号', '收件人姓名', '收件人联系方式', '收件地址', '物品类', '物品详情', '备注信息'
+            '编号',
+            '收件人姓名',
+            '收件人联系方式',
+            '收件地址',
+            '物品类',
+            '物品详情',
+            '备注信息'
         ));
         $excel->setColumnType('A', DataType::TYPE_STRING);
         $excel->setColumnType('C', DataType::TYPE_STRING);
@@ -193,8 +227,13 @@ class OrderController extends BaseController
                 $prods[] = $prod['product_title'];
             }
             $excel->addRow(array(
-                $row['order_no'], $row['receive_name'], $row['mobile'], $row['province'] . $row['city'] . $row['area'] . $row['address'],
-                '食品', implode('、', $prods), ''
+                $row['order_no'],
+                $row['receive_name'],
+                $row['mobile'],
+                $row['province'] . $row['city'] . $row['area'] . $row['address'],
+                '食品',
+                implode('、', $prods),
+                ''
             ));
         }
 
@@ -376,7 +415,7 @@ class OrderController extends BaseController
      * 改价
      * @param $id
      * @param $price
-     * @throws Exception
+     * @throws \Exception
      */
     public function reprice($id, $price)
     {

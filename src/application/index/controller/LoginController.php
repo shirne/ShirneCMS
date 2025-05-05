@@ -9,7 +9,6 @@ use app\common\validate\MemberValidate;
 use shirne\sdk\OAuthFactory;
 use shirne\captcha\Captcha;
 use think\Db;
-use think\Exception;
 use think\facade\Log;
 
 /**
@@ -235,7 +234,7 @@ class LoginController extends BaseController
 
                 $this->setLogin($member);
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             Log::error($e->getMessage() . "\n" . $e->getFile() . $e->getLine() . $e->getCode());
             $this->error('登录失败', url('index/login/index'));
         }

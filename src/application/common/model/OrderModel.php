@@ -6,7 +6,6 @@ namespace app\common\model;
 use app\common\core\BaseOrderModel;
 use app\common\service\MessageService;
 use think\Db;
-use think\Exception;
 use think\facade\Log;
 
 /**
@@ -88,7 +87,7 @@ class OrderModel extends BaseOrderModel
                 $this->afterAudit($this->getOrigin());
             }
         } else {
-            throw new Exception('订单不存在');
+            throw new \Exception('订单不存在');
         }
     }
 
@@ -849,14 +848,16 @@ class OrderModel extends BaseOrderModel
     {
         $message = getSetting('message_commission');
         if (!empty($message)) {
-            foreach ([
-                'username' => MemberModel::showname($member),
-                'userid' => $member['id'],
-                'buyer' => MemberModel::showname($buyer),
-                'amount' => number_format($order['payamount'], 2),
-                'type' => $type,
-                'commission' => number_format($commission, 2)
-            ] as $k => $v) {
+            foreach (
+                [
+                    'username' => MemberModel::showname($member),
+                    'userid' => $member['id'],
+                    'buyer' => MemberModel::showname($buyer),
+                    'amount' => number_format($order['payamount'], 2),
+                    'type' => $type,
+                    'commission' => number_format($commission, 2)
+                ] as $k => $v
+            ) {
                 $message = str_replace("[$k]", $v, $message);
             }
 

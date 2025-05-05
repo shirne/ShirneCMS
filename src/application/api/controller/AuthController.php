@@ -15,7 +15,6 @@ use shirne\captcha\Captcha;
 use shirne\common\ValidateHelper;
 use shirne\sdk\OAuthFactory;
 use think\Db;
-use think\Exception;
 use think\facade\Cache;
 use think\facade\Log;
 use think\Response;
@@ -369,7 +368,7 @@ class AuthController extends BaseController
         if ($weapp instanceof Application) {
             try {
                 $userinfo = $weapp->oauth->userFromCode($code)->getRaw();
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 $this->error('登录失败:' . $e->getMessage(), ERROR_LOGIN_FAILED);
             }
             if (empty($userinfo) || empty($userinfo['openid'])) {
@@ -381,7 +380,7 @@ class AuthController extends BaseController
 
             try {
                 $session = $weapp->auth->session($code);
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 $this->error('登录失败:' . $e->getMessage(), ERROR_LOGIN_FAILED);
             }
             if (empty($session) || empty($session['openid'])) {
@@ -460,7 +459,7 @@ class AuthController extends BaseController
         if ($weapp instanceof Application) {
             try {
                 $userinfo = $weapp->oauth->userFromCode($code)->getRaw();
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 $this->error('登录失败:' . $e->getMessage(), ERROR_LOGIN_FAILED);
             }
             if (empty($userinfo) || empty($userinfo['openid'])) {
@@ -476,7 +475,7 @@ class AuthController extends BaseController
             } else {
                 try {
                     $session = $weapp->auth->session($code);
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     $this->error('登录失败:' . $e->getMessage(), ERROR_LOGIN_FAILED);
                 }
                 if (empty($session) || empty($session['openid'])) {
@@ -488,6 +487,8 @@ class AuthController extends BaseController
                     if (sha1($rawData . $session['session_key']) == $signature) {
                         $userinfo = json_decode($rawData, TRUE);
                     }
+                } else {
+                    $userinfo = [];
                 }
 
                 if (!empty($phoneCode)) {
@@ -505,18 +506,8 @@ class AuthController extends BaseController
                 }
             }
         }
-
-        // 只使用code登录，自动生成空微信信息
-        if (empty($userinfo)) {
-            $userinfo = [
-                "nickName" => "微信用户",
-                "gender" => 0,
-                "language" => "",
-                "city" => "",
-                "province" => "",
-                "country" => "",
-                "avatarUrl" => "https://thirdwx.qlogo.cn/mmopen/vi_32/POgEwh4mIHO4nibH0KlMECNjjGxQUq24ZEaGT4poC6icRiccVGKSyXwibcPq4BWmiaIGuG1icwxaQX6grC9VemZoJ8rg/132",
-            ];
+        if (empty($session)) {
+            $this->error('登录授权失败', ERROR_LOGIN_FAILED);
         }
         $type = $wechat['account_type'];
         $typeid = $wechat['id'];
@@ -531,6 +522,10 @@ class AuthController extends BaseController
             $sameAuth = MemberOauthModel::where('unionid', $session['unionid'])->find();
             if (!empty($sameAuth)) {
                 $member = MemberModel::where('id', $sameAuth['member_id'])->find();
+
+                if (empty($userinfo['nickname'])) $userinfo['nickname'] = $sameAuth['nickname'];
+                if (empty($userinfo['gender'])) $userinfo['gender'] = $sameAuth['gender'];
+                if (empty($userinfo['avatar'])) $userinfo['avatar'] = $sameAuth['avatar'];
             }
         }
 
@@ -541,7 +536,7 @@ class AuthController extends BaseController
 
         if (empty($member)) {
             $register = getSetting('m_register');
-            if ($register != '1' || !empty($mobileData['purePhoneNumber'])) {
+            if (($register != '1' && !empty($userinfo)) || !empty($mobileData['purePhoneNumber'])) {
 
                 //自动注册
                 $data['openid'] = $session['openid'];
@@ -552,6 +547,7 @@ class AuthController extends BaseController
                 if ($referid <= 0 && $this->config['referer_id']) {
                     $referid = intval($this->config['referer_id']);
                 }
+                if (empty($data['nickname'])) $data['nickname'] = '微信用户' . random_int(100, 999);
                 $member = MemberModel::createFromOauth($data, $referid, $mobileData['purePhoneNumber'] ?? '');
 
                 if ($member['id']) {
@@ -569,9 +565,11 @@ class AuthController extends BaseController
                 $data['mobile'] = $mobileData['purePhoneNumber'];
                 $data['mobile_bind'] = 1;
             }
-            $updata = MemberModel::checkUpdata($data, $member);
-            if (!empty($updata)) {
-                MemberModel::update($updata, array('id' => $member['id']));
+            if (!empty($userinfo)) {
+                $updata = MemberModel::checkUpdata($data, $member);
+                if (!empty($updata)) {
+                    MemberModel::update($updata, array('id' => $member['id']));
+                }
             }
             if (!empty($agent)) {
                 MemberModel::autoBindAgent($member, $agent);

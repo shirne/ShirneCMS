@@ -10,7 +10,6 @@ use app\common\validate\MemberValidate;
 use shirne\excel\Excel;
 use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use think\Db;
-use think\Exception;
 
 /**
  * 会员管理

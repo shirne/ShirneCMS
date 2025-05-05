@@ -5,7 +5,6 @@ namespace app\common\model;
 
 
 use app\common\core\BaseModel;
-use think\Exception;
 use think\facade\Log;
 
 class WechatTemplateMessageModel extends BaseModel

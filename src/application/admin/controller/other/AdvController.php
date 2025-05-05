@@ -8,7 +8,6 @@ use app\admin\validate\AdvItemValidate;
 use app\common\model\AdvGroupModel;
 use app\common\model\AdvItemModel;
 use think\Db;
-use think\Exception;
 
 /**
  * 广告功能

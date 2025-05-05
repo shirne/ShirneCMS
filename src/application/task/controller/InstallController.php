@@ -8,7 +8,6 @@ use think\Console;
 use think\console\Input;
 use think\console\Output;
 use think\Controller;
-use think\Exception;
 use think\facade\Config;
 use think\facade\Env;
 use think\Db;
@@ -106,7 +105,7 @@ class InstallController extends Controller
                     $mysqlenv['pass'] = false;
                 }
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
         }
         $envs[] = $mysqlenv;
 

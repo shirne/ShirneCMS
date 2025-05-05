@@ -4,7 +4,6 @@ namespace app\admin\controller;
 
 use extcore\traits\Verify;
 use think\Db;
-use think\Exception;
 
 /**
  * 后台登录

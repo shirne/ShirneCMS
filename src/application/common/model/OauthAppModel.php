@@ -6,14 +6,13 @@ namespace app\common\model;
 
 use app\common\core\BaseModel;
 use think\Db;
-use think\Exception;
 
 class OauthAppModel extends BaseModel
 {
     /**
      * 验证签名
      * @param array $data 必须包含appid,timestamp和sign
-     * @throws Exception
+     * @throws \Exception
      * @return bool|array
      */
     public static function checkSign($data)

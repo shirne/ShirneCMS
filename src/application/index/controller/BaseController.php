@@ -12,8 +12,6 @@ use extcore\traits\Email;
 use shirne\sdk\OAuthFactory;
 use think\Controller;
 use think\Db;
-use think\Exception;
-use think\facade\Env;
 use think\facade\Lang;
 use think\facade\Log;
 
@@ -44,10 +42,7 @@ class BaseController extends Controller
 
     /**
      * 前端初始化
-     * @throws Exception
-     * @throws \think\db\exception\DataNotFoundException
-     * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
+     * @throws \Exception
      */
     public function initialize()
     {
@@ -177,7 +172,7 @@ class BaseController extends Controller
     /**
      * 写入会员登录状态
      * @param $member
-     * @throws Exception
+     * @throws \Exception
      */
     protected function setLogin($member, $logintype = 1)
     {
@@ -250,7 +245,7 @@ class BaseController extends Controller
 
     /**
      * 检测用户是否登录并初始化资料
-     * @throws Exception
+     * @throws \Exception
      */
     protected function checkLogin()
     {
@@ -331,7 +326,7 @@ class BaseController extends Controller
     /**
      * 检测并自动登录微信
      * @return bool
-     * @throws Exception
+     * @throws \Exception
      */
     protected function wechatLogin()
     {

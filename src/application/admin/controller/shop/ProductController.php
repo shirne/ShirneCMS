@@ -14,7 +14,6 @@ use app\common\facade\ProductCategoryFacade;
 use app\common\model\WechatModel;
 use stdClass;
 use think\Db;
-use think\Exception;
 
 /**
  * 商品管理
@@ -83,7 +82,7 @@ class ProductController extends BaseController
      * @param string $key
      * @param int $cate_id
      * @return mixed|\think\response\Redirect
-     * @throws Exception
+     * @throws \Exception
      */
     public function index($keyword = '',  $cate_id = 0)
     {
