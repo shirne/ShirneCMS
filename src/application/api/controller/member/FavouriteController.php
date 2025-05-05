@@ -21,7 +21,7 @@ class FavouriteController extends AuthedController
     public function index($type)
     {
         $model = new MemberFavouriteModel();
-        $this->response($model->getFavourites($type));
+        return $this->response($model->getFavourites($type));
     }
 
     /**
@@ -31,7 +31,7 @@ class FavouriteController extends AuthedController
     {
         $model = new MemberFavouriteModel();
         $faved = $model->isFavourite($this->user['id'], $type, $id);
-        $this->response($faved);
+        return $this->response($faved);
     }
 
     /**
