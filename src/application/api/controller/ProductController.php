@@ -6,6 +6,7 @@ use app\common\facade\MemberFavouriteFacade;
 use app\common\facade\ProductCategoryFacade;
 use app\common\model\MemberLevelModel;
 use app\common\model\PostageModel;
+use app\common\model\ProductBrandModel;
 use app\common\model\ProductModel;
 use app\common\model\WechatModel;
 use app\common\model\ProductSkuModel;
@@ -170,8 +171,6 @@ class ProductController extends BaseController
             $product['sale'] = $product['sale'] + $product['v_sale'];
         }
 
-        $skus = ProductSkuModel::where('product_id', $product['id'])->select();
-        $images = Db::name('ProductImages')->where('product_id', $product['id'])->select();
         if (!empty($product['levels'])) {
             $levels = MemberLevelModel::getCacheData();
             $level_names = [];
@@ -180,6 +179,12 @@ class ProductController extends BaseController
             }
             $product['level_names'] = $level_names;
         }
+
+        $product['brand'] = ProductBrandModel::find(['id' => $product['brand_id']]);
+
+        $skus = ProductSkuModel::where('product_id', $product['id'])->select();
+        $images = Db::name('ProductImages')->where('product_id', $product['id'])->select();
+
 
         $isFavourite = $this->isLogin ? MemberFavouriteFacade::isFavourite($this->user['id'], 'product', $id) : 0;
 
