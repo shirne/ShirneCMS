@@ -25,6 +25,16 @@ class FavouriteController extends AuthedController
     }
 
     /**
+     * 是否收藏
+     */
+    public function has($type, $id)
+    {
+        $model = new MemberFavouriteModel();
+        $faved = $model->isFavourite($this->user['id'], $type, $id);
+        $this->response($faved);
+    }
+
+    /**
      * 添加到收藏
      * @param string $type product/article
      * @param int|string|array $id 
