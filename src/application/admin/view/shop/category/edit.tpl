@@ -132,9 +132,11 @@
                 {if !empty($specs)}
                 <div class="form-group">
                     <label for="description">绑定规格</label>
-                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                    <div class="btn-group-toggle">
                         {volist name="specs" id="val" key="k"}
-                        <label class="btn btn-outline-secondary{:fix_in_array($k,$model['specs'])?' active':''}">
+                        <label
+                            class="btn btn-outline-secondary{:fix_in_array($k,$model['specs'])?' active':''} mr-1 mb-1"
+                            data-toggle="button">
                             <input type="checkbox" name="specs[]" value="{$k}" autocomplete="off"
                                 {:fix_in_array($k,$model['specs'])?' checked':''}>{$val}
                         </label>
