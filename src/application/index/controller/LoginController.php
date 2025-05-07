@@ -183,7 +183,7 @@ class LoginController extends BaseController
             if ($this->isLogin) {
                 $data['member_id'] = $this->userid;
             } elseif (!empty($userInfo['unionid'])) {
-                $sameAuth = MemberOauthModel::where('unionid', $userInfo['unionid'])->find();
+                $sameAuth = MemberOauthModel::where('unionid', $userInfo['unionid'])->where('openid', '<>', $data['openid'])->where('member_id', '>', 0)->find();
                 if (!empty($sameAuth)) {
                     $data['member_id'] = $sameAuth['member_id'];
                 }

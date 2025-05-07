@@ -395,7 +395,7 @@ class AuthController extends BaseController
         } elseif ($this->isLogin) {
             $member = MemberModel::where('id', $this->user['id'])->find();
         } elseif (!empty($session['unionid'])) {
-            $sameAuth = MemberOauthModel::where('unionid', $session['unionid'])->find();
+            $sameAuth = MemberOauthModel::where('unionid', $session['unionid'])->where('openid', '<>', $session['openid'])->where('member_id', '>', 0)->find();
             if (!empty($sameAuth)) {
                 $member = MemberModel::where('id', $sameAuth['member_id'])->find();
             }
@@ -519,7 +519,7 @@ class AuthController extends BaseController
         } elseif ($this->isLogin) {
             $member = MemberModel::where('id', $this->user['id'])->find();
         } elseif (!empty($session['unionid'])) {
-            $sameAuth = MemberOauthModel::where('unionid', $session['unionid'])->find();
+            $sameAuth = MemberOauthModel::where('unionid', $session['unionid'])->where('openid', '<>', $session['openid'])->where('member_id', '>', 0)->find();
             if (!empty($sameAuth)) {
                 $member = MemberModel::where('id', $sameAuth['member_id'])->find();
 
