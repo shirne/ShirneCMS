@@ -168,11 +168,11 @@ class LoginController extends BaseController
 
         try {
             $userInfo = $oauth->userFromCode($code);
-            $data['openid'] = $userInfo['id'];
-            $data['nickname'] = $userInfo['nickname'];
-            $data['name'] = $userInfo['name'];
-            $data['email'] = $userInfo['email'];
-            $data['avatar'] = $userInfo['avatar'];
+            $data['openid'] = $userInfo->getId();
+            $data['nickname'] = $userInfo->getNickname();
+            $data['name'] = $userInfo->getName();
+            $data['email'] = $userInfo->getEmail();
+            $data['avatar'] = $userInfo->getAvatar();
 
             $origin = $userInfo->getRaw();
             $data['gender'] = empty($origin['gender']) ? 0 : $this->parseGender($origin['gender']);
