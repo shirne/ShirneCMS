@@ -33,6 +33,7 @@ class PostageModel extends CacheableModel
         $exists = Db::name('postageArea')->where('postage_id', $id)->select();
         $exists = array_column($exists, NULL, 'id');
         $sort = 0;
+        $existsids = [];
         foreach ($newareas as $area_id => $area) {
             $area['sort'] = $sort;
             if (!empty($area['expresses'])) $area['expresses'] = json_encode($area['expresses'], JSON_UNESCAPED_UNICODE);
@@ -41,13 +42,16 @@ class PostageModel extends CacheableModel
             else $area['areas'] = '';
             unset($area['id']);
             if (is_numeric($area_id) && isset($exists[$area_id])) {
+                $existsids[] = $area_id;
                 Db::name('postageArea')->where('id', $area_id)->update($area);
             } else {
                 $area['postage_id'] = $id;
-                Db::name('postageArea')->insert($area);
+                $newid = Db::name('postageArea')->insert($area, false, true);
+                $existsids[] = $newid;
             }
             $sort++;
         }
+        Db::name('postageArea')->whereNotIn('id', $existsids)->delete();
     }
 
     public function getAreas()

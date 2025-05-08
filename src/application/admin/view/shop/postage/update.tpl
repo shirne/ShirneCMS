@@ -7,7 +7,7 @@
     <div class="page-header">{if !empty($model['id'])}编辑{else}添加{/if}运费模板</div>
     <div class="page-content">
         <form method="post">
-            <div class="row">
+            <div class="row" class="noajax" onsubmit="return false">
                 <div class="col-12 col-lg-6">
                     <div class="card mt-3">
                         <div class="card-header">基本设置</div>
@@ -103,16 +103,18 @@
                         <tr>
                             <th>可选快递</th>
                             <th>配送区域</th>
+                            <th>起始重量({{unit}})</th>
                             <th>首重({{unit}})</th>
                             <th>首费</th>
                             <th>续重({{unit}})</th>
                             <th>续费</th>
                             <th>封顶</th>
                             <th>免运费额度</th>
+                            <th>操作</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(area,idx) in areas" :key="idx">
+                        <tr v-for="(area,idx) in areas" :key="area.id">
                             <td width="200">
                                 <input type="hidden" :name="'areas['+area.id+'][id]'" v-model="area.id">
                                 <div class="expresses">
@@ -131,6 +133,10 @@
                                     </span>
                                 </div>
                                 <a href="javascript:" class="setareas" :data-id="idx" @click="setAreas">设置</a>
+                            </td>
+                            <td width="100">
+                                <input type="text" class="form-control" :name="'areas['+area.id+'][weight_lower]'"
+                                    v-model="area.weight_lower">
                             </td>
                             <td width="100">
                                 <input type="text" class="form-control" :name="'areas['+area.id+'][first]'"
@@ -156,13 +162,16 @@
                                 <input type="text" class="form-control" :name="'areas['+area.id+'][free_limit]'"
                                     v-model="area.free_limit">
                             </td>
+                            <td width="100">
+                                <a href="javascript:" class="setexpress" :data-id="idx" @click="delArea(idx)">删除</a>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
                 <div class="card-footer">
                     <div class="row">
                         <div class="text-center" style="width: 120px;">
-                            <a href="javascript:" class="btn btn-outline-primary addarea" @click="addarea">添加设置</a>
+                            <a href="javascript:" class="btn btn-outline-primary newarea" @click="addarea">添加设置</a>
                         </div>
                         <div class="col">
                             <div class="text-muted">1. 配送区域不设置默认不限制区域，设置了区域则仅在设置的区域内可用。如果匹配不到可用区域，使用本模板的产品将不可购买<br />2.
@@ -174,7 +183,7 @@
             </div>
             <div class="form-group mt-3">
                 <input type="hidden" name="id" v-model="postage.id" />
-                <button type="submit" class="btn btn-primary">提交</button>
+                <button type="submit" class="btn btn-primary" :disabled="isSubmit" @click="doSubmit">提交</button>
             </div>
         </form>
     </div>
@@ -198,6 +207,7 @@
                 area_type: 0,
                 specials: []
             },
+            isSubmit: false,
             areas: [],
             area_new_index: 0,
             expresses: {}
@@ -245,6 +255,12 @@
                     extend_fee: '',
                     ceiling: '',
                     free_limit: ''
+                })
+            },
+            delArea: function (idx) {
+                var self = this
+                dialog.confirm('确定删除该设置？', function () {
+                    self.areas.splice(idx, 1)
                 })
             },
             setExpress: function (e) {
@@ -370,6 +386,40 @@
                         callback(picked)
                     }
                 }).show(areahtml, title ? title : '选择支持区域');
+            },
+            doSubmit: function (e) {
+                e.preventDefault()
+                if (this.isSubmit) return;
+                this.isSubmit = true;
+                var self = this;
+                var data = JSON.parse(JSON.stringify(this.postage))
+                data.areas = {}
+                for (var i = 0; i < this.areas.length; i++) {
+                    data.areas[this.areas[i].id] = JSON.parse(JSON.stringify(this.areas[i]))
+                }
+                $.ajax({
+                    url: '',
+                    data: JSON.stringify(data),
+                    method: 'POST',
+                    dataType: 'json',
+                    headers: {
+                        'content-type': 'application/json'
+                    },
+                    success: function (res) {
+                        self.isSubmit = false
+                        if (res.code == 1) {
+                            dialog.alert('保存成功', function () {
+                                location.href = res.url
+                            })
+                        } else {
+                            dialog.warning(res.msg)
+                        }
+                    },
+                    error: function (err) {
+                        self.isSubmit = false
+                        dialog.error('保存失败')
+                    }
+                })
             }
         }
     });
