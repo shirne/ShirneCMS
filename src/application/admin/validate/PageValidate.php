@@ -15,11 +15,12 @@ class PageValidate extends BaseUniqueValidate
 
     protected $rule = array(
         'title' => 'require',
-        'name' => 'require|unique:page,%id%'
+        'name' => 'require|alphaDash|unique:page,%id%'
     );
     protected $message = array(
         'title.require' => '请填写单页标题！',
         'name.require' => '请填写单页别名！',
+        'name.alphaDash' => '别名用于URL，只能填写字母数字！',
         'name.unique' => '单页别名已经存在！'
     );
 }

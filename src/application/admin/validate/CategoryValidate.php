@@ -15,7 +15,7 @@ class CategoryValidate extends BaseUniqueValidate
     protected $rule = array(
         'title' => 'require',
         'short' => 'max:20',
-        'name' => ['require', 'unique' => 'category,%id%', 'regex' => '/^[a-zA-Z]\w+$/']
+        'name' => ['require', 'unique' => 'category,%id%', 'regex' => '/^[a-zA-Z][a-zA-Z0-9\-_]+$/']
     );
     protected $message = array(
         'title.require' => '请填写分类标题',
