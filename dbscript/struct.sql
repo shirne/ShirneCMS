@@ -7,11 +7,11 @@
 
 DROP TABLE IF EXISTS `sa_lang`;
 CREATE TABLE `sa_lang` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
   `lang` varchar(10) NOT NULL,
   `table` varchar(30) NOT NULL DEFAULT '',
   `field` varchar(30) DEFAULT '',
-  `key_id` int DEFAULT '0',
+  `key_id` BIGINT DEFAULT '0',
   `value` TEXT,
   PRIMARY KEY (`id`),
   UNIQUE KEY `lang` (`lang`) USING BTREE
@@ -168,6 +168,9 @@ DROP TABLE IF EXISTS `sa_subscribe`;
 CREATE TABLE `sa_subscribe` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
   `lang` varchar(10) DEFAULT NULL COMMENT '语言',
+  `member_id` int(10) NOT NULL DEFAULT 0,
+  `type` varchar(20) NOT NULL DEFAULT 'email',
+  `mobile` varchar(20) NOT NULL DEFAULT '',
   `title` varchar(100) DEFAULT NULL,
   `email` varchar(150) DEFAULT '',
   `last_send_time` BIGINT DEFAULT 0,
@@ -374,25 +377,6 @@ CREATE TABLE `sa_o_auth` (
   `status` tinyint DEFAULT 1,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Table structure for table `sa_subscribe`
---
-
-DROP TABLE IF EXISTS `sa_subscribe`;
-CREATE TABLE `sa_subscribe` (
-  `id` BIGINT NOT NULL AUTO_INCREMENT,
-  `member_id` int(10) NOT NULL DEFAULT 0,
-  `type` varchar(20) NOT NULL DEFAULT 'email',
-  `mobile` varchar(20) NOT NULL DEFAULT '',
-  `email` varchar(100) DEFAULT '',
-  `create_time` BIGINT DEFAULT '0',
-  `update_time` BIGINT DEFAULT '0',
-  `last_time` BIGINT DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `mobile` (`mobile`),
-  KEY `email` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Table structure for table `sa_member`
