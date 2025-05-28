@@ -479,12 +479,12 @@
                     keyboard = false;
                 }
                 if (message.default) {
-                    dftValue = message.default.toString();
+                    dftValue = is_multi ? message.default : message.default.toString();
                 }
             }
-            var inputHtml = '<input type="text" name="confirm_input" class="form-control" />';
+            var inputHtml = '<input type="text" name="confirm_input" class="form-control prompt-control" />';
             if (is_textarea) {
-                inputHtml = '<textarea name="confirm_input" class="form-control" ></textarea>';
+                inputHtml = '<textarea name="confirm_input" class="form-control prompt-control" ></textarea>';
             }
             if (is_multi) {
                 inputHtml = '';
@@ -508,27 +508,27 @@
                     }
 
                     if (sub_is_textarea) {
-                        inputHtml += '<div class="input-group mt-2"><div class="input-group-prepend"><span class="input-group-text">' + label + '</span></div><textarea name="' + i + '" class="form-control" >' + value + '</textarea></div>';
+                        inputHtml += '<div class="input-group mt-2"><div class="input-group-prepend"><span class="input-group-text">' + label + '</span></div><textarea name="' + i + '" class="form-control prompt-control" >' + value + '</textarea></div>';
                     } else if (sub_type == 'radio') {
                         inputHtml += '<div class="form-group mt-2"><label class="form-label mr-3">' + label + '</label>' + values.map(function (v) {
                             return '<div class="form-check form-check-inline">' +
-                                '  <input class="form-check-input" type="radio" name="' + i + '" id="prompt-radio-' + i + '-' + v.value + '" value="' + v.value + '">' +
+                                '  <input class="form-check-input prompt-control" type="radio" name="' + i + '" id="prompt-radio-' + i + '-' + v.value + '" value="' + v.value + '">' +
                                 '  <label class="form-check-label" for="prompt-radio-' + i + '-' + v.value + '">' + v.label + '</label>' +
                                 '</div>'
                         }).join('') + '</div>';
                     } else if (sub_type == 'checkbox') {
                         inputHtml += '<div class="form-group mt-2"><label class="form-label">' + label + '</label>' + values.map(function (v) {
                             return '<div class="form-check form-check-inline">' +
-                                '  <input class="form-check-input" type="checkbox" name="' + i + '" id="prompt-checkbox-' + i + '-' + v.value + '" value="' + v.value + '">' +
+                                '  <input class="form-check-input prompt-control" type="checkbox" name="' + i + '" id="prompt-checkbox-' + i + '-' + v.value + '" value="' + v.value + '">' +
                                 '  <label class="form-check-label" for="prompt-checkbox-' + i + '-' + v.value + '">' + v.label + '</label>' +
                                 '</div>'
                         }).join('') + '</div>';
                     } else if (sub_type == 'select') {
-                        inputHtml += '<div class="input-group mt-2"><div class="input-group-prepend"><span class="input-group-text">' + label + '</span></div><select class="form-control" name="' + i + '">' + values.map(function (v) {
+                        inputHtml += '<div class="input-group mt-2"><div class="input-group-prepend"><span class="input-group-text">' + label + '</span></div><select class="form-control prompt-control" name="' + i + '">' + values.map(function (v) {
                             return '<option value="' + v.value + '">' + v.label + '</option>'
                         }).join('') + '</select></div>';
                     } else {
-                        inputHtml += '<div class="input-group mt-2"><div class="input-group-prepend"><span class="input-group-text">' + label + '</span></div><input type="text"  name="' + i + '" value="' + value + '" class="form-control" /></div>';
+                        inputHtml += '<div class="input-group mt-2"><div class="input-group-prepend"><span class="input-group-text">' + label + '</span></div><input type="text"  name="' + i + '" value="' + value + '" class="form-control prompt-control" /></div>';
                     }
                 }
             }
@@ -541,11 +541,20 @@
                     }
                 },
                 onshown: function (body) {
-                    var firstInput = body.find('.form-control').eq(0);
+                    var firstInput = body.find('.prompt-control').eq(0);
                     if (dftValue) {
                         if (typeof dftValue === 'object') {
                             for (var i in dftValue) {
-                                body.find('[name=' + i + ']').val(dftValue[i]);
+                                var f = body.find('[name=' + i + ']')
+                                if (f.attr('type') == 'radio') {
+                                    f.each(function () {
+                                        if ($(this).val() == dftValue[i]) {
+                                            $(this).prop('checked', true)
+                                        }
+                                    })
+                                } else {
+                                    f.val(dftValue[i]);
+                                }
                             }
                         } else {
                             firstInput.val(dftValue);
@@ -557,7 +566,7 @@
                     }
                 },
                 onsure: function (body) {
-                    var inputs = body.find('.form-control,.form-check-input'), val = inputs.val();
+                    var inputs = body.find('.prompt-control'), val = inputs.val();
                     if (is_multi) {
                         val = {};
                         inputs.each(function () {
