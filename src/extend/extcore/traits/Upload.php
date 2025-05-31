@@ -19,10 +19,31 @@ trait Upload
         'max_size'       =>  10485760,
         //允许的文件后缀
         'allow_exts'     =>  array(
-            'jpg', 'jpeg', 'png', 'gif', 'bmp', 'tif', 'webp',
-            'swf', 'mp4', 'mp3', 'flv', 'avi',
-            'txt', 'csv', 'xls', 'xlsx', 'doc', 'docx', 'ppt', 'pptx', 'pdf',
-            'zip', 'rar', 'json', 'pem'
+            'jpg',
+            'jpeg',
+            'png',
+            'gif',
+            'bmp',
+            'tif',
+            'webp',
+            'swf',
+            'mp4',
+            'mp3',
+            'flv',
+            'avi',
+            'txt',
+            'csv',
+            'xls',
+            'xlsx',
+            'doc',
+            'docx',
+            'ppt',
+            'pptx',
+            'pdf',
+            'zip',
+            'rar',
+            'json',
+            'pem'
         ),
         'img_exts'       =>  array('gif', 'jpg', 'jpeg', 'bmp', 'png', 'swf', 'tif', 'webp'),
         'media_exts'       =>  array('gif', 'jpg', 'jpeg', 'bmp', 'png', 'swf', 'tif', 'swf', 'mp4', 'mp3', 'flv', 'avi'),
@@ -38,6 +59,11 @@ trait Upload
      */
     protected $uploadError;
     protected $uploadErrorCode;
+
+    protected function _noFile()
+    {
+        return $this->uploadErrorCode == 101 || $this->uploadErrorCode == 102;
+    }
 
     protected function _setUploadDriver()
     {
@@ -123,7 +149,7 @@ trait Upload
         }
         if (empty($field)) {
             $files = $_FILES;
-        } else {
+        } else if (isset($_FILES[$field])) {
             $files[$field] = $_FILES[$field] ?? '';
         }
         if (empty($files[$field]) || empty($files[$field]['tmp_name'])) {
