@@ -34,6 +34,8 @@
         "aliyuncs/oss-sdk-php": "^2.3",
         "alibabacloud/green": "^1.7",
         "alibabacloud/dysmsapi": "^1.7",
+        "qcloud/cos-sdk-v5": "2.*",
+        "qiniu/php-sdk": "^7.3",
         "overtrue/pinyin": "~4.0",
         "nxp/math-executor": "^2.3"
     },

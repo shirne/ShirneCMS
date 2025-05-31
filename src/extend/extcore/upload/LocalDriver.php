@@ -7,14 +7,46 @@ namespace extcore\upload;
  * Class LocalDriver
  * @package extcore\upload
  */
-class LocalDriver implements UploadInterface{
+class LocalDriver extends UploadInterface{
 
-	protected $config = array();
-	protected $errorMsg = '';
-
-    public function __construct( $config = array() ) {
-		$this->config = $config;
+    public function delFile($name) {
+        if(is_array($name)){
+            foreach ($name as $item){
+                delete_image($item);
+            }
+        }else{
+            if(!empty($name) && strpos($name,'/uploads/')===0){
+                @unlink('.'.$name);
+            }
+        }
+        return true;
     }
+
+    public function thumb($src, $args) {
+        $arguments = $this->parseArg($args);
+        if(empty($arguments))return $src;
+        $args = [];
+        if(!empty($arguments['name'])){
+            $arguments = $this->config['styles'][$arguments['name']] ?? [];
+        }
+        if(empty($arguments)){
+            return $src;
+        }
+        if(!empty($arguments['width'])){
+            $args['w']=$arguments['width'];
+        }
+        if(!empty($arguments['height'])){
+            $args['h']=$arguments['height'];
+        }
+        if(!empty($arguments['mode'])){
+            $args['m']=$arguments['mode'];
+        }
+        if(!empty($arguments['quality'])){
+            $args['q']=$arguments['quality'];
+        }
+        return $src.'?'.http_build_query($args);
+    }
+
 
     public function rootPath($path) {
     	if(!(is_dir($path) && is_writable($path))){
@@ -61,7 +93,4 @@ class LocalDriver implements UploadInterface{
         return true;
     }
 
-    public function getError(){
-        return $this->errorMsg;
-    }
 }

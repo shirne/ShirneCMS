@@ -1,108 +1,91 @@
 <?php
 
-
-
 namespace extcore\upload;
+
+
+use Qiniu\Auth;
+use Qiniu\Storage\BucketManager;
+use Qiniu\Storage\UploadManager;
 
 /**
  * 七牛上传驱动
  * Class QiniuDriver
  * @package extcore\upload
  */
-class QiniuDriver implements UploadInterface {
+class QiniuDriver extends UploadInterface
+{
 
-    protected $config = [
-        'access_key' => '',
-        'secret_key' => '',
-        'bucket' => '',
-        'domain' => '',
-        'url' => ''
+    protected $auth;
 
-    ];
-    protected $errorMsg = '';
+    public function __construct($config = array())
+    {
+        parent::__construct(array_merge([
+            'access_key' => '',
+            'secret_key' => '',
+            'bucket' => '',
+            'domain' => '',
+            'url' => ''
 
-    public function __construct($config = array()) {
-        $this->config = array_merge($this->config, (array)$config['driverConfig']);
+        ], (array)$config['driver_config']));
+
+        $this->auth = new Auth($this->config['access_key'], $this->config['secret_key']);
     }
 
-    public function rootPath($path) {
-        if(empty($this->config['access_key']) || empty($this->config['secret_key']) || empty($this->config['bucket']) || empty($this->config['domain']) || empty($this->config['url'])) {
+    public function delFile($name)
+    {
+        if (!is_array($name)) {
+            $name = explode(',', $name);
+        }
+        try {
+            $bucketMgr = new BucketManager($this->auth);
+            foreach ($name as $item) {
+                if(empty($item))continue;
+                $bucketMgr->delete($this->config['bucket'], $item);
+            }
+        } catch (\Exception $e) {
+            $this->errorMsg = $e->getMessage();
+            return false;
+        }
+        return true;
+    }
+
+
+    public function thumb($src, $args)
+    {
+        $arguments = $this->parseArg($args);
+        $src = $this->config['domain'] . $src;
+        if (empty($arguments)) return $src;
+
+        // todo 实现七牛云图片样式裁剪
+        return $src;
+    }
+
+    public function rootPath($path)
+    {
+        if (empty($this->config['access_key']) || empty($this->config['secret_key']) || empty($this->config['bucket']) || empty($this->config['domain']) || empty($this->config['url'])) {
             $this->errorMsg = '请先配置七牛上传参数！';
             return false;
         }
         return true;
     }
 
-    public function checkPath($path) {
+    public function checkPath($path)
+    {
         return true;
     }
 
-    public function saveFile($fileData) {
+    public function saveFile($fileData)
+    {
 
-        $uploadToken = $this->uploadToken();
         $name = $fileData['savename'];
-        $postFields = array(
-            'token' => $uploadToken,
-            'file'  => curl_file_create(realpath($fileData['tmp_name']), $fileData['type'], $name),
-            'key' => $name
-        );
-
-        $data = $this->curl($this->config['url'], $postFields, 10);
-        if(empty($data)) {
-            $this->errorMsg = '图片服务器连接失败！';
-            return false;
-        }
-        $data = json_decode($data, true);
-        if(empty($data)) {
-            $this->errorMsg = '图片服务器连接失败！';
-            return false;
-        }
-        $fileData['url'] = $this->config['domain'] . '/' . $name;
-        if($data['error']) {
-            if($data['error'] == 'file exists') {
-                return $fileData;
-            }
-            $this->errorMsg = $data['error'];
+        try {
+            $uploadToken = $this->auth->uploadToken($this->config['bucket']);
+            $uploadMgr = new UploadManager();
+            $uploadMgr->putFile($uploadToken, $name, $fileData['tmp_name']);
+        } catch (\Exception $e) {
+            $this->errorMsg = $e->getMessage();
             return false;
         }
         return $fileData;
-    }
-
-    public function curl($url, $post_data=array(),$timeout=10) {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-        curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
-        curl_setopt($ch, CURLOPT_REFERER, $_SERVER['HTTP_HOST']);
-        $result = curl_exec($ch);
-        curl_close($ch);
-        return $result;
-    }
-
-    public function getError() {
-        return $this->errorMsg;
-    }
-
-    protected function uploadToken($param = []) {
-        $deadline = time() + 3600;
-        $data = array('scope' => $this->config['bucket'], 'deadline' => $deadline);
-        $data = array_merge($data, $param);
-        $data = json_encode($data);
-        $data = $this->encode($data);
-        return $this->sign($this->config['secret_key'], $this->config['access_key'], $data) . ':' . $data;
-    }
-
-    protected function encode($str) {
-        $find = array('+', '/');
-        $replace = array('-', '_');
-        return str_replace($find, $replace, base64_encode($str));
-    }
-
-    protected function sign($sk, $ak, $data) {
-        $sign = hash_hmac('sha1', $data, $sk, true);
-        return $ak . ':' . $this->encode($sign);
     }
 }
