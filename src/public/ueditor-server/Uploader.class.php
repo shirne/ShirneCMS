@@ -10,6 +10,7 @@
 class Uploader
 {
     private $fileField; //文件域名
+    private $type; //上传来源
     private $file; //文件上传对象
     private $base64; //文件上传对象
     private $config; //配置信息
@@ -57,7 +58,7 @@ class Uploader
         $this->type = $type;
         if ($type == "remote") {
             $this->saveRemote();
-        } else if($type == "base64") {
+        } else if ($type == "base64") {
             $this->upBase64();
         } else {
             $this->upFile();
@@ -163,7 +164,6 @@ class Uploader
         } else { //移动成功
             $this->stateInfo = $this->stateMap[0];
         }
-
     }
 
     /**
@@ -196,7 +196,7 @@ class Uploader
         // 此时提取出来的可能是 ip 也有可能是域名，先获取 ip
         $ip = gethostbyname($host_without_protocol);
         // 判断是否是私有 ip
-        if(!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE)) {
+        if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE)) {
             $this->stateInfo = $this->getStateInfo("INVALID_IP");
             return;
         }
@@ -226,7 +226,7 @@ class Uploader
         ob_end_clean();
         preg_match("/[\/]([^\/]*)[\.]?[^\.\/]*$/", $imgUrl, $m);
 
-        $this->oriName = $m ? $m[1]:"";
+        $this->oriName = $m ? $m[1] : "";
         $this->fileSize = strlen($img);
         $this->fileType = $this->getFileExt();
         $this->fullName = $this->getFullName();
@@ -255,7 +255,6 @@ class Uploader
         } else { //移动成功
             $this->stateInfo = $this->stateMap[0];
         }
-
     }
 
     /**
@@ -315,7 +314,8 @@ class Uploader
      * 获取文件名
      * @return string
      */
-    private function getFileName () {
+    private function getFileName()
+    {
         return substr($this->filePath, strrpos($this->filePath, '/') + 1);
     }
 
@@ -368,5 +368,4 @@ class Uploader
             "size" => $this->fileSize
         );
     }
-
 }

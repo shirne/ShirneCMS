@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 上传附件和上传视频
  * User: Jinqn
@@ -46,6 +47,10 @@ switch (htmlspecialchars($_GET['action'])) {
         );
         $fieldName = $CONFIG['fileFieldName'];
         break;
+}
+
+if (!$isAdmin) {
+    $config['pathFormat'] = str_replace('/ueditor/', '/ueditor/' . $userid . '/', $config['pathFormat']);
 }
 
 /* 生成上传实例对象并完成上传 */
