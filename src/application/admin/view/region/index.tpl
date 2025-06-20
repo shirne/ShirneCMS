@@ -8,7 +8,7 @@
 			<div class="card side-cate">
 				<div class="card-header">
 					<a href="javascript:" class="btn float-right btn-outline-primary btn-sm addcate">添加</a>
-					<a href="javascript:" class="btn float-right btn-outline-primary btn-sm btn-batch-add"><i
+					<a href="javascript:" class="btn float-right btn-outline-primary btn-sm btn-batch-add mr-2"><i
 							class="ion-md-albums"></i> {:lang('Batch add')}</a>
 					区域
 				</div>
@@ -47,13 +47,14 @@
 					</tr>
 				</thead>
 				<tbody>
-					{empty name="lists"}{:list_empty(7)}{/empty}
+					{empty name="lists"}{:list_empty(8)}{/empty}
 					{volist name="lists" id="v" }
 					<tr>
 						<td><input type="checkbox" name="id" value="{$v.id}" /></td>
 						<td>{$v.title}</td>
 						<td>{$v.title_en}</td>
 						<td>{$v.code}</td>
+						<td>{$v.short}</td>
 						<td>{$v.category_title}</td>
 						<td>
 							{$v.sort}
@@ -93,42 +94,80 @@
 			<div class="input-group"><span class="input-group-prepend"><span class="input-group-text">区号</span></span><input class="form-control" name="code" placeholder="移动电话区号"/></div>
 			</div>
 			<div class="form-group">
+				<div class="input-group"><span class="input-group-prepend"><span class="input-group-text">邮编</span></span><input class="form-control" name="postcode" placeholder="邮政编码"/></div>
+			</div>
+			<div class="form-group">
 			<div class="input-group"><span class="input-group-prepend"><span class="input-group-text">区域简称</span></span><input class="form-control" name="short" placeholder="区域名称的简写"/></div>
 			</div>
 			<div class="form-group">
 			<div class="input-group"><span class="input-group-prepend"><span class="input-group-text">区域拼音</span></span><input class="form-control" name="name" placeholder="区域对应的唯一识别符号,只能为英文"/></div>
 			</div>
 			<div class="form-group">
-				<div class="input-group"><span class="input-group-prepend"><span class="input-group-text">所属区域</span></span><select class="form-control" name="pid">
-					<option value="0">顶级区域</option>
-						{foreach $category as $v}
-							<option value="{$v.id}" >{$v.html} {$v.title}</option>
-						{/foreach}
-					</select>
+				<div class="input-group">
+					<span class="input-group-prepend"><span class="input-group-text">所属区域</span></span>
+					<input type="hidden" name="pid" />
+					<input type="text" class="form-control" readonly />
+					<span class="input-group-append">
+					<button class="btn btn-outline-secondary pickRegion" type="button" >选择</button>
+					</span>
 				</div>
 			</div>
 		</div>
 	</script>
 	<script type="text/html" id="cateselect">
         <div class="form-group">
-            <select class="form-control">
-                <option value="0">顶级区域</option>
-                {volist name="regions" id="cate"}
-                    <option value="{$cate.id}">{$cate.html|raw} {$cate.title}</option>
-                {/volist}
-            </select>
+			<div class="input-group">
+				<span class="input-group-prepend"><span class="input-group-text">所属区域</span></span>
+				<input type="hidden" name="pid" />
+				<input type="text" class="form-control" readonly />
+				<span class="input-group-append">
+				<button class="btn btn-outline-secondary pickRegion" type="button" >选择</button>
+				</span>
+			</div>
         </div>
         <div class="form-group text-muted">每行一个分类，每个分类以空格区分名称、简称、别名，简称、别名可依次省略，别名必须使用英文字母<br />例：分类名称 分类简称 catename</div>
     </script>
 	<script type="text/javascript">
 
 		jQuery(function ($) {
+			function pickRegion(e) {
+				var source = $(e.target)
+				var group = source.parents('.input-group');
+				var init = group.find('[name=pid]').val()
+				if (!init) init = 'china'
+				dialog.pickTree({
+					url: "{:url('api/common/region')}",
+					titlekey: 'title',
+					name: '地区',
+					initTree: init,
+					globalSearch: true,
+				}, function (region) {
+					if (region && region.length > 0) {
+						group.find('[name=pid]').val(region[region.length - 1].id)
+						group.find('[type=text]').val(region.map((m) => m.title).join(','))
+					}
+				})
+			}
 			$('.addcate').click(function () {
 				var data = $(this).data();
 				var dlg = new Dialog({
 					backdrop: 'static',
 					onshown: function (body) {
 						bindData(body, data)
+						var button = body.find('.pickRegion')
+						button.click(pickRegion)
+						if (data.pid) {
+							var group = button.parents('.input-group');
+							$.ajax({
+								url: "{:url('api/common/region')}",
+								data: { tree: data.pid },
+								success: function (res) {
+									if (res.code == 1) {
+										group.find('[type=text]').val(res.data.map((m) => m.title).join(','))
+									}
+								}
+							})
+						}
 					},
 					onsure: function (body) {
 						var newData = getData(body)
@@ -158,7 +197,10 @@
 				var prmpt = dialog.prompt({
 					title: '批量添加',
 					content: $('#cateselect').html(),
-					is_textarea: true
+					is_textarea: true,
+					onshow: function (body) {
+						body.find('.pickRegion').click(pickRegion)
+					}
 				}, function (args, body) {
 					var pid = body.find('select').val();
 					var loading = dialog.loading('正在提交...');

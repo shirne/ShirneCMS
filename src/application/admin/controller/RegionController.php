@@ -13,7 +13,7 @@ class RegionController extends BaseController
     /**
      * 区域管理
      */
-    public function index($keyword = "", $cate_id = 0)
+    public function index($keyword = "", $cate_id = 0, $pagesize = 15)
     {
         if ($this->request->isPost()) {
             return redirect(url('', ['cate_id' => $cate_id, 'keyword' => base64url_encode($keyword)]));
@@ -26,16 +26,16 @@ class RegionController extends BaseController
             $model->whereLike('region.title|region.title_en', "%$keyword%");
         }
         if ($cate_id > 0) {
-            $model->whereIn('region.pid', RegionFacade::getSubCateIds($cate_id, 2));
+            $model->whereIn('region.pid', RegionFacade::getSubCateIds($cate_id, 3));
         }
 
-        $lists = $model->order('id DESC')->paginate(10);
-        $this->assign('lists', $lists);
+        $lists = $model->order('id DESC')->paginate($pagesize);
+
+        $this->assign('lists', $lists->items());
         $this->assign('page', $lists->render());
         $this->assign('keyword', $keyword);
         $this->assign('cate_id', $cate_id);
-        $this->assign("category", RegionFacade::getSubCategory(0, 2));
-        $this->assign("regions", RegionFacade::getCategories());
+        $this->assign("category", RegionFacade::getSubCategory(0, 3));
 
         return $this->fetch();
     }
@@ -122,7 +122,6 @@ class RegionController extends BaseController
 
         if ($this->request->isPost()) {
             $data = $this->request->post();
-
             $validate = new RegionValidate();
             $validate->setId($id);
 
