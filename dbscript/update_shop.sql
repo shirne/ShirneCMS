@@ -518,11 +518,14 @@ CREATE TABLE `sa_express_cache` (
 DROP TABLE IF EXISTS `sa_postage`;
 CREATE TABLE `sa_postage` (
   `id` INT NOT NULL AUTO_INCREMENT,
+  `store_id` int(11) DEFAULT 0 COMMENT '店铺id',
   `title` VARCHAR(50) NULL,
   `is_default` TINYINT NULL DEFAULT 0,
+  `status` tinyint DEFAULT '1' COMMENT '状态',
   `calc_type` TINYINT NULL DEFAULT 0 COMMENT '0-按重  1-按件 2-按体积',
   `area_type` TINYINT NULL DEFAULT 0,
   `specials` TEXT,
+  `regions` VARCHAR(100) NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

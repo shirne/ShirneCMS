@@ -6,8 +6,8 @@
 <div id="page-wrapper">
     <div class="page-header">{if !empty($model['id'])}编辑{else}添加{/if}运费模板</div>
     <div class="page-content">
-        <form method="post">
-            <div class="row" class="noajax" onsubmit="return false">
+        <form method="post" class="noajax" onsubmit="return false">
+            <div class="row">
                 <div class="col-12 col-lg-6">
                     <div class="card mt-3">
                         <div class="card-header">基本设置</div>
@@ -21,7 +21,20 @@
                                         placeholder="输入名称">
                                 </div>
                             </div>
-
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">发货地区</span>
+                                    </div>
+                                    <input type="hidden" name="regions" v-model="postage.regions" />
+                                    <input type="text" class="form-control" :value="region_names" placeholder="请选择地区"
+                                        aria-label="请选择地区" aria-describedby="button-addon2">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary pickRegion" type="button"
+                                            id="button-addon2" @click="pickRegion">选择</button>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="form-group col form-row">
                                 <label for="is_default">计算方式</label>
                                 <div class="col">
@@ -83,12 +96,14 @@
                             <div class="form-group col form-row">
                                 <div class="col">
                                     <div class="areas">
-                                        <span v-for="a in postage.specials" class="badge badge-secondary mr-1">
-                                            <input type="hidden" name="specials[]" :value="a" />
-                                            {{a}}
+                                        <span v-for="(a,idx) in postage.specials" :key="a.id"
+                                            class="chip chip-secondary mr-1">
+                                            <input type="hidden" name="specials[]" :value="a.id" />
+                                            {{a.title}}
+                                            <span class="close" @click="delGlobalArea(idx)">&times;</span>
                                         </span>
                                     </div>
-                                    <a href="javascript:" class="setareas" @click="setGlobalAreas">设置</a>
+                                    <a href="javascript:" class="setareas" @click="addGlobalAreas">添加</a>
                                 </div>
                             </div>
                         </div>
@@ -123,16 +138,17 @@
                                         {{expresses[a]}}
                                     </span>
                                 </div>
-                                <a href="javascript:" class="setexpress" :data-id="idx" @click="setExpress">设置</a>
+                                <a href="javascript:" class="setexpress" @click="setExpress(idx)">设置</a>
                             </td>
                             <td width="400">
                                 <div class="areas">
-                                    <span v-for="a in area.areas" class="badge badge-secondary mr-1">
-                                        <input type="hidden" :name="'areas['+area.id+'][areas][]'" :value="a" />
-                                        {{a}}
+                                    <span v-for="(a,sidx) in area.areas" class="chip chip-secondary mr-1">
+                                        <input type="hidden" :name="'areas['+area.id+'][areas][]'" :value="a.id" />
+                                        {{a.title}}
+                                        <span class="close" @click="delArea(idx, sidx)">&times;</span>
                                     </span>
                                 </div>
-                                <a href="javascript:" class="setareas" :data-id="idx" @click="setAreas">设置</a>
+                                <a href="javascript:" class="setareas" @click="addAreas(idx)">添加</a>
                             </td>
                             <td width="100">
                                 <input type="text" class="form-control" :name="'areas['+area.id+'][weight_lower]'"
@@ -190,12 +206,11 @@
 </div>
 {/block}
 {block name="script"}
-<script type="text/javascript" src="__STATIC__/js/location.min.js"></script>
 <script type="text/javascript" src="__STATIC__/vue/2.6/vue.min.js"></script>
 <script type="text/javascript">
     var exphtml = '';
     var areahtml = '';
-    var locobj = new Location()
+
     var app = new Vue({
         el: '#page-wrapper',
         data: {
@@ -208,6 +223,7 @@
                 specials: []
             },
             isSubmit: false,
+            region_names: '{$region_names}',
             areas: [],
             area_new_index: 0,
             expresses: {}
@@ -263,8 +279,7 @@
                     self.areas.splice(idx, 1)
                 })
             },
-            setExpress: function (e) {
-                var idx = $(e.target).data('id')
+            setExpress: function (idx) {
                 var picked = this.areas[idx].expresses
                 var self = this
                 if (!exphtml) {
@@ -299,93 +314,66 @@
                     }
                 }).show(exphtml, '选择支持快递');
             },
-            setAreas: function (e) {
-                var idx = $(e.target).data('id')
-                var picked = this.areas[idx].areas
+            pickRegion: function (e) {
                 var self = this
-                this.pickArea(picked, function (newpicked) {
-                    Vue.set(self.areas[idx], 'areas', newpicked)
+                dialog.pickTree({
+                    url: "{:url('api/common/region')}",
+                    titlekey: 'title',
+                    name: '地区',
+                    initTree: 'china',
+                    globalSearch: true,
+                }, function (region) {
+                    if (region && region.length > 0) {
+                        self.postage.regions = region.map((m) => m.id).join(',')
+                        self.region_names = region.map((m) => m.title).join(',')
+                    }
                 })
             },
-            setGlobalAreas: function (e) {
+            delArea: function (idx, sidx) {
                 var self = this
-                var picked = self.postage.specials
-                this.pickArea(picked, function (newpicked) {
-                    Vue.set(self.postage, 'specials', newpicked)
-                }, self.postage.area_type == 1 ? '选择不配置送区域' : '选择配送区域')
+                dialog.confirm('确定移除该地区？', function () {
+                    self.areas[idx].areas.splice(sidx, 1)
+                })
             },
-            pickArea: function (picked, callback, title) {
-                if (!areahtml) {
-                    areahtml = '<div class="container-fluid" style="height:500px;overflow: scroll">';
-                    var provinces = locobj.find(0)
-                    for (var k in provinces) {
-                        var cities = locobj.find('0,' + k)
-                        if (cities) {
-                            areahtml += '<div class="row border-bottom pt-1 pb-1"> <div class="text-center" style="width:100px"><span class="badge badge-info " style="font-size:14px;">' + provinces[k] + '</span><br /><a href="javascript:" class="btn btn-sm pt-0 pb-0 pickrow">选择全部</a><br /><a href="javascript:" class="btn btn-sm pt-0 pb-0 cancelrow">取消选择</a></div><div class="col">';
-                            for (var c in cities) {
-                                areahtml += '<div class="float-left mr-2 mb-2"> <div class="btn-group-toggle btn-group-sm" data-toggle="buttons">\n' +
-                                    '  <label class="btn btn-outline-secondary">\n' +
-                                    '    <input type="checkbox" value="' + cities[c] + '" name="areaitem" autocomplete="off"> ' + cities[c] + '\n' +
-                                    '  </label>\n' +
-                                    '</div></div>'
-                            }
-                            areahtml += '</div></div>';
+            addAreas: function (idx) {
+                var self = this
+                dialog.pickTree({
+                    url: "{:url('api/common/region')}",
+                    titlekey: 'title',
+                    name: '地区',
+                    initTree: 'china',
+                    globalSearch: true,
+                }, function (region) {
+                    if (region && region.length > 0) {
+                        if (!self.areas[idx].areas) {
+                            Vue.set(self.areas[idx], 'areas', [])
                         }
+                        self.areas[idx].areas.push(region[region.length - 1])
                     }
-                    areahtml += '</div>';
-                }
-                var dlg = new Dialog({
-                    size: 'lg',
-                    addbtn: {
-                        text: '清空',
-                        click: function (body) {
-                            var ckboxes = $(body).find('[name=areaitem]')
-                            for (var i = 0; i < ckboxes.length; i++) {
-                                if (ckboxes.eq(i).prop('checked')) {
-                                    ckboxes.eq(i).parent('label')[0].click()
-                                }
-                            }
-                            return false;
-                        },
-                        type: 'warning'
-                    },
-                    onshown: function (body) {
-                        if (picked && picked.length > 0) {
-                            var ckboxes = $(body).find('[name=areaitem]')
-                            for (var i = 0; i < ckboxes.length; i++) {
-                                if (picked.indexOf(ckboxes.eq(i).val()) > -1) {
-                                    ckboxes.eq(i).parent('label')[0].click()
-                                }
-                            }
+                })
+            },
+            delGlobalArea: function (idx) {
+                var self = this
+                dialog.confirm('确定移除该地区？', function () {
+                    self.postage.specials.splice(idx, 1)
+                })
+            },
+            addGlobalAreas: function (e) {
+                var self = this
+                dialog.pickTree({
+                    url: "{:url('api/common/region')}",
+                    titlekey: 'title',
+                    name: '地区',
+                    initTree: 'china',
+                    globalSearch: true,
+                }, function (region) {
+                    if (region && region.length > 0) {
+                        if (!self.postage.specials) {
+                            Vue.set(self.postage, 'specials', [])
                         }
-                        $(body).find('a.pickrow').click(function (e) {
-                            var prow = $(this).parents('.row')
-                            var ckboxes = prow.find('[name=areaitem]')
-                            for (var i = 0; i < ckboxes.length; i++) {
-                                if (!ckboxes.eq(i).prop('checked')) {
-                                    ckboxes.eq(i).parent('label')[0].click()
-                                }
-                            }
-                        })
-                        $(body).find('a.cancelrow').click(function (e) {
-                            var prow = $(this).parents('.row')
-                            var ckboxes = prow.find('[name=areaitem]')
-                            for (var i = 0; i < ckboxes.length; i++) {
-                                if (ckboxes.eq(i).prop('checked')) {
-                                    ckboxes.eq(i).parent('label')[0].click()
-                                }
-                            }
-                        })
-                    },
-                    onsure: function (body) {
-                        var ckboxes = $(body).find('[name=areaitem]:checked')
-                        var picked = []
-                        for (var i = 0; i < ckboxes.length; i++) {
-                            picked.push(ckboxes.eq(i).val())
-                        }
-                        callback(picked)
+                        self.postage.specials.push(region[region.length - 1])
                     }
-                }).show(areahtml, title ? title : '选择支持区域');
+                })
             },
             doSubmit: function (e) {
                 e.preventDefault()
@@ -393,9 +381,16 @@
                 this.isSubmit = true;
                 var self = this;
                 var data = JSON.parse(JSON.stringify(this.postage))
-                data.areas = {}
+                if (data.specials) data.specials = data.specials.map(function (s) {
+                    return s.id
+                })
+                data.areas = []
                 for (var i = 0; i < this.areas.length; i++) {
-                    data.areas[this.areas[i].id] = JSON.parse(JSON.stringify(this.areas[i]))
+                    var row = JSON.parse(JSON.stringify(this.areas[i]))
+                    if (row.areas) row.areas = row.areas.map(function (s) {
+                        return s.id
+                    })
+                    data.areas.push(row);
                 }
                 $.ajax({
                     url: '',

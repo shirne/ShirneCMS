@@ -19,6 +19,8 @@
             <tr>
                 <th width="50">编号</th>
                 <th width="200">名称</th>
+                <th>所属</th>
+                <th>地区</th>
                 <th width="80">计费类型</th>
                 <th>配送限制</th>
                 <th width="160">&nbsp;</th>
@@ -29,6 +31,12 @@
             <tr>
                 <td>{$v.id}</td>
                 <td>{$v.title}{if $v['is_default']}<span class="badge badge-info">默认</span> {/if}</td>
+                <th>{$v.store_name|default='-'}
+                    {if $v['status']==0}
+                    <span class="badge badge-warning">私有</span>
+                    {/if}
+                </th>
+                <th>{$v.region_names|default=''}</th>
                 <td>
                     {if $v['calc_type'] == 2}
                     <span class="badge badge-warning">按体积计算</span>
@@ -40,7 +48,7 @@
                 </td>
                 <td>
                     {$v['area_type']==1?'仅':'不'}配送地区:
-                    {:implode(', ',$v['specials'])}
+                    {$v['special_names']}
                 </td>
                 <td class="operations">
                     <a class="btn btn-outline-primary" title="编辑"
@@ -52,5 +60,6 @@
             {/foreach}
         </tbody>
     </table>
+    {$page|raw}
 </div>
 {/block}

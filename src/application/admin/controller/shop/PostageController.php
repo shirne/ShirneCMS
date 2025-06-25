@@ -5,7 +5,9 @@ namespace app\admin\controller\shop;
 
 use app\admin\controller\BaseController;
 use app\admin\validate\PostageValidate;
+use app\common\facade\RegionFacade;
 use app\common\model\PostageModel;
+use app\common\model\RegionModel;
 use think\Db;
 
 class PostageController extends BaseController
@@ -13,11 +15,45 @@ class PostageController extends BaseController
     /**
      * 运费模板列表
      */
-    public function index()
+    public function index($store_id = '')
     {
+        $model = PostageModel::order('id ASC');
+        if ($store_id !== '') {
+            $store_id = intval($store_id);
 
-        $lists = PostageModel::order('id ASC')->select();
+            $model->where('store_id', $store_id);
+        }
+        $paged = $model->paginate();
+        $lists = $paged->items();
+        $factids = array_column($lists, 'store_id');
+        if (!empty($factids)) {
+            $factories = Db::name('factory')->whereIn('id', $factids)->select();
+            if (!empty($factories)) {
+                $factories = array_column($factories, NULL, 'id');
+                foreach ($lists as &$item) {
+                    if (isset($factories[$item['store_id']])) {
+                        $item['store_name'] = $factories[$item['store_id']]['title'];
+                    }
+                }
+                unset($item);
+            }
+        }
+        foreach ($lists as &$item) {
+            if (!empty($item['regions'])) {
+                $item['region_names'] = implode(',', RegionModel::GetTitles($item['regions']));
+            } else {
+                $item['region_names'] = '';
+            }
+            if (!empty($item['specials'])) {
+                $item['special_names'] = implode(',', RegionModel::GetTitles($item['specials']));
+            } else {
+                $item['special_names'] = '';
+            }
+        }
+        unset($item);
         $this->assign('lists', $lists);
+        $this->assign('page', $paged->render());
+        $this->assign('store_id', $store_id);
         return $this->fetch();
     }
 
@@ -37,6 +73,12 @@ class PostageController extends BaseController
                 $areas = $data['areas'];
                 unset($data['areas']);
                 if (empty($data['specials'])) $data['specials'] = [];
+                if (!empty($data['regions'])) {
+                    $datas = RegionModel::GetTitles($data['regions']);
+                    if (count($datas) > 1) $data['country'] = $datas[1];
+                    if (count($datas) > 2) $data['province'] = $datas[2];
+                    if (count($datas) > 3) $data['city'] = $datas[3];
+                }
                 $levelModel = PostageModel::create($data);
                 $insertId = $levelModel['id'];
                 if ($insertId !== false) {
@@ -53,17 +95,19 @@ class PostageController extends BaseController
         $this->assign('model', [
             'is_default' => $counts < 1 ? 1 : 0,
             'area_type' => 0,
-            'calc_type' => 0
+            'calc_type' => 0,
+            'specials' => [],
         ]);
         $this->assign('areas', [
             ['id' => 0, 'sort' => 0]
         ]);
+        $this->assign('region_names', '');
         $this->assign('express', config('express.'));
         return $this->fetch('update');
     }
 
     /**
-     * 修改会员组
+     * 修改邮费设置
      */
     public function update($id)
     {
@@ -80,6 +124,12 @@ class PostageController extends BaseController
                 $this->error($validate->getError());
             } else {
                 if (empty($data['specials'])) $data['specials'] = [];
+                if (!empty($data['regions'])) {
+                    $datas = RegionModel::GetTitles($data['regions']);
+                    if (count($datas) > 1) $data['country'] = $datas[1];
+                    if (count($datas) > 2) $data['province'] = $datas[2];
+                    if (count($datas) > 3) $data['city'] = $datas[3];
+                }
                 if ($model->allowField(true)->save($data)) {
                     PostageModel::updateAreas($data['areas'], $id);
                     cache('postage', null);
@@ -90,14 +140,16 @@ class PostageController extends BaseController
                 }
             }
         }
+        $model->specials = RegionFacade::findCategories($model->specials);
         $this->assign('model', $model);
+        $this->assign('region_names', implode(',', RegionModel::GetTitles($model['regions'])));
         $this->assign('areas', $model->getAreas());
         $this->assign('express', config('express.'));
         return $this->fetch();
     }
 
     /**
-     * 删除会员组
+     * 删除邮费设置
      * @param $id
      */
     public function delete($id)

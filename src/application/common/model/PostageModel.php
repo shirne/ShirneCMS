@@ -5,6 +5,7 @@ namespace app\common\model;
 
 
 use app\common\core\CacheableModel;
+use app\common\facade\RegionFacade;
 use think\Db;
 
 class PostageModel extends CacheableModel
@@ -34,24 +35,24 @@ class PostageModel extends CacheableModel
         $exists = array_column($exists, NULL, 'id');
         $sort = 0;
         $existsids = [];
-        foreach ($newareas as $area_id => $area) {
+        foreach ($newareas as $area) {
             $area['sort'] = $sort;
             if (!empty($area['expresses'])) $area['expresses'] = json_encode($area['expresses'], JSON_UNESCAPED_UNICODE);
             else $area['expresses'] = '';
             if (!empty($area['areas'])) $area['areas'] = json_encode($area['areas'], JSON_UNESCAPED_UNICODE);
             else $area['areas'] = '';
             unset($area['id']);
+            $area_id = $area['id'];
             if (is_numeric($area_id) && isset($exists[$area_id])) {
-                $existsids[] = $area_id;
                 Db::name('postageArea')->where('id', $area_id)->update($area);
             } else {
                 $area['postage_id'] = $id;
-                $newid = Db::name('postageArea')->insert($area, false, true);
-                $existsids[] = $newid;
+                $area_id = Db::name('postageArea')->insert($area, false, true);
             }
+            $existsids[] = $area_id;
             $sort++;
         }
-        Db::name('postageArea')->whereNotIn('id', $existsids)->delete();
+        Db::name('postageArea')->where('postage_id', $id)->whereNotIn('id', $existsids)->delete();
     }
 
     public function getAreas()
@@ -60,6 +61,10 @@ class PostageModel extends CacheableModel
         foreach ($lists as &$item) {
             $item['expresses'] = force_json_decode($item['expresses']);
             $item['areas'] = force_json_decode($item['areas']);
+
+            if (!empty($item['areas'])) {
+                $item['areas'] = RegionFacade::findCategories($item['areas']);
+            }
         }
         return $lists;
     }
