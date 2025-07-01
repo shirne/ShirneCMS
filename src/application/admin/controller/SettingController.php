@@ -124,6 +124,18 @@ class SettingController extends BaseController
         return $this->fetch();
     }
 
+    private function getGroups()
+    {
+        $allGroups = Db::name('setting')->field('group')->distinct('group')->select();
+        $groups = settingGroups();
+        foreach ($allGroups as $g) {
+            if (!empty($g['group']) && !isset($groups[$g['group']])) {
+                $groups[$g['group']] = lang($g['group']);
+            }
+        }
+        return $groups;
+    }
+
     /**
      * 添加配置
      * @return mixed
@@ -145,10 +157,13 @@ class SettingController extends BaseController
                 }
             }
         }
-        $model = array();
+        $groups = $this->getGroups();
+        $model = array(
+            'group' => current(array_keys($groups)),
+        );
         $this->assign('model', $model);
         $this->assign('id', 0);
-        $this->assign('groups', settingGroups());
+        $this->assign('groups', $groups);
         $this->assign('types', settingTypes());
         return $this->fetch('edit');
     }
@@ -181,9 +196,10 @@ class SettingController extends BaseController
         if (empty($model)) {
             $this->error('要修改的配置不存在');
         }
+        $groups = $this->getGroups();
         $this->assign('model', $model);
         $this->assign('id', $id);
-        $this->assign('groups', settingGroups());
+        $this->assign('groups', $groups);
         $this->assign('types', settingTypes());
         return $this->fetch();
     }
