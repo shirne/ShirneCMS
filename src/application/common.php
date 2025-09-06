@@ -1265,6 +1265,27 @@ function auto_read($file, $charset = 'UTF-8')
     return "";
 }
 
+if (!function_exists('str_contains')) {
+    function str_contains($str, $need)
+    {
+        return strpos($str, $need) !== false;
+    }
+}
+
+if (!function_exists('str_starts_with')) {
+    function str_starts_with($str, $need)
+    {
+        return strpos($str, $need) === 0;
+    }
+}
+
+if (!function_exists('str_ends_with')) {
+    function str_ends_with($str, $need)
+    {
+        return (@substr_compare($str, $need, -strlen($need)) == 0);
+    }
+}
+
 /**
  * 索引二维数组
  * @param $arr array 二维数组
