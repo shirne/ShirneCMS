@@ -4,6 +4,7 @@ namespace modules\credit\model;
 
 
 use app\common\core\ContentModel;
+use modules\credit\facade\GoodsCategoryFacade;
 
 /**
  * Class GoodsModel
@@ -17,6 +18,7 @@ class GoodsModel extends ContentModel
     function __construct($data = [])
     {
         parent::__construct($data);
+
         $this->cateFacade = GoodsCategoryFacade::getFacadeInstance();
         $this->searchFields = 'title|goods_no|description';
     }
