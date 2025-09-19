@@ -594,7 +594,7 @@ class IndexController extends BaseController
 
         if (!empty($key)) {
             $key = base64url_decode($key);
-            $model->whereLike('ManagerLog.remark', "%$key%");
+            $model->whereLike('MemberLog.remark', "%$key%");
         }
         if (!empty($type)) {
             $model->where('action', $type);

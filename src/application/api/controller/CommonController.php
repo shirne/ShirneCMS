@@ -236,10 +236,10 @@ class CommonController extends BaseController
     public function feedbacks($pagesize = 10)
     {
         $model = Db::view('feedback', '*')
-            ->view("member", ["username", "nickname", "avatar"], "Feedback.member_id=member.id", "LEFT")
-            ->view("manager", ["realname" => "manager_name"], "Feedback.manager_id=manager.id", "LEFT")
-            ->where("Feedback.status", 1)
-            ->order("Feedback.create_time DESC");
+            ->view("member", ["username", "nickname", "avatar"], "feedback.member_id=member.id", "LEFT")
+            ->view("manager", ["realname" => "manager_name"], "feedback.manager_id=manager.id", "LEFT")
+            ->where("feedback.status", 1)
+            ->order("feedback.create_time DESC");
 
         $list = $model->paginate($pagesize);
 

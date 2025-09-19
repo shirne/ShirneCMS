@@ -31,10 +31,10 @@ class FeedbackController extends BaseController
             ->view('Manager', ['username' => 'manager_username', 'realname' => 'manager_realname'], 'Feedback.manager_id=Manager.id', 'LEFT');
 
         if (!empty($key)) {
-            $model->whereLike('feedback.email|feedback.content|member.nickname|member.username', "%$key%");
+            $model->whereLike('Feedback.email|Feedback.content|Member.nickname|Member.username', "%$key%");
         }
         if ($type > 0) {
-            $model->where('feedback.type', $type);
+            $model->where('Feedback.type', $type);
         }
         $lists = $model->order('Feedback.id desc')->paginate(15);
         $this->assign('levels', getMemberLevels());
