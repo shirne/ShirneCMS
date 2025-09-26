@@ -127,8 +127,11 @@ class CommonController extends BaseController
         return null;
     }
 
-    public function booth($flags)
+    public function booth($flags = '')
     {
+        if (empty($flags)) {
+            $this->error('参数错误');
+        }
         return $this->response(BoothModel::fetchBooth($flags));
     }
 
@@ -188,8 +191,11 @@ class CommonController extends BaseController
      * @param $flag
      * @return Response
      */
-    public function advs($flag)
+    public function advs($flag = '')
     {
+        if (empty($flags)) {
+            $this->error('参数错误');
+        }
         return $this->response(AdvGroupModel::getAdList($flag));
     }
 
