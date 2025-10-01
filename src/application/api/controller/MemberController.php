@@ -304,7 +304,7 @@ class MemberController extends AuthedController
         if ($result) {
             if (!empty($this->user['avatar'])) delete_image($this->user['avatar']);
             user_log($this->user['id'], 'avatar', 1, '修改头像');
-            $this->success('更新成功');
+            $this->success(['url' => $data['avatar']], 1, '更新成功');
         } else {
             $this->error('更新失败', 0);
         }
