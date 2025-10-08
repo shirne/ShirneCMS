@@ -20,9 +20,10 @@
 						<a href="javascript:" data-id="{$v['id']}" title="删除地区"
 							class="float-right ml-2 text-danger delcate"><i class="ion-md-trash"></i></a>
 						<a href="javascript:" data-id="{$v['id']}" title="编辑地区" data-title="{$v['title']}"
-							data-short="{$v['short']}" data-title_en="{$v['title_en']}" data-code="{$v['code']}"
-							data-name="{$v['name']}" data-sort="{$v['sort']}" data-pid="{$v['pid']}"
-							class="float-right ml-2 addcate"><i class="ion-md-create"></i></a>
+							data-short="{$v['short']|default=''}" data-title_en="{$v['title_en']|default=''}"
+							data-code="{$v['code']|default=''}" data-name="{$v['name']|default=''}"
+							data-sort="{$v['sort']}" data-pid="{$v['pid']}" class="float-right ml-2 addcate"><i
+								class="ion-md-create"></i></a>
 						<a href="javascript:" data-pid="{$v['id']}" title="添加地区" class="float-right addcate"><i
 								class="ion-md-add"></i></a>
 						<a class="list-cate-item" href="{:url('index',['key'=>$keyword,'cate_id'=>$v['id']])}"
@@ -52,18 +53,19 @@
 					<tr>
 						<td><input type="checkbox" name="id" value="{$v.id}" /></td>
 						<td>{$v.title}</td>
-						<td>{$v.title_en}</td>
-						<td>{$v.code}</td>
-						<td>{$v.short}</td>
+						<td>{$v.title_en|default=''}</td>
+						<td>{$v.code|default=''}</td>
+						<td>{$v.short|default=''}</td>
 						<td>{$v.category_title}</td>
 						<td>
 							{$v.sort}
 						</td>
 						<td class="operations">
 							<a class="btn btn-outline-primary addcate" href="javascript:" data-id="{$v['id']}"
-								title="编辑地区" data-title="{$v['title']}" data-short="{$v['short']}"
-								data-title_en="{$v['title_en']}" data-code="{$v['code']}" data-name="{$v['name']}"
-								data-sort="{$v['sort']}" data-pid="{$v['pid']}"><i class="ion-md-create"></i> </a>
+								title="编辑地区" data-title="{$v['title']}" data-short="{$v['short']|default=''}"
+								data-title_en="{$v['title_en']|default=''}" data-code="{$v['code']|default=''}"
+								data-name="{$v['name']}" data-sort="{$v['sort']}" data-pid="{$v['pid']}"><i
+									class="ion-md-create"></i> </a>
 							<a class="btn btn-outline-danger link-confirm" title="{:lang('Delete')}"
 								data-confirm="您真的确定要删除吗？\n删除后将不能恢复!"
 								href="{:url('region/delete',array('id'=>$v['id']))}"><i class="ion-md-trash"></i> </a>
