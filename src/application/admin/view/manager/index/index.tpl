@@ -27,7 +27,7 @@
             <tr>
                 <th width="50">编号</th>
                 <th>用户名</th>
-                <th>邮箱</th>
+                <th>联系方式</th>
                 <th>注册时间/修改时间</th>
                 <th>上次登陆</th>
                 <th>类型</th>
@@ -40,7 +40,7 @@
             <tr>
                 <td>{$v.id}</td>
                 <td>{$v.username}</td>
-                <td>{$v.email}</td>
+                <td>{$v.email}<br />{$v.mobile}</td>
                 <td style="font-size: 12px">{$v.create_time|showdate}<br />{$v.update_time|showdate}</td>
                 <td style="font-size: 12px">{$v.login_ip}<br />{$v.login_time|showdate}</td>
                 <td>
