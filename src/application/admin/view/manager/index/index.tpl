@@ -47,7 +47,7 @@
 
                     {if isset($roles[$v['type']])}
                     <span
-                        class="badge badge-{$roles[$v['type']]['label_type']}">{$roles[$v['type']]['role_name']}</span>
+                        class="badge badge-{$roles[$v['type']]['label_type']|default=secondary}">{$roles[$v['type']]['role_name']}</span>
                     {else/}
                     <span class="badge badge-secondary"> - </span>
                     {/if}

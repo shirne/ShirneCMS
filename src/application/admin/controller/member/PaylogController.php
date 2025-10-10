@@ -71,7 +71,7 @@ class PaylogController extends BaseController
 
         $all = ['all' => ['title' => '全部']];
         $orderTypes = array_merge($all, PayOrderModel::$orderTypes);
-        $payTypes = array_merge($all, PayOrderModel::$payTypes);
+        $payTypes = array_merge(['all' => '全部'], PayOrderModel::$payTypes);
 
         $orderDetails = [
             'order' => 'order/detail',
