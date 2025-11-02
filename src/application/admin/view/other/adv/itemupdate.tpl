@@ -70,8 +70,8 @@
             <div class="form-row">
                 {foreach $group['ext_set']['key'] as $key => $ikey}
                 <div class="col-6 form-group">
-                    <label for="image">{$group['ext_set']['value'][$key]}</label>
-                    <input type="text" name="ext[{$ikey}]" class="form-control"
+                    <label for="ext_{$ikey}">{$group['ext_set']['value'][$key]}</label>
+                    <input type="text" id="ext_{$ikey}" name="ext[{$ikey}]" class="form-control"
                         value="{$model['ext'][$ikey]|default=''}" />
                 </div>
                 {/foreach}
