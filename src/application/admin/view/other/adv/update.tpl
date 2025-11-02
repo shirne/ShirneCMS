@@ -27,6 +27,11 @@
                 </label>
             </div>
             <div class="form-group">
+                <label for="description">备注说明</label>
+                <input type="text" name="description" class="form-control" value="{$model.description}"
+                    placeholder="备注说明">
+            </div>
+            <div class="form-group">
                 <label for="image">广告位尺寸</label>
                 <div class="form-row">
                     <div class="input-group col">

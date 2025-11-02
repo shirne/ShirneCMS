@@ -245,6 +245,7 @@ DROP TABLE IF EXISTS `sa_adv_group`;
 CREATE TABLE `sa_adv_group` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
   `title` varchar(100) DEFAULT '',
+  `description` varchar(300) DEFAULT '',
   `flag` varchar(50) DEFAULT '',
   `width` int DEFAULT 0,
   `height` int DEFAULT 0,
