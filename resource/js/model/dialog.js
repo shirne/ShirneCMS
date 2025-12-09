@@ -1029,5 +1029,9 @@
     // 暴露接口
     window.Dialog = $.Dialog = Dialog;
     window.dialog = $.dialog = dialog;
+
+    window.createTitle = function (title, subTitle) {
+        return '<div class="main-title">' + title + '</div><div class="sub-title">' + subTitle + '</div>';
+    }
 })(window, jQuery || Zepto);
 
