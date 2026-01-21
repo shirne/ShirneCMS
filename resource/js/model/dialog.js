@@ -721,7 +721,7 @@
                     }
                     if (isMulti) {
                         multibox.on('click', '.badge .close', function () {
-                            var idx = $(this).data('idx')
+                            var idx = $(this).parents('.badge').data('idx')
                             picked.splice(idx, 1)
                             updatePicked()
                         })
@@ -735,6 +735,7 @@
                         })
                     }
                     listbox.on('click', '.list-group-item', function () {
+                        if ($(e.target).is('.add')) return;
                         var id = $(this).data('id');
 
                         var item = findItem(id)
