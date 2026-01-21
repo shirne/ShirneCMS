@@ -145,6 +145,24 @@
     margin-left: 5px;
   }
 
+  .add {
+    align-items: flex-end;
+    width: 30px;
+    text-align: center;
+  }
+
+  &.checked {
+    background-color: #eee;
+
+    .add {
+      color: #0a0;
+    }
+
+    .add::before {
+      content: "\f2bc";
+    }
+  }
+
   &.disabled {
     .title {
       color: #999;
@@ -160,11 +178,5 @@
       background-color: #f8f9fa;
       color: #212529;
     }
-  }
-
-  .add {
-    align-items: flex-end;
-    width: 30px;
-    text-align: center;
   }
 }

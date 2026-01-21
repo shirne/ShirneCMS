@@ -695,7 +695,22 @@
                         multibox.html(picked.map(function (item, idx) {
                             return '<span class="badge badge-secondary" data-idx="' + idx + '">' + item[config.titlekey] + '<a href="javascript:" class="close" aria-label="移除">&times;</a></span>';
                         }).join(''));
+                        updatePickState()
                     }
+
+
+                    function updatePickState() {
+                        if (!isMulti) return
+                        var ids = picked.map(function (e) { return e.id });
+                        listbox.find('.list-group-item').each(function (idx) {
+                            if (ids.indexOf($(this).data('id')) > -1) {
+                                $(this).addClass('checked')
+                            } else {
+                                $(this).removeClass('checked')
+                            }
+                        })
+                    }
+
 
                     body.find('.search-btn').click(function () {
                         var keyinput = body.find('.search-box input[type=text]')
@@ -727,7 +742,11 @@
                         })
                         listbox.on('click', '.list-group-item .add', function (e) {
                             var row = $(this).parents('.list-group-item').eq(0)
-                            var item = findItem(row.data('id'))
+                            var id = row.data('id')
+                            if (picked.some(function (item) {
+                                return item[idkey] == id
+                            })) return;
+                            var item = findItem(id)
                             if (item) {
                                 picked.push(item)
                                 updatePicked()
@@ -796,6 +815,7 @@
                                         if (lists && lists.length) {
                                             config.list = lists
                                             listbox.html(config.rowTemplate.compile(lists, true));
+                                            updatePickState()
                                         }
                                     } else {
                                         listbox.html('<span class="text-danger"><i class="ion-md-warning"></i> 加载失败</span>');
@@ -828,6 +848,7 @@
                     } else {
                         loadList();
                     }
+                    updatePicked()
                 },
                 onsure: function (body) {
                     if (config.isMulti) {
