@@ -1,11 +1,11 @@
 (function (window, $) {
-    var dialogTpl = '<div class="modal shirne-modal fade" id="{@id}" {if tabindex}tabindex="{@tabindex}"{/if} role="dialog" aria-labelledby="{@id}Label" aria-hidden="true">\n' +
+    var dialogTpl = '<div class="modal shirne-modal fade" id="{@id}" {if tabindex}tabindex="{@tabindex}"{/if} role="dialog" aria-labelledby="{@id}Label" >\n' +
         '    <div class="modal-dialog {@size}">\n' +
         '        <div class="modal-content {@contentClass}">\n' +
         '            <div class="modal-header">\n' +
         '                <h4 class="modal-title" id="{@id}Label">{@title}</h4>\n' +
         '                <button type="button" class="close" data-dismiss="modal">\n' +
-        '                    <span aria-hidden="true">&times;</span>\n' +
+        '                    <span>&times;</span>\n' +
         '                    <span class="sr-only">Close</span>\n' +
         '                </button>\n' +
         '            </div>\n' +
@@ -495,7 +495,6 @@
                         sub_is_textarea = label.is_textarea ? label.is_textarea : is_textarea;
                         sub_type = label.type
                         if (label.values) {
-                            console.log(label.values)
                             for (var k in label.values) {
                                 values.push({
                                     value: k,
@@ -642,23 +641,32 @@
                 };
             }
             var icon = config.icon ? '<i class="ion-md-checkmark"></i> ' : ''
+            var idkey = config && config.idkey ? config.idkey : 'id'
+            var titleKey = config && config.titlekey ? config.titlekey : 'title'
+            var isMulti = config && config.isMulti
             config = $.extend({
                 url: '',
                 title: '',
                 isajax: true,
+                initTree: '',
+                isMulti: false,
+                globalSearch: false,
                 list: [],
                 name: '项目',
-                idkey: 'id',
-                titlekey: 'title',
+                idkey: idkey,
+                pidkey: 'pid',
+                titlekey: titleKey,
                 level: 3,
                 onRow: null,
                 toList: function (json) {
                     return json.data;
                 },
-                breadTemplate: '<li class="breadcrumb-item" aria-current="page"><a href="javascript:" data-id="{@id}">{@title}</a></li>',
-                rowTemplate: '<a href="javascript:" data-id="{@id}" class="list-group-item list-group-item-action" style="line-height:30px;">' + icon + '[{@id}]&nbsp;{@title}</a>'
+                breadTemplate: '<li class="breadcrumb-item" aria-current="page"><a href="javascript:" data-id="{@' + idkey + '}">{@' + titleKey + '}</a></li>',
+                rowTemplate: '<a href="javascript:" data-id="{@' + idkey + '}" class="list-group-item list-group-item-action" style="line-height:30px;"><span class="item-name">' + icon + '[{@' + idkey + '}]&nbsp;{if @tree_names}{@tree_names}{else}{@' + titleKey + '}{/if}</span>' + (isMulti ? '<i class="ion-md-add add"></i>' : '') + '</a>'
             }, config || {});
-            var selected = [{ id: 0, pid: -1, title: config.name }]
+            var root = { id: 0, pid: -1, title: config.name }
+            var selected = [root]
+            var picked = config.selected ? config.selected : []
             if (!filter) filter = {};
 
             var title = '请选择' + config.name;
@@ -666,34 +674,92 @@
             if (config.isajax) {
                 contentTpl = '<nav aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item active" aria-current="page"><a href="javascript:" data-id="0">' + config.name + '</a></li></ol></nav>' + contentTpl;
             }
+            if (isMulti) {
+                contentTpl = '<div class="multi-box"></div>' + contentTpl
+            }
+            if (config.globalSearch) {
+                contentTpl = '<div class="input-group search-box mb-2"><input type="text" class="form-control" /><div class="input-group-append"><button class="btn btn-outline-secondary search-btn" type="button" ><i class="ion-md-search"></i></button></div></div>' + contentTpl;
+            }
             if (!config.title) config.title = title;
 
             var dlg = new Dialog({
                 backdrop: 'static',
                 onshown: function (body) {
                     var breadcrumb = body.find('.breadcrumb');
+                    var multibox = body.find('.multi-box');
                     var listbox = body.find('.list-group');
                     var lastLoading = 0;
-                    listbox.on('click', 'a.list-group-item', function () {
-                        var id = $(this).data('id');
+
+                    function updatePicked() {
+                        if (!isMulti) return
+                        multibox.html(picked.map(function (item, idx) {
+                            return '<span class="badge badge-secondary" data-idx="' + idx + '">' + item[config.titlekey] + '<a href="javascript:" class="close" aria-label="移除">&times;</a></span>';
+                        }).join(''));
+                    }
+
+                    body.find('.search-btn').click(function () {
+                        var keyinput = body.find('.search-box input[type=text]')
+                        var key = keyinput.val()
+                        if (key) {
+                            filter = {
+                                key: key,
+                                pid: -1
+                            }
+                            loadList(false);
+                        } else {
+                            filter = {}
+                            loadList();
+                        }
+                    })
+                    function findItem(id) {
                         for (var i = 0; i < config.list.length; i++) {
                             if (config.list[i][config.idkey] == id) {
-                                listbox.find('a.list-group-item').removeClass('active');
-                                $(this).addClass('active');
-                                if (config.list[i].pid == selected[selected.length - 1].pid) {
-                                    selected.pop()
-                                }
-                                selected.push(config.list[i])
-                                if (selected.length <= config.level) {
-                                    dlg.box.find('.modal-footer .btn-outline-primary').prop('disabled', true)
-                                } else {
-                                    dlg.box.find('.modal-footer .btn-outline-primary').prop('disabled', false)
-                                }
-                                breadcrumb.html(config.breadTemplate.compile(selected, true));
-                                loadList()
-                                break;
+                                return config.list[i]
                             }
                         }
+                        return null
+                    }
+                    if (isMulti) {
+                        multibox.on('click', '.badge .close', function () {
+                            var idx = $(this).data('idx')
+                            picked.splice(idx, 1)
+                            updatePicked()
+                        })
+                        listbox.on('click', '.list-group-item .add', function (e) {
+                            var row = $(this).parents('.list-group-item').eq(0)
+                            var item = findItem(row.data('id'))
+                            if (item) {
+                                picked.push(item)
+                                updatePicked()
+                            }
+                        })
+                    }
+                    listbox.on('click', '.list-group-item', function () {
+                        var id = $(this).data('id');
+
+                        var item = findItem(id)
+                        if (item) {
+                            listbox.find('a.list-group-item').removeClass('active');
+                            $(this).addClass('active');
+                            if (item.tree) {
+                                selected = item.tree
+                                selected.unshift(root)
+                            } else {
+                                if (item.pid == selected[selected.length - 1].pid) {
+                                    selected.pop()
+                                }
+                                selected.push(item)
+                            }
+
+                            if (selected.length <= config.level) {
+                                dlg.box.find('.modal-footer .btn-outline-primary').prop('disabled', true)
+                            } else {
+                                dlg.box.find('.modal-footer .btn-outline-primary').prop('disabled', false)
+                            }
+                            breadcrumb.html(config.breadTemplate.compile(selected, true));
+                            loadList()
+                        }
+
                     });
                     breadcrumb.on('click', '.breadcrumb-item a', function () {
                         var id = $(this).data('id')
@@ -710,11 +776,11 @@
                         return;
                     }
 
-                    function loadList() {
+                    function loadList(withpid) {
                         var curLoading = new Date().getTime()
                         lastLoading = curLoading;
                         //listbox.html('<span class="list-loading">加载中...</span>');
-                        filter['pid'] = selected[selected.length - 1].id;
+                        if (withpid !== false) filter['pid'] = selected[selected.length - 1][config.idkey];
 
                         $.ajax(
                             {
@@ -736,18 +802,51 @@
                                 }
                             }
                         );
-
                     }
-                    loadList();
+                    if (config.initTree) {
+                        $.ajax(
+                            {
+                                url: config.url,
+                                type: 'GET',
+                                dataType: 'JSON',
+                                data: {
+                                    tree: config.initTree
+                                },
+                                success: function (json) {
+                                    if (json.code === 1 && json.data && json.data.length) {
+                                        selected = json.data
+                                        selected.unshift(root)
+                                        breadcrumb.html(config.breadTemplate.compile(selected, true));
+                                    } else {
+                                        listbox.html('<span class="text-danger"><i class="ion-md-warning"></i> 初始化失败</span>');
+                                    }
+                                    loadList();
+                                }
+                            }
+                        );
+                    } else {
+                        loadList();
+                    }
                 },
                 onsure: function (body) {
-                    if (selected.length < config.level) {
-                        dialog.warning('没有选择' + config.name + '!');
-                        return false;
-                    }
-                    if (typeof callback == 'function') {
-                        var result = callback(selected.slice(1));
-                        return result;
+                    if (config.isMulti) {
+                        if (picked.length < 1) {
+                            dialog.warning('没有选择' + config.name + '!');
+                            return false;
+                        }
+                        if (typeof callback == 'function') {
+                            var result = callback(picked);
+                            return result;
+                        }
+                    } else {
+                        if (selected.length < config.level) {
+                            dialog.warning('没有选择' + config.name + '!');
+                            return false;
+                        }
+                        if (typeof callback == 'function') {
+                            var result = callback(selected.slice(1));
+                            return result;
+                        }
                     }
                 }
             }).show(contentTpl, config.title);

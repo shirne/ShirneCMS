@@ -127,7 +127,7 @@ function watchAll() {
     gulp.watch(['./less/*.less', './less/model/*.less'], cssTask, (event) => {
         console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
     });
-    gulp.watch(['./less/admin/*.less'], cssAdminTask, (event) => {
+    gulp.watch(['./less/model/_dialog.less', './less/admin/*.less'], cssAdminTask, (event) => {
         console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
     });
     gulp.watch(backsrces, backendTask, (event) => {
